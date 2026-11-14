@@ -298,7 +298,7 @@ SCENE({id:'public-key',name:'Public-key encryption',tag:'A lock anyone can close
   if(k>=4)out+=TM(410,200,`${c}⁷ = ${NW_pow(c,7)}`,12.5,C.ink,'start')+TM(410,224,`mod 33 = ${back}`,15,C.blue,'start','font-weight="700"')+(back===m?T(560,224,'✓',17,C.green,'middle','font-weight="700"'):'');
   // Alice's panel
   out+=R(10,104,200,140,'#fff',C.grid,9)+TM(20,128,`message m = ${m}`,14,C.ink,'start','font-weight="700"');
-  if(k>=1)out+=NW_lock(186,124,true,C.green)+TM(20,150,'has public key (3, 33)',12.5,C.green,'start');
+  if(k>=1)out+=NW_lock(186,124,true,C.green)+TM(20,150,'has key (3, 33)',12.5,C.green,'start');
   if(k>=2)out+=TM(20,178,`c = ${m}³ mod 33`,14,C.ink,'start')+TM(20,202,`  = ${NW_pow(m,3)} mod 33`,14,C.ink,'start','xml:space="preserve"')+TM(20,228,`  = ${c}`,16,C.coral,'start','font-weight="700" xml:space="preserve"')+NW_lock(186,214,false,C.coral);
   // Eve
   out+=R(200,262,200,108,C.coralp,'none',10)+TB(300,282,'Eve (listening)',14,C.coral)+T(300,304,k>=1?'saw the public key (3, 33)':'has seen nothing yet',13,C.ink)+T(300,324,k>=3?`saw the locked number ${c}`:'',13,C.ink)+T(300,346,k>=5?'needs d: must factor 33 = 3 × 11':'cannot unlock without d',13,k>=5?C.coral:C.muted);
@@ -323,11 +323,11 @@ SCENE({id:'digital-signature',name:'Digital signature',tag:'Proving who wrote it
   if(k===3)out+=NW_chip(lerp(240,360,u),68,'msg + '+sig,C.purple,80);
   out+=R(10,104,210,170,'#fff',C.grid,9)+T(20,126,'Message',13,C.muted,'start')+TM(20,148,s.signed,13.5,C.ink,'start','font-weight="700" xml:space="preserve"');
   if(k>=1)out+=T(20,176,'Digest',13,C.muted,'start')+TM(20,198,`h = ${h}`,15,C.ink,'start');
-  if(k>=2)out+=T(20,226,'Signature (private d = 7)',13,C.muted,'start')+TM(20,250,`s = ${h}⁷ mod 33 = ${sig}`,14,C.purple,'start','font-weight="700"');
+  if(k>=2)out+=T(20,226,'Sign with private d = 7',13,C.muted,'start')+TM(20,250,`s = ${h}⁷ mod 33 = ${sig}`,14,C.purple,'start','font-weight="700"');
   out+=R(380,104,210,170,'#fff',C.grid,9)+T(390,126,'Received message',13,C.muted,'start');
   if(k>=3)out+=TM(390,148,s.received,13.5,s.received===s.signed?C.ink:C.coral,'start','font-weight="700" xml:space="preserve"');
   if(k>=4)out+=T(390,176,'Digest of what arrived',13,C.muted,'start')+TM(390,198,`h′ = ${h2}`,15,C.ink,'start');
-  if(k>=5)out+=T(390,226,'Signature checked (public e = 3)',13,C.muted,'start')+TM(390,250,`${sig}³ mod 33 = ${check}`,14,C.green,'start','font-weight="700"');
+  if(k>=5)out+=T(390,226,'Check with public e = 3',13,C.muted,'start')+TM(390,250,`${sig}³ mod 33 = ${check}`,14,C.green,'start','font-weight="700"');
   if(k>=5){out+=R(130,288,340,46,ok?C.greenp:C.coralp,ok?C.green:C.coral,10)+TB(300,317,ok?`${check} = ${h2}: valid, unchanged, from Alice`:`${check} ≠ ${h2}: invalid, reject it`,16,ok?C.green:C.coral)}
   else out+=T(300,316,'The private key never leaves Alice.',14,C.muted);
   out+=T(300,360,'Toy digest: only 33 possible values. Real digests (SHA-256) have 2²⁵⁶.',13,C.muted);

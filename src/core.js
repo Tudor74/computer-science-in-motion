@@ -21,6 +21,71 @@
    hint       one line telling the learner what they can change.
  Watch mode is deterministic: a scene's picture depends only on lesson time.
  Try it mode is driven only by the learner's state and step position.
+
+ INTERACTION DESIGN NOTE: for each term, the one thing the learner changes, and why.
+ Represent
+  bit ............ flip bits, add/remove bits: each extra bit visibly doubles the list of patterns.
+  binary ......... flip place values, +1/−1, shift: carries ripple left exactly as in decimal.
+  byte ........... slider 0–255 and +1: 255 + 1 wraps to 0, so a fixed width is felt, not told.
+  hexadecimal .... RGB sliders: each byte splits into two 4-bit halves, one hex digit each.
+  ascii .......... type text: every character becomes a number; accents fall outside the table.
+  unicode ........ type anything: UTF-8 length (1–4 bytes) and its leading-bit signal appear.
+  bitmap ......... paint pixels: each row's byte value changes under your finger.
+  boolean ........ toggle A, B, C or press a table row: tree values and truth-table row agree.
+  logic-gate ..... pick a gate, flip inputs: live wires, lamp and lit truth-table row stay in step.
+  half-adder ..... flip A and B: two lamps read as the two-bit sum, showing 1 + 1 = 10.
+ Instruct
+  algorithm ...... find-the-largest flowchart on a list you shuffle or edit: same steps, any input.
+  variable ....... step x = 3; y = x; x = x + 2: y keeps its copy, the classic misconception.
+  conditional .... temperature and limit sliders: only one branch lights; equality tests ">".
+  loop ........... choose n, step total += i: one block column per repetition, counter beside.
+  function ....... pick a function, change the input: the same input always returns the same value.
+  call-stack ..... step main → greet → format: frames with locals push and pop in order.
+  recursion ...... factorial(n), n 1–6: the stack grows to the base case, then unwinds with answers.
+ Organise data
+  array .......... read any index in one step; insert at start counts every item that must move.
+  linked-list .... count hops to a node; inserting changes only pointers, nothing shifts.
+  stack / queue .. push/pop and enqueue/dequeue: only the top, or only the two ends, are reachable.
+  hash-function .. type a key, step the character-code sum mod 8: a tiny edit moves the bucket.
+  hash-table ..... insert and look up keys: collisions chain; look-ups check only one bucket.
+  tree ........... press a node: its path from the root, depth and leaf status; add children.
+  binary-search-tree insert and search: left/right path; sorted inserts make a tall chain.
+  graph .......... press two vertices to toggle an edge: degrees and adjacency list update.
+ Search and sort
+  linear-search .. choose a target: cards are checked one by one; the worst case costs n.
+  binary-search .. choose a target (or an absent one): the interval halves, steps vs ⌈log₂ n⌉.
+  bfs / dfs ...... the same graph, press a start: a queue spreads in rings, a stack dives and backtracks.
+  dijkstra ....... press a start, change edge lengths: the nearest unsettled node is fixed first.
+  4 sorts ........ one shared input (shuffle, reverse, nearly sorted, swap two bars): counters and a
+                   chart compare all four algorithms on exactly that input.
+  big-o .......... slider n and "double n": six growth curves race; times at 10⁹ steps per second.
+  divide-and-conquer split 2–16 numbers in halves: depth ⌈log₂ n⌉, answers combine on the way up.
+  dynamic-programming fib(n) plain vs memoised: 41 calls shrink to 13 as the memo table fills.
+ Machines
+  fetch-decode-execute change data cells, step: the same three-phase cycle runs every instruction.
+  machine-code ... choose opcode and operand: a byte splits into fields; program lines decode.
+  memory-hierarchy send a request to a level: the trip down and back, with human-scale times.
+  cache .......... press addresses or load patterns: locality turns misses into hits (LRU).
+  compiler / interpreter one shared expression: translate everything first vs evaluate as you go.
+  process ........ only the legal transitions are pressable: the OS owns a program's state.
+  scheduling ..... FCFS / SJF / round robin, job lengths and quantum: average wait vs switching.
+ Networks
+  packet ......... type a message and break links: packets take different routes, arrive out of
+                   order, and are reassembled by number.
+  ip-routing ..... choose a destination, cut links: each router only looks up the next hop.
+  tcp ............ lose chosen segments: ACKs, timeout and resend repair the stream.
+  dns ............ look a name up twice: the delegation chain, then the resolver's cache.
+  http ........... choose a request: the request text and the status code that answers it.
+  encryption ..... type text, slide the Caesar key, then try every key: why 25 keys is weak.
+  public-key ..... slider m with toy RSA (n = 33, e = 3, d = 7): anyone locks, only d unlocks.
+  digital-signature edit or tamper with the message: verification fails until it is re-signed.
+ Theory
+  finite-automaton choose a machine, type a string, step: the state is the machine's only memory.
+  regular-expression choose a pattern, edit text: matches are routes through the railroad diagram.
+  turing-machine . choose a machine, type the tape, step: read, write, move, change state.
+  halting-problem  press cells to change the table: D still disagrees with every row's diagonal.
+  p-vs-np ........ pick numbers to check instantly, then run brute force through all 2ⁿ subsets.
+ The 2D/3D toggle from Mathematics In Motion is left out: none of these ideas needs depth.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

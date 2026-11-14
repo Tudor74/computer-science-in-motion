@@ -18,12 +18,11 @@ SCENE({id:'array',name:'Array',tag:'Items side by side',
   delLast(s){if(!s.items.length)return;s.items.pop();s.moves=0;s.read=null;s.last='delete last'}},
  draw(s,f,X){
   const w=58,g=4,x0=40,n=s.items.length,anim=s.anim||0;let out=heading('Every item has a numbered slot');
-  for(let i=0;i<9;i++){const x=x0+i*(w+g);out+=R(x,120,w,58,'none',C.grid,6,'stroke-dasharray="4 4"')+TM(x+w/2,200,200+4*i,13,C.muted)}
-  s.items.forEach((v,i)=>{let x=x0+i*(w+g),y=120;
-   if(anim>0){if(i===0)y=120-70*anim;else x=x0+(i-anim)*(w+g)}
+  for(let i=0;i<9;i++){const x=x0+i*(w+g);out+=R(x,120,w,58,'none',C.grid,6,'stroke-dasharray="4 4"')+TM(x+w/2,200,200+4*i,13,C.muted)+(i<n?TM(x+w/2,108,'['+i+']',14,i===s.read?C.amber:C.muted):'')}
+  s.items.forEach((v,i)=>{let x=x0+i*(w+g),y=120,op=1;
+   if(anim>0){if(i===0)op=1-anim;else x=x0+(i-anim)*(w+g)}
    const hl=i===s.read;
-   out+=hit(X,'read',i,`Read a[${i}], which holds ${v}`,R(x,y,w,58,hl?C.amberp:i===0&&s.last==='insert at start'?C.coralp:'#fff',hl?C.amber:C.blue,6)+TB(x+w/2,y+37,v,22,C.ink));
-   out+=TM(x+w/2,108,'['+i+']',14,hl?C.amber:C.muted);
+   out+=G(hit(X,'read',i,`Read a[${i}], which holds ${v}`,R(x,y,w,58,hl?C.amberp:i===0&&s.last==='insert at start'?C.coralp:'#fff',hl?C.amber:C.blue,6)+TB(x+w/2,y+37,v,22,C.ink)),`opacity="${fmt(op)}"`);
   });
   out+=T(580,228,'memory address of each slot',13,C.muted,'end');
   if(s.read!==null&&s.read<n){const x=x0+s.read*(w+g)+w/2;out+=arrow(x,272,x,214,C.amber,2.5)+R(130,276,340,40,'#fff',C.amber,8)+TM(300,302,`a[${s.read}] at 200 + ${s.read} × 4 = ${200+4*s.read}`,15,C.ink)}
@@ -161,9 +160,9 @@ SCENE({id:'hash-table',name:'Hash table',tag:'Find without searching',
    if(chain.length>5)out+=T(580,y+rh/2+4,'+'+(chain.length-5),13,C.muted,'end');
   }
   const n=s.keys.length;
-  out+=T(20,334,`${n} keys · 8 buckets · ${coll} collision${coll===1?'':'s'}`,14,C.muted,'start');
+  out+=T(20,334,`${n} key${n===1?'':'s'} · 8 buckets · ${coll} collision${coll===1?'':'s'}`,14,C.muted,'start');
   if(s.look)out+=T(580,334,`“${s.look.key}” → bucket ${s.look.bucket} · ${s.look.cmp} comparison${s.look.cmp===1?'':'s'} · ${s.look.found?'found':'not found'}`,14,s.look.found?C.green:C.coral,'end');
-  out+=T(300,362,'A linear search would compare against all '+n+' keys.',13,C.muted);
+  out+=T(300,362,n>1?'A linear search could need to compare against all '+n+' keys.':'With more keys, a linear search would check them all.',13,C.muted);
   const say=s.look?`“${s.look.key}” hashes to bucket ${s.look.bucket}. Only that chain is checked: ${s.look.cmp} comparison${s.look.cmp===1?'':'s'}, ${s.look.found?'found':'not there'}.`:coll?`Coloured buckets hold more than one key: collisions. The table still works by chaining, but long chains slow look-ups.`:'Each key sits in the bucket its hash picks.';
   return {svg:out,phase:say};
  }});
@@ -252,6 +251,6 @@ SCENE({id:'graph',name:'Graph',tag:'Things and their connections',
   out+=T(20,340,'red badge = degree',13,C.coral,'start');
   out+=R(390,56,190,270,'#fff',C.grid,8)+T(404,80,'adjacency list',13,C.muted,'start');
   Object.keys(OR_GN).forEach((id,i)=>{const nb=s.edges.filter(e=>e.includes(id)).map(e=>e.replace(id,'')).sort();out+=TB(404,112+i*36,id+':',16,C.blue,'start')+TM(430,112+i*36,nb.join(', ')||'—',15,C.ink,'start')});
-  const m=s.edges.length;out+=T(20,362,`${m} edges · degrees add up to ${2*m}, because every edge has two ends`,14,C.muted,'start');
+  const m=s.edges.length;out+=T(20,362,`${m} edge${m===1?'':'s'} · degrees add up to ${2*m}, because every edge has two ends`,14,C.muted,'start');
   return {svg:out,phase:s.sel?`${s.sel} selected: press another vertex to add or remove an edge.`:(s.lastEdge?`Edge ${s.lastEdge}. `:'')+'The picture and the adjacency list hold the same information; programs usually store the list.'};
  }});

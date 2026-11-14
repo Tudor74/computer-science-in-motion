@@ -153,11 +153,11 @@ SCENE({id:'function',name:'Function',tag:'A named, reusable procedure',
   const fn=IN_FN[s.f],isW=s.f==='length',inp=isW?s.word:s.x,res=fn.f(inp),u=X.try?1:clamp(s.u,0,1);
   let out=heading('Same input, same output');
   const ix=lerp(30,190,smooth(u/.35)),inVis=u<.45,outVis=u>.55,ox=lerp(330,460,smooth((u-.55)/.35));
-  out+=R(200,80,200,150,C.dark,'none',16)+TB(300,130,fn.name,20,'#fff')+T(300,162,'= '+fn.rule,16,'#cfe0ea')+T(300,206,'function',13,'#9fb6c4');
   out+=arrow(150,155,198,155,C.line,2.5)+arrow(402,155,450,155,C.line,2.5);
   if(inVis||X.try)out+=box(X.try?30:ix-10,120,120,70,isW?'“'+inp+'”':String(inp),'#fff',C.ink,isW?17:26,C.blue);
-  out+=T(90,214,isW?'input word':'input x',13,C.muted);
   if(outVis||X.try)out+=box(X.try?460:ox,120,120,70,String(res),C.amberp,C.ink,22,C.amber);
+  out+=R(200,80,200,150,C.dark,'none',16)+TB(300,130,fn.name,20,'#fff')+T(300,162,'= '+fn.rule,16,'#cfe0ea')+T(300,206,'function',13,'#9fb6c4');
+  out+=T(90,214,isW?'input word':'input x',13,C.muted);
   out+=T(520,214,'return value',13,C.muted);
   const xs=isW?['a','cat','tree','apple'].filter(w=>w!==inp).slice(0,3).concat([inp]):[...new Set([0,1,2,3,inp])].slice(-5);
   const cw=560/xs.length;
