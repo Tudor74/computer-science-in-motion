@@ -1,6 +1,6 @@
 /* ===================== Stage 6 · Networks ===================== */
 // Shared helpers for this stage (prefixed NW_ because every file shares one scope).
-const NW_chip=(x,y,label,col=C.blue,w=50)=>R(x-w/2,y-11,w,22,col,'none',6)+TM(x,y+5,label,13,'#fff','middle','font-weight="700"');
+const NW_chip=(x,y,label,col=C.blue,w=50)=>R(x-w/2,y-11,w,22,col,'none',6)+TMF(x,y+5,label,13,'#fff','middle','font-weight="700"');
 const NW_mod=(b,e,m)=>{let r=1n,x=BigInt(b)%BigInt(m),k=BigInt(e);const M=BigInt(m);while(k>0n){if(k&1n)r=r*x%M;x=x*x%M;k>>=1n}return Number(r)};
 const NW_pow=(b,e)=>(BigInt(b)**BigInt(e)).toString();
 const NW_sup=n=>String(n).split('').map(d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d]).join('');
@@ -49,7 +49,7 @@ SCENE({id:'packet',name:'Packet',tag:'Messages travel in pieces',
   arrived.sort((a,b)=>a.arrive-b.arrive||a.n-b.n);
   out+=T(20,316,'Arrived:',14,C.muted,'start');arrived.forEach((p,i)=>out+=NW_chip(110+i*58,311,p.n+':'+p.data,cols[(p.n-1)%4]));
   const done=pl.packets.length&&arrived.length===pl.packets.length,sorted=arrived.slice().sort((a,b)=>a.n-b.n);
-  out+=T(20,356,'In number order:',14,C.muted,'start')+TM(145,356,sorted.map(p=>p.data).join('')||'…',17,done?C.green:C.ink,'start','font-weight="700" xml:space="preserve"');
+  out+=TF(20,356,'In number order:',14,C.muted,'start')+TMF(145,356,sorted.map(p=>p.data).join('')||'…',17,done?C.green:C.ink,'start','font-weight="700" xml:space="preserve"');
   let phase;
   if(!pl.paths.length)phase='Every route from sender to receiver is broken, so no packet can get through. Repair a link.';
   else if(!pl.packets.length)phase='Type a message to split it into packets.';
@@ -92,7 +92,7 @@ SCENE({id:'ip-routing',name:'IP address and routing',tag:'Finding the way, one h
   for(const r in Rr){const [x,y]=Rr[r],here=f.at===r;out+=Ci(x,y,24,here?C.pale:'#fff',here?C.coral:C.blue)+TB(x,y+5,r,15)}
   // The moving packet: tween from the previous holder to the current one.
   const pos=id=>H[id]?H[id].at:Rr[id],path=SCENES['ip-routing'].trace(s).map(q=>q.at),cur2=pos(f.at),pb=X.k>0?pos(path[X.k-1]):cur2,u=smooth(X.u),px=lerp(pb[0],cur2[0],u),py=lerp(pb[1],cur2[1],u);
-  const dx=207-px,dy=192-py,dd=Math.hypot(dx,dy)||1;out+=NW_chip(px+dx/dd*42,py+dy/dd*42,'→ '+dip.split('.').slice(2).join('.'),C.coral,64);
+  const dx=207-px,dy=192-py,dd=Math.hypot(dx,dy)||1;out+=NW_chip(px+dx/dd*50,py+dy/dd*50,'→ '+dip.split('.').slice(2).join('.'),C.coral,64);
   // Routing table of the router now holding the packet.
   const tx=420,holder=f.at[0]==='R'?f.at:null;
   out+=R(tx-6,64,184,234,'#fff',C.grid,10);
@@ -148,7 +148,7 @@ SCENE({id:'tcp',name:'TCP',tag:'Reliable delivery over an unreliable network',
    else if(pr>=0)out+=R(rx+8,y0-8,56,16,C.greenp,'none',8)+T(rx+36,y0+4.5,'ACK '+m.n,13,C.green,'middle','font-weight="650"');
   }
   const arrivedSegs=new Set(r.msgs.filter(m=>m.kind==='seg'&&!m.lost&&m.t1<=Tn).map(m=>m.n));
-  out+=T(570,92,'Received',13,C.muted);range(5).forEach(i=>{const ok=arrivedSegs.has(i+1);out+=R(548,102+i*30,44,24,ok?C.blue:'#fff',ok?C.blue:C.line,6)+T(570,119+i*30,i+1,14,ok?'#fff':C.muted,'middle','font-weight="700"')});
+  out+=TF(570,92,'Received',13,C.muted);range(5).forEach(i=>{const ok=arrivedSegs.has(i+1);out+=R(548,102+i*30,44,24,ok?C.blue:'#fff',ok?C.blue:C.line,6)+T(570,119+i*30,i+1,14,ok?'#fff':C.muted,'middle','font-weight="700"')});
   let msg='';for(let t=Math.floor(Tn);t>=0&&!msg;t--)if(r.ev[t])msg=r.ev[t].join(' ');
   if(last&&f.t>=r.end)msg='All five segments are confirmed. The receiver hands 1, 2, 3, 4, 5 to the application in order, even though they did not all arrive in order.';
   return {svg:out,phase:msg};
@@ -184,7 +184,7 @@ SCENE({id:'dns',name:'DNS',tag:'Turning names into addresses',
   const NB={browser:[20,165,100,50,'Browser'],resolver:[165,165,140,50,'Resolver'],root:[400,60,180,50,'Root server'],tld:[400,165,180,50,d.tld+' servers'],auth:[400,270,180,50,d.zone]};
   const act=new Set([f.a,f.b,f.c?'resolver':null]);
   for(const k in NB){const [x,y,w,h,l]=NB[k];out+=R(x,y,w,h,act.has(k)?C.pale:'#fff',act.has(k)?C.blue:C.line,9)+T(x+w/2,y+h/2+5,l,14,C.ink,'middle','font-weight="650"')}
-  out+=T(70,236,'your computer',13,C.muted)+T(490,52,'name servers on the internet',13,C.muted);
+  out+=TF(70,236,'your computer',13,C.muted)+TF(490,52,'name servers on the internet',13,C.muted);
   const anchor=(k,toward)=>{const [x,y,w,h]=NB[k];const cx=x+w/2,cy=y+h/2;if(k==='browser')return [x+w,cy];if(k==='resolver')return toward==='browser'?[x,cy]:[x+w,cy];return [x,cy]};
   if(f.a){const [x0,y0]=anchor(f.a,f.b),[x1,y1]=anchor(f.b,f.a),dx=x1-x0,dy=y1-y0,dd=Math.hypot(dx,dy),off=(f.a==='resolver'&&f.b!=='browser')||f.a==='browser'?-7:7,ox=-dy/dd*off,oy=dx/dd*off;
    const reply=f.b==='resolver'||f.b==='browser',col=reply?C.green:C.blue,u=smooth(X.u);

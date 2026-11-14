@@ -105,9 +105,21 @@ function shuffled(a,seed){const r=rng(seed),b=a.slice();for(let i=b.length-1;i>0
 let shuffleSeed=11;const nextSeed=()=>(shuffleSeed=(shuffleSeed*48271)%2147483647);
 
 /* ---- SVG primitives (viewBox 600×380) ---- */
-const T=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>`<text x="${fmt(x)}" y="${fmt(y)}" font-size="${size}" fill="${fill}" text-anchor="${anchor}" ${extra}>${esc(s)}</text>`;
+// Diagram text scale (as in Mathematics In Motion): on narrow screens the 600-wide drawing shrinks,
+// so labels are enlarged to stay readable. Small labels grow fully; large ones by a bounded amount.
+let TS=1;
+function textSize(size,s,x,anchor){
+ let z=TS===1?size:size<=15?size*TS:size+15*(TS-1);
+ // A centred full-width line shrinks back to fit inside the drawing rather than overflow it.
+ if(x===300&&anchor==='middle'){const est=String(s).length*z*.56;if(est>580)z=Math.max(size,z*580/est)}
+ return Math.round(z*10)/10;
+}
+const T=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>`<text x="${fmt(x)}" y="${fmt(y)}" font-size="${textSize(size,s,x,anchor)}" fill="${fill}" text-anchor="${anchor}" ${extra}>${esc(s)}</text>`;
 const TB=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>T(x,y,s,size,fill,anchor,'font-weight="700" '+extra);
+// Fixed-size text: for tightly packed labels (digit stacks, side legends, dense tables) that must not grow on phones.
+const unscaled=fn=>(...a)=>{const o=TS;TS=1;try{return fn(...a)}finally{TS=o}};
 const TM=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>T(x,y,s,size,fill,anchor,'class="mono" '+extra);
+const TF=unscaled(T),TBF=unscaled(TB),TMF=unscaled(TM);
 const R=(x,y,w,h,fill=C.pale,stroke='none',rx=8,extra='')=>`<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(Math.max(0,w))}" height="${fmt(Math.max(0,h))}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="2" ${extra}/>`;
 const L=(x1,y1,x2,y2,stroke=C.line,w=2,extra='')=>`<line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" ${extra}/>`;
 const Ci=(x,y,r,fill=C.blue,stroke='none',extra='')=>`<circle cx="${fmt(x)}" cy="${fmt(y)}" r="${fmt(r)}" fill="${fill}" stroke="${stroke}" stroke-width="2" ${extra}/>`;
@@ -162,7 +174,7 @@ function graphSVG(X,nodes,edges,o={}){
  return out;
 }
 // A small "counter" tile used for live counts (comparisons, steps, hops…).
-function counter(x,y,label,value,col=C.blue,w=120){return R(x,y,w,46,'#fff',C.grid,8)+T(x+w/2,y+17,label,12,C.muted)+TB(x+w/2,y+38,value,17,col)}
+function counter(x,y,label,value,col=C.blue,w=120){return R(x,y,w,46,'#fff',C.grid,8)+TF(x+w/2,y+17,label,12,C.muted)+TBF(x+w/2,y+38,value,17,col)}
 
 const SCENES={};
 function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCENES[def.id]=def}

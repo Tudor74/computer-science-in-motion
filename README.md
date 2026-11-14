@@ -27,7 +27,13 @@ It is a companion to [Mathematics In Motion](https://github.com/Tudor74/mathemat
 ```sh
 python3 build.py            # writes index.html
 node test/check.js          # Playwright: console errors, every scene in Watch and Try it, overflow, screenshots
+node test/slider.js         # time slider: hold to rewind, release to pause, forward latches, keys
+node test/text-layout.js 375  # phone text scale: labels stay inside the drawing and do not collide
 ```
+
+On narrow screens diagram labels are enlarged (up to 1.28×, as in Mathematics In Motion) so they stay near 12px on screen. Tightly packed labels use the fixed-size helpers `TF`, `TBF` and `TMF`.
+
+The speed control is the Mathematics In Motion time slider: hold left of 0 to rewind at up to 8× (releasing pauses), drag right to latch a forward speed up to 12×, and use Play/Pause separately.
 
 | File | Contents |
 | --- | --- |

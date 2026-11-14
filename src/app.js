@@ -110,18 +110,70 @@ function renderMap(id){
 }
 
 /* ---- Clock ---- */
-function speedText(){return speed===0?'Paused':`${fmt(Math.abs(speed))}× ${speed<0?'rewind':'forward'}`}
+/* Time slider, ported unchanged from Mathematics In Motion: raw 0–1000, with zero at a measured point.
+   Left of zero rewinds up to 8× while held (release pauses); right of zero latches forward up to 12×. */
+const slider=$('speed'),shuttle=$('shuttle');
+let zero=170,activePointer=null,held=false,keyboardHeld=false;
+function speedText(){return speed===0?'0 · Paused':`${fmt(Math.abs(speed))}× ${speed<0?'rewind':'forward'}`}
+function rawToRate(raw){raw=Number(raw);const tolerance=9;if(Math.abs(raw-zero)<=tolerance)return 0;return raw<zero?-8*(zero-raw)/zero:12*(raw-zero)/(1000-zero)}
+function rateToRaw(rate){return rate<0?zero*(1+rate/8):zero+(1000-zero)*rate/12}
 function updateTransport(){
  const i=indexAt(t),playing=speed!==0;
  $('play').dataset.playing=String(playing);$('play-label').textContent=playing?'Pause':'Play';
  $('play').setAttribute('aria-label',playing?'Pause playback':'Play at '+fmt(lastForward)+' times speed');
+ slider.value=String(Math.round(rateToRaw(speed)));
+ slider.setAttribute('aria-valuetext',speed===0?'Paused':speed<0?`Rewinding at ${fmt(-speed)} times normal speed; release to pause`:`Forward at ${fmt(speed)} times normal speed; this speed stays set`);
  $('speed-readout').value=speedText();
  const pv=route[i-1],nx=route[i+1];
  $('previous').disabled=!pv;$('next').disabled=!nx;
  $('previous').setAttribute('aria-label',pv?'Previous topic: '+SCENES[pv].name:'No previous topic');
  $('next').setAttribute('aria-label',nx?'Next topic: '+SCENES[nx].name:'No next topic');
 }
-function setSpeed(v){speed=clamp(Number(v)||0,-4,8);if(speed>0)lastForward=speed;$('speed').value=String(speed===0?0:speed);updateTransport()}
+function setSpeed(v){speed=clamp(Number(v)||0,-8,12);if(speed>0)lastForward=speed;updateTransport()}
+// Keep diagram labels near a 12.4px minimum on screen: the 600-unit drawing is scaled down on phones.
+function measureText(){
+ const w=svg.getBoundingClientRect().width;
+ const next=w>0?clamp(Math.round((12.4/16)*600/w*100)/100,1,1.28):1;
+ if(next!==TS){TS=next;svg.dataset.textScale=String(TS);paint()}
+}
+function measureAll(){measureText();measureSlider()}
+function measureSlider(){
+ const available=Math.max(80,slider.getBoundingClientRect().width-46);
+ // Preserve a short rewind throw; spend the additional width on forward speed.
+ const rewindTravel=Math.min(112,available*.24);
+ zero=Math.round(1000*rewindTravel/available);
+ shuttle.style.setProperty('--zero',(100*zero/1000)+'%');
+ updateTransport();
+}
+function beginHold(e){
+ if(e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
+ if(held&&activePointer!==null&&activePointer!==e.pointerId)return;
+ held=true;activePointer=e.pointerId;shuttle.classList.add('holding');
+ try{slider.setPointerCapture(e.pointerId)}catch(_e){}
+ if(e.pointerType==='touch'||e.pointerType==='pen'){try{if(typeof navigator.vibrate==='function')navigator.vibrate(12)}catch(_e){}}
+}
+function endHold(e){
+ if(e&&activePointer!==null&&e.pointerId!==undefined&&e.pointerId!==activePointer)return;
+ const id=activePointer;
+ held=false;activePointer=null;keyboardHeld=false;shuttle.classList.remove('holding');
+ // The native handle returns to zero immediately; forward speed remains latched.
+ if(speed<0)setSpeed(0);else updateTransport();
+ try{if(id!==null&&slider.hasPointerCapture(id))slider.releasePointerCapture(id)}catch(_e){}
+}
+function speedKeys(e){
+ const keys=['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','Home','End','PageUp','PageDown'];
+ if(!keys.includes(e.key))return;
+ e.preventDefault();keyboardHeld=true;shuttle.classList.add('holding');
+ if(mode==='try')setMode('watch');
+ let next=speed;
+ if(e.key==='Home')next=-8;
+ else if(e.key==='End')next=12;
+ else if(e.key==='ArrowRight'||e.key==='ArrowUp')next=Math.round((speed+.1)*10)/10;
+ else if(e.key==='ArrowLeft'||e.key==='ArrowDown')next=Math.round((speed-.1)*10)/10;
+ else if(e.key==='PageUp')next=speed+.5;
+ else if(e.key==='PageDown')next=speed-.5;
+ setSpeed(next);
+}
 function advance(now){
  if(lastFrame===null){lastFrame=now;return}
  const dt=clamp((now-lastFrame)/1000,0,.25);lastFrame=now;
@@ -267,7 +319,16 @@ try{
  $('previous').addEventListener('click',()=>goTo(indexAt(t)-1));
  $('next').addEventListener('click',()=>goTo(indexAt(t)+1));
  $('play').addEventListener('click',playPause);$('replay').addEventListener('click',replay);
- $('speed').addEventListener('input',e=>{if(mode==='try')setMode('watch');setSpeed(e.target.value)});
+ slider.addEventListener('input',()=>{if(mode==='try')setMode('watch');setSpeed(rawToRate(slider.value))});
+ slider.addEventListener('pointerdown',beginHold);
+ slider.addEventListener('lostpointercapture',endHold);
+ slider.addEventListener('keydown',speedKeys);
+ slider.addEventListener('keyup',e=>{if(['ArrowLeft','ArrowRight','ArrowDown','ArrowUp','Home','End','PageUp','PageDown'].includes(e.key))endHold()});
+ slider.addEventListener('blur',()=>{if(keyboardHeld||held||speed<0)endHold()});
+ window.addEventListener('pointerup',endHold,true);
+ window.addEventListener('pointercancel',endHold,true);
+ window.addEventListener('blur',()=>endHold());
+ document.addEventListener('visibilitychange',()=>{endHold();lastFrame=performance.now()});
  for(const d of ['up','left','right','down'])$('map-'+d).addEventListener('click',e=>{const n=e.currentTarget.dataset.node;if(n)goTo(route.indexOf(n))});
  $('local-map').addEventListener('keydown',e=>{const dirs={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};if(dirs[e.key]){e.preventDefault();const n=neighbours(cur())[dirs[e.key]];if(n){goTo(route.indexOf(n));$('local-map').focus()}}});
  $('lesson-prior').addEventListener('click',e=>{const b=e.target.closest('[data-lesson]');if(b)goTo(route.indexOf(lessons[b.dataset.lesson].ids[0]))});
@@ -283,14 +344,16 @@ try{
   if(dlg.open)return;
   const typing=/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName);
   if(e.key===' '&&!typing&&e.target.tagName!=='BUTTON'&&!e.target.closest('[data-act]')){e.preventDefault();playPause()}
-  if(e.key==='Escape'&&!typing){setSpeed(0);stopRun()}
+  if(e.key==='Escape'&&!typing){endHold();setSpeed(0);stopRun()}
  });
  const start=route.indexOf(decodeURIComponent(location.hash.slice(1)));
  setSpeed(0);goTo(start>=0?start:0);
+ measureAll();
+ if(typeof ResizeObserver==='function'){const ro=new ResizeObserver(measureAll);ro.observe(shuttle);ro.observe(svg)}else window.addEventListener('resize',measureAll);
  requestAnimationFrame(loop);
  // Read-only inspection hooks for automated checks; no network.
  window.csApp={route,scenes:SCENES,glossary:GLOSSARY,lessons:CURRICULUM.lessons,
-  state:()=>({t,speed,mode,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
+  state:()=>({t,speed,mode,textScale:TS,zero,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
   go:id=>goTo(route.indexOf(id)),seek:x=>{setSpeed(0);t=clamp(x,0,TOTAL);lastPainted=-1},offsets,
   setMode,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
 }catch(err){

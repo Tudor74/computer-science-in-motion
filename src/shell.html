@@ -8,7 +8,7 @@
 <meta name="application-version" content="0.1">
 <meta name="description" content="An offline, animated and interactive route through computer science, from bits to P versus NP.">
 <style>
-:root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa}
+:root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa;--thumb:46px;--zero:17%;--rewind:#f3e7e1}
 *{box-sizing:border-box}
 html{background:var(--bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
 body{margin:0;padding:14px;background:var(--bg)}
@@ -111,10 +111,30 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
 #play .pause-symbol{display:none}
 #play[data-playing="true"] .play-symbol{display:none}
 #play[data-playing="true"] .pause-symbol{display:block}
-.speed{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:14px}
-.speed label{font-weight:600}
-#speed{width:200px;min-height:44px;accent-color:var(--blue)}
-#speed-readout{min-width:92px;font-variant-numeric:tabular-nums;font-weight:500}
+/* Time slider: identical to Mathematics In Motion. Hold left to rewind (release pauses); forward speed latches. */
+.shuttle{width:100%;margin:8px 0 0;--zero:17%}
+.speed-heading{display:flex;gap:12px;align-items:center;min-height:40px;margin:0}
+.speed-heading label{font-size:14px;font-weight:600}
+.speed-heading output{font-size:14px;font-weight:500;text-align:left;min-width:0;white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums}
+.range-wrap{height:56px;position:relative;display:flex;align-items:center}
+.track-rail{position:absolute;left:calc(var(--thumb)/2);right:calc(var(--thumb)/2);height:11px;border-radius:10px;pointer-events:none;background:linear-gradient(to right,var(--rewind) 0,var(--rewind) var(--zero),#d5e8f4 var(--zero),#d5e8f4 100%);border:1px solid #b2c7d4}
+.track-rail::after{content:"";position:absolute;width:3px;height:24px;top:-7px;left:var(--zero);transform:translateX(-50%);background:#516775;border-radius:2px}
+#speed{appearance:none;-webkit-appearance:none;display:block;width:100%;height:56px;margin:0;background:transparent;position:relative;z-index:2;cursor:grab;touch-action:pan-y;outline:none;min-height:0}
+#speed::-webkit-slider-runnable-track{height:12px;background:transparent;border:none}
+#speed::-moz-range-track{height:12px;background:transparent;border:none}
+#speed::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:var(--thumb);width:var(--thumb);border-radius:50%;margin-top:-17px;background:#1772b7;border:4px solid #fff;box-shadow:0 0 0 1px #12598d,0 3px 9px #18354426;transition:background-color .08s,box-shadow .08s}
+#speed::-moz-range-thumb{height:38px;width:38px;border-radius:50%;background:#1772b7;border:4px solid #fff;box-shadow:0 0 0 1px #12598d,0 3px 9px #18354426;transition:background-color .08s,box-shadow .08s}
+.holding #speed{cursor:grabbing}
+.holding #speed::-webkit-slider-thumb{background:#b84625;box-shadow:0 0 0 5px #f8d4b5,0 3px 10px #18354435}
+.holding #speed::-moz-range-thumb{background:#b84625;box-shadow:0 0 0 5px #f8d4b5,0 3px 10px #18354435}
+#speed:focus-visible::-webkit-slider-thumb{outline:3px solid #a44289;outline-offset:5px}
+#speed:focus-visible::-moz-range-thumb{outline:3px solid #a44289;outline-offset:5px}
+.scale{position:relative;height:20px;margin:0 calc(var(--thumb)/2);font-size:12px;font-weight:650;color:var(--muted)}
+.scale span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}
+.scale .start{left:0;transform:none}.scale .end{right:0;transform:none}
+.scale .zero{left:var(--zero);color:var(--ink)}
+.scale .one{left:calc(var(--zero) + (100% - var(--zero))/12)}
+.scale .two{left:calc(var(--zero) + (100% - var(--zero))*.5)}
 .bottom{padding:5px 18px 12px;color:var(--muted);font-size:12px;line-height:1.6}
 .bottom p{margin:0}
 .bottom details{margin-top:4px}
@@ -158,8 +178,8 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  .transport{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
  .transport button{font-size:13px;padding:7px 4px;gap:3px;min-width:0}
  #play{min-width:0}
- .speed{grid-column:1/-1;margin:4px 0 0;width:100%}
- #speed{flex:1;width:auto;min-width:0}
+ .scale .two{display:none}.scale .one{display:none}
+ .speed-heading{gap:8px}.speed-heading label,.speed-heading output{font-size:13px}
  .bottom{padding:5px 10px 10px}
  .try-row input[type=range]{width:140px}
  .deck-note{display:none}
@@ -170,6 +190,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  .topic-header h1{font-size:18px}
  .try-row button{padding:6px 8px;font-size:13px}
  #word-list{grid-template-columns:1fr}
+ .scale{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 @media(forced-colors:active){.topic-header{background:Canvas;color:CanvasText;border-bottom:1px solid CanvasText}.topic-texture,.topic-header::after{display:none}.mode-buttons button[aria-pressed="true"],.try-row button[aria-pressed="true"]{border:2px solid Highlight}}
@@ -240,9 +261,13 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <button type="button" id="play" data-playing="false"><svg class="play-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5L19 12L8 19Z" fill="currentColor"/></svg><svg class="pause-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5H10V19H7ZM14 5H17V19H14Z" fill="currentColor"/></svg><span id="play-label">Play</span></button>
   <button type="button" id="replay"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10a9 9 0 1 1 2.5 8.1M3 4v6h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Replay</span></button>
   <button type="button" id="next"><span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  <div class="speed"><label for="speed">Speed</label><input type="range" id="speed" min="-4" max="8" step="0.25" value="1" aria-describedby="speed-help"><output id="speed-readout" for="speed">1× forward</output></div>
  </div>
- <p class="sr-only" id="speed-help">Speed below zero rewinds; zero pauses. Play and Pause keep the chosen speed.</p>
+ <div class="shuttle" id="shuttle">
+  <div class="speed-heading"><label for="speed">Speed</label><output id="speed-readout" for="speed">0 · Paused</output></div>
+  <div class="range-wrap"><div class="track-rail" aria-hidden="true"></div><input type="range" id="speed" min="0" max="1000" step="1" value="170" aria-label="Playback speed" aria-describedby="speed-help" aria-valuetext="Paused"></div>
+  <div class="scale" aria-hidden="true"><span class="start">−8×</span><span class="zero">0</span><span class="one">1×</span><span class="two">6×</span><span class="end">12×</span></div>
+  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind up to eight times speed; release to pause. Forward speed stays set up to twelve times. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
+ </div>
 </section>
 </div>
 <footer class="bottom">

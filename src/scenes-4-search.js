@@ -207,7 +207,7 @@ const SS_sortOn={
  few(s){s.a=shuffled([1,1,1,2,2,2,3,3,3,3],nextSeed());s.sel=null},
  pick(s,i){i=Number(i);if(s.sel===null||s.sel===undefined){s.sel=i}else{if(s.sel!==i)[s.a[s.sel],s.a[i]]=[s.a[i],s.a[s.sel]];s.sel=null}}};
 function SS_sortDraw(which,title,s,f,X,moves='Swaps'){
- const a=f.a,n=a.length,W=38,x0=20,base=300,mx=Math.max(...a),sc=200/mx;let out=T(212,30,title,17,C.ink,'middle','font-weight="650"');
+ const a=f.a,n=a.length,W=38,x0=20,base=300,mx=Math.max(...a),sc=200/mx;let out=TF(212,30,title,17,C.ink,'middle','font-weight="650"');
  const cmp=f.cmp||[],done=new Set(f.done||[]);
  if(f.rng){const [lo,mid,hi]=f.rng;out+=R(x0+lo*W,84,(mid-lo)*W,base-80,C.pale,'none',6)+R(x0+mid*W,84,(hi-mid)*W,base-80,C.purplep,'none',6)}
  if(f.part){const [lo,hi]=f.part;out+=R(x0+lo*W,84,(hi-lo+1)*W,base-80,'#f2f6f9',C.grid,6);if(f.bound>lo)out+=R(x0+lo*W,84,(f.bound-lo)*W,base-80,C.greenp,'none',6)}
@@ -220,10 +220,10 @@ function SS_sortDraw(which,title,s,f,X,moves='Swaps'){
  if(f.rng)out+=T(x0+f.rng[0]*W+4,100,'level '+f.d,13,C.muted,'start');
  out+=counter(418,46,'Comparisons',f.c,C.blue,82)+counter(508,46,moves,f.sw,C.coral,82);
  const cs=SS_counts(s.a),cm=Math.max(...cs);
- out+=TB(504,124,'Comparisons on this input',13,C.ink);
+ out+=TBF(504,124,'Comparisons on this input',13,C.ink);
  SS_ALGS.forEach(([nm],i)=>{const y=136+i*34,me=nm===which;out+=T(418,y+12,nm,13,me?C.ink:C.muted,'start',me?'font-weight="700"':'')+R(418,y+17,Math.max(2,cs[i]/cm*130),10,me?C.blue:C.line,'none',3)+T(590,y+12,cs[i],13,me?C.blue:C.muted,'end','font-weight="650"')});
- out+=T(504,292,`n = ${n}: n²/2 = ${n*n/2}`,13,C.muted)+T(504,310,`n log₂ n ≈ ${Math.round(n*Math.log2(n))}`,13,C.muted);
- out+=T(212,350,X.try&&X.k===0&&s.sel!==null&&s.sel!==undefined?'Now press another bar to swap with it.':'Amber = compared · coral = swapped · green = in final place',13,C.muted);
+ out+=TF(504,292,`n = ${n}: n²/2 = ${n*n/2}`,13,C.muted)+TF(504,310,`n log₂ n ≈ ${Math.round(n*Math.log2(n))}`,13,C.muted);
+ out+=TF(212,350,X.try&&X.k===0&&s.sel!==null&&s.sel!==undefined?'Now press another bar to swap with it.':'Amber = compared · coral = swapped · green = in final place',13,C.muted);
  return out;
 }
 function SS_sortScene(id,name,tag,which,fn,title,def,ex,dur,moves){
@@ -265,7 +265,7 @@ SCENE({id:'big-o',name:'Big-O notation',tag:'How the work grows',
    if(d)out+=P(d,col,3);const v=fn(s.n);if(Math.log10(v)<=6)out+=Ci(X(s.n),Y(v),5,col);else if(clip){out+=T(X(20),yT-6,'2ⁿ off the chart ↑',13,C.coral)}}
   out+=L(X(s.n),yT,X(s.n),yB,C.ink,1.5,'stroke-dasharray="4 4"');
   out+=TB(460,44,`n = ${s.n}`,18,C.ink);
-  SS_FN.forEach(([nm,fn,col],i)=>{const y=62+i*48,v=fn(s.n);out+=R(340,y,250,42,'#fff',C.grid,7)+R(340,y,6,42,col,'none',3)+TB(356,y+18,nm,14,col,'start')+TB(582,y+18,SS_num(v),15,C.ink,'end')+T(356,y+35,'≈ '+SS_time(v)+' at 10⁹ steps/s',13,C.muted,'start')});
+  SS_FN.forEach(([nm,fn,col],i)=>{const y=62+i*48,v=fn(s.n);out+=R(340,y,250,42,'#fff',C.grid,7)+R(340,y,6,42,col,'none',3)+TBF(356,y+18,nm,14,col,'start')+TBF(582,y+18,SS_num(v),15,C.ink,'end')+TF(356,y+35,'≈ '+SS_time(v)+' at 10⁹ steps/s',13,C.muted,'start')});
   return {svg:out,phase:`At n = ${s.n}: O(n log n) needs about ${SS_num(SS_FN[3][1](s.n))} steps, O(n²) needs ${SS_num(s.n*s.n)} and O(2ⁿ) needs ${SS_num(2**s.n)}. Doubling n doubles O(n), quadruples O(n²) and squares O(2ⁿ).`};
  }});
 
@@ -330,12 +330,12 @@ SCENE({id:'dynamic-programming',name:'Dynamic programming',tag:'Remember answers
   nodes.forEach(nd=>{if(nd.idx>f.i)return;const [x,y]=P_(nd),cur=nd.idx===f.i,fin=nd.last<=f.i&&!cur;
    out+=Ci(x,y,r,nd.hit?C.greenp:cur?C.coral:fin?C.pale:'#fff',nd.hit?C.green:cur?C.coral:C.blue)+T(x,y+5,nd.k,13,cur?'#fff':C.ink,'middle','font-weight="650"')});
   // Memo table (memoised) or recomputation counts (plain).
-  out+=T(20,350,s.mode==='memo'?'memo':'times computed',13,C.muted,'start');
+  out+=TF(20,350,s.mode==='memo'?'memo':'times computed',13,C.muted,'start');
   const cw=Math.min(58,(560-120)/(s.n+1));
   for(let k=0;k<=s.n;k++){const x=130+k*cw;let txt,on;
    if(s.mode==='memo'){const fin=nodes.find(nd=>nd.k===k&&!nd.hit&&nd.last<=f.i);on=!!fin;txt=on?`f${k}=${SS_fib(k)}`:`f${k}`}
    else{const cnt=nodes.filter(nd=>nd.k===k&&nd.idx<=f.i).length;on=cnt>1;txt=`f${k} ×${cnt}`}
-   out+=R(x,330,cw-4,30,on?(s.mode==='memo'?C.greenp:C.coralp):'#fff',on?(s.mode==='memo'?C.green:C.coral):C.grid,5)+T(x+(cw-4)/2,350,txt,13,C.ink);
+   out+=R(x,330,cw-4,30,on?(s.mode==='memo'?C.greenp:C.coralp):'#fff',on?(s.mode==='memo'?C.green:C.coral):C.grid,5)+TF(x+(cw-4)/2,350,txt,13,C.ink);
   }
   return {svg:out,phase:f.say};
  }});

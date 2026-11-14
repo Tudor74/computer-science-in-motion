@@ -122,7 +122,7 @@ SCENE({id:'ascii',name:'Character encoding (ASCII)',tag:'Letters as numbers',
    out+=R(x+4,64,w-8,70,ok?'#fff':C.coralp,ok?C.blue:C.coral,9)+TM(x+w/2,112,ch===' '?'␣':ch,34,ok?C.ink:C.coral);
    out+=arrow(x+w/2,140,x+w/2,170,C.line,2,7);
    out+=TB(x+w/2,196,ok?code:'—',20,ok?C.blue:C.coral);
-   if(ok)bin(code,7).split('').forEach((b,j)=>out+=TM(x+w/2,224+j*17,b,14,b==='1'?C.ink:C.muted));
+   if(ok)bin(code,7).split('').forEach((b,j)=>out+=TMF(x+w/2,224+j*17,b,14,b==='1'?C.ink:C.muted));
    else out+=T(x+w/2,236,'not',13,C.coral)+T(x+w/2,252,'ASCII',13,C.coral);
   });
   out+=T(300,366,'A–Z: 65–90 · a–z: 97–122 · 0–9: 48–57 · space: 32',14,C.muted);

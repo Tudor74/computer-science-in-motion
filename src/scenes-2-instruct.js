@@ -194,7 +194,7 @@ SCENE({id:'call-stack',name:'Call stack',tag:'Remembering where to return',
   f.out.forEach((o,i)=>out+=TM(28,320+i*22,'> '+o,15,'#fff','start'));
   out+=L(372,350,584,350,C.ink,2.5)+T(478,370,'bottom of the stack',13,C.muted);
   f.stack.forEach((fr,i)=>{const y=350-(i+1)*64,top=i===f.stack.length-1;
-   out+=R(372,y+4,212,58,top?C.amberp:C.pale,top?C.amber:C.line,8)+TB(384,y+26,fr.fn,15,C.ink,'start')+TM(384,y+48,fr.vars.length>26?fr.vars.slice(0,25)+'…':fr.vars,13,C.muted,'start');
+   out+=R(372,y+4,212,58,top?C.amberp:C.pale,top?C.amber:C.line,8)+TB(384,y+26,fr.fn,15,C.ink,'start')+TMF(384,y+48,fr.vars.length>26?fr.vars.slice(0,25)+'…':fr.vars,13,C.muted,'start');
    if(top)out+=T(578,y+26,'top',13,C.amber,'end','font-weight="700"')});
   if(f.ret)out+=R(372,52,212,40,'#fff',C.coral,8)+TM(478,77,'returns "'+f.ret.slice(0,18)+'"',13,C.coral);
   return {svg:out,phase:f.say};
@@ -219,12 +219,12 @@ SCENE({id:'recursion',name:'Recursion',tag:'A function that calls itself',
   for(let i=0;i<shown;i++){const k=n-i,y=52+i*46,x=24+i*16,alive=i<f.depth,isBase=k===1,res=f.mode==='return'||f.mode==='done'?(n-i<=f.resolved?fact(k):null):(isBase&&f.mode==='base'?1:null),top=alive&&i===f.depth-1;
    const txt=isBase?'factorial(1) = 1   base case':`factorial(${k}) = ${k} × factorial(${k-1})`;
    out+=R(x,y,380-i*16,40,!alive?'#f4f6f7':top?C.amberp:isBase?C.greenp:'#fff',!alive?C.grid:top?C.amber:isBase?C.green:C.blue,8,!alive?'stroke-dasharray="5 4"':'');
-   out+=TM(x+12,y+26,txt,14,alive?C.ink:C.muted,'start','xml:space="preserve"');
-   if(res!==null&&!isBase)out+=TB(x+372-i*16,y+26,'= '+res,15,alive?C.green:C.muted,'end');
+   out+=TMF(x+12,y+26,txt,14,alive?C.ink:C.muted,'start','xml:space="preserve"');
+   if(res!==null&&!isBase)out+=TBF(x+372-i*16,y+26,'= '+res,15,alive?C.green:C.muted,'end');
    if(i>0&&alive&&f.mode==='call')out+=arrow(x-6,y-14,x+4,y+2,C.line,2,6);
   }
   if(f.mode==='return'){const i=f.depth,y=52+i*46,x=24+i*16;out+=arrow(x+300,y+6,x+300,y-6,C.coral,2.5,8)}
   out+=counter(450,70,'stack depth',f.depth,C.blue,130)+counter(450,140,'calls made',Math.max(f.depth,f.mode==='return'||f.mode==='done'?n:0),C.purple,130);
-  out+=T(515,230,'Every recursive',13,C.muted)+T(515,248,'call must move',13,C.muted)+T(515,266,'toward the base case,',13,C.muted)+T(515,284,'or it never stops.',13,C.muted);
+  out+=TF(515,230,'Every recursive',13,C.muted)+TF(515,248,'call must move',13,C.muted)+TF(515,266,'toward the base case,',13,C.muted)+TF(515,284,'or it never stops.',13,C.muted);
   return {svg:out,phase:f.say};
  }});

@@ -173,7 +173,7 @@ SCENE({id:'halting-problem',name:'Halting problem',tag:'A question no program ca
   for(let j=0;j<n;j++){const x=x0+j*cw;if(j<=flipped){const v=s.cells[j][j]==='H'?'L':'H';out+=R(x+4,yD+4,cw-8,rh-8,C.coralp,C.coral,6)+TB(x+cw/2,yD+26,v==='H'?'halts':'loops',14,C.coral);
     if(j===flipped&&f.phase==='flip')out+=curveArrow(x+cw/2+18,y0+12+j*rh+rh-4,x+cw/2+18,yD+4,-16,C.amber,2)}
    else out+=R(x+4,yD+4,cw-8,rh-8,'#fff',C.grid,6,'stroke-dasharray="4 4"')}
-  out+=T(x0+n*cw+12,yD+20,'D does the',13,C.coral,'start')+T(x0+n*cw+12,yD+36,'opposite',13,C.coral,'start');
+  out+=TF(x0+n*cw+12,yD+20,'D does the',13,C.coral,'start')+TF(x0+n*cw+12,yD+36,'opposite',13,C.coral,'start');
   let say;
   if(f.phase==='table')say='Each row is a program; each column is a program given as its input. Suppose a perfect checker could fill in every cell correctly.';
   else if(f.phase==='flip')say=`D, given P${f.i+1}, asks the checker about P${f.i+1} on P${f.i+1} (${s.cells[f.i][f.i]==='H'?'halts':'loops'}) and does the opposite: it ${s.cells[f.i][f.i]==='H'?'loops':'halts'}.`;

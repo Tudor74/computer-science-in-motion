@@ -121,7 +121,7 @@ SCENE({id:'memory-hierarchy',name:'Memory hierarchy',tag:'Fast and small, or slo
    const fill=found?C.greenp:vis?C.amberp:i===0?'#dfe9f0':'#fff',stroke=found?C.green:vis?C.amber:C.line;
    const inner=`<polygon points="${cx-wt/2},${y} ${cx+wt/2},${y} ${cx+wb/2},${y+42} ${cx-wb/2},${y+42}" fill="${fill}" stroke="${stroke}" stroke-width="2"/>`+T(cx,y+33,L.name,14,C.ink,'middle','font-weight="650"');
    out+=hit(X,'lvl',i,`Send a request to ${L.name}`,inner);
-   out+=TB(395,y+19,L.time,15,found?C.green:C.ink)+T(395,y+36,L.size,13,C.muted)+T(520,y+27,L.human,15,found?C.green:C.ink,'middle',found?'font-weight="700"':'');
+   out+=TBF(395,y+19,L.time,15,found?C.green:C.ink)+TF(395,y+36,L.size,13,C.muted)+T(520,y+27,L.human,15,found?C.green:C.ink,'middle',found?'font-weight="700"':'');
   });
   const yOf=a=>a<0?44:rowY(a)+11,y=lerp(yOf(f.prev),yOf(f.at),smooth(X.u));
   out+=L(cx-34,44,cx-34,yOf(Math.max(f.at,f.prev)),C.coral,1.5,'stroke-dasharray="3 4" opacity=".7"')+Ci(cx-34,y,7,f.ph==='up'||f.ph==='done'?C.green:C.coral,'#fff');
