@@ -160,7 +160,7 @@ SCENE({id:'touch-targets-thumb',name:'Thumb reach',tag:'Where one hand can tap',
   const ang=s.hand==='right'?[180,270]:[270,360],arc=k=>{const a0=ang[0]*Math.PI/180,a1=ang[1]*Math.PI/180;return `M${fmt(px+k*Math.cos(a0))} ${fmt(py+k*Math.sin(a0))} A${k} ${k} 0 0 1 ${fmt(px+k*Math.cos(a1))} ${fmt(py+k*Math.sin(a1))}`};
   out+=P(arc(.62*Rr),'#b07a5e',2,'none','stroke-dasharray="6 5" opacity=".7"')+Ci(px,py,10,'#f3d6c4','#b07a5e');
   const tx=360;out+=TBF(tx,90,(s.big?'Large':'Small')+' phone, '+s.hand+' hand',15,C.ink,'start');
-  [['easy',0,C.green],['possible',1,C.amber],['hard',2,C.coral]].forEach(([n,z,col],i)=>out+=R(tx,112+i*30,18,18,zc[z],col,4)+T(tx+28,126+i*30,`${n}: ${Math.round(100*counts[z]/(rows*cols))}% of the screen`,14,C.ink,'start'));
+  [['easy',0,C.green],['possible',1,C.amber],['hard',2,C.coral]].forEach(([n,z,col],i)=>out+=R(tx,112+i*30,18,18,zc[z],col,4)+TF(tx+28,126+i*30,`${n}: ${Math.round(100*counts[z]/(rows*cols))}% of the screen`,14,C.ink,'start'));
   if(placedZone!==null)out+=TBF(tx,232,`Your button is ${zn[placedZone]} to reach`,15,[C.green,C.amber,C.coral][placedZone],'start');
   out+=TF(tx,268,'Zones are an illustrative model:',13,C.muted,'start')+TF(tx,286,'an arc around the thumb’s base.',13,C.muted,'start');
   return {svg:out,phase:`The thumb pivots near the ${s.hand==='right'?'bottom-right':'bottom-left'} corner. ${s.big?'On the larger phone the far top corner is well beyond the arc, so':'Even on a small phone'} the top ${s.hand==='right'?'left':'right'} corner is the hardest place for a frequent action; navigation placed at the bottom is easier to reach.`};
