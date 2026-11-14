@@ -441,15 +441,14 @@ SCENE({id:'bandwidth-latency',name:'Bandwidth and latency',tag:'A wide pipe or a
   out+=box(20,cy-26,78,52,'Sender',C.pale,C.ink,14)+box(x0+len+12,cy-26,82,52,'Receiver',C.pale,C.ink,14);
   out+=R(x0,top,len,h,'#eef5fa',C.blue,h/2>14?14:h/2);
   out+=L(x0,top-14,x0+len,top-14,C.muted,1.5)+TF(x0+len/2,top-20,`latency ${s.lat} tick${s.lat>1?'s':''}`,13,C.muted);
-  out+=L(x0-8,top,x0-8,top+h,C.muted,1.5)+TF(x0-12,cy+76,`width ${s.bw}`,13,C.muted,'start');
+  out+=L(x0-8,top,x0-8,top+h,C.muted,1.5)+TF(x0,top+h+18,`width ${s.bw} (bandwidth)`,13,C.muted,'start');
   let arrived=0;
   for(let i=0;i<s.size;i++){const st=send(i);if(t>=st+s.lat){arrived++;continue}if(t<st)continue;const x=x0+(t-st)/s.lat*len,y=top+4+(i%s.bw)*14;out+=R(x-5,y,10,11,C.blue,'none',2)}
   out+=counter(20,232,'ticks so far',fmt(Math.min(t,done+1)),C.blue,128)+counter(160,232,'arrived',`${arrived} of ${s.size}`,arrived===s.size?C.green:C.blue,128);
   const tiny=s.lat+1,file=done+1;
-  out+=TF(310,244,'Time to arrive completely',13,C.muted,'start');
-  const bw=v=>Math.min(250,v*250/Math.max(tiny,file,1));
-  out+=R(310,252,bw(tiny),16,C.purple,'none',4)+TF(316+bw(tiny),265,`1-packet message: ${tiny} ticks`,13,C.ink,'start');
-  out+=R(310,274,bw(file),16,C.blue,'none',4)+TF(316+Math.min(bw(file),140),287,`this file: ${file} ticks`,13,C.ink,'start');
+  const bw=v=>Math.max(4,v*260/Math.max(tiny,file,1));
+  out+=TF(310,244,`1-packet message: ${tiny} ticks`,13,C.ink,'start')+R(310,250,bw(tiny),12,C.purple,'none',4);
+  out+=TF(310,280,`this file (${s.size} packets): ${file} ticks`,13,C.ink,'start')+R(310,286,bw(file),12,C.blue,'none',4);
   out+=TF(300,322,`≈ latency + size ÷ bandwidth = ${s.lat} + ${s.size} ÷ ${s.bw} ≈ ${fmt(s.lat+s.size/s.bw)} ticks`,14,C.ink);
   out+=TF(300,352,'A wider pipe shortens big transfers; only a shorter pipe helps tiny messages.',13,C.muted);
   return {svg:out,phase:t<=0?'Packets queue at the sender. Each tick, as many as the bandwidth allows enter the pipe.':arrived===s.size?`All ${s.size} packets are through after ${file} ticks. A single packet would still need ${tiny}: no amount of bandwidth removes the latency.`:`Each packet spends ${s.lat} ticks in the pipe; ${s.bw} can travel side by side. ${arrived} of ${s.size} have arrived.`};
@@ -531,7 +530,7 @@ function NW_trFrames(s){
   while(true){pos++;if(pos===hops){fr.push({pos,ttl:left,dir:1,res:res.slice(),reached:true,say:`It reaches the server with TTL ${left} to spare.`});if(record){res.push({hop:pos,name:'Server',ms:NW_TR.ms[pos]})}fr.push({pos:0,from:pos,ttl:null,dir:-1,res:res.slice(),reply:'reply',say:'The server answers normally.'});break}
    left--;if(left===0){fr.push({pos,ttl:0,dir:1,res:res.slice(),dead:true,say:`${NW_TR.nodes[pos]} lowers TTL to 0, drops the packet and sends back “time exceeded”, revealing itself.`});if(record)res.push({hop:pos,name:NW_TR.nodes[pos],ms:NW_TR.ms[pos]});fr.push({pos:0,from:pos,ttl:null,dir:-1,res:res.slice(),reply:'error',say:`The error message comes back from ${NW_TR.nodes[pos]}${record?`, about ${NW_TR.ms[pos]} ms after sending`:''}.`});break}
    fr.push({pos,ttl:left,dir:1,res:res.slice(),say:`${NW_TR.nodes[pos]} lowers TTL to ${left} and forwards it.`})}};
- if(s.mode==='probe')probe(s.ttl,false);else for(let t=1;t<=hops;t++)probe(t,true);
+ if(s.mode==='probe')probe(s.ttl,true);else for(let t=1;t<=hops;t++)probe(t,true);
  fr.push({pos:0,ttl:null,res:res.slice(),end:true,say:s.mode==='probe'?(s.ttl>=hops?'With enough TTL the packet arrives. TTL exists so that a packet caught in a routing loop dies instead of circling for ever.':`TTL ${s.ttl} was too small: the packet died at hop ${s.ttl}. Traceroute uses exactly this on purpose.`):'Traceroute sent TTL 1, 2, 3… so each router in turn reported itself: the whole route, with timings.'});
  return fr;
 }
@@ -552,7 +551,7 @@ SCENE({id:'ttl-traceroute',name:'TTL and traceroute',tag:'A packet with a countd
   if(f.dir===1&&!f.end){const p0=prev&&prev.dir===1&&!prev.end&&prev.pos<f.pos?prev.pos:f.pos,x=lerp(xs[p0],xs[f.pos],u);out+=NW_chip(x,y-40,f.dead?'TTL 0 ✕':'TTL '+f.ttl,f.dead?C.coral:C.blue,70)}
   if(f.dir===-1){const x=lerp(xs[f.from],xs[0],u);out+=NW_chip(x,y+42,f.reply==='error'?'time exceeded':'reply',f.reply==='error'?C.coral:C.green,f.reply==='error'?110:60)}
   out+=R(130,214,340,24,C.pale,'none',6)+TBF(170,231,'hop',13,C.muted)+TBF(300,231,'who answered',13,C.muted)+TBF(430,231,'round trip',13,C.muted);
-  if(!f.res.length)out+=TF(300,264,s.mode==='probe'?'(a single packet records nothing)':'(no answers yet)',13,C.muted);
+  if(!f.res.length)out+=TF(300,264,s.mode==='probe'?'(no answer yet)':'(no answers yet)',13,C.muted);
   f.res.forEach((r,i)=>{const yy=256+i*22;out+=TMF(170,yy,r.hop,13,C.ink)+TF(300,yy,r.name,13,C.ink)+TMF(430,yy,r.ms+' ms',13,C.ink)});
   return {svg:out,phase:f.say};
  }});
@@ -649,7 +648,7 @@ SCENE({id:'congestion-control',name:'Congestion control',tag:'Speed up, back off
  draw(s,f,X){
   const rows=NW_cc(s),k=f.i,mx=Math.max(16,...rows.map(q=>q.cw),s.thresh),H=230,base=300,sc=H/mx,x0=60,cw=25;let out=heading('The congestion window, round trip by round trip');
   for(let v=0;v<=mx;v+=mx>24?8:4){const y=base-v*sc;out+=L(x0-4,y,x0+20*cw,y,C.grid,1)+TF(x0-8,y+4,v,13,C.muted,'end')}
-  out+=TF(18,64,'segments',13,C.muted,'start')+TF(18,80,'per round',13,C.muted,'start');
+  out+=TF(18,52,'segments per round',13,C.muted,'start');
   rows.forEach((q,i)=>{const x=x0+i*cw,h=q.cw*sc,shown=i<=k,col=q.phase==='slow'?C.purple:C.blue;
    if(shown)out+=R(x+3,base-h,cw-6,h,q.loss?C.coral:col,'none',3);
    if(shown&&q.loss)out+=TBF(x+cw/2,base-h-6,'✕',14,C.coral);
@@ -719,7 +718,7 @@ SCENE({id:'dns-ttl',name:'DNS caching and TTL',tag:'Fresh enough?',
   const rows=NW_ttl(s),k=f.i,sx=t=>40+t*520/300,axis=250;let out=heading(`TTL ${s.ttl} s: how long the resolver may reuse an answer`);
   out+=L(40,axis,560,axis,C.ink,2);for(let t=0;t<=300;t+=50)out+=L(sx(t),axis,sx(t),axis+6,C.ink,1.5)+TF(sx(t),axis+22,t+' s',13,C.muted);
   out+=L(sx(150),58,sx(150),axis,C.coral,2,'stroke-dasharray="5 4"')+TF(sx(150)+6,72,'site moves:',13,C.coral,'start')+TF(sx(150)+6,88,'.10 → .99',13,C.coral,'start');
-  out+=TF(40,72,'address is …10',13,C.muted,'start');
+  out+=TF(40,72,'address ends .10',13,C.muted,'start');
   rows.slice(0,k+1).forEach((q,i)=>{if(q.kind==='miss'){const x0=sx(q.r),x1=sx(Math.min(300,q.exp));out+=R(x0,100+(i%3)*22,x1-x0,18,q.val==='.10'?C.pale:C.greenp,q.val==='.10'?C.blue:C.green,4)+TMF(x0+4,113+(i%3)*22,'cached '+q.val,12.5,C.ink,'start')}});
   rows.forEach((q,i)=>{if(i>k)return;const x=sx(q.r),col=q.kind==='miss'?C.blue:q.kind==='hit'?C.green:C.coral;out+=L(x,axis-38,x,axis,col,2)+Ci(x,axis-42,i===k?9:6,col);
    if(i===k)out+=TBF(x,axis-58,q.kind==='miss'?'ask':q.kind==='hit'?'cache':'stale!',13,col)});
@@ -754,7 +753,7 @@ SCENE({id:'url-anatomy',name:'URL',tag:'An address in six parts',
  on:{url(s,v){s.url=v}},
  draw(s,f,X){
   const parts=NW_url(s.url.trim());let out=heading('Reading a URL from left to right');
-  if(!parts){out+=TM(300,80,s.url.slice(0,70)||'(empty)',13,C.coral)+R(110,170,380,60,C.coralp,C.coral,10)+TB(300,198,'Not a complete URL',16,C.coral)+TF(300,218,'It needs at least a scheme and a host, like https://example.com',13,C.ink);return {svg:out,phase:'A browser cannot fetch this: a full URL starts with a scheme such as https:// followed by a host name.'}}
+  if(!parts){out+=TM(300,80,s.url.slice(0,70)||'(empty)',13,C.coral)+R(60,170,480,60,C.coralp,C.coral,10)+TB(300,198,'Not a complete URL',16,C.coral)+TF(300,218,'It needs at least a scheme and a host, like https://example.com',13,C.ink);return {svg:out,phase:'A browser cannot fetch this: a full URL starts with a scheme such as https:// followed by a host name.'}}
   const str=s.url.trim().slice(0,70),cw=Math.min(9,560/Math.max(1,str.length)),x0=300-str.length*cw/2,hl=s.hl;
   const colAt=i=>{const p=parts.find(q=>q.at>=0&&i>=q.at&&i<q.at+q.len);return p?NW_UPARTS[p.k][1]:null};
   Array.from(str).forEach((c,i)=>{const col=colAt(i),p=parts.find(q=>q.at>=0&&i>=q.at&&i<q.at+q.len),on=hl===undefined||(p&&p.k===hl);out+=TMF(x0+i*cw+cw/2,78,c,Math.min(15,cw*1.55),col&&on?col:C.muted,'middle',col&&on?'font-weight="700"':'')});

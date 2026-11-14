@@ -569,7 +569,7 @@ function OR_heapRun(heap,op){const a=heap.slice(),fr=[],snap=o=>fr.push({a:a.sli
  for(;;){const l=2*i+1,r=l+1;if(l>=a.length)break;const c=r<a.length&&a[r]<a[l]?r:l;snap({hl:[i,c],cmp:true,say:`Compare ${a[i]} with its smaller child, ${a[c]}.`});if(a[c]<a[i]){[a[c],a[i]]=[a[i],a[c]];snap({hl:[c],say:`Swap: ${a[c]} sifts down.`});i=c}else break}
  snap({hl:[i],done:true,say:`Done: ${top} was served first and the heap order is restored.`});return fr}
 function OR_heapFinal(s){const fr=OR_heapRun(s.heap,s.op);return fr[fr.length-1].a}
-SCENE({id:'binary-heap',name:'Priority queue (binary heap)',tag:'Most urgent first',
+SCENE({id:'heap-priority-queue',name:'Priority queue (binary heap)',tag:'Most urgent first',
  definition:'A priority queue always serves the most urgent item next. A binary heap stores it as a tree in an array: each parent is smaller than its children, so the smallest is at the root. Inserting sifts a value up; removing the root sifts a replacement down.',
  example:'Item i has children at 2i + 1 and 2i + 2. With 1,000,000 items, an insert or removal needs at most about 20 swaps. Schedulers and Dijkstra’s algorithm use heaps.',
  desc:'A binary tree of numbers above the array that stores it, index by index; compared and swapped values are highlighted as a new value sifts up or the root’s replacement sifts down.',
@@ -614,29 +614,28 @@ SCENE({id:'hash-spread',name:'Spreading keys evenly',tag:'Good hashes avoid clus
   return {svg:out,phase:`${s.n} keys in ${s.m} buckets: the ideal is ${fmt(ideal)} per bucket. This hash puts up to ${mx} in one bucket and leaves ${empty} empty. A look-up must search its whole bucket, so evenness is speed.`};
  }});
 
-function OR_fault(t,f){const a=Array.from(t);if(a.length<2)return t;if(f==='bit')a[1]=String.fromCharCode(a[1].charCodeAt(0)^1);if(f==='swap')[a[0],a[1]]=[a[1],a[0]];return a.join('')}
-function OR_ck(t,fn){const c=Array.from(t).map(x=>x.charCodeAt(0)&255);if(fn==='sum')return sum(c)%256;let s1=0,s2=0;for(const v of c){s1=(s1+v)%255;s2=(s2+s1)%255}return s2*256+s1}
-SCENE({id:'checksum',name:'Checksum',tag:'A hash that catches damage',
- definition:'A checksum is a small number computed from data and sent along with it. The receiver recomputes it: if the numbers differ, the data was damaged on the way. A better checksum also notices changes in order, not just in value.',
- example:'Adding up the bytes of “HELLO” catches a flipped bit but misses two swapped letters, because addition ignores order. Fletcher’s checksum keeps a running total of running totals, so position matters and the swap is caught.',
- desc:'A sent message and the received copy, each with its character codes and checksum; damaged characters are highlighted and a verdict says whether the checksums disagree.',
- dur:12,hint:'Type a message, choose some damage, and compare the two checksums. Find the damage that the simple sum misses.',
- init:()=>({text:'HELLO',fault:'swap',fn:'sum'}),
- watch(p){const q=Math.min(3,Math.floor(p*4));return {text:'HELLO',fault:['none','bit','swap','swap'][q],fn:q<3?'sum':'fletcher'}},
- ui:[{text:'Message',label:'Message',get:s=>s.text,act:'text',max:8},{choose:[['none','No damage'],['bit','Flip a bit'],['swap','Swap two letters']],label:'Damage',get:s=>s.fault,act:'fault'},{choose:[['sum','Sum of bytes'],['fletcher','Fletcher']],label:'Checksum',get:s=>s.fn,act:'fn'}],
- on:{text(s,v){s.text=String(v).slice(0,8)},fault(s,v){s.fault=v},fn(s,v){s.fn=v}},
+const OR_gcd=(a,b)=>b?OR_gcd(b,a%b):a;
+const OR_isPrime=n=>n>1&&range(n).slice(2).every(d=>n%d);
+const OR_MCOL=[C.blue,C.coral,C.green,C.purple,C.amber,'#4d7f99','#8a6d3b','#b0457a','#3f8f5a','#6a5acd','#c07a2c','#2f6f8f','#9c4f4f','#5b6b73','#7a8f2c','#a05aa0'];
+SCENE({id:'hash-modulo',name:'Choosing the table size',tag:'Why prime sizes help',
+ definition:'Most hash tables finish with “hash mod m” to pick one of m buckets. If keys share a pattern, such as all being multiples of 4, a size m that shares a factor with that pattern wastes buckets. A prime m shares no factor, so patterned keys still spread out.',
+ example:'Keys 0, 4, 8, 12, … mod 8 only ever land in buckets 0 and 4. The same keys mod 7 use all seven buckets.',
+ desc:'Sixteen evenly spaced keys along the top joined by coloured lines to the buckets they land in along the bottom, with each bucket’s count; unused buckets are dashed.',
+ dur:11,hint:'Choose how far apart the keys are, then change the number of buckets. Find sizes that use every bucket.',
+ init:()=>({step:4,m:8}),
+ watch(p){return {step:4,m:p<.5?8:7}},
+ ui:[{choose:[[1,'1, 2, 3…'],[2,'Even'],[4,'× 4'],[6,'× 6'],[10,'× 10']],label:'Key spacing',get:s=>s.step,act:'step'},{range:'m',label:'Buckets',min:2,max:16,get:s=>s.m,act:'m',show:v=>v+(OR_isPrime(v)?' (prime)':'')}],
+ on:{step(s,v){s.step=Number(v)},m(s,v){s.m=v}},
  draw(s){
-  const t=s.text||'?',rx=OR_fault(t,s.fault),a=Array.from(t),b=Array.from(rx),c1=OR_ck(t,s.fn),c2=OR_ck(rx,s.fn),caught=c1!==c2,damaged=t!==rx;
-  let out=heading(s.fn==='sum'?'Add up every byte (mod 256)':'Fletcher: a running total of running totals');
-  const w=Math.min(56,400/a.length),x0=40,row=(y,arr,lab,cmp)=>{let o=TB(x0,y-12,lab,14,C.muted,'start');arr.forEach((ch,i)=>{const bad=cmp&&ch!==a[i];o+=R(x0+i*w+2,y,w-4,40,bad?C.coralp:'#fff',bad?C.coral:C.blue,6)+TM(x0+i*w+w/2,y+26,ch,18,C.ink)+TMF(x0+i*w+w/2,y+58,ch.charCodeAt(0),13,bad?C.coral:C.muted)});return o};
-  out+=row(78,a,'sent',false)+row(198,b,'received',true);
-  const ck=(y,v,col)=>R(470,y,110,40,'#fff',col,8)+TBF(525,y+26,s.fn==='sum'?v:hex(v,4),16,col);
-  out+=TF(525,66,'checksum',13,C.muted)+ck(78,c1,C.blue)+ck(198,c2,caught?C.coral:C.blue);
-  out+=TF(525,140,s.fn==='sum'?'sent with the data':'two running totals',13,C.muted);
-  out+=arrow(525,124,525,192,C.line,2,7);
-  const verdict=!damaged?['No damage: the checksums agree.',C.green,C.greenp]:caught?['Damage detected: the checksums differ ✓',C.green,C.greenp]:['Damage missed: the checksums still agree ✗',C.coral,C.coralp];
-  out+=R(80,300,440,44,verdict[2],verdict[1],10)+TB(300,328,verdict[0],16,verdict[1]);
-  return {svg:out,phase:!damaged?'The received copy matches, so both checksums agree.':caught?`The received checksum is ${s.fn==='sum'?c2:hex(c2,4)}, not ${s.fn==='sum'?c1:hex(c1,4)}, so the receiver asks for the data again.`:'Swapping two letters keeps the same bytes in a different order, and a plain sum cannot see order. Fletcher’s second total weights earlier bytes more heavily, so it would catch this.'};
+  const keys=range(16).map(i=>i*s.step),m=s.m,kw=34,kx=300-16*kw/2,bw=Math.min(60,540/m),bx=300-m*bw/2,cnt=Array(m).fill(0);keys.forEach(k=>cnt[k%m]++);
+  const used=cnt.filter(Boolean).length,g=OR_gcd(s.step,m);let out=heading(`Keys every ${s.step}, taken mod ${m}`);
+  keys.forEach((k,i)=>{const b=k%m;out+=L(kx+i*kw+kw/2,96,bx+b*bw+bw/2,236,OR_MCOL[b%16],1.6,'opacity=".75"')});
+  keys.forEach((k,i)=>{const b=k%m;out+=R(kx+i*kw+2,64,kw-4,30,'#fff',OR_MCOL[b%16],5)+TMF(kx+i*kw+kw/2,84,k,13,C.ink)});
+  out+=TF(kx,56,'keys',13,C.muted,'start')+TF(bx,300,'buckets',13,C.muted,'start');
+  for(let b=0;b<m;b++){const on=cnt[b]>0;out+=R(bx+b*bw+2,238,bw-4,36,on?OR_MCOL[b%16]:'#fff',on?OR_MCOL[b%16]:C.line,5,on?'':'stroke-dasharray="4 3"')+TBF(bx+b*bw+bw/2,261,cnt[b],13,on?'#fff':C.muted)+TMF(bx+b*bw+bw/2,288,b,13,C.muted)}
+  out+=TB(300,330,`${used} of ${m} buckets used${OR_isPrime(m)?' · '+m+' is prime':''}`,16,used===m?C.green:C.coral);
+  out+=TF(300,356,g>1?`${s.step} and ${m} share the factor ${g}, so only every ${g}th bucket can ever be reached.`:`${s.step} and ${m} share no factor, so the keys cycle through every bucket.`,13,C.muted);
+  return {svg:out,phase:`Key k goes to bucket k mod ${m}. Keys spaced ${s.step} apart reach only ${m} ÷ ${g} = ${used} bucket${used===1?'':'s'}. Real keys often hide patterns like this (sizes, addresses, timestamps), which is why many tables use a prime number of buckets or mix the bits first.`};
  }});
 
 /* ---- Hash tables ---- */
@@ -868,7 +867,7 @@ SCENE({id:'graph-connectivity',name:'Connectivity and cycles',tag:'Pieces, loops
 
 THREAD({id:'grids-in-memory',name:'Grids stored in a line',ids:['bitmap','array-2d','array-3d']});
 THREAD({id:'stack-evaluates',name:'Stacks evaluate expressions',ids:['bracket-matching','postfix-evaluation','compiler']});
-THREAD({id:'most-urgent',name:'Serve the most urgent first',ids:['binary-heap','dijkstra','scheduling']});
+THREAD({id:'most-urgent',name:'Serve the most urgent first',ids:['heap-priority-queue','dijkstra','scheduling']});
 THREAD({id:'collisions',name:'Collisions and crowding',ids:['hash-spread','linear-probing','load-factor']});
 THREAD({id:'doubling',name:'Grow by doubling',ids:['dynamic-array','load-factor']});
 THREAD({id:'loops-in-structures',name:'Spotting loops',ids:['cycle-detection','graph-connectivity']});

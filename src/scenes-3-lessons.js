@@ -10,10 +10,10 @@ LESSON({id:'stack',name:'Stacks',short:'Stacks',stage:'organise',level:'Core',
  prior:['array','call-stack'],references:['clrs','sicp'],ids:['stack','bracket-matching','postfix-evaluation','undo-redo']});
 LESSON({id:'queue',name:'Queues',short:'Queues',stage:'organise',level:'Core',
  why:'First in, first out is fair; opening both ends, or serving by priority instead, gives two more essential structures.',
- prior:['stack'],references:['clrs','knuth'],ids:['queue','deque','binary-heap']});
+ prior:['stack'],references:['clrs','knuth'],ids:['queue','deque','heap-priority-queue']});
 LESSON({id:'hash-function',name:'Hash functions',short:'Hashing',stage:'organise',level:'Core',
- why:'A good hash turns any key into a well-spread number; the same idea detects damaged data.',
- prior:['ascii','array'],references:['clrs','knuth'],ids:['hash-function','hash-spread','checksum']});
+ why:'A good hash turns any key into a well-spread number, and the table size matters as much as the function.',
+ prior:['ascii','array'],references:['clrs','knuth'],ids:['hash-function','hash-spread','hash-modulo']});
 LESSON({id:'hash-table',name:'Hash tables',short:'Hash tables',stage:'organise',level:'Core',
  why:'A hash table finds a key in about one step, provided collisions are handled and the table grows before it gets crowded.',
  prior:['hash-function','linked-list'],references:['clrs','knuth'],ids:['hash-table','linear-probing','load-factor']});
