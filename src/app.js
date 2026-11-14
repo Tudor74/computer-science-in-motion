@@ -120,7 +120,7 @@ function installThree(){
   if(e.key==='Home')camera={yaw:.62,pitch:.55};if(e.key==='ArrowLeft')camera.yaw-=.12;if(e.key==='ArrowRight')camera.yaw+=.12;if(e.key==='ArrowUp')camera.pitch=clamp(camera.pitch+.08,.15,1.15);if(e.key==='ArrowDown')camera.pitch=clamp(camera.pitch-.08,.15,1.15);redraw3D()}});
 }
 function showScene(){
- const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;
+ const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;clearSceneTimers();
  const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
  $('view-controls').hidden=!sc.three;viewMode='auto';camera={yaw:.62,pitch:.55};
  $('term').textContent=sc.name;setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
@@ -264,14 +264,24 @@ function stepBy(d){if(!tryFrames)return;const k=clamp(tryK+d,0,tryFrames.length-
 function recompute(sc){tryFrames=sc.trace?sc.trace(tryState(sc)):null}
 function updateStepStatus(){const el=$('try-step');if(!el)return;const n=tryFrames?tryFrames.length:0;el.textContent=n?`Step ${tryK+1} of ${n}`:'';
  for(const [id,dis] of [['try-back',tryK<=0],['try-first',tryK<=0],['try-step-btn',tryK>=n-1]]){const b=$(id);if(b)b.disabled=dis}}
+/* Timed updates for experiments (e.g. a reply that arrives after a set delay). They run only while the same
+   scene stays open in Try it, and are cancelled on any scene or mode change. An every() timer stops when its
+   handler returns 'stop'. */
+const sceneTimers=new Set();
+function clearSceneTimers(){for(const t of sceneTimers){clearTimeout(t);clearInterval(t)}sceneTimers.clear()}
+function timerCtx(){const id=cur();const alive=()=>mode==='try'&&cur()===id;return {
+ later(ms,act,arg){const t=setTimeout(()=>{sceneTimers.delete(t);if(alive())doAct(act,arg)},ms);sceneTimers.add(t);return t},
+ every(ms,act,arg){const t=setInterval(()=>{if(!alive()||doAct(act,arg)==='stop'){clearInterval(t);sceneTimers.delete(t)}},ms);sceneTimers.add(t);return t},
+ cancel(t){clearTimeout(t);clearInterval(t);sceneTimers.delete(t)}}}
 function doAct(name,arg,value){
  const sc=SCENES[cur()],s=tryState(sc);const h=sc.on&&sc.on[name];
  if(!h){console.warn('No handler',name,'in',sc.id);return}
- let r;try{r=h(s,value!==undefined?value:arg,{k:tryK,frames:tryFrames})}catch(err){console.error(err);return}
+ let r;try{r=h(s,value!==undefined?value:arg,{k:tryK,frames:tryFrames,...timerCtx()})}catch(err){console.error(err);return}
  if(sc.trace){const old=tryK;recompute(sc);tryK=r==='keep'?clamp(old,0,tryFrames.length-1):r==='end'?tryFrames.length-1:0}
  if(r!=='keep')stopRun();
  tryU=1;syncControls();paint();
  if(r==='run')startRun();
+ return r;
 }
 function buildControls(sc){
  const box=$('try-controls');box.innerHTML='';
@@ -316,7 +326,7 @@ function enterTry(sceneChanged){
  if(trySceneId!==sc.id||!sceneChanged){trySceneId=sc.id;recompute(sc);tryK=0;tryU=1;stopRun();buildControls(sc)}
 }
 function setMode(m){
- if(m===mode)return;mode=m;
+ if(m===mode)return;mode=m;clearSceneTimers();
  $('mode-watch').setAttribute('aria-pressed',String(m==='watch'));$('mode-try').setAttribute('aria-pressed',String(m==='try'));
  $('try-panel').hidden=m!=='try';$('deck-note').textContent=m==='try'?'Your input · step by step':'Animated · deterministic';
  $('phase').setAttribute('aria-live',m==='try'?'polite':'off');

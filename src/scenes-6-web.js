@@ -543,7 +543,7 @@ SCENE({id:'response-time',name:'Response time',tag:'How long can people wait?',
  init:()=>({delay:1000,phase:'idle',token:0,log:[]}),
  watch(p){return {delay:Math.round(50*Math.pow(600,p)),phase:'watch',log:[]}},
  ui:[{range:'delay',label:'Delay',min:50,max:5000,step:50,get:s=>s.delay,act:'delay',show:v=>v+' ms'}],
- on:{delay(s,v){s.delay=v},press(s){if(s.phase==='wait')return;s.token++;s.phase='wait';s.t0=performance.now();const tok=s.token;setTimeout(()=>{if(H6_live('response-time'))window.csApp.act('arrive',tok)},s.delay)},
+ on:{delay(s,v){s.delay=v},press(s,a,ctx){if(s.phase==='wait')return;s.token++;s.phase='wait';s.t0=performance.now();ctx.later(s.delay,'arrive',s.token)},
   arrive(s,tok){if(Number(tok)!==s.token||s.phase!=='wait')return;s.phase='done';s.got=Math.round(performance.now()-s.t0);s.log=s.log.concat(s.got).slice(-8)}},
  draw(s,f,X){
   let out=heading('Three limits of waiting');
@@ -572,10 +572,9 @@ SCENE({id:'response-time-progress',name:'Progress indicators',tag:'Making waits 
  init:()=>({phase:'idle',u:0,trials:0,votes:{accel:0,linear:0,same:0},token:0}),
  watch(p){return {phase:'watch',u:clamp(p*1.1,0,1),trials:0,votes:{accel:0,linear:0,same:0}}},
  ui:[{b:'Play A then B',act:'play'}],
- on:{play(s){if(s.phase==='A'||s.phase==='B')return;s.first=s.trials%2?'linear':'accel';s.phase='A';s.u=0;s.t0=performance.now();s.token++;const tok=s.token;clearInterval(H6_timer);
-   H6_timer=setInterval(()=>{if(!H6_live('response-time-progress')){clearInterval(H6_timer);return}window.csApp.act('tick',tok)},80)},
-  tick(s,tok){if(Number(tok)!==s.token)return;const u=(performance.now()-s.t0)/H6_BAR_MS;if(u<1){s.u=u;return}
-   if(s.phase==='A'){s.phase='B';s.u=0;s.t0=performance.now()}else if(s.phase==='B'){s.phase='judge';s.u=1;clearInterval(H6_timer)}},
+ on:{play(s,a,ctx){if(s.phase==='A'||s.phase==='B')return;s.first=s.trials%2?'linear':'accel';s.phase='A';s.u=0;s.t0=performance.now();s.token++;clearInterval(H6_timer);H6_timer=ctx.every(80,'tick',s.token)},
+  tick(s,tok){if(Number(tok)!==s.token)return 'stop';const u=(performance.now()-s.t0)/H6_BAR_MS;if(u<1){s.u=u;return}
+   if(s.phase==='A'){s.phase='B';s.u=0;s.t0=performance.now()}else if(s.phase==='B'){s.phase='judge';s.u=1;return 'stop'}},
   judge(s,w){if(s.phase!=='judge')return;const kind=w==='same'?'same':(w==='A')===(s.first==='accel')?'accel':'linear';s.votes[kind]++;s.trials++;s.phase='reveal'}},
  draw(s,f,X){
   const fn=(kind,u)=>kind==='accel'?u*u:u;let out=heading('Same duration, different feel');

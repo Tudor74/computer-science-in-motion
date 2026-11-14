@@ -28,6 +28,8 @@
    year       on a LESSON: the date or decade shown in the eyebrow (e.g. '1954').
    Experiments: in Try it the learner can be the participant. on() handlers may read
    performance.now() to time responses and store results in the state; draw() stays pure.
+   For delays use the handler's ctx: ctx.later(ms,act,arg) and ctx.every(ms,act,arg) (stops when the
+   handler returns 'stop'); both are cancelled when the scene or mode changes.
    Use rng()/shuffled()/nextSeed() for trial order, never Math.random.
 
  INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)

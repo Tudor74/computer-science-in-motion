@@ -295,8 +295,8 @@ SCENE({id:'time-sharing-response',name:'Response time limits',tag:'0.1 s, 1 s, 1
  watch(p){const ds=[80,800,8000],k=Math.min(2,Math.floor(p*3)),u=clamp((p*3-k)*1.3,0,1);return {delay:ds[k],pending:u<1,demoT:ds[k]/1000*u,history:ds.slice(0,k).map(d=>({delay:d,ms:d}))}},
  ui:[{range:'delay',label:'Delay (ms)',min:0,max:12000,step:50,get:s=>s.delay,act:'delay'},{b:'Press',act:'press'}],
  on:{delay(s,v){s.delay=v},
-  press(s){if(s.pending&&performance.now()-s.pressedAt<s.delay+800)return 'keep';s.pending=true;s.pressedAt=performance.now();
-   setTimeout(()=>{try{const st=window.csApp&&window.csApp.state();if(st&&st.id==='time-sharing-response'&&st.mode==='try')window.csApp.act('arrive')}catch(_){}},s.delay);return 'keep'},
+  press(s,a,ctx){if(s.pending&&performance.now()-s.pressedAt<s.delay+800)return 'keep';s.pending=true;s.pressedAt=performance.now();
+   ctx.later(s.delay,'arrive');return 'keep'},
   arrive(s){if(!s.pending)return 'keep';s.pending=false;s.history.push({delay:s.delay,ms:Math.round(performance.now()-s.pressedAt)});s.history=s.history.slice(-8);return 'keep'}},
  draw(s,f,X){
   let out=heading('How long can an answer take?');
