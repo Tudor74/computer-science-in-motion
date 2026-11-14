@@ -3,7 +3,10 @@
 import os, re, glob
 root=os.path.dirname(os.path.abspath(__file__))
 src=lambda p: open(os.path.join(root,'src',p),encoding='utf-8').read()
-parts=[src('core.js')]+[open(p,encoding='utf-8').read() for p in sorted(glob.glob(os.path.join(root,'src','scenes-*.js')))]
+stages=os.environ.get('STAGES')  # e.g. STAGES=1,7 builds only those stage files (development only)
+files=sorted(glob.glob(os.path.join(root,'src','scenes-*.js')))
+if stages: files=[f for f in files if os.path.basename(f).split('-')[1] in stages.split(',')]
+parts=[src('core.js')]+[open(p,encoding='utf-8').read() for p in files]
 parts.append(src('curriculum.js'))
 if os.environ.get('STUB'):
     parts.append("for(const l of CURRICULUM.lessons)for(const id of l.ids)if(!SCENES[id])SCENE({id,name:id+' (stub)',definition:'Stub.',example:'',init:()=>({}),draw:()=>({svg:T(300,190,'stub '+id,20),phase:'stub'})});")

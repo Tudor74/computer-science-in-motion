@@ -23,7 +23,7 @@ function markedHTML(input,exclude=null){
  while((m=wordPattern.exec(src))!==null){
   const start=m.index+m[1].length,tok=m[2],al=aliasKey.get(tok.toLowerCase()),key=al&&al.key;
   // Upper-case operator names (AND, OR, NOT) must not capture ordinary words.
-  if(!key||seen.has(key)||(/^[A-Z]{2,}$/.test(al.alias)&&tok!==al.alias))continue;seen.add(key);
+  if(!key||seen.has(key)||(/^[A-Z]+$/.test(al.alias)&&tok!==al.alias))continue;seen.add(key);
   html+=esc(src.slice(cur,start));
   let b=`<button type="button" class="word" data-word="${esc(key)}" aria-label="${esc(tok)}: show meaning">${esc(tok)}</button>`;
   const after=src.slice(start+tok.length),punct=after.match(/^[.,;:!?)]/);
@@ -133,6 +133,7 @@ function loop(now){
  if(mode==='try'&&tryU<1){tryU=reduced?1:clamp((now-tweenStart)/320,0,1);paint()}
  else if(mode==='watch'&&t!==lastPainted){lastPainted=t;showScene();paint()}
  requestAnimationFrame(loop);
+ window.addEventListener('hashchange',()=>{const i=route.indexOf(decodeURIComponent(location.hash.slice(1)));if(i>=0&&i!==indexAt(t))goTo(i)});
 }
 function goTo(i,keepMode=true){
  i=clamp(i,0,route.length-1);t=offsets[i];lastPainted=-1;shown=-1;
