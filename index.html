@@ -419,7 +419,34 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   turing-machine . choose a machine, type the tape, step: read, write, move, change state.
   halting-problem  press cells to change the table: D still disagrees with every row's diagonal.
   p-vs-np ........ pick numbers to check instantly, then run brute force through all 2ⁿ subsets.
- The 2D/3D toggle from Mathematics In Motion is left out: none of these ideas needs depth.
+ Each term above is now the first scene of its own lesson; the lesson's further scenes (listed in the
+ src/scenes-N-lessons.js files) each change one thing the learner can try:
+  Represent: halving yes/no questions, noise vs threshold, column addition, repeated halving, KB vs KiB,
+   two's complement circle, float bits and 0.1 + 0.2, nibble tiles, hex dump, line endings, sort order,
+   Unicode blocks, mojibake, colour depth, run-length encoding, De Morgan, the 16 functions, NAND-only
+   gates, multiplexer, SR latch, full adder, ripple carry.
+  Instruct: literal robot, pseudocode ↔ flowchart, counterexample, types, swap, scope, else-if order,
+   nesting vs AND, boundaries, while halving, nested loops, off-by-one, arguments, return vs print,
+   composition, frame locals, stack overflow, recursion tree, towers of Hanoi.
+  Organise data: 2D and 3D arrays, dynamic array, list reversal, cycle detection, brackets, postfix,
+   undo/redo, deque, heap, hash spread and modulo, linear probing, load factor, traversals, trie,
+   BST deletion and balance, adjacency matrix, connectivity.
+  Search and sort: early exit, average case, sentinel, unsorted binary search, guessing, insertion point,
+   BFS maze, flood fill, rings, DFS maze, cycles, topological sort, heap queue, negative edges, A*,
+   best case, stability, disorder, shifting, merge step, merge tree, partition schemes, pivots,
+   counting operations, cases, space, recursion trees, fast powers, Karatsuba, coins, edit distance, knapsack.
+  Machines: ALU flags, jump loop, pipeline, addressing, assembler, locality, virtual memory, register count,
+   cache mapping, write policy, lexer, syntax errors, optimiser, bytecode VM, JIT, threads, race, mutex,
+   priority and ageing, deadlock.
+  Networks: encapsulation, checksum, bandwidth vs latency, subnet mask, NAT, TTL, handshake, sliding window,
+   congestion, DNS records, DNS TTL, URL parts, cookies, TLS, one-time pad, frequency analysis, block modes,
+   Diffie–Hellman, factoring, hash avalanche, certificate chain, man in the middle.
+  Theory: design an automaton, NFA sets, traffic light, regex → automaton, regex limits, capture groups,
+   build a Turing machine, Church–Turing, universal machine, Collatz, reductions, Rice, growth race,
+   3-colouring, greedy vs best tour.
+ 3D (as in Mathematics In Motion, only where depth helps): bit patterns as cube corners, the RGB colour cube,
+ a truth-table cube, a recursion skyline, a 3D array, an edit-distance landscape, the memory pyramid,
+ nested packet envelopes, and NFA state sets as cube corners.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

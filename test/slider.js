@@ -33,5 +33,5 @@ const file='file://'+path.resolve(process.env.FILE||path.resolve(__dirname,'../i
  // Rewind crosses back into the previous scene.
  const before=(await st()).index;await p.evaluate(()=>csApp.seek(csApp.offsets[csApp.route.indexOf('loop')]+0.2));
  await p.mouse.move(zeroX,y);await p.mouse.down();await p.mouse.move(box.x+30,y,{steps:3});await p.waitForTimeout(500);const back=(await st()).id;await p.mouse.up();
- ok(back==='conditional','rewind crosses into the previous topic, at '+back);
+ const prevId=await p.evaluate(()=>csApp.route[csApp.route.indexOf('loop')-1]);ok(back===prevId,'rewind crosses into the previous topic '+prevId+', at '+back);
  console.log(fails.length||errs.length?'FAIL:\n'+fails.concat(errs).join('\n'):'Slider: all behaviour checks pass.');await b.close();process.exit(fails.length+errs.length?1:0)})();
