@@ -288,6 +288,7 @@ SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line
   const {rows,cols,order}=s,n=rows*cols,cw=54,ch=40,gx=56,gy=72,row=order==='row';
   const flat=(r,c)=>row?r*cols+c:c*rows+r,at=k=>row?[Math.floor(k/cols),k%cols]:[k%rows,Math.floor(k/rows)];
   const sel=flat(s.r,s.c),walk=s.walk===undefined?-1:s.walk;let out=heading(row?'Row-major: whole rows sit side by side':'Column-major: whole columns sit side by side');
+  out+=arrow(gx+s.c*cw+cw/2,gy+s.r*ch+ch/2,300-n*Math.min(40,540/n)/2+sel*Math.min(40,540/n)+Math.min(40,540/n)/2,259,C.coral,2,8);
   for(let c=0;c<cols;c++)out+=TMF(gx+c*cw+cw/2,gy-8,c,13,C.muted);
   for(let r=0;r<rows;r++){out+=TMF(gx-16,gy+r*ch+ch/2+5,r,13,C.muted);
    for(let c=0;c<cols;c++){const on=r===s.r&&c===s.c,done=walk>=0&&flat(r,c)<walk;
@@ -296,7 +297,6 @@ SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line
   out+=TB(fx,96,`a[${s.r}][${s.c}]`,20,C.coral)+TF(fx,124,row?'row × columns + column':'column × rows + row',13,C.muted)+TB(fx,154,row?`${s.r} × ${cols} + ${s.c} = ${sel}`:`${s.c} × ${rows} + ${s.r} = ${sel}`,17,C.ink);
   const sy=262,w=Math.min(40,540/n),sx=300-n*w/2;out+=TF(sx,sy-10,'memory: one long line',13,C.muted,'start');
   for(let k=0;k<n;k++){const [r,c]=at(k),on=k===sel;out+=R(sx+k*w+1,sy,w-2,34,on?C.coral:OR_BANDS[r],on?C.coral:k<walk?C.blue:'none',4)+TMF(sx+k*w+w/2,sy+22,OR_LET[r*cols+c],13,on?'#fff':C.ink)+TMF(sx+k*w+w/2,sy+50,k,13,on?C.coral:C.muted)}
-  out+=arrow(gx+s.c*cw+cw/2,gy+s.r*ch+ch-2,sx+sel*w+w/2,sy-3,C.coral,2,8);
   out+=T(300,350,row?'Each row is one solid block of colour in memory.':'Rows are interleaved: neighbours in a row are now '+rows+' places apart.',14,C.muted);
   return {svg:out,phase:`a[${s.r}][${s.c}] is item ${sel} of ${n} in memory. In ${row?'row':'column'}-major order, stepping along a row moves ${row?'1 place':rows+' places'} in memory${row?', so reading a row is fast':''}. Most languages, including C and Python’s NumPy by default, use row-major order.`};
  }});
@@ -323,11 +323,13 @@ SCENE({id:'array-3d',name:'Three-dimensional array',tag:'Layers of grids',
   return {svg:out,phase:`Cell a[${s.l}][${s.r}][${s.c}] is memory index ${k}. Each layer is a solid block of 9; inside it, each row is a block of 3. Moving one layer jumps 9 places, one row 3 places, one column 1 place.`};
  }});
 SCENES['array-3d'].three=(s,f,X,project)=>{
- const P=project([-0.3,3.3,-0.3,3.3,-0.3,3.6]),k=s.l*9+s.r*3+s.c;let faces=[];
- for(let l=0;l<3;l++)for(let r=0;r<3;r++)for(let c=0;c<3;c++){const i=l*9+r*3+c,on=i===k,same=l===s.l;faces.push(...prism(c+.12,r+.12,l*1.15+.1,.76,.76,.76,on?C.coral:same?'#9cc3de':'#d7e3ea'))}
- let out=paintFaces(faces,P)+axes3(P,['column','row','layer'],[3.4,3.4,3.7]);
- const q=P([s.c+.5,s.r+.5,s.l*1.15+1.05]);out+=R(q[0]-17,q[1]-34,34,22,'#fff',C.coral,6)+TBF(q[0],q[1]-18,k,13,C.coral);
- return {svg:out,title:'The layers stacked into a cube',caption:`Layer ${s.l} (shaded) is one block of 9 cells in memory. The orange cube is a[${s.l}][${s.r}][${s.c}], memory index ${k}.`};
+ const P=project([-0.3,3.3,-0.3,3.3,-0.3,3.6]),k=s.l*9+s.r*3+s.c;let faces=[],mine=[];
+ for(let l=0;l<3;l++)for(let r=0;r<3;r++)for(let c=0;c<3;c++){const i=l*9+r*3+c,on=i===k,same=l===s.l;(on?mine:faces).push(...prism(c+.12,r+.12,l*1.15+.1,.76,.76,.76,on?C.coral:same?'#9cc3de':'#d7e3ea',on?'':same?'fill-opacity=".45"':'fill-opacity=".28" stroke-opacity=".45"'))}
+ // The chosen cell is drawn last, like an x-ray highlight, so it is never hidden.
+ const o=[-.25,-.25,0],lab=(v,t,dx,dy)=>{const q=P(v);return label3(q[0]+dx,q[1]+dy,t,15,C.muted)};
+ let out=arrow3(o,[3.8,-.25,0],P,C.muted,1.7)+arrow3(o,[-.25,3.8,0],P,C.muted,1.7)+arrow3([-.25,3.8,0],[-.25,3.8,4],P,C.muted,1.7)+lab([3.8,-.25,0],'column',15,20)+lab([-.25,3.8,0],'row',-22,18)+lab([-.25,3.8,4],'layer',0,-10)+paintFaces(faces,P)+paintFaces(mine.map(f=>({...f,stroke:'#8a2f1c'})),P);
+ const q=P([s.c+.88,s.r+.5,s.l*1.15+.5]),tx=Math.max(q[0]+30,430);out+=L(q[0],q[1],tx-20,q[1],C.coral,1.5)+R(tx-20,q[1]-12,74,24,'#fff',C.coral,6)+TBF(tx+17,q[1]+5,'index '+k,13,C.coral);
+ return {svg:out,title:'The layers stacked into a cube',caption:`Layer ${s.l} (blue; the other layers are faded) is one block of 9 cells in memory. The orange cube is a[${s.l}][${s.r}][${s.c}], memory index ${k}.`};
 };
 
 function OR_dyn(n){let cap=1,copies=0;const per=[];for(let k=1;k<=n;k++){let c=1;if(k>cap){copies+=cap;c+=cap;cap*=2}per.push(c)}return {cap,copies,per,grew:n>1&&((n-1)&(n-2))===0}}
@@ -635,7 +637,7 @@ SCENE({id:'hash-modulo',name:'Choosing the table size',tag:'Why prime sizes help
   for(let b=0;b<m;b++){const on=cnt[b]>0;out+=R(bx+b*bw+2,238,bw-4,36,on?OR_MCOL[b%16]:'#fff',on?OR_MCOL[b%16]:C.line,5,on?'':'stroke-dasharray="4 3"')+TBF(bx+b*bw+bw/2,261,cnt[b],13,on?'#fff':C.muted)+TMF(bx+b*bw+bw/2,288,b,13,C.muted)}
   out+=TB(300,330,`${used} of ${m} buckets used${OR_isPrime(m)?' · '+m+' is prime':''}`,16,used===m?C.green:C.coral);
   out+=TF(300,356,g>1?`${s.step} and ${m} share the factor ${g}, so only every ${g}th bucket can ever be reached.`:`${s.step} and ${m} share no factor, so the keys cycle through every bucket.`,13,C.muted);
-  return {svg:out,phase:`Key k goes to bucket k mod ${m}. Keys spaced ${s.step} apart reach only ${m} ÷ ${g} = ${used} bucket${used===1?'':'s'}. Real keys often hide patterns like this (sizes, addresses, timestamps), which is why many tables use a prime number of buckets or mix the bits first.`};
+  return {svg:out,phase:`Key k goes to bucket k mod ${m}. Keys spaced ${s.step} apart reach ${g>1?'only ':'all '}${m} ÷ ${g} = ${used} bucket${used===1?'':'s'}. Real keys often hide patterns like this (sizes, addresses, timestamps), which is why many tables use a prime number of buckets or mix the bits first.`};
  }});
 
 /* ---- Hash tables ---- */
@@ -693,7 +695,7 @@ SCENE({id:'linear-probing',name:'Open addressing (linear probing)',tag:'Collisio
    out+=TMF(x0+j*w+w/2,y-10,j,13,j===f.h?C.coral:C.muted)+R(x0+j*w+2,y,w-4,44,cur?(f.done?(f.miss?C.amberp:C.greenp):C.amberp):pr?'#fff4ee':v!==null?C.pale:'#fff',cur?(f.done&&!f.miss?C.green:C.amber):v!==null?C.blue:C.grid,6,v===null?'stroke-dasharray="4 3"':'')+(v!==null?TMF(x0+j*w+w/2,y+27,v,13,C.ink):'')}
   // clusters: runs of filled slots
   let j=0;while(j<OR_PM){if(filled[j]){let e=j;while(e+1<OR_PM&&filled[e+1])e++;if(e>j)out+=P(`M${x0+j*w+4} ${y+52}v6H${x0+(e+1)*w-4}v-6`,C.purple,1.6)+TF(x0+(j+e+1)*w/2,y+74,'cluster',13,C.purple);j=e+1}else j++}
-  if(f.h!==undefined){const hx=x0+f.h*w+w/2;out+=R(hx-46,72,92,24,C.coral,'none',6)+TF(hx,89,'h(k) = '+f.h,13,'#fff')+arrow(hx,96,hx,y-18,C.coral,2,7);
+  if(f.h!==undefined){const hx=x0+f.h*w+w/2;out+=R(hx-46,72,92,24,C.coral,'none',6)+TF(hx,89,'h(k) = '+f.h,13,'#fff')+arrow(hx,96,hx,y-25,C.coral,2,7);
    for(let i=1;i<(f.probe||[]).length;i++){const a=f.probe[i-1],b=f.probe[i];if(b>a)out+=curveArrow(x0+a*w+w/2+6,y+46,x0+b*w+w/2-6,y+46,-16,C.amber,2);else out+=TF(x0+b*w+w/2,y+100,'wrapped to 0',13,C.amber)}}
   const op=s.op;out+=TB(300,282,op?`${op.t==='ins'?'Insert':'Look up'} “${op.k}”`:'Type a key, then Insert or Look up',16,C.ink);
   out+=counter(240,300,'probes',(f.probe||[]).length,C.amber,120);
