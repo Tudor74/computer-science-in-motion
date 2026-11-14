@@ -484,7 +484,7 @@ SCENE({id:'postfix-evaluation',name:'Postfix evaluation',tag:'Arithmetic with a 
   const bx=230,bh=30,base=336,show=f.st.slice(-6);
   out+=P(`M${bx} ${base-196}V${base}H${bx+140}V${base-196}`,C.ink,2.2);
   show.forEach((v,k)=>{const y=base-(k+1)*(bh+3),top=k===show.length-1;out+=R(bx+8,y,124,bh,top?C.blue:C.pale,'none',6)+TB(bx+70,y+21,fmt(v),17,top?'#fff':C.ink)});
-  out+=TF(bx+70,base+20,'stack',13,C.muted);
+  out+=TF(bx-10,base-8,'stack',13,C.muted,'end');
   if(f.calc)out+=R(400,150,180,48,C.amberp,C.amber,10)+TB(490,180,f.calc,17,C.ink);
   if(f.done)out+=R(400,220,180,48,f.ok?C.greenp:C.coralp,f.ok?C.green:C.coral,10)+TB(490,250,f.ok?'= '+fmt(f.st[0]):'Not valid',17,f.ok?C.green:C.coral);
   if(f.done&&f.ok)out+=T(300,366,'Same as: '+f.infix,15,C.ink);
@@ -631,7 +631,7 @@ SCENE({id:'hash-modulo',name:'Choosing the table size',tag:'Why prime sizes help
   const used=cnt.filter(Boolean).length,g=OR_gcd(s.step,m);let out=heading(`Keys every ${s.step}, taken mod ${m}`);
   keys.forEach((k,i)=>{const b=k%m;out+=L(kx+i*kw+kw/2,96,bx+b*bw+bw/2,236,OR_MCOL[b%16],1.6,'opacity=".75"')});
   keys.forEach((k,i)=>{const b=k%m;out+=R(kx+i*kw+2,64,kw-4,30,'#fff',OR_MCOL[b%16],5)+TMF(kx+i*kw+kw/2,84,k,13,C.ink)});
-  out+=TF(kx,56,'keys',13,C.muted,'start')+TF(bx,300,'buckets',13,C.muted,'start');
+  out+=TF(kx,56,'keys',13,C.muted,'start')+TF(bx,306,'buckets',13,C.muted,'start');
   for(let b=0;b<m;b++){const on=cnt[b]>0;out+=R(bx+b*bw+2,238,bw-4,36,on?OR_MCOL[b%16]:'#fff',on?OR_MCOL[b%16]:C.line,5,on?'':'stroke-dasharray="4 3"')+TBF(bx+b*bw+bw/2,261,cnt[b],13,on?'#fff':C.muted)+TMF(bx+b*bw+bw/2,288,b,13,C.muted)}
   out+=TB(300,330,`${used} of ${m} buckets used${OR_isPrime(m)?' · '+m+' is prime':''}`,16,used===m?C.green:C.coral);
   out+=TF(300,356,g>1?`${s.step} and ${m} share the factor ${g}, so only every ${g}th bucket can ever be reached.`:`${s.step} and ${m} share no factor, so the keys cycle through every bucket.`,13,C.muted);
@@ -651,9 +651,9 @@ SCENE({id:'load-factor',name:'Load factor and resizing',tag:'Grow before it gets
  on:{ins(s){if(s.n<24)s.n++},n(s,v){s.n=v},grow(s,v){s.grow=v}},
  draw(s){
   const g=s.grow==='grow',r=OR_lf(s.n,g),m=r.m,a=s.n/m,cw=Math.min(56,520/m),x0=300-m*cw/2,base=292;let out=heading(r.resized?`Resized: ${r.from} → ${m} buckets, every key rehashed`:'Insert, and watch the load factor');
-  const gx=60,gw=480,ga=Math.min(2,a);out+=R(gx,50,gw,16,'#eef2f4','none',8)+R(gx,50,gw*ga/2,16,a>.75?C.amber:C.green,'none',8);
-  if(g)out+=L(gx+gw*.375,44,gx+gw*.375,72,C.coral,2)+TF(gx+gw*.375,88,'0.75',13,C.coral);
-  out+=TF(gx,88,'0',13,C.muted,'start')+TF(gx+gw,88,'2',13,C.muted,'end')+TBF(gx+gw*ga/2,44,'α = '+fmt(a),13,C.ink);
+  const gx=60,gw=480,ga=Math.min(2,a);out+=R(gx,70,gw,16,'#eef2f4','none',8)+R(gx,70,gw*ga/2,16,a>.75?C.amber:C.green,'none',8);
+  if(g)out+=L(gx+gw*.375,64,gx+gw*.375,92,C.coral,2)+TF(gx+gw*.375,108,'0.75',13,C.coral);
+  out+=TF(gx,108,'0',13,C.muted,'start')+TF(gx+gw,108,'2',13,C.muted,'end')+TBF(clamp(gx+gw*ga/2,gx+30,gx+gw-30),62,'α = '+fmt(a),13,C.ink);
   const cols=range(m).map(()=>[]);r.keys.forEach((k,i)=>cols[OR_hpoly(k,m)].push(i));
   const moved=new Set(r.resized?r.keys.map((k,i)=>OR_hpoly(k,r.from)!==OR_hpoly(k,m)?i:-1).filter(i=>i>=0):[]);
   cols.forEach((c,b)=>{c.forEach((i,j)=>{const nw=i===s.n-1;out+=R(x0+b*cw+cw/2-8,base-(j+1)*18,16,16,nw?C.coral:moved.has(i)?C.green:C.blue,'none',3)});
@@ -861,7 +861,7 @@ SCENE({id:'graph-connectivity',name:'Connectivity and cycles',tag:'Pieces, loops
   const verdict=tree?'A tree ✓':cycles&&c===1?'Connected, with cycles':cycles?'Pieces, with cycles':c>1?'A forest of '+c+' trees':'';
   out+=R(455,226,140,40,tree?C.greenp:'#fff',tree?C.green:C.grid,8)+TF(525,251,verdict,13,tree?C.green:C.ink);
   out+=TF(525,296,'tree: 1 piece and',13,C.muted)+TF(525,314,'n − 1 = 7 edges',13,C.muted);
-  out+=TF(240,362,'Dashed orange edges join vertices that were already connected: each makes a cycle.',13,C.muted);
+  out+=TF(300,362,'Dashed orange: an edge between already-connected vertices makes a cycle.',13,C.muted);
   return {svg:out,phase:`${e} edges, ${c} component${c===1?'':'s'}, ${cycles} independent cycle${cycles===1?'':'s'}. Each edge either joins two pieces (pieces − 1) or closes a cycle; that is why edges − (8 − pieces) counts the cycles.${tree?' One piece and no cycles: a tree.':''}`};
  }});
 

@@ -409,13 +409,13 @@ SCENE({id:'linear-sentinel',name:'Sentinel search',tag:'One test per card instea
   return fr},
  draw(s,f,X){
   const n=s.cards.length,w=46,step=52,x0=36;let out=heading(`Search for ${s.target}`);
-  const row=(y,withSent,count,label,code)=>{let o=TB(x0,y-12,label,14,C.muted,'start')+TMF(x0+(n+1)*step-6,y-12,code,13,C.muted,'end');
+  const row=(y,withSent,count,label,code)=>{let o=TBF(x0,y-12,label,14,C.muted,'start')+TMF(x0+122,y-12,code,13,C.muted,'start')+TBF(x0+(n+1)*step-6,y-12,`tests: ${count}`,15,withSent?C.purple:C.blue,'end');
    s.cards.concat(withSent?[s.target]:[]).forEach((v,i)=>{const sent=i===n,looked=i<Math.min(f.k,withSent?n+1:n),cur=i===Math.min(f.k,withSent?n+1:n)-1&&f.k>0,found=cur&&v===s.target;
     o+=R(x0+i*step,y,w,56,sent?C.purplep:found?C.greenp:cur?C.amberp:looked?'#eef2f4':'#fff',sent?C.purple:found?C.green:cur?C.amber:C.line,8,sent?'stroke-dasharray="5 3"':'')+TB(x0+i*step+w/2,y+36,v,20,sent?C.purple:C.ink)});
-   return o+counter(470,y+64,'tests',count,withSent?C.purple:C.blue,110)};
-  out+=row(72,false,f.plain,'Plain loop','while i < n and a[i] ≠ t');
-  out+=row(200,true,f.sent,'With sentinel','while a[i] ≠ t');
-  out+=TF(x0+n*step+w/2,192,'sentinel',13,C.purple);
+   return o};
+  out+=row(84,false,f.plain,'Plain loop','while i < n and a[i] ≠ t');
+  out+=row(214,true,f.sent,'With sentinel','while a[i] ≠ t');
+  out+=TF(x0+n*step+w/2,292,'sentinel',13,C.purple);
   out+=TF(300,352,'Same O(n) growth, but half the tests in the inner loop.',14,C.muted);
   return {svg:out,phase:f.say};
  }});
@@ -668,7 +668,7 @@ SCENE({id:'dfs-topological-sort',name:'Topological sort',tag:'Order tasks that d
   let out=heading('Every arrow means “do this first”');
   s.edges.forEach(([a,b,on],i)=>{const A=SS_TP[a],B=SS_TP[b],isBad=f.bad&&f.bad[0]===a&&f.bad[1]===b,col=isBad?C.coral:on?C.blue:C.line;
    if(on)out+=arrowR(A,B,26,30,col,isBad?3.5:2.2);else out+=L(A[0],A[1],B[0],B[1],C.line,1.5,'stroke-dasharray="4 5"');
-   const mx=(A[0]+B[0])/2+(a==='Shoes'?14:0),my=(A[1]+B[1])/2;out+=hit(X,'tog',i,`Rule ${a} before ${b}: ${on?'on':'off'}. Press to switch.`,Ci(mx,my,8,on?'#fff':'#eef2f4',col))});
+   const mx=(A[0]+B[0])/2+(a==='Shoes'?16:0),my=(A[1]+B[1])/2+(a==='Shoes'?-16:0);out+=hit(X,'tog',i,`Rule ${a} before ${b}: ${on?'on':'off'}. Press to switch.`,Ci(mx,my,8,on?'#fff':'#eef2f4',col))});
   for(const k in SS_TP){const [x,y]=SS_TP[k],c=f.col[k],cur=k===f.cur;out+=R(x-44,y-17,88,34,c===2?C.greenp:c===1?C.amberp:'#fff',cur?C.ink:c===2?C.green:c===1?C.amber:C.line,17)+TBF(x,y+5,k,14,C.ink)}
   out+=TBF(510,58,'Schedule',14,C.ink);f.order.forEach((k,i)=>out+=R(450,70+i*38,120,30,C.greenp,C.green,8)+TF(510,90+i*38,`${i+1}. ${k}`,14,C.ink));
   if(f.bad)out+=R(440,330,140,36,C.coralp,C.coral,8)+TBF(510,353,'Cycle: no order',14,C.coral);
@@ -695,7 +695,7 @@ SCENE({id:'dijkstra-negative',name:'Why negative edges break Dijkstra',tag:'Sett
  draw(s,f,X){
   const E=[['S','A',2],['S','B',5],['B','A',s.w],['A','T',1]];let out=heading('Dijkstra settles each node once');
   E.forEach(([a,b,w])=>{const A=SS_NP[a],B=SS_NP[b],neg=w<0;out+=arrowR(A,B,28,30,neg?C.coral:C.line,neg?3:2.2);const mx=(A[0]+B[0])/2+(a==='B'?22:0),my=(A[1]+B[1])/2;out+=R(mx-18,my-13,36,24,'#fff',neg?C.coral:C.line,6)+TB(mx,my+5,w,14,neg?C.coral:C.ink)});
-  for(const k in SS_NP){const [x,y]=SS_NP[k],st=f.settled.includes(k),cur=k===f.cur,bad=f.wrong&&f.wrong.includes(k);out+=Ci(x,y,28,st?C.blue:'#fff',bad?C.coral:cur?C.amber:C.blue,bad||cur?'stroke-width="3.5"':'')+TB(x,y+6,k,18,st?'#fff':C.ink)+TBF(x,y+48,f.d[k]===Infinity?'∞':f.d[k],14,C.blue)}
+  for(const k in SS_NP){const [x,y]=SS_NP[k],st=f.settled.includes(k),cur=k===f.cur,bad=f.wrong&&f.wrong.includes(k);out+=Ci(x,y,28,st?C.blue:'#fff',bad?C.coral:cur?C.amber:C.blue,bad||cur?'stroke-width="3.5"':'')+TB(x,y+6,k,18,st?'#fff':C.ink)+SS_badge(k==='A'||k==='B'?x-34:x,y+(k==='A'?-36:48),'d = '+(f.d[k]===Infinity?'∞':f.d[k]),C.blue)}
   if(f.done){out+=TBF(470,300,'Dijkstra',13,C.blue)+TBF(545,300,'True',13,C.green);['A','T'].forEach((k,i)=>{const y=324+i*24;out+=TBF(420,y,k,14,C.ink)+TF(470,y,f.d[k],14,f.wrong.includes(k)?C.coral:C.blue)+TF(545,y,f.truth[k],14,C.green)})}
   return {svg:out,phase:f.say};
  }});
@@ -744,8 +744,8 @@ SCENE({id:'dijkstra-priority-queue',name:'Priority queue',tag:'Always hand out t
   const h=f.h,pos=i=>{const d=Math.floor(Math.log2(i+1)),j=i-(2**d-1),cnt=2**d;return [40+(j+.5)*520/cnt,70+d*62]};let out=heading('Binary heap: each parent ≤ its children');
   h.forEach((v,i)=>{if(i>0){const [x1,y1]=pos((i-1)>>1),[x2,y2]=pos(i);out+=L(x1,y1,x2,y2,C.line,2)}});
   h.forEach((v,i)=>{const [x,y]=pos(i),hl=f.hl&&f.hl.includes(i),sw=f.sw&&f.sw.includes(i);out+=Ci(x,y,20,hl?C.amberp:i===0?C.greenp:'#fff',hl?C.amber:sw?C.coral:i===0?C.green:C.blue)+TB(x,y+6,v,15,C.ink)});
-  const w=Math.min(36,540/Math.max(1,h.length));h.forEach((v,i)=>{const x=300-h.length*w/2+i*w,hl=f.hl&&f.hl.includes(i);out+=R(x,300,w-2,32,hl?C.amberp:'#fff',hl?C.amber:C.grid,4)+TBF(x+w/2-1,321,v,13,C.ink)+TF(x+w/2-1,350,i,13,C.muted)});
-  out+=TF(300,372,'Array: children of position i sit at 2i + 1 and 2i + 2',13,C.muted);
+  const w=Math.min(36,540/Math.max(1,h.length));h.forEach((v,i)=>{const x=300-h.length*w/2+i*w,hl=f.hl&&f.hl.includes(i);out+=R(x,286,w-2,32,hl?C.amberp:'#fff',hl?C.amber:C.grid,4)+TBF(x+w/2-1,307,v,13,C.ink)+TF(x+w/2-1,334,i,13,C.muted)});
+  out+=TF(300,360,'Array: children of position i sit at 2i + 1 and 2i + 2',13,C.muted);
   return {svg:out,phase:f.say};
  }});
 
@@ -978,8 +978,8 @@ SCENE({id:'big-o-cases',name:'Best, worst and average over all inputs',tag:'One 
   const lo=Math.min(...cs),hi=Math.max(...cs),avg=sum(cs)/cs.length,hist={};cs.forEach(c=>hist[c]=(hist[c]||0)+1);const mx=Math.max(...Object.values(hist));
   let out=heading(`${s.alg[0].toUpperCase()+s.alg.slice(1)} sort on all ${ps.length} orderings of ${s.n} items`);
   const x0=60,W=480,bw=W/(hi-lo+1),base=280;
-  for(let c=lo;c<=hi;c++){const v=hist[c]||0,x=x0+(c-lo)*bw;out+=R(x+2,base-v/mx*190,bw-4,v/mx*190,C.blue,'none',3)+TF(x+bw/2,base+16,c,13,C.muted);if(v&&bw>26)out+=TF(x+bw/2,base-v/mx*190-6,v,13,C.blue)}
-  const mark=(c,col,label,dy)=>{const x=x0+(c-lo+.5)*bw;return L(x,70,x,base,col,2,'stroke-dasharray="5 4"')+TBF(x,62+dy,label,13,col)};
+  for(let c=lo;c<=hi;c++){const v=hist[c]||0,x=x0+(c-lo)*bw;out+=R(x+2,base-v/mx*160,bw-4,v/mx*160,C.blue,'none',3)+TF(x+bw/2,base+16,c,13,C.muted);if(v&&bw>26){const bh=v/mx*160;out+=bh>22?TF(x+bw/2,base-bh+16,v,13,'#fff'):TF(x+bw/2,base-bh-5,v,13,C.blue)}}
+  const mark=(c,col,label,dy)=>{const x=x0+(c-lo+.5)*bw;return L(x,72+dy,x,base,col,2,'stroke-dasharray="5 4"')+R(x-46,50+dy,92,18,'#fff','none',4,'opacity=".9"')+TBF(x,63+dy,label,13,col)};
   out+=mark(lo,C.green,'best '+lo,0)+mark(hi,C.coral,'worst '+hi,0)+mark(avg,C.purple,'average '+fmt(avg),18);
   out+=T(300,322,'comparisons needed →',13,C.muted)+T(300,350,'Bar height: how many orderings need that many comparisons.',14,C.muted);
   return {svg:out,phase:`Best ${lo}, average ${fmt(avg)}, worst ${hi} comparisons. ${s.alg==='merge'?'Merge sort’s counts are tightly bunched: its best and worst cases are close.':'The best case (already sorted) is far from the worst case (reversed).'}`};
@@ -1030,9 +1030,9 @@ SCENE({id:'dc-fast-exponentiation',name:'Fast exponentiation',tag:'Square, squar
   out+=TF(300,58,`${s.exp} = ${s.exp.toString(2)} in binary (read right to left below)`,13,C.muted);
   bits.forEach((b,i)=>{const x=x0+(k-1-i)*w,done=i<=f.i,use=f.used.includes(i),cur=i===f.i;
    out+=TB(x+w/2,90,b,22,b?C.blue:C.muted)+TF(x+w/2,108,'bit '+i,13,C.muted);
-   out+=R(x+4,120,w-8,62,!done?'#f4f7f9':use?C.greenp:'#fff',cur?C.amber:use?C.green:C.grid,8)+TBF(x+w/2,146,`${s.base}^${2**i}`,13,done?C.ink:'#9aaab3');
-   if(done)out+=TF(x+w/2,168,SS_big(BigInt(s.base)**BigInt(2**i)).replace(/ \(.*/,'…'),13,C.muted)});
-  out+=T(300,226,'Result = '+(f.used.length?f.used.map(i=>`${s.base}^${2**i}`).join(' × '):'1'),17,C.ink);
+   out+=R(x+4,120,w-8,62,!done?'#f4f7f9':use?C.greenp:'#fff',cur?C.amber:use?C.green:C.grid,8)+TBF(x+w/2,146,`${s.base}${SS_sup(2**i)}`,14,done?C.ink:'#9aaab3');
+   if(done){const v=(BigInt(s.base)**BigInt(2**i)).toString();out+=TF(x+w/2,168,v.length>8?v.slice(0,5)+'…':v,13,C.muted)}});
+  out+=T(300,226,'Result = '+(f.used.length?f.used.map(i=>`${s.base}${SS_sup(2**i)}`).join(' × '):'1'),17,C.ink);
   out+=TB(300,256,'= '+SS_big(f.res),17,C.green);
   out+=counter(150,288,'Multiplications',f.m,C.blue,140)+counter(310,288,'One at a time',s.exp-1,C.muted,140);
   return {svg:out,phase:f.say};
@@ -1083,9 +1083,9 @@ SCENE({id:'dc-karatsuba',name:'Karatsuba multiplication',tag:'Three multiplicati
   const half=(x,y,hi,lo,n1,n2)=>R(x,y,72,46,C.pale,C.blue,8)+TB(x+36,y+30,hi,20,C.ink)+R(x+78,y,72,46,C.purplep,C.purple,8)+TB(x+114,y+30,lo,20,C.ink)+TF(x+36,y+62,n1,13,C.blue)+TF(x+114,y+62,n2,13,C.purple);
   out+=half(70,56,v.a,v.b,'a','b')+half(380,56,v.c,v.d,'c','d')+TB(300,86,'×',22,C.muted);
   const rows=[[1,`ac = ${v.a} × ${v.c}`,v.ac],[2,`bd = ${v.b} × ${v.d}`,v.bd],[3,`(a + b)(c + d) = ${v.a+v.b} × ${v.c+v.d}`,v.mid],[4,`ad + bc = ${v.mid} − ${v.ac} − ${v.bd}`,v.cross]];
-  rows.forEach(([k,txt,val],i)=>{const y=144+i*38,on=f.k>=k,cur=f.k===k;out+=R(70,y,460,32,cur?C.amberp:on?'#fff':'#f4f7f9',cur?C.amber:C.grid,6)+TMF(84,y+21,txt,14,on?C.ink:'#9aaab3','start')+(on?TBF(516,y+21,'= '+val,14,k===4?C.purple:C.blue,'end'):'')});
-  if(f.done)out+=TB(300,320,`${v.ac}·10⁴ + ${v.cross}·10² + ${v.bd} = ${v.res}`,17,C.green);
-  out+=counter(70,334,'Multiplications',f.m,C.blue,130)+counter(400,334,'Schoolbook',4,C.muted,130);
+  rows.forEach(([k,txt,val],i)=>{const y=136+i*36,on=f.k>=k,cur=f.k===k;out+=R(70,y,460,32,cur?C.amberp:on?'#fff':'#f4f7f9',cur?C.amber:C.grid,6)+TMF(84,y+21,txt,14,on?C.ink:'#9aaab3','start')+(on?TBF(516,y+21,'= '+val,14,k===4?C.purple:C.blue,'end'):'')});
+  if(f.done)out+=TB(300,300,`${v.ac}·10⁴ + ${v.cross}·10² + ${v.bd} = ${v.res}`,17,C.green);
+  out+=counter(70,318,'Multiplications',f.m,C.blue,130)+counter(400,318,'Schoolbook',4,C.muted,130);
   return {svg:out,phase:f.say};
  }});
 

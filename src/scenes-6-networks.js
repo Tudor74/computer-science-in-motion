@@ -389,7 +389,11 @@ SCENE({id:'encapsulation',name:'Protocol layers and encapsulation',tag:'Envelope
   const P=project([[-3.2,-2.2,-1.6],[3.2,2.2,1.6]]);let out='';
   const box=i=>{const m=.55*i;return [-1.4-m,-.7-m*.7,-.45-m*.55,1.4+m,.7+m*.7,.45+m*.55]};
   out+=paintFaces(prism(-1.4,-.7,-.45,2.8,1.4,.9,C.purple).map((q,j)=>j===5?{...q,label:'data',ink:'#fff'}:q),P);
-  for(let i=1;i<f.d;i++){const c=box(i),Ly=NW_LAYERS[i];out+=NW_wire(P,c,Ly.col,i===f.a?3.2:2);const q=P([c[0],c[1],c[5]]);out+=TB(q[0]-8,q[1]+4,Ly.tag,15,Ly.col,'end')}
+  const labs=[];
+  for(let i=1;i<f.d;i++){const c=box(i),Ly=NW_LAYERS[i];out+=NW_wire(P,c,Ly.col,i===f.a?3.2:2);
+   // Label each envelope at its right-most corner; keep labels at least 20 px apart vertically.
+   const q=[[c[0],c[1],c[5]],[c[3],c[1],c[5]],[c[0],c[4],c[5]],[c[3],c[4],c[5]],[c[0],c[1],c[2]],[c[3],c[1],c[2]],[c[0],c[4],c[2]],[c[3],c[4],c[2]]].map(P).sort((u,v)=>v[0]-u[0])[0];
+   let y=q[1];for(const l of labs)if(Math.abs(l-y)<20)y=l+20;labs.push(y);out+=TB(q[0]+10,y+5,Ly.tag,15,Ly.col,'start')}
   return {svg:out,title:'Nested envelopes',caption:`${f.d===1?'Only the data, no envelopes yet.':`${f.d-1} envelope${f.d>2?'s':''} around the data: ${range(f.d-1).map(i=>NW_LAYERS[i+1].tag).reverse().join(' around ')} around the data.`} Each layer only ever opens its own envelope.`};
  }});
 
@@ -921,7 +925,9 @@ SCENE({id:'block-modes',name:'Block cipher modes',tag:'Same block in, same block
  on:{pic(s,v){s.img=NW_IMGS[v].slice()},px(s,a){const [r,c]=String(a).split(',').map(Number);const row=s.img[r];s.img[r]=row.slice(0,c)+(row[c]==='1'?'0':'1')+row.slice(c+1);s.row=r}},
  draw(s,f,X){
   const B=NW_blocks(s.img),E=NW_ecb(B),Cc=NW_cbc(B),cs=11,shown=s.shown===undefined?12:s.shown;let out=heading('Encrypt 4 pixels at a time');
-  const panel=(x,title,vals,cl,click,limit)=>{let o=TBF(x+88,58,title,14,cl);for(let r=0;r<12;r++)for(let j=0;j<4;j++){const bits=bin(vals[r][j],4);for(let k=0;k<4;k++){const c=j*4+k,on=bits[k]==='1',show=r<limit;const cell=R(x+c*cs,68+r*cs,cs-1,cs-1,!show?'#eef2f4':on?C.dark:'#fff','none',1);o+=click?hit(X,'px',r+','+c,`Pixel row ${r+1}, column ${c+1}: ${on?'dark':'light'}`,cell):cell}}
+  // Cipher panels colour each whole block by its value, so equal blocks look equal at a glance.
+  const NWP=['#1f5f8b','#e8a23a','#3c8d5a','#c45238','#7156a6','#8a6a4a','#d77fb3','#7d8a93','#b5b84a','#3fb3c4','#2f3570','#a8444a','#8ca252','#f0d27a','#5254a3','#f2b8b0'];
+  const panel=(x,title,vals,cl,click,limit)=>{let o=TBF(x+88,58,title,14,cl);for(let r=0;r<12;r++)for(let j=0;j<4;j++){if(!click){o+=R(x+j*4*cs,68+r*cs,4*cs-1,cs-1,r<limit?NWP[vals[r][j]]:'#eef2f4','none',1);continue}const bits=bin(vals[r][j],4);for(let k=0;k<4;k++){const c=j*4+k,on=bits[k]==='1',show=r<limit;const cell=R(x+c*cs,68+r*cs,cs-1,cs-1,!show?'#eef2f4':on?C.dark:'#fff','none',1);o+=click?hit(X,'px',r+','+c,`Pixel row ${r+1}, column ${c+1}: ${on?'dark':'light'}`,cell):cell}}
    for(let j=1;j<4;j++)o+=L(x+j*4*cs-.5,66,x+j*4*cs-.5,68+12*cs,C.coral,1,'opacity=".5"');return o};
   out+=panel(16,'Original',B,C.ink,true,12)+panel(212,'ECB: block by block',E,C.coral,false,shown)+panel(408,'CBC: chained',Cc,C.green,false,shown);
   const r=clamp(s.row,0,11);  out+=TF(20,226,`Row ${r+1}, block values (0–15):`,13,C.muted,'start');
@@ -929,7 +935,7 @@ SCENE({id:'block-modes',name:'Block cipher modes',tag:'Same block in, same block
   out+=rowv(254,'plain',B[r],C.ink)+rowv(282,'ECB',E[r],C.coral)+rowv(310,'CBC',Cc[r],C.green);
   const dupPlain=new Set(B.flat()).size,dupE=new Set(E.flat()).size,dupC=new Set(Cc.flat()).size;
   out+=TF(390,254,`${dupPlain} different plain blocks`,13,C.ink,'start')+TF(390,282,`${dupE} different ECB blocks`,13,C.coral,'start')+TF(390,310,`${dupC} different CBC blocks`,13,C.green,'start');
-  out+=TF(300,348,'Toy cipher: a 4-bit substitution box with a key. ECB maps equal blocks to equal blocks;',13,C.muted)+TF(300,366,'CBC XORs each block with the previous ciphertext first, so repeats look different.',13,C.muted);
+  out+=TF(300,348,'Each colour is one encrypted 4-pixel block value (toy 4-bit cipher). ECB: equal in, equal out;',13,C.muted)+TF(300,366,'CBC XORs each block with the previous ciphertext first, so repeats come out different.',13,C.muted);
   return {svg:out,phase:`ECB turns every all-dark block into the same ciphertext block and every all-light block into another, so the shape survives: the ${dupE===dupPlain?'same number of':'same pattern of'} distinct blocks as the original. CBC chains each block to the one before, so the picture becomes noise.`};
  }});
 
@@ -993,7 +999,7 @@ SCENE({id:'factoring',name:'Multiplying is easy, factoring is hard',tag:'The one
   if(found)out+=TMF(330,304,`${n} ÷ ${NW_PRIMES[f.i]} = ${n/NW_PRIMES[f.i]} ✓`,16,C.green,'start','font-weight="700"');
   else if(f.i>=0)out+=TMF(330,304,`${n} ÷ ${NW_PRIMES[f.i]} leaves ${n%NW_PRIMES[f.i]}`,15,C.coral,'start');
   out+=TF(300,344,'Trial division needs about √n tries. n with 10 digits: ~10 000 tries; 100 digits: ~10⁴⁸;',13,C.muted)+TF(300,362,'617 digits (2048-bit RSA): beyond any computer, even with the cleverest known methods.',13,C.muted);
-  return {svg:out,phase:found?`Found it after ${tries} division${tries>1?'s':''}: ${n} = ${NW_PRIMES[f.i]} × ${n/NW_PRIMES[f.i]}. Multiplying took one step. Each extra digit in the primes multiplies the dividing work by about three.`:f.i<0?`Multiplying ${p} by ${q} is instant. Now pretend you only know ${n} and must find the primes.`:`${NW_PRIMES[f.i]} does not divide ${n} exactly. Try the next prime.`};
+  return {svg:out,phase:found?`Found it after ${tries} division${tries>1?'s':''}: ${n} = ${NW_PRIMES[f.i]} × ${n/NW_PRIMES[f.i]}. Multiplying took one step. Give each prime one more digit and the search takes roughly ten times as many divisions.`:f.i<0?`Multiplying ${p} by ${q} is instant. Now pretend you only know ${n} and must find the primes.`:`${NW_PRIMES[f.i]} does not divide ${n} exactly. Try the next prime.`};
  }});
 
 /* ---- Digital signature lesson: hash properties ---- */
@@ -1044,8 +1050,7 @@ SCENE({id:'certificate-chain',name:'Certificates and the chain of trust',tag:'Wh
   certs.forEach((c,i)=>{const y=48+i*92,on=f.lvl===i,bad=on&&f.bad;
    out+=R(30,y,330,76,bad?C.coralp:on?C.pale:'#fff',bad?C.coral:on?C.blue:C.grid,10)+R(30,y,10,76,i===0?C.purple:i===1?C.blue:C.green,'none',4);
    out+=TBF(52,y+22,c.t,14,C.ink,'start')+TF(52,y+42,'signed by '+c.by,13,C.muted,'start')+TF(52,y+62,'valid until '+c.until+(i===2&&flt==='tampered'?' · contents edited!':''),13,i===2&&flt==='tampered'?C.coral:C.muted,'start');
-   if(i>0)out+=arrow(200,y-2,200,y-14,C.line,2,7)});
-  out+=TF(372,186,'↑ “signed by”',13,C.muted,'start');
+   if(i>0)out+=arrow(200,y-2,200,y-14,C.line,2,7)+TF(210,y-4,'signed by ↑',13,C.muted,'start')});
   const inStore=flt!=='untrusted';out+=R(400,48,180,120,'#fff',C.grid,10)+TBF(490,70,'Browser trust store',13,C.ink);
   ['Example Root CA','Another Root','A Third Root'].forEach((r,i)=>out+=TF(412,96+i*22,(f.lvl===0&&i===0&&inStore?'✓ ':'• ')+r,13,f.lvl===0&&i===0&&inStore?C.green:C.muted,'start'));
   out+=R(400,186,180,46,'#fff',C.grid,10)+TF(410,205,'Address bar',13,C.muted,'start')+TMF(410,224,'shop.example.co.uk',13,C.ink,'start');
