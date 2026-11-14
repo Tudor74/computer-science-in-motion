@@ -31,6 +31,8 @@ node test/check.js            # every scene in Watch and Try it: console errors,
 node test/three.js            # 2D/3D toggle on every 3D scene
 node test/slider.js           # time slider behaviour
 node test/text-layout.js 375  # phone text scale: labels stay inside the drawing and do not collide
+node test/timed.js            # timed experiments: delayed replies arrive, and stop when you leave
+node test/threads.js          # map connections: merged by name, "Other connection" switches
 ```
 
 | File | Contents |

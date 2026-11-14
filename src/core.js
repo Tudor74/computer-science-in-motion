@@ -32,7 +32,70 @@
    handler returns 'stop'); both are cancelled when the scene or mode changes.
    Use rng()/shuffled()/nextSeed() for trial order, never Math.random.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. In the experiment scenes (★)
+ the learner is the participant and sees their own data beside the published finding.
+ 1 Lights and switches
+  front-panel ....... toggle, deposit, run; ★ copy lamps to switches by grouping (chunking); find the bug by single-stepping.
+  punched-cards ..... punch and decode Hollerith columns; turnaround slider (batch vs online); double keying catches errors.
+  command-line ...... a teletype roll; ★ recall vs recognition of commands; terse vs helpful error messages.
+  time-sharing ...... users and slices on a CPU ring; ★ feel 0.1/1/10 s delays (Miller 1968); queueing knee.
+  light-pen ......... the photocell fires on the beam; refresh vs flicker; ‘gorilla arm’ endurance.
+  vigilance ......... ★ a compressed Mackworth clock; d′ and criterion sliders; alarm base rates and fatigue.
+ 2 Pointing and linking
+  sketchpad ......... constraints, masters and instances, zooming a large sheet.
+  mouse ............. relative pointing; Card, English & Burr lines; the 1968 demo, step by step.
+  fitts-law ......... ★ alternating targets plotted against ID; edges and corners; pie vs linear menus.
+  hick-law .......... ★ 1–8 lamps against log₂(n+1); menu breadth vs depth; familiar vs unfamiliar lists.
+  hypertext ......... follow links; build a Memex trail; transclusion vs copy; lost in hyperspace.
+  augmenting-intellect NLS view levels; the five-key chord keyset; bootstrapping (illustrative model).
+ 3 The desktop
+  wimp .............. raise and close overlapping windows; where the desktop metaphor breaks; ★ pie vs linear menu.
+  dynabook .......... which parts of the vision arrived; a real Logo turtle; Bruner's doing/images/symbols.
+  direct-manipulation typed command vs drag; Norman's gulfs; undo as a safety net.
+  keystroke-model ... build K/P/B/H/M methods and predict time; GOMS selection rules; ★ the Model Human Processor.
+  spreadsheet ....... live recalculation; relative vs absolute references; find the planted errors.
+  wysiwyg ........... markup vs appearance; bitmap fonts and anti-aliasing; ★ consistent vs shuffled menus.
+ 4 How the mind reads a screen
+  gestalt ........... spacing flips rows and columns; similarity vs proximity; common region; form labels.
+  preattentive ...... ★ feature vs conjunction search slopes; what pops out; ★ highlighting in a table.
+  working-memory .... ★ adaptive digit span against 7 ± 2 and ≈ 4; chunking; recognition over recall.
+  affordances ....... Norman doors; ★ which flat elements look clickable; ★ stove-knob mappings.
+  mental-models ..... thermostat valve belief; seven stages and the gulfs; Caps Lock mode errors.
+  change-blindness .. ★ the flicker paradigm; ★ inattentional blindness; ★ silent vs highlighted updates.
+  eye-movements ..... task changes the scanpath; ★ moving window; the 2° fovea in 3D.
+ 5 Seeing data
+  visual-variables .. Bertin's seven variables on one dataset; Mackinlay's rankings; mapping verdicts.
+  graphical-perception ★ estimate ratios by encoding (Cleveland & McGill); pie vs bars; area underestimation.
+  data-ink .......... erase non-data ink (and fake 3D in 3D); small multiples; Bateman's ‘useful junk’.
+  mind-maps ......... build a radial map; notes vs mind map vs concept map; an honest evidence check.
+  overview-detail ... overview, zoom, filter, details; a fisheye list; overview + detail minimap.
+  animated-bubbles .. Rosling-style year slider (illustrative); animation vs small multiples; Factfulness quiz.
+  colour-maps ....... rainbow vs uniform maps; scheme by data type; colour-vision deficiency simulation.
+ 6 The networked page
+  world-wide-web .... links and the Back stack; one-way vs two-way links; link rot; one page, three clients.
+  information-scent . follow the scent (one link smells wrong); patch leaving; breadcrumbs.
+  usability-testing . the 1−(1−L)ⁿ curve with seeded users; think-aloud vs silent; SUS scoring.
+  heuristics ........ find the planted problems; severity order; more evaluators find more.
+  scanning-patterns . F vs layer-cake scanpaths; ★ banner blindness; satisficing.
+  response-time ..... ★ real delays against 0.1/1/10 s and Doherty; ★ steady vs accelerating bars; optimistic UI.
+ 7 Touch, mobile and attention
+  multi-touch ....... two points give zoom and rotation; FTIR blobs; capacitive scans and ghost points.
+  touch-targets ..... target size vs hit rate (illustrative); thumb zones; finger-tilt offset and its fixes.
+  gestures .......... hidden vs visible actions; swipe vs scroll thresholds; agreement scores.
+  interruptions ..... resumption lag; batching notifications; attention residue.
+  accessibility ..... the real WCAG contrast formula; focus order and labels; the persona spectrum.
+  dark-patterns ..... spot five patterns; roach-motel cancel flow; Fogg's behaviour model.
+ 8 Immersive and beyond
+  head-mounted-display head tracking re-projects the room (3D); field of view; 3 vs 6 degrees of freedom (3D).
+  presence .......... immersion features over the pit; latency makes the world swim; sensory conflict.
+  depth-cues ........ six monocular cues (3D); stereo convergence; vergence–accommodation conflict.
+  augmented-reality . the reality–virtuality continuum; registration error; occlusion.
+  conversational-ui . step ELIZA's rules; confirmation and repair; the media equation.
+  brain-computer .... a P300 speller; averaging trials; information transfer rate.
+  ai-agents ......... calibrated trust; ten levels of automation; confidence thresholds and automation bias.
+  calm-technology ... centre vs periphery; the ubiquitous-computing waves; tangible building blocks.
+ 3D only where depth helps: data-ink (fake 3D bars), the fovea cones, the HMD view pyramid, degrees of
+ freedom, and the true layout behind depth cues.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

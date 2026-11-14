@@ -10,6 +10,9 @@ const route=CURRICULUM.lessons.flatMap(l=>l.ids);
 const lessonOf={};CURRICULUM.lessons.forEach(l=>l.ids.forEach(id=>lessonOf[id]=l.id));
 // Connections may name scenes from stages not in this build (per-stage test builds): keep only routed ones.
 for(const th of THREADS)th.ids=th.ids.filter(id=>route.includes(id));
+// Threads with the same name (written by different eras) become one connection, in order, without repeats.
+{const merged=[];for(const th of THREADS){const same=merged.find(m=>m.name===th.name);if(same){for(const id of th.ids)if(!same.ids.includes(id))same.ids.push(id)}else merged.push({...th,ids:th.ids.slice()})}
+ THREADS.length=0;THREADS.push(...merged.filter(th=>th.ids.length>1))}
 const missing=route.filter(id=>!SCENES[id]);
 if(missing.length)throw new Error('Scenes missing for: '+missing.join(', '));
 const DUR=id=>SCENES[id].dur||8;
@@ -148,12 +151,17 @@ function updateHeader(les){
 }
 
 /* ---- Local map ---- */
-function threadFor(id){return THREADS.find(th=>th.ids.includes(id))||null}
+// As in Mathematics In Motion, the map follows the connection you are travelling along; a scene in several
+// connections offers an "Other connection" button to switch.
+let activeThread=null;
+function threadsOf(id){return THREADS.filter(th=>th.ids.includes(id))}
+function threadFor(id){const all=threadsOf(id);return all.find(th=>th.id===activeThread)||all[0]||null}
 function neighbours(id){const i=route.indexOf(id),th=threadFor(id),j=th?th.ids.indexOf(id):-1;return {left:route[i-1]||null,right:route[i+1]||null,up:th&&th.ids[j-1]||null,down:th&&th.ids[j+1]||null,th}}
 function renderMap(id){
  const nb=neighbours(id),sym={up:'↑',left:'←',right:'→',down:'↓'};
  $('local-map').dataset.flat=String(!nb.up&&!nb.down);
- $('map-caption').textContent=nb.th&&(nb.up||nb.down)?'↑↓ Connection: '+nb.th.name:'← → Along the learning route';
+ const all=threadsOf(id),k=nb.th?all.indexOf(nb.th):-1;
+ $('map-caption').innerHTML=nb.th&&(nb.up||nb.down)?'↑↓ Connection: '+esc(nb.th.name)+(all.length>1?` <button type="button" id="map-switch" aria-label="Show another connection (${k+1} of ${all.length})">Other connection (${k+1}/${all.length})</button>`:''):'← → Along the learning route';
  for(const d of ['up','left','right','down']){
   const b=$('map-'+d),n=nb[d];b.hidden=!n;b.disabled=!n;b.dataset.node=n||'';$('wire-'+d).style.visibility=n?'visible':'hidden';
   if(n){const les=lessons[lessonOf[n]];b.innerHTML=`<small>${sym[d]} ${esc(les.short||les.name)}</small><b>${esc(SCENES[n].name)}</b>`;b.setAttribute('aria-label',`${d}: ${SCENES[n].name}, ${les.name}. ${d==='left'||d==='right'?'Along the route':'Connection: '+nb.th.name}`)}
@@ -393,8 +401,9 @@ try{
  window.addEventListener('pointercancel',endHold,true);
  window.addEventListener('blur',()=>endHold());
  document.addEventListener('visibilitychange',()=>{endHold();lastFrame=performance.now()});
- for(const d of ['up','left','right','down'])$('map-'+d).addEventListener('click',e=>{const n=e.currentTarget.dataset.node;if(n)goTo(route.indexOf(n))});
- $('local-map').addEventListener('keydown',e=>{const dirs={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};if(dirs[e.key]){e.preventDefault();const n=neighbours(cur())[dirs[e.key]];if(n){goTo(route.indexOf(n));$('local-map').focus()}}});
+ for(const d of ['up','left','right','down'])$('map-'+d).addEventListener('click',e=>{const n=e.currentTarget.dataset.node;if(!n)return;if(d==='up'||d==='down'){const th=threadFor(cur());if(th)activeThread=th.id}goTo(route.indexOf(n))});
+ $('map-caption').addEventListener('click',e=>{if(!e.target.closest('#map-switch'))return;const all=threadsOf(cur());if(all.length<2)return;const k=all.indexOf(threadFor(cur()));activeThread=all[(k+1)%all.length].id;renderMap(cur());$('map-switch')&&$('map-switch').focus()});
+ $('local-map').addEventListener('keydown',e=>{const dirs={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};if(dirs[e.key]){e.preventDefault();const nb=neighbours(cur()),n=nb[dirs[e.key]];if(n){if(nb.th&&(dirs[e.key]==='up'||dirs[e.key]==='down'))activeThread=nb.th.id;goTo(route.indexOf(n));$('local-map').focus()}}});
  $('lesson-prior').addEventListener('click',e=>{const b=e.target.closest('[data-lesson]');if(b)goTo(route.indexOf(lessons[b.dataset.lesson].ids[0]))});
  $('words').addEventListener('click',e=>showAllWords(e.currentTarget));
  $('word-close').addEventListener('click',()=>closeWords(false));
