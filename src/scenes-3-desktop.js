@@ -334,7 +334,7 @@ SCENE({id:'direct-manipulation-undo',name:'Undo as a safety net',tag:'Reversible
  }});
 
 /* ---------------- keystroke-model ---------------- */
-const H3_OPS={K:{t:.28,n:'Keystroke',c:C.blue},P:{t:1.1,n:'Point',c:C.coral},B:{t:.1,n:'Button',c:C.amber},H:{t:.4,n:'Home hand',c:C.purple},M:{t:1.35,n:'Mental',c:C.green}};
+const H3_OPS={K:{t:.28,n:'Keystroke',c:C.blue},P:{t:1.1,n:'Point',c:C.coral},B:{t:.1,n:'Button',c:C.amber},H:{t:.4,n:'Home',c:C.purple},M:{t:1.35,n:'Mental',c:C.green}};
 const H3_KLM_PRESETS={mouse:{name:'Delete a word (mouse)',ops:['H','M','P','B','B','B','B','H','M','K']},keys:{name:'Delete a word (keys)',ops:['M','K','K','K','K']}};
 const H3_klmTotal=ops=>ops.reduce((a,o)=>a+H3_OPS[o].t,0);
 function H3_klmBar(ops,x,y,w,h,scale,label){let o=TF(x,y-6,label,13,C.ink,'start'),cx=x;ops.forEach(op=>{const ww=H3_OPS[op].t*scale;o+=R(cx,y,Math.max(2,ww-1.5),h,H3_OPS[op].c,'none',3)+(ww>12?TBF(cx+ww/2,y+h/2+5,op,13,'#fff'):'');cx+=ww});return o+TBF(Math.min(cx+8,560),y+h/2+5,H3_klmTotal(ops).toFixed(2)+' s',13,C.ink,'start')}
@@ -350,7 +350,7 @@ SCENE({id:'keystroke-model',name:'The keystroke-level model',tag:'Predict task t
  on:{add(s,o){if(s.ops.length<16){s.ops.push(o);s.preset='custom'}},pop(s){s.ops.pop();s.preset='custom'},clear(s){s.ops=[];s.preset='custom'},preset(s,v){s.preset=v;s.ops=H3_KLM_PRESETS[v].ops.slice()}},
  draw(s,f,X){
   let out=heading('Add up the steps an expert must make');
-  Object.entries(H3_OPS).forEach(([k,o],i)=>{const x=24+i*112;out+=hit(X,'add',k,`Add operator ${k}, ${o.n}, ${o.t} seconds`,R(x,46,104,54,'#fff',o.c,8)+TB(x+18,80,k,22,o.c)+TF(x+36,70,o.n,13,C.ink,'start')+TF(x+36,88,o.t+' s',13,C.muted,'start'))});
+  Object.entries(H3_OPS).forEach(([k,o],i)=>{const x=24+i*112;out+=hit(X,'add',k,`Add operator ${k}, ${o.n}, ${o.t} seconds`,R(x,46,104,54,'#fff',o.c,8)+TBF(x+18,80,k,22,o.c)+TF(x+36,70,o.n,13,C.ink,'start')+TF(x+36,88,o.t+' s',13,C.muted,'start'))});
   const scale=440/Math.max(6,H3_klmTotal(s.ops));
   out+=H3_klmBar(s.ops,24,150,0,36,scale,'Your method: '+(s.ops.join(' ')||'(empty)'));
   out+=TB(300,226,`Predicted time: ${H3_klmTotal(s.ops).toFixed(2)} s`,22,C.ink);
@@ -385,7 +385,8 @@ SCENE({id:'keystroke-model-compare',name:'GOMS: choosing a method',tag:'Goals, o
   out+=R(498,112,84,40,win==='shortcut'?C.greenp:'#fff',win==='shortcut'?C.green:C.grid,7)+TBF(540,130,'Method B',13)+TF(540,146,'shortcut',13,C.muted);
   out+=R(410,168,172,92,'#fff',C.purple,8)+TBF(496,188,'Selection rule',13,C.purple)+TF(496,208,'Use whichever is quicker',13,C.ink)+TF(496,226,`from where the hand is.`,13,C.ink)+TF(496,246,`Now: ${win}.`,13,C.green);
   out+=TF(300,340,'Operators: K 0.28 · P 1.1 · B 0.1 · H 0.4 · M 1.35 seconds',13,C.muted);
-  return {svg:out,phase:`Each H costs 0.4 s and is followed by thinking time. ${s.hand==='mouse'?'With the hand already on the mouse, menus avoid a trip to the keyboard.':'With the hand on the keyboard, shortcuts avoid a trip to the mouse.'} GOMS turns “which is better?” into a prediction you can check.`};
+  const ha=a.filter(o=>o==='H').length,hb=b.filter(o=>o==='H').length;
+  return {svg:out,phase:`Starting with the hand on the ${s.hand==='mouse'?'mouse':'keyboard'}, the menu needs ${ha} homing step${ha===1?'':'s'} and the shortcut ${hb}. Each H costs 0.4 s, but pointing (1.1 s) costs more, so here the ${win} wins. GOMS turns “which is better?” into a prediction you can check.`};
  }});
 
 let H3_rtRand=rng(83);
@@ -447,7 +448,8 @@ SCENE({id:'spreadsheet',name:'The live spreadsheet',tag:'Change one number, ever
    out+=tot?bcell:hit(X,'sel',r,`B${r+1}, ${H3_SS_ITEMS[r]}: £${bv}. Press to select.`,bcell);
    out+=R(288,y,120,rh,(tot||r===s.sel)?C.pale:'#fff',C.grid,0)+TM(398,y+22,'£'+cv,14,C.ink,'end',tot?'font-weight="700"':'')}
   const [sx,sy]=cell(s.sel,2);
-  for(const [r,c] of [[s.sel,3],[4,2],[4,3]]){const [tx,ty]=cell(r,c);out+=curveArrow(sx+30,sy,tx-30,ty,r===4&&c===2?-30:20,C.coral,2)}
+  const [c1x,c1y]=cell(s.sel,3),[b5x,b5y]=cell(4,2),[c5x,c5y]=cell(4,3);
+  out+=curveArrow(sx+20,sy-12,c1x-20,c1y-12,-12,C.coral,2)+arrow(sx-40,sy+12,b5x-40,b5y-12,C.coral,2)+curveArrow(sx+48,sy+12,c5x-48,c5y-12,16,C.coral,2);
   out+=R(24,y0+rh*6+10,384,34,'#fff',C.grid,6)+TMF(34,y0+rh*6+32,`B${s.sel+1} = ${s.v[s.sel]}   C${s.sel+1} = B${s.sel+1}*12   B5 = SUM(B1:B4)`,13,C.ink,'start','xml:space="preserve"');
   out+=TB(500,72,'Dependants of B'+(s.sel+1),14,C.ink);[`C${s.sel+1} (per year)`,'B5 (total)','C5 (yearly total)'].forEach((t,i)=>out+=R(424,86+i*40,154,32,C.pale,C.blue,7)+TF(501,107+i*40,t,13,C.ink));
   out+=counter(440,220,'recalculations',s.recalc,C.coral,124);

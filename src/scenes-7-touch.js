@@ -129,7 +129,7 @@ SCENE({id:'touch-targets',name:'Touch target size',tag:'The fat-finger problem',
   for(let i=0;i<20;i++){const x=cx+H7_gauss(r)*sig,y=cy+H7_gauss(r)*sig,ok=Math.abs(x-cx)<=w/2&&Math.abs(y-cy)<=w/2;if(ok)hits++;out+=Ci(clamp(x,34,296),clamp(y,92,344),4.5,ok?C.green:C.coral)}
   out+=`<ellipse cx="${cx+60}" cy="${cy+92}" rx="${5*H7_MM}" ry="${6*H7_MM*.75}" fill="#f3d6c4" opacity=".55"/>`+T(cx+60,cy+96,'finger pad ≈ 10 mm',13,'#8a5a3e');
   const gx=340,gy=100,gw=230,gh=190,xm=v=>gx+(v-2)/14*gw,ym=v=>gy+gh-v*gh;
-  out+=R(xm(9.2),gy,xm(9.6)-xm(9.2)+8,gh,C.greenp,'none',3)+TF(xm(9.6)+14,gy+gh-14,'Parhi et al.: 9.2–9.6 mm',13,C.green,'start');
+  out+=R(xm(9.2),gy,xm(9.6)-xm(9.2)+8,gh,C.greenp,'none',3)+TF(xm(9.2)-6,gy+gh-14,'Parhi et al.: 9.2–9.6 mm',13,C.green,'end');
   out+=L(gx,gy+gh,gx+gw,gy+gh,C.line,2)+L(gx,gy,gx,gy+gh,C.line,2);
   let d='';for(let v=2;v<=16;v+=.25)d+=(v===2?'M':'L')+fmt(xm(v))+' '+fmt(ym(H7_hitProb(v)));
   out+=P(d,C.blue,3);

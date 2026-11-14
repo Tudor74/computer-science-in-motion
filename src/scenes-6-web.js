@@ -533,7 +533,7 @@ SCENE({id:'scanning-patterns-satisficing',name:'Satisficing',tag:'Good enough be
 // Timed Try-it scenes schedule follow-up actions through the page's own action hook, only while still on the scene.
 function H6_live(id){try{const st=window.csApp&&window.csApp.state();return !!st&&st.id===id&&st.mode==='try'}catch(_){return false}}
 const H6_lx=t=>40+520*(Math.log10(t)-Math.log10(.05))/(Math.log10(30)-Math.log10(.05));
-const H6_BANDS=[[.05,.1,'feels instant',C.greenp],[.1,1,'noticed, flow kept',C.pale],[1,10,'attention held; show progress',C.amberp],[10,30,'attention wanders',C.coralp]];
+const H6_BANDS=[[.05,.1,'feels instant',C.greenp],[.1,1,'noticed, flow kept',C.pale],[1,10,'needs progress feedback',C.amberp],[10,30,'attention drifts',C.coralp]];
 SCENE({id:'response-time',name:'Response time',tag:'How long can people wait?',
  definition:'People perceive delays in bands: up to about 0.1 s a response feels instantaneous, up to about 1 s their flow of thought is kept, and beyond about 10 s their attention drifts away.',
  example:'Doherty and Thadani reported that keeping system responses under about 0.4 s made IBM users markedly more productive: they stopped waiting and started working at the machine’s pace.',
@@ -547,9 +547,9 @@ SCENE({id:'response-time',name:'Response time',tag:'How long can people wait?',
   arrive(s,tok){if(Number(tok)!==s.token||s.phase!=='wait')return;s.phase='done';s.got=Math.round(performance.now()-s.t0);s.log=s.log.concat(s.got).slice(-8)}},
  draw(s,f,X){
   let out=heading('Three limits of waiting');
-  H6_BANDS.forEach(([a,b,lab,col])=>{out+=R(H6_lx(a),190,H6_lx(b)-H6_lx(a),60,col,'none',0);out+=TF((H6_lx(a)+H6_lx(b))/2,272,lab,13,C.ink)});
+  H6_BANDS.forEach(([a,b,lab,col],i)=>{out+=R(H6_lx(a),190,H6_lx(b)-H6_lx(a),60,col,'none',0);out+=TF(i===3?556:(H6_lx(a)+H6_lx(b))/2,i%2?290:272,lab,13,C.ink,i===3?'end':'middle')});
   for(const t of [.1,.4,1,10]){out+=L(H6_lx(t),182,H6_lx(t),258,t===.4?C.purple:C.ink,t===.4?2:1.5);out+=TF(H6_lx(t),176,t+' s',13,t===.4?C.purple:C.ink)}
-  out+=TF(H6_lx(.4),300,'0.4 s: Doherty threshold',13,C.purple);
+  out+=TF(H6_lx(.4),316,'0.4 s: Doherty threshold',13,C.purple);
   for(const t of [.05,30])out+=TF(H6_lx(t),176,t+' s',13,C.muted);
   if(s.phase==='watch'){const t=s.delay/1000,x=H6_lx(t);out+=`<polygon points="${fmt(x)},252 ${fmt(x-8)},266 ${fmt(x+8)},266" fill="${C.blue}"/>`+TB(x,238,t<1?Math.round(t*1000)+' ms':fmt(Math.round(t*10)/10)+' s',13,C.blue)}
   s.log.forEach((ms,i)=>out+=Ci(H6_lx(ms/1000),220,7,C.blue,'#fff'));
@@ -611,8 +611,8 @@ SCENE({id:'response-time-optimistic',name:'Optimistic updates',tag:'Show the res
   const tx=t=>300+t*22;out+=L(tx(0),110,tx(12),110,C.muted,1.5)+L(tx(0),200,tx(12),200,C.muted,1.5);
   out+=TF(300,96,'server',13,C.muted,'start')+TF(300,186,'screen',13,C.muted,'start');
   for(let t=0;t<=12;t+=4)out+=TF(tx(t),300,(t*100)+' ms',13,C.muted);
-  out+=curveArrow(tx(0),196,tx(4),114,-20,C.blue,2)+TF(tx(2),148,'request',13,C.blue);
-  if(back)out+=curveArrow(tx(4),114,tx(8),196,-20,s.fail?C.coral:C.green,2)+TF(tx(6.4),160,s.fail?'✗ failed':'✓ saved',13,s.fail?C.coral:C.green);
+  out+=arrow(tx(0),196,tx(4),114,C.blue,2,8)+TF(tx(1.6),140,'request',13,C.blue,'end');
+  if(back)out+=arrow(tx(4),114,tx(8),196,s.fail?C.coral:C.green,2,8)+TF(tx(6.2),140,s.fail?'✗ failed':'✓ saved',13,s.fail?C.coral:C.green,'start');
   out+=R(tx(0),210,opt?tx(.6)-tx(0):tx(8)-tx(0),14,opt?C.greenp:C.amberp,'none',3)+TF(tx(0),246,opt?'feedback at once':'waiting for the reply',13,opt?C.green:C.amber,'start');
   out+=L(tx(k),90,tx(k),270,C.ink,1.5,'stroke-dasharray="4 3"');
   return {svg:out,phase:`${k*100} ms. `+(opt?(back?(s.fail?'The save failed, so the interface rolls back and says why. Rollbacks must be rare and clearly explained, or people stop trusting what they see.':'The server agrees; nothing visible changes because the screen was already right.'):'The heart is already red: the action feels instant even though the server has not answered.'):(back?(s.fail?'Only now does the user learn it failed.':'After 800 ms the heart finally turns red.'):'The user stares at “Saving…” while the request travels.'))};

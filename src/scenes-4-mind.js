@@ -67,9 +67,9 @@ SCENE({id:'gestalt-region',name:'Common region and connectedness',tag:'Boxes and
  ui:[{choose:H4_REGION_OPTS,label:'Grouping cue',get:s=>s.mode,act:'mode'}],
  on:{mode(s,v){s.mode=v}},
  draw(s){
-  const xs=[];let x=70;for(let i=0;i<10;i++){xs.push(x);x+=i%2===0?34:64}
+  const xs=[];let x=50;for(let i=0;i<10;i++){xs.push(x);x+=i%2===0?44:70}
   const y=150,reg=s.mode==='region'||s.mode==='both',lin=s.mode==='lines'||s.mode==='both';let out=heading('Which dots belong together?');
-  if(reg)for(let i=1;i<9;i+=2)out+=R(xs[i]-24,y-34,xs[i+1]-xs[i]+48,68,C.amberp,C.amber,20);
+  if(reg)for(let i=1;i<9;i+=2)out+=R(xs[i]-17,y-30,xs[i+1]-xs[i]+34,60,C.amberp,C.amber,20);
   if(lin)for(let i=1;i<9;i+=2)out+=L(xs[i],y,xs[i+1],y,C.purple,5);
   xs.forEach(px=>out+=Ci(px,y,11,C.dark));
   const pairs=s.mode==='none'?[[0,1],[2,3],[4,5],[6,7],[8,9]]:[[1,2],[3,4],[5,6],[7,8]];
