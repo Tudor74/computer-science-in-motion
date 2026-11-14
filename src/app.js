@@ -1,5 +1,7 @@
 /* ===================== Runtime: route, clock, modes, map, glossary ===================== */
 // Lessons come from LESSON() calls in the stage files; a stage with none keeps its lessons from curriculum.js.
+// Old grouped lesson ids (e.g. 'bits', 'sorting') map to the lesson of their first term, for glossary context labels.
+const LEGACY_LESSON=Object.fromEntries(CURRICULUM.lessons.map(l=>[l.id,l.ids[0]]));
 CURRICULUM.lessons=CURRICULUM.stages.flatMap(st=>{const mine=LESSONS.filter(l=>l.stage===st.id);return mine.length?mine:CURRICULUM.lessons.filter(l=>l.stage===st.id)});
 THREADS.push(...EXTRA_THREADS);
 const stages=Object.fromEntries(CURRICULUM.stages.map(s=>[s.id,s]));
@@ -330,7 +332,8 @@ function showWord(key,origin,remember=true){
  const g=WORDS[key];if(!g)return;
  if(!dlg.open){wordTrail=[];curWord=null;wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
  if(remember&&curWord&&curWord!==key)wordTrail.push(curWord);curWord=key;
- $('word-title').textContent=g.title;$('word-context').textContent=(g.linkContext&&lessons[g.linkContext]?lessons[g.linkContext].name:'Computer science')+' · word meaning';
+ $('word-title').textContent=g.title;const ctx=lessons[g.linkContext]||lessons[LEGACY_LESSON[g.linkContext]]||lessons[lessonOf[g.scene||g.key]];
+ $('word-context').textContent=(ctx?ctx.name:'Computer science')+' · word meaning';
  setWords($('word-meaning'),g.here,key);setWords($('word-contrast'),g.contrast,key);setWords($('word-example'),g.example,key);
  $('word-detail').hidden=false;$('word-browser').hidden=true;
  $('word-back').hidden=false;$('word-back').textContent=wordTrail.length?'← Previous word':'← All words';
