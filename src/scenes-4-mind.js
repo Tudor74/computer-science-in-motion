@@ -554,7 +554,7 @@ SCENE({id:'eye-movements',name:'Saccades and fixations',tag:'The eye jumps, then
   let out=heading('Same picture, different task');out+=R(30,50,540,290,'#f6f3ee','none',10);
   [[150,'#e7c9a9'],[300,'#d9b08c'],[450,'#c8996f']].forEach(([x,c],j)=>out+=Ci(x,120,26,c)+R(x-32,152,64,100,[C.blue,C.green,C.purple][j],'none',16));
   out+=R(230,284,140,36,'#fff',C.dark,4)+TF(300,307,'EXIT · Platform 2',13,C.dark)+R(498,60,46,32,C.amberp,C.amber,3)+R(40,140,40,120,'#d9c3a3','none',3);
-  const path=H4_PATHS[s.task],k=f.i,pts=path.slice(0,k+1).map((sp,j)=>{const [x,y]=H4_SPOTS[sp];return [x+((j*37)%23)-11,y+((j*53)%17)-8]});
+  const path=H4_PATHS[s.task],k=f.i,pts=path.slice(0,k+1).map((sp,j)=>{const [x,y]=H4_SPOTS[sp];return [x+((j*37)%31)-15,y+((j*53)%25)-12]});
   pts.forEach((p,j)=>{if(j>0)out+=arrow(pts[j-1][0],pts[j-1][1],p[0],p[1],C.coral,2,7);});
   pts.forEach((p,j)=>out+=Ci(p[0],p[1],6+H4_DUR[j]/40,j===k?C.coral:'#c4523888','#fff')+TF(p[0],p[1]+4,j+1,11,'#fff'));
   const tot=sum(H4_DUR.slice(0,k+1));out+=T(300,362,`${k+1} fixations · ${tot} ms of looking · saccades take only about 20–40 ms each`,13,C.muted);
@@ -573,15 +573,17 @@ SCENE({id:'eye-movements-fovea',name:'The moving window',tag:'How much do you se
  ui:[{range:'right',label:'Window right',min:1,max:24,get:s=>s.right,act:'right'},{range:'left',label:'Window left',min:0,max:10,get:s=>s.left,act:'left'}],
  on:{right(s,v){s.right=v},left(s,v){s.left=v},word(s,i){s.fix=Number(i)+1;return 'keep'}},
  draw(s,f,X){
-  let out=heading('Only a small window is read at each fixation');const lines=[H4_TEXT.slice(0,58),H4_TEXT.slice(58)],cw=9.4;
-  let base=0;lines.forEach((ln,li)=>{const y=110+li*70,x0=300-ln.length*cw/2;
+  let out=heading('Only a small window is read at each fixation');const lines=H4_lines(),cw=9.4;
+  let base=0;lines.forEach((ln,li)=>{const y=100+li*56,x0=300-ln.length*cw/2;
    Array.from(ln).forEach((ch,ci)=>{const g=base+ci,d=g-s.fix,vis=d>=-s.left&&d<=s.right;out+=TMF(x0+ci*cw+cw/2,y,ch===' '?' ':vis?ch:'x',16,vis?C.ink:'#a9b4ba','middle',g===s.fix?'font-weight="800"':'')});
    H4_starts().filter(w=>w>=base&&w<base+ln.length).forEach(w=>{const ci=w-base,len=(H4_TEXT.slice(w).match(/^\S+/)||[''])[0].length;out+=hit(X,'word',w,'Fixate this word',R(x0+ci*cw,y-20,len*cw,28,'transparent','none',3))});
    if(s.fix>=base&&s.fix<base+ln.length){const fx=x0+(s.fix-base)*cw+cw/2;out+=`<polygon points="${fmt(fx)},${y+10} ${fmt(fx-6)},${y+22} ${fmt(fx+6)},${y+22}" fill="${C.coral}"/>`+R(fx-s.left*cw-cw/2,y-24,(s.left+s.right+1)*cw,34,'none',C.coral,6,'stroke-dasharray="4 3"')}
    base+=ln.length});
-  const ok=s.right>=14;out+=R(110,260,380,60,ok?C.greenp:C.amberp,'none',10)+TB(300,286,ok?'Wide enough: reading speed is about normal':'Too narrow: reading slows down',15,ok?C.green:C.amber)+T(300,308,`window: ${s.left} left, ${s.right} right of fixation`,13,C.ink);
+  const ok=s.right>=14;out+=R(110,276,380,60,ok?C.greenp:C.amberp,'none',10)+TB(300,302,ok?'Wide enough: reading speed is about normal':'Too narrow: reading slows down',15,ok?C.green:C.amber)+T(300,324,`window: ${s.left} left, ${s.right} right of fixation`,13,C.ink);
   return {svg:out,phase:'The asymmetry follows reading direction: readers of right-to-left scripts such as Hebrew show the larger span to the left. Interfaces benefit by putting key words early in a line, where they fall inside the window.'};
  }});
+// Wrap the passage into lines of at most 44 characters, keeping each line's trailing space so indices stay aligned.
+function H4_lines(){const out=[];let rest=H4_TEXT;while(rest.length>44){let cut=rest.lastIndexOf(' ',44);out.push(rest.slice(0,cut+1));rest=rest.slice(cut+1)}out.push(rest);return out}
 function H4_starts(){const a=[];for(let i=0;i<H4_TEXT.length;i++)if(H4_TEXT[i]!==' '&&(i===0||H4_TEXT[i-1]===' '))a.push(i);return a}
 
 SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail takes aiming',
@@ -598,10 +600,10 @@ SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail tak
   let out=heading('The fovea covers about 2° of what you see');const r=a=>s.d*Math.tan(a*Math.PI/180);const fov=2*r(1),para=2*r(2.5);
   const ex=60,ey=200,sx=60+s.d*2.6;out+=Ci(ex,ey,18,'#fff',C.dark)+Ci(ex+12,ey,6,C.dark)+R(sx,90,8,220,C.dark,'none',2);
   const ray=(a,col,w)=>{const h=Math.tan(a*Math.PI/180)*(sx-ex)*1;return L(ex+12,ey,sx,ey-h*6,col,w)+L(ex+12,ey,sx,ey+h*6,col,w)};
-  out+=ray(2.5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-28,'angles drawn ×6 for visibility',11,C.muted)+TF((ex+sx)/2,ey+56,s.d+' cm',13,C.ink);
+  out+=ray(2.5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-70,'angles drawn ×6 for visibility',11,C.muted)+TF((ex+sx)/2,ey+56,s.d+' cm',13,C.ink);
   const fx=470,fy=200,sc=6;out+=R(380,90,180,220,'#fff',C.line,6)+Ci(fx,fy,para/2*sc,C.purplep,C.purple)+Ci(fx,fy,Math.max(2,fov/2*sc),C.coralp,C.coral);
   out+=TF(470,112,'screen, actual proportions (1 cm = 6 units)',11,C.muted)+TF(470,292,`sharp zone ≈ ${fov.toFixed(1)} cm across`,13,C.coral)+TF(470,272,`parafovea ≈ ${para.toFixed(1)} cm`,12,C.purple);
-  out+=T(300,350,'Everything outside the coral circle is seen at lower resolution, and colour and detail fall off further out.',13,C.muted);
+  out+=T(300,350,'Outside the coral circle, detail and colour fall off steeply.',13,C.muted);
   return {svg:out,phase:`At ${s.d} cm, 2° spans about ${fov.toFixed(1)} cm of screen. A whole paragraph cannot be seen sharply at once, which is why a single glance cannot read a screen and important cues must be noticeable in peripheral vision.`};
  },
  three(s,f,X,project){

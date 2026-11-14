@@ -89,8 +89,8 @@ SCENE({id:'front-panel-bug',name:'Single-stepping a bug',tag:'Debugging by lampl
   const P=H1_bugProg(s.seed);let out=heading('Step, compare, find the bug');
   [['line',40],['instruction',112],['expected',212],['lamps',282]].forEach(([h,x])=>out+=TBF(x,66,h,13,C.muted));
   const fr=this.trace(s);
-  P.wrong.forEach((l,i)=>{const y=92+i*34,done=i<=f.pc,row=fr[i+1],bad=done&&row.acc!==row.exp,cur=i===f.pc;
-   const inner=R(20,y-18,290,28,cur?C.amberp:'#fff',bad?C.coral:cur?C.amber:C.grid,6)+TMF(40,y,i,14,C.muted)+TMF(112,y,l[0]+(l[1]!==null?' '+l[1]:''),15,C.ink)+TF(212,y,done&&l[0]!=='STORE'&&l[0]!=='HALT'?String(row.exp):'',14,C.green)+TF(282,y,done&&l[0]!=='STORE'&&l[0]!=='HALT'?String(row.acc):'',14,bad?C.coral:C.ink,'middle','font-weight="700"');
+  P.wrong.forEach((l,i)=>{const y=92+i*34,done=i<=f.pc,row=fr[i+1],bad=done&&row.acc!==row.exp,cur=i===f.pc,first=bad&&!fr.slice(1,i+1).some(r=>r.acc!==r.exp);
+   const inner=R(20,y-18,290,28,cur?C.amberp:'#fff',first?C.coral:bad?'#e3a08f':cur?C.amber:C.grid,6,bad&&!first?'stroke-dasharray="5 4"':'')+TMF(40,y,i,14,C.muted)+TMF(112,y,l[0]+(l[1]!==null?' '+l[1]:''),15,C.ink)+TF(212,y,done&&l[0]!=='STORE'&&l[0]!=='HALT'?String(row.exp):'',14,C.green)+TF(282,y,done&&l[0]!=='STORE'&&l[0]!=='HALT'?String(row.acc):'',14,bad?C.coral:C.ink,'middle','font-weight="700"');
    out+=hit(X,'guess',i,`Line ${i}: ${l[0]} ${l[1]??''}. Press if this is the bug.`,inner)});
   out+=TF(165,276,`Cells 8, 9, 10 hold the prices ${P.vals.join(', ')};`,13,C.muted)+TF(165,296,`the total should be ${sum(P.vals)}.`,13,C.muted);
   out+=R(332,44,256,150,H1_PANEL,'none',10)+TF(346,66,'PROGRAM COUNTER',13,H1_LABEL,'start');
@@ -98,7 +98,7 @@ SCENE({id:'front-panel-bug',name:'Single-stepping a bug',tag:'Debugging by lampl
   out+=TF(346,126,'ACCUMULATOR',13,H1_LABEL,'start');for(let i=0;i<8;i++)out+=H1_lamp(360+i*26,150,(f.acc>>(7-i))&1,8);
   out+=TB(460,184,`= ${f.acc}`,15,'#fff');
   out+=R(332,206,256,118,'#f6f1e3','#d9cfb3',4)+TF(346,228,'9 Sept 1947 · Harvard Mark II',13,C.ink,'start','font-weight="650"')+TF(346,252,'Relay 70, panel F (moth) in relay.',13,C.ink,'start')+TF(346,276,'“First actual case of bug',13,C.ink,'start','font-style="italic"')+TF(346,298,'being found.”',13,C.ink,'start','font-style="italic"')+Ci(560,280,9,'#8a7a5a')+L(548,272,572,288,'#8a7a5a',2)+L(548,288,572,272,'#8a7a5a',2);
-  let verdict='';if(s.guess!==null)verdict=s.guess===P.bug?`Found it: line ${P.bug} reads the wrong cell.`:`Not line ${s.guess}: its lamps matched what was expected.`;
+  let verdict='';if(s.guess!==null)verdict=s.guess===P.bug?`Found it: line ${P.bug} reads the wrong cell.`:s.guess>P.bug?`Line ${s.guess} is wrong only because the error started earlier.`:`Not line ${s.guess}: its lamps matched what was expected.`;
   if(verdict)out+=T(300,354,verdict,15,s.guess===P.bug?C.green:C.coral,'middle','font-weight="650"');
   const phase=f.pc<0?'Single-step: run one instruction, read the lamps, compare with what you expected. The first mismatch points at the bug.':`Line ${f.pc}: ${P.wrong[f.pc][0]}${P.wrong[f.pc][1]!==null?' '+P.wrong[f.pc][1]:''}. Lamps show ${f.acc}${f.acc!==f.exp?`, but ${f.exp} was expected`:' as expected'}.`;
   return {svg:out,phase};

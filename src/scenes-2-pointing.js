@@ -537,7 +537,7 @@ SCENE({id:'augmenting-bootstrapping',name:'Bootstrapping',tag:'Improve the tools
   const run=sh=>{ // illustrative compounding model
  let c=1;const out=[c];for(let t=1;t<=20;t++){c=c+c*sh*.25+(1-sh)*.05;out.push(c)}return out};
   const a=run(s.share/100),b=run(0);let out=heading('Tools that improve their makers compound');
-  const cx=150,cy=190,rr=72;['better tools','better toolmakers','faster improvement'].forEach((t,i)=>{const ang=-Math.PI/2+i*2*Math.PI/3,x=cx+rr*Math.cos(ang),y=cy+rr*Math.sin(ang);out+=R(x-62,y-17,124,34,C.pale,C.blue,17)+TF(x,y+5,t,13,C.ink)});
+  const cx=158,cy=190,rr=80;['better tools','better toolmakers','faster improvement'].forEach((t,i)=>{const ang=-Math.PI/2+i*2*Math.PI/3,x=cx+rr*Math.cos(ang),y=cy+rr*Math.sin(ang);out+=R(x-62,y-17,124,34,C.pale,C.blue,17)+TF(x,y+5,t,13,C.ink)});
   for(let i=0;i<3;i++){const a0=-Math.PI/2+i*2*Math.PI/3+.5,a1=a0+1.1;out+=curveArrow(cx+rr*Math.cos(a0),cy+rr*Math.sin(a0),cx+rr*Math.cos(a1),cy+rr*Math.sin(a1),12,C.blue,2)}
   const ymax=Math.max(4,Math.ceil(Math.max(...a)));const pl=H2_plot(300,60,270,220,20,ymax,'improvement cycles','capability',[0,5,10,15,20],[0,Math.round(ymax/2),ymax]);out+=pl.svg;
   out+=P(a.map((v,t)=>(t?'L':'M')+fmt(pl.px(t))+' '+fmt(pl.py(v))).join(''),C.green,3)+P(b.map((v,t)=>(t?'L':'M')+fmt(pl.px(t))+' '+fmt(pl.py(v))).join(''),C.muted,2.5,'none','stroke-dasharray="5 4"');

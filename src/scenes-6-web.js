@@ -273,17 +273,17 @@ SCENE({id:'usability-testing',name:'Usability testing',tag:'How many users do yo
   const obs=range(15).map(k=>{const any=range(12).map(j=>mat.slice(0,k+1).some(r=>r[j]));return any.filter(Boolean).length/12});
   out+=H6_curve(k=>1-Math.pow(1-s.L,k),obs,s.n,15,340,300,240,220,'number of users');
   const model=Math.round(100*(1-Math.pow(1-s.L,s.n)));
-  out+=TB(460,68,`${s.n} user${s.n>1?'s':''}: model ${model}%`,14,C.blue)+TB(460,88,`this run found ${g.found} of 12`,14,C.green);
+  out+=TB(460,50,`${s.n} user${s.n>1?'s':''}: model ${model}%`,14,C.blue)+TB(460,68,`this run found ${g.found} of 12`,14,C.green);
   return {svg:out,phase:`With L = ${s.L.toFixed(2)}, the model predicts ${model}% of problems after ${s.n} user${s.n>1?'s':''}. Hard-to-meet problems (right-hand columns) need many users. Nielsen’s advice was several small rounds of testing, fixing between them, rather than one large test.`};
  }});
 
 const H6_SESSION=[
  {screen:'Product page',focus:'Add to basket',say:'Okay, I want the blue mug. Add to basket… done.',note:'Found the button quickly.',silent:'Clicked Add to basket (0:04).'},
  {screen:'Product page',focus:'Basket icon',say:'Where’s my basket? Is it… oh, that little bag at the top?',note:'Basket icon not recognised as the basket (8 s).',silent:'Paused 8 s, then clicked the bag icon.'},
- {screen:'Delivery',focus:'“Standard (2)”',say:'“Standard (2)” — two days? Two pounds? I can’t tell.',note:'Ambiguous delivery label.',silent:'Switched delivery option twice.'},
+ {screen:'Delivery',focus:'“Standard (2)”',say:'‘Standard (2)’ — two days? Two pounds? I can’t tell.',note:'Ambiguous delivery label.',silent:'Switched delivery option twice.'},
  {screen:'Address',focus:'Postcode',say:'It says invalid postcode, but I typed it right!',note:'Validation rejects the space in the postcode.',silent:'Postcode error shown twice.'},
  {screen:'Address',focus:'Error message',say:'Maybe without the space? …Yes, that worked. Annoying.',note:'Error message does not say what is wrong.',silent:'Removed a character; error cleared.'},
- {screen:'Confirmation',focus:'“Request processed”',say:'“Request processed”… did I actually pay?',note:'Confirmation does not confirm the order.',silent:'Hovered over the page for 6 s, then left.'}
+ {screen:'Confirmation',focus:'“Request processed”',say:'‘Request processed’… did I actually pay?',note:'Confirmation does not confirm the order.',silent:'Hovered over the page for 6 s, then left.'}
 ];
 function H6_wrap(text,max){const words=String(text).split(' '),lines=[];let cur='';for(const w of words){if((cur+' '+w).trim().length>max&&cur){lines.push(cur);cur=w}else cur=(cur+' '+w).trim()}if(cur)lines.push(cur);return lines}
 SCENE({id:'usability-testing-think-aloud',name:'Thinking aloud',tag:'Hearing why people struggle',
@@ -399,7 +399,7 @@ SCENE({id:'heuristics-severity',name:'Severity ratings',tag:'Which problem do we
   const order=H6_SPOTS.slice().sort((a,b)=>Math.round(s.sev[b.id])-Math.round(s.sev[a.id])||H6_SPOTS.indexOf(a)-H6_SPOTS.indexOf(b));
   const label={jargon:'Jargon heading',rules:'Hidden password rules',error:'Cryptic error code',date:'Date format mismatch',recall:'Code from previous page',cancel:'No way to cancel',spinner:'Endless spinner'};
   order.forEach((sp,i)=>{const y=54+i*40,v=s.sev[sp.id],sel=sp.id===s.sel,col=v>=3.5?C.coral:v>=2.5?C.amber:v>=1.5?C.blue:C.muted;
-   out+=hit(X,'pick',sp.id,`${label[sp.id]}, severity ${Math.round(v)}. Press to select.`,R(14,y,350,34,sel?C.pale:'#fff',sel?C.blue:C.grid,7)+TF(24,y+22,label[sp.id],13,C.ink,'start',sel?'font-weight="700"':'')+R(196,y+11,150*v/4,12,col,'none',5)+TF(356,y+22,Math.round(v),13,col,'end','font-weight="700"'))});
+   out+=hit(X,'pick',sp.id,`${label[sp.id]}, severity ${Math.round(v)}. Press to select.`,R(14,y,350,34,sel?C.pale:'#fff',sel?C.blue:C.grid,7)+TF(24,y+22,label[sp.id],13,C.ink,'start',sel?'font-weight="700"':'')+R(196,y+11,130*v/4,12,col,'none',5)+TF(356,y+22,Math.round(v),13,col,'end','font-weight="700"'))});
   const sp=H6_SPOTS.find(x=>x.id===s.sel),v=Math.round(s.sev[s.sel]);
   out+=R(378,54,210,274,'#fff',C.grid,9)+TBF(390,78,label[sp.id],14,C.ink,'start');
   H6_wrap(sp.why,28).forEach((l,i)=>out+=TF(390,102+i*18,l,13,C.muted,'start'));
@@ -427,7 +427,7 @@ SCENE({id:'heuristics-evaluators',name:'Several evaluators',tag:'Why one expert 
   const single=sum(mat.map(r=>r.filter(Boolean).length))/10/16;
   const obs=range(10).map(k=>range(16).filter(j=>mat.slice(0,k+1).some(r=>r[j])).length/16);
   out+=H6_curve(k=>1-Math.pow(1-single,k),obs,s.k,10,360,300,220,220,'evaluators');
-  out+=TB(470,68,`${s.k} evaluator${s.k>1?'s':''}: ${g.found} of 16 found`,14,C.green)+TF(470,88,`one evaluator alone: about ${Math.round(single*100)}%`,13,C.muted);
+  out+=TB(470,50,`${s.k} evaluator${s.k>1?'s':''}: ${g.found} of 16 found`,14,C.green)+TF(470,68,`one evaluator alone: about ${Math.round(single*100)}%`,13,C.muted);
   out+=TF(86+8*14,352,'← easy to spot · hard to spot →',13,C.muted);
   return {svg:out,phase:`Each evaluator here finds about ${Math.round(single*100)}% of problems. Pooling ${s.k} finds ${Math.round(100*g.found/16)}%. The curve flattens: past about five evaluators, extra effort buys little. The blue curve assumes evaluators are independent; real ones overlap more.`};
  }});

@@ -90,7 +90,7 @@ SCENE({id:'wimp-desktop-metaphor',name:'The desktop metaphor',tag:'Icons as offi
    out+=hit(X,'pick',n,`${label}${s.sel===n?', picked up':''}. Press to ${s.sel&&s.sel!==n?'drop here':'pick up'}.`,R(x-36,y-36,72,92,'transparent','none',8)+H3_icon(kind,x,y,label,s.sel===n,full))}
   if(s.disk==='ejected')out+=TF(300,150,'(disk ejected)',13,C.muted);
   if(s.ghost){const a=H3_DM_POS[s.ghost.from],b=H3_DM_POS[s.ghost.to],x=lerp(a[0],b[0],s.ghost.u),y=lerp(a[1],b[1],s.ghost.u);out+=L(a[0],a[1],b[0],b[1],C.line,1.5,'stroke-dasharray="5 4"')+G(H3_icon(s.ghost.from==='report'?'doc':s.ghost.from==='projects'?'folder':'disk',x,y,'',false),'opacity=".55"')+H3_pointer(x+6,y+4)}
-  out+=TB(495,66,'Does the metaphor hold?',14,C.ink);
+  out+=TBF(495,66,'Does the metaphor hold?',14,C.ink);
   if(s.msg){const col=s.ok===true?C.green:s.ok===false?C.coral:C.muted,fill=s.ok===true?C.greenp:s.ok===false?C.coralp:'#fff';
    out+=R(405,80,182,150,fill,col,9)+TBF(496,102,s.ok===true?'Holds ✓':s.ok===false?'Breaks ✗':'—',15,col);
    const words=s.msg.split(' ');let line='',y=124,lines=[];for(const w of words){if((line+' '+w).length>25){lines.push(line);line=w}else line=line?line+' '+w:w}lines.push(line);
@@ -160,7 +160,7 @@ SCENE({id:'dynabook',name:'The Dynabook',tag:'A computer for children of all age
   for(let r=0;r<3;r++)for(let c=0;c<10;c++)out+=R(58+c*19.5,206+r*15,15,11,'#fff','#9fb3bf',2);
   if(s.year>=1997)out+=[10,18,26].map(r=>P(`M${264-r*.7} ${70-r*.7}A${r} ${r} 0 0 1 ${264+r*.7} ${70-r*.7}`,C.green,1.8)).join('');
   out+=TB(154,300,s.year,32,C.ink);
-  H3_DYNA.forEach((f,i)=>{const y=58+i*44,on=f.y<=s.year;out+=R(296,y,288,38,on?C.greenp:'#fff',on?C.green:C.grid,8)+TB(308,y+17,f.t,14,on?C.ink:C.muted,'start')+TF(308,y+32,on?`${f.y}: ${f.n}`:'not yet',13,on?C.green:C.muted,'start')});
+  H3_DYNA.forEach((f,i)=>{const y=58+i*44,on=f.y<=s.year;out+=R(296,y,288,38,on?C.greenp:'#fff',on?C.green:C.grid,8)+TBF(308,y+17,f.t,14,on?C.ink:C.muted,'start')+TF(308,y+32,on?`${f.y}: ${f.n}`:'not yet',13,on?C.green:C.muted,'start')});
   out+=L(40,340,580,340,C.line,3);H3_DYNA.forEach(f=>{const x=40+540*(f.y-1972)/43;out+=Ci(x,340,5,f.y<=s.year?C.green:'#fff',C.green)});
   const mx=40+540*(s.year-1972)/43;out+=`<polygon points="${fmt(mx)},334 ${fmt(mx-7)},322 ${fmt(mx+7)},322" fill="${C.ink}"/>`+TF(40,362,'1972',13,C.muted,'start')+TF(580,362,'2015',13,C.muted,'end');
   return {svg:out,phase:`By ${s.year}, ${got.length} of ${H3_DYNA.length} parts of the vision were real. The machine arrived; Kay’s deeper aim, that children would use it to build and test their own ideas, is still only partly met.`};
@@ -532,8 +532,8 @@ SCENE({id:'wysiwyg',name:'What you see is what you get',tag:'Appearance instead 
   const tokens=[];if(s.head)tokens.push('@heading[Notes]','¶');H3_WORDS.forEach((w,i)=>{let t=w;if(s.st[i].i)t=`@i[${t}]`;if(s.st[i].b)t=`@b[${t}]`;tokens.push(t)});
   const ml=H3_wrap(tokens,240,t=>t==='¶'?999:(t.length+1)*7.9);ml.forEach((ln,j)=>out+=TMF(32,98+j*24,ln.filter(t=>t!=='¶').join(' '),13,'#e3f2ea','start'));
   let y=98;if(s.head){out+=TB(322,y+8,'Notes',24,C.ink,'start');y+=46}
-  const items=H3_WORDS.map((w,i)=>({w,i})),lines=H3_wrap(items,240,it=>(it.w.length+1)*(s.st[it.i].b?11.2:10.2));
-  lines.forEach((ln,j)=>{let x=322;ln.forEach(it=>{const st=s.st[it.i],wd=it.w.length*(st.b?11.2:10.2),sel=s.sel===it.i;
+  const k19=textSize(19,'',0,'start')/19,items=H3_WORDS.map((w,i)=>({w,i})),lines=H3_wrap(items,240,it=>(it.w.length+1)*(s.st[it.i].b?11.2:10.2)*k19);
+  lines.forEach((ln,j)=>{let x=322;ln.forEach(it=>{const st=s.st[it.i],wd=it.w.length*(st.b?11.2:10.2)*k19,sel=s.sel===it.i;
    out+=hit(X,'sel',it.i,`Word ${it.w}${st.b?', bold':''}${st.i?', italic':''}. Press to select.`,R(x-3,y+j*32-20,wd+6,28,sel?C.amberp:'transparent',sel?C.amber:'none',4)+T(x,y+j*32,it.w,19,C.ink,'start',`${st.b?'font-weight="700"':''} ${st.i?'font-style="italic"':''}`));x+=wd+10})});
   out+=TF(300,336,'Markup is exact and portable; WYSIWYG shows the result as you work.',13,C.muted);
   const w=s.sel!==null?H3_WORDS[s.sel]:null;
