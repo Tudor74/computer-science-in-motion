@@ -1,4 +1,7 @@
 /* ===================== Runtime: route, clock, modes, map, glossary ===================== */
+// Lessons come from LESSON() calls in the stage files; a stage with none keeps its lessons from curriculum.js.
+CURRICULUM.lessons=CURRICULUM.stages.flatMap(st=>{const mine=LESSONS.filter(l=>l.stage===st.id);return mine.length?mine:CURRICULUM.lessons.filter(l=>l.stage===st.id)});
+THREADS.push(...EXTRA_THREADS);
 const stages=Object.fromEntries(CURRICULUM.stages.map(s=>[s.id,s]));
 const lessons=Object.fromEntries(CURRICULUM.lessons.map(l=>[l.id,l]));
 const route=CURRICULUM.lessons.flatMap(l=>l.ids);
@@ -65,17 +68,61 @@ function paint(){
  svg.dataset.mode=mode;
  if(fk){const el=svg.querySelector(`[data-key="${CSS.escape(fk)}"]`);if(el)el.focus({preventScroll:true})}
  setWords($('phase'),out.phase||(f&&f.say)||'');
+ if(sc.three&&updateViewPane(sc,i))render3D(sc,s,f,X);else if(sc.three)updateViewPane(sc,i);else{$('three-panel').hidden=true;$('two-panel').inert=false;$('two-panel').removeAttribute('aria-hidden')}
  if(mode==='try')updateStepStatus();
  const prog=mode==='try'?offsets[i]/TOTAL:t/TOTAL;
  $('progress-fill').style.width=(100*prog)+'%';$('progress').setAttribute('aria-valuenow',String(Math.round(100*prog)));
 }
+/* ---- 2D/3D view (as in Mathematics In Motion) ---- */
+let viewMode='auto',viewReveal=0,last3D=null,turning=null;const SLIDE=.6,three=$('three-drawing');
+function paneProgress(sc,i){
+ if(!sc.three||viewMode==='2d')return 0;
+ if(viewMode==='3d')return 1;
+ if(mode==='try')return 0; // In Try it, Auto keeps the interactive 2D diagram in front.
+ const local=t-offsets[i],half=DUR(sc.id)/2;
+ if(reduced)return local>=half?1:0;
+ return smooth(clamp((local-half)/SLIDE,0,1));
+}
+function updateViewPane(sc,i){
+ viewReveal=paneProgress(sc,i);const pane=$('three-panel'),two=$('two-panel'),show=!!sc.three&&viewReveal>0;
+ pane.hidden=!sc.three;pane.style.visibility=show?'visible':'hidden';
+ pane.style.transform=`translateX(${((1-viewReveal)*100).toFixed(4)}%)`;pane.dataset.sliding=String(viewReveal>0&&viewReveal<1);
+ two.inert=viewReveal>0;pane.inert=viewReveal<1;
+ two.setAttribute('aria-hidden',String(viewReveal>=1));pane.setAttribute('aria-hidden',String(viewReveal<1));
+ $('three-reset').hidden=viewReveal<1;
+ for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===viewMode));
+ return show;
+}
+function render3D(sc,s,f,X){
+ last3D={sc,s,f,X};let o;
+ try{o=sc.three(s,f,X,makeProject)||{}}catch(err){console.error('3D draw failed in',sc.id,err);o={svg:T(300,190,'This 3D view could not be drawn.',18,C.coral),caption:String(err.message)}}
+ three.innerHTML=`<title>${esc(o.title||sc.name+' in 3D')}</title><desc>${esc(o.caption||'')}</desc>`+(o.svg||'');
+ setWords($('three-caption'),(o.caption||'')+' Drag to turn.');
+}
+function redraw3D(){if(last3D)render3D(last3D.sc,last3D.s,last3D.f,last3D.X)}
+function chooseView(m){if(!['2d','auto','3d'].includes(m))return;setSpeed(0);stopRun();viewMode=m;lastPainted=-1;paint()}
+function installThree(){
+ for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>chooseView(b.dataset.view));
+ $('three-reset').addEventListener('click',()=>{setSpeed(0);camera={yaw:.62,pitch:.55};redraw3D()});
+ three.addEventListener('pointerdown',e=>{
+  if(e.isPrimary===false||e.pointerType==='mouse'&&e.button!==0)return;
+  setSpeed(0);turning={id:e.pointerId,x:e.clientX,y:e.clientY,yaw:camera.yaw,pitch:camera.pitch,touch:e.pointerType==='touch'};three.classList.add('turning');
+  try{three.setPointerCapture(e.pointerId)}catch(_){}
+ });
+ three.addEventListener('pointermove',e=>{if(!turning||e.pointerId!==turning.id)return;camera.yaw=turning.yaw+(e.clientX-turning.x)*.008;if(!turning.touch)camera.pitch=clamp(turning.pitch+(e.clientY-turning.y)*.006,.15,1.15);redraw3D()});
+ const endTurn=e=>{if(!turning||e.pointerId!==undefined&&e.pointerId!==turning.id)return;const id=turning.id;turning=null;three.classList.remove('turning');try{if(three.hasPointerCapture(id))three.releasePointerCapture(id)}catch(_){}};
+ window.addEventListener('pointerup',endTurn,true);window.addEventListener('pointercancel',endTurn,true);three.addEventListener('lostpointercapture',endTurn);
+ three.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(e.key)){e.preventDefault();e.stopPropagation();setSpeed(0);
+  if(e.key==='Home')camera={yaw:.62,pitch:.55};if(e.key==='ArrowLeft')camera.yaw-=.12;if(e.key==='ArrowRight')camera.yaw+=.12;if(e.key==='ArrowUp')camera.pitch=clamp(camera.pitch+.08,.15,1.15);if(e.key==='ArrowDown')camera.pitch=clamp(camera.pitch-.08,.15,1.15);redraw3D()}});
+}
 function showScene(){
  const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;
  const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
+ $('view-controls').hidden=!sc.three;viewMode='auto';camera={yaw:.62,pitch:.55};
  $('term').textContent=sc.name;setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
  $('eyebrow').textContent=`${st.name} · ${sc.tag||les.name}`;
  setWords($('lesson-why'),'Why this lesson: '+les.why);
- const prior=les.prior||[];
+ const prior=(les.prior||[]).filter(k=>lessons[k]);
  $('lesson-prior').innerHTML=prior.length?'Builds on: '+prior.map(k=>`<button type="button" data-lesson="${k}">${esc(lessons[k].name)}</button>`).join(''):'Builds on: nothing yet. This is a starting point.';
  $('counter').textContent=`${li+1} / ${les.ids.length}`;$('counter').setAttribute('aria-label',`Topic ${li+1} of ${les.ids.length} in this lesson`);
  updateHeader(les);renderMap(id);updateTransport();
@@ -315,6 +362,7 @@ try{
  installPicker();
  $('mode-watch').addEventListener('click',()=>setMode('watch'));
  $('mode-try').addEventListener('click',()=>setMode('try'));
+ installThree();
  svg.addEventListener('click',onSvgAct);svg.addEventListener('keydown',onSvgAct);
  $('previous').addEventListener('click',()=>goTo(indexAt(t)-1));
  $('next').addEventListener('click',()=>goTo(indexAt(t)+1));
@@ -353,9 +401,9 @@ try{
  requestAnimationFrame(loop);
  // Read-only inspection hooks for automated checks; no network.
  window.csApp={route,scenes:SCENES,glossary:GLOSSARY,lessons:CURRICULUM.lessons,
-  state:()=>({t,speed,mode,textScale:TS,zero,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
+  state:()=>({viewMode,viewReveal,camera:{...camera},hasThree:!!SCENES[cur()].three,t,speed,mode,textScale:TS,zero,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
   go:id=>goTo(route.indexOf(id)),seek:x=>{setSpeed(0);t=clamp(x,0,TOTAL);lastPainted=-1},offsets,
-  setMode,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
+  setMode,chooseView,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
 }catch(err){
  console.error(err);$('status').className='note';$('status').setAttribute('role','alert');$('status').textContent='The lessons could not start: '+err.message;
 }

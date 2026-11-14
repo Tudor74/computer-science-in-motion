@@ -58,6 +58,23 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 #drawing[data-mode="try"]{cursor:default}
 .phase{margin:0;padding:8px 11px;min-height:66px;font-size:14px;line-height:1.5;border-top:1px solid #e3ebef;background:var(--deck)}
 .try-panel{border-top:1px solid #dfe8ee;padding:8px 9px 10px;background:#fbfdfe}
+/* 2D/3D view toggle (as in Mathematics In Motion): 3D slides over the 2D diagram and its caption. */
+.view-options{display:flex;align-items:center;gap:6px}
+.view-options[hidden],#three-panel[hidden],#three-reset[hidden]{display:none!important}
+.view-mode-buttons{display:flex;align-items:center;gap:1px;background:#e7eff4;border-radius:7px;padding:2px}
+.view-mode-buttons button{font-size:12px;font-weight:600;line-height:1;min-width:44px;min-height:40px;padding:4px 8px;border:0;border-radius:5px;color:#425d6c;background:transparent}
+.view-mode-buttons button[aria-pressed="true"]{background:#fff;color:#164f79;box-shadow:0 1px 3px #192c3715}
+.view-mode-buttons button:hover{background:#dceaf3}
+#three-reset{min-height:40px;padding:3px 8px;font-size:12px;border:0;background:transparent}
+.diagram-viewport{position:relative;overflow:hidden}
+#three-panel{position:absolute;inset:0;z-index:1;background:#edf4f8;display:flex;flex-direction:column;transform:translateX(100%);will-change:transform;visibility:hidden}
+#three-panel[data-sliding="true"]{box-shadow:-5px 0 14px #192c3718}
+#three-drawing{display:block;width:100%;height:auto;aspect-ratio:600/380;cursor:grab;touch-action:pan-y;flex:0 0 auto}
+#three-drawing.turning{cursor:grabbing;touch-action:none}
+#three-drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#three-drawing:focus-visible{outline:3px solid var(--focus);outline-offset:-4px}
+.three-caption{margin:0;padding:8px 11px;font-size:14px;line-height:1.5;border-top:1px solid #dde8ee;flex:1 1 auto;overflow:auto}
+#two-panel[inert],#three-panel[inert]{pointer-events:none}
 .try-panel[hidden]{display:none}
 .try-hint{font-size:13px;color:var(--muted);margin:0 0 7px;line-height:1.45}
 .try-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -183,6 +200,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  .bottom{padding:5px 10px 10px}
  .try-row input[type=range]{width:140px}
  .deck-note{display:none}
+ .deck-toolbar{flex-wrap:wrap}
 }
 @media(max-width:380px){
  .header-row{gap:6px}
@@ -222,10 +240,26 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
      <button type="button" id="mode-watch" aria-pressed="true" title="Watch the animated explanation">Watch</button>
      <button type="button" id="mode-try" aria-pressed="false" title="Change the input and see the same diagram respond">Try it</button>
     </div>
+    <div class="view-options" id="view-controls" hidden>
+     <div class="view-mode-buttons" role="group" aria-label="Diagram view">
+      <button type="button" id="view-2d" data-view="2d" aria-pressed="false" title="Pause and inspect the 2D view">2D</button>
+      <button type="button" id="view-auto" data-view="auto" aria-pressed="true" title="3D slides in halfway through the topic; rewind slides it back">Auto</button>
+      <button type="button" id="view-3d" data-view="3d" aria-pressed="false" title="Pause and inspect the 3D view">3D</button>
+     </div>
+     <button type="button" id="three-reset" aria-label="Reset three-dimensional view" hidden>Reset view</button>
+    </div>
     <span class="deck-note" id="deck-note">Animated · deterministic</span>
    </div>
+   <div class="diagram-viewport" id="diagram-viewport">
+   <div id="two-panel">
    <svg id="drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-labelledby="diagram-title diagram-desc" data-mode="watch"><title id="diagram-title">Loading</title><desc id="diagram-desc">The diagram appears when JavaScript runs.</desc><text x="300" y="190" text-anchor="middle" font-size="20" fill="#546873">Loading the first lesson…</text></svg>
    <p class="phase" id="phase" tabindex="0" aria-label="Diagram caption">The diagram is drawn by the script on this page.</p>
+   </div>
+   <section id="three-panel" aria-label="Three-dimensional view" aria-hidden="true" hidden inert>
+    <svg id="three-drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="group" tabindex="0" aria-label="3D companion: drag horizontally to turn, or use arrow keys. Turning pauses playback."></svg>
+    <p class="three-caption" id="three-caption" tabindex="0" aria-label="Three-dimensional view caption"></p>
+   </section>
+   </div>
    <section class="try-panel" id="try-panel" aria-label="Try it controls" hidden>
     <p class="try-hint" id="try-hint"></p>
     <div id="try-controls"></div>
@@ -476,8 +510,48 @@ function graphSVG(X,nodes,edges,o={}){
 // A small "counter" tile used for live counts (comparisons, steps, hops…).
 function counter(x,y,label,value,col=C.blue,w=120){return R(x,y,w,46,'#fff',C.grid,8)+TF(x+w/2,y+17,label,12,C.muted)+TBF(x+w/2,y+38,value,17,col)}
 
+/* ---- Projected 3D (as in Mathematics In Motion): plain SVG, no WebGL. ----
+ A scene opts in with three(s,f,X,project) -> {svg, caption, title}. Call project(bounds) with a list of
+ [x,y,z] points (or [x0,x1,y0,y1,z0,z1]) to get P: [x,y,z] -> [sx,sy,depth] fitted to the panel,
+ using the shared camera, which the learner turns by dragging. z is up. */
+let camera={yaw:.62,pitch:.55};
+function makeProject(bounds){
+ const raw=([x,y,z])=>{const a=x*Math.cos(camera.yaw)-y*Math.sin(camera.yaw),b=x*Math.sin(camera.yaw)+y*Math.cos(camera.yaw);return [a,-b*Math.sin(camera.pitch)-z*Math.cos(camera.pitch),-b*Math.cos(camera.pitch)+z*Math.sin(camera.pitch)]};
+ const pts=[];if(Array.isArray(bounds[0])){for(const point of bounds)pts.push(raw(point))}else{for(const x of [bounds[0],bounds[1]])for(const y of [bounds[2],bounds[3]])for(const z of [bounds[4],bounds[5]])pts.push(raw([x,y,z]))}
+ const xs=pts.map(v=>v[0]),ys=pts.map(v=>v[1]),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),scale=Math.min(440/(xmax-xmin||1),270/(ymax-ymin||1));
+ return a=>{const q=raw(a);return [300+(q[0]-(xmin+xmax)/2)*scale,196+(q[1]-(ymin+ymax)/2)*scale,q[2]]};
+}
+const label3=(x,y,value,size=16,fill=C.ink,extra='')=>T(x,y,value,size,fill,'middle',extra);
+function line3(a,b,P,colour=C.line,width=2,extra=''){const p=P(a),q=P(b);return L(p[0],p[1],q[0],q[1],colour,width,extra)}
+function arrow3(a,b,P,colour=C.blue,width=3){const p=P(a),q=P(b);return arrow(p[0],p[1],q[0],q[1],colour,width)}
+function point3(a,P,colour=C.blue,r=6,stroke='none'){const p=P(a);return Ci(p[0],p[1],r,colour,stroke)}
+function poly3(points,P,fill,stroke=C.line,extra=''){return `<polygon points="${points.map(v=>P(v).slice(0,2).map(fmt).join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" stroke-linejoin="round" ${extra}/>`}
+// A box as six faces; paintFaces draws faces back to front.
+function prism(x,y,z,dx,dy,dz,col=C.blue,extra=''){
+ const a=[x,y,z],b=[x+dx,y,z],c=[x+dx,y+dy,z],d=[x,y+dy,z],A=[x,y,z+dz],B=[x+dx,y,z+dz],D=[x,y+dy,z+dz],E=[x+dx,y+dy,z+dz];
+ return [{pts:[a,b,c,d],fill:col},{pts:[a,b,B,A],fill:col},{pts:[b,c,E,B],fill:col},{pts:[c,d,D,E],fill:col},{pts:[d,a,A,D],fill:col},{pts:[A,B,E,D],fill:col}].map((f,i)=>({...f,opacity:i===5?1:i===2?.78:.64,extra}));
+}
+function tint(hex,amount){if(hex.length===4)hex='#'+hex.slice(1).split('').map(c=>c+c).join('');const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));return '#'+rgb.map(v=>Math.round(v+(255-v)*amount).toString(16).padStart(2,'0')).join('')}
+function paintFaces(faces,P){return faces.map(f=>({...f,depth:f.pts.reduce((a,p)=>a+P(p)[2],0)/f.pts.length})).sort((a,b)=>a.depth-b.depth).map(f=>{
+ let out=poly3(f.pts,P,tint(f.fill,f.opacity===undefined?0:(1-f.opacity)*.8),f.stroke||'#6c8d9f',f.extra||'');
+ if(f.label!==undefined){const mid=f.pts.reduce((a,v)=>a.map((q,i)=>q+v[i]/f.pts.length),[0,0,0]),p=P(mid);out+=label3(p[0],p[1]+6,f.label,f.size||17,f.ink||C.ink,'font-weight="650"')}
+ return out;
+}).join('')}
+// Depth-sorted mixed items: [{at:[x,y,z], svg:(P)=>string}] drawn back to front (for spheres, labels, nodes).
+function sortedItems(items,P){return items.map(it=>({...it,d:P(it.at)[2]})).sort((a,b)=>a.d-b.d).map(it=>it.svg(P)).join('')}
+function axes3(P,labels=['x','y','z'],end=[3,3,3],from=[0,0,0]){
+ let out='';[[end[0],from[1],from[2]],[from[0],end[1],from[2]],[from[0],from[1],end[2]]].forEach((a,i)=>{out+=arrow3(from,a,P,C.muted,1.7);const q=P(a);out+=label3(q[0]+(i===0?15:i===1?-17:0),q[1]+(i===2?-12:20),labels[i],15,C.muted)});
+ return out;
+}
+
 const SCENES={};
 function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCENES[def.id]=def}
+/* Lessons are registered by each stage file, in route order:
+   LESSON({id,name,short,stage,why,prior:[lesson ids],level,references:[source keys],ids:[scene ids]}).
+   THREAD({id,name,ids:[scene ids]}) adds an up/down connection on the local map. */
+const LESSONS=[],EXTRA_THREADS=[];
+function LESSON(def){if(LESSONS.some(l=>l.id===def.id))console.warn('Duplicate lesson',def.id);LESSONS.push(def)}
+function THREAD(def){EXTRA_THREADS.push(def)}
 // Glossary entries live beside the scenes that use them: WORD({key,title,aliases,here,contrast,example,linkContext,scene?}).
 const GLOSSARY=[];
 function WORD(...entries){for(const e of entries){if(GLOSSARY.some(g=>g.key===e.key)){console.warn('Duplicate word',e.key);continue}GLOSSARY.push(e)}}
@@ -723,6 +797,15 @@ SCENE({id:'half-adder',name:'Half adder',tag:'Gates that add',
   out+=TB(300,350,`${s.a} + ${s.b} = ${cy}${sm} in binary = ${s.a+s.b}`,20,C.blue);
   return {svg:out,phase:cy?'Both inputs are 1, so the sum bit is 0 and a 1 carries into the next place: 1 + 1 = 10.':`Only ${s.a+s.b===0?'zeros':'one input'} is on, so no carry is needed; the sum bit is ${sm}.`};
  }});
+
+// 3D companion (reference example for the three() API): up to three bits are the corners of a cube.
+SCENES.bit.three=(s,f,X,project)=>{
+ const n=Math.min(3,s.bits.length),bits=s.bits.slice(-n),P=project([[0,0,0],[2,2,2],[-.4,-.4,-.4],[2.4,2.4,2.4]]);
+ const corner=v=>[(v&1)*2,(v>>1&1)*2,(v>>2&1)*2],cur=parseInt(bits.join(''),2),total=1<<n;let out='';
+ for(let v=0;v<total;v++)for(let b=0;b<n;b++){const w=v^(1<<b);if(w>v){const on=v===cur||w===cur;out+=line3(corner(v),corner(w),P,on?C.blue:C.line,on?3:2)}}
+ out+=sortedItems(range(total).map(v=>({at:corner(v),svg:P=>{const p=P(corner(v)),on=v===cur;return Ci(p[0],p[1],on?26:21,on?C.blue:'#fff',on?C.blue:C.line)+TM(p[0],p[1]+5,bin(v,n),14,on?'#fff':C.ink,'middle','font-weight="700"')}})),P);
+ return {svg:out,title:'Bit patterns as corners',caption:n===1?'One bit: two ends of a line.':n===2?'Two bits: the four corners of a square. Neighbours differ in exactly one bit.':`Three bits: the ${total} corners of a cube. Each edge flips exactly one bit${s.bits.length>3?' (showing the last three bits)':''}.`};
+};
 
 /* Stage 1 word meanings. */
 WORD(
@@ -2730,6 +2813,9 @@ const TEXTURES={
 };
 
 /* ===================== Runtime: route, clock, modes, map, glossary ===================== */
+// Lessons come from LESSON() calls in the stage files; a stage with none keeps its lessons from curriculum.js.
+CURRICULUM.lessons=CURRICULUM.stages.flatMap(st=>{const mine=LESSONS.filter(l=>l.stage===st.id);return mine.length?mine:CURRICULUM.lessons.filter(l=>l.stage===st.id)});
+THREADS.push(...EXTRA_THREADS);
 const stages=Object.fromEntries(CURRICULUM.stages.map(s=>[s.id,s]));
 const lessons=Object.fromEntries(CURRICULUM.lessons.map(l=>[l.id,l]));
 const route=CURRICULUM.lessons.flatMap(l=>l.ids);
@@ -2796,17 +2882,61 @@ function paint(){
  svg.dataset.mode=mode;
  if(fk){const el=svg.querySelector(`[data-key="${CSS.escape(fk)}"]`);if(el)el.focus({preventScroll:true})}
  setWords($('phase'),out.phase||(f&&f.say)||'');
+ if(sc.three&&updateViewPane(sc,i))render3D(sc,s,f,X);else if(sc.three)updateViewPane(sc,i);else{$('three-panel').hidden=true;$('two-panel').inert=false;$('two-panel').removeAttribute('aria-hidden')}
  if(mode==='try')updateStepStatus();
  const prog=mode==='try'?offsets[i]/TOTAL:t/TOTAL;
  $('progress-fill').style.width=(100*prog)+'%';$('progress').setAttribute('aria-valuenow',String(Math.round(100*prog)));
 }
+/* ---- 2D/3D view (as in Mathematics In Motion) ---- */
+let viewMode='auto',viewReveal=0,last3D=null,turning=null;const SLIDE=.6,three=$('three-drawing');
+function paneProgress(sc,i){
+ if(!sc.three||viewMode==='2d')return 0;
+ if(viewMode==='3d')return 1;
+ if(mode==='try')return 0; // In Try it, Auto keeps the interactive 2D diagram in front.
+ const local=t-offsets[i],half=DUR(sc.id)/2;
+ if(reduced)return local>=half?1:0;
+ return smooth(clamp((local-half)/SLIDE,0,1));
+}
+function updateViewPane(sc,i){
+ viewReveal=paneProgress(sc,i);const pane=$('three-panel'),two=$('two-panel'),show=!!sc.three&&viewReveal>0;
+ pane.hidden=!sc.three;pane.style.visibility=show?'visible':'hidden';
+ pane.style.transform=`translateX(${((1-viewReveal)*100).toFixed(4)}%)`;pane.dataset.sliding=String(viewReveal>0&&viewReveal<1);
+ two.inert=viewReveal>0;pane.inert=viewReveal<1;
+ two.setAttribute('aria-hidden',String(viewReveal>=1));pane.setAttribute('aria-hidden',String(viewReveal<1));
+ $('three-reset').hidden=viewReveal<1;
+ for(const b of document.querySelectorAll('[data-view]'))b.setAttribute('aria-pressed',String(b.dataset.view===viewMode));
+ return show;
+}
+function render3D(sc,s,f,X){
+ last3D={sc,s,f,X};let o;
+ try{o=sc.three(s,f,X,makeProject)||{}}catch(err){console.error('3D draw failed in',sc.id,err);o={svg:T(300,190,'This 3D view could not be drawn.',18,C.coral),caption:String(err.message)}}
+ three.innerHTML=`<title>${esc(o.title||sc.name+' in 3D')}</title><desc>${esc(o.caption||'')}</desc>`+(o.svg||'');
+ setWords($('three-caption'),(o.caption||'')+' Drag to turn.');
+}
+function redraw3D(){if(last3D)render3D(last3D.sc,last3D.s,last3D.f,last3D.X)}
+function chooseView(m){if(!['2d','auto','3d'].includes(m))return;setSpeed(0);stopRun();viewMode=m;lastPainted=-1;paint()}
+function installThree(){
+ for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>chooseView(b.dataset.view));
+ $('three-reset').addEventListener('click',()=>{setSpeed(0);camera={yaw:.62,pitch:.55};redraw3D()});
+ three.addEventListener('pointerdown',e=>{
+  if(e.isPrimary===false||e.pointerType==='mouse'&&e.button!==0)return;
+  setSpeed(0);turning={id:e.pointerId,x:e.clientX,y:e.clientY,yaw:camera.yaw,pitch:camera.pitch,touch:e.pointerType==='touch'};three.classList.add('turning');
+  try{three.setPointerCapture(e.pointerId)}catch(_){}
+ });
+ three.addEventListener('pointermove',e=>{if(!turning||e.pointerId!==turning.id)return;camera.yaw=turning.yaw+(e.clientX-turning.x)*.008;if(!turning.touch)camera.pitch=clamp(turning.pitch+(e.clientY-turning.y)*.006,.15,1.15);redraw3D()});
+ const endTurn=e=>{if(!turning||e.pointerId!==undefined&&e.pointerId!==turning.id)return;const id=turning.id;turning=null;three.classList.remove('turning');try{if(three.hasPointerCapture(id))three.releasePointerCapture(id)}catch(_){}};
+ window.addEventListener('pointerup',endTurn,true);window.addEventListener('pointercancel',endTurn,true);three.addEventListener('lostpointercapture',endTurn);
+ three.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home'].includes(e.key)){e.preventDefault();e.stopPropagation();setSpeed(0);
+  if(e.key==='Home')camera={yaw:.62,pitch:.55};if(e.key==='ArrowLeft')camera.yaw-=.12;if(e.key==='ArrowRight')camera.yaw+=.12;if(e.key==='ArrowUp')camera.pitch=clamp(camera.pitch+.08,.15,1.15);if(e.key==='ArrowDown')camera.pitch=clamp(camera.pitch-.08,.15,1.15);redraw3D()}});
+}
 function showScene(){
  const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;
  const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
+ $('view-controls').hidden=!sc.three;viewMode='auto';camera={yaw:.62,pitch:.55};
  $('term').textContent=sc.name;setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
  $('eyebrow').textContent=`${st.name} · ${sc.tag||les.name}`;
  setWords($('lesson-why'),'Why this lesson: '+les.why);
- const prior=les.prior||[];
+ const prior=(les.prior||[]).filter(k=>lessons[k]);
  $('lesson-prior').innerHTML=prior.length?'Builds on: '+prior.map(k=>`<button type="button" data-lesson="${k}">${esc(lessons[k].name)}</button>`).join(''):'Builds on: nothing yet. This is a starting point.';
  $('counter').textContent=`${li+1} / ${les.ids.length}`;$('counter').setAttribute('aria-label',`Topic ${li+1} of ${les.ids.length} in this lesson`);
  updateHeader(les);renderMap(id);updateTransport();
@@ -3046,6 +3176,7 @@ try{
  installPicker();
  $('mode-watch').addEventListener('click',()=>setMode('watch'));
  $('mode-try').addEventListener('click',()=>setMode('try'));
+ installThree();
  svg.addEventListener('click',onSvgAct);svg.addEventListener('keydown',onSvgAct);
  $('previous').addEventListener('click',()=>goTo(indexAt(t)-1));
  $('next').addEventListener('click',()=>goTo(indexAt(t)+1));
@@ -3084,9 +3215,9 @@ try{
  requestAnimationFrame(loop);
  // Read-only inspection hooks for automated checks; no network.
  window.csApp={route,scenes:SCENES,glossary:GLOSSARY,lessons:CURRICULUM.lessons,
-  state:()=>({t,speed,mode,textScale:TS,zero,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
+  state:()=>({viewMode,viewReveal,camera:{...camera},hasThree:!!SCENES[cur()].three,t,speed,mode,textScale:TS,zero,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
   go:id=>goTo(route.indexOf(id)),seek:x=>{setSpeed(0);t=clamp(x,0,TOTAL);lastPainted=-1},offsets,
-  setMode,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
+  setMode,chooseView,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
 }catch(err){
  console.error(err);$('status').className='note';$('status').setAttribute('role','alert');$('status').textContent='The lessons could not start: '+err.message;
 }

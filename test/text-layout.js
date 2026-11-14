@@ -10,7 +10,7 @@ const probe=()=>{const svg=document.getElementById('drawing');const boxes=[...sv
   if(ix>2&&iy>2){const area=ix*iy,small=Math.min(a.w*a.h,c.w*c.h);if(small>0&&area/small>.18)ov.push(`overlap: “${a.s}” × “${c.s}”`)}}
  return out.concat(ov)};
 async function survey(page){
- const ids=await page.evaluate(()=>csApp.route);const res={};
+ const only=(process.env.ONLY||'').split(',').filter(Boolean);const ids=only.length?only:await page.evaluate(()=>csApp.route);const res={};
  for(const id of ids){const set=new Set();
   for(const dt of [1,3.5,6]){await page.evaluate(([id,dt])=>{csApp.setMode('watch');csApp.go(id);csApp.seek(csApp.offsets[csApp.route.indexOf(id)]+dt)},[id,dt]);await page.waitForTimeout(40);(await page.evaluate(probe)).forEach(x=>set.add('watch '+x))}
   await page.evaluate(()=>csApp.setMode('try'));await page.waitForTimeout(30);(await page.evaluate(probe)).forEach(x=>set.add('try '+x));

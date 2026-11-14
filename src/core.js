@@ -176,8 +176,48 @@ function graphSVG(X,nodes,edges,o={}){
 // A small "counter" tile used for live counts (comparisons, steps, hops…).
 function counter(x,y,label,value,col=C.blue,w=120){return R(x,y,w,46,'#fff',C.grid,8)+TF(x+w/2,y+17,label,12,C.muted)+TBF(x+w/2,y+38,value,17,col)}
 
+/* ---- Projected 3D (as in Mathematics In Motion): plain SVG, no WebGL. ----
+ A scene opts in with three(s,f,X,project) -> {svg, caption, title}. Call project(bounds) with a list of
+ [x,y,z] points (or [x0,x1,y0,y1,z0,z1]) to get P: [x,y,z] -> [sx,sy,depth] fitted to the panel,
+ using the shared camera, which the learner turns by dragging. z is up. */
+let camera={yaw:.62,pitch:.55};
+function makeProject(bounds){
+ const raw=([x,y,z])=>{const a=x*Math.cos(camera.yaw)-y*Math.sin(camera.yaw),b=x*Math.sin(camera.yaw)+y*Math.cos(camera.yaw);return [a,-b*Math.sin(camera.pitch)-z*Math.cos(camera.pitch),-b*Math.cos(camera.pitch)+z*Math.sin(camera.pitch)]};
+ const pts=[];if(Array.isArray(bounds[0])){for(const point of bounds)pts.push(raw(point))}else{for(const x of [bounds[0],bounds[1]])for(const y of [bounds[2],bounds[3]])for(const z of [bounds[4],bounds[5]])pts.push(raw([x,y,z]))}
+ const xs=pts.map(v=>v[0]),ys=pts.map(v=>v[1]),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys),scale=Math.min(440/(xmax-xmin||1),270/(ymax-ymin||1));
+ return a=>{const q=raw(a);return [300+(q[0]-(xmin+xmax)/2)*scale,196+(q[1]-(ymin+ymax)/2)*scale,q[2]]};
+}
+const label3=(x,y,value,size=16,fill=C.ink,extra='')=>T(x,y,value,size,fill,'middle',extra);
+function line3(a,b,P,colour=C.line,width=2,extra=''){const p=P(a),q=P(b);return L(p[0],p[1],q[0],q[1],colour,width,extra)}
+function arrow3(a,b,P,colour=C.blue,width=3){const p=P(a),q=P(b);return arrow(p[0],p[1],q[0],q[1],colour,width)}
+function point3(a,P,colour=C.blue,r=6,stroke='none'){const p=P(a);return Ci(p[0],p[1],r,colour,stroke)}
+function poly3(points,P,fill,stroke=C.line,extra=''){return `<polygon points="${points.map(v=>P(v).slice(0,2).map(fmt).join(',')).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" stroke-linejoin="round" ${extra}/>`}
+// A box as six faces; paintFaces draws faces back to front.
+function prism(x,y,z,dx,dy,dz,col=C.blue,extra=''){
+ const a=[x,y,z],b=[x+dx,y,z],c=[x+dx,y+dy,z],d=[x,y+dy,z],A=[x,y,z+dz],B=[x+dx,y,z+dz],D=[x,y+dy,z+dz],E=[x+dx,y+dy,z+dz];
+ return [{pts:[a,b,c,d],fill:col},{pts:[a,b,B,A],fill:col},{pts:[b,c,E,B],fill:col},{pts:[c,d,D,E],fill:col},{pts:[d,a,A,D],fill:col},{pts:[A,B,E,D],fill:col}].map((f,i)=>({...f,opacity:i===5?1:i===2?.78:.64,extra}));
+}
+function tint(hex,amount){if(hex.length===4)hex='#'+hex.slice(1).split('').map(c=>c+c).join('');const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16));return '#'+rgb.map(v=>Math.round(v+(255-v)*amount).toString(16).padStart(2,'0')).join('')}
+function paintFaces(faces,P){return faces.map(f=>({...f,depth:f.pts.reduce((a,p)=>a+P(p)[2],0)/f.pts.length})).sort((a,b)=>a.depth-b.depth).map(f=>{
+ let out=poly3(f.pts,P,tint(f.fill,f.opacity===undefined?0:(1-f.opacity)*.8),f.stroke||'#6c8d9f',f.extra||'');
+ if(f.label!==undefined){const mid=f.pts.reduce((a,v)=>a.map((q,i)=>q+v[i]/f.pts.length),[0,0,0]),p=P(mid);out+=label3(p[0],p[1]+6,f.label,f.size||17,f.ink||C.ink,'font-weight="650"')}
+ return out;
+}).join('')}
+// Depth-sorted mixed items: [{at:[x,y,z], svg:(P)=>string}] drawn back to front (for spheres, labels, nodes).
+function sortedItems(items,P){return items.map(it=>({...it,d:P(it.at)[2]})).sort((a,b)=>a.d-b.d).map(it=>it.svg(P)).join('')}
+function axes3(P,labels=['x','y','z'],end=[3,3,3],from=[0,0,0]){
+ let out='';[[end[0],from[1],from[2]],[from[0],end[1],from[2]],[from[0],from[1],end[2]]].forEach((a,i)=>{out+=arrow3(from,a,P,C.muted,1.7);const q=P(a);out+=label3(q[0]+(i===0?15:i===1?-17:0),q[1]+(i===2?-12:20),labels[i],15,C.muted)});
+ return out;
+}
+
 const SCENES={};
 function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCENES[def.id]=def}
+/* Lessons are registered by each stage file, in route order:
+   LESSON({id,name,short,stage,why,prior:[lesson ids],level,references:[source keys],ids:[scene ids]}).
+   THREAD({id,name,ids:[scene ids]}) adds an up/down connection on the local map. */
+const LESSONS=[],EXTRA_THREADS=[];
+function LESSON(def){if(LESSONS.some(l=>l.id===def.id))console.warn('Duplicate lesson',def.id);LESSONS.push(def)}
+function THREAD(def){EXTRA_THREADS.push(def)}
 // Glossary entries live beside the scenes that use them: WORD({key,title,aliases,here,contrast,example,linkContext,scene?}).
 const GLOSSARY=[];
 function WORD(...entries){for(const e of entries){if(GLOSSARY.some(g=>g.key===e.key)){console.warn('Duplicate word',e.key);continue}GLOSSARY.push(e)}}

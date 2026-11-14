@@ -239,3 +239,12 @@ SCENE({id:'half-adder',name:'Half adder',tag:'Gates that add',
   out+=TB(300,350,`${s.a} + ${s.b} = ${cy}${sm} in binary = ${s.a+s.b}`,20,C.blue);
   return {svg:out,phase:cy?'Both inputs are 1, so the sum bit is 0 and a 1 carries into the next place: 1 + 1 = 10.':`Only ${s.a+s.b===0?'zeros':'one input'} is on, so no carry is needed; the sum bit is ${sm}.`};
  }});
+
+// 3D companion (reference example for the three() API): up to three bits are the corners of a cube.
+SCENES.bit.three=(s,f,X,project)=>{
+ const n=Math.min(3,s.bits.length),bits=s.bits.slice(-n),P=project([[0,0,0],[2,2,2],[-.4,-.4,-.4],[2.4,2.4,2.4]]);
+ const corner=v=>[(v&1)*2,(v>>1&1)*2,(v>>2&1)*2],cur=parseInt(bits.join(''),2),total=1<<n;let out='';
+ for(let v=0;v<total;v++)for(let b=0;b<n;b++){const w=v^(1<<b);if(w>v){const on=v===cur||w===cur;out+=line3(corner(v),corner(w),P,on?C.blue:C.line,on?3:2)}}
+ out+=sortedItems(range(total).map(v=>({at:corner(v),svg:P=>{const p=P(corner(v)),on=v===cur;return Ci(p[0],p[1],on?26:21,on?C.blue:'#fff',on?C.blue:C.line)+TM(p[0],p[1]+5,bin(v,n),14,on?'#fff':C.ink,'middle','font-weight="700"')}})),P);
+ return {svg:out,title:'Bit patterns as corners',caption:n===1?'One bit: two ends of a line.':n===2?'Two bits: the four corners of a square. Neighbours differ in exactly one bit.':`Three bits: the ${total} corners of a cube. Each edge flips exactly one bit${s.bits.length>3?' (showing the last three bits)':''}.`};
+};

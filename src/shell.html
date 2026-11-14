@@ -58,6 +58,23 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 #drawing[data-mode="try"]{cursor:default}
 .phase{margin:0;padding:8px 11px;min-height:66px;font-size:14px;line-height:1.5;border-top:1px solid #e3ebef;background:var(--deck)}
 .try-panel{border-top:1px solid #dfe8ee;padding:8px 9px 10px;background:#fbfdfe}
+/* 2D/3D view toggle (as in Mathematics In Motion): 3D slides over the 2D diagram and its caption. */
+.view-options{display:flex;align-items:center;gap:6px}
+.view-options[hidden],#three-panel[hidden],#three-reset[hidden]{display:none!important}
+.view-mode-buttons{display:flex;align-items:center;gap:1px;background:#e7eff4;border-radius:7px;padding:2px}
+.view-mode-buttons button{font-size:12px;font-weight:600;line-height:1;min-width:44px;min-height:40px;padding:4px 8px;border:0;border-radius:5px;color:#425d6c;background:transparent}
+.view-mode-buttons button[aria-pressed="true"]{background:#fff;color:#164f79;box-shadow:0 1px 3px #192c3715}
+.view-mode-buttons button:hover{background:#dceaf3}
+#three-reset{min-height:40px;padding:3px 8px;font-size:12px;border:0;background:transparent}
+.diagram-viewport{position:relative;overflow:hidden}
+#three-panel{position:absolute;inset:0;z-index:1;background:#edf4f8;display:flex;flex-direction:column;transform:translateX(100%);will-change:transform;visibility:hidden}
+#three-panel[data-sliding="true"]{box-shadow:-5px 0 14px #192c3718}
+#three-drawing{display:block;width:100%;height:auto;aspect-ratio:600/380;cursor:grab;touch-action:pan-y;flex:0 0 auto}
+#three-drawing.turning{cursor:grabbing;touch-action:none}
+#three-drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#three-drawing:focus-visible{outline:3px solid var(--focus);outline-offset:-4px}
+.three-caption{margin:0;padding:8px 11px;font-size:14px;line-height:1.5;border-top:1px solid #dde8ee;flex:1 1 auto;overflow:auto}
+#two-panel[inert],#three-panel[inert]{pointer-events:none}
 .try-panel[hidden]{display:none}
 .try-hint{font-size:13px;color:var(--muted);margin:0 0 7px;line-height:1.45}
 .try-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -183,6 +200,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  .bottom{padding:5px 10px 10px}
  .try-row input[type=range]{width:140px}
  .deck-note{display:none}
+ .deck-toolbar{flex-wrap:wrap}
 }
 @media(max-width:380px){
  .header-row{gap:6px}
@@ -222,10 +240,26 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
      <button type="button" id="mode-watch" aria-pressed="true" title="Watch the animated explanation">Watch</button>
      <button type="button" id="mode-try" aria-pressed="false" title="Change the input and see the same diagram respond">Try it</button>
     </div>
+    <div class="view-options" id="view-controls" hidden>
+     <div class="view-mode-buttons" role="group" aria-label="Diagram view">
+      <button type="button" id="view-2d" data-view="2d" aria-pressed="false" title="Pause and inspect the 2D view">2D</button>
+      <button type="button" id="view-auto" data-view="auto" aria-pressed="true" title="3D slides in halfway through the topic; rewind slides it back">Auto</button>
+      <button type="button" id="view-3d" data-view="3d" aria-pressed="false" title="Pause and inspect the 3D view">3D</button>
+     </div>
+     <button type="button" id="three-reset" aria-label="Reset three-dimensional view" hidden>Reset view</button>
+    </div>
     <span class="deck-note" id="deck-note">Animated · deterministic</span>
    </div>
+   <div class="diagram-viewport" id="diagram-viewport">
+   <div id="two-panel">
    <svg id="drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-labelledby="diagram-title diagram-desc" data-mode="watch"><title id="diagram-title">Loading</title><desc id="diagram-desc">The diagram appears when JavaScript runs.</desc><text x="300" y="190" text-anchor="middle" font-size="20" fill="#546873">Loading the first lesson…</text></svg>
    <p class="phase" id="phase" tabindex="0" aria-label="Diagram caption">The diagram is drawn by the script on this page.</p>
+   </div>
+   <section id="three-panel" aria-label="Three-dimensional view" aria-hidden="true" hidden inert>
+    <svg id="three-drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="group" tabindex="0" aria-label="3D companion: drag horizontally to turn, or use arrow keys. Turning pauses playback."></svg>
+    <p class="three-caption" id="three-caption" tabindex="0" aria-label="Three-dimensional view caption"></p>
+   </section>
+   </div>
    <section class="try-panel" id="try-panel" aria-label="Try it controls" hidden>
     <p class="try-hint" id="try-hint"></p>
     <div id="try-controls"></div>
