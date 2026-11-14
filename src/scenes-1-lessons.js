@@ -1,0 +1,40 @@
+/* Era 1 · Lights and switches: lessons, sources and connections. */
+SOURCE('burks-1946',{title:'Burks, Goldstine & von Neumann (1946). Preliminary discussion of the logical design of an electronic computing instrument'});
+SOURCE('miller-1956',{title:'Miller, G. A. (1956). The magical number seven, plus or minus two. Psychological Review 63(2)',url:'https://doi.org/10.1037/h0043158'});
+SOURCE('mark2-log',{title:'Harvard Mark II logbook page with the moth, 9 September 1947 (Smithsonian National Museum of American History)'});
+SOURCE('front-panel',{title:'Front panel (Wikipedia)',url:'https://en.wikipedia.org/wiki/Front_panel'});
+SOURCE('hollerith-1889',{title:'Hollerith, H. (1889). Art of Compiling Statistics. US patent 395,782'});
+SOURCE('punched-card',{title:'Punched card (Wikipedia)',url:'https://en.wikipedia.org/wiki/Punched_card'});
+SOURCE('sackman-1968',{title:'Sackman, Erikson & Grant (1968). Exploratory experimental studies comparing online and offline programming performance. Communications of the ACM 11(1)'});
+SOURCE('barchard-2011',{title:'Barchard & Pace (2011). Preventing human error: the impact of data entry methods on data accuracy and statistical results. Computers in Human Behavior 27(5)'});
+SOURCE('ritchie-1974',{title:'Ritchie & Thompson (1974). The UNIX time-sharing system. Communications of the ACM 17(7)',url:'https://doi.org/10.1145/361011.361061'});
+SOURCE('teletype-33',{title:'Teletype Model 33 (Wikipedia)',url:'https://en.wikipedia.org/wiki/Teletype_Model_33'});
+SOURCE('shepard-1967',{title:'Shepard, R. N. (1967). Recognition memory for words, sentences, and pictures. Journal of Verbal Learning and Verbal Behavior 6(1)'});
+SOURCE('shneiderman-1982',{title:'Shneiderman, B. (1982). System message design: guidelines and experimental results. In Directions in Human/Computer Interaction'});
+SOURCE('licklider-1960',{title:'Licklider, J. C. R. (1960). Man–Computer Symbiosis. IRE Transactions on Human Factors in Electronics',url:'https://en.wikipedia.org/wiki/Man%E2%80%93Computer_Symbiosis'});
+SOURCE('corbato-1962',{title:'Corbató, Merwin-Daggett & Daley (1962). An experimental time-sharing system. AFIPS Spring Joint Computer Conference'});
+SOURCE('ctss',{title:'Compatible Time-Sharing System (Wikipedia)',url:'https://en.wikipedia.org/wiki/Compatible_Time-Sharing_System'});
+SOURCE('miller-1968',{title:'Miller, R. B. (1968). Response time in man–computer conversational transactions. AFIPS Fall Joint Computer Conference'});
+SOURCE('card-1991',{title:'Card, Robertson & Mackinlay (1991). The information visualizer, an information workspace. CHI ’91'});
+SOURCE('scherr-1965',{title:'Scherr, A. L. (1965). An analysis of time-shared computer systems. MIT PhD thesis (MAC-TR-18)'});
+SOURCE('astrahan-1983',{title:'Astrahan & Jacobs (1983). History of the design of the SAGE computer — the AN/FSQ-7. Annals of the History of Computing 5(4)'});
+SOURCE('light-pen',{title:'Light pen (Wikipedia)',url:'https://en.wikipedia.org/wiki/Light_pen'});
+SOURCE('hincapie-2014',{title:'Hincapié-Ramos, Guo, Moghadasian & Irani (2014). Consumed Endurance: a metric to quantify arm fatigue of mid-air interactions. CHI ’14'});
+SOURCE('mackworth-1948',{title:'Mackworth, N. H. (1948). The breakdown of vigilance during prolonged visual search. Quarterly Journal of Experimental Psychology 1(1)'});
+SOURCE('green-swets-1966',{title:'Green & Swets (1966). Signal Detection Theory and Psychophysics. Wiley'});
+SOURCE('sdt',{title:'Detection theory (Wikipedia)',url:'https://en.wikipedia.org/wiki/Detection_theory'});
+SOURCE('breznitz-1984',{title:'Breznitz, S. (1984). Cry Wolf: The Psychology of False Alarms. Lawrence Erlbaum'});
+SOURCE('bliss-1995',{title:'Bliss, Gilson & Deaton (1995). Human probability matching behaviour in response to alarms of varying reliability. Ergonomics 38(11)'});
+
+LESSON({id:'front-panel',name:'Front panels and blinking lights',short:'Front panel',stage:'lights',year:'1940s–1970s',why:'Before screens, the interface was a panel of switches and lamps: every bit went in and came out by hand.',prior:[],level:'Introduction',references:['burks-1946','front-panel','miller-1956','mark2-log'],ids:['front-panel','front-panel-reading','front-panel-bug']});
+LESSON({id:'punched-cards',name:'Punched cards and batch processing',short:'Punched cards',stage:'lights',year:'1890–1970s',why:'Cards made data portable, but batch processing meant waiting hours to learn whether a program worked.',prior:['front-panel'],level:'Introduction',references:['hollerith-1889','punched-card','sackman-1968','barchard-2011'],ids:['punched-cards','punched-cards-batch','punched-cards-verify']});
+LESSON({id:'command-line',name:'Teletypes and the command line',short:'Command line',stage:'lights',year:'1960s–',why:'Typing commands and reading replies made computing a conversation, but one where you had to remember every word.',prior:['punched-cards'],level:'Introduction',references:['teletype-33','ritchie-1974','shepard-1967','shneiderman-1982'],ids:['command-line','command-line-recall','command-line-errors']});
+LESSON({id:'time-sharing',name:'Time-sharing and response time',short:'Time-sharing',stage:'lights',year:'1961–',why:'Sharing one machine among many terminals made replies fast enough to think with, and showed how much waiting matters.',prior:['command-line'],level:'Core',references:['licklider-1960','corbato-1962','ctss','miller-1968','card-1991','scherr-1965'],ids:['time-sharing','time-sharing-response','time-sharing-queue']});
+LESSON({id:'light-pen',name:'Radar screens and the light pen',short:'Light pen',stage:'lights',year:'1950s–1960s',why:'Air-defence consoles let operators point at the screen itself, decades before the mouse, and revealed the limits of the human arm and eye.',prior:['front-panel'],level:'Core',references:['astrahan-1983','light-pen','hincapie-2014'],ids:['light-pen','light-pen-refresh','light-pen-fatigue']});
+LESSON({id:'vigilance',name:'Watching for rare signals',short:'Vigilance',stage:'lights',year:'1948–',why:'Radar watchkeeping started the science of attention: people miss rare signals, and alarms that cry wolf get ignored.',prior:['light-pen'],level:'Core',references:['mackworth-1948','green-swets-1966','sdt','breznitz-1984','bliss-1995'],ids:['vigilance','vigilance-sdt','vigilance-alarms']});
+
+THREAD({id:'h1-waiting',name:'How long people will wait',ids:['punched-cards-batch','time-sharing-response','response-time']});
+THREAD({id:'h1-chunks',name:'Memory works in chunks',ids:['front-panel-reading','working-memory']});
+THREAD({id:'h1-recall',name:'Recognition beats recall',ids:['command-line-recall','heuristics']});
+THREAD({id:'h1-pointing',name:'Pointing at the screen',ids:['light-pen','sketchpad','mouse','multi-touch']});
+THREAD({id:'h1-attention',name:'Attention is limited',ids:['vigilance','interruptions']});

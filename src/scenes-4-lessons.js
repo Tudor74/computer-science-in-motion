@@ -1,0 +1,40 @@
+/* Era 4 · How the mind reads a screen: lessons, sources and connections. */
+SOURCE('h4-wertheimer',{title:'Wertheimer, M. (1923). Untersuchungen zur Lehre von der Gestalt II. Psychologische Forschung, 4, 301–350',url:'https://doi.org/10.1007/BF00410640'});
+SOURCE('h4-palmer-region',{title:'Palmer, S. E. (1992). Common region: a new principle of perceptual grouping. Cognitive Psychology, 24, 436–447',url:'https://doi.org/10.1016/0010-0285(92)90014-S'});
+SOURCE('h4-wagemans',{title:'Wagemans, J. et al. (2012). A century of Gestalt psychology in visual perception. Psychological Bulletin, 138(6), 1172–1217',url:'https://doi.org/10.1037/a0029333'});
+SOURCE('h4-treisman',{title:'Treisman, A. M. & Gelade, G. (1980). A feature-integration theory of attention. Cognitive Psychology, 12, 97–136',url:'https://doi.org/10.1016/0010-0285(80)90005-5'});
+SOURCE('h4-wolfe',{title:'Wolfe, J. M. & Horowitz, T. S. (2004). What attributes guide the deployment of visual attention and how do they do it? Nature Reviews Neuroscience, 5, 495–501',url:'https://doi.org/10.1038/nrn1411'});
+SOURCE('h4-healey',{title:'Healey, C. G. & Enns, J. T. (2012). Attention and visual memory in visualization and computer graphics. IEEE TVCG, 18(7), 1170–1188',url:'https://doi.org/10.1109/TVCG.2011.127'});
+SOURCE('h4-miller',{title:'Miller, G. A. (1956). The magical number seven, plus or minus two. Psychological Review, 63(2), 81–97',url:'https://doi.org/10.1037/h0043158'});
+SOURCE('h4-cowan',{title:'Cowan, N. (2001). The magical number 4 in short-term memory. Behavioral and Brain Sciences, 24, 87–114',url:'https://doi.org/10.1017/S0140525X01003922'});
+SOURCE('h4-peterson',{title:'Peterson, L. R. & Peterson, M. J. (1959). Short-term retention of individual verbal items. Journal of Experimental Psychology, 58(3), 193–198',url:'https://doi.org/10.1037/h0049234'});
+SOURCE('h4-chase-simon',{title:'Chase, W. G. & Simon, H. A. (1973). Perception in chess. Cognitive Psychology, 4, 55–81',url:'https://doi.org/10.1016/0010-0285(73)90004-2'});
+SOURCE('h4-gibson',{title:'Gibson, J. J. (1979). The Ecological Approach to Visual Perception. Houghton Mifflin'});
+SOURCE('h4-norman-doet',{title:'Norman, D. A. (2013). The Design of Everyday Things (revised and expanded edition). Basic Books; first published 1988 as The Psychology of Everyday Things'});
+SOURCE('h4-chapanis',{title:'Chapanis, A. & Lindenbaum, L. E. (1959). A reaction time study of four control-display linkages. Human Factors, 1(4), 1–7',url:'https://doi.org/10.1177/001872085900100401'});
+SOURCE('h4-kempton',{title:'Kempton, W. (1986). Two theories of home heat control. Cognitive Science, 10(1), 75–90',url:'https://doi.org/10.1207/s15516709cog1001_3'});
+SOURCE('h4-norman-ce',{title:'Norman, D. A. (1986). Cognitive engineering. In Norman & Draper (eds), User Centered System Design. Lawrence Erlbaum'});
+SOURCE('h4-norman-slips',{title:'Norman, D. A. (1981). Categorization of action slips. Psychological Review, 88(1), 1–15',url:'https://doi.org/10.1037/0033-295X.88.1.1'});
+SOURCE('h4-reason',{title:'Reason, J. (1990). Human Error. Cambridge University Press'});
+SOURCE('h4-rensink',{title:'Rensink, R. A., O’Regan, J. K. & Clark, J. J. (1997). To see or not to see. Psychological Science, 8(5), 368–373',url:'https://doi.org/10.1111/j.1467-9280.1997.tb00427.x'});
+SOURCE('h4-simons-chabris',{title:'Simons, D. J. & Chabris, C. F. (1999). Gorillas in our midst. Perception, 28, 1059–1074',url:'https://doi.org/10.1068/p281059'});
+SOURCE('h4-most',{title:'Most, S. B. et al. (2001). How not to be seen: the contribution of similarity and selective ignoring to sustained inattentional blindness. Psychological Science, 12(1), 9–17',url:'https://doi.org/10.1111/1467-9280.00303'});
+SOURCE('h4-varakin',{title:'Varakin, D. A., Levin, D. T. & Fidler, R. (2004). Unseen and unaware: implications of recent research on failures of visual awareness for human–computer interface design. Human–Computer Interaction, 19(4), 389–422',url:'https://doi.org/10.1207/s15327051hci1904_9'});
+SOURCE('h4-yarbus',{title:'Yarbus, A. L. (1967). Eye Movements and Vision. Plenum Press'});
+SOURCE('h4-rayner',{title:'Rayner, K. (1998). Eye movements in reading and information processing: 20 years of research. Psychological Bulletin, 124(3), 372–422',url:'https://doi.org/10.1037/0033-2909.124.3.372'});
+SOURCE('h4-mcconkie',{title:'McConkie, G. W. & Rayner, K. (1975). The span of the effective stimulus during a fixation in reading. Perception & Psychophysics, 17, 578–586',url:'https://doi.org/10.3758/BF03203972'});
+
+LESSON({id:'gestalt',name:'Gestalt grouping',short:'Gestalt',stage:'mind',year:'1923',why:'Before we read a single word, the eye has already decided what belongs together, using spacing, likeness, enclosure and connection.',prior:[],level:'Introduction',references:['h4-wertheimer','h4-palmer-region','h4-wagemans'],ids:['gestalt','gestalt-similarity','gestalt-region','gestalt-form']});
+LESSON({id:'preattentive',name:'Pop-out and visual search',short:'Pop-out',stage:'mind',year:'1980',why:'Some differences are seen before attention arrives; others cost a search. Good displays put what matters in the first group.',prior:['gestalt'],level:'Core',references:['h4-treisman','h4-wolfe','h4-healey'],ids:['preattentive','preattentive-features','preattentive-design']});
+LESSON({id:'working-memory',name:'Working memory',short:'Memory',stage:'mind',year:'1956',why:'We can hold only a handful of things in mind at once, so interfaces should carry information for us instead of asking us to remember it.',prior:['preattentive'],level:'Core',references:['h4-miller','h4-cowan','h4-peterson','h4-chase-simon'],ids:['working-memory','working-memory-chunking','working-memory-recognition']});
+LESSON({id:'affordances',name:'Affordances and signifiers',short:'Affordances',stage:'mind',year:'1979',why:'People act on what things look like they can do. Good form signals the right action; good layout maps controls onto what they control.',prior:['gestalt'],level:'Core',references:['h4-gibson','h4-norman-doet','h4-chapanis'],ids:['affordances','affordances-signifiers','affordances-mapping']});
+LESSON({id:'mental-models',name:'Mental models and errors',short:'Mental models',stage:'mind',year:'1986',why:'Every user carries a theory of how the system works; when it is wrong, or the system hides its state, sensible actions fail.',prior:['affordances','working-memory'],level:'Core',references:['h4-kempton','h4-norman-ce','h4-norman-slips','h4-reason'],ids:['mental-models','mental-models-gulfs','mental-models-errors']});
+LESSON({id:'change-blindness',name:'Change and inattentional blindness',short:'Blindness',stage:'mind',year:'1997',why:'We see far less than it feels like we see: unattended changes and unexpected objects go unnoticed, so interfaces must point out what changed.',prior:['preattentive','working-memory'],level:'Core',references:['h4-rensink','h4-simons-chabris','h4-most','h4-varakin'],ids:['change-blindness','change-blindness-inattention','change-blindness-design']});
+LESSON({id:'eye-movements',name:'Eye movements',short:'Eye movements',stage:'mind',year:'1967',why:'The eye takes in a scene in jumps, with only a tiny sharp centre, and the task decides where it lands.',prior:['change-blindness'],level:'Core',references:['h4-yarbus','h4-rayner','h4-mcconkie'],ids:['eye-movements','eye-movements-fovea','eye-movements-acuity']});
+
+// Connections to other eras (kept only when those scenes are in the build).
+THREAD({id:'h4-search-cost',name:'The cost of looking',ids:['hick-law','preattentive','scanning-patterns']});
+THREAD({id:'h4-grouping-pages',name:'Grouping on the page',ids:['gestalt-region','data-ink','heuristics']});
+THREAD({id:'h4-memory-ui',name:'Carry it for the user',ids:['command-line','working-memory-recognition','wimp']});
+THREAD({id:'h4-seeing-data',name:'From pop-out to charts',ids:['preattentive-features','visual-variables','graphical-perception']});
+THREAD({id:'h4-gaze',name:'Where the eyes go',ids:['eye-movements','scanning-patterns','head-mounted-display']});
