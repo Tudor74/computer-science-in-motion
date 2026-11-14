@@ -8,6 +8,8 @@ const stages=Object.fromEntries(CURRICULUM.stages.map(s=>[s.id,s]));
 const lessons=Object.fromEntries(CURRICULUM.lessons.map(l=>[l.id,l]));
 const route=CURRICULUM.lessons.flatMap(l=>l.ids);
 const lessonOf={};CURRICULUM.lessons.forEach(l=>l.ids.forEach(id=>lessonOf[id]=l.id));
+// Connections may name scenes from stages not in this build (per-stage test builds): keep only routed ones.
+for(const th of THREADS)th.ids=th.ids.filter(id=>route.includes(id));
 const missing=route.filter(id=>!SCENES[id]);
 if(missing.length)throw new Error('Scenes missing for: '+missing.join(', '));
 const DUR=id=>SCENES[id].dur||8;
@@ -122,7 +124,8 @@ function showScene(){
  const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
  $('view-controls').hidden=!sc.three;viewMode='auto';camera={yaw:.62,pitch:.55};
  $('term').textContent=sc.name;setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
- $('eyebrow').textContent=`${st.name} · ${sc.tag||les.name}`;
+ $('eyebrow').textContent=`${st.name} · ${les.year||st.years||''}${sc.tag?' · '+sc.tag:''}`;
+ const res=[].concat(sc.research||[]);$('research').innerHTML=res.length?'<b>Research</b> '+res.map(r=>esc(r)).join(' · '):'';
  setWords($('lesson-why'),'Why this lesson: '+les.why);
  const prior=(les.prior||[]).filter(k=>lessons[k]);
  $('lesson-prior').innerHTML=prior.length?'Builds on: '+prior.map(k=>`<button type="button" data-lesson="${k}">${esc(lessons[k].name)}</button>`).join(''):'Builds on: nothing yet. This is a starting point.';
@@ -333,7 +336,7 @@ function showWord(key,origin,remember=true){
  if(!dlg.open){wordTrail=[];curWord=null;wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
  if(remember&&curWord&&curWord!==key)wordTrail.push(curWord);curWord=key;
  $('word-title').textContent=g.title;const ctx=lessons[g.linkContext]||lessons[LEGACY_LESSON[g.linkContext]]||lessons[lessonOf[g.scene||g.key]];
- $('word-context').textContent=(ctx?ctx.name:'Computer science')+' · word meaning';
+ $('word-context').textContent=(ctx?ctx.name:'Human–computer interaction')+' · word meaning';
  setWords($('word-meaning'),g.here,key);setWords($('word-contrast'),g.contrast,key);setWords($('word-example'),g.example,key);
  $('word-detail').hidden=false;$('word-browser').hidden=true;
  $('word-back').hidden=false;$('word-back').textContent=wordTrail.length?'← Previous word':'← All words';

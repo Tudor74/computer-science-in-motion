@@ -22,97 +22,15 @@
  Watch mode is deterministic: a scene's picture depends only on lesson time.
  Try it mode is driven only by the learner's state and step position.
 
- INTERACTION DESIGN NOTE: for each term, the one thing the learner changes, and why.
- Represent
-  bit ............ flip bits, add/remove bits: each extra bit visibly doubles the list of patterns.
-  binary ......... flip place values, +1/−1, shift: carries ripple left exactly as in decimal.
-  byte ........... slider 0–255 and +1: 255 + 1 wraps to 0, so a fixed width is felt, not told.
-  hexadecimal .... RGB sliders: each byte splits into two 4-bit halves, one hex digit each.
-  ascii .......... type text: every character becomes a number; accents fall outside the table.
-  unicode ........ type anything: UTF-8 length (1–4 bytes) and its leading-bit signal appear.
-  bitmap ......... paint pixels: each row's byte value changes under your finger.
-  boolean ........ toggle A, B, C or press a table row: tree values and truth-table row agree.
-  logic-gate ..... pick a gate, flip inputs: live wires, lamp and lit truth-table row stay in step.
-  half-adder ..... flip A and B: two lamps read as the two-bit sum, showing 1 + 1 = 10.
- Instruct
-  algorithm ...... find-the-largest flowchart on a list you shuffle or edit: same steps, any input.
-  variable ....... step x = 3; y = x; x = x + 2: y keeps its copy, the classic misconception.
-  conditional .... temperature and limit sliders: only one branch lights; equality tests ">".
-  loop ........... choose n, step total += i: one block column per repetition, counter beside.
-  function ....... pick a function, change the input: the same input always returns the same value.
-  call-stack ..... step main → greet → format: frames with locals push and pop in order.
-  recursion ...... factorial(n), n 1–6: the stack grows to the base case, then unwinds with answers.
- Organise data
-  array .......... read any index in one step; insert at start counts every item that must move.
-  linked-list .... count hops to a node; inserting changes only pointers, nothing shifts.
-  stack / queue .. push/pop and enqueue/dequeue: only the top, or only the two ends, are reachable.
-  hash-function .. type a key, step the character-code sum mod 8: a tiny edit moves the bucket.
-  hash-table ..... insert and look up keys: collisions chain; look-ups check only one bucket.
-  tree ........... press a node: its path from the root, depth and leaf status; add children.
-  binary-search-tree insert and search: left/right path; sorted inserts make a tall chain.
-  graph .......... press two vertices to toggle an edge: degrees and adjacency list update.
- Search and sort
-  linear-search .. choose a target: cards are checked one by one; the worst case costs n.
-  binary-search .. choose a target (or an absent one): the interval halves, steps vs ⌈log₂ n⌉.
-  bfs / dfs ...... the same graph, press a start: a queue spreads in rings, a stack dives and backtracks.
-  dijkstra ....... press a start, change edge lengths: the nearest unsettled node is fixed first.
-  4 sorts ........ one shared input (shuffle, reverse, nearly sorted, swap two bars): counters and a
-                   chart compare all four algorithms on exactly that input.
-  big-o .......... slider n and "double n": six growth curves race; times at 10⁹ steps per second.
-  divide-and-conquer split 2–16 numbers in halves: depth ⌈log₂ n⌉, answers combine on the way up.
-  dynamic-programming fib(n) plain vs memoised: 41 calls shrink to 13 as the memo table fills.
- Machines
-  fetch-decode-execute change data cells, step: the same three-phase cycle runs every instruction.
-  machine-code ... choose opcode and operand: a byte splits into fields; program lines decode.
-  memory-hierarchy send a request to a level: the trip down and back, with human-scale times.
-  cache .......... press addresses or load patterns: locality turns misses into hits (LRU).
-  compiler / interpreter one shared expression: translate everything first vs evaluate as you go.
-  process ........ only the legal transitions are pressable: the OS owns a program's state.
-  scheduling ..... FCFS / SJF / round robin, job lengths and quantum: average wait vs switching.
- Networks
-  packet ......... type a message and break links: packets take different routes, arrive out of
-                   order, and are reassembled by number.
-  ip-routing ..... choose a destination, cut links: each router only looks up the next hop.
-  tcp ............ lose chosen segments: ACKs, timeout and resend repair the stream.
-  dns ............ look a name up twice: the delegation chain, then the resolver's cache.
-  http ........... choose a request: the request text and the status code that answers it.
-  encryption ..... type text, slide the Caesar key, then try every key: why 25 keys is weak.
-  public-key ..... slider m with toy RSA (n = 33, e = 3, d = 7): anyone locks, only d unlocks.
-  digital-signature edit or tamper with the message: verification fails until it is re-signed.
- Theory
-  finite-automaton choose a machine, type a string, step: the state is the machine's only memory.
-  regular-expression choose a pattern, edit text: matches are routes through the railroad diagram.
-  turing-machine . choose a machine, type the tape, step: read, write, move, change state.
-  halting-problem  press cells to change the table: D still disagrees with every row's diagonal.
-  p-vs-np ........ pick numbers to check instantly, then run brute force through all 2ⁿ subsets.
- Each term above is now the first scene of its own lesson; the lesson's further scenes (listed in the
- src/scenes-N-lessons.js files) each change one thing the learner can try:
-  Represent: halving yes/no questions, noise vs threshold, column addition, repeated halving, KB vs KiB,
-   two's complement circle, float bits and 0.1 + 0.2, nibble tiles, hex dump, line endings, sort order,
-   Unicode blocks, mojibake, colour depth, run-length encoding, De Morgan, the 16 functions, NAND-only
-   gates, multiplexer, SR latch, full adder, ripple carry.
-  Instruct: literal robot, pseudocode ↔ flowchart, counterexample, types, swap, scope, else-if order,
-   nesting vs AND, boundaries, while halving, nested loops, off-by-one, arguments, return vs print,
-   composition, frame locals, stack overflow, recursion tree, towers of Hanoi.
-  Organise data: 2D and 3D arrays, dynamic array, list reversal, cycle detection, brackets, postfix,
-   undo/redo, deque, heap, hash spread and modulo, linear probing, load factor, traversals, trie,
-   BST deletion and balance, adjacency matrix, connectivity.
-  Search and sort: early exit, average case, sentinel, unsorted binary search, guessing, insertion point,
-   BFS maze, flood fill, rings, DFS maze, cycles, topological sort, heap queue, negative edges, A*,
-   best case, stability, disorder, shifting, merge step, merge tree, partition schemes, pivots,
-   counting operations, cases, space, recursion trees, fast powers, Karatsuba, coins, edit distance, knapsack.
-  Machines: ALU flags, jump loop, pipeline, addressing, assembler, locality, virtual memory, register count,
-   cache mapping, write policy, lexer, syntax errors, optimiser, bytecode VM, JIT, threads, race, mutex,
-   priority and ageing, deadlock.
-  Networks: encapsulation, checksum, bandwidth vs latency, subnet mask, NAT, TTL, handshake, sliding window,
-   congestion, DNS records, DNS TTL, URL parts, cookies, TLS, one-time pad, frequency analysis, block modes,
-   Diffie–Hellman, factoring, hash avalanche, certificate chain, man in the middle.
-  Theory: design an automaton, NFA sets, traffic light, regex → automaton, regex limits, capture groups,
-   build a Turing machine, Church–Turing, universal machine, Collatz, reductions, Rice, growth race,
-   3-colouring, greedy vs best tour.
- 3D (as in Mathematics In Motion, only where depth helps): bit patterns as cube corners, the RGB colour cube,
- a truth-table cube, a recursion skyline, a 3D array, an edit-distance landscape, the memory pyramid,
- nested packet envelopes, and NFA state sets as cube corners.
+ HCI ADDITIONS
+   research   string or [strings]: the original study, demo or book behind the scene, shown as
+              "Research: Author (year) …". Cite only real, checkable work.
+   year       on a LESSON: the date or decade shown in the eyebrow (e.g. '1954').
+   Experiments: in Try it the learner can be the participant. on() handlers may read
+   performance.now() to time responses and store results in the state; draw() stays pure.
+   Use rng()/shuffled()/nextSeed() for trial order, never Math.random.
+
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
@@ -245,6 +163,9 @@ function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCE
 const LESSONS=[],EXTRA_THREADS=[];
 function LESSON(def){if(LESSONS.some(l=>l.id===def.id))console.warn('Duplicate lesson',def.id);LESSONS.push(def)}
 function THREAD(def){EXTRA_THREADS.push(def)}
+// Further reading for a lesson's references: SOURCE('fitts-1954',{title:'…',url:'…'}).
+const SOURCES={};
+function SOURCE(key,def){SOURCES[key]=def}
 // Glossary entries live beside the scenes that use them: WORD({key,title,aliases,here,contrast,example,linkContext,scene?}).
 const GLOSSARY=[];
 function WORD(...entries){for(const e of entries){if(GLOSSARY.some(g=>g.key===e.key)){console.warn('Duplicate word',e.key);continue}GLOSSARY.push(e)}}

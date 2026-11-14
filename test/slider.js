@@ -4,7 +4,7 @@ const {chromium}=require('playwright');const path=require('path');
 const file='file://'+path.resolve(process.env.FILE||path.resolve(__dirname,'../index.html'));
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1100,height:900}});const errs=[];
  p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
- await p.goto(file+'#loop');await p.waitForTimeout(300);
+ await p.goto(file);await p.waitForTimeout(200);const LOOP=await p.evaluate(()=>csApp.route[5]);await p.goto(file+'#'+LOOP);await p.waitForTimeout(300);
  const st=()=>p.evaluate(()=>csApp.state()),fails=[];const ok=(c,m)=>{if(!c)fails.push(m)};
  const box=await (await p.$('#speed')).boundingBox(),y=box.y+box.height/2;
  const s0=await st();ok(s0.speed===0,'starts paused');
@@ -31,7 +31,7 @@ const file='file://'+path.resolve(process.env.FILE||path.resolve(__dirname,'../i
  await p.click('#mode-try');ok((await st()).mode==='try'&&(await st()).speed===0,'Try it pauses');
  await p.click('#play');ok((await st()).mode==='watch'&&(await st()).speed>0,'Play returns to Watch and plays');
  // Rewind crosses back into the previous scene.
- const before=(await st()).index;await p.evaluate(()=>csApp.seek(csApp.offsets[csApp.route.indexOf('loop')]+0.2));
+ const before=(await st()).index;await p.evaluate(()=>csApp.seek(csApp.offsets[csApp.route.indexOf(csApp.route[5])]+0.2));
  await p.mouse.move(zeroX,y);await p.mouse.down();await p.mouse.move(box.x+30,y,{steps:3});await p.waitForTimeout(500);const back=(await st()).id;await p.mouse.up();
- const prevId=await p.evaluate(()=>csApp.route[csApp.route.indexOf('loop')-1]);ok(back===prevId,'rewind crosses into the previous topic '+prevId+', at '+back);
+ const prevId=await p.evaluate(()=>csApp.route[4]);ok(back===prevId,'rewind crosses into the previous topic '+prevId+', at '+back);
  console.log(fails.length||errs.length?'FAIL:\n'+fails.concat(errs).join('\n'):'Slider: all behaviour checks pass.');await b.close();process.exit(fails.length+errs.length?1:0)})();
