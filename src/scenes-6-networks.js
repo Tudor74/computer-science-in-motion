@@ -855,7 +855,7 @@ SCENE({id:'one-time-pad',name:'One-time pad',tag:'Perfect secrecy, once',
  ui:[{text:'Message 1',label:'Message 1',get:s=>s.p1,act:'p1',max:6},{text:'Message 2',label:'Message 2',get:s=>s.p2,act:'p2',max:6},{choose:[['enc','Encrypt once'],['reuse','Key used twice']],label:'View',get:s=>s.view,act:'view'}],
  on:{p1(s,v){s.p1=v},p2(s,v){s.p2=v},view(s,v){s.view=v}},
  draw(s){
-  const P1=NW_A8(s.p1),P2=NW_A8(s.p2),K=NW_KEYB,rows=s.rows===undefined?9:s.rows,n=P1.length,cw=76,x0=120;let out='';
+  const P1=NW_A8(s.p1),P2=NW_A8(s.p2),K=NW_KEYB,rows=s.rows===undefined?9:s.rows,n=P1.length,cw=79,x0=112;let out='';
   if(s.view==='enc'){
    out+=heading('Message XOR key = ciphertext');
    const lines=[['message',P1,C.ink],['⊕ key',K.slice(0,n),C.purple],['= cipher',P1.map((b,i)=>b^K[i]),C.coral],['⊕ key again',P1,C.green]];
