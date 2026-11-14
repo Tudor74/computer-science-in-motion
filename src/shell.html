@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Computer Science In Motion — v0.1</title>
+<meta name="application-version" content="0.1">
+<meta name="description" content="An offline, animated and interactive route through computer science, from bits to P versus NP.">
+<style>
+:root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa}
+*{box-sizing:border-box}
+html{background:var(--bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
+body{margin:0;padding:14px;background:var(--bg)}
+button,select,input{font:inherit;color:inherit}
+button{background:#fff;border:1px solid #aec3cf;border-radius:8px;padding:7px 12px;cursor:pointer;color:var(--ink);font-weight:600;min-height:44px;min-width:44px}
+button:hover{background:#edf5fa}
+button:disabled{opacity:.42;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.frame{max-width:1040px;margin:0 auto;background:var(--paper);border-radius:13px;box-shadow:0 3px 18px #192c3709;overflow:hidden}
+
+/* Header: lesson title doubles as the lesson picker; texture is a stage cue. */
+.topic-header{position:relative;isolation:isolate;min-height:58px;padding:6px 18px;display:flex;align-items:center;background:#222;color:#f2f2f2}
+.topic-texture{position:absolute;inset:0;width:100%;height:100%;color:#4a4a4a;opacity:.75;pointer-events:none;z-index:0}
+.topic-header::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(34,34,34,.78),rgba(34,34,34,.3) 46%,rgba(34,34,34,0) 80%)}
+.header-row{position:relative;z-index:1;width:100%;min-width:0;display:flex;align-items:center;gap:12px}
+.brand{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c9d2d6;font-weight:650;margin:0 0 1px}
+.title-picker{position:relative;flex:1 1 auto;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;padding:4px 28px 4px 0;border-radius:6px}
+.title-picker:hover{background:#ffffff0c}
+.title-picker:focus-within{outline:2px solid #acd4ef;outline-offset:3px}
+.topic-header h1{margin:0;font-size:23px;line-height:1.22;font-weight:580;letter-spacing:-.02em;overflow-wrap:anywhere}
+.picker-chevron{position:absolute;right:8px;top:50%;width:7px;height:7px;border-right:1.7px solid #bac2c7;border-bottom:1.7px solid #bac2c7;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+#route-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:3;cursor:pointer;font-size:16px}
+#route-select option,#route-select optgroup{color:#192c37;background:#fff}
+.header-counter{flex:0 0 auto;font-size:13px;color:#d0d6d9;font-variant-numeric:tabular-nums;white-space:nowrap}
+#words{flex:0 0 auto;color:#f1f4f6;border:1px solid #ffffff40;background:#ffffff08;font-size:13px;padding:6px 11px}
+#words:hover{background:#ffffff17}
+
+/* Lesson: diagram deck on the left, copy and local map on the right. */
+.lesson{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);gap:18px;padding:12px 18px 12px;align-items:start}
+.visual-column{min-width:0}
+.diagram-deck{background:var(--deck);border-radius:10px;overflow:hidden}
+.deck-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 6px 0;min-height:48px}
+.mode-buttons{display:flex;gap:2px;background:#e3edf3;border-radius:9px;padding:2px}
+.mode-buttons button{border:0;background:transparent;min-height:40px;padding:4px 14px;font-size:14px;color:#425d6c;border-radius:7px}
+.mode-buttons button[aria-pressed="true"]{background:#fff;color:#164f79;box-shadow:0 1px 3px #192c3720}
+.mode-buttons button:hover{background:#d7e6ef}
+.mode-buttons button[aria-pressed="true"]:hover{background:#fff}
+.deck-note{font-size:12px;color:var(--muted);text-align:right;line-height:1.3}
+#drawing{display:block;width:100%;height:auto;aspect-ratio:600/380}
+#drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#drawing .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#drawing .hit{cursor:pointer}
+#drawing .hit:hover>*:first-child{filter:brightness(.96)}
+#drawing .hit:focus{outline:none}
+#drawing .hit:focus-visible>*:first-child{stroke:var(--focus);stroke-width:3}
+#drawing[data-mode="try"]{cursor:default}
+.phase{margin:0;padding:8px 11px;min-height:66px;font-size:14px;line-height:1.5;border-top:1px solid #e3ebef;background:var(--deck)}
+.try-panel{border-top:1px solid #dfe8ee;padding:8px 9px 10px;background:#fbfdfe}
+.try-panel[hidden]{display:none}
+.try-hint{font-size:13px;color:var(--muted);margin:0 0 7px;line-height:1.45}
+.try-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.try-row+.try-row{margin-top:6px}
+.try-row button{font-size:14px;padding:6px 11px}
+.try-row button[aria-pressed="true"]{background:#dcecf6;border-color:#5f93b6;color:#123f63}
+.try-row label{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.try-row input[type=range]{width:170px;min-height:44px;accent-color:var(--blue)}
+.try-row input[type=text]{min-height:44px;border:1px solid #b5cbd8;border-radius:7px;padding:6px 9px;width:min(240px,100%);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:500}
+.try-row output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.5ch}
+.seg{display:flex;gap:0;flex-wrap:wrap}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:8px 0 0 8px;margin-left:0}
+.seg button:last-child{border-radius:0 8px 8px 0}
+.step-status{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+
+.explanation{min-width:0;display:flex;flex-direction:column;gap:12px}
+.copy{min-width:0}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:4px 0 6px}
+#term{font-size:34px;line-height:1.12;letter-spacing:-.03em;margin:0 0 10px}
+.definition{font-size:19px;line-height:1.45;margin:0 0 10px}
+.example{font-size:16px;line-height:1.55;margin:0 0 10px;color:#2c414d;padding-left:10px;border-left:2px solid #bdd3e1}
+.meta{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+.meta button{min-height:32px;padding:2px 8px;font-size:13px;font-weight:550;margin:2px 3px 2px 0;border-color:#c9d8e2}
+button.word{display:inline;appearance:none;min-height:0;min-width:0;margin:0;padding:0;border:0;border-radius:2px;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;line-height:inherit;text-align:inherit;vertical-align:baseline;white-space:normal;text-decoration:underline;text-decoration-color:var(--word-blue);text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer}
+button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
+.word-tail{white-space:nowrap}
+
+/* Local concept map: left/right along the route, up/down along a connection. */
+.branch-map{border-top:1px solid #dfe7ec;padding-top:10px}
+.map-caption{font-size:12px;color:var(--muted);margin:0 0 6px;min-height:18px}
+.local-map{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,1fr);grid-template-rows:minmax(64px,auto) minmax(72px,auto) minmax(64px,auto);gap:5px 8px;isolation:isolate}
+.local-map[data-flat="true"]{grid-template-rows:0 minmax(72px,auto) 0;row-gap:0}
+.map-wires{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.map-node{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;border:0;border-radius:8px;padding:4px 6px;background:#edf3f7;font-size:13px;font-weight:550;line-height:1.22}
+.map-node:hover{background:#dcebf5}
+.map-node small{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:3px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.map-node[hidden]{visibility:hidden;display:flex!important}
+#map-up{grid-column:2;grid-row:1}#map-left{grid-column:1;grid-row:2}#map-right{grid-column:3;grid-row:2}#map-down{grid-column:2;grid-row:3}
+#map-current{grid-column:2;grid-row:2;border:1px solid #84b5d4;background:#fff;cursor:default}
+#map-current small{color:var(--blue)}
+.local-map[data-flat="true"] #map-up,.local-map[data-flat="true"] #map-down{display:none!important}
+
+.progress{height:4px;background:#eaf0f3;position:relative;overflow:hidden}
+.progress span{position:absolute;top:0;bottom:0;left:0;background:var(--blue);width:0}
+.controls{padding:12px 18px 10px}
+.transport{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.transport button{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:15px;white-space:nowrap}
+.transport svg{width:21px;height:21px;flex:0 0 21px;pointer-events:none}
+#play{min-width:109px}
+#play .pause-symbol{display:none}
+#play[data-playing="true"] .play-symbol{display:none}
+#play[data-playing="true"] .pause-symbol{display:block}
+.speed{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:14px}
+.speed label{font-weight:600}
+#speed{width:200px;min-height:44px;accent-color:var(--blue)}
+#speed-readout{min-width:92px;font-variant-numeric:tabular-nums;font-weight:500}
+.bottom{padding:5px 18px 12px;color:var(--muted);font-size:12px;line-height:1.6}
+.bottom p{margin:0}
+.bottom details{margin-top:4px}
+.bottom summary{cursor:pointer;font-weight:600;min-height:32px;display:list-item}
+.bottom a{color:#155e91}
+.bottom ul{padding-left:20px;margin:6px 0}
+.note{padding:12px 16px;background:#fff5dc;border-radius:10px;margin:12px}
+
+#word-dialog{width:min(500px,calc(100vw - 28px));max-height:calc(100dvh - 28px);padding:20px;border:1px solid #b5cbd8;border-radius:14px;color:var(--ink);background:#fff;box-shadow:0 16px 60px #142b4b40;overflow:auto;font-size:16px;line-height:1.5}
+#word-dialog::backdrop{background:#182d3d45}
+.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.dialog-top .eyebrow{margin:0}
+#word-title{font-size:26px;line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+#word-title:focus{outline:none}
+#word-context{font-size:12px;color:#163f70;margin:0 0 6px}
+#word-dialog dl{margin:0}
+#word-dialog dt{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:750;color:var(--muted);margin:14px 0 4px}
+#word-dialog dd{margin:0;font-size:17px;line-height:1.5}
+#word-dialog dd.example-word{font-size:15px;color:var(--muted);padding-left:10px;border-left:2px solid #bdd3e1}
+.word-footer{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#word-back{border:0;padding:3px 0;background:transparent;font-size:14px;text-decoration:underline;min-height:36px}
+#word-search{width:100%;min-height:44px;border:1px solid #b5cbd8;border-radius:7px;padding:8px 10px;margin:6px 0 8px}
+#word-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:45dvh;overflow:auto}
+#word-list button{font-size:15px;text-align:left;font-weight:500}
+#word-list-count{font-size:13px;color:var(--muted);margin:0 0 6px}
+#word-dialog [hidden]{display:none!important}
+
+@media(max-width:760px){
+ body{padding:6px}
+ .frame{border-radius:11px}
+ .topic-header{padding:6px 12px}
+ .topic-header h1{font-size:20px}
+ .brand{display:none}
+ .lesson{grid-template-columns:1fr;padding:8px 10px;gap:12px}
+ .explanation{display:contents}
+ .copy{order:0}.visual-column{order:1}.branch-map{order:2}
+ #term{font-size:29px}
+ .definition{font-size:18px}
+ .controls{padding:10px 10px 8px}
+ .transport{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .transport button{font-size:13px;padding:7px 4px;gap:3px;min-width:0}
+ #play{min-width:0}
+ .speed{grid-column:1/-1;margin:4px 0 0;width:100%}
+ #speed{flex:1;width:auto;min-width:0}
+ .bottom{padding:5px 10px 10px}
+ .try-row input[type=range]{width:140px}
+ .deck-note{display:none}
+}
+@media(max-width:380px){
+ .header-row{gap:6px}
+ #words{padding:6px 7px;font-size:12px}
+ .topic-header h1{font-size:18px}
+ .try-row button{padding:6px 8px;font-size:13px}
+ #word-list{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media(forced-colors:active){.topic-header{background:Canvas;color:CanvasText;border-bottom:1px solid CanvasText}.topic-texture,.topic-header::after{display:none}.mode-buttons button[aria-pressed="true"],.try-row button[aria-pressed="true"]{border:2px solid Highlight}}
+@media print{.topic-header{background:#fff;color:#192c37}.topic-texture,.topic-header::after,.controls,.try-panel{display:none}}
+</style>
+</head>
+<body>
+<main class="frame" id="app" aria-label="Computer science visual lessons">
+<header class="topic-header" id="topic-header">
+ <svg class="topic-texture" id="topic-texture" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg>
+ <div class="header-row">
+  <div class="title-picker">
+   <p class="brand">Computer Science In Motion</p>
+   <h1 id="topic-title">Bits and binary</h1>
+   <span class="picker-chevron" aria-hidden="true"></span>
+   <label class="sr-only" for="route-select">Choose any lesson</label>
+   <select id="route-select" aria-label="Choose any lesson"></select>
+  </div>
+  <span class="header-counter" id="counter">1 / 4</span>
+  <button type="button" id="words" aria-haspopup="dialog" aria-controls="word-dialog">Word meanings</button>
+ </div>
+</header>
+<div id="lesson-panel" role="region" aria-labelledby="term">
+<section class="lesson">
+ <div class="visual-column">
+  <div class="diagram-deck">
+   <div class="deck-toolbar">
+    <div class="mode-buttons" role="group" aria-label="Diagram mode">
+     <button type="button" id="mode-watch" aria-pressed="true" title="Watch the animated explanation">Watch</button>
+     <button type="button" id="mode-try" aria-pressed="false" title="Change the input and see the same diagram respond">Try it</button>
+    </div>
+    <span class="deck-note" id="deck-note">Animated · deterministic</span>
+   </div>
+   <svg id="drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-labelledby="diagram-title diagram-desc" data-mode="watch"><title id="diagram-title">Loading</title><desc id="diagram-desc">The diagram appears when JavaScript runs.</desc><text x="300" y="190" text-anchor="middle" font-size="20" fill="#546873">Loading the first lesson…</text></svg>
+   <p class="phase" id="phase" tabindex="0" aria-label="Diagram caption">The diagram is drawn by the script on this page.</p>
+   <section class="try-panel" id="try-panel" aria-label="Try it controls" hidden>
+    <p class="try-hint" id="try-hint"></p>
+    <div id="try-controls"></div>
+   </section>
+  </div>
+ </div>
+ <div class="explanation">
+  <div class="copy" id="copy">
+   <p class="eyebrow" id="eyebrow">Represent</p>
+   <h2 id="term">Bit</h2>
+   <p class="definition" id="definition"></p>
+   <p class="example" id="example"></p>
+   <p class="meta" id="lesson-why"></p>
+   <p class="meta" id="lesson-prior"></p>
+  </div>
+  <nav class="branch-map" aria-label="Nearby concepts">
+   <p class="map-caption" id="map-caption"></p>
+   <div class="local-map" id="local-map" tabindex="0" aria-label="Local concept map. Arrow keys move. Left and right follow the learning route; up and down follow a connection.">
+    <svg class="map-wires" viewBox="0 0 300 260" preserveAspectRatio="none" aria-hidden="true"><path id="wire-up" d="M150 130 L158 100 L150 39" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-down" d="M150 130 L142 170 L150 221" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-left" d="M150 130 L50 130" fill="none" stroke="#76949f" stroke-width="1.6"/><path id="wire-right" d="M150 130 L250 130" fill="none" stroke="#76949f" stroke-width="1.6"/></svg>
+    <button type="button" class="map-node" id="map-up"></button>
+    <button type="button" class="map-node" id="map-left"></button>
+    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>Bit</b></div>
+    <button type="button" class="map-node" id="map-right"></button>
+    <button type="button" class="map-node" id="map-down"></button>
+   </div>
+  </nav>
+ </div>
+</section>
+<div class="progress" role="progressbar" aria-label="Whole route progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><span id="progress-fill"></span></div>
+<section class="controls" aria-label="Playback controls">
+ <div class="transport">
+  <button type="button" id="previous"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12H4M11 5L4 12L11 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Previous</span></button>
+  <button type="button" id="play" data-playing="false"><svg class="play-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5L19 12L8 19Z" fill="currentColor"/></svg><svg class="pause-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5H10V19H7ZM14 5H17V19H14Z" fill="currentColor"/></svg><span id="play-label">Play</span></button>
+  <button type="button" id="replay"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10a9 9 0 1 1 2.5 8.1M3 4v6h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Replay</span></button>
+  <button type="button" id="next"><span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="speed"><label for="speed">Speed</label><input type="range" id="speed" min="-4" max="8" step="0.25" value="1" aria-describedby="speed-help"><output id="speed-readout" for="speed">1× forward</output></div>
+ </div>
+ <p class="sr-only" id="speed-help">Speed below zero rewinds; zero pauses. Play and Pause keep the chosen speed.</p>
+</section>
+</div>
+<footer class="bottom">
+ <p id="status">v0.1 · Offline · No external files</p>
+ <details id="about"><summary>About this page and further reading</summary>
+  <p>Every diagram is a pure function of the lesson clock, so play, pause, speed, rewind and replay always show the same picture for the same moment. <b>Try it</b> hands the same diagram to you: change the input, step through, and compare.</p>
+  <p id="sources-intro">Further reading for this lesson:</p>
+  <ul id="sources"></ul>
+ </details>
+</footer>
+<p class="sr-only" id="announcement" aria-live="polite"></p>
+<noscript><p class="note">JavaScript is turned off. The lessons are drawn by the script on this page, so please turn JavaScript on.</p></noscript>
+</main>
+
+<dialog id="word-dialog" aria-labelledby="word-title">
+ <div class="dialog-top"><p class="eyebrow">Word meanings</p><button type="button" id="word-close" aria-label="Close and stay paused">Close</button></div>
+ <button type="button" id="word-back" hidden>← All words</button>
+ <p id="word-context">Meaning here</p><h2 id="word-title" tabindex="-1">Word meanings</h2>
+ <div id="word-detail"><dl>
+  <dt>Here it means</dt><dd id="word-meaning"></dd>
+  <dt>Do not confuse with</dt><dd id="word-contrast"></dd>
+  <dt>Example</dt><dd id="word-example" class="example-word"></dd>
+ </dl></div>
+ <div id="word-browser" hidden>
+  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try pointer, packet, hash…" autocomplete="off">
+  <p id="word-list-count" aria-live="polite"></p><div id="word-list"></div>
+ </div>
+ <div class="word-footer"><button type="button" id="word-goto" hidden>Go to this topic</button><button type="button" id="word-resume">Close and resume</button></div>
+</dialog>
+<script>
+/*__SCRIPT__*/
+</script>
+</body>
+</html>

@@ -1,0 +1,1048 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Computer Science In Motion — v0.1</title>
+<meta name="application-version" content="0.1">
+<meta name="description" content="An offline, animated and interactive route through computer science, from bits to P versus NP.">
+<style>
+:root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa}
+*{box-sizing:border-box}
+html{background:var(--bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
+body{margin:0;padding:14px;background:var(--bg)}
+button,select,input{font:inherit;color:inherit}
+button{background:#fff;border:1px solid #aec3cf;border-radius:8px;padding:7px 12px;cursor:pointer;color:var(--ink);font-weight:600;min-height:44px;min-width:44px}
+button:hover{background:#edf5fa}
+button:disabled{opacity:.42;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.frame{max-width:1040px;margin:0 auto;background:var(--paper);border-radius:13px;box-shadow:0 3px 18px #192c3709;overflow:hidden}
+
+/* Header: lesson title doubles as the lesson picker; texture is a stage cue. */
+.topic-header{position:relative;isolation:isolate;min-height:58px;padding:6px 18px;display:flex;align-items:center;background:#222;color:#f2f2f2}
+.topic-texture{position:absolute;inset:0;width:100%;height:100%;color:#4a4a4a;opacity:.75;pointer-events:none;z-index:0}
+.topic-header::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(34,34,34,.78),rgba(34,34,34,.3) 46%,rgba(34,34,34,0) 80%)}
+.header-row{position:relative;z-index:1;width:100%;min-width:0;display:flex;align-items:center;gap:12px}
+.brand{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c9d2d6;font-weight:650;margin:0 0 1px}
+.title-picker{position:relative;flex:1 1 auto;min-width:0;min-height:44px;display:flex;flex-direction:column;justify-content:center;padding:4px 28px 4px 0;border-radius:6px}
+.title-picker:hover{background:#ffffff0c}
+.title-picker:focus-within{outline:2px solid #acd4ef;outline-offset:3px}
+.topic-header h1{margin:0;font-size:23px;line-height:1.22;font-weight:580;letter-spacing:-.02em;overflow-wrap:anywhere}
+.picker-chevron{position:absolute;right:8px;top:50%;width:7px;height:7px;border-right:1.7px solid #bac2c7;border-bottom:1.7px solid #bac2c7;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+#route-select{position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:3;cursor:pointer;font-size:16px}
+#route-select option,#route-select optgroup{color:#192c37;background:#fff}
+.header-counter{flex:0 0 auto;font-size:13px;color:#d0d6d9;font-variant-numeric:tabular-nums;white-space:nowrap}
+#words{flex:0 0 auto;color:#f1f4f6;border:1px solid #ffffff40;background:#ffffff08;font-size:13px;padding:6px 11px}
+#words:hover{background:#ffffff17}
+
+/* Lesson: diagram deck on the left, copy and local map on the right. */
+.lesson{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);gap:18px;padding:12px 18px 12px;align-items:start}
+.visual-column{min-width:0}
+.diagram-deck{background:var(--deck);border-radius:10px;overflow:hidden}
+.deck-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 6px 0;min-height:48px}
+.mode-buttons{display:flex;gap:2px;background:#e3edf3;border-radius:9px;padding:2px}
+.mode-buttons button{border:0;background:transparent;min-height:40px;padding:4px 14px;font-size:14px;color:#425d6c;border-radius:7px}
+.mode-buttons button[aria-pressed="true"]{background:#fff;color:#164f79;box-shadow:0 1px 3px #192c3720}
+.mode-buttons button:hover{background:#d7e6ef}
+.mode-buttons button[aria-pressed="true"]:hover{background:#fff}
+.deck-note{font-size:12px;color:var(--muted);text-align:right;line-height:1.3}
+#drawing{display:block;width:100%;height:auto;aspect-ratio:600/380}
+#drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#drawing .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+#drawing .hit{cursor:pointer}
+#drawing .hit:hover>*:first-child{filter:brightness(.96)}
+#drawing .hit:focus{outline:none}
+#drawing .hit:focus-visible>*:first-child{stroke:var(--focus);stroke-width:3}
+#drawing[data-mode="try"]{cursor:default}
+.phase{margin:0;padding:8px 11px;min-height:66px;font-size:14px;line-height:1.5;border-top:1px solid #e3ebef;background:var(--deck)}
+.try-panel{border-top:1px solid #dfe8ee;padding:8px 9px 10px;background:#fbfdfe}
+.try-panel[hidden]{display:none}
+.try-hint{font-size:13px;color:var(--muted);margin:0 0 7px;line-height:1.45}
+.try-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.try-row+.try-row{margin-top:6px}
+.try-row button{font-size:14px;padding:6px 11px}
+.try-row button[aria-pressed="true"]{background:#dcecf6;border-color:#5f93b6;color:#123f63}
+.try-row label{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.try-row input[type=range]{width:170px;min-height:44px;accent-color:var(--blue)}
+.try-row input[type=text]{min-height:44px;border:1px solid #b5cbd8;border-radius:7px;padding:6px 9px;width:min(240px,100%);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:500}
+.try-row output{font-variant-numeric:tabular-nums;font-weight:700;min-width:2.5ch}
+.seg{display:flex;gap:0;flex-wrap:wrap}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:8px 0 0 8px;margin-left:0}
+.seg button:last-child{border-radius:0 8px 8px 0}
+.step-status{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
+
+.explanation{min-width:0;display:flex;flex-direction:column;gap:12px}
+.copy{min-width:0}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:4px 0 6px}
+#term{font-size:34px;line-height:1.12;letter-spacing:-.03em;margin:0 0 10px}
+.definition{font-size:19px;line-height:1.45;margin:0 0 10px}
+.example{font-size:16px;line-height:1.55;margin:0 0 10px;color:#2c414d;padding-left:10px;border-left:2px solid #bdd3e1}
+.meta{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+.meta button{min-height:32px;padding:2px 8px;font-size:13px;font-weight:550;margin:2px 3px 2px 0;border-color:#c9d8e2}
+button.word{display:inline;appearance:none;min-height:0;min-width:0;margin:0;padding:0;border:0;border-radius:2px;background:transparent;color:inherit;font:inherit;letter-spacing:inherit;line-height:inherit;text-align:inherit;vertical-align:baseline;white-space:normal;text-decoration:underline;text-decoration-color:var(--word-blue);text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer}
+button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
+.word-tail{white-space:nowrap}
+
+/* Local concept map: left/right along the route, up/down along a connection. */
+.branch-map{border-top:1px solid #dfe7ec;padding-top:10px}
+.map-caption{font-size:12px;color:var(--muted);margin:0 0 6px;min-height:18px}
+.local-map{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) minmax(0,1fr);grid-template-rows:minmax(64px,auto) minmax(72px,auto) minmax(64px,auto);gap:5px 8px;isolation:isolate}
+.local-map[data-flat="true"]{grid-template-rows:0 minmax(72px,auto) 0;row-gap:0}
+.map-wires{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.map-node{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;border:0;border-radius:8px;padding:4px 6px;background:#edf3f7;font-size:13px;font-weight:550;line-height:1.22}
+.map-node:hover{background:#dcebf5}
+.map-node small{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:3px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.map-node[hidden]{visibility:hidden;display:flex!important}
+#map-up{grid-column:2;grid-row:1}#map-left{grid-column:1;grid-row:2}#map-right{grid-column:3;grid-row:2}#map-down{grid-column:2;grid-row:3}
+#map-current{grid-column:2;grid-row:2;border:1px solid #84b5d4;background:#fff;cursor:default}
+#map-current small{color:var(--blue)}
+.local-map[data-flat="true"] #map-up,.local-map[data-flat="true"] #map-down{display:none!important}
+
+.progress{height:4px;background:#eaf0f3;position:relative;overflow:hidden}
+.progress span{position:absolute;top:0;bottom:0;left:0;background:var(--blue);width:0}
+.controls{padding:12px 18px 10px}
+.transport{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.transport button{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:15px;white-space:nowrap}
+.transport svg{width:21px;height:21px;flex:0 0 21px;pointer-events:none}
+#play{min-width:109px}
+#play .pause-symbol{display:none}
+#play[data-playing="true"] .play-symbol{display:none}
+#play[data-playing="true"] .pause-symbol{display:block}
+.speed{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:14px}
+.speed label{font-weight:600}
+#speed{width:200px;min-height:44px;accent-color:var(--blue)}
+#speed-readout{min-width:92px;font-variant-numeric:tabular-nums;font-weight:500}
+.bottom{padding:5px 18px 12px;color:var(--muted);font-size:12px;line-height:1.6}
+.bottom p{margin:0}
+.bottom details{margin-top:4px}
+.bottom summary{cursor:pointer;font-weight:600;min-height:32px;display:list-item}
+.bottom a{color:#155e91}
+.bottom ul{padding-left:20px;margin:6px 0}
+.note{padding:12px 16px;background:#fff5dc;border-radius:10px;margin:12px}
+
+#word-dialog{width:min(500px,calc(100vw - 28px));max-height:calc(100dvh - 28px);padding:20px;border:1px solid #b5cbd8;border-radius:14px;color:var(--ink);background:#fff;box-shadow:0 16px 60px #142b4b40;overflow:auto;font-size:16px;line-height:1.5}
+#word-dialog::backdrop{background:#182d3d45}
+.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.dialog-top .eyebrow{margin:0}
+#word-title{font-size:26px;line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+#word-title:focus{outline:none}
+#word-context{font-size:12px;color:#163f70;margin:0 0 6px}
+#word-dialog dl{margin:0}
+#word-dialog dt{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:750;color:var(--muted);margin:14px 0 4px}
+#word-dialog dd{margin:0;font-size:17px;line-height:1.5}
+#word-dialog dd.example-word{font-size:15px;color:var(--muted);padding-left:10px;border-left:2px solid #bdd3e1}
+.word-footer{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#word-back{border:0;padding:3px 0;background:transparent;font-size:14px;text-decoration:underline;min-height:36px}
+#word-search{width:100%;min-height:44px;border:1px solid #b5cbd8;border-radius:7px;padding:8px 10px;margin:6px 0 8px}
+#word-list{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:45dvh;overflow:auto}
+#word-list button{font-size:15px;text-align:left;font-weight:500}
+#word-list-count{font-size:13px;color:var(--muted);margin:0 0 6px}
+#word-dialog [hidden]{display:none!important}
+
+@media(max-width:760px){
+ body{padding:6px}
+ .frame{border-radius:11px}
+ .topic-header{padding:6px 12px}
+ .topic-header h1{font-size:20px}
+ .brand{display:none}
+ .lesson{grid-template-columns:1fr;padding:8px 10px;gap:12px}
+ .explanation{display:contents}
+ .copy{order:0}.visual-column{order:1}.branch-map{order:2}
+ #term{font-size:29px}
+ .definition{font-size:18px}
+ .controls{padding:10px 10px 8px}
+ .transport{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .transport button{font-size:13px;padding:7px 4px;gap:3px;min-width:0}
+ #play{min-width:0}
+ .speed{grid-column:1/-1;margin:4px 0 0;width:100%}
+ #speed{flex:1;width:auto;min-width:0}
+ .bottom{padding:5px 10px 10px}
+ .try-row input[type=range]{width:140px}
+ .deck-note{display:none}
+}
+@media(max-width:380px){
+ .header-row{gap:6px}
+ #words{padding:6px 7px;font-size:12px}
+ .topic-header h1{font-size:18px}
+ .try-row button{padding:6px 8px;font-size:13px}
+ #word-list{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media(forced-colors:active){.topic-header{background:Canvas;color:CanvasText;border-bottom:1px solid CanvasText}.topic-texture,.topic-header::after{display:none}.mode-buttons button[aria-pressed="true"],.try-row button[aria-pressed="true"]{border:2px solid Highlight}}
+@media print{.topic-header{background:#fff;color:#192c37}.topic-texture,.topic-header::after,.controls,.try-panel{display:none}}
+</style>
+</head>
+<body>
+<main class="frame" id="app" aria-label="Computer science visual lessons">
+<header class="topic-header" id="topic-header">
+ <svg class="topic-texture" id="topic-texture" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg>
+ <div class="header-row">
+  <div class="title-picker">
+   <p class="brand">Computer Science In Motion</p>
+   <h1 id="topic-title">Bits and binary</h1>
+   <span class="picker-chevron" aria-hidden="true"></span>
+   <label class="sr-only" for="route-select">Choose any lesson</label>
+   <select id="route-select" aria-label="Choose any lesson"></select>
+  </div>
+  <span class="header-counter" id="counter">1 / 4</span>
+  <button type="button" id="words" aria-haspopup="dialog" aria-controls="word-dialog">Word meanings</button>
+ </div>
+</header>
+<div id="lesson-panel" role="region" aria-labelledby="term">
+<section class="lesson">
+ <div class="visual-column">
+  <div class="diagram-deck">
+   <div class="deck-toolbar">
+    <div class="mode-buttons" role="group" aria-label="Diagram mode">
+     <button type="button" id="mode-watch" aria-pressed="true" title="Watch the animated explanation">Watch</button>
+     <button type="button" id="mode-try" aria-pressed="false" title="Change the input and see the same diagram respond">Try it</button>
+    </div>
+    <span class="deck-note" id="deck-note">Animated · deterministic</span>
+   </div>
+   <svg id="drawing" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" role="img" aria-labelledby="diagram-title diagram-desc" data-mode="watch"><title id="diagram-title">Loading</title><desc id="diagram-desc">The diagram appears when JavaScript runs.</desc><text x="300" y="190" text-anchor="middle" font-size="20" fill="#546873">Loading the first lesson…</text></svg>
+   <p class="phase" id="phase" tabindex="0" aria-label="Diagram caption">The diagram is drawn by the script on this page.</p>
+   <section class="try-panel" id="try-panel" aria-label="Try it controls" hidden>
+    <p class="try-hint" id="try-hint"></p>
+    <div id="try-controls"></div>
+   </section>
+  </div>
+ </div>
+ <div class="explanation">
+  <div class="copy" id="copy">
+   <p class="eyebrow" id="eyebrow">Represent</p>
+   <h2 id="term">Bit</h2>
+   <p class="definition" id="definition"></p>
+   <p class="example" id="example"></p>
+   <p class="meta" id="lesson-why"></p>
+   <p class="meta" id="lesson-prior"></p>
+  </div>
+  <nav class="branch-map" aria-label="Nearby concepts">
+   <p class="map-caption" id="map-caption"></p>
+   <div class="local-map" id="local-map" tabindex="0" aria-label="Local concept map. Arrow keys move. Left and right follow the learning route; up and down follow a connection.">
+    <svg class="map-wires" viewBox="0 0 300 260" preserveAspectRatio="none" aria-hidden="true"><path id="wire-up" d="M150 130 L158 100 L150 39" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-down" d="M150 130 L142 170 L150 221" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-left" d="M150 130 L50 130" fill="none" stroke="#76949f" stroke-width="1.6"/><path id="wire-right" d="M150 130 L250 130" fill="none" stroke="#76949f" stroke-width="1.6"/></svg>
+    <button type="button" class="map-node" id="map-up"></button>
+    <button type="button" class="map-node" id="map-left"></button>
+    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>Bit</b></div>
+    <button type="button" class="map-node" id="map-right"></button>
+    <button type="button" class="map-node" id="map-down"></button>
+   </div>
+  </nav>
+ </div>
+</section>
+<div class="progress" role="progressbar" aria-label="Whole route progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress"><span id="progress-fill"></span></div>
+<section class="controls" aria-label="Playback controls">
+ <div class="transport">
+  <button type="button" id="previous"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12H4M11 5L4 12L11 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Previous</span></button>
+  <button type="button" id="play" data-playing="false"><svg class="play-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5L19 12L8 19Z" fill="currentColor"/></svg><svg class="pause-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5H10V19H7ZM14 5H17V19H14Z" fill="currentColor"/></svg><span id="play-label">Play</span></button>
+  <button type="button" id="replay"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 10a9 9 0 1 1 2.5 8.1M3 4v6h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Replay</span></button>
+  <button type="button" id="next"><span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="speed"><label for="speed">Speed</label><input type="range" id="speed" min="-4" max="8" step="0.25" value="1" aria-describedby="speed-help"><output id="speed-readout" for="speed">1× forward</output></div>
+ </div>
+ <p class="sr-only" id="speed-help">Speed below zero rewinds; zero pauses. Play and Pause keep the chosen speed.</p>
+</section>
+</div>
+<footer class="bottom">
+ <p id="status">v0.1 · Offline · No external files</p>
+ <details id="about"><summary>About this page and further reading</summary>
+  <p>Every diagram is a pure function of the lesson clock, so play, pause, speed, rewind and replay always show the same picture for the same moment. <b>Try it</b> hands the same diagram to you: change the input, step through, and compare.</p>
+  <p id="sources-intro">Further reading for this lesson:</p>
+  <ul id="sources"></ul>
+ </details>
+</footer>
+<p class="sr-only" id="announcement" aria-live="polite"></p>
+<noscript><p class="note">JavaScript is turned off. The lessons are drawn by the script on this page, so please turn JavaScript on.</p></noscript>
+</main>
+
+<dialog id="word-dialog" aria-labelledby="word-title">
+ <div class="dialog-top"><p class="eyebrow">Word meanings</p><button type="button" id="word-close" aria-label="Close and stay paused">Close</button></div>
+ <button type="button" id="word-back" hidden>← All words</button>
+ <p id="word-context">Meaning here</p><h2 id="word-title" tabindex="-1">Word meanings</h2>
+ <div id="word-detail"><dl>
+  <dt>Here it means</dt><dd id="word-meaning"></dd>
+  <dt>Do not confuse with</dt><dd id="word-contrast"></dd>
+  <dt>Example</dt><dd id="word-example" class="example-word"></dd>
+ </dl></div>
+ <div id="word-browser" hidden>
+  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try pointer, packet, hash…" autocomplete="off">
+  <p id="word-list-count" aria-live="polite"></p><div id="word-list"></div>
+ </div>
+ <div class="word-footer"><button type="button" id="word-goto" hidden>Go to this topic</button><button type="button" id="word-resume">Close and resume</button></div>
+</dialog>
+<script>
+(function(){
+'use strict';
+/* ===========================================================================
+ Computer Science In Motion — v0.1. One offline file: no network, no libraries.
+
+ SCENE API (every term is one scene; see SCENE() calls below)
+   id, name, tag, definition, example, desc      text shown beside the diagram
+   dur        seconds of playback for this scene (default 8)
+   init()     -> state      default input: used for Watch and for Try it's reset
+   watch(p)   -> state      optional; state as a pure function of p in [0,1]
+                            (only for scenes without trace)
+   trace(s)   -> [frame]    optional; discrete steps (each frame may carry .say)
+   draw(s,f,X)-> {svg,phase}  pure: same (s,f,X) gives the same picture
+                 X = {p, try, k, n, u}: time, mode, step index, step count, tween
+   ui: [...]  Try it controls: {b:'Label',act}, {range,label,min,max,step,get,act},
+              {text,label,get,act,max}, {choose:[[value,label]],get,act}
+   on: {act(s,arg,ctx)}  handlers for buttons and for SVG [data-act] targets.
+              Return 'keep' to keep the step position; 'end' to jump to the last
+              step; 'run' to start running; otherwise steps restart at 0.
+   shared     optional key: scenes with the same key share one Try it state.
+   hint       one line telling the learner what they can change.
+ Watch mode is deterministic: a scene's picture depends only on lesson time.
+ Try it mode is driven only by the learner's state and step position.
+=========================================================================== */
+const $=id=>document.getElementById(id);
+const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v)};
+const lerp=(a,b,u)=>a+(b-a)*u;
+const fmt=n=>Math.abs(Number(n))<.005?'0':Number(n).toFixed(2).replace(/\.?0+$/,'');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const range=n=>Array.from({length:n},(_,i)=>i);
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const pad=(s,n,c='0')=>String(s).padStart(n,c);
+const bin=(v,n)=>pad((v>>>0).toString(2),n).slice(-n);
+const hex=(v,n=2)=>pad(v.toString(16).toUpperCase(),n);
+// A fixed pseudo-random generator: the same seed always gives the same "random" data.
+function rng(seed){let x=seed>>>0||1;return ()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296}}
+function shuffled(a,seed){const r=rng(seed),b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+let shuffleSeed=11;const nextSeed=()=>(shuffleSeed=(shuffleSeed*48271)%2147483647);
+
+/* ---- SVG primitives (viewBox 600×380) ---- */
+const T=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>`<text x="${fmt(x)}" y="${fmt(y)}" font-size="${size}" fill="${fill}" text-anchor="${anchor}" ${extra}>${esc(s)}</text>`;
+const TB=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>T(x,y,s,size,fill,anchor,'font-weight="700" '+extra);
+const TM=(x,y,s,size=16,fill=C.ink,anchor='middle',extra='')=>T(x,y,s,size,fill,anchor,'class="mono" '+extra);
+const R=(x,y,w,h,fill=C.pale,stroke='none',rx=8,extra='')=>`<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(Math.max(0,w))}" height="${fmt(Math.max(0,h))}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="2" ${extra}/>`;
+const L=(x1,y1,x2,y2,stroke=C.line,w=2,extra='')=>`<line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" ${extra}/>`;
+const Ci=(x,y,r,fill=C.blue,stroke='none',extra='')=>`<circle cx="${fmt(x)}" cy="${fmt(y)}" r="${fmt(r)}" fill="${fill}" stroke="${stroke}" stroke-width="2" ${extra}/>`;
+const P=(d,stroke=C.blue,w=2,fill='none',extra='')=>`<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+const G=(inner,extra='')=>`<g ${extra}>${inner}</g>`;
+function arrow(x1,y1,x2,y2,col=C.blue,w=2.5,head=9,extra=''){
+ const dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy);if(d<1)return '';
+ const ux=dx/d,uy=dy/d,bx=x2-ux*head,by=y2-uy*head;
+ return L(x1,y1,bx,by,col,w,extra)+`<polygon points="${fmt(x2)},${fmt(y2)} ${fmt(bx-uy*head*.55)},${fmt(by+ux*head*.55)} ${fmt(bx+uy*head*.55)},${fmt(by-ux*head*.55)}" fill="${col}"/>`;
+}
+// Arrow between two circles of radius r (stops at the rims).
+function arrowR(a,b,r1,r2,col=C.blue,w=2.5){const dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1;return arrow(a[0]+dx/d*r1,a[1]+dy/d*r1,b[0]-dx/d*r2,b[1]-dy/d*r2,col,w)}
+// Curved arrow (quadratic) with a bend; returns svg.
+function curveArrow(x1,y1,x2,y2,bend=30,col=C.blue,w=2.2){
+ const mx=(x1+x2)/2,my=(y1+y2)/2,dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy)||1,cx=mx-dy/d*bend,cy=my+dx/d*bend;
+ const tx=x2-cx,ty=y2-cy,td=Math.hypot(tx,ty)||1,ux=tx/td,uy=ty/td,h=8,bx=x2-ux*h,by=y2-uy*h;
+ return P(`M${fmt(x1)} ${fmt(y1)} Q${fmt(cx)} ${fmt(cy)} ${fmt(bx)} ${fmt(by)}`,col,w)+`<polygon points="${fmt(x2)},${fmt(y2)} ${fmt(bx-uy*h*.55)},${fmt(by+ux*h*.55)} ${fmt(bx+uy*h*.55)},${fmt(by-ux*h*.55)}" fill="${col}"/>`;
+}
+const heading=(s,y=30)=>T(300,y,s,18,C.ink,'middle','font-weight="650"');
+// A labelled box with centred text.
+function box(x,y,w,h,label,fill=C.pale,ink=C.ink,size=17,stroke='none',mono=false,rx=8){
+ return R(x,y,w,h,fill,stroke,rx)+(mono?TM:T)(x+w/2,y+h/2+size*.36,label,size,ink);
+}
+// Interactive wrapper: in Try it mode a target becomes a focusable button.
+function hit(X,act,arg,label,inner){
+ if(!X||!X.try)return inner;
+ return `<g class="hit" data-act="${esc(act)}" data-arg="${esc(arg)}" data-key="${esc(act+':'+arg)}" tabindex="0" role="button" aria-label="${esc(label)}">${inner}</g>`;
+}
+// A row of bit cells; returns svg. bits: array of 0/1, highlight: optional set of indices.
+function bitRow(X,bits,x0,y,w,act,opts={}){
+ const h=opts.h||w,gap=opts.gap||6;let out='';
+ bits.forEach((b,i)=>{const x=x0+i*(w+gap),on=!!b,hl=opts.hl&&opts.hl.includes(i);
+  const inner=R(x,y,w,h,on?(opts.on||C.blue):'#fff',hl?C.coral:(on?(opts.on||C.blue):C.line),7)+TM(x+w/2,y+h/2+h*.17,on?'1':'0',Math.round(h*.48),on?'#fff':C.muted,'middle','font-weight="700"');
+  out+=act?hit(X,act,i,`Bit ${i+1}: ${on?1:0}. Press to flip.`,inner):inner;
+ });
+ return out;
+}
+// Vertical bars for sorting-style arrays.
+function bars(vals,x0,base,w,scale,colour,label=true){let out='';vals.forEach((v,i)=>{const col=typeof colour==='function'?colour(i,v):colour;out+=R(x0+i*w+3,base-v*scale,w-6,v*scale,col,'none',4);if(label)out+=T(x0+i*w+w/2,base+18,v,14,C.muted)});return out}
+// Graph drawing: nodes {id:[x,y]}, edges [[a,b,w?]], styles via callbacks.
+function graphSVG(X,nodes,edges,o={}){
+ let out='';const r=o.r||20;
+ for(const e of edges){const a=nodes[e[0]],b=nodes[e[1]],st=o.edge?o.edge(e):{};
+  if(o.directed)out+=arrowR(a,b,r,r+2,st.col||C.line,st.w||2.5);else out+=L(a[0],a[1],b[0],b[1],st.col||C.line,st.w||2.5,st.extra||'');
+  if(e[2]!==undefined&&o.weights!==false){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;const wi=R(mx-13,my-12,26,22,'#fff',st.col||C.line,6)+T(mx,my+5,e[2],14,C.ink);out+=o.edgeAct?hit(X,o.edgeAct,e[0]+'-'+e[1],`Edge ${e[0]} to ${e[1]}, weight ${e[2]}. Press to change.`,wi):wi}
+ }
+ for(const id in nodes){const [x,y]=nodes[id],st=o.node?o.node(id):{};
+  const inner=Ci(x,y,r,st.fill||'#fff',st.stroke||C.blue)+T(x,y+6,st.label||id,st.size||17,st.ink||C.ink,'middle','font-weight="650"');
+  out+=o.nodeAct?hit(X,o.nodeAct,id,st.aria||`Node ${id}`,inner):inner;
+  if(st.badge)out+=T(x,y+r+17,st.badge,13,st.badgeInk||C.muted);
+ }
+ return out;
+}
+// A small "counter" tile used for live counts (comparisons, steps, hops…).
+function counter(x,y,label,value,col=C.blue,w=120){return R(x,y,w,46,'#fff',C.grid,8)+T(x+w/2,y+17,label,12,C.muted)+TB(x+w/2,y+38,value,17,col)}
+
+const SCENES={};
+function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCENES[def.id]=def}
+// Glossary entries live beside the scenes that use them: WORD({key,title,aliases,here,contrast,example,linkContext,scene?}).
+const GLOSSARY=[];
+function WORD(...entries){for(const e of entries){if(GLOSSARY.some(g=>g.key===e.key)){console.warn('Duplicate word',e.key);continue}GLOSSARY.push(e)}}
+
+/* ===================== Stage 1 · Represent ===================== */
+// A two-position switch used for inputs throughout the logic lessons.
+function toggle(X,act,arg,x,y,on,label){
+ const inner=R(x,y,74,40,on?C.blue:'#fff',on?C.blue:C.line,20)+Ci(on?x+54:x+20,y+20,14,on?'#fff':C.line)+T(x+37,y+62,label+' = '+(on?1:0),15,C.ink,'middle','font-weight="650"');
+ return hit(X,act,arg,`Input ${label} is ${on?1:0}. Press to switch.`,inner);
+}
+function lamp(x,y,on,label){return Ci(x,y,24,on?'#ffd24a':'#eef2f4',on?'#c79100':C.line)+(on?Ci(x,y,34,'none','#ffd24a','opacity=".5"'):'')+T(x,y+52,label,15,C.ink,'middle','font-weight="650"')}
+const wireCol=v=>v?C.blue:'#b9c9d3',wireW=v=>v?5:3;
+function gateShape(type,x,y,col=C.dark){
+ let d,bubble=false;
+ if(type==='AND'||type==='NAND'){d=`M${x} ${y}H${x+45}A40 40 0 0 1 ${x+45} ${y+80}H${x}Z`;bubble=type==='NAND'}
+ else if(type==='OR'||type==='XOR'||type==='NOR'){d=`M${x} ${y}Q${x+28} ${y+40} ${x} ${y+80}Q${x+62} ${y+80} ${x+92} ${y+40}Q${x+62} ${y} ${x} ${y}Z`;bubble=type==='NOR'}
+ else {d=`M${x} ${y+5}L${x+78} ${y+40}L${x} ${y+75}Z`;bubble=true}
+ let out=P(d,col,2.5,'#fff');
+ if(type==='XOR')out+=P(`M${x-11} ${y}Q${x+17} ${y+40} ${x-11} ${y+80}`,col,2.5);
+ if(bubble)out+=Ci(type==='NOT'?x+86:x+93,y+40,7,'#fff',col);
+ out+=T(x+(type==='NOT'?30:38),y+46,type,14,C.muted,'middle','font-weight="700"');
+ return out;
+}
+const GATES={AND:(a,b)=>a&b,OR:(a,b)=>a|b,NOT:a=>a?0:1,XOR:(a,b)=>a^b,NAND:(a,b)=>(a&b)?0:1};
+function truthTable(x,y,cols,rows,active,cw=44,rh=28){
+ let out='';cols.forEach((c,j)=>out+=TB(x+j*cw+cw/2,y+19,c,14,j===cols.length-1?C.coral:C.muted));
+ rows.forEach((r,i)=>{const yy=y+rh*(i+1),on=i===active;out+=R(x-4,yy+2,cw*cols.length+8,rh-4,on?C.amberp:'none',on?C.amber:'none',6);r.forEach((v,j)=>out+=TM(x+j*cw+cw/2,yy+19,v,15,j===r.length-1?(v?C.blue:C.muted):C.ink,'middle',on?'font-weight="700"':''))});
+ return out;
+}
+
+SCENE({id:'bit',name:'Bit',tag:'The smallest choice',
+ definition:'A bit is a single choice between two states, written 0 and 1.',
+ example:'A light switch is one bit: off or on. Two bits give four patterns (00, 01, 10, 11); every extra bit doubles the number of patterns.',
+ desc:'A row of bit cells beside a grid listing every pattern those bits can make; the current pattern is highlighted.',
+ dur:9,hint:'Press a bit to flip it. Add or remove bits and watch the number of patterns double or halve.',
+ init:()=>({bits:[1]}),
+ watch(p){const n=p<.25?1:p<.5?2:p<.75?3:4,v=Math.floor(p*48)%(1<<n);return {bits:bin(v,n).split('').map(Number)}},
+ ui:[{b:'Add a bit',act:'add'},{b:'Remove a bit',act:'remove'}],
+ on:{flip(s,i){s.bits[i]^=1},add(s){if(s.bits.length<5)s.bits.unshift(0)},remove(s){if(s.bits.length>1)s.bits.shift()}},
+ draw(s,f,X){
+  const n=s.bits.length,w=64,x0=300-(n*(w+8)-8)/2,v=parseInt(s.bits.join(''),2);let out=heading(n===1?'One bit: two possible states':`${n} bits: 2${'⁰¹²³⁴⁵'[n]} = ${1<<n} patterns`);
+  s.bits.forEach((b,i)=>out+=Ci(x0+i*(w+8)+w/2,74,11,b?'#ffd24a':'#eef2f4',b?'#c79100':C.line));
+  out+=bitRow(X,s.bits,x0,96,w,'flip');
+  const total=1<<n,cols=total<=4?total:total<=8?4:8,cw=Math.min(118,560/cols),rows=Math.ceil(total/cols),rh=Math.min(40,150/rows);
+  for(let i=0;i<total;i++){const cx=300-(cols*cw)/2+(i%cols)*cw,cy=200+Math.floor(i/cols)*rh,on=i===v;out+=R(cx+4,cy,cw-8,rh-6,on?C.blue:'#fff',on?C.blue:C.grid,6)+TM(cx+cw/2,cy+rh/2+2,bin(i,n),Math.min(17,rh*.5),on?'#fff':C.muted)}
+  out+=T(300,366,`Each extra bit doubles the count: ${range(n).map(i=>2).join(' × ')} = ${total}`,15,C.muted);
+  return {svg:out,phase:`The pattern ${s.bits.join('')} is one of ${total} possible patterns. A bit has no meaning on its own; we agree what each pattern stands for.`};
+ }});
+
+SCENE({id:'binary',name:'Binary number',tag:'Place value with twos',
+ definition:'A way of writing numbers using only 0 and 1, where each place is worth twice the place to its right.',
+ example:'101101 means 32 + 8 + 4 + 1 = 45. Decimal places are worth 1, 10, 100…; binary places are worth 1, 2, 4, 8, 16…',
+ desc:'Eight bit cells under their place values 128 down to 1; the values of the 1 bits add up to the decimal number shown.',
+ dur:10,hint:'Press bits to switch place values on and off, or count with +1 and −1. Watch the carry ripple left.',
+ init:()=>({v:45}),
+ watch(p){return {v:Math.min(45,Math.floor(smooth(p)*46))}},
+ ui:[{b:'+1',act:'inc',aria:'Add one'},{b:'−1',act:'dec',aria:'Subtract one'},{b:'× 2 (shift left)',act:'shl'},{b:'÷ 2 (shift right)',act:'shr'}],
+ on:{flip(s,i){s.v^=1<<(7-i)},inc(s){s.v=(s.v+1)&255},dec(s){s.v=(s.v+255)&255},shl(s){s.v=(s.v<<1)&255},shr(s){s.v>>=1}},
+ draw(s,f,X){
+  const bits=bin(s.v,8).split('').map(Number),w=58,g=10,x0=300-(8*w+7*g)/2;let out=heading('Each place is worth twice the next');
+  bits.forEach((b,i)=>{const x=x0+i*(w+g);out+=TB(x+w/2,74,String(1<<(7-i)),17,b?C.blue:C.muted)+T(x+w/2,92,'2'+'⁷⁶⁵⁴³²¹⁰'[i],12,C.muted)});
+  out+=bitRow(X,bits,x0,104,w,'flip');
+  const parts=bits.map((b,i)=>b?1<<(7-i):0).filter(Boolean);
+  out+=T(300,214,parts.length?parts.join(' + '):'no places switched on',20,C.ink);
+  out+=TB(300,282,`${bits.join('')} in binary = ${s.v} in decimal`,26,C.blue);
+  out+=T(300,330,'Decimal places: … 1000, 100, 10, 1. Binary places: … 8, 4, 2, 1.',15,C.muted);
+  return {svg:out,phase:`Add the place values under each 1: ${parts.length?parts.join(' + ')+' = '+s.v:'0'}. Adding 1 to a run of 1s turns them to 0 and carries left, just as 999 + 1 = 1000.`};
+ }});
+
+SCENE({id:'byte',name:'Byte',tag:'Eight bits make a byte',
+ definition:'A group of 8 bits, which can hold 256 different patterns: the numbers 0 to 255.',
+ example:'Memory and file sizes are counted in bytes. A byte holding 255 (11111111) plus 1 overflows to 0 if there is no ninth bit to carry into.',
+ desc:'A byte of eight cells above a number line from 0 to 255 with a marker at the current value; an overflow warning appears when the value wraps.',
+ dur:9,hint:'Slide the value or press +1 near 255 to see overflow. Each bit can also be flipped directly.',
+ init:()=>({v:250,wrapped:false}),
+ watch(p){const k=Math.floor(p*16),raw=244+k;return {v:raw%256,wrapped:raw>255}},
+ ui:[{range:'v',label:'Value',min:0,max:255,get:s=>s.v,act:'set'},{b:'+1',act:'inc',aria:'Add one'}],
+ on:{set(s,v){s.v=v;s.wrapped=false},inc(s){s.wrapped=s.v===255;s.v=(s.v+1)&255},flip(s,i){s.v^=1<<(7-i);s.wrapped=false}},
+ draw(s,f,X){
+  const bits=bin(s.v,8).split('').map(Number);let out=heading('1 byte = 8 bits = 256 patterns');
+  out+=T(70,95,'carry?',13,s.wrapped?C.coral:C.muted)+R(44,104,52,52,s.wrapped?C.coralp:'#fff',s.wrapped?C.coral:C.grid,7,'stroke-dasharray="5 4"')+TM(70,138,s.wrapped?'1':'',24,C.coral);
+  out+=bitRow(X,bits,110,104,52,'flip',{gap:6});
+  out+=L(60,236,540,236,C.line,3);for(const v of [0,64,128,192,255]){const x=60+480*v/255;out+=L(x,230,x,242,C.line,2)+T(x,262,v,13,C.muted)}
+  const mx=60+480*s.v/255;out+=`<polygon points="${fmt(mx)},228 ${fmt(mx-9)},212 ${fmt(mx+9)},212" fill="${C.blue}"/>`+TB(mx,204,s.v,17,C.blue);
+  out+=s.wrapped?R(110,286,380,58,C.coralp,C.coral,10)+TB(300,311,'Overflow: 255 + 1 wrapped round to 0',17,C.coral)+T(300,333,'The carry needed a ninth bit, and the byte has none.',14,C.ink)
+   :T(300,318,`Smallest 00000000 = 0, largest 11111111 = 255`,16,C.muted);
+  return {svg:out,phase:s.wrapped?'The answer 256 needs nine bits. A fixed-size byte drops the carry, so the count wraps to zero, like a car mileometer rolling over.':`${bits.join('')} is ${s.v}. Eight places give 2⁸ = 256 patterns, so a byte counts from 0 to 255.`};
+ }});
+
+SCENE({id:'hexadecimal',name:'Hexadecimal',tag:'Four bits per digit',
+ definition:'Base 16: the digits 0–9 then A–F, where each hex digit stands for exactly four bits.',
+ example:'The web colour #1772B7 is three bytes: 17 red, 72 green, B7 blue. B7 = 1011 0111 = 183.',
+ desc:'Three bytes for red, green and blue, each split into two four-bit halves with their hex digits, beside a swatch of the resulting colour.',
+ dur:9,hint:'Mix a colour with the three sliders. Each byte splits into two 4-bit halves; each half is one hex digit.',
+ init:()=>({r:23,g:114,b:183}),
+ watch(p){const cs=[[23,114,183],[196,82,56],[44,119,108],[255,210,74]],q=p*3,i=Math.min(2,Math.floor(q)),u=smooth(q-i);const a=cs[i],b=cs[i+1];return {r:Math.round(lerp(a[0],b[0],u)),g:Math.round(lerp(a[1],b[1],u)),b:Math.round(lerp(a[2],b[2],u))}},
+ ui:[{range:'r',label:'Red',min:0,max:255,get:s=>s.r,act:'r'},{range:'g',label:'Green',min:0,max:255,get:s=>s.g,act:'g'},{range:'b',label:'Blue',min:0,max:255,get:s=>s.b,act:'b'}],
+ on:{r(s,v){s.r=v},g(s,v){s.g=v},b(s,v){s.b=v}},
+ draw(s){
+  const code='#'+hex(s.r)+hex(s.g)+hex(s.b);let out=heading('Each hex digit is exactly four bits');
+  [['Red',s.r,C.coral],['Green',s.g,C.green],['Blue',s.b,C.blue]].forEach(([n,v,col],j)=>{const y=70+j*92,bits=bin(v,8);
+   out+=TB(24,y+32,n,15,col,'start');
+   for(let h=0;h<2;h++){const x=90+h*150,nib=bits.slice(h*4,h*4+4);out+=R(x,y+8,136,38,'#fff',C.grid,7);nib.split('').forEach((b,i)=>out+=TM(x+19+i*33,y+34,b,19,b==='1'?C.ink:C.muted));
+    out+=P(`M${x+10} ${y+52}Q${x+68} ${y+66} ${x+126} ${y+52}`,C.line,1.6)+TB(x+68,y+82,hex(v,2)[h],20,col)}
+   out+=T(410,y+34,'= '+v,17,C.muted,'start');
+  });
+  out+=R(470,70,110,180,code,C.grid,12)+TB(525,280,code,18,C.ink);
+  out+=T(300,360,'0000 = 0 … 1001 = 9, 1010 = A … 1111 = F',15,C.muted);
+  return {svg:out,phase:`${code}: red ${hex(s.r)} = ${s.r}, green ${hex(s.g)} = ${s.g}, blue ${hex(s.b)} = ${s.b}. Two hex digits always describe one byte, which is why programmers read hex rather than long runs of bits.`};
+ }});
+
+SCENE({id:'ascii',name:'Character encoding (ASCII)',tag:'Letters as numbers',
+ definition:'An agreed table that gives each character a number, so text can be stored as bits. ASCII uses 7 bits for 128 characters.',
+ example:'In ASCII, “A” is 65 (1000001) and “a” is 97: lowercase letters are exactly 32 further on. The digit “7” is 55, not 7.',
+ desc:'Each character of a short word with its ASCII number and its seven-bit pattern underneath.',
+ dur:9,hint:'Type up to 8 characters. Letters, digits, spaces and punctuation are in ASCII; accented letters are not.',
+ init:()=>({text:'Hi 7!'}),
+ watch(p){const w='Hello!';return {text:w.slice(0,Math.max(1,Math.ceil(p*w.length)))}},
+ ui:[{text:'Text',label:'Text',get:s=>s.text,act:'set',max:8}],
+ on:{set(s,v){s.text=v}},
+ draw(s){
+  const chars=Array.from(s.text).slice(0,8);let out=heading('Every character is a number in an agreed table');
+  if(!chars.length)out+=T(300,190,'Type something to encode it.',18,C.muted);
+  const w=Math.min(78,560/Math.max(1,chars.length)),x0=300-chars.length*w/2;
+  chars.forEach((ch,i)=>{const x=x0+i*w,code=ch.codePointAt(0),ok=code<128;
+   out+=R(x+4,64,w-8,70,ok?'#fff':C.coralp,ok?C.blue:C.coral,9)+TM(x+w/2,112,ch===' '?'␣':ch,34,ok?C.ink:C.coral);
+   out+=arrow(x+w/2,140,x+w/2,170,C.line,2,7);
+   out+=TB(x+w/2,196,ok?code:'—',20,ok?C.blue:C.coral);
+   if(ok)bin(code,7).split('').forEach((b,j)=>out+=TM(x+w/2,224+j*17,b,14,b==='1'?C.ink:C.muted));
+   else out+=T(x+w/2,236,'not',13,C.coral)+T(x+w/2,252,'ASCII',13,C.coral);
+  });
+  out+=T(300,366,'A–Z: 65–90 · a–z: 97–122 · 0–9: 48–57 · space: 32',14,C.muted);
+  const bad=chars.filter(c=>c.codePointAt(0)>127);
+  return {svg:out,phase:bad.length?`“${bad.join('')}” has no ASCII number. ASCII covers only 128 characters, mostly English, which is why Unicode was needed.`:`“${chars.join('')}” is stored as ${chars.map(c=>c.codePointAt(0)).join(', ')}. The computer stores only the numbers; the table gives them meaning.`};
+ }});
+
+SCENE({id:'unicode',name:'Unicode and UTF-8',tag:'One table for every script',
+ definition:'Unicode gives every character in every writing system a number (a code point). UTF-8 stores each code point as 1 to 4 bytes.',
+ example:'“a” is U+0061 and takes 1 byte; “é” is U+00E9 and takes 2; “€” takes 3; the emoji 😀 (U+1F600) takes 4. Plain ASCII text is already valid UTF-8.',
+ desc:'Each character with its Unicode code point and the one to four UTF-8 bytes that store it; the first byte’s leading bits show how many bytes follow.',
+ dur:10,hint:'Type any text, including accents, symbols or emoji, or pick an example. Watch the byte count grow.',
+ init:()=>({text:'aé€😀'}),
+ watch(p){const w=Array.from('aé€😀');return {text:w.slice(0,Math.max(1,Math.ceil(p*4))).join('')}},
+ ui:[{text:'Text',label:'Text',get:s=>s.text,act:'set',max:12},{choose:[['aé€😀','Mixed'],['日本','Japanese'],['Ωμέγα','Greek'],['🎉👍','Emoji']],label:'Examples',get:s=>s.text,act:'set'}],
+ on:{set(s,v){s.text=v}},
+ draw(s){
+  const cps=Array.from(s.text).slice(0,5),enc=new TextEncoder();let out=heading('Code point → 1 to 4 bytes');
+  if(!cps.length)out+=T(300,190,'Type something to encode it.',18,C.muted);
+  const w=Math.min(116,580/Math.max(1,cps.length)),x0=300-cps.length*w/2;let total=0;
+  const cols=[C.blue,C.green,C.purple,C.coral];
+  cps.forEach((ch,i)=>{const x=x0+i*w,cp=ch.codePointAt(0),bytes=Array.from(enc.encode(ch)),col=cols[bytes.length-1];total+=bytes.length;
+   out+=R(x+5,58,w-10,62,'#fff',col,9)+T(x+w/2,102,ch,30,C.ink);
+   out+=TM(x+w/2,140,'U+'+hex(cp,4),14,C.muted);
+   bytes.forEach((b,j)=>{const y=154+j*44,bits=bin(b,8),lead=j===0?(bytes.length===1?1:bytes.length+1):2;
+    out+=R(x+8,y,w-16,38,j===0?col:'#fff',col,7)+TM(x+w/2,y+16,hex(b),14,j===0?'#fff':col,'middle','font-weight="700"');
+    out+=`<text x="${fmt(x+w/2)}" y="${y+32}" font-size="11" text-anchor="middle" class="mono"><tspan fill="${j===0?'#ffe7b0':C.coral}" font-weight="700">${bits.slice(0,lead)}</tspan><tspan fill="${j===0?'#fff':C.muted}">${bits.slice(lead)}</tspan></text>`});
+   out+=T(x+w/2,345,bytes.length+(bytes.length>1?' bytes':' byte'),13,col,'middle','font-weight="650"');
+  });
+  out+=T(300,370,`${cps.length} character${cps.length===1?'':'s'}, ${total} byte${total===1?'':'s'} in UTF-8`,14,C.muted);
+  return {svg:out,phase:'The highlighted leading bits announce the length: 0… is a 1-byte character, 110… starts 2 bytes, 1110… starts 3, 11110… starts 4, and every continuation byte begins 10….'};
+ }});
+
+const SMILEY=[0b00111100,0b01000010,0b10100101,0b10000001,0b10100101,0b10011001,0b01000010,0b00111100];
+SCENE({id:'bitmap',name:'Bitmap image',tag:'Pictures as grids of numbers',
+ definition:'A picture stored as a grid of pixels, where each pixel’s colour is a number. In a 1-bit image each pixel is simply on or off.',
+ example:'An 8 × 8 black-and-white icon needs 64 bits: 8 bytes, one per row. Colour photos use 3 bytes per pixel (red, green, blue).',
+ desc:'An eight-by-eight grid of pixels forming a face; beside each row is the byte that stores it in binary and decimal.',
+ dur:10,hint:'Press pixels to paint them. Each row is one byte; watch its value change.',
+ init:()=>({rows:SMILEY.slice()}),
+ watch(p){const k=Math.floor(p*64);return {rows:SMILEY.map((r,i)=>{const shown=clamp(k-i*8,0,8);return r&(0xFF<<(8-shown)&0xFF)}),scan:k}},
+ ui:[{b:'Invert',act:'invert'},{b:'Clear',act:'clear'},{b:'Mirror',act:'mirror'}],
+ on:{px(s,a){const [r,c]=String(a).split(',').map(Number);s.rows[r]^=1<<(7-c)},invert(s){s.rows=s.rows.map(r=>r^255)},clear(s){s.rows=s.rows.map(()=>0)},mirror(s){s.rows=s.rows.map(r=>parseInt(bin(r,8).split('').reverse().join(''),2))}},
+ draw(s,f,X){
+  let out=heading('Each row of 8 pixels is one byte');const cs=34,x0=36,y0=56;
+  s.rows.forEach((r,i)=>{bin(r,8).split('').forEach((b,j)=>{const on=b==='1',scan=s.scan!==undefined&&i*8+j===s.scan;out+=hit(X,'px',i+','+j,`Row ${i+1}, column ${j+1}: ${on?'on':'off'}`,R(x0+j*cs,y0+i*cs,cs-2,cs-2,on?C.dark:'#fff',scan?C.coral:C.grid,3))});
+   const y=y0+i*cs+cs/2+5;out+=TM(340,y,bin(r,8),17,C.ink,'start')+T(450,y,'= '+r,16,C.muted,'start')+TM(520,y,'0x'+hex(r),15,C.muted,'start')});
+  out+=T(162,y0+8*cs+26,'8 × 8 = 64 pixels',14,C.muted)+T(450,y0+8*cs+26,'8 rows = 8 bytes',14,C.muted);
+  return {svg:out,phase:'Reading left to right, a dark pixel is 1 and a light one 0. A screen only ever receives numbers like these; resolution and colour depth decide how many.'};
+ }});
+
+const BOOL_ROWS=range(8).map(i=>{const a=i>>2&1,b=i>>1&1,c=i&1;return [a,b,c,(a&b)|(c?0:1)]});
+SCENE({id:'boolean',name:'Boolean logic',tag:'Calculating with true and false',
+ definition:'Algebra on the two values true (1) and false (0), using AND, OR and NOT.',
+ example:'“Go outside if it is warm AND dry, OR if you have NOT got homework.” With warm = 1, dry = 0, homework = 1 the answer is 0.',
+ desc:'An expression tree for (A AND B) OR NOT C, with each node coloured by its value, beside the full eight-row truth table with the current row highlighted.',
+ dur:10,hint:'Press A, B or C in the tree, or press any row of the table to load those inputs.',
+ init:()=>({a:1,b:0,c:1}),
+ watch(p){const r=Math.min(7,Math.floor(p*8));return {a:r>>2&1,b:r>>1&1,c:r&1}},
+ on:{tog(s,k){s[k]^=1},row(s,i){i=Number(i);s.a=i>>2&1;s.b=i>>1&1;s.c=i&1}},
+ draw(s,f,X){
+  const and=s.a&s.b,not=s.c?0:1,out1=and|not;let out=heading('(A AND B) OR NOT C');
+  const node=(x,y,lab,v,act,arg)=>{const inner=R(x-38,y-22,76,44,v?C.blue:'#fff',v?C.blue:C.line,22)+TB(x,y+6,lab,16,v?'#fff':C.ink);return act?hit(X,act,arg,`${lab}. Press to switch.`,inner):inner};
+  const ed=(x1,y1,x2,y2,v)=>L(x1,y1,x2,y2,wireCol(v),wireW(v));
+  out+=ed(170,90,100,170,and)+ed(170,90,250,170,not)+ed(100,170,50,270,s.a)+ed(100,170,150,270,s.b)+ed(250,170,250,270,s.c);
+  out+=node(170,90,'OR = '+out1,out1)+node(100,170,'AND = '+and,and)+node(250,170,'NOT = '+not,not);
+  out+=node(50,270,'A = '+s.a,s.a,'tog','a')+node(150,270,'B = '+s.b,s.b,'tog','b')+node(250,270,'C = '+s.c,s.c,'tog','c');
+  const r=s.a*4+s.b*2+s.c;
+  out+=truthTable(360,50,['A','B','C','out'],BOOL_ROWS,r,52,33);
+  if(X.try)BOOL_ROWS.forEach((_,i)=>out+=hit(X,'row',i,`Load row ${i+1}`,R(356,50+33*(i+1)+2,216,29,'transparent','none',6)));
+  out+=T(170,340,'Values flow upward from the inputs',14,C.muted);
+  return {svg:out,phase:`A AND B is ${and} (both must be 1); NOT C is ${not}; OR gives ${out1} because ${out1?'at least one side is 1':'neither side is 1'}. Eight rows cover every possible input.`};
+ }});
+
+SCENE({id:'logic-gate',name:'Logic gate',tag:'Boolean logic in hardware',
+ definition:'A tiny circuit that computes one Boolean operation, such as AND, OR or NOT, on electrical signals.',
+ example:'An AND gate lights its output only when both inputs carry current. Billions of gates, built from transistors, make up a processor.',
+ desc:'Two input switches feed a gate symbol whose output lights a lamp; live wires are drawn thick and blue, and the matching truth-table row is highlighted.',
+ dur:12,hint:'Pick a gate, then flip the input switches. The lit row of the truth table always matches the lamp.',
+ init:()=>({gate:'AND',a:1,b:0}),
+ watch(p){const gs=['AND','OR','NOT','XOR','NAND'],q=p*5,i=Math.min(4,Math.floor(q)),sub=Math.min(3,Math.floor((q-i)*4));return {gate:gs[i],a:sub>>1&1,b:sub&1}},
+ ui:[{choose:[['AND','AND'],['OR','OR'],['NOT','NOT'],['XOR','XOR'],['NAND','NAND']],label:'Gate',get:s=>s.gate,act:'gate'}],
+ on:{gate(s,g){s.gate=g},tog(s,k){s[k]^=1}},
+ draw(s,f,X){
+  const one=s.gate==='NOT',o=GATES[s.gate](s.a,s.b);let out=heading(s.gate+' gate');
+  const gx=250,gy=120;
+  out+=toggle(X,'tog','a',30,one?140:90,s.a,'A');if(!one)out+=toggle(X,'tog','b',30,190,s.b,'B');
+  if(one)out+=P(`M104 160H${gx}`,wireCol(s.a),wireW(s.a));
+  else out+=P(`M104 110H190V140H${gx}`,wireCol(s.a),wireW(s.a))+P(`M104 210H190V180H${gx-(s.gate==='XOR'?4:0)}`,wireCol(s.b),wireW(s.b));
+  out+=gateShape(s.gate,gx,gy);
+  const ox=one?gx+93:gx+(s.gate==='NAND'?100:92);out+=P(`M${ox} 160H470`,wireCol(o),wireW(o))+lamp(500,160,o,'out = '+o);
+  const rows=one?[[0,1],[1,0]]:[[0,0],[0,1],[1,0],[1,1]].map(([a,b])=>[a,b,GATES[s.gate](a,b)]);
+  out+=truthTable(one?250:220,250,one?['A','out']:['A','B','out'],rows,one?s.a:s.a*2+s.b,50,24);
+  const rule={AND:'1 only when both inputs are 1',OR:'1 when at least one input is 1',NOT:'flips its single input',XOR:'1 when the inputs differ',NAND:'NOT AND: 0 only when both are 1'}[s.gate];
+  return {svg:out,phase:`${s.gate} gives ${rule}. With ${one?'A = '+s.a:'A = '+s.a+', B = '+s.b} the output is ${o}.${s.gate==='NAND'?' Every other gate can be built from NAND gates alone.':''}`};
+ }});
+
+SCENE({id:'half-adder',name:'Half adder',tag:'Gates that add',
+ definition:'A circuit that adds two single bits, producing a sum bit (from XOR) and a carry bit (from AND).',
+ example:'1 + 1 = 2, which is 10 in binary: sum 0, carry 1. Chain adders together, passing the carry along, and a processor can add whole bytes.',
+ desc:'Inputs A and B feed both an XOR gate, giving the sum, and an AND gate, giving the carry; lamps show the two-bit result.',
+ dur:10,hint:'Flip A and B. The two lamps read as a two-digit binary number: carry then sum.',
+ init:()=>({a:1,b:1}),
+ watch(p){const r=Math.min(3,Math.floor(p*4));return {a:r>>1&1,b:r&1}},
+ on:{tog(s,k){s[k]^=1}},
+ draw(s,f,X){
+  const sm=s.a^s.b,cy=s.a&s.b;let out=heading('Sum = A XOR B · Carry = A AND B');
+  out+=toggle(X,'tog','a',24,96,s.a,'A')+toggle(X,'tog','b',24,216,s.b,'B');
+  out+=P('M98 116H160V100H260',wireCol(s.a),wireW(s.a))+P('M160 116V220H260',wireCol(s.a),wireW(s.a))+Ci(160,116,5,wireCol(s.a));
+  out+=P('M98 236H190V140H256',wireCol(s.b),wireW(s.b))+P('M190 236V260H260',wireCol(s.b),wireW(s.b))+Ci(190,236,5,wireCol(s.b));
+  out+=gateShape('XOR',260,80)+gateShape('AND',260,200);
+  out+=P('M352 120H460',wireCol(sm),wireW(sm))+P('M346 240H460',wireCol(cy),wireW(cy));
+  out+=lamp(490,120,sm,'sum = '+sm)+lamp(490,240,cy,'carry = '+cy);
+  out+=TB(300,350,`${s.a} + ${s.b} = ${cy}${sm} in binary = ${s.a+s.b}`,20,C.blue);
+  return {svg:out,phase:cy?'Both inputs are 1, so the sum bit is 0 and a 1 carries into the next place: 1 + 1 = 10.':`Only ${s.a+s.b===0?'zeros':'one input'} is on, so no carry is needed; the sum bit is ${sm}.`};
+ }});
+
+/* Stage 1 word meanings. */
+WORD(
+ {key:'bit',title:'Bit',aliases:['bit','bits'],linkContext:'bits',here:'A single binary digit: one choice between two states, written 0 or 1.',contrast:'Not a small amount of anything in particular. A bit has no meaning until we agree what its two states stand for.',example:'A pixel that is either black or white needs one bit.'},
+ {key:'binary',title:'Binary',aliases:['binary','base 2'],linkContext:'bits',scene:'binary',here:'Writing numbers with only the digits 0 and 1, where each place is worth twice the place to its right.',contrast:'“Binary” also means “two-way” in general (a binary choice, a binary tree). Here it is a number system.',example:'1101 in binary is 8 + 4 + 1 = 13.'},
+ {key:'byte',title:'Byte',aliases:['byte','bytes'],linkContext:'bits',here:'A group of 8 bits, holding one of 256 patterns.',contrast:'Not the same as a bit: 1 byte = 8 bits. File sizes use bytes (kB, MB); network speeds often use bits per second.',example:'The letter A is stored in one byte as 01000001.'},
+ {key:'hexadecimal',title:'Hexadecimal',aliases:['hexadecimal','hex'],linkContext:'bits',here:'Base 16, using 0–9 then A–F. One hex digit stands for exactly four bits.',contrast:'It is not a different kind of data, only a shorter way of writing the same bits.',example:'FF = 1111 1111 = 255.'},
+ {key:'decimal',title:'Decimal',aliases:['decimal'],linkContext:'bits',here:'The everyday base-10 number system, with place values 1, 10, 100, ….',contrast:'Here “decimal” means base 10, not a number with a decimal point.',example:'The binary number 1010 is ten in decimal.'},
+ {key:'place-value',title:'Place value',aliases:['place value','place values'],linkContext:'bits',here:'The rule that a digit’s worth depends on its position, as well as on the digit.',contrast:'The 1 in 100 and the 1 in 10 are the same digit with different place values.',example:'In binary 100, the 1 is worth 4.'},
+ {key:'overflow',title:'Overflow',aliases:['overflow','overflows'],linkContext:'bits',scene:'byte',here:'When a result needs more bits than the space provided, so the extra carry is lost.',contrast:'Not an error message by itself: often the number simply wraps round silently.',example:'In one byte, 255 + 1 gives 0.'},
+ {key:'carry',title:'Carry',aliases:['carry','carries'],linkContext:'logic',here:'The extra 1 passed to the next place when a column adds up to more than its digit can hold.',contrast:'Works the same in decimal (9 + 1 carries) and binary (1 + 1 carries).',example:'1 + 1 = 10 in binary: write 0, carry 1.'},
+ {key:'ascii',title:'ASCII',aliases:['ASCII'],linkContext:'encoding',scene:'ascii',here:'A 1960s table numbering 128 characters: English letters, digits, punctuation and control codes.',contrast:'ASCII is not the same as Unicode; it is the first 128 entries of Unicode.',example:'“A” = 65, “a” = 97, space = 32.'},
+ {key:'character',title:'Character',aliases:['character','characters'],linkContext:'encoding',here:'A single unit of text: a letter, digit, symbol, space or emoji.',contrast:'A character is not the same as a byte; in UTF-8 one character can take up to four bytes.',example:'“é” is one character stored in two bytes.'},
+ {key:'encoding',title:'Encoding',aliases:['encoding','encode','encoded'],linkContext:'encoding',here:'An agreed rule for turning information into bits, and back again.',contrast:'Not encryption: an encoding is public and meant to be read; encryption is meant to be secret.',example:'UTF-8 is an encoding for Unicode text.'},
+ {key:'unicode',title:'Unicode',aliases:['Unicode'],linkContext:'encoding',scene:'unicode',here:'A single table giving a number (a code point) to every character in the world’s writing systems.',contrast:'Unicode numbers the characters; UTF-8 and UTF-16 are ways of storing those numbers as bytes.',example:'€ is U+20AC.'},
+ {key:'code-point',title:'Code point',aliases:['code point','code points'],linkContext:'encoding',here:'The number Unicode assigns to one character, written U+ followed by hex digits.',contrast:'A code point is a number, not the bytes on disk.',example:'U+0041 is “A”.'},
+ {key:'utf-8',title:'UTF-8',aliases:['UTF-8'],linkContext:'encoding',here:'The most common way to store Unicode: each code point becomes 1 to 4 bytes.',contrast:'It is backwards compatible with ASCII, which is why old English text still reads correctly.',example:'“a” is 1 byte, “😀” is 4 bytes.'},
+ {key:'pixel',title:'Pixel',aliases:['pixel','pixels'],linkContext:'encoding',scene:'bitmap',here:'One dot of a digital image, whose colour is stored as a number.',contrast:'A pixel has no fixed physical size; the same image can be shown large or small.',example:'A 1920 × 1080 screen has about 2 million pixels.'},
+ {key:'boolean',title:'Boolean',aliases:['boolean','Boolean'],linkContext:'logic',scene:'boolean',here:'Having only the values true and false (1 and 0), named after George Boole.',contrast:'Boolean logic is not about numbers getting bigger; it only combines truth values.',example:'“is raining” is a Boolean value.'},
+ {key:'and',title:'AND',aliases:['AND'],linkContext:'logic',here:'Gives true only when both inputs are true.',contrast:'In everyday speech “and” can mean “then”; in logic it only means “both”.',example:'1 AND 0 = 0.'},
+ {key:'or',title:'OR',aliases:['OR'],linkContext:'logic',here:'Gives true when at least one input is true, including when both are.',contrast:'Not “either but not both”; that is XOR.',example:'1 OR 1 = 1.'},
+ {key:'not',title:'NOT',aliases:['NOT'],linkContext:'logic',here:'Flips a single value: true becomes false and false becomes true.',contrast:'It takes one input, unlike AND and OR.',example:'NOT 1 = 0.'},
+ {key:'xor',title:'XOR',aliases:['XOR','exclusive or'],linkContext:'logic',here:'Exclusive OR: true when the two inputs differ.',contrast:'Unlike OR, 1 XOR 1 = 0.',example:'XOR gives the sum bit when adding two bits.'},
+ {key:'truth-table',title:'Truth table',aliases:['truth table','truth tables'],linkContext:'logic',here:'A table listing the output for every possible combination of inputs.',contrast:'It is complete: n inputs need 2ⁿ rows, so nothing is left to guess.',example:'Two inputs need 4 rows.'},
+ {key:'logic-gate',title:'Logic gate',aliases:['logic gate','logic gates','gate','gates'],linkContext:'logic',scene:'logic-gate',here:'A small circuit computing one Boolean operation on electrical signals.',contrast:'A gate does not store anything; its output depends only on its current inputs.',example:'An AND gate made from two transistors in series.'},
+ {key:'transistor',title:'Transistor',aliases:['transistor','transistors'],linkContext:'logic',here:'An electronic switch controlled by electricity, the physical building block of gates.',contrast:'In a processor it is used as an on/off switch, not as an amplifier.',example:'A modern processor has billions of transistors.'},
+ {key:'circuit',title:'Circuit',aliases:['circuit','circuits'],linkContext:'logic',here:'Connected components through which signals flow to compute a result.',contrast:'In this course a circuit is a logical design, not a particular wiring diagram.',example:'A half adder is a circuit of two gates.'},
+ {key:'half-adder',title:'Half adder',aliases:['half adder','adder','adders'],linkContext:'logic',scene:'half-adder',here:'A circuit that adds two bits, giving a sum bit and a carry bit.',contrast:'A full adder also accepts a carry coming in from the previous place.',example:'1 + 1 gives sum 0, carry 1.'},
+ {key:'input',title:'Input',aliases:['input','inputs'],linkContext:'algorithms',here:'Data given to a circuit, function or program for it to work on.',contrast:'Not necessarily typed by a person: an input can come from a sensor, a file or another program.',example:'A and B are the inputs of a gate.'},
+ {key:'output',title:'Output',aliases:['output','outputs'],linkContext:'algorithms',here:'The result produced from the inputs.',contrast:'Not necessarily shown on screen; it may be passed to the next step.',example:'The lamp shows the gate’s output.'}
+);
+
+/* ===================== Curriculum: stages → lessons → terms ===================== */
+const CURRICULUM={version:1,
+stages:[
+ {id:'represent',name:'1 · Represent',why:'Everything a computer holds is a pattern of two-state switches. Learn to read those patterns as numbers, text, pictures and logic.'},
+ {id:'instruct',name:'2 · Instruct',why:'Give a machine precise steps: remember values, choose, repeat, name a procedure and let it call itself.'},
+ {id:'organise',name:'3 · Organise data',why:'The shape you give data decides which questions are quick to answer.'},
+ {id:'search',name:'4 · Search and sort',why:'Classic algorithms show that a cleverer method beats a faster machine. Big-O measures how much.'},
+ {id:'machines',name:'5 · Machines',why:'Open the box: how a processor runs instructions, why memory has layers, how programs become instructions, and how one machine runs many programs.'},
+ {id:'networks',name:'6 · Networks',why:'Split messages into packets, route them across the world, name machines, request pages and keep secrets in public.'},
+ {id:'theory',name:'7 · Theory',why:'Ask what any computer could ever do: simple machines, universal machines, impossible problems and problems that may be hard.'}
+],
+lessons:[
+ {id:'bits',name:'Bits and binary',short:'Bits',stage:'represent',why:'A bit is the smallest choice; place value turns rows of bits into numbers.',prior:[],level:'Introduction',ids:['bit','binary','byte','hexadecimal'],references:['code','cs-unplugged']},
+ {id:'encoding',name:'Encoding text and images',short:'Encoding',stage:'represent',why:'An agreed table turns numbers into letters, symbols and pixels.',prior:['bits'],level:'Introduction',ids:['ascii','unicode','bitmap'],references:['unicode','code']},
+ {id:'logic',name:'Boolean logic and gates',short:'Logic',stage:'represent',why:'True and false, combined by rules, become circuits that can add.',prior:['bits'],level:'Introduction',ids:['boolean','logic-gate','half-adder'],references:['code','nand2tetris']},
+ {id:'algorithms',name:'Algorithms and state',short:'Algorithms',stage:'instruct',why:'An algorithm is a recipe precise enough for a machine. Variables, choices and loops are its building blocks.',prior:['bits','logic'],level:'Introduction',ids:['algorithm','variable','conditional','loop'],references:['sicp','cs-unplugged']},
+ {id:'functions',name:'Functions and recursion',short:'Functions',stage:'instruct',why:'Name a procedure once and reuse it; let it call itself to solve a smaller copy of the problem.',prior:['algorithms'],level:'Introduction',ids:['function','call-stack','recursion'],references:['sicp']},
+ {id:'linear',name:'Lists, stacks and queues',short:'Linear data',stage:'organise',why:'Items in a line can be stored side by side or chained by pointers, and accessed from one or both ends.',prior:['algorithms','bits'],level:'Core',ids:['array','linked-list','stack','queue'],references:['clrs','knuth']},
+ {id:'lookup',name:'Hashing',short:'Hashing',stage:'organise',why:'Turn a key into a bucket number and you can find things without searching.',prior:['linear'],level:'Core',ids:['hash-function','hash-table'],references:['clrs','knuth']},
+ {id:'trees',name:'Trees and graphs',short:'Trees & graphs',stage:'organise',why:'Hierarchies and networks: the shapes behind folders, search trees, maps and the web.',prior:['linear','functions'],level:'Core',ids:['tree','binary-search-tree','graph'],references:['clrs']},
+ {id:'searching',name:'Searching',short:'Searching',stage:'search',why:'Look through a list, halve a sorted one, or explore a graph in waves or in depth.',prior:['linear','trees'],level:'Core',ids:['linear-search','binary-search','bfs','dfs','dijkstra'],references:['clrs','dijkstra']},
+ {id:'sorting',name:'Sorting',short:'Sorting',stage:'search',why:'Four ways to put things in order, and how many comparisons each one needs.',prior:['linear','searching'],level:'Core',ids:['bubble-sort','insertion-sort','merge-sort','quick-sort'],references:['knuth','clrs']},
+ {id:'complexity',name:'Measuring algorithms',short:'Big-O',stage:'search',why:'Compare methods by how their work grows, then use two strategies that change that growth.',prior:['sorting','functions'],level:'Core',ids:['big-o','divide-and-conquer','dynamic-programming'],references:['clrs','knuth']},
+ {id:'cpu',name:'The processor and memory',short:'CPU',stage:'machines',why:'A processor repeats one tiny cycle billions of times a second. Memory is layered because speed is expensive.',prior:['logic','algorithms'],level:'Core',ids:['fetch-decode-execute','machine-code','memory-hierarchy','cache'],references:['nand2tetris','patterson']},
+ {id:'software',name:'Compilers and operating systems',short:'Systems',stage:'machines',why:'Programs in readable languages are translated or interpreted, and an operating system shares one machine between many of them.',prior:['cpu','trees'],level:'Core',ids:['compiler','interpreter','process','scheduling'],references:['dragon','tanenbaum']},
+ {id:'internet',name:'How the internet works',short:'Internet',stage:'networks',why:'Messages travel as packets, find their way by address, arrive reliably, and are named and requested in human terms.',prior:['bits','graph-lesson'],level:'Core',ids:['packet','ip-routing','tcp','dns','http'],references:['kurose','rfc791','rfc9293','rfc1034','rfc9110']},
+ {id:'security',name:'Encryption and trust',short:'Security',stage:'networks',why:'Scramble messages with keys, share a lock in public, and prove who wrote something.',prior:['internet','bits'],level:'Core',ids:['encryption','public-key','digital-signature'],references:['diffie-hellman','rsa','kurose']},
+ {id:'automata',name:'Machines that read',short:'Automata',stage:'theory',why:'The simplest models of computation: a machine with a few states, a pattern language, and a machine with an endless tape.',prior:['algorithms','logic'],level:'Advanced',ids:['finite-automaton','regular-expression','turing-machine'],references:['sipser','turing']},
+ {id:'limits',name:'Limits of computation',short:'Limits',stage:'theory',why:'Some questions no program can answer; others may be easy to check but hard to solve.',prior:['automata','complexity'],level:'Advanced',ids:['halting-problem','p-vs-np'],references:['turing','cook','sipser']}
+]};
+// The lesson "graph-lesson" alias lets a lesson name trees and graphs as prior knowledge.
+CURRICULUM.lessons.forEach(l=>{l.prior=l.prior.map(p=>p==='graph-lesson'?'trees':p)});
+
+/* Up/down links: each thread connects the same idea appearing in different places. */
+const THREADS=[
+ {id:'place-value',name:'Place value and counting',ids:['bit','binary','hexadecimal','bitmap']},
+ {id:'tables',name:'An agreed table of meanings',ids:['ascii','unicode','machine-code']},
+ {id:'truth',name:'True and false as circuits',ids:['boolean','logic-gate','half-adder','fetch-decode-execute']},
+ {id:'choice',name:'Making a choice',ids:['conditional','binary-search-tree','finite-automaton']},
+ {id:'repeat',name:'Repetition and steps',ids:['loop','linear-search','bubble-sort','big-o']},
+ {id:'self-similar',name:'Solve a smaller copy',ids:['recursion','merge-sort','quick-sort','divide-and-conquer','dynamic-programming']},
+ {id:'lifo',name:'Last in, first out',ids:['call-stack','stack','dfs']},
+ {id:'fifo',name:'First in, first out',ids:['queue','bfs','scheduling']},
+ {id:'halving',name:'Halve the problem',ids:['binary-search','binary-search-tree','tree']},
+ {id:'networks-as-graphs',name:'Networks are graphs',ids:['graph','dijkstra','ip-routing','packet']},
+ {id:'lookup-fast',name:'Find without searching',ids:['array','hash-function','hash-table','cache','dns']},
+ {id:'chains',name:'Follow the pointers',ids:['linked-list','tree']},
+ {id:'translate',name:'Translate between languages',ids:['algorithm','compiler','interpreter','turing-machine']},
+ {id:'state',name:'Memory of what happened',ids:['variable','process','tcp','http']},
+ {id:'one-way',name:'Easy one way, hard the other',ids:['encryption','public-key','digital-signature','p-vs-np']},
+ {id:'limits-thread',name:'What machines cannot do',ids:['regular-expression','halting-problem']},
+ {id:'layers',name:'Speed versus size',ids:['byte','memory-hierarchy']},
+ {id:'functions-thread',name:'Named procedures',ids:['function','call-stack']},
+ {id:'insert',name:'Insert into order',ids:['insertion-sort','binary-search-tree']},
+];
+
+const SOURCES={
+ 'code':{title:'Charles Petzold, Code: The Hidden Language of Computer Hardware and Software (2nd edn, 2022)'},
+ 'cs-unplugged':{title:'CS Unplugged — computer science without a computer',url:'https://www.csunplugged.org/'},
+ 'unicode':{title:'The Unicode Standard',url:'https://www.unicode.org/standard/standard.html'},
+ 'nand2tetris':{title:'Nisan and Schocken, The Elements of Computing Systems (Nand to Tetris)',url:'https://www.nand2tetris.org/'},
+ 'sicp':{title:'Abelson and Sussman, Structure and Interpretation of Computer Programs'},
+ 'clrs':{title:'Cormen, Leiserson, Rivest and Stein, Introduction to Algorithms'},
+ 'knuth':{title:'Donald Knuth, The Art of Computer Programming'},
+ 'dijkstra':{title:'E. W. Dijkstra, “A note on two problems in connexion with graphs”, Numerische Mathematik (1959)'},
+ 'patterson':{title:'Patterson and Hennessy, Computer Organization and Design'},
+ 'dragon':{title:'Aho, Lam, Sethi and Ullman, Compilers: Principles, Techniques, and Tools'},
+ 'tanenbaum':{title:'Andrew Tanenbaum and Herbert Bos, Modern Operating Systems'},
+ 'kurose':{title:'Kurose and Ross, Computer Networking: A Top-Down Approach'},
+ 'rfc791':{title:'RFC 791 — Internet Protocol',url:'https://www.rfc-editor.org/rfc/rfc791'},
+ 'rfc9293':{title:'RFC 9293 — Transmission Control Protocol',url:'https://www.rfc-editor.org/rfc/rfc9293'},
+ 'rfc1034':{title:'RFC 1034 — Domain names: concepts and facilities',url:'https://www.rfc-editor.org/rfc/rfc1034'},
+ 'rfc9110':{title:'RFC 9110 — HTTP Semantics',url:'https://www.rfc-editor.org/rfc/rfc9110'},
+ 'diffie-hellman':{title:'Diffie and Hellman, “New directions in cryptography” (1976)'},
+ 'rsa':{title:'Rivest, Shamir and Adleman, “A method for obtaining digital signatures and public-key cryptosystems” (1978)'},
+ 'sipser':{title:'Michael Sipser, Introduction to the Theory of Computation'},
+ 'turing':{title:'A. M. Turing, “On computable numbers, with an application to the Entscheidungsproblem” (1936)'},
+ 'cook':{title:'Stephen Cook, “The complexity of theorem-proving procedures” (1971)'},
+};
+
+/* Header textures: a quiet stage cue, not a difficulty rating. */
+const TEXTURES={
+ represent:{w:24,h:24,tile:'<circle cx="12" cy="12" r="1.5" fill="currentColor"/>'},
+ instruct:{w:28,h:28,tile:'<path d="M-14 28L14 0M14 28L42 0" fill="none" stroke="currentColor" stroke-width="1.2"/>'},
+ organise:{w:28,h:28,tile:'<path d="M28 0H0V28" fill="none" stroke="currentColor" stroke-width="1.1"/>'},
+ search:{w:40,h:40,tile:'<path d="M4 40V28M12 40V18M20 40V32M28 40V10M36 40V22" fill="none" stroke="currentColor" stroke-width="1.6"/>'},
+ machines:{w:48,h:48,tile:'<path d="M0 12H18V30H36M24 0V8M24 48V36H48M6 48V36" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="18" cy="12" r="2.4" fill="currentColor"/><circle cx="36" cy="30" r="2.4" fill="currentColor"/><circle cx="24" cy="36" r="2.4" fill="currentColor"/>'},
+ networks:{w:66,h:38.105,tile:(()=>{let o='';for(const [x,y] of [[0,0],[0,38.105],[33,19.0525],[66,0],[66,38.105]]){o+=`<polygon points="${range(6).map(i=>{const a=i*Math.PI/3;return (x+22*Math.cos(a)).toFixed(2)+','+(y+22*Math.sin(a)).toFixed(2)}).join(' ')}" fill="none" stroke="currentColor" stroke-width="1.1"/>`}return o})()},
+ theory:{w:90,h:77.9423,tile:(()=>{const ps=[],mid=(a,b)=>[(a[0]+b[0])/2,(a[1]+b[1])/2];(function d(a,b,c,n){if(!n){ps.push(`M${a[0].toFixed(2)} ${a[1].toFixed(2)}L${b[0].toFixed(2)} ${b[1].toFixed(2)}L${c[0].toFixed(2)} ${c[1].toFixed(2)}Z`);return}const ab=mid(a,b),bc=mid(b,c),ca=mid(c,a);d(a,ab,ca,n-1);d(ab,b,bc,n-1);d(ca,bc,c,n-1)})([0,77.9423],[45,0],[90,77.9423],4);return `<path d="${ps.join('')}" fill="currentColor"/>`})()},
+};
+
+for(const l of CURRICULUM.lessons)for(const id of l.ids)if(!SCENES[id])SCENE({id,name:id+' (stub)',definition:'Stub.',example:'',init:()=>({}),draw:()=>({svg:T(300,190,'stub '+id,20),phase:'stub'})});
+/* ===================== Runtime: route, clock, modes, map, glossary ===================== */
+const stages=Object.fromEntries(CURRICULUM.stages.map(s=>[s.id,s]));
+const lessons=Object.fromEntries(CURRICULUM.lessons.map(l=>[l.id,l]));
+const route=CURRICULUM.lessons.flatMap(l=>l.ids);
+const lessonOf={};CURRICULUM.lessons.forEach(l=>l.ids.forEach(id=>lessonOf[id]=l.id));
+const missing=route.filter(id=>!SCENES[id]);
+if(missing.length)throw new Error('Scenes missing for: '+missing.join(', '));
+const DUR=id=>SCENES[id].dur||8;
+const offsets=[];let TOTAL=0;for(const id of route){offsets.push(TOTAL);TOTAL+=DUR(id)}
+const LEAD=.4;
+function indexAt(time){let lo=0,hi=route.length-1;time=clamp(time,0,TOTAL);while(lo<hi){const mid=(lo+hi+1)>>1;if(offsets[mid]<=time)lo=mid;else hi=mid-1}return lo}
+function localP(i,time){const d=DUR(route[i]);return clamp((time-offsets[i]-LEAD)/(d-2*LEAD-.2),0,1)}
+
+/* ---- Glossary word links ---- */
+const WORDS=Object.fromEntries(GLOSSARY.map(g=>[g.key,g]));
+const aliases=GLOSSARY.flatMap(g=>g.aliases.map(a=>({alias:a,key:g.key}))).sort((a,b)=>b.alias.length-a.alias.length);
+const aliasKey=new Map(aliases.map(a=>[a.alias.toLowerCase(),a]));
+const reEscape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const wordPattern=new RegExp('(^|[^A-Za-z0-9-])('+aliases.map(a=>reEscape(a.alias)).join('|')+')(?=$|[^A-Za-z0-9])','gi');
+// Link each glossary word once per block; never link the block's own topic word.
+function markedHTML(input,exclude=null){
+ const src=String(input),seen=new Set(exclude?[exclude]:[]);let html='',cur=0,m;wordPattern.lastIndex=0;
+ while((m=wordPattern.exec(src))!==null){
+  const start=m.index+m[1].length,tok=m[2],al=aliasKey.get(tok.toLowerCase()),key=al&&al.key;
+  // Upper-case operator names (AND, OR, NOT) must not capture ordinary words.
+  if(!key||seen.has(key)||(/^[A-Z]{2,}$/.test(al.alias)&&tok!==al.alias))continue;seen.add(key);
+  html+=esc(src.slice(cur,start));
+  let b=`<button type="button" class="word" data-word="${esc(key)}" aria-label="${esc(tok)}: show meaning">${esc(tok)}</button>`;
+  const after=src.slice(start+tok.length),punct=after.match(/^[.,;:!?)]/);
+  if(punct){b=`<span class="word-tail">${b}${esc(punct[0])}</span>`;cur=start+tok.length+1}else cur=start+tok.length;
+  html+=b;
+ }
+ return html+esc(src.slice(cur));
+}
+function setWords(el,input,exclude=null){const sig=JSON.stringify([input,exclude]);if(el.dataset.src!==sig){el.innerHTML=markedHTML(input,exclude);el.dataset.src=sig}}
+
+/* ---- State ---- */
+let t=0,speed=0,lastForward=1,lastFrame=null,mode='watch',shown=-1,lastPainted=-1;
+const watchInit={},watchTrace={};
+const tryStore={};let tryK=0,tryU=1,tryFrames=null,runTimer=null,tweenStart=0,trySceneId=null;
+const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const svg=$('drawing');
+function cur(){return route[indexAt(t)]}
+function initOf(id){if(!watchInit[id])watchInit[id]=SCENES[id].init?SCENES[id].init():{};return watchInit[id]}
+function traceOfWatch(id){if(!watchTrace[id])watchTrace[id]=SCENES[id].trace(initOf(id));return watchTrace[id]}
+function tryKey(sc){return sc.shared||sc.id}
+function tryState(sc){const k=tryKey(sc);if(!tryStore[k])tryStore[k]=sc.init?sc.init():{};return tryStore[k]}
+
+/* ---- Drawing ---- */
+function paint(){
+ const i=indexAt(t),id=route[i],sc=SCENES[id];let s,f=null,X;
+ if(mode==='try'){
+  s=tryState(sc);const n=tryFrames?tryFrames.length:0;tryK=clamp(tryK,0,Math.max(0,n-1));
+  X={p:1,try:true,k:tryK,n,u:tryU};f=n?tryFrames[tryK]:null;
+ }else{
+  const p=localP(i,t);
+  if(sc.trace){s=initOf(id);const fr=traceOfWatch(id),n=fr.length,k=Math.min(n-1,Math.floor(p*n*1.0001));X={p,try:false,k,n,u:clamp(p*n-k,0,1)};f=fr[k]}
+  else{s=sc.watch?sc.watch(p):initOf(id);X={p,try:false,k:0,n:0,u:p}}
+ }
+ let out;
+ try{out=sc.draw(s,f,X)||{}}catch(err){console.error('Draw failed in',id,err);out={svg:T(300,190,'This diagram could not be drawn.',18,C.coral),phase:String(err.message)}}
+ // Keep keyboard focus on the same interactive target across a redraw.
+ const fk=document.activeElement&&svg.contains(document.activeElement)?document.activeElement.getAttribute('data-key'):null;
+ svg.innerHTML=`<title id="diagram-title">${esc(sc.name)}</title><desc id="diagram-desc">${esc(sc.desc||sc.definition)}</desc>`+(out.svg||'');
+ svg.dataset.mode=mode;
+ if(fk){const el=svg.querySelector(`[data-key="${CSS.escape(fk)}"]`);if(el)el.focus({preventScroll:true})}
+ setWords($('phase'),out.phase||(f&&f.say)||'');
+ if(mode==='try')updateStepStatus();
+ const prog=mode==='try'?offsets[i]/TOTAL:t/TOTAL;
+ $('progress-fill').style.width=(100*prog)+'%';$('progress').setAttribute('aria-valuenow',String(Math.round(100*prog)));
+}
+function showScene(){
+ const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;
+ const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
+ setWords($('term'),sc.name);setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
+ $('eyebrow').textContent=`${st.name} · ${sc.tag||les.name}`;
+ setWords($('lesson-why'),'Why this lesson: '+les.why);
+ const prior=les.prior||[];
+ $('lesson-prior').innerHTML=prior.length?'Builds on: '+prior.map(k=>`<button type="button" data-lesson="${k}">${esc(lessons[k].name)}</button>`).join(''):'Builds on: nothing yet. This is a starting point.';
+ $('counter').textContent=`${li+1} / ${les.ids.length}`;$('counter').setAttribute('aria-label',`Topic ${li+1} of ${les.ids.length} in this lesson`);
+ updateHeader(les);renderMap(id);updateTransport();
+ $('replay').setAttribute('aria-label','Replay '+sc.name);
+ $('sources').innerHTML=(les.references||[]).map(k=>SOURCES[k]).filter(Boolean).map(s=>`<li>${s.url?`<a href="${esc(s.url)}" rel="noopener">${esc(s.title)}</a>`:esc(s.title)}${s.note?' — '+esc(s.note):''}</li>`).join('');
+ $('announcement').textContent=`${les.name}. ${sc.name}. ${sc.definition}`;
+ if(location.hash.slice(1)!==id){try{history.replaceState(null,'','#'+id)}catch(_){}}
+ if(mode==='try')enterTry(true);
+}
+let headerLesson=null;
+function updateHeader(les){
+ if(headerLesson===les.id)return;headerLesson=les.id;
+ $('topic-title').textContent=les.name;
+ $('route-select').value=les.id;
+ const tex=TEXTURES[les.stage]||TEXTURES.represent;
+ const siblings=CURRICULUM.lessons.filter(l=>l.stage===les.stage),frac=siblings.length>1?siblings.indexOf(les)/(siblings.length-1):0;
+ $('topic-texture').innerHTML=`<defs><pattern id="tile" patternUnits="userSpaceOnUse" width="${tex.w}" height="${tex.h}" patternTransform="scale(${(1-.12*frac).toFixed(3)})">${tex.tile}</pattern></defs><rect width="100%" height="100%" fill="url(#tile)"/>`;
+}
+
+/* ---- Local map ---- */
+function threadFor(id){return THREADS.find(th=>th.ids.includes(id))||null}
+function neighbours(id){const i=route.indexOf(id),th=threadFor(id),j=th?th.ids.indexOf(id):-1;return {left:route[i-1]||null,right:route[i+1]||null,up:th&&th.ids[j-1]||null,down:th&&th.ids[j+1]||null,th}}
+function renderMap(id){
+ const nb=neighbours(id),sym={up:'↑',left:'←',right:'→',down:'↓'};
+ $('local-map').dataset.flat=String(!nb.up&&!nb.down);
+ $('map-caption').textContent=nb.th&&(nb.up||nb.down)?'↑↓ Connection: '+nb.th.name:'← → Along the learning route';
+ for(const d of ['up','left','right','down']){
+  const b=$('map-'+d),n=nb[d];b.hidden=!n;b.disabled=!n;b.dataset.node=n||'';$('wire-'+d).style.visibility=n?'visible':'hidden';
+  if(n){const les=lessons[lessonOf[n]];b.innerHTML=`<small>${sym[d]} ${esc(les.short||les.name)}</small><b>${esc(SCENES[n].name)}</b>`;b.setAttribute('aria-label',`${d}: ${SCENES[n].name}, ${les.name}. ${d==='left'||d==='right'?'Along the route':'Connection: '+nb.th.name}`)}
+ }
+ $('map-current').innerHTML=`<small>You are here</small><b>${esc(SCENES[id].name)}</b>`;
+}
+
+/* ---- Clock ---- */
+function speedText(){return speed===0?'Paused':`${fmt(Math.abs(speed))}× ${speed<0?'rewind':'forward'}`}
+function updateTransport(){
+ const i=indexAt(t),playing=speed!==0;
+ $('play').dataset.playing=String(playing);$('play-label').textContent=playing?'Pause':'Play';
+ $('play').setAttribute('aria-label',playing?'Pause playback':'Play at '+fmt(lastForward)+' times speed');
+ $('speed-readout').value=speedText();
+ const pv=route[i-1],nx=route[i+1];
+ $('previous').disabled=!pv;$('next').disabled=!nx;
+ $('previous').setAttribute('aria-label',pv?'Previous topic: '+SCENES[pv].name:'No previous topic');
+ $('next').setAttribute('aria-label',nx?'Next topic: '+SCENES[nx].name:'No next topic');
+}
+function setSpeed(v){speed=clamp(Number(v)||0,-4,8);if(speed>0)lastForward=speed;$('speed').value=String(speed===0?0:speed);updateTransport()}
+function advance(now){
+ if(lastFrame===null){lastFrame=now;return}
+ const dt=clamp((now-lastFrame)/1000,0,.25);lastFrame=now;
+ if(speed===0||mode==='try'||document.hidden)return;
+ t=clamp(t+dt*speed,0,TOTAL);if(t===TOTAL||t===0&&speed<0)setSpeed(0);
+}
+function loop(now){
+ advance(now);
+ if(mode==='try'&&tryU<1){tryU=reduced?1:clamp((now-tweenStart)/320,0,1);paint()}
+ else if(mode==='watch'&&t!==lastPainted){lastPainted=t;showScene();paint()}
+ requestAnimationFrame(loop);
+}
+function goTo(i,keepMode=true){
+ i=clamp(i,0,route.length-1);t=offsets[i];lastPainted=-1;shown=-1;
+ if(!keepMode&&mode==='try')setMode('watch');
+ showScene();paint();
+}
+function playPause(){
+ if(mode==='try')setMode('watch');
+ if(speed!==0){setSpeed(0);return}
+ if(t>=TOTAL-.01)t=0;
+ setSpeed(lastForward||1);
+}
+function replay(){if(mode==='try')setMode('watch');t=offsets[indexAt(t)];lastPainted=-1;setSpeed(lastForward||1)}
+
+/* ---- Try it mode ---- */
+function stopRun(){if(runTimer){clearInterval(runTimer);runTimer=null}const b=$('try-run');if(b){b.textContent='Run ▷';b.setAttribute('aria-pressed','false')}}
+function startRun(){
+ stopRun();if(!tryFrames||tryFrames.length<2)return;
+ if(tryK>=tryFrames.length-1){tryK=0}
+ const b=$('try-run');if(b){b.textContent='Pause ❚❚';b.setAttribute('aria-pressed','true')}
+ runTimer=setInterval(()=>{if(tryK>=tryFrames.length-1){stopRun();return}stepBy(1)},reduced?900:620);
+}
+function stepBy(d){if(!tryFrames)return;const k=clamp(tryK+d,0,tryFrames.length-1);if(k===tryK)return;tryK=k;tweenStart=performance.now();tryU=d>0&&!reduced?0:1;paint()}
+function recompute(sc){tryFrames=sc.trace?sc.trace(tryState(sc)):null}
+function updateStepStatus(){const el=$('try-step');if(!el)return;const n=tryFrames?tryFrames.length:0;el.textContent=n?`Step ${tryK+1} of ${n}`:'';
+ for(const [id,dis] of [['try-back',tryK<=0],['try-first',tryK<=0],['try-step-btn',tryK>=n-1]]){const b=$(id);if(b)b.disabled=dis}}
+function doAct(name,arg,value){
+ const sc=SCENES[cur()],s=tryState(sc);const h=sc.on&&sc.on[name];
+ if(!h){console.warn('No handler',name,'in',sc.id);return}
+ let r;try{r=h(s,value!==undefined?value:arg,{k:tryK,frames:tryFrames})}catch(err){console.error(err);return}
+ if(sc.trace){const old=tryK;recompute(sc);tryK=r==='keep'?clamp(old,0,tryFrames.length-1):r==='end'?tryFrames.length-1:0}
+ if(r!=='keep')stopRun();
+ tryU=1;syncControls();paint();
+ if(r==='run')startRun();
+}
+function buildControls(sc){
+ const box=$('try-controls');box.innerHTML='';
+ const rowA=document.createElement('div');rowA.className='try-row';
+ const s=tryState(sc);
+ for(const [ci,c] of (sc.ui||[]).entries()){
+  if(c.b){const b=document.createElement('button');b.type='button';b.textContent=c.b;if(c.aria)b.setAttribute('aria-label',c.aria);b.addEventListener('click',()=>doAct(c.act,c.arg));rowA.appendChild(b)}
+  else if(c.range){const lab=document.createElement('label'),inp=document.createElement('input'),out=document.createElement('output');
+   lab.textContent=c.label+' ';inp.type='range';inp.min=c.min;inp.max=c.max;inp.step=c.step||1;inp.value=c.get(s);inp.dataset.ctl=ci;out.value=c.show?c.show(c.get(s)):c.get(s);
+   inp.addEventListener('input',()=>{doAct(c.act,null,Number(inp.value))});lab.append(inp,out);rowA.appendChild(lab)}
+  else if(c.text){const lab=document.createElement('label'),inp=document.createElement('input');lab.textContent=c.label+' ';inp.type='text';inp.value=c.get(s);inp.maxLength=c.max||24;inp.dataset.ctl=ci;inp.spellcheck=false;inp.autocomplete='off';
+   inp.addEventListener('input',()=>doAct(c.act,null,inp.value));lab.appendChild(inp);rowA.appendChild(lab)}
+  else if(c.choose){const g=document.createElement('div');g.className='seg';g.setAttribute('role','group');g.setAttribute('aria-label',c.label||'Choose');g.dataset.ctl=ci;
+   for(const [v,l] of c.choose){const b=document.createElement('button');b.type='button';b.textContent=l;b.dataset.value=v;b.setAttribute('aria-pressed',String(String(c.get(s))===String(v)));b.addEventListener('click',()=>doAct(c.act,v));g.appendChild(b)}
+   if(c.label){const lab=document.createElement('span');lab.className='sr-only';lab.textContent=c.label;rowA.appendChild(lab)}rowA.appendChild(g)}
+ }
+ const reset=document.createElement('button');reset.type='button';reset.textContent='Reset';reset.setAttribute('aria-label','Reset to the starting example');
+ reset.addEventListener('click',()=>{delete tryStore[tryKey(sc)];recompute(sc);tryK=0;stopRun();buildControls(sc);paint()});
+ rowA.appendChild(reset);box.appendChild(rowA);
+ if(sc.trace){
+  const rowB=document.createElement('div');rowB.className='try-row';rowB.setAttribute('role','group');rowB.setAttribute('aria-label','Step through');
+  rowB.innerHTML=`<button type="button" id="try-first" aria-label="Back to the first step">⏮</button><button type="button" id="try-back" aria-label="Previous step">◀ Back</button><button type="button" id="try-step-btn" aria-label="Next step">Step ▶</button><button type="button" id="try-run" aria-pressed="false">Run ▷</button><span class="step-status" id="try-step" aria-live="off"></span>`;
+  box.appendChild(rowB);
+  $('try-first').addEventListener('click',()=>{stopRun();tryK=0;tryU=1;paint()});
+  $('try-back').addEventListener('click',()=>{stopRun();stepBy(-1)});
+  $('try-step-btn').addEventListener('click',()=>{stopRun();stepBy(1)});
+  $('try-run').addEventListener('click',()=>runTimer?stopRun():startRun());
+ }
+ $('try-hint').textContent=sc.hint||'Change the input and watch the diagram respond.';
+}
+function syncControls(){
+ const sc=SCENES[cur()],s=tryState(sc);
+ for(const el of $('try-controls').querySelectorAll('[data-ctl]')){
+  const c=sc.ui[Number(el.dataset.ctl)];
+  if(c.range){if(document.activeElement!==el)el.value=c.get(s);el.nextSibling.value=c.show?c.show(c.get(s)):c.get(s)}
+  else if(c.text){if(document.activeElement!==el)el.value=c.get(s)}
+  else if(c.choose){for(const b of el.querySelectorAll('button'))b.setAttribute('aria-pressed',String(String(c.get(s))===String(b.dataset.value)))}
+ }
+}
+function enterTry(sceneChanged){
+ const sc=SCENES[cur()];
+ if(trySceneId!==sc.id||!sceneChanged){trySceneId=sc.id;recompute(sc);tryK=0;tryU=1;stopRun();buildControls(sc)}
+}
+function setMode(m){
+ if(m===mode)return;mode=m;
+ $('mode-watch').setAttribute('aria-pressed',String(m==='watch'));$('mode-try').setAttribute('aria-pressed',String(m==='try'));
+ $('try-panel').hidden=m!=='try';$('deck-note').textContent=m==='try'?'Your input · step by step':'Animated · deterministic';
+ $('phase').setAttribute('aria-live',m==='try'?'polite':'off');
+ if(m==='try'){setSpeed(0);trySceneId=null;enterTry(false)}else{stopRun();trySceneId=null}
+ lastPainted=-1;paint();
+}
+function onSvgAct(e){
+ if(mode!=='try')return;const g=e.target.closest('[data-act]');if(!g||!svg.contains(g))return;
+ if(e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;
+ e.preventDefault();doAct(g.dataset.act,g.dataset.arg);
+}
+
+/* ---- Word dialog ---- */
+const dlg=$('word-dialog');let wordTrail=[],curWord=null,wordOrigin=null;
+function showWord(key,origin,remember=true){
+ const g=WORDS[key];if(!g)return;
+ if(!dlg.open){wordTrail=[];curWord=null;wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
+ if(remember&&curWord&&curWord!==key)wordTrail.push(curWord);curWord=key;
+ $('word-title').textContent=g.title;$('word-context').textContent=(g.linkContext&&lessons[g.linkContext]?lessons[g.linkContext].name:'Computer science')+' · word meaning';
+ setWords($('word-meaning'),g.here,key);setWords($('word-contrast'),g.contrast,key);setWords($('word-example'),g.example,key);
+ $('word-detail').hidden=false;$('word-browser').hidden=true;
+ $('word-back').hidden=false;$('word-back').textContent=wordTrail.length?'← Previous word':'← All words';
+ const target=g.scene||(SCENES[key]&&route.includes(key)?key:null);$('word-goto').hidden=!target||target===cur();$('word-goto').dataset.node=target||'';
+ $('word-title').focus();dlg.scrollTop=0;
+}
+function fillWordList(){
+ const q=$('word-search').value.trim().toLowerCase();
+ const list=GLOSSARY.filter(g=>(g.title+' '+g.aliases.join(' ')).toLowerCase().includes(q)).sort((a,b)=>a.title.localeCompare(b.title,'en-GB'));
+ $('word-list').innerHTML=list.map(g=>`<button type="button" data-word="${esc(g.key)}">${esc(g.title)}</button>`).join('');
+ $('word-list-count').textContent=`${list.length} of ${GLOSSARY.length} meanings`;
+}
+function showAllWords(origin){
+ if(!dlg.open){wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
+ wordTrail=[];curWord=null;$('word-title').textContent='Word meanings';$('word-context').textContent='Search every lesson';
+ $('word-detail').hidden=true;$('word-browser').hidden=false;$('word-back').hidden=true;$('word-goto').hidden=true;
+ $('word-search').value='';fillWordList();$('word-search').focus();
+}
+function closeWords(resume){if(!dlg.open)return;dlg.close();if(wordOrigin&&wordOrigin.isConnected)wordOrigin.focus({preventScroll:true});if(resume&&mode==='watch')setSpeed(lastForward||1)}
+
+/* ---- Lesson picker ---- */
+function installPicker(){
+ $('route-select').innerHTML=CURRICULUM.stages.map(st=>`<optgroup label="${esc(st.name)}">${CURRICULUM.lessons.filter(l=>l.stage===st.id).map(l=>`<option value="${l.id}">${CURRICULUM.lessons.indexOf(l)+1}. ${esc(l.name)}</option>`).join('')}</optgroup>`).join('');
+ $('route-select').addEventListener('change',e=>{const l=lessons[e.target.value];if(l)goTo(route.indexOf(l.ids[0]))});
+}
+
+/* ---- Boot ---- */
+try{
+ installPicker();
+ $('mode-watch').addEventListener('click',()=>setMode('watch'));
+ $('mode-try').addEventListener('click',()=>setMode('try'));
+ svg.addEventListener('click',onSvgAct);svg.addEventListener('keydown',onSvgAct);
+ $('previous').addEventListener('click',()=>goTo(indexAt(t)-1));
+ $('next').addEventListener('click',()=>goTo(indexAt(t)+1));
+ $('play').addEventListener('click',playPause);$('replay').addEventListener('click',replay);
+ $('speed').addEventListener('input',e=>{if(mode==='try')setMode('watch');setSpeed(e.target.value)});
+ for(const d of ['up','left','right','down'])$('map-'+d).addEventListener('click',e=>{const n=e.currentTarget.dataset.node;if(n)goTo(route.indexOf(n))});
+ $('local-map').addEventListener('keydown',e=>{const dirs={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'};if(dirs[e.key]){e.preventDefault();const n=neighbours(cur())[dirs[e.key]];if(n){goTo(route.indexOf(n));$('local-map').focus()}}});
+ $('lesson-prior').addEventListener('click',e=>{const b=e.target.closest('[data-lesson]');if(b)goTo(route.indexOf(lessons[b.dataset.lesson].ids[0]))});
+ $('words').addEventListener('click',e=>showAllWords(e.currentTarget));
+ $('word-close').addEventListener('click',()=>closeWords(false));
+ $('word-resume').addEventListener('click',()=>closeWords(true));
+ $('word-back').addEventListener('click',()=>{if(wordTrail.length)showWord(wordTrail.pop(),null,false);else showAllWords()});
+ $('word-goto').addEventListener('click',()=>{const n=$('word-goto').dataset.node;closeWords(false);if(n)goTo(route.indexOf(n))});
+ $('word-search').addEventListener('input',fillWordList);
+ dlg.addEventListener('cancel',e=>{e.preventDefault();closeWords(false)});
+ document.addEventListener('click',e=>{const w=e.target.closest('[data-word]');if(w){e.preventDefault();showWord(w.dataset.word,w)}});
+ document.addEventListener('keydown',e=>{
+  if(dlg.open)return;
+  const typing=/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName);
+  if(e.key===' '&&!typing&&e.target.tagName!=='BUTTON'&&!e.target.closest('[data-act]')){e.preventDefault();playPause()}
+  if(e.key==='Escape'&&!typing){setSpeed(0);stopRun()}
+ });
+ const start=route.indexOf(decodeURIComponent(location.hash.slice(1)));
+ setSpeed(0);goTo(start>=0?start:0);
+ requestAnimationFrame(loop);
+ // Read-only inspection hooks for automated checks; no network.
+ window.csApp={route,scenes:SCENES,glossary:GLOSSARY,lessons:CURRICULUM.lessons,
+  state:()=>({t,speed,mode,index:indexAt(t),id:cur(),k:tryK,n:tryFrames?tryFrames.length:0,total:TOTAL}),
+  go:id=>goTo(route.indexOf(id)),seek:x=>{setSpeed(0);t=clamp(x,0,TOTAL);lastPainted=-1},offsets,
+  setMode,act:(n,a,v)=>doAct(n,a,v),step:d=>stepBy(d===undefined?1:d),drawAll:()=>{const errs=[];for(const id of route){const sc=SCENES[id];for(const p of [0,.3,.6,1]){try{let s,f=null,X;if(sc.trace){s=sc.init();const fr=sc.trace(s);const k=Math.min(fr.length-1,Math.floor(p*fr.length));f=fr[k];X={p,try:false,k,n:fr.length,u:.5}}else{s=sc.watch?sc.watch(p):(sc.init?sc.init():{});X={p,try:false,k:0,n:0,u:p}}const o=sc.draw(s,f,X);if(!o||!o.svg)errs.push(id+' empty at '+p)}catch(err){errs.push(id+': '+err.message)}}}return errs}};
+}catch(err){
+ console.error(err);$('status').className='note';$('status').setAttribute('role','alert');$('status').textContent='The lessons could not start: '+err.message;
+}
+})();
+
+</script>
+</body>
+</html>
