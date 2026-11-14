@@ -206,7 +206,7 @@ SCENE({id:'information-scent-patch',name:'When to leave a site',tag:'The margina
  }});
 
 const H6_TREE={home:{t:'Home',kids:['cameras','accessories'],p:null},cameras:{t:'Cameras',kids:['compact','pro'],p:'home'},accessories:{t:'Accessories',kids:['bags','lenses'],p:'home'},compact:{t:'Compact',kids:['x1'],p:'cameras'},pro:{t:'Pro',kids:[],p:'cameras'},x1:{t:'Model X1',kids:[],p:'compact'},bags:{t:'Bags',kids:[],p:'accessories'},lenses:{t:'Lenses',kids:[],p:'accessories'}};
-const H6_TPOS={home:[456,72],cameras:[378,140],accessories:[530,140],compact:[340,208],pro:[414,208],x1:[340,276],bags:[494,208],lenses:[566,208]};
+const H6_TPOS={home:[460,72],cameras:[388,140],accessories:[530,140],compact:[354,208],pro:[422,208],x1:[354,276],bags:[494,208],lenses:[566,208]};
 function H6_path(id){const p=[];for(let n=id;n;n=H6_TREE[n].p)p.unshift(n);return p}
 SCENE({id:'information-scent-breadcrumbs',name:'Breadcrumbs and wayfinding',tag:'Where am I, and how do I get back?',
  definition:'Wayfinding is knowing where you are, where you can go and how to return. A breadcrumb trail shows the path from the home page to the current page, and each step is a link back up.',
@@ -222,7 +222,7 @@ SCENE({id:'information-scent-breadcrumbs',name:'Breadcrumbs and wayfinding',tag:
   const node=H6_TREE[s.at],path=H6_path(s.at);let out=heading('Goal: reach Bags from Model X1');
   out+=H6_browser(X,14,48,300,252,'shop.example/'+path.slice(1).join('/'),{back:'back',canBack:(s.hist||[]).length>0});
   let y=104;
-  if(s.crumbs){let x=28;path.forEach((id,i)=>{const lab=H6_TREE[id].t,w=lab.length*7.6+6,last=i===path.length-1;out+=last?TF(x,y,lab,13,C.ink,'start','font-weight="700"'):hit(X,'go',id,'Breadcrumb: '+lab,TF(x,y,lab,13,C.blue,'start','text-decoration="underline"'));x+=w;if(!last){out+=TF(x,y,'›',13,C.muted,'start');x+=14}});y+=30}
+  if(s.crumbs){let x=28;path.forEach((id,i)=>{const lab=H6_TREE[id].t,w=lab.length*7.6+12,last=i===path.length-1;out+=last?TF(x,y,lab,13,C.ink,'start','font-weight="700"'):hit(X,'go',id,'Breadcrumb: '+lab,TF(x,y,lab,13,C.blue,'start','text-decoration="underline"'));x+=w;if(!last){out+=TF(x,y,'›',13,C.muted,'start');x+=14}});y+=30}
   out+=TB(28,y,node.t,18,C.ink,'start');
   const links=node.kids.length?node.kids:[];out+=TF(28,y+26,links.length?'In this section:':'No sub-pages here.',13,C.muted,'start');
   links.forEach((id,i)=>out+=hit(X,'go',id,'Open '+H6_TREE[id].t,T(28,y+52+i*26,'→ '+H6_TREE[id].t,15,C.blue,'start','text-decoration="underline"')));
