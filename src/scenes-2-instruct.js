@@ -780,10 +780,12 @@ SCENE({id:'towers-of-hanoi',name:'Towers of Hanoi',tag:'A recursive plan for a p
   const pegs=f.play?s.pegs:f.pegs,moves=f.play?s.moves:f.k,min=(1<<s.n)-1;let out=heading(f.play?'Your turn: move the tower to C':`Moving ${s.n} disk${s.n>1?'s':''} from A to C`);
   const px=[120,300,480],base=318;
   pegs.forEach((p,i)=>{const lifted=f.play&&s.held===i;
-   out+=hit(X,'peg',i,`Peg ${IN_PEG[i]}: ${p.length} disks. ${s.held===null?'Press to pick up its top disk.':'Press to drop the disk here.'}`,R(px[i]-88,90,176,236,lifted?C.amberp:'transparent',lifted?C.amber:'none',10));
+   if(lifted)out+=R(px[i]-88,90,176,236,C.amberp,C.amber,10);
    out+=R(px[i]-5,130,10,base-130,C.line,'none',4);
    p.forEach((d,j)=>{const w=36+d*22,y=base-(j+1)*22-(lifted&&j===p.length-1?44:0),mv=!f.play&&f.mv&&f.mv[1]===i&&j===p.length-1;out+=R(px[i]-w/2,y,w,20,IN_DISKC[(d-1)%6],mv?C.ink:'none',8)+TF(px[i],y+15,d,13,'#fff','middle','font-weight="700"')});
-   out+=TB(px[i],344,IN_PEG[i],16,C.ink)});
+   out+=TB(px[i],344,IN_PEG[i],16,C.ink);
+   // The press target sits on top of the peg and its disks so any part of the peg can be pressed.
+   out+=hit(X,'peg',i,`Peg ${IN_PEG[i]}: ${p.length} disks. ${s.held===null?'Press to pick up its top disk.':'Press to drop the disk here.'}`,R(px[i]-88,90,176,236,'transparent','none',10))});
   out+=R(30,base,540,8,C.dark,'none',4);
   out+=counter(30,48,'moves',`${moves}`,C.blue,110)+counter(460,48,'minimum',min,C.green,110);
   const won=pegs[2].length===s.n;

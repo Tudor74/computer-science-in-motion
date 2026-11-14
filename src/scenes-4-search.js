@@ -388,8 +388,8 @@ SCENE({id:'linear-average-case',name:'Best, average and worst case',tag:'It depe
   bars.slice(0,shown).forEach((v,i)=>{const miss=half&&i===n,x=x0+4+i*W;out+=R(x,base-v*sc,W-6,v*sc,miss?C.coral:C.blue,'none',3)+TF(x+(W-6)/2,base+16,miss?'✗':i+1,13,miss?C.coral:C.muted)});
   const line=(v,col,label)=>{const y=base-v*sc;return L(x0,y,x0+bars.length*W+6,y,col,2,'stroke-dasharray="6 4"')+T(x0+bars.length*W+12,y+5,label,14,col,'start','font-weight="650"')};
   out+=line(1,C.green,'best 1')+line(n,C.coral,'worst '+n)+line(avg,C.purple,'average '+fmt(avg));
-  out+=T(300,350,half?'Half the time the target is missing and costs all n checks.':'Target equally likely at each position: average (n + 1) / 2.',14,C.muted);
-  out+=T(70,base+34,'target position →',13,C.muted,'start');
+  out+=TF(300,356,half?'Half the time the target is missing and costs all n checks.':'Target equally likely at each position: average (n + 1) / 2.',14,C.muted);
+  out+=TF(70,base+30,'target position →',13,C.muted,'start');
   return {svg:out,phase:`n = ${n}: best case 1, worst case ${n}, average ${fmt(avg)}. All three grow in proportion to n, so linear search is O(n) whichever case you measure.`};
  }});
 
@@ -416,7 +416,7 @@ SCENE({id:'linear-sentinel',name:'Sentinel search',tag:'One test per card instea
   out+=row(72,false,f.plain,'Plain loop','while i < n and a[i] ≠ t');
   out+=row(200,true,f.sent,'With sentinel','while a[i] ≠ t');
   out+=TF(x0+n*step+w/2,192,'sentinel',13,C.purple);
-  out+=T(220,352,'Same O(n) growth, but half the tests in the inner loop.',14,C.muted);
+  out+=TF(300,352,'Same O(n) growth, but half the tests in the inner loop.',14,C.muted);
   return {svg:out,phase:f.say};
  }});
 
@@ -855,9 +855,9 @@ SCENE({id:'merge-step',name:'Merging two sorted piles',tag:'The heart of merge s
   fr.push({i,j,out:out.slice(),c,done:true,say:`The ${rest==='left'?'right':'left'} pile is empty: copy the rest of the ${rest} pile with no more comparisons. ${c} comparison${c===1?'':'s'} for ${out.length} cards.`});return fr},
  draw(s,f,X){
   const w=54,step=62;let out=heading('Take the smaller front card each time');
-  const pile=(arr,used,y,label,col)=>{out+=TB(70,y+34,label,15,col,'end');arr.forEach((v,k)=>{const gone=k<used,front=k===used&&!f.done;if(gone)return;const x=90+(k-used)*step;out+=R(x,y,w,56,front?C.amberp:'#fff',front?C.amber:col,8)+TB(x+w/2,y+36,v,20,C.ink)})};
+  const pile=(arr,used,y,label,col)=>{out+=TBF(80,y+34,label,15,col,'end');arr.forEach((v,k)=>{const gone=k<used,front=k===used&&!f.done;if(gone)return;const x=90+(k-used)*step;out+=R(x,y,w,56,front?C.amberp:'#fff',front?C.amber:col,8)+TB(x+w/2,y+36,v,20,C.ink)})};
   pile(s.L,f.i,60,'Left',C.blue);pile(s.R,f.j,140,'Right',C.purple);
-  out+=TB(70,262,'Merged',15,C.green,'end');f.out.forEach(([side,v],k)=>{const x=90+k*step;out+=R(x,228,w,56,C.greenp,side==='L'?C.blue:C.purple,8)+TB(x+w/2,264,v,20,C.ink)});
+  out+=TBF(80,262,'Merged',15,C.green,'end');f.out.forEach(([side,v],k)=>{const x=90+k*step;out+=R(x,228,w,56,C.greenp,side==='L'?C.blue:C.purple,8)+TB(x+w/2,264,v,20,C.ink)});
   out+=counter(470,60,'Comparisons',f.c,C.blue,110)+counter(470,120,'At most n − 1',s.L.length+s.R.length-1,C.muted,110);
   out+=T(300,330,'Blue edge: came from the left pile · purple: from the right',14,C.muted);
   return {svg:out,phase:f.say};

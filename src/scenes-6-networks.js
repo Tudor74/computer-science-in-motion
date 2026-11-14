@@ -389,7 +389,7 @@ SCENE({id:'encapsulation',name:'Protocol layers and encapsulation',tag:'Envelope
   const P=project([[-3.2,-2.2,-1.6],[3.2,2.2,1.6]]);let out='';
   const box=i=>{const m=.55*i;return [-1.4-m,-.7-m*.7,-.45-m*.55,1.4+m,.7+m*.7,.45+m*.55]};
   out+=paintFaces(prism(-1.4,-.7,-.45,2.8,1.4,.9,C.purple).map((q,j)=>j===5?{...q,label:'data',ink:'#fff'}:q),P);
-  for(let i=1;i<f.d;i++){const c=box(i),Ly=NW_LAYERS[i];out+=NW_wire(P,c,Ly.col,i===f.a?3.2:2);const q=P([c[3],c[1],c[5]]);out+=TB(q[0]+8,q[1]-4,Ly.tag,15,Ly.col,'start')}
+  for(let i=1;i<f.d;i++){const c=box(i),Ly=NW_LAYERS[i];out+=NW_wire(P,c,Ly.col,i===f.a?3.2:2);const q=P([c[0],c[1],c[5]]);out+=TB(q[0]-8,q[1]+4,Ly.tag,15,Ly.col,'end')}
   return {svg:out,title:'Nested envelopes',caption:`${f.d===1?'Only the data, no envelopes yet.':`${f.d-1} envelope${f.d>2?'s':''} around the data: ${range(f.d-1).map(i=>NW_LAYERS[i+1].tag).reverse().join(' around ')} around the data.`} Each layer only ever opens its own envelope.`};
  }});
 
@@ -622,7 +622,7 @@ SCENE({id:'sliding-window',name:'Sliding window',tag:'Keep several segments in f
   const w=s.w,x0=72,bw=38,u=X.k>=X.n-1?0:X.u;let out=heading(`Window of ${w}: up to ${w} segment${w>1?'s':''} unacknowledged at once`);
   for(let n=1;n<=NW_SW_N;n++){const x=x0+(n-1)*bw,acked=n<f.base,fl=n>=f.base&&n<f.next,allowed=n>=f.next&&n<f.base+w;
    out+=R(x+2,62,bw-4,30,acked?C.greenp:fl?C.blue:allowed?'#fff':'#eef2f4',acked?C.green:fl?C.blue:allowed?C.blue:C.grid,5,allowed?'stroke-dasharray="4 3"':'')+TB(x+bw/2,82,n,14,fl?'#fff':acked?C.green:allowed?C.blue:C.muted)}
-  const wx=x0+(f.base-1)*bw,ww=Math.min(w,NW_SW_N-f.base+1)*bw;if(f.base<=NW_SW_N)out+=P(`M${wx} 56V50H${wx+ww}V56`,C.coral,2.5)+TF(wx+ww/2,45,'window',13,C.coral);
+  const wx=x0+(f.base-1)*bw,ww=Math.min(w,NW_SW_N-f.base+1)*bw;if(f.base<=NW_SW_N)out+=P(`M${wx} 56V50H${wx+ww}V56`,C.coral,2.5)+TF(wx+ww+4,55,'window',13,C.coral,'start');
   out+=TF(72,110,'acknowledged',13,C.green,'start')+TF(220,110,'in flight',13,C.blue,'start')+TF(330,110,'may be sent',13,C.blue,'start')+TF(470,110,'must wait',13,C.muted,'start');
   out+=box(14,144,74,52,'Sender',C.pale,C.ink,13)+box(512,144,74,52,'Receiver',C.pale,C.ink,13)+L(90,170,510,170,C.line,1.5,'stroke-dasharray="4 4"');
   f.segs.forEach((g,i)=>{const pr=clamp((f.t+u-g.t0)/2,0,1);out+=NW_chip(lerp(110,490,pr),150-(g.n%3)*0,String(g.n),C.blue,30)});
@@ -720,9 +720,9 @@ SCENE({id:'dns-ttl',name:'DNS caching and TTL',tag:'Fresh enough?',
   out+=L(40,axis,560,axis,C.ink,2);for(let t=0;t<=300;t+=50)out+=L(sx(t),axis,sx(t),axis+6,C.ink,1.5)+TF(sx(t),axis+22,t+' s',13,C.muted);
   out+=L(sx(150),58,sx(150),axis,C.coral,2,'stroke-dasharray="5 4"')+TF(sx(150)+6,72,'site moves:',13,C.coral,'start')+TF(sx(150)+6,88,'.10 → .99',13,C.coral,'start');
   out+=TF(40,72,'address is …10',13,C.muted,'start');
-  rows.slice(0,k+1).forEach((q,i)=>{if(q.kind==='miss'){const x0=sx(q.r),x1=sx(Math.min(300,q.exp));out+=R(x0,120+(i%3)*24,x1-x0,18,q.val==='.10'?C.pale:C.greenp,q.val==='.10'?C.blue:C.green,4)+TMF(x0+4,133+(i%3)*24,'cached '+q.val,12.5,C.ink,'start')}});
+  rows.slice(0,k+1).forEach((q,i)=>{if(q.kind==='miss'){const x0=sx(q.r),x1=sx(Math.min(300,q.exp));out+=R(x0,100+(i%3)*22,x1-x0,18,q.val==='.10'?C.pale:C.greenp,q.val==='.10'?C.blue:C.green,4)+TMF(x0+4,113+(i%3)*22,'cached '+q.val,12.5,C.ink,'start')}});
   rows.forEach((q,i)=>{if(i>k)return;const x=sx(q.r),col=q.kind==='miss'?C.blue:q.kind==='hit'?C.green:C.coral;out+=L(x,axis-38,x,axis,col,2)+Ci(x,axis-42,i===k?9:6,col);
-   if(i===k)out+=TBF(x,axis-56,q.kind==='miss'?'ask':q.kind==='hit'?'cache':'stale!',13,col)});
+   if(i===k)out+=TBF(x,axis-58,q.kind==='miss'?'ask':q.kind==='hit'?'cache':'stale!',13,col)});
   const done=rows.slice(0,k+1),m=done.filter(q=>q.kind==='miss').length,h=done.filter(q=>q.kind==='hit').length,st=done.filter(q=>q.kind==='stale').length;
   out+=counter(60,290,'queries upstream',m,C.blue,140)+counter(230,290,'cache hits',h,C.green,140)+counter(400,290,'stale answers',st,C.coral,140);
   const q=rows[k];
