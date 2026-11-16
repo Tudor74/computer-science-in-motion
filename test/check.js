@@ -31,7 +31,7 @@ const only=(process.env.ONLY||'').split(',').filter(Boolean);
   if(process.env.ALLSHOTS){const clip=await page.evaluate(()=>{const r=document.querySelector('.diagram-deck').getBoundingClientRect();return {x:r.x,y:r.y+window.scrollY,width:r.width,height:r.height}});await page.screenshot({path:path.join(shots,'try-'+id+'.png'),clip,fullPage:true})}
  }
  console.log('scenes done');
- const sample=(process.env.SAMPLE||'oral-recitation,three-baskets,first-council,palm-leaf,kumarajiva,kangyur-tengyur,diamond-sutra-868,digital-canons').split(',').filter(i=>route.includes(i));
+ const sample=(process.env.SAMPLE||'kraftwerk,belleville-three,tr-909,tresor,free-parties,dub-techno,beatmatching,groove-science').split(',').filter(i=>route.includes(i));
  for(const id of sample){await page.evaluate(id=>{csApp.setMode('watch');csApp.go(id);csApp.seek(csApp.offsets[csApp.route.indexOf(id)]+4)},id);await page.waitForTimeout(80);await page.screenshot({path:path.join(shots,'desk-'+id+'.png'),fullPage:true})}
  const phone=await b.newPage({viewport:{width:375,height:800},isMobile:true,hasTouch:true});
  phone.on('pageerror',e=>errors.push('phone pageerror: '+e.message));

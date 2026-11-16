@@ -1,18 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// The Buddhist canon (Tripitaka, "three baskets") in historical order: from memorised recitation, through the
-// baskets and councils, to palm leaf and birch bark, translation into Chinese and Tibetan, woodblock printing,
-// and today's digital canons and scholarship. Traditional accounts are labelled as traditional and shown beside
-// what scholars have established. Lessons, sources and connections are registered by each era's files.
+// Techno in historical order: the machines and scenes that led to it, Detroit, the instruments, Berlin, the UK
+// and rave, the sub-genres, DJ craft, and techno today with the science of groove. Every Try it scene makes
+// sound in the browser. Lessons, sources and connections are registered by each era's files.
 const CURRICULUM={version:1,
 stages:[
- {id:'oral',name:'1 · Spoken teaching',years:'c. 5th century BCE onward',why:'Teachings memorised and recited by groups: how a long text stays stable without writing.'},
- {id:'baskets',name:'2 · The three baskets',years:'Structure of the canon',why:'Vinaya, Sutta and Abhidhamma: what each basket holds and how it is organised.'},
- {id:'councils',name:'3 · Councils and Ashoka',years:'c. 400–250 BCE',why:'Communal recitations, the first schools, and an emperor’s inscriptions: the earliest datable evidence.'},
- {id:'writing',name:'4 · Writing it down',years:'1st century BCE–5th century CE',why:'Palm leaves in Sri Lanka, birch-bark scrolls from Gandhāra, and the commentaries.'},
- {id:'chinese',name:'5 · Into Chinese',years:'2nd–10th century',why:'Translation teams, Kumārajīva and Xuanzang, catalogues, and how translation choices shaped meaning.'},
- {id:'tibetan',name:'6 · Tibetan and other canons',years:'7th–14th century',why:'The Kangyur and Tengyur, and how the Pali, Chinese and Tibetan canons compare.'},
- {id:'printing',name:'7 · Printing',years:'868–1900',why:'The Diamond Sūtra of 868, the Tripitaka Koreana’s 81,000 blocks, and royal editions.'},
- {id:'modern',name:'8 · The canon today',years:'1881–today',why:'Critical editions, digital canons, comparing parallels across languages, and new manuscript finds.'}
+ {id:'roots',name:'1 · Roots',years:'1970–1984',why:'Kraftwerk’s machines, Moroder’s sequenced disco, electro and Chicago house: the ingredients before the name.'},
+ {id:'detroit',name:'2 · Detroit',years:'1981–1992',why:'The Belleville Three, a city and its radio, Afrofuturism, and Underground Resistance.'},
+ {id:'machines',name:'3 · The machines',years:'1980–1990',why:'The TR-808 and TR-909 drum machines, the TB-303 bassline and the step sequencer: built here in sound.'},
+ {id:'berlin',name:'4 · Berlin',years:'1989–2004',why:'A wall comes down, empty buildings become clubs, Tresor links Detroit and Berlin, and minimal follows.'},
+ {id:'rave',name:'5 · UK and rave',years:'1987–1997',why:'Acid house summers, free parties and sound systems, a law against repetitive beats, and what came after.'},
+ {id:'styles',name:'6 · Styles',years:'1990–today',why:'Acid, minimal, dub techno and hard techno as settings of tempo, kick, swing and filter you can morph between.'},
+ {id:'craft',name:'7 · DJ craft and arrangement',years:'Technique',why:'Beatmatching, EQ mixing, phrasing, and how a track builds and releases tension.'},
+ {id:'today',name:'8 · Techno today',years:'2000–today',why:'Global scenes, who gets credit, the tools, and what research says about groove and why bodies move.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -20,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- oral:{w:48,h:24,tile:'<path d="M0 12Q6 4 12 12T24 12T36 12T48 12" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- baskets:{w:48,h:32,tile:'<path d="M4 10H14L12 24H6ZM19 10H29L27 24H21ZM34 10H44L42 24H36Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- councils:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 4"/><circle cx="20" cy="20" r="2.5" fill="currentColor"/>'},
- writing:{w:56,h:24,tile:'<rect x="4" y="6" width="48" height="12" rx="2" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/><circle cx="38" cy="12" r="1.5" fill="currentColor"/>'},
- chinese:{w:40,h:40,tile:'<path d="M10 8V32M20 8V32M30 8V32" stroke="currentColor" stroke-width=".9"/><path d="M6 14H14M16 20H24M26 26H34" stroke="currentColor" stroke-width=".6"/>'},
- tibetan:{w:56,h:24,tile:'<rect x="4" y="7" width="48" height="10" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M10 12H46" stroke="currentColor" stroke-width=".6"/>'},
- printing:{w:40,h:36,tile:'<rect x="6" y="6" width="28" height="24" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M11 12H29M11 18H29M11 24H24" stroke="currentColor" stroke-width=".7"/>'},
- modern:{w:44,h:36,tile:'<path d="M6 10H38M6 18H38M6 26H38" stroke="currentColor" stroke-width=".6"/><path d="M14 10L22 18L14 26M30 10L22 18L30 26" fill="none" stroke="currentColor" stroke-width=".8"/>'}
+ roots:{w:48,h:24,tile:'<path d="M0 16H8V8H16V16H24V8H32V16H40V8H48" fill="none" stroke="currentColor" stroke-width="1"/>'},
+ detroit:{w:44,h:32,tile:'<path d="M4 28V14H12V28M16 28V8H24V28M28 28V18H36V28" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ machines:{w:48,h:24,tile:'<rect x="3" y="7" width="9" height="10" fill="currentColor" opacity=".6"/><rect x="15" y="7" width="9" height="10" fill="none" stroke="currentColor"/><rect x="27" y="7" width="9" height="10" fill="none" stroke="currentColor"/><rect x="39" y="7" width="9" height="10" fill="none" stroke="currentColor"/>'},
+ berlin:{w:44,h:32,tile:'<path d="M2 26H42M8 26V10M16 26V10M24 26V10M32 26V10" stroke="currentColor" stroke-width=".9"/><path d="M18 10H22" stroke="currentColor" stroke-width="2.4" opacity=".0"/>'},
+ rave:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="15" cy="16" r="1.6" fill="currentColor"/><circle cx="25" cy="16" r="1.6" fill="currentColor"/><path d="M13 23Q20 30 27 23" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ styles:{w:48,h:28,tile:'<path d="M4 22V10M14 22V6M24 22V14M34 22V8M44 22V16" stroke="currentColor" stroke-width="1.4"/>'},
+ craft:{w:48,h:32,tile:'<circle cx="14" cy="16" r="9" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="14" cy="16" r="2" fill="currentColor"/><circle cx="34" cy="16" r="9" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="34" cy="16" r="2" fill="currentColor"/>'},
+ today:{w:44,h:44,tile:'<circle cx="22" cy="22" r="14" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M8 22H36M22 8Q30 22 22 36M22 8Q14 22 22 36" fill="none" stroke="currentColor" stroke-width=".6"/>'}
 };

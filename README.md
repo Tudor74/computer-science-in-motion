@@ -1,19 +1,21 @@
-# Tripitaka In Motion
+# Techno In Motion
 
-A single-file, offline HTML page on the history of the Buddhist canon (the Tripitaka, "three baskets"), in historical order: spoken teaching, the three baskets, the councils and Ashoka, writing it down, translation into Chinese, the Tibetan and other canons, printing, and the canon today. It is a history of a body of texts, not religious instruction. In Try it you see how group recitation keeps a text stable, place texts in their baskets, follow a passage across languages, and print a woodblock page. Every scene says whether it shows a traditional account, an established finding, or something scholars debate, and each tradition is described in its own terms.
+A single-file, offline HTML page that tells the history of techno in order and lets you make the sounds: the roots in Kraftwerk, Moroder, electro and Chicago house; Detroit; the drum machines and the TB-303; Berlin; UK rave; the styles; DJ craft; and techno today with the science of groove. Every Try it scene plays through the browser's own synthesiser (simplified models, not circuit emulations): program a drum pattern, twist an acid line, beatmatch two decks. No real tracks are reproduced.
 
-This is the `tripitaka` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `techno` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+
+- Sound plays only when you press something, there is always a Stop, and the Sound on/off switch mutes everything.
 
 ## Route
 
-1. **Spoken teaching**: oral recitation, memory techniques, the reciters, the languages of the teaching
-2. **The three baskets**: the three baskets, the Vinaya, the Suttas, the Abhidhamma
-3. **Councils and Ashoka**: the first council, the second council and the schools, Ashoka's edicts, dating the Buddha
-4. **Writing it down**: palm leaf, the Gandhāran scrolls, the commentaries, the Sanskrit canons
-5. **Into Chinese**: the first translations, Kumārajīva, Xuanzang, the catalogues
-6. **Tibetan and other canons**: Tibetan translation, the Kangyur and Tengyur, comparing canons, Mongolian and Manchu canons
-7. **Printing**: the Diamond Sūtra of 868, the Song editions, the Tripitaka Koreana, royal editions
-8. **The canon today**: the Pali Text Society, the Taishō edition, digital canons, parallels and new finds
+1. **Roots** (1970–1984): Kraftwerk, Moroder's sequencer, electro, Chicago house
+2. **Detroit** (1981–1992): the Belleville Three, the Electrifying Mojo, Afrofuturism, Underground Resistance
+3. **The machines** (1980–1990): the TR-808, the TR-909, the TB-303, the step sequencer
+4. **Berlin** (1989–2004): after the Wall, Tresor, minimal, the Berghain era
+5. **UK and rave** (1987–1997): the acid house summer, free parties, the Criminal Justice Act, after rave
+6. **Styles**: tempo and kick, acid, dub techno, hard and industrial
+7. **DJ craft and arrangement**: beatmatching, EQ mixing, phrasing, arrangement
+8. **Techno today**: global scenes, credit and erasure, tools today, the science of groove
 
 ## Source layout
 

@@ -37,15 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: this is a history of a body of texts, not religious instruction, and the learner works
-   the mechanisms that carried it. Oral: recite alone or in a group and watch slips accumulate or get caught.
-   Baskets: sort texts into Vinaya, Sutta and Abhidhamma. Councils: compare the six Vinayas' accounts, read
-   Ashoka's edicts, slide the Buddha's dates between chronologies. Writing: prepare a palm leaf, date a birch-bark
-   scroll by radiocarbon. Chinese: staff a translation team, judge a text as the cataloguers did. Tibetan: build
-   calques from the standard glossary, sort texts into Kangyur and Tengyur, compare the canons. Printing: carve
-   and print a block, fill Haeinsa's shelves. Modern: collate editions, read a Taisho reference, compare parallels.
-   Every scene is tagged traditional account, established or debated; each tradition is described in its own
-   terms; the Buddha is never drawn as a figure; script impressions are labelled as impressions.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
@@ -192,6 +184,25 @@ const AUDIO={ctx:null,muted:false,nodes:new Set(),master:null,
  seq(notes,o={}){for(const n of notes)this.tone(n.hz,{...o,...n,at:(o.at||0)+(n.at||0)})},
  noise(o={}){const c=this.get();if(!c)return;const {dur=.08,gain=.12,at=0}=o;try{const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0),r=rng(len);for(let i=0;i<len;i++)d[i]=(r()*2-1)*(1-i/len);
   const src=c.createBufferSource(),g=c.createGain();src.buffer=buf;g.gain.value=Math.min(gain,.3);src.connect(g);g.connect(this.master);src.start(c.currentTime+at);this.nodes.add(src);src.onended=()=>this.nodes.delete(src)}catch(_){}},
+ // --- Drum-machine and bassline voices (Techno In Motion). All take {at} seconds from now and register for stopAll.
+ // kick: a sine whose pitch falls from `from` to `to` Hz; `decay` is the length in seconds.
+ kick(o={}){const c=this.get();if(!c)return;const {at=0,from=150,to=48,decay=.32,gain=.3,click=.012}=o;
+  try{const t0=c.currentTime+at,osc=c.createOscillator(),g=c.createGain();osc.type='sine';osc.frequency.setValueAtTime(from,t0);osc.frequency.exponentialRampToValueAtTime(Math.max(20,to),t0+Math.max(.02,decay*.35));
+   g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(Math.min(gain,.4),t0+click);g.gain.exponentialRampToValueAtTime(.0008,t0+decay);osc.connect(g);g.connect(this.master);osc.start(t0);osc.stop(t0+decay+.03);
+   this.nodes.add(osc);osc.onended=()=>this.nodes.delete(osc)}catch(_){}},
+ // hat/snare/clap: noise through a filter. type 'highpass' with a high cutoff gives a hat; 'bandpass' near 1.5 kHz a clap or snare body.
+ hit(o={}){const c=this.get();if(!c)return;const {at=0,dur=.05,gain=.1,type='highpass',cutoff=7000,q=.8}=o;
+  try{const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0),r=rng(len+17);for(let i=0;i<len;i++)d[i]=(r()*2-1)*Math.pow(1-i/len,2);
+   const src=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();src.buffer=buf;f.type=type;f.frequency.value=cutoff;f.Q.value=q;g.gain.value=Math.min(gain,.3);
+   src.connect(f);f.connect(g);g.connect(this.master);src.start(c.currentTime+at);this.nodes.add(src);src.onended=()=>this.nodes.delete(src)}catch(_){}},
+ // acid: a saw or square through a resonant low-pass whose cutoff sweeps down after each note (the TB-303 gesture).
+ // cutoff is the resting cutoff in Hz, env the extra Hz added at the note's start, res the filter Q, slideFrom an earlier pitch to glide from.
+ acid(hz,o={}){const c=this.get();if(!c||!(hz>0))return;const {at=0,dur=.2,gain=.12,type='sawtooth',cutoff=400,env=1800,res=12,decay=.18,accent=false,slideFrom=0}=o;
+  try{const t0=c.currentTime+at,osc=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();osc.type=type;
+   if(slideFrom>0){osc.frequency.setValueAtTime(slideFrom,t0);osc.frequency.exponentialRampToValueAtTime(hz,t0+Math.min(.06,dur*.6))}else osc.frequency.setValueAtTime(hz,t0);
+   f.type='lowpass';f.Q.value=clamp(res,0.5,22);const top=clamp(cutoff+env*(accent?1.5:1),60,12000);f.frequency.setValueAtTime(top,t0);f.frequency.exponentialRampToValueAtTime(clamp(cutoff,60,12000),t0+Math.max(.03,decay));
+   const gv=Math.min(gain*(accent?1.4:1),.3);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(gv,t0+.005);g.gain.setValueAtTime(gv,t0+Math.max(.01,dur-.03));g.gain.linearRampToValueAtTime(0,t0+dur);
+   osc.connect(f);f.connect(g);g.connect(this.master);osc.start(t0);osc.stop(t0+dur+.03);this.nodes.add(osc);osc.onended=()=>this.nodes.delete(osc)}catch(_){}},
  stopAll(){for(const n of this.nodes){try{n.stop()}catch(_){}}this.nodes.clear()},
  setMuted(m){this.muted=m;if(m)this.stopAll()}};
 
