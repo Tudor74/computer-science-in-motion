@@ -274,7 +274,7 @@ SCENE({id:'loss-aversion',name:'Loss aversion',tag:'Would you take the bet?',
 const D6_v=(x,a,lam)=>x>=0?Math.pow(x,a):-lam*Math.pow(-x,a);
 SCENE({id:'loss-aversion-value',name:'The value function',tag:'Prospect theory',
  definition:'Prospect theory describes choices with a value function over gains and losses from a reference point: concave for gains, convex for losses, and steeper for losses.',
- example:'With the 1992 estimates, winning £50 is worth about 31 units of value and losing £50 about −71.',
+ example:'With the 1992 estimates, winning £50 is worth about 31 units of value and losing £50 about −70.',
  desc:'The prospect-theory value curve from −£100 to +£100, with sliders for curvature and loss aversion, and markers for a £50 gain and a £50 loss.',
  research:'Kahneman & Tversky (1979). Prospect theory: an analysis of decision under risk. Econometrica 47. Tversky & Kahneman (1992). Advances in prospect theory, J. Risk and Uncertainty 5 (α ≈ 0.88, λ ≈ 2.25).',
  dur:9,hint:'Change the curvature and the loss weight. At λ = 1 and curvature 1 the curve is a straight line: money counts at face value.',
@@ -500,7 +500,8 @@ SCENE({id:'selection-task-logic',name:'Four inferences',tag:'Valid or not?',
    if(a!==null){const ok=a===r.valid;out+=TF(424,y+22,r.n,13,C.ink,'start',`font-weight="700"`)+TF(424,y+40,(r.valid?'valid':'invalid')+(ok?' ✓':' ✗'),13,ok?C.green:C.coral,'start');
     out+=R(424,y+48,r.rate*.6,8,C.line,'none',2)+TF(428+r.rate*.6,y+56,`≈${r.rate}% accept`,13,C.muted,'start')}});
   const done=s.ans.filter(a=>a!==null).length,right=s.ans.filter((a,i)=>a===D6_INF[i].valid).length;
-  out+=T(300,350,done<4?'Mark all four.':`${s.sim?'Simulated participant':'You'}: ${right} of 4. Most people accept modus ponens, miss modus tollens and accept the fallacies.`,14,C.ink);
+  out+=T(300,344,done<4?'Mark all four.':`${s.sim?'Simulated participant':'You'}: ${right} of 4 right.`,15,C.ink);
+  if(done===4)out+=TF(300,368,'Typically: ponens accepted, tollens often missed, fallacies often accepted.',13,C.muted);
   return {svg:out,phase:'Logic says only the first two follow. In experiments nearly everyone accepts modus ponens, but only about two thirds draw modus tollens, and about half or more accept the two fallacies. Many everyday “if” statements are read as “if and only if”, which would make all four valid.'};
  }});
 

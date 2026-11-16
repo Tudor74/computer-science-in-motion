@@ -59,7 +59,7 @@ SCENE({id:'action-potential',name:'Action potential',tag:'All or nothing',
   s.trials.forEach((a,i)=>{const last=i===s.trials.length-1,pts=[];for(let k=0;k<=160;k++){const t=k/20;pts.push([pl.X(t),pl.Y(D5_V(t-1,a))])}out+=D5_poly(pts,last?C.blue:'#9cbad0',last?3:1.8)});
   out+=TB(410,74,'Trials',15,C.ink,'start');
   if(!s.trials.length)out+=TF(410,100,'None yet: press Stimulate.',13,C.muted,'start');
-  s.trials.forEach((a,i)=>{const y=100+i*28,f=D5_fires(a);out+=R(406,y-17,176,24,i===s.trials.length-1?C.pale:'#f6f9fb','none',6)+TF(414,y,`${a} mV push`,13,C.ink,'start')+TBF(574,y,f?'spike, +40 mV':'no spike',13,f?C.green:C.muted,'end')});
+  s.trials.forEach((a,i)=>{const y=100+i*28,f=D5_fires(a);out+=R(406,y-17,176,24,i===s.trials.length-1?C.pale:'#f6f9fb','none',6)+TF(414,y,`${a} mV`,13,C.ink,'start')+TBF(574,y,f?'spike to +40 mV':'no spike',13,f?C.green:C.muted,'end')});
   const a=s.trials.length?s.trials[s.trials.length-1]:s.stim;
   out+=T(300,360,!s.trials.length?`Set a push and press Stimulate.`:D5_fires(a)?'Every spike has the same height: the size of the push no longer matters.':`${a} mV is not enough: −70 + ${a} = ${-70+a} mV stays below −55 mV.`,15,D5_fires(a)?C.green:C.ink);
   const nf=s.trials.filter(D5_fires).length;
@@ -310,8 +310,8 @@ SCENE({id:'receptive-fields-hierarchy',name:'A hierarchy of features',tag:'Spots
 
 function D5_hermann(wavy){
  let out=R(40,60,280,280,'#111','none',2);const w=14,sq=(280-4*w)/5,lines=[1,2,3,4].map(k=>40+k*sq+(k-.5)*w);
- lines.forEach(v=>{if(!wavy){out+=L(40,v,320,v,'#fff',w,'stroke-linecap="butt"')+L(v,60,v,340,'#fff',w,'stroke-linecap="butt"')}
-  else{const ph=[],pv=[];for(let k=0;k<=56;k++){const t=k*5;ph.push([40+t,v+6*Math.sin(t/14)]);pv.push([v+6*Math.sin(t/14),60+t])}out+=D5_poly(ph,'#fff',w,'stroke-linecap="butt"')+D5_poly(pv,'#fff',w,'stroke-linecap="butt"')}});
+ lines.forEach(v=>{const hy=v+20;if(!wavy){out+=L(40,hy,320,hy,'#fff',w,'stroke-linecap="butt"')+L(v,60,v,340,'#fff',w,'stroke-linecap="butt"')}
+  else{const ph=[],pv=[];for(let k=0;k<=56;k++){const t=k*5;ph.push([40+t,hy+6*Math.sin(t/14)]);pv.push([v+6*Math.sin(t/14),60+t])}out+=D5_poly(ph,'#fff',w,'stroke-linecap="butt"')+D5_poly(pv,'#fff',w,'stroke-linecap="butt"')}});
  return out;
 }
 SCENE({id:'receptive-fields-hermann',name:'The Hermann grid',tag:'A textbook explanation, tested',

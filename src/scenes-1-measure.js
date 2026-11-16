@@ -305,7 +305,7 @@ SCENE({id:'mental-chronometry',name:'Donders’ subtraction method',tag:'Be the 
   return {svg:out,phase:diffs?`Medians: ${['a','c','b'].filter(t=>ms[t]!==null).map(t=>t+' '+Math.round(ms[t])).join(', ')} ms. Donders read the differences as the time taken by each added stage.`:'Each task adds one more thing to do between signal and response. Donders timed the difference to time the thought.'};
  }});
 
-const D1_STG=['Encode','Compare','Choose','Execute'],D1_STB=[90,60,100,80];
+const D1_STG=['Encode','Compare','Choose','Execute'],D1_STB=[90,70,100,80];
 SCENE({id:'mental-chronometry-subtraction',name:'Stages and the additive-factor method',tag:'From subtraction to additivity',
  definition:'Donders assumed pure insertion: adding a task stage leaves the other stages unchanged. That is hard to guarantee. Saul Sternberg proposed a weaker test: if two factors slow different stages, their effects add; if they slow the same stage, they interact.',
  example:'A blurred signal slows encoding by about 60 ms; an awkward key mapping slows response selection by about 80 ms. Together they cost about 140 ms, the sum, so they act on different stages. If the sum were exceeded, they would be sharing a stage.',
@@ -322,7 +322,7 @@ SCENE({id:'mental-chronometry-subtraction',name:'Stages and the additive-factor 
   let out=heading('Reaction time as a chain of stages');
   let x=30;const k=1;st.forEach((v,i)=>{const w=v*k;out+=R(x,58,w-3,40,[C.pale,C.greenp,C.amberp,C.purplep][i],[C.blue,C.green,C.amber,C.purple][i],6)+TF(x+w/2,83,D1_STG[i],13,C.ink);x+=w});
   out+=TF(30,120,`total ${tot} ms`+(s.a?' · blurred signal':'')+(s.b?' · awkward keys':''),14,C.ink,'start');
-  const pl=D1_plot(70,160,260,170,0,1,250,500,'signal: clear → blurred','RT (ms)',[],[300,400,500]);out+=pl.svg;
+  const pl=D1_plot(70,160,260,170,0,1,300,600,'signal: clear → blurred','RT (ms)',[],[300,400,500,600]);out+=pl.svg;
   out+=TF(pl.px(.1),348,'clear',13,C.muted)+TF(pl.px(.9),348,'blurred',13,C.muted);
   for(const [b,c] of [[false,C.blue],[true,C.coral]]){const y0=sum(rt(false,b)),y1=sum(rt(true,b));out+=L(pl.px(.1),pl.py(y0),pl.px(.9),pl.py(y1),c,3)+Ci(pl.px(.1),pl.py(y0),5,c)+Ci(pl.px(.9),pl.py(y1),5,c)}
   out+=TF(pl.px(.92)+4,pl.py(sum(rt(true,true)))+5,'awkward',13,C.coral,'start')+TF(pl.px(.92)+4,pl.py(sum(rt(true,false)))+5,'easy keys',13,C.blue,'start');

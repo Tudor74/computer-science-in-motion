@@ -524,7 +524,7 @@ SCENE({id:'gestalt-grouping-principles',name:'Laws of grouping',tag:'Seven ways 
   if(k==='continuity'){out+=D2_poly(range(11).map(i=>[120+i*36,270-i*18]),'none');range(11).forEach(i=>out+=dot(120+i*36,270-i*18,C.ink,7));range(11).forEach(i=>out+=dot(120+i*36,90+i*18,C.ink,7))}
   if(k==='fate'){const u=X.try?0:(X.p*6)%1;for(let i=0;i<8;i++)for(let j=0;j<4;j++){const mv=(i+j)%3===0;out+=dot(110+i*52,100+j*52-(mv?u*30:0),mv?C.blue:C.ink,8);if(mv)out+=arrow(110+i*52+14,108+j*52,110+i*52+14,84+j*52,C.blue,1.8,6)}}
   const PX=[];for(let g=0;g<4;g++)PX.push(100+g*130,136+g*130);
-  if(k==='region'){for(let g=0;g<3;g++)out+=`<ellipse cx="${183+g*130}" cy="190" rx="70" ry="38" fill="#fff" stroke="${C.line}" stroke-width="2"/>`;PX.forEach(x=>out+=dot(x,190))}
+  if(k==='region'){for(let g=0;g<3;g++)out+=`<ellipse cx="${183+g*130}" cy="190" rx="58" ry="36" fill="#fff" stroke="${C.line}" stroke-width="2"/>`;PX.forEach(x=>out+=dot(x,190))}
   if(k==='connect'){for(let g=0;g<3;g++)out+=L(136+g*130,190,230+g*130,190,C.ink,3);PX.forEach(x=>out+=dot(x,190))}
   const cap={proximity:'You see four pairs of columns, not eight equal columns.',similarity:'Filled and hollow dots are evenly spaced, yet you see rows.',closure:'Three cut-out discs: you see a white triangle that is not drawn (Kanizsa).',continuity:'Two straight lines crossing, not two bent ones meeting in a V.',fate:'The blue dots moving together form one group (in Watch they move).',region:'Dots sharing an outline group together, even across the wider gaps.',connect:'Lines join dots across the wider gaps, and connection beats nearness.'}[k];
   out+=T(300,336,cap,15,C.ink);

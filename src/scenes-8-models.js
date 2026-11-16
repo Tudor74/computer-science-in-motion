@@ -71,7 +71,7 @@ SCENE({id:'perceptron',name:'The perceptron learns',tag:'Rosenblatt’s rule',
   const bx=345,by=300,bw=Math.min(18,225/Math.max(1,r.errs.length));out+=L(bx,by,580,by,C.line,1)+TF(bx,214,'mistakes in each pass',13,C.muted,'start');
   r.errs.slice(0,12).forEach((e,i)=>{const h=Math.min(70,e*10);out+=R(bx+i*(bw+3),by-h,bw,h,e?C.coral:C.green,'none',2)});
   out+=TF(bx,by+18,'pass 1 →',13,C.muted,'start');
-  out+=TF(180,352,'blue arrow points to the side the perceptron calls blue',13,C.muted);
+  out+=TF(180,352,'arrow: the side called blue · amber ring: on the wrong side',13,C.muted);
   const conv=s.k>=n&&r.errs[Math.floor(s.k/n)-1]===0&&inEp===0;
   const phase=s.k===0?'The starting line is arbitrary. Each mistake moves the line towards the point it got wrong.':r.last&&r.last.upd?`Point ${r.last.i+1} was on the wrong side, so the weights moved by η × target × input (η = ${D8_ETA}).`:conv?'A whole pass with no mistakes: the line now separates the classes. Rosenblatt proved this always happens if a separating line exists.':s.set==='xor'&&ep>=3?'XOR keeps producing mistakes pass after pass: no straight line can put the blue corners on one side and the coral corners on the other.':'That point was already on the right side, so nothing changed.';
   return {svg:out,phase};
@@ -97,7 +97,7 @@ SCENE({id:'perceptron-xor',name:'Why one layer is not enough',tag:'XOR and hidde
   let out=heading(two?'Two layers: hidden OR and AND units compute XOR':'One layer: the best single unit (OR) still gets XOR wrong',26);
   const node=(x,y,v,lab)=>Ci(x,y,24,v?C.blue:'#fff',v?C.blue:C.line,'stroke-width="2.5"')+TBF(x,y+5,String(v),16,v?'#fff':C.ink)+TF(x,y+42,lab,13,C.muted);
   const I=[[70,110],[70,250]],Hh=[[200,110],[200,250]],O=[330,180];
-  const wl=(a,b,wt,on)=>L(a[0]+24,a[1],b[0]-24,b[1],on?C.blue:C.line,on?3:1.8)+TF((a[0]+b[0])/2+(b[1]<a[1]?-6:6),(a[1]+b[1])/2+(b[1]<a[1]?-6:14),wt,13,C.purple);
+  const wl=(a,b,wt,on)=>{const u=b[1]===a[1]?.5:.3,x=a[0]+24+(b[0]-a[0]-48)*u,y=a[1]+(b[1]-a[1])*u;return L(a[0]+24,a[1],b[0]-24,b[1],on?C.blue:C.line,on?3:1.8)+TBF(x,y+(b[1]>a[1]?-6:b[1]<a[1]?16:-7),wt,13,C.purple,'middle','stroke="#fff" stroke-width="4" paint-order="stroke"')};
   if(two){out+=wl(I[0],Hh[0],'+1',s.a)+wl(I[1],Hh[0],'+1',s.b)+wl(I[0],Hh[1],'+1',s.a)+wl(I[1],Hh[1],'+1',s.b)+wl(Hh[0],O,'+1',net.h1)+wl(Hh[1],O,'−1',net.h2);
    out+=node(Hh[0][0],Hh[0][1],net.h1,'OR (θ 0.5)')+node(Hh[1][0],Hh[1][1],net.h2,'AND (θ 1.5)')}
   else{out+=wl(I[0],O,'+1',s.a)+wl(I[1],O,'+1',s.b)}
@@ -151,7 +151,7 @@ SCENE({id:'perceptron-error',name:'Learning as going downhill',tag:'Gradient des
   out+=TF(360,284,`η = ${s.eta.toFixed(2)} · stable limit 2/λ = ${lim.toFixed(2)}`,13,s.eta>=lim?C.coral:C.ink,'start');
   out+=TF(360,306,`error after ${path.length-1} steps: ${last>99?'> 99':last.toFixed(3)}`,13,C.ink,'start');
   out+=TF(360,328,'star = lowest error (w₁ 1, w₂ 0.5)',13,C.muted,'start');
-  const phase=s.eta>=lim||div?'The step is so large that each move overshoots the valley by more than it gained: the error grows and the weights fly away.':s.eta>lim*.7?'Close to the limit, the path zig-zags across the narrow valley before it settles.':'Each step points straight downhill. The valley is long and narrow because the two inputs are correlated, so the path bends as it goes.';
+  const phase=s.eta>=lim||div?'The step is so large that each move overshoots the valley by more than it gained: the error grows and the weights fly away.':s.eta>1/D8_HMAX?'Each step now overshoots across the steep direction of the valley; the path still settles because every overshoot is smaller than the last.':'Each step points straight downhill. The valley is long and narrow because the two inputs are correlated, so the path bends as it goes.';
   return {svg:out,phase};
  },
  three(s,f,X,project){
@@ -183,15 +183,14 @@ SCENE({id:'prediction-error',name:'Learning from surprise',tag:'The Rescorla–W
  on:{add(s,v){if(s.trials.length<30)s.trials.push(v)},five(s){for(let i=0;i<5&&s.trials.length<30;i++)s.trials.push('R')},clear(s){s.trials=[]}},
  draw(s){
   const {V,D}=D8_rw(s.trials),n=s.trials.length;let out=heading('Associative strength grows by a share of the surprise',26);
-  const pl=D8_plot(70,52,490,170,[0,30],[0,1.05],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30 trials']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],yl:'strength V of tone → food'});out+=pl.svg;
+  const pl=D8_plot(70,52,490,150,[0,30],[0,1.05],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30 trials']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],yl:'strength V of tone → food'});out+=pl.svg;
   out+=L(pl.X(0),pl.Y(1),pl.X(30),pl.Y(1),C.green,1.4,'stroke-dasharray="6 5"')+TF(pl.X(30)-4,pl.Y(1)-6,'λ = 1 when food follows',13,C.green,'end');
   out+=D8_poly(V.map((v,i)=>[pl.X(i),pl.Y(v)]),C.blue,2.6);V.forEach((v,i)=>out+=Ci(pl.X(i),pl.Y(v),3.5,C.blue));
-  const by=296,sc=52;out+=L(70,by,560,by,C.line,1.4)+TF(64,by+4,'0',13,C.muted,'end')+TF(70,by-sc-8,'prediction error λ − V on each trial',13,C.muted,'start');
+  const by=298,sc=42;out+=L(70,by,560,by,C.line,1.4)+TF(64,by+4,'0',13,C.muted,'end')+TF(70,by-sc-8,'prediction error λ − V on each trial',13,C.muted,'start')+TF(560,by-sc-8,'● food  ○ no food',13,C.muted,'end');
   D.forEach((d,i)=>{const x=pl.X(i+.5)-6,h=Math.abs(d)*sc;out+=R(x,d>=0?by-h:by,12,h,d>=0?C.coral:C.purple,'none',2)});
   s.trials.forEach((t,i)=>out+=TF(pl.X(i+.5),by+(D[i]<0?Math.abs(D[i])*sc+16:16),t==='R'?'●':'○',13,t==='R'?C.green:C.muted));
   const last=n?D[n-1]:null;
   out+=T(300,372,n?`Trial ${n}: error ${last>=0?'+':''}${last.toFixed(2)}, so V moves by ${(D8_ALPHA*last).toFixed(2)} to ${V[n].toFixed(2)}`:'No trials yet: the tone predicts nothing (V = 0)',15,C.ink);
-  out+=TF(560,by+38,'● food  ○ no food',13,C.muted,'end');
   const phase=!n?'Add a trial. With α = 0.25 every trial closes a quarter of the gap between what is expected and what happens.':last>.05?'Positive surprise: more food than predicted, so the tone gains strength. The gains shrink as the prediction improves.':last<-.05?'Negative surprise: food was expected but did not come, so the tone loses strength (extinction).':'The prediction matches the outcome, so there is nothing left to learn.';
   return {svg:out,phase};
  }});
@@ -210,9 +209,9 @@ SCENE({id:'prediction-error-blocking',name:'Blocking',tag:'Kamin’s surprise',
  on:{pre(s,v){s.pre=Number(v)},set(s,v){s.pre=Number(v)}},
  draw(s){
   const {A,B}=D8_block(s.pre),n=A.length-1,ctl=D8_block(0);let out=heading('Does tone B learn when light A already predicts the shock?',26);
-  const pl=D8_plot(70,52,330,210,[0,25],[0,1.05],{xt:[[0,'0'],[5,'5'],[10,'10'],[15,'15'],[20,'20'],[25,'25']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'trials',yl:'associative strength'});out+=pl.svg;
-  if(s.pre>0)out+=R(pl.X(0),52,pl.X(s.pre)-pl.X(0),210,C.pale,'none',0)+TF((pl.X(0)+pl.X(s.pre))/2,74,'A alone',13,C.blue);
-  out+=TF((pl.X(s.pre)+pl.X(n))/2,74,'A + B together',13,C.ink);
+  const pl=D8_plot(70,52,330,210,[0,25],[0,1.05],{xt:[[0,'0'],[5,'5'],[10,'10'],[15,'15'],[20,'20'],[25,'25']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'trials (strength of each cue)'});out+=pl.svg;
+  if(s.pre>0)out+=R(pl.X(0),52,pl.X(s.pre)-pl.X(0),210,C.pale,'none',0)+TF((pl.X(0)+pl.X(s.pre))/2,46,'A alone',13,C.blue);
+  out+=TF((pl.X(s.pre)+pl.X(n))/2,46,'A + B together',13,C.ink);
   out+=D8_poly(A.map((v,i)=>[pl.X(i),pl.Y(v)]),C.blue,2.6)+D8_poly(B.map((v,i)=>[pl.X(i),pl.Y(v)]),C.coral,2.6);
   out+=TBF(pl.X(n)+6,pl.Y(A[n])+4,'A',14,C.blue,'start')+TBF(pl.X(n)+6,pl.Y(B[n])+4,'B',14,C.coral,'start');
   const bx=450,base=262,hh=180;out+=TF(505,62,'final strength of B',13,C.muted);
@@ -251,7 +250,7 @@ SCENE({id:'prediction-error-dopamine',name:'Dopamine and prediction error',tag:'
   sel.forEach((k,j)=>{const y=110+j*rh+rh/2,d=rows[k-1],om=s.trials[k-1]==='O';out+=TF(x0-12,y+4,`trial ${k}${om?' (no reward)':''}`,13,om?C.purple:C.muted,'end');
    out+=L(x0,y,x0+D8_TD_T*dx,y,C.grid,1);d.forEach((v,t)=>{const h=Math.min(1.2,Math.abs(v))*16;if(h>.5)out+=R(tx(t)-9,v>0?y-h:y,18,h,v>0?C.coral:C.purple,'none',2)})});
   if(!n)out+=T(300,200,'No trials yet. Run a trial with reward.',15,C.muted);
-  [0,2,4,6,8].forEach(t=>out+=TF(tx(t),358,`${t}`,13,C.muted));out+=TF(x0+D8_TD_T*dx,358,'time step',13,C.muted,'start');
+  [0,2,4,6,8].forEach(t=>out+=TF(tx(t),358,`${t}`,13,C.muted));out+=TF(x0-12,358,'time step',13,C.muted,'end');
   const L_=n?rows[n-1]:null,cueR=L_?L_[D8_TD_CUE]:0,rewR=L_?L_[D8_TD_REW]:0;
   if(n)out+=TF(300,378,`last trial: response at cue ${cueR.toFixed(2)} · at reward time ${rewR.toFixed(2)}`,13,C.ink);
   const om=n&&s.trials[n-1]==='O';
@@ -277,9 +276,9 @@ SCENE({id:'bayesian-perception',name:'Perception as inference',tag:'Prior × lik
   const curve=(m,sd,col,w,extra='')=>{const pts=[];for(let i=0;i<=200;i++){const x=i/20;pts.push([pl.X(x),pl.Y(D8_norm(x,m,sd))])}return D8_poly(pts,col,w,extra)};
   out+=curve(D8_PRIOR_M,s.sp,C.green,2.4,'stroke-dasharray="7 5"')+curve(s.m,s.sl,C.blue,2.4)+curve(po.mean,po.sd,C.coral,3.2);
   out+=L(pl.X(po.mean),50,pl.X(po.mean),260,C.coral,1.4,'stroke-dasharray="3 4"');
-  const lab=(x,y,t,c)=>TBF(x,y,t,13,c);
+  const lab=(x,y,t,c)=>TBF(x,y,t,13,c,'middle','stroke="#fff" stroke-width="4" paint-order="stroke"');
   out+=lab(pl.X(D8_PRIOR_M),pl.Y(D8_norm(D8_PRIOR_M,D8_PRIOR_M,s.sp))-8,'prior',C.green)+lab(pl.X(s.m),pl.Y(D8_norm(s.m,s.m,s.sl))-8,'likelihood',C.blue);
-  out+=TBF(pl.X(po.mean)+(po.mean<s.m?-6:6),66,`posterior ${po.mean.toFixed(2)}`,13,C.coral,po.mean<s.m?'end':'start');
+  out+=TBF(pl.X(po.mean)+(po.mean<s.m?-6:6),66,`posterior ${po.mean.toFixed(2)}`,13,C.coral,po.mean<s.m?'end':'start','stroke="#fff" stroke-width="4" paint-order="stroke"');
   out+=T(300,322,`weight on the senses ${Math.round(po.wl*100)}% · on the prior ${Math.round((1-po.wl)*100)}%`,15,C.ink);
   out+=TF(300,346,`posterior mean = (prior/σp² + measurement/σs²) ÷ (1/σp² + 1/σs²) · posterior σ ${po.sd.toFixed(2)}`,13,C.muted);
   return {svg:out,phase:po.wl>.7?'The senses are reliable, so the estimate stays close to the measurement and the prior only nudges it.':po.wl<.4?'The senses are noisy, so the estimate is pulled strongly towards what was expected: this is how low contrast makes motion look slower.':'Both sources count. The posterior is narrower than either, because two uncertain sources together are more certain than one.'};
@@ -341,9 +340,9 @@ SCENE({id:'bayesian-perception-reach',name:'Your own prior',tag:'You are the obs
   let out=heading('Where is the hidden target?',26);const lx=v=>40+v*5.2,ly=88;
   out+=L(lx(0),ly,lx(100),ly,C.line,2);[0,20,40,60,80,100].forEach(v=>out+=L(lx(v),ly-5,lx(v),ly+5,C.line,1.4)+TF(lx(v),ly+22,String(v),13,C.muted));
   if(X.try)for(let v=0;v<=100;v+=4)out+=hit(X,'est',v,'Set estimate '+v,R(lx(v)-10,ly-26,20,40,'transparent','none',0));
-  if(s.i<D8_RTRIALS){const t=D8_rTrial(s.seed,s.i);t.dots.forEach(d=>out+=Ci(lx(d),ly-12,5,t.cond==='sharp'?C.blue:C.purple,'#fff'));out+=TF(lx(100),ly-28,`trial ${s.i+1} of ${D8_RTRIALS} · ${t.cond==='sharp'?'sharp cloud':'blurry cloud'}`,13,C.muted,'end')}
-  else out+=TF(lx(100),ly-28,'all trials done',13,C.muted,'end');
-  out+=`<polygon points="${fmt(lx(s.est))},${ly+2} ${fmt(lx(s.est)-7)},${ly+16} ${fmt(lx(s.est)+7)},${ly+16}" fill="${C.coral}"/>`;
+  if(s.i<D8_RTRIALS){const t=D8_rTrial(s.seed,s.i);t.dots.forEach(d=>out+=Ci(lx(d),ly-12,5,t.cond==='sharp'?C.blue:C.purple,'#fff'));out+=TF(lx(100),58,`trial ${s.i+1} of ${D8_RTRIALS} · ${t.cond==='sharp'?'sharp cloud':'blurry cloud'}`,13,C.muted,'end')}
+  else out+=TF(lx(100),58,'all trials done',13,C.muted,'end');
+  out+=`<polygon points="${fmt(lx(s.est))},${ly-19} ${fmt(lx(s.est)-7)},${ly-33} ${fmt(lx(s.est)+7)},${ly-33}" fill="${C.coral}"/>`;
   const last=s.res[s.res.length-1];if(last&&!s.sim)out+=TF(40,58,`last: target ${last.x.toFixed(0)}, your estimate ${Math.round(last.e)}`,13,C.green,'start');
   const pl=D8_plot(80,150,260,180,[30,90],[30,90],{xt:[[30,'30'],[90,'90']],yt:[[30,'30'],[60,'60'],[90,'90']],xl:'centre of the dot cloud',xlDy:30,yl:'estimate'});out+=pl.svg;
   out+=L(pl.X(30),pl.Y(30),pl.X(90),pl.Y(90),C.grid,1.4,'stroke-dasharray="4 4"');
@@ -408,7 +407,7 @@ SCENE({id:'predictive-processing-oddball',name:'The oddball',tag:'Mismatch and s
   for(let i=0;i<D8_OB_N;i++){const x=x0+i*dx+dx/2,on=i<shown,cur=i===s.head;
    if(on){const h=Math.min(5,su[i])*34;out+=R(x-8,base-h,16,h,seq[i]?C.coral:C.blue,'none',2)}
    out+=R(x-10,base+10,20,20,seq[i]?C.coral:'#fff',seq[i]?C.coral:C.line,4)+(cur?Ci(x,base+46,4,C.ink):'')}
-  out+=TF(x0,base+68,'□ common tone 1000 Hz   ■ odd tone 1200 Hz',13,C.muted,'start');
+  out+=R(x0,base+56,14,14,'#fff',C.line,3)+TF(x0+20,base+68,'common tone 1000 Hz',13,C.muted,'start')+R(x0+200,base+56,14,14,C.coral,'none',3)+TF(x0+220,base+68,'odd tone 1200 Hz',13,C.muted,'start');
   const avg=t=>{const v=su.filter((_,i)=>seq[i]===t&&i<shown);return v.length?D8_mean(v):NaN};const a0=avg(0),a1=avg(1);
   out+=T(300,354,`average surprise: common ${isFinite(a0)?a0.toFixed(2):'—'} bits · odd ${isFinite(a1)?a1.toFixed(2):'—'} bits`,15,C.ink);
   return {svg:out,phase:s.prob>=.5?'When both tones are equally common, neither is surprising: about 1 bit each, and the mismatch response largely vanishes.':'Each odd tone is surprising because the model has learned to expect the common one. In the brain the mismatch negativity tracks this kind of surprise.'};
@@ -432,7 +431,7 @@ SCENE({id:'predictive-processing-action',name:'Acting to fulfil predictions',tag
   out+=Ci(sx,sy,9,C.ink)+R(sx-60,sy+8,150,10,C.grid,'none',3);
   out+=L(sx,sy,sx+len*Math.cos(ang(mu)),sy+len*Math.sin(ang(mu)),C.green,7,'stroke-dasharray="10 6" opacity=".7"');
   out+=L(sx,sy,sx+len*Math.cos(ang(x)),sy+len*Math.sin(ang(x)),C.blue,9);
-  out+=TF(sx+len*Math.cos(ang(mu))+12,sy+len*Math.sin(ang(mu)),'predicted',13,C.green,'start')+TF(sx+len*Math.cos(ang(x))+14,sy+len*Math.sin(ang(x))+12,'actual',13,C.blue,'start');
+  out+=TF(sx+len*Math.cos(ang(mu))+12,sy+len*Math.sin(ang(mu))-8,'predicted',13,C.green,'start')+TF(sx+len*Math.cos(ang(x))+14,sy+len*Math.sin(ang(x))+18,'actual',13,C.blue,'start');
   out+=TF(sx,sy+40,`error ${(mu-x).toFixed(1)}°`,14,C.coral);
   const pl=D8_plot(340,60,230,220,[0,24],[0,90],{xt:[[0,'0'],[12,'12'],[24,'24 steps']],yt:[[0,'0°'],[45,'45°'],[90,'90°']],yl:'arm angle'});out+=pl.svg;
   out+=D8_poly(r.M.slice(0,t+1).map((v,i)=>[pl.X(i),pl.Y(v)]),C.green,2.4,'stroke-dasharray="6 4"')+D8_poly(r.X.slice(0,t+1).map((v,i)=>[pl.X(i),pl.Y(v)]),C.blue,2.6);
@@ -470,7 +469,7 @@ SCENE({id:'embodied-cognition',name:'Catching without calculating',tag:'The outf
   const c0=ta(.3,D8_fielder(s.stand,s.run,.3))/.3;ref.push([p2.X(0),p2.Y(0)],[p2.X(D8_TF),p2.Y(clamp(c0*D8_TF,0,2.5))]);
   out+=D8_poly(ref,C.grid,1.6,'stroke-dasharray="6 4"')+D8_poly(cv,C.amber,2.6);
   const miss=fx-D8_RANGE;out+=T(300,300,s.run?`The fielder ends ${Math.abs(miss)<1?'under the ball':Math.abs(miss).toFixed(0)+' m '+(miss>0?'behind':'short of')+' it'}, without ever computing the landing point`:miss>2?`Standing ${miss.toFixed(0)} m beyond the landing spot: the ball's apparent rise slows down`:miss<-2?`Standing ${(-miss).toFixed(0)} m short: the ball's apparent rise speeds up`:'Standing at the landing spot: the ball rises at a perfectly steady rate',15,C.ink);
-  out+=TF(480,224,'dashed: steady rise',13,C.muted);
+  out+=TF(480,244,'dashed: steady rise',13,C.muted);
   return {svg:out,phase:s.run?'The rule needs no physics: speed up if the ball’s rise accelerates, slow down if it decelerates. It brings the fielder to the right place just in time.':'Only at the landing spot does the tangent of the gaze angle grow in a straight line. Any curvature tells the fielder which way to move.'};
  }});
 
@@ -568,13 +567,13 @@ SCENE({id:'consciousness',name:'Seeing and not seeing',tag:'Backward masking',
   if(s.ph==='target'&&t)out+=TBF(cx,cy+14,String(t.digit),40,C.ink);
   else if(s.ph==='mask')out+=D8_mask(cx,cy);
   else if(s.ph==='ask')out+=TF(cx,cy+5,'Which digit was it?',14,C.ink);
-  else out+=Ci(cx,cy,3,C.muted)+TF(cx,cy+30,s.i>=D8_MN?'all trials done':'fixate the dot, then press Flash',13,C.muted);
+  else out+=Ci(cx,cy,3,C.muted)+TF(cx,cy+30,s.i>=D8_MN?'all trials done':'look at the dot, then Flash',13,C.muted);
   if(s.ph==='ask'&&!s.sim)D8_DIG.forEach((d,k)=>{const x=cx-105+(k%4)*70,y=210+Math.floor(k/4)*42;out+=hit(X,'ans',d,'Digit '+d,R(x-0,y,58,34,'#fff',C.blue,6)+TBF(x+29,y+23,String(d),16,C.blue))});
   else{const y=212;[['digit','17 ms'],['blank','to SOA'],['mask','250 ms']].forEach(([l,d],k)=>{const x=40+k*76;out+=R(x,y,68,30,['target','blank','mask'][k]===s.ph?C.pale:'#fff',C.line,4)+TF(x+34,y+20,l,13,C.ink)+TF(x+34,y+48,d,13,C.muted)})}
   const pl=D8_plot(340,60,230,210,[0,150],[0,1],{xt:[[17,'17'],[50,'50'],[83,'83'],[133,'133']],yt:[[0,'0'],[.125,'chance'],[.5,'0.5'],[1,'1']],xl:'delay to mask (ms)',yl:'proportion correct'});out+=pl.svg;
   const cv=[];for(let v=0;v<=150;v+=3)cv.push([pl.X(v),pl.Y(D8_mCurve(v))]);out+=D8_poly(cv,C.green,2.2,'stroke-dasharray="6 4"');
   D8_SOAS.forEach(soa=>{const v=s.res.filter(r=>r.soa===soa);if(v.length){const m=v.filter(r=>r.ok).length/v.length;out+=Ci(pl.X(soa),pl.Y(m),6,C.coral,'#fff')+TF(pl.X(soa),pl.Y(m)-11,`${v.filter(r=>r.ok).length}/${v.length}`,13,C.muted)}});
-  out+=TF(455,330,`${s.sim?'simulated':'your'} accuracy · dashed: approximate published shape`,13,C.muted);
+  out+=TF(455,330,`dots: ${s.sim?'simulated':'your'} accuracy`,13,C.muted)+TF(455,348,'dashed: approximate published curve',13,C.muted);
   out+=TF(150,350,`trial ${Math.min(s.i+1,D8_MN)} of ${D8_MN}`,13,C.muted);
   return {svg:out,phase:'Short delays leave the digit unseen and answers near chance; around 50 ms performance jumps. Dehaene’s group linked this jump to a late, all-or-none “ignition” of activity across the brain.'};
  }});
@@ -602,7 +601,7 @@ SCENE({id:'consciousness-workspace',name:'The global workspace',tag:'Ignition an
   const lc=[],gc=[];for(let i=0;i<=100;i++){const v=i/100;lc.push([pl.X(v),pl.Y(v)]);gc.push([pl.X(v),pl.Y(D8_ign(v,s.att))])}
   out+=D8_poly(lc,C.blue,2.2,'stroke-dasharray="6 4"')+D8_poly(gc,C.coral,2.8);
   out+=L(pl.X(s.x),70,pl.X(s.x),270,C.ink,1.2)+Ci(pl.X(s.x),pl.Y(g),6,C.coral,'#fff')+Ci(pl.X(s.x),pl.Y(loc),5,C.blue,'#fff');
-  out+=TF(560,92,'workspace',13,C.coral,'end')+TF(560,110,'visual area',13,C.blue,'end');
+  out+=TF(560,236,'workspace',13,C.coral,'end')+TF(560,254,'visual area',13,C.blue,'end');
   out+=T(300,360,`threshold at strength ${(.5/s.att).toFixed(2)}${s.att<1?' (raised: attention is elsewhere)':''}`,15,C.ink);
   return {svg:out,phase:g>.5?'Past the threshold the workspace switches on as a whole and the content becomes available to every system: reportable, memorable, usable.':'Below threshold the visual area still responds in proportion to the stimulus; this unconscious processing can still influence behaviour, as priming studies show.'};
  }});

@@ -220,9 +220,9 @@ SCENE({id:'theory-of-mind-contents',name:'The surprising tube',tag:'Forgetting y
    const a=s.age===3?['Pencils.','Pencils.']:s.age===4?['Sweets… no, pencils.','Sweets.']:['Sweets!','Sweets — they haven’t seen inside.'];
    out+=D7_person(250,300,C.purple,1.3)+TBF(250,326,`age ${s.age}`,14,C.purple);
    out+=TF(300,90,'“What did you think was inside,',13,C.ink,'start')+TF(300,108,'before we opened it?”',13,C.ink,'start');
-   out+=D7_bubble(300,120,270,44,270,250,'#fff',a[0].startsWith('Pencils')?C.coral:C.green)+TF(316,148,a[0],14,C.ink,'start');
+   out+=R(300,120,270,44,'#fff',a[0].startsWith('Pencils')?C.coral:C.green,10)+TF(316,148,a[0],14,C.ink,'start');
    out+=TF(300,196,'“What will your friend think is inside?”',13,C.ink,'start');
-   out+=D7_bubble(300,208,270,44,270,262,'#fff',a[1].startsWith('Pencils')?C.coral:C.green)+TF(316,236,a[1],14,C.ink,'start');
+   out+=R(300,208,270,44,'#fff',a[1].startsWith('Pencils')?C.coral:C.green,10)+TF(316,236,a[1],14,C.ink,'start');
   }else out+=D7_para(230,150,s.fr===0?'Most children say “sweets”. So would you.':s.fr===1?'The tube is full of pencils.':'The tube looks just as it did at the start.',34,15,C.ink,'start',22);
   out+=T(300,362,s.fr<3?'Watch for the moment the child’s own earlier belief disappears':s.age===3?'Three-year-olds often report their old belief as if it had always been the new one':'Older children keep track of what they, and others, used to believe',15,C.ink);
   return {svg:out,phase:s.fr<3?'The same logic as Sally and Anne, but about the child’s own past belief.':'Gopnik and Astington found 3-year-olds struggle as much with their own past false belief as with another person’s, suggesting a general change in understanding how beliefs represent the world.'};
@@ -254,7 +254,7 @@ SCENE({id:'conformity',name:'Asch’s lines',tag:'Judging alone, and in a group'
    for(let j=0;j<8;j++){const x=70+j*66,me=j===6,said=j<s.k;out+=D7_person(x,330,me?C.blue:C.muted,.9);
     if(said)out+=TBF(x,270,me?'?':'A',16,me?C.blue:C.coral);}
    out+=TF(70+6*66,350,'participant',13,C.blue);
-   out+=TF(300,370,'Correct answer: B. The real participant answered sixth of seven.',13,C.muted);
+   out+=TF(300,370,'Correct answer: B. The real participant answered seventh of eight.',13,C.muted);
    return {svg:out,phase:s.k<7?'One after another, the confederates give the same wrong answer.':'Across critical trials, about 37% of answers went with the majority. About 25% of people never yielded, and most answers stayed independent.'};
   }
   let out=heading(s.i<8?`Trial ${s.i+1} of 8: which line matches the standard?`:'Your results beside Asch’s',24);
@@ -304,7 +304,7 @@ SCENE({id:'conformity-culture',name:'Time, culture and the textbook story',tag:'
   let out='';
   if(s.lens==='time'){
    out+=heading('US studies: conformity declined, 1952–1994',24)+R(70,60,460,220,'#fff',C.grid,4);
-   out+=P('M90 110 C200 130 320 190 510 230',C.coral,3)+TF(510,250,'trend (illustrative shape)',13,C.coral,'end');
+   out+=P('M90 110 C200 130 320 190 510 230',C.coral,3)+TF(520,84,'trend (illustrative shape)',13,C.coral,'end');
    ['1950s','1960s','1970s','1980s','1990s'].forEach((l,i)=>out+=TF(110+i*100,300,l,13,C.muted));
    out+=TF(80,78,'more conformity',13,C.muted,'start');
    out+=Ci(380,262,6,C.blue)+TF(372,258,'UK students, 1980: 1 in 396',13,C.blue,'end');
@@ -405,14 +405,16 @@ SCENE({id:'obedience-critiques',name:'What the archives showed',tag:'Second look
    out+=heading('The Stanford Prison Experiment (1971)',24);
    const cards=[['What is claimed','Ordinary students given the role of guards became cruel within days; the study was stopped after six of a planned fourteen days.'],['What later work found','Guards were briefed and encouraged to be tough. Students who read the set-up could guess what was expected (Banuazizi & Movahedi 1975).'],['A different design','The BBC Prison Study (Reicher & Haslam 2006) found guards did not drift into tyranny without leadership and shared identity.']];
    cards.forEach(([t,b],i)=>{const x=24+i*188;out+=R(x,48,176,250,i?'#f6f9fb':C.coralp,'none',8)+TBF(x+12,74,t,14,C.ink,'start')+D7_para(x+12,100,b,22,13,C.ink,'start',18)});
-   out+=TF(300,330,'It was never peer-reviewed as a controlled experiment and has no control group.',13,C.muted);
+   out+=TF(300,330,'With no control group, the study could not show what caused the guards’ behaviour.',13,C.muted);
   }
   return {svg:out,phase:s.lens==='prods'?'Haslam and Reicher argue for “engaged followership”: people continued because they identified with the scientist’s goals, not because they blindly obeyed.':s.lens==='belief'?'If many participants doubted the deception, the results measure something more complicated than obedience to a believed harm.':'Demand characteristics: when participants can tell what the experimenter hopes to see, they may act it out.'};
  }});
 
 /* =========================== cognitive-dissonance =========================== */
 const D7_COG=[['Smoking causes cancer',5,'against'],['It costs a lot',2,'against'],['I enjoy it',3,'for'],['It calms me down',2,'for'],['Grandad smoked and lived to 90',1,'for'],['The risks are exaggerated',2,'for']];
-function D7_dis(s){let d=0,c=0;D7_COG.forEach(([l,w,side],i)=>{if(!s.on[i])return;const imp=i===0?s.risk:w;const dissonant=s.quit?side==='for':side==='against';if(dissonant)d+=imp;else c+=imp});return {d,c,m:d+c?d/(d+c):0}}
+// After quitting, the pull of the old pleasures fades (importance 1).
+const D7_imp=(s,i)=>i===0?s.risk:s.quit&&D7_COG[i][2]==='for'?1:D7_COG[i][1];
+function D7_dis(s){let d=0,c=0;D7_COG.forEach(([l,w,side],i)=>{if(!s.on[i])return;const imp=D7_imp(s,i);const dissonant=s.quit?side==='for':side==='against';if(dissonant)d+=imp;else c+=imp});return {d,c,m:d+c?d/(d+c):0}}
 SCENE({id:'cognitive-dissonance',name:'Dissonance and its reduction',tag:'Changing the mind to fit the act',
  definition:'Cognitive dissonance is the discomfort of holding beliefs that conflict with each other or with what you do. Festinger proposed that people reduce it by changing a behaviour, changing a belief, or adding new beliefs.',
  example:'A smoker who knows that smoking causes cancer can quit, decide the risk is exaggerated, or remember a grandfather who smoked and lived to 90.',
@@ -427,13 +429,13 @@ SCENE({id:'cognitive-dissonance',name:'Dissonance and its reduction',tag:'Changi
   const r=D7_dis(s);let out=heading('Beliefs around a behaviour',24);
   out+=R(220,44,160,40,C.ink,'none',8)+TBF(300,70,s.quit?'I have quit':'I smoke',16,'#fff');
   const left=[],right=[];D7_COG.forEach((c,i)=>{const dissonant=s.quit?c[2]==='for':c[2]==='against';(dissonant?left:right).push(i)});
-  const chip=(i,x,y,dis)=>{const on=!!s.on[i],imp=i===0?s.risk:D7_COG[i][1],col=dis?C.coral:C.green;
+  const chip=(i,x,y,dis)=>{const on=!!s.on[i],imp=D7_imp(s,i),col=dis?C.coral:C.green;
    return L(x+(x<300?250:0),y+16,300,84,on?col:C.grid,1.5,on?'':'stroke-dasharray="4 4"')+hit(X,'tog',i,D7_COG[i][0]+(on?', on':', off'),R(x,y,250,32,on?(dis?C.coralp:C.greenp):'#fff',on?col:C.grid,8)+TF(x+10,y+21,D7_COG[i][0],13,on?C.ink:C.muted,'start')+TBF(x+240,y+21,'●'.repeat(imp),11,on?col:C.line,'end'))};
   out+=TBF(30,112,'Clash (dissonant)',14,C.coral,'start')+TBF(570,112,'Fit (consonant)',14,C.green,'end');
   left.forEach((i,k)=>out+=chip(i,22,124+k*40,true));right.forEach((i,k)=>out+=chip(i,328,124+k*40,false));
   out+=TF(300,296,'dots show importance',13,C.muted);
   out+=R(100,312,400,20,'#f1f5f7','none',6)+R(100,312,400*r.m,20,C.coral,'none',6)+TBF(300,352,`Dissonance: ${Math.round(r.m*100)}% of the weight clashes`,15,C.coral);
-  return {svg:out,phase:s.quit?'Quitting removes the biggest clash, though missing the pleasure now clashes a little with the new behaviour.':s.risk<5?'Playing down the risk lowers its importance, so the clash weighs less.':'Adding excuses does not remove the clash; it dilutes it with more consonant beliefs.'};
+  return {svg:out,phase:s.quit?'Quitting turns the health facts into support for the new behaviour. Only the missed pleasures still clash, and their pull fades.':s.risk<5?'Playing down the risk lowers its importance, so the clash weighs less.':'Adding excuses does not remove the clash; it dilutes it with more consonant beliefs.'};
  }});
 
 const D7_FC=[['control','No payment, no lie',-0.45],['1','Paid $1 to say it was fun',1.35],['20','Paid $20 to say it was fun',-0.05]];
@@ -496,7 +498,7 @@ SCENE({id:'cognitive-dissonance-choice',name:'Choosing changes liking',tag:'You 
    [[ch,'chosen',s.r1[ch],s.r2[0],C.green],[rej,'rejected',s.r1[rej],s.r2[1],C.coral]].forEach(([it,lab,a,b,c],k)=>{const x=80+k*250;
     out+=TBF(x+80,64,`${lab}: ${D7_ITEMS[it]}`,13,c);[[a,'before'],[b,'after']].forEach(([v,t],m)=>{const bx=x+30+m*70,h=v*18;out+=R(bx,240-h,50,h,m?c:C.line,'none',4)+TBF(bx+25,234-h,String(v),13,C.ink)+TF(bx+25,258,t,13,C.muted)})});
    out+=T(300,296,`Spread of alternatives: ${spread>0?'+':''}${spread} (${d1>=0?'+':''}${d1} for the chosen, ${d2>=0?'+':''}${d2} for the rejected)`,15,spread>0?C.green:C.ink);
-   out+=D7_para(40,322,'Brehm found a positive spread on average. Chen and Risen showed that choosing also reveals preferences your first rating missed, so some spread appears even without dissonance.',90,13,C.ink,'start',18);
+   out+=D7_para(40,322,'Brehm found a positive spread on average. Chen and Risen showed that choosing also reveals preferences your first rating missed, so some spread appears even without dissonance.',80,13,C.ink,'start',18);
   }
   return {svg:out,phase:s.sim?'Simulated participant (Watch): the chosen item rises and the rejected item falls.':s.stage==='done'?'One person’s spread is noisy; studies average many people and compare with a control that rates twice before choosing.':'There are no right answers: rate how much you would like each thing.'};
  }});
@@ -574,7 +576,7 @@ SCENE({id:'replication-crisis-quiz',name:'Which ones held up?',tag:'Predict, the
     if(s.g[i]){n++;score+=t==='m'?.5:s.g[i]===t?1:0}}});
   if(s.shown){out+=T(300,350,n?`Your score: ${fmt(score)} of ${n} (mixed counts half) · prediction markets: about 71%`:'Make some predictions, then reveal',15,C.ink)}
   else out+=TF(300,350,'Make your predictions, then press Reveal',14,C.muted);
-  return {svg:out,phase:s.shown?D7_QZ.map(q=>q[0]+': '+q[2]).slice(0,4).join(' '):'Large, simple, well-measured effects (anchoring, testing) tend to replicate; subtle priming effects in small samples tend not to.'};
+  return {svg:out,phase:s.shown?'Ego depletion: 23 labs found almost no effect (Hagger et al. 2016). Power poses: no hormone change (Ranehill et al. 2015). Elderly priming failed (Doyen et al. 2012). Pen-held smiles: failed in 17 labs in 2016, a small effect in a 2022 multilab study. Money priming failed in Many Labs 1, where anchoring and framing replicated; the testing effect is robust.':'Large, simple, well-measured effects (anchoring, testing) tend to replicate; subtle priming effects in small samples tend not to.'};
  }});
 
 const D7_pow=(d,n)=>{const ncp=d*Math.sqrt(n/2);return D7_phi(ncp-1.96)+D7_phi(-ncp-1.96)};

@@ -70,7 +70,7 @@ SCENE({id:'channel-capacity',name:'How many categories can you tell apart?',tag:
   out+=D3_poly(pts.map(p=>[pl.X(p[0]),pl.Y(p[1])]),X.try?C.coral:C.blue,2);
   pts.forEach(p=>out+=Ci(pl.X(p[0]),pl.Y(Math.min(3.4,p[1])),6,X.try?C.coral:C.blue,'#fff'));
   out+=R(430,184,156,132,'#fff',C.grid,8)+TF(508,204,X.try?'your trials':'simulated',13,C.muted);
-  D3_ABS_N.forEach((m,i)=>{const d=X.try?s.data[m]:[],ok=d.filter(e=>e[0]===e[1]).length;out+=TF(442,230+i*24,`${m}:`,13,C.ink,'start')+TF(578,230+i*24,X.try?(d.length?`${d.length} · ${Math.round(100*ok/d.length)}% right`:'—'):`${D3_ABS_SIM[m]} bits`,13,C.muted,'end')});
+  D3_ABS_N.forEach((m,i)=>{const d=X.try?s.data[m]:[],ok=d.filter(e=>e[0]===e[1]).length;out+=TF(442,230+i*24,`${m}:`,13,C.ink,'start')+TF(578,230+i*24,X.try?(d.length?`${d.length} · ${Math.round(100*ok/d.length)}% right`:'—'):`${D3_ABS_SIM[m]} bit${D3_ABS_SIM[m]===1?'':'s'}`,13,C.muted,'end')});
   return {svg:out,phase:pts.length>=3?'The line climbs, then bends over: past about 5–9 categories, adding categories adds confusion instead of information. With only a few trials per size the estimate runs a little high.':'With 2 categories you make almost no mistakes and pass 1 bit per answer. As categories multiply, errors creep in and the bits transmitted level off.'};
  }});
 
@@ -90,13 +90,13 @@ SCENE({id:'channel-capacity-bits',name:'What is a bit?',tag:'Twenty questions',
   const N=s.N,sec=s.secret!==undefined?s.secret:s.seed%N,left=s.hi-s.lo+1,done=left===1,cw=520/N;
   let out=heading(`Find 1 of ${N}: log₂ ${N} = ${Math.log2(N)} questions if each halves the options`);
   for(let i=0;i<N;i++){const x=40+i*cw,alive=i>=s.lo&&i<=s.hi,win=done&&i===sec;out+=R(x+1,60,cw-2,40,win?C.green:alive?C.pale:'#f1f4f6',alive?C.blue:'none',3);
-   if(cw>=15||i%8===0)out+=TF(x+cw/2,122,String(i+1),13,alive?C.ink:C.line)}
+   if(cw>=24||(cw>=12&&i%4===3)||i%8===7||i===0)out+=TF(x+cw/2,122,String(i+1),13,alive?C.ink:C.line)}
   out+=counter(40,140,'questions asked',s.q,C.blue,150)+counter(206,140,'options left',left,C.ink,150)+counter(372,140,'bits gained',(Math.log2(N/left)).toFixed(1),C.green,150);
   s.log.slice(-4).forEach((l,i)=>out+=TF(48,214+i*20,l,13,C.muted,'start'));
   const pl=D3_plot(330,206,240,110,[0,6],[0,34],[[2,'4'],[3,'8'],[4,'16'],[5,'32'],[6,'64']],[[0,'0'],[16,'16'],[32,'32']],'number of cells',null);out+=pl.svg;
   const hv=[2,3,4,5,6].map(b=>[pl.X(b),pl.Y(b)]),gv=[2,3,4,5,6].map(b=>[pl.X(b),pl.Y((2**b+1)/2)]);
-  out+=D3_poly(hv,C.green,2.5)+D3_poly(gv,C.coral,2.5)+TF(566,pl.Y(6)-6,'halving: log₂ N',13,C.green,'end')+TF(pl.X(4.6),pl.Y(30),'one at a time: ≈ N/2',13,C.coral,'end');
-  out+=TF(208,322,'questions needed on average',13,C.muted,'start');
+  out+=D3_poly(hv,C.green,2.5)+D3_poly(gv,C.coral,2.5)+TF(340,226,'one at a time: ≈ N/2',13,C.coral,'start')+TF(340,246,'halving: log₂ N',13,C.green,'start');
+  out+=TF(450,200,'questions needed on average',13,C.muted);
   return {svg:out,phase:done?`Found in ${s.q} questions. A question whose answer is equally likely to be yes or no carries exactly 1 bit; the halving strategy gets the full bit every time.`:'Each halving question removes half the remaining options, gaining 1 bit. A question that is almost always answered “no” gains much less.'};
  }});
 
@@ -120,8 +120,8 @@ SCENE({id:'channel-capacity-hick',name:'Choice time and information',tag:'Hick a
   const pl=D3_plot(370,60,200,190,[0,3.2],[0,.8],[[0,'0'],[1,'1'],[2,'2'],[3,'3']],[[0,'0'],[.4,'0.4'],[.8,'0.8 s']],'information H (bits)',null);out+=pl.svg;
   out+=L(pl.X(0),pl.Y(a),pl.X(3.2),pl.Y(a+b*3.2),C.green,2.5);
   [1,2,4,8].forEach(m=>out+=Ci(pl.X(Math.log2(m)),pl.Y(a+b*Math.log2(m)),4,'#fff',C.green));
-  out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+12,pl.Y(rt)-10,D3_ms(rt),13,C.coral,'start');
-  out+=TF(470,334,'RT ≈ a + b·H (a = 0.2 s, b = 0.15 s per bit: illustrative)',13,C.muted);
+  out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+(H>2.2?-12:12),pl.Y(rt)-10,D3_ms(rt),13,C.coral,H>2.2?'end':'start');
+  out+=TF(300,356,'RT ≈ a + b·H, with a = 0.2 s and b = 0.15 s per bit (illustrative)',13,C.muted);
   return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up exactly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
  }});
 
@@ -160,7 +160,7 @@ SCENE({id:'chunking',name:'Digit span',tag:'Be the participant',
   out+=L(380,pl.Y(4),576,pl.Y(4),C.purple,2,'stroke-dasharray="6 4"')+TF(572,pl.Y(4)-6,'Cowan: ≈ 4 chunks',13,C.purple,'end');
   const h=s.hist.slice(-12);out+=D3_poly(h.map((e,i)=>[pl.X(i+1),pl.Y(e.len)]),C.line,1.5);h.forEach((e,i)=>out+=Ci(pl.X(i+1),pl.Y(e.len),6,e.ok?C.green:C.coral,'#fff'));
   const best=Math.max(0,...s.hist.filter(e=>e.ok).map(e=>e.len));
-  out+=T(478,344,best?`${s.sim?'Simulated':'Your'} longest correct list: ${best}`:'Green = correct, red = mistake',14,C.ink);
+  out+=TF(478,344,best?`longest correct list: ${best}`:'green right · red wrong',14,C.ink);
   return {svg:out,phase:best?'Digits are easy to say over and to group, so spans of 6–8 are typical. Cowan’s point is that the real store holds about four chunks; rehearsal and grouping stretch what reaches it.':'The list grows after each success and shrinks after a mistake, so it settles near your span.'};
  }});
 
@@ -209,7 +209,7 @@ SCENE({id:'chunking-experts',name:'Chunks in chess',tag:'Expertise is memory for
   const sqs=s.kind==='real'?D3_REAL.map(p=>D3_sq(p[0])):shuffled(range(64),s.seed).slice(0,D3_REAL.length).map(i=>[i%8,i>>3]);
   if(s.kind==='real'&&s.chunks)D3_CHUNKS.forEach(([list,col,lab])=>{const ps=list.map(D3_sq),fs=ps.map(p=>p[0]),rs=ps.map(p=>p[1]),x0=bx+Math.min(...fs)*c+2,x1=bx+(Math.max(...fs)+1)*c-2,y0=by+(7-Math.max(...rs))*c+2,y1=by+(8-Math.min(...rs))*c-2;out+=R(x0,y0,x1-x0,y1-y0,'none',col,8,'stroke-width="3"')});
   D3_REAL.forEach((p,i)=>{const [f,r]=sqs[i],x=bx+f*c+c/2,y=by+(7-r)*c+c/2;out+=Ci(x,y,13,p[2]?C.ink:'#fff',C.ink)+TBF(x,y+5,p[1],13,p[2]?'#fff':C.ink)});
-  const lv=[['master',16,3],['class A',8,2.5],['beginner',4,2.5]],base=300,sc=11;
+  const lv=[['master',16,3],['class A',8,2.5],['beginner',4,2.5]],base=300,sc=9;
   out+=TF(468,62,'pieces recalled after 5 s',13,C.muted);
   lv.forEach(([n,real,rnd],i)=>{const x=370+i*70,v=s.kind==='real'?real:rnd;out+=R(x,base-v*sc,46,v*sc,s.kind==='real'?C.blue:C.coral,'none',4)+TBF(x+23,base-v*sc-6,s.kind==='real'?String(v):'≈'+v,13,C.ink)+TF(x+23,base+18,n,13,C.muted)});
   out+=L(360,base,576,base,C.line,1.5)+TF(468,base+44,'of 26 pieces · approximate first-trial values',13,C.muted);
@@ -245,17 +245,17 @@ SCENE({id:'selective-attention',name:'The Stroop effect',tag:'Be the participant
   D3_CONDS.forEach((c,i)=>{const d=s.data[c],m=D3_mean(d),x=88+i*82;if(d.length){const h=clamp(m,0,1.4)*sc;out+=R(x,base-h,60,h,c==='incongruent'?C.coral:c==='congruent'?C.green:C.blue,'none',4)+TBF(x+30,base-h-6,D3_ms(m),13,C.ink)}out+=TF(x+30,base+18,c,13,C.muted)});
   const ci=s.data.congruent,ii=s.data.incongruent,ok=ci.length>=2&&ii.length>=2;
   out+=R(360,226,226,110,'#fff',C.grid,8)+TF(473,248,s.sim?'simulated participant':`trial ${Math.min(s.i+1,24)} of 24 · errors ${s.errors}`,13,C.muted);
-  out+=TF(473,276,'interference (incongruent − congruent)',13,C.muted)+TB(473,306,ok?D3_ms(D3_mean(ii)-D3_mean(ci)):'—',20,C.coral);
-  out+=TF(473,328,'button presses: typically 50–150 ms',13,C.muted);
+  out+=TF(473,276,'interference: incongruent − congruent',13,C.muted)+TB(473,306,ok?D3_ms(D3_mean(ii)-D3_mean(ci)):'—',20,C.coral);
+  out+=TF(473,328,'often about 50–150 ms',13,C.muted);
   return {svg:out,phase:ok?(D3_mean(ii)>D3_mean(ci)?'Your incongruent trials were slower: the word’s meaning was read even though you were trying to ignore it.':'No slowing this time; with few trials, chance can hide the effect. Try another run.'):'Congruent: the word matches the ink. Incongruent: it names another colour. Neutral: XXXX. The gap between incongruent and congruent is the Stroop interference.'};
  }});
 
 const D3_EV=[
  {id:'tone',l:'Tone',what:'a steady 400 Hz tone',v:'Usually noticed',col:C.green,lines:['Physical changes get through: Cherry’s listeners','reported a tone in the ignored ear.']},
- {id:'voice',l:'Voice change',what:'a man’s voice switches to a woman’s',v:'Usually noticed',col:C.green,lines:['A change of speaker (pitch and voice quality) is','noticed, even though the words are not.']},
- {id:'lang',l:'Language',what:'English switches to German',v:'Usually missed',col:C.coral,lines:['Listeners could not say what language the ignored','speech was in, or whether it changed.']},
+ {id:'voice',l:'Voice change',what:'man’s voice → woman’s voice',v:'Usually noticed',col:C.green,lines:['A change of speaker (pitch and voice quality) is','noticed, even though the words are not.']},
+ {id:'lang',l:'Language',what:'English → German',v:'Usually missed',col:C.coral,lines:['Listeners could not say what language the ignored','speech was in, or whether it changed.']},
  {id:'rev',l:'Backwards',what:'speech is played backwards',v:'Usually missed',col:C.coral,lines:['Reversed speech keeps the voice but loses the words;','most listeners noticed nothing odd.']},
- {id:'rep',l:'Repeated words',what:'a word list repeated 35 times',v:'Not remembered',col:C.coral,lines:['Moray (1959): words heard 35 times in the ignored','ear were recognised no better than new words.']},
+ {id:'rep',l:'Repeated words',what:'words repeated 35 times',v:'Not remembered',col:C.coral,lines:['Moray (1959): words heard 35 times in the ignored','ear were recognised no better than new words.']},
  {id:'name',l:'Own name',what:'the listener’s own name',v:'About a third notice',col:C.amber,lines:['Moray (1959); Wood & Cowan (1995) replicated about 1 in 3,','more often in people with lower working-memory span.']}];
 SCENE({id:'selective-attention-cocktail',name:'The cocktail party',tag:'Shadowing one ear',
  definition:'In dichotic listening a different message goes to each ear and the listener repeats one of them aloud (shadowing). Colin Cherry (1953) found that almost nothing of the meaning of the other message was reported, though its physical qualities were.',
@@ -300,7 +300,7 @@ SCENE({id:'selective-attention-filter',name:'Where is the filter?',tag:'Early, a
   const m=D3_MODELS[s.m];let out=heading(m.n);
   const y1=86,y2=136;out+=TF(36,y1+5,'L ear',13,C.ink,'start')+TF(36,y2+5,'R ear',13,C.ink,'start');
   out+=box(96,66,96,90,'',C.pale)+TF(144,100,'sensory',13,C.ink)+TF(144,118,'buffer',13,C.ink)+arrow(76,y1,94,y1,C.blue,2.5)+arrow(76,y2,94,y2,C.muted,2);
-  out+=box(326,66,110,90,'',C.greenp)+TF(381,108,'meaning',13,C.ink)+box(476,66,104,90,'',C.amberp)+TF(528,100,'awareness,',13,C.ink)+TF(528,118,'response',13,C.ink);
+  out+=box(326,66,110,90,'',C.greenp)+TF(381,108,'meaning',13,C.ink)+box(478,66,102,90,'',C.amberp)+TF(529,100,'awareness,',13,C.ink)+TF(529,118,'response',13,C.ink);
   const fx=s.m===2?452:258,valve=x=>P(`M${x-12} 60L${x+12} 60L${x+4} 111L${x+4} 162L${x-4} 162L${x-4} 111Z`,C.coral,2,C.coralp)+TF(x,180,'filter',13,C.coral);
   // Attended channel: full strength to the end.
   out+=arrow(194,y1,s.m===2?324:250,y1,C.blue,3)+(s.m===2?arrow(438,y1,474,y1,C.blue,3):arrow(266,y1,324,y1,C.blue,3)+arrow(438,y1,474,y1,C.blue,3));
@@ -435,7 +435,7 @@ SCENE({id:'mental-rotation',name:'Turning shapes in the mind',tag:'Be the partic
  draw(s,f,X){
   let out=heading('Same shape turned, or its mirror image?');
   out+=R(40,44,240,150,'#fff',C.grid,10)+R(320,44,240,150,'#fff',C.grid,10);
-  if(s.phase==='run'&&!s.blank&&s.trial){const tr=s.trial,cells=D3_SHAPES[tr.shape];out+=D3_shape(cells,160,119,28,0,0,C.blue)+D3_shape(cells,440,119,28,tr.sign*tr.ang,tr.mir,C.blue);if(!X.try)out+=TF(440,186,`${tr.ang}°${tr.mir?' · mirror':''}`,13,C.muted)}
+  if(s.phase==='run'&&!s.blank&&s.trial){const tr=s.trial,cells=D3_SHAPES[tr.shape];out+=D3_shape(cells,160,116,24,0,0,C.blue)+D3_shape(cells,440,116,24,tr.sign*tr.ang,tr.mir,C.blue);if(!X.try)out+=TF(440,186,`${tr.ang}°${tr.mir?' · mirror':''}`,13,C.muted)}
   else out+=TF(300,124,s.phase==='done'?'Finished':X.try?'Press Start':'',15,C.muted);
   out+=D3_key(X,'ans',0,'Same shape',160,202,120,36,'Same')+D3_key(X,'ans',1,'Mirror image',320,202,120,36,'Mirror');
   const pl=D3_plot(96,252,250,80,[0,180],[0,2.5],[[0,'0°'],[90,'90°'],[180,'180°']],[[0,'0'],[1,'1'],[2,'2 s']],null,null);out+=pl.svg;
@@ -445,7 +445,7 @@ SCENE({id:'mental-rotation',name:'Turning shapes in the mind',tag:'Be the partic
   means.forEach(m=>out+=Ci(pl.X(m[0]),pl.Y(m[1]),5,s.sim?C.blue:C.coral,'#fff'));
   out+=TF(221,372,'angle between the shapes',13,C.muted);
   out+=R(380,252,206,100,'#fff',C.grid,8)+TF(483,274,s.sim?'simulated participant':`trial ${Math.min(s.i+1,20)} of 20 · errors ${s.errors}`,13,C.muted);
-  out+=fit&&fit.b>0?TF(483,302,'your rotation speed',13,C.muted)+TB(483,330,`≈ ${Math.round(1/fit.b)}° per second`,17,C.green):TF(483,316,'speed appears after 3 angles',13,C.muted);
+  out+=fit&&fit.b>0?TF(483,302,s.sim?'rotation speed':'your rotation speed',13,C.muted)+TB(483,330,`≈ ${Math.round(1/fit.b)}° per second`,17,C.green):TF(483,316,'speed appears after 3 angles',13,C.muted);
   return {svg:out,phase:fit&&fit.b>0?`Each extra degree cost about ${Math.round(fit.b*1000)} ms: a straight line, as if you rotated an image at about ${Math.round(1/fit.b)}° per second. Shepard and Metzler’s 3D figures turned at roughly 60° per second.`:'If the image is turned at a steady speed, the time should rise in a straight line with the angle.'};
  }});
 
@@ -467,7 +467,7 @@ SCENE({id:'mental-rotation-cubes',name:'Shepard and Metzler’s figures',tag:'Ro
  draw(s){
   let out=heading(`Second figure turned ${s.a}° about the vertical${s.mir?', and mirrored':''}`);
   const pl=D3_plot(70,56,220,200,[0,180],[0,5],[[0,'0°'],[60,'60°'],[120,'120°'],[180,'180°']],[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5 s']],'angle',null);out+=pl.svg;
-  const rt=a=>1+a/58;out+=L(pl.X(0),pl.Y(rt(0)),pl.X(180),pl.Y(rt(180)),C.green,3)+Ci(pl.X(s.a),pl.Y(rt(s.a)),8,C.coral,'#fff')+TF(pl.X(s.a)+(s.a>120?-12:12),pl.Y(rt(s.a))-12,`≈ ${rt(s.a).toFixed(1)} s`,13,C.coral,s.a>120?'end':'start');
+  const rt=a=>1+a/58;out+=L(pl.X(0),pl.Y(rt(0)),pl.X(180),pl.Y(rt(180)),C.green,3)+Ci(pl.X(s.a),pl.Y(rt(s.a)),8,C.coral,'#fff')+TF(pl.X(s.a)+(s.a>120?-12:12),pl.Y(rt(s.a))+(s.a>120?-12:24),`≈ ${rt(s.a).toFixed(1)} s`,13,C.coral,s.a>120?'end':'start');
   out+=TF(180,330,'mean time for “same” pairs (approximate)',13,C.muted);
   const Pi=([x,y,z])=>[442+(x-y)*.866*15,214+(x+y)*.5*15-z*15,x+y+z];
   out+=paintFaces(D3_smFaces(D3_smCubes(0,0,-4),C.blue).concat(D3_smFaces(D3_smCubes(s.a,s.mir,4),C.purple)),Pi);
@@ -479,7 +479,7 @@ SCENE({id:'mental-rotation-cubes',name:'Shepard and Metzler’s figures',tag:'Ro
   return {svg:paintFaces(faces,P),title:'Two block figures in depth',caption:`Figure B (purple) is figure A turned ${s.a}° about the vertical${s.mir?' and mirrored, so no rotation will make them match':''}. Drag to view them from other sides.`};
  }});
 
-const D3_MAP=[['hut',70,80],['tree',190,64],['rock',262,120],['well',92,190],['lake',214,212],['sand',290,226],['grass',160,140]];
+const D3_MAP=[['hut',70,80],['tree',190,64],['rock',262,120],['well',92,190],['lake',196,206],['sand',262,212],['grass',160,140]];
 const D3_mapPos=i=>[30+D3_MAP[i][1],46+D3_MAP[i][2]];
 const D3_dist=(a,b)=>{const p=D3_mapPos(a),q=D3_mapPos(b);return Math.hypot(p[0]-q[0],p[1]-q[1])};
 SCENE({id:'mental-rotation-debate',name:'Scanning a mental map',tag:'The imagery debate',
@@ -505,7 +505,7 @@ SCENE({id:'mental-rotation-debate',name:'Scanning a mental map',tag:'The imagery
   const dd=D3_dist(s.a,s.b);out+=L(pl.X(0),pl.Y(.9),pl.X(320),pl.Y(.9+320*.0035),C.green,2)+Ci(pl.X(dd),pl.Y(.9+dd*.0035),6,C.coral,'#fff');
   const txt=s.view==='k'?['Kosslyn: the image is picture-like.','Distances are kept, so moving','across more of it takes longer.','Visual cortex is often active','during imagery (Kosslyn 1995).']:['Pylyshyn: people know that','travelling further takes longer,','and they simulate that knowledge.','Expectations can shift results','(Intons-Peterson 1983).'];
   out+=R(360,240,226,128,'#fff',s.view==='k'?C.green:C.purple,10);txt.forEach((t,i)=>out+=TF(473,262+i*22,t,13,i===0?(s.view==='k'?C.green:C.purple):C.ink));
-  out+=TF(493,226,'time ≈ a + b·distance (illustrative)',13,C.muted);
+  out+=TF(493,48,'time ≈ a + b·distance (illustrative)',13,C.muted);
   return {svg:out,phase:'The straight-line result replicates; what it means does not have a settled answer. Most researchers now accept some depictive format for imagery, while agreeing that knowledge and expectations also shape the results.'};
  }});
 
