@@ -289,9 +289,9 @@ SCENE({id:'dark-adaptation-purkinje',name:'Colours at dusk',tag:'The Purkinje sh
 /* =========================== trichromacy =========================== */
 const S1_TARGETS=[[230,150,40],[90,170,210],[200,90,160],[120,200,90],[240,210,120],[110,110,200]];
 const S1_err=(a,b)=>Math.round(Math.sqrt(a.reduce((t,v,i)=>t+((v-b[i])/255)**2,0)/3)*100);
-SCENE({id:'trichromacy',name:'Matching any colour with three lights',tag:'You do Maxwell’s experiment',
- definition:'Trichromacy means that any colour can be matched by mixing three suitable primary lights. It follows from having three cone types: the eye reduces each light to just three numbers.',
- example:'Your screen proves it: every colour on it is a mix of red, green and blue dots. Remove one primary and many colours become impossible to match, as Maxwell showed with his colour top and colour box in the 1850s.',
+SCENE({id:'trichromacy',name:'Matching colours with three lights',tag:'You do Maxwell’s experiment',
+ definition:'Trichromacy means that any colour can be matched with three primary lights, as long as a primary may be moved across to the colour being matched (a “negative” amount). It follows from having three cone types: the eye reduces each light to just three numbers.',
+ example:'Your screen relies on it: every colour on it is a mix of red, green and blue dots. No three real lights mixed in positive amounts reach every visible colour, so a screen shows only the colours inside its gamut. Remove one primary and many colours become impossible to match, as Maxwell showed with his colour top and colour box in the 1850s.',
  desc:'A split circle with a target colour on the left and your mix of red, green and blue lights on the right, with your match errors for three and for two lights.',
  research:'Young, T. (1802). On the theory of light and colours. Helmholtz, H. von (1852). Maxwell, J. C. (1860). On the theory of compound colours. Philosophical Transactions 150, 57–84. Stockman, A. & Sharpe, L. T. (2000). Your matches stay on this page.',
  dur:12,hint:'Adjust the three lights until both halves look the same, then press Check. Try “two lights only” to see some colours become impossible. Your data stay on this page.',

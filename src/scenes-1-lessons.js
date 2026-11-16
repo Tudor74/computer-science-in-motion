@@ -44,7 +44,7 @@ LESSON({id:'dark-adaptation',name:'Dark adaptation',short:'The dark',stage:'eye'
  prior:['photoreceptors'],references:['s1-hecht-1937','s1-hecht-hsia','s1-purkinje','s1-cie'],
  ids:['dark-adaptation','dark-adaptation-red','dark-adaptation-purkinje']});
 LESSON({id:'trichromacy',name:'Three cone types',short:'Trichromacy',stage:'eye',year:'1802–2000',level:'Core',
- why:'Because we have three cone types, three primary lights can match any colour, and lights with quite different spectra can look identical.',
+ why:'Because we have three cone types, three primary lights can match any colour (if one may be added to the target instead), and lights with quite different spectra can look identical.',
  prior:['photoreceptors'],references:['s1-young','s1-maxwell','s1-stockman','s1-rayleigh'],
  ids:['trichromacy','trichromacy-cones','trichromacy-metamers']});
 LESSON({id:'opponent-colour',name:'Opponent colours',short:'Opponents',stage:'eye',year:'1878–1966',level:'Core',
