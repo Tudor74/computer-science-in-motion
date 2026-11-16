@@ -227,7 +227,7 @@ SCENE({id:'electrolysis',name:'Splitting water',tag:'Electricity pulls a compoun
  definition:'An electric current passed through a solution can split a compound into its elements: electrolysis. Water splits into hydrogen at the negative electrode (cathode) and oxygen at the positive electrode (anode), always two volumes of hydrogen to one of oxygen.',
  example:'A current of 1 ampere for 10 minutes carries 600 coulombs, enough to release about 75 mL of hydrogen and 37 mL of oxygen at room temperature.',
  research:['Nicholson, W. & Carlisle, A. (1800). Account of the new electrical or galvanic apparatus of Sig. Alex. Volta, and experiments performed with the same. Journal of Natural Philosophy, Chemistry and the Arts 4: water split weeks after Volta announced his pile.','Volta, A. (1800). On the electricity excited by the mere contact of conducting substances of different kinds. Philosophical Transactions 90.'],
- desc:'An electrolysis apparatus with two collecting tubes over the electrodes. Hydrogen collects over the cathode at twice the volume of oxygen over the anode, and the readouts follow the current and time.',
+ desc:'An electrolysis apparatus with two water-filled collecting tubes over the electrodes. Gas pushes the water down: hydrogen collects over the cathode at twice the volume of oxygen over the anode, and the readouts follow the current and time.',
  dur:12,hint:'Change the current and the running time. The hydrogen tube always holds twice the gas of the oxygen tube, because each O₂ needs four electrons and each H₂ only two.',
  init:()=>({I:1,t:10}),
  watch(p){return {I:1,t:+(p*30).toFixed(1)}},
@@ -237,8 +237,8 @@ SCENE({id:'electrolysis',name:'Splitting water',tag:'Electricity pulls a compoun
   const Q=s.I*s.t*60,ne=Q/C2_F,vH=ne/2*C2_VM20*1000,vO=ne/4*C2_VM20*1000;
   let out=heading('2H₂O → 2H₂ + O₂ by electricity');
   out+=R(120,250,300,70,'#d6e6f2',C.line,6);// trough
-  const cap=Math.max(180,vH*1.08),tube=(x,v,lab,col)=>{const h=Math.min(1,v/cap)*170;return R(x,70,46,200,'#f4f9fc',C.line,6)+R(x+2,72,42,h,col,'none',4)+TB(x+23,62,lab,15,C.ink)};
-  out+=tube(170,vH,'H₂','#ffffff')+tube(324,vO,'O₂','#fbe3dc');
+  const cap=Math.max(180,vH*1.08),tube=(x,v,lab,col)=>{const h=Math.min(1,v/cap)*170;return R(x,70,46,200,'#d6e6f2',C.line,6)+R(x+2,72,42,h,col,'none',4)+(h>2?L(x+2,72+h,x+44,72+h,C.blue,1.5):'')+TB(x+23,62,lab,15,C.ink)};
+  out+=tube(170,vH,'H₂','#fbfdfe')+tube(324,vO,'O₂','#fdeee8');
   out+=R(184,262,18,46,'#7b8c96','none',2)+R(338,262,18,46,'#7b8c96','none',2);
   out+=TB(193,352,'cathode (−)',13,C.ink)+TB(347,352,'anode (+)',13,C.ink);
   out+=P('M193 308V330H100V200H80M347 308V330H440V200H480',C.muted,2)+R(40,180,40,40,'#fff',C.ink,4)+TB(60,206,'−',18,C.ink)+R(480,180,40,40,'#fff',C.ink,4)+TB(500,206,'+',18,C.ink)+TF(60,240,'battery',13,C.muted)+TF(500,240,'battery',13,C.muted);

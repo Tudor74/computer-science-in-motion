@@ -187,7 +187,7 @@ SCENE({id:'equilibrium-dynamic',name:'Equilibrium is not standing still',tag:'Fo
   out+=C5_poly(pts.map(p=>[p1.X(p.t),p1.Y(p.a)]),C.blue,2.6)+C5_poly(pts.map(p=>[p1.X(p.t),p1.Y(p.b)]),'#9b5a1d',2.6);
   const cur=C5_dyn(s.st,s.t);out+=L(p1.X(s.t),64,p1.X(s.t),244,C.coral,1.5,'stroke-dasharray="4 4"');
   out+=TF(80,290,'blue: N₂O₄   brown: NO₂',12,C.muted,'start');
-  const rmax=Math.max(.045,pts[0].fw,pts[0].bw)*1.05;
+  const rmax=Math.max(...pts.map(p=>Math.max(p.fw,p.bw)))*1.12;
   const p2=C5_plot(340,64,220,180,[0,6],[0,rmax],{xt:[[0,'0'],[3,'3'],[6,'6 s']],yt:[[0,'0']],yl:'rate'});out+=p2.svg;
   out+=C5_poly(pts.map(p=>[p2.X(p.t),p2.Y(p.fw)]),C.green,2.6)+C5_poly(pts.map(p=>[p2.X(p.t),p2.Y(p.bw)]),C.purple,2.6);
   out+=L(p2.X(s.t),64,p2.X(s.t),244,C.coral,1.5,'stroke-dasharray="4 4"');
