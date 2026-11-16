@@ -37,7 +37,14 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: the learner makes the sounds with the engine's simplified kick, noise and acid voices
+   (not circuit emulations, and no real track's melody or bassline is reproduced). Roots: humanise a machine
+   pulse, build a sequenced bass with delay. Detroit: chord stabs, swung and straight grooves. Machines: tune an
+   808 kick, program a 909 pattern, twist a 303's cutoff, resonance, accent and slide, chain patterns. Berlin:
+   strip a loop to minimal, hear a kick on small speakers and a club system. Rave and styles: morph tempo, kick
+   and filter between acid, dub and hard techno. Craft: beatmatch two decks, swap bass with EQ, mix on the
+   phrase, arrange a track. Today: who gets credit, and research on groove. Sound only on a press, always a
+   Stop, gentle volume, no strobing visuals.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
