@@ -588,7 +588,7 @@ SCENE({id:'titration-curves',name:'Choosing an indicator',tag:'Strong and weak a
  example:'Halfway to equivalence (12.5 mL) the pH of ethanoic acid equals its pKa, 4.76. Phenolphthalein, changing at 8.2–10, suits it; methyl orange, changing at 3.1–4.4, would change many millilitres too early.',
  desc:'Titration curves for 25 mL of 0.100 mol/dm³ hydrochloric acid or ethanoic acid with 0.100 mol/dm³ sodium hydroxide. A coloured band marks the chosen indicator’s range. A readout gives the volume at which the indicator changes and how far that is from the true equivalence point.',
  research:'Henderson, L. J. (1908). American Journal of Physiology 21, 173–179; Hasselbalch, K. A. (1916). Biochemische Zeitschrift 78, 112–144 (pH = pKa + log [A⁻]/[HA]). Kolthoff, I. M. (1937). Acid–Base Indicators. Macmillan. Ka of ethanoic acid 1.75 × 10⁻⁵ at 25 °C; curves calculated exactly from the charge balance.',
- dur:12,hint:'Try every indicator on each acid. For the strong acid all three land within a fraction of a drop; for the weak acid only one does.',
+ dur:12,hint:'Try every indicator on each acid. For the strong acid all three land within about two drops of equivalence; for the weak acid only one does.',
  init:()=>({a:'weak',ind:'pp'}),
  watch(p){const seq=[['strong','mo'],['strong','pp'],['weak','mo'],['weak','bb'],['weak','pp']],i=Math.min(4,Math.floor(p*5));return {a:seq[i][0],ind:seq[i][1]}},
  ui:[{choose:[['strong','HCl (strong)'],['weak','ethanoic (weak)']],label:'Acid',get:s=>s.a,act:'a'},{choose:Object.keys(C7_IND).map(k=>[k,C7_IND[k].n]),label:'Indicator',get:s=>s.ind,act:'ind'}],
