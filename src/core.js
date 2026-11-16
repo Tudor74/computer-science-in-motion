@@ -37,7 +37,14 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: the learner does chemistry on screen and reruns classic experiments. Alchemy: distil
+   in an alembic, pour mercury into Boyle's J-tube, heat tin in Lavoisier's sealed flask, balance equations atom
+   by atom. Atoms: split water, run Faraday's cells in series, identify a mystery flame spectrum. Periodic table:
+   fill Mendeleev's gaps, find argon in Rayleigh's discrepancy, measure Curie's samples. Bonding: build Lewis
+   structures, turn VSEPR shapes in 3D. Reactions: fit an Arrhenius plot, push Le Chatelier, buffer a solution,
+   lower a barrier. Carbon: make esters, count Hückel electrons, flip R and S. Analysis: run TLC, read IR, NMR
+   and mass spectra, titrate drop by drop. Modern: dope silicon, count a buckyball's pentagons, compute atom
+   economy, watch the ozone hole close. Myths are corrected and the ethics of chemistry stated plainly.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
