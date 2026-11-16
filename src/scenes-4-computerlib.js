@@ -104,10 +104,10 @@ SCENE({id:'dream-machines',name:'Branching movies',tag:'Dream Machines: media th
  example:'Start at the library entrance and choose a room, then a shelf. Every path is a complete short film; nobody needs to see all of them.',
  research:'Nelson, T. H. (1974). Computer Lib / Dream Machines. Self-published (Dream Machines side).',
  desc:'A film strip of the segments watched so far, the current segment’s choices as buttons, and a tree of all seven segments with the chosen path highlighted.',
- dur:10,hint:'Press a choice to continue the film. Start again and take a different branch.',
+ dur:10,hint:'Press a choice to continue the film. Press Reset and take a different branch.',
  init:()=>({path:[0]}),
  watch(p){const k=Math.min(2,Math.floor(p*3)),alt=p>.66;return {path:[0,alt?2:1,alt?6:3].slice(0,k+1)}},
- ui:[{b:'Start again',act:'reset'}],
+ ui:[],
  on:{pick(s,n){s.path.push(Number(n))},reset(s){s.path=[0]}},
  draw(s,f,X){
   const cur=s.path[s.path.length-1],node=T4_MOVIE[cur];let out=heading('A film with choice points');
@@ -130,7 +130,7 @@ SCENE({id:'dream-machines-hypergram',name:'Hypergrams',tag:'Pictures that branch
  dur:10,hint:'Press part of the picture to open it. Use Back to go up a level.',
  init:()=>({trail:[]}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {trail:[1,2,2].slice(0,k)}},
- ui:[{b:'◀ Back',act:'back'},{b:'Start again',act:'reset'}],
+ ui:[{b:'◀ Back',act:'back'}],
  on:{go(s,i){if(s.trail.length<3)s.trail.push(Number(i))},back(s){s.trail.pop()},reset(s){s.trail=[]}},
  draw(s,f,X){
   const d=s.trail.length,lv=T4_HG[d];let out=heading('Press part of the picture to open it');

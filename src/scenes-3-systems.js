@@ -24,7 +24,7 @@ SCENE({id:'hes-brown',name:'The Hypertext Editing System',tag:'Brown University,
  dur:12,hint:'Press a branch on the screen to follow it. Insert a line to see that areas have no fixed length; Back retraces your path.',
  init:()=>({cur:'A',path:['A'],ins:{}}),
  watch(p){const k=Math.min(T3_WALK.length-1,Math.floor(p*T3_WALK.length));return {cur:T3_WALK[k],path:T3_WALK.slice(0,k+1),ins:p>.55?{B:1}:{}}},
- ui:[{b:'Insert a line here',act:'ins'},{b:'◀ Back',act:'back'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Insert a line here',act:'ins'},{b:'◀ Back',act:'back'}],
  on:{go(s,id){s.cur=id;s.path.push(id);if(s.path.length>12)s.path.shift()},
   back(s){if(s.path.length>1){s.path.pop();s.cur=s.path[s.path.length-1]}},
   ins(s){s.ins[s.cur]=Math.min(2,(s.ins[s.cur]||0)+1)},
@@ -158,7 +158,7 @@ SCENE({id:'nls-demo-tree',name:'Outline or network?',tag:'Engelbart and Nelson d
  dur:12,hint:'Choose tree or network, then press one idea and then another to connect them. In a tree the second idea is moved under the first.',
  init:()=>({mode:'tree',parent:T3_TREE0.slice(),extra:[],pick:-1,msg:''}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return k<2?{mode:'tree',parent:k?[-1,0,0,1,3,2]:T3_TREE0.slice(),extra:[],pick:-1,msg:k?'moved':''}:{mode:'network',parent:T3_TREE0.slice(),extra:k>2?[[3,4]]:[],pick:-1,msg:''}},
- ui:[{choose:[['tree','Tree (NLS outline)'],['network','Network (Nelson)']],label:'Structure',get:s=>s.mode,act:'mode'},{b:'Start again',act:'reset'}],
+ ui:[{choose:[['tree','Tree (NLS outline)'],['network','Network (Nelson)']],label:'Structure',get:s=>s.mode,act:'mode'}],
  on:{mode(s,v){s.mode=v;s.pick=-1;s.msg=''},reset(s){s.parent=T3_TREE0.slice();s.extra=[];s.pick=-1;s.msg=''},
   node(s,i){i=Number(i);if(s.pick<0||s.pick===i){s.pick=s.pick===i?-1:i;s.msg='';return 'keep'}const a=s.pick,b=i;s.pick=-1;
    if(s.mode==='tree'){let x=a;while(x>=0){if(x===b){s.msg='cycle';return 'keep'}x=s.parent[x]}if(b===0){s.msg='root';return 'keep'}s.parent[b]=a;s.msg='moved'}
@@ -222,7 +222,7 @@ SCENE({id:'fress-undo',name:'Undo',tag:'Stepping back through edits',
  dur:12,hint:'Apply edits, then Undo and Redo. Make a new edit after undoing and watch the redo states disappear.',
  init:()=>({steps:[]}),
  watch(p){return {steps:T3_UDEMO.slice(0,Math.min(T3_UDEMO.length,Math.floor(p*(T3_UDEMO.length+1))))}},
- ui:[{b:'Edit 1: insert “always”',act:'e',arg:0},{b:'Edit 2: both directions',act:'e',arg:1},{b:'Edit 3: must',act:'e',arg:2},{b:'↶ Undo',act:'u'},{b:'↷ Redo',act:'r'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Edit 1: insert “always”',act:'e',arg:0},{b:'Edit 2: both directions',act:'e',arg:1},{b:'Edit 3: must',act:'e',arg:2},{b:'↶ Undo',act:'u'},{b:'↷ Redo',act:'r'}],
  on:{e(s,k){s.steps.push(Number(k));if(s.steps.length>20)s.steps.shift()},u(s){s.steps.push('u')},r(s){s.steps.push('r')},reset(s){s.steps=[]}},
  draw(s){
   const {h,i}=T3_undoRun(s.steps),cur=h[i];let out=heading('Every edit is kept, so any edit can be reversed');

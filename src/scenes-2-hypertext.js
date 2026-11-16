@@ -164,10 +164,10 @@ SCENE({id:'hypermedia',name:'Hyperfilm',tag:'A film that branches',
  example:'A walking tour of a town filmed as short shots: at each corner the viewer picks left or right, and no two viewings need be the same.',
  research:'Nelson, T. H. (1965). Complex information processing. Proceedings of the ACM 20th National Conference, 84–100 (hyperfilm). Lippman, A. (1980). Movie-maps: an application of the optical videodisc to computer graphics. SIGGRAPH ’80.',
  desc:'A map of six filmed shots joined by branch points, the viewer’s route drawn in colour, and the current shot shown as a film frame.',
- dur:12,hint:'At each branch choose which shot to watch next. Start again to try another route.',
+ dur:12,hint:'At each branch choose which shot to watch next. Press Reset to try another route.',
  init:()=>({path:['start']}),
  watch(p){const r=['start','market','bridge','end'];return {path:r.slice(0,1+Math.min(3,Math.floor(p*4)))}},
- ui:[{b:'Take the first branch',act:'go',arg:'a'},{b:'Take the second branch',act:'go',arg:'b'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Take the first branch',act:'go',arg:'a'},{b:'Take the second branch',act:'go',arg:'b'}],
  on:{go(s,w){const c=T2_FILM[s.path[s.path.length-1]],n=c[w];if(n)s.path.push(n)},reset(s){s.path=['start']},jump(s,id){const c=T2_FILM[s.path[s.path.length-1]];if(c.a===id||c.b===id)s.path.push(id)}},
  draw(s,f,X){
   const cur=s.path[s.path.length-1],c=T2_FILM[cur];let out=heading('Every viewer chooses the next shot');
