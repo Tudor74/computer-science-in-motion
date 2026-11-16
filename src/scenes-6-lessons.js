@@ -34,7 +34,7 @@ LESSON({id:'comparing-canons',name:'Comparing the canons',short:'Comparing canon
  why:'Set side by side, the Pali, Chinese and Tibetan canons show what all Buddhist traditions share and what each alone preserved.',
  prior:['three-baskets','sutta-pitaka','vinaya-pitaka','abhidhamma-pitaka','catalogues','kangyur-tengyur'],references:['p6-norman','p6-tohoku','p6-analayo-2011','p6-lamotte','p6-bernhard','p6-nelson'],
  ids:['comparing-canons','comparing-canons-overlap','comparing-canons-parallel']});
-LESSON({id:'mongolian-manchu',name:'Mongolian, Manchu and Tangut canons',short:'Later canons',stage:'tibetan',year:'11th–18th century',level:'Further',
+LESSON({id:'mongolian-manchu',name:'Mongolian, Manchu and Tangut canons',short:'Later canons',stage:'tibetan',year:'11th–18th century',level:'Advanced',
  why:'Rulers from the Tangut emperors to the Qianlong emperor had the canon translated again, this time from Chinese and Tibetan, into the languages of their own states.',
  prior:['kangyur-tengyur','comparing-canons'],references:['p6-kollmar-paulenz','p6-heissig','p6-kychanov','p6-wu-chia','p6-language'],
  ids:['mongolian-manchu','mongolian-manchu-relay','mongolian-manchu-quadrilingual']});
