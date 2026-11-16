@@ -406,7 +406,7 @@ SCENE({id:'smell-memory-claims',name:'Smell and memory claims',tag:'Supported or
  dur:12,hint:'Judge each claim, then press Next. Your answers stay in this page.',
  init:()=>({i:0,ans:{}}),
  watch(p){const i=Math.min(5,Math.floor(p*6)),ans={};for(let k=0;k<=i;k++)ans[k]=S5_CLAIMS[k].v;return {i,ans,sim:true}},
- ui:[{choose:[['supported','Supported'],['overstated','Overstated']],label:'Your verdict',get:s=>s.ans[s.i]||null,act:'v'},{b:'Next claim',act:'next'},{b:'Start again',act:'reset'}],
+ ui:[{choose:[['supported','Supported'],['overstated','Overstated']],label:'Your verdict',get:s=>s.ans[s.i]||null,act:'v'},{b:'Next claim',act:'next'}],
  on:{v(s,v){s.ans[s.i]=v;s.sim=false;return 'keep'},next(s){s.i=(s.i+1)%S5_CLAIMS.length;return 'keep'},reset(s){s.i=0;s.ans={};return 'keep'}},
  draw(s){
   const c=S5_CLAIMS[s.i],a=s.ans[s.i];let out=heading(`Claim ${s.i+1} of ${S5_CLAIMS.length}`);
