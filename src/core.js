@@ -37,7 +37,14 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: every scene lets the learner operate the structure Nelson described, rather than read
+   about it. Roots: tie memex items into trails, file one card in many places. Hypertext: zip an outline to a
+   draft, choose a route through a film, compare versions word by word. Systems: fold an NLS outline, chord
+   on a keyset, annotate a poem in FRESS, stretch a paragraph. Computer Lib: flip the two-sided book, sort
+   cybercrud from real limits, merge drafts. Xanadu: build an essay from transclusions, link both ways,
+   address by tumbler. Web: watch one-way links rot and pages drift. Later: steer a ZigZag cursor along
+   chosen dimensions, follow transclusion beams. Legacy: find your way with and without a map, rank pages by
+   backlinks, address content by its hash. Accounts that differ (Wired 1995) are shown side by side.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
