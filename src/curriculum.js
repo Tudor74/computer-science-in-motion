@@ -1,17 +1,18 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// Language in historical order: from clay tokens and the first scripts, through the discovery of language
-// families and sound laws, structure, grammar, how children learn, meaning, language in society, to machines.
+// The origin of life in historical order: from spontaneous generation and its downfall, through prebiotic
+// chemistry, the early Earth, RNA-first and metabolism-first ideas, the first cells and the last common ancestor,
+// to the search for life elsewhere. Almost everything after era 1 is open science and is labelled so.
 // Lessons, sources and connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'writing',name:'1 · Writing',years:'3400 BCE–1500',why:'Tokens became tablets, pictures became sounds, the alphabet spread, lost scripts were cracked and print multiplied text.'},
- {id:'families',name:'2 · Families and sound laws',years:'1786–1900',why:'Languages turned out to be relatives, and their sounds change by regular laws that let us rebuild lost ancestors.'},
- {id:'structure',name:'3 · Structure',years:'1916–1960',why:'Signs, phonemes and word parts, Zipf’s law, the information in English, and whether language shapes thought.'},
- {id:'grammar',name:'4 · Grammar',years:'1957–2000',why:'Trees, recursion and formal grammars, sentences that lead you astray, universals and a sign language born in a school.'},
- {id:'learning',name:'5 · Learning language',years:'1970–today',why:'Babies tuning to sounds, finding words in a stream, learning meanings fast, critical periods, bilingualism and reading.'},
- {id:'meaning',name:'6 · Meaning and use',years:'1950–today',why:'Reference, implicature, speech acts, metaphor, colour words and how conversation takes turns.'},
- {id:'society',name:'7 · Language in society',years:'1960–today',why:'Variation and change, contact and creoles, dying languages, accents and bias, and English around the world.'},
- {id:'machines',name:'8 · Language machines',years:'1949–today',why:'Machine translation, n-grams, word vectors, attention and large language models, and what they do and do not understand.'}
+ {id:'spontaneous',name:'1 · Spontaneous generation',years:'350 BCE–1862',why:'Maggots from meat and microbes from broth: how careful experiments showed life comes from life, today.'},
+ {id:'chemistry',name:'2 · Life’s chemistry',years:'1828–1970',why:'Urea from a flask, the primordial soup, Miller–Urey’s spark and amino acids from space.'},
+ {id:'earth',name:'3 · The early Earth',years:'4.5–3.5 billion years ago',why:'A molten world cools, oceans form, and the oldest traces of life are argued over.'},
+ {id:'rna',name:'4 · An RNA world?',years:'1967–today',why:'Molecules that both carry information and catalyse: ribozymes, replicators and the error threshold.'},
+ {id:'metabolism',name:'5 · Metabolism first?',years:'1988–today',why:'Vents, mineral catalysts, autocatalytic sets and the proton gradients every cell still uses.'},
+ {id:'cells',name:'6 · The first cells',years:'1924–today',why:'Self-assembling membranes, protocells that grow and divide, and why life is one-handed.'},
+ {id:'luca',name:'7 · The last common ancestor',years:'1977–today',why:'Reconstructing LUCA from today’s genomes, where the genetic code came from, and the place of viruses.'},
+ {id:'elsewhere',name:'8 · Life elsewhere',years:'1961–today',why:'Habitable zones, icy moons, biosignatures and false alarms, and what we would count as alive.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +20,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- writing:{w:40,h:28,tile:'<path d="M6 8L12 8L9 12ZM20 8L26 8L23 12ZM10 18L16 18L13 22Z" fill="currentColor" opacity=".7"/>'},
- families:{w:44,h:40,tile:'<path d="M22 4V14M22 14L10 28M22 14L34 28M10 28L4 36M10 28L16 36" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- structure:{w:40,h:32,tile:'<rect x="4" y="10" width="10" height="12" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="16" y="10" width="8" height="12" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="26" y="10" width="10" height="12" fill="currentColor" opacity=".4"/>'},
- grammar:{w:44,h:36,tile:'<path d="M22 4L10 18M22 4L34 18M10 18L4 32M10 18L16 32" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- learning:{w:48,h:24,tile:'<path d="M0 12Q6 2 12 12T24 12T36 12T48 12" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M14 4V20M34 4V20" stroke="currentColor" stroke-width=".5"/>'},
- meaning:{w:44,h:32,tile:'<path d="M4 6H24V18H12L6 24V18H4Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M28 12H40V22H38V26L34 22H28Z" fill="currentColor" opacity=".4"/>'},
- society:{w:48,h:28,tile:'<circle cx="10" cy="14" r="6" fill="none" stroke="currentColor"/><circle cx="24" cy="14" r="6" fill="none" stroke="currentColor"/><circle cx="38" cy="14" r="6" fill="currentColor" opacity=".35"/>'},
- machines:{w:44,h:36,tile:'<circle cx="6" cy="8" r="2.5" fill="currentColor"/><circle cx="6" cy="28" r="2.5" fill="currentColor"/><circle cx="22" cy="18" r="2.5" fill="currentColor"/><circle cx="38" cy="18" r="2.5" fill="none" stroke="currentColor"/><path d="M6 8L22 18L6 28M22 18H38" stroke="currentColor" stroke-width=".7"/>'}
+ spontaneous:{w:40,h:40,tile:'<path d="M14 34V18Q14 10 20 10Q26 10 26 18V34Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M26 16Q34 12 36 4" fill="none" stroke="currentColor" stroke-width=".8"/>'},
+ chemistry:{w:40,h:40,tile:'<path d="M20 6L32 13V27L20 34L8 27V13Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ earth:{w:44,h:44,tile:'<circle cx="22" cy="22" r="14" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M10 18Q22 24 34 16" fill="none" stroke="currentColor" stroke-width=".6"/>'},
+ rna:{w:48,h:24,tile:'<path d="M0 12Q6 2 12 12T24 12T36 12T48 12" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M6 6V10M18 14V18M30 6V10M42 14V18" stroke="currentColor" stroke-width=".7"/>'},
+ metabolism:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9" stroke-dasharray="5 4"/><circle cx="20" cy="8" r="2.5" fill="currentColor"/>'},
+ cells:{w:44,h:44,tile:'<circle cx="16" cy="22" r="10" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="32" cy="22" r="7" fill="none" stroke="currentColor" stroke-width=".7"/>'},
+ luca:{w:44,h:40,tile:'<path d="M22 36V24M22 24L8 6M22 24L36 6M22 24L22 6" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ elsewhere:{w:44,h:44,tile:'<circle cx="22" cy="22" r="5" fill="currentColor" opacity=".6"/><ellipse cx="22" cy="22" rx="18" ry="7" fill="none" stroke="currentColor" stroke-width=".7"/>'}
 };

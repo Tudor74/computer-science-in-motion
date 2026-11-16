@@ -354,7 +354,7 @@ function showWord(key,origin,remember=true){
  if(!dlg.open){wordTrail=[];curWord=null;wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
  if(remember&&curWord&&curWord!==key)wordTrail.push(curWord);curWord=key;
  $('word-title').textContent=g.title;const ctx=lessons[g.linkContext]||lessons[LEGACY_LESSON[g.linkContext]]||lessons[lessonOf[g.scene||g.key]];
- $('word-context').textContent=(ctx?ctx.name:'Language')+' · word meaning';
+ $('word-context').textContent=(ctx?ctx.name:'Abiogenesis')+' · word meaning';
  setWords($('word-meaning'),g.here,key);setWords($('word-contrast'),g.contrast,key);setWords($('word-example'),g.example,key);
  $('word-detail').hidden=false;$('word-browser').hidden=true;
  $('word-back').hidden=false;$('word-back').textContent=wordTrail.length?'← Previous word':'← All words';

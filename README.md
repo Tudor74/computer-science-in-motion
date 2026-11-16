@@ -1,19 +1,19 @@
-# Language In Motion
+# Abiogenesis In Motion
 
-A single-file, offline HTML page that tells the story of how people have understood language, in historical order: writing, families and sound laws, structure, grammar, how children learn, meaning and use, language in society, and language machines. In Try it you build trees, apply sound laws, train tiny models, and take part in classic experiments with your results drawn beside the published ones. Myths are labelled and debates presented as open.
+A single-file, offline HTML page on how life might have begun, told in historical order: the fall of spontaneous generation, life's chemistry, the early Earth, the RNA world, metabolism-first ideas, the first cells, the last common ancestor, and the search for life elsewhere. Every scene says whether its idea has been demonstrated, is plausible, or is speculative: after the first era, almost all of this is open science.
 
-This is the `language` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `abiogenesis` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **Writing** (3400 BCE–1500): clay tokens, logograms, the alphabet, decipherment, printing, scripts of the world
-2. **Families and sound laws** (1786–1900): language families, the comparative method, Grimm's law, the Great Vowel Shift, phonetics and the IPA, language trees
-3. **Structure** (1916–1960): Saussure's sign, phonemes, morphology, Zipf's law, redundancy and entropy, linguistic relativity
-4. **Grammar** (1957–2000): syntax trees, recursion, formal grammars, garden paths, universals, sign languages
-5. **Learning language**: infant perception, statistical learning, word learning, critical periods, bilingualism, the reading brain
-6. **Meaning and use**: reference and sense, implicature, speech acts, metaphor, colour terms, turn-taking
-7. **Language in society**: variation, the S-curve of change, contact and creoles, endangered languages, accents and attitudes, world Englishes
-8. **Language machines**: machine translation, n-grams, word embeddings, attention, large language models, the understanding debate
+1. **Spontaneous generation** (350 BCE–1862): Aristotle, Redi's flies, Needham and Spallanzani, Pasteur and Pouchet
+2. **Life's chemistry** (1828–1970): Wöhler's urea, Oparin and Haldane, Miller–Urey, meteorite chemistry
+3. **The early Earth**: the Hadean, the oldest evidence of life, the bombardment timeline, panspermia
+4. **An RNA world?**: ribozymes, replicators, the error threshold, nucleotide synthesis
+5. **Metabolism first?**: hydrothermal vents, the iron–sulphur world, autocatalytic sets, proton gradients
+6. **The first cells**: coacervates, protocells, membrane growth, chirality
+7. **The last common ancestor**: LUCA, the origin of the genetic code, rooting the tree, the origins of viruses
+8. **Life elsewhere**: habitable zones, icy moons, biosignatures, defining life
 
 ## Source layout
 

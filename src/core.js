@@ -37,13 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: the learner operates the structures of language or takes part in the classic experiments.
-   Writing: press tokens into tablets, evolve letter shapes, crack a script with Kober's grids. Families: apply
-   Grimm's law and the Great Vowel Shift, reconstruct a proto-word. Structure: fit Zipf, play Shannon's guessing
-   game. Grammar: merge words into trees, read garden-path sentences against the clock. Learning: segment
-   Saffran's syllable stream. Meaning: judge implicatures, sort colour terms. Society: sample Labov's stores,
-   spread a change through a network. Machines: generate n-gram text, do word-vector arithmetic, read attention.
-   Myths are labelled and open debates are presented as open.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
