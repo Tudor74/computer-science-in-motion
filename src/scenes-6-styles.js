@@ -287,7 +287,7 @@ const X6_shape=(x,mode)=>mode==='soft'?Math.tanh(x):clamp(x,-1,1);
 function X6_harm(drive,mode){const N=512,h=[];for(let n=1;n<=9;n++){let a=0;for(let i=0;i<N;i++){const th=2*Math.PI*(i+.5)/N;a+=X6_shape(drive*Math.sin(th),mode)*Math.sin(n*th)}h.push(Math.abs(2*a/N))}return h}
 SCENE({id:'hard-and-industrial',name:'Distortion',tag:'Turning it up until it clips',
  definition:'Distortion happens when a signal is pushed past what a circuit can pass, so the tops of the wave are flattened. A flattened wave contains extra harmonics, which is why an overdriven kick sounds harder, brighter and louder at the same peak level.',
- example:'A pure sine has one harmonic. Driven to five times the clipping level it is nearly a square wave, with strong third, fifth and seventh harmonics.',
+ example:'A pure sine contains only its fundamental (the first harmonic), with no higher harmonics. Driven to five times the clipping level it is nearly a square wave, with strong third, fifth and seventh harmonics.',
  desc:'A sine wave pushed through a clipping stage with a drive slider and a choice of hard or soft clipping, drawn beside a bar chart of its first nine harmonics.',
  research:['Pakarinen, J. & Yeh, D. T. (2009). A review of digital techniques for modeling vacuum-tube guitar amplifiers. Computer Music Journal 33(2), 85–100 (clipping and harmonics).','Reynolds, S. (1998). Energy Flash. Picador (hardcore and gabber).','The harmonic levels are computed from the drawn wave.'],
  dur:11,hint:'Raise the drive and press Play tone. Compare hard clipping, which flattens abruptly, with soft clipping, which rounds off.',
