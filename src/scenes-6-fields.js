@@ -34,7 +34,7 @@ function P6_lines(ch,o={}){
 function P6_drawLines(Ls,col,w=1.6){let s='';for(const pts of Ls.paths){if(pts.length<4)continue;s+=P(P6_path(pts),col,w);
   const i=Math.floor(pts.length*.45),a=pts[i],b=pts[i+1];const dx=(b[0]-a[0])*Ls.sign,dy=(b[1]-a[1])*Ls.sign,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
   s+=`<polygon points="${fmt(a[0]+ux*6)},${fmt(a[1]+uy*6)} ${fmt(a[0]-ux*4-uy*4)},${fmt(a[1]-uy*4+ux*4)} ${fmt(a[0]-ux*4+uy*4)},${fmt(a[1]-uy*4-ux*4)}" fill="${col}"/>`}return s}
-function P6_charge(x,y,q,label,r=15){const pos=q>0,col=q===0?C.line:pos?C.coral:C.blue;return Ci(x,y,r,col,'#fff')+TBF(x,y+6,q===0?'0':pos?'+':'−',17,'#fff')+(label?TF(x,y+r+17,label,13,col):'')}
+function P6_charge(x,y,q,label,r=15){const pos=q>0,col=q===0?C.line:pos?C.coral:C.blue;return Ci(x,y,r,col,'#fff')+TBF(x,y+6,q===0?'0':pos?'+':'−',17,'#fff')+(label?R(x-28,y+r+4,56,18,'#ffffffd9','none',5)+TF(x,y+r+17,label,13,col):'')}
 function P6_signs(cx,y,n,maxw=120){let s='';const k=Math.abs(Math.round(n)),per=Math.max(1,Math.floor(maxw/15)),rows=Math.ceil(k/per);
  for(let i=0;i<k;i++){const row=Math.floor(i/per),inRow=Math.min(per,k-row*per),col=i%per;s+=TBF(cx+(col-(inRow-1)/2)*15,y+row*15,n>0?'+':'−',15,n>0?C.coral:C.blue)}return s}
 // A gold-leaf electroscope: charge on the cap and on the leaves (signed units). Leaves part with leaf charge.
@@ -45,7 +45,7 @@ function P6_scope(cx,top,cap,leaves,label){
  s+=L(cx,top+140,lx,ly,'#d4a017',6)+L(cx,top+140,rx,ly,'#d4a017',6);
  s+=P6_signs(cx,top-14,cap,90);
  const k=Math.abs(leaves),left=Math.ceil(k/2),sg=Math.sign(leaves);
- for(let i=0;i<k;i++){const onLeft=i<left,j=onLeft?i:i-left,f=.45+.18*j,x=onLeft?cx-Math.sin(a)*64*f-12:cx+Math.sin(a)*64*f+12,y=top+140+Math.cos(a)*64*f;s+=TBF(x,y+5,sg>0?'+':'−',14,sg>0?C.coral:C.blue)}
+ for(let i=0;i<k;i++){const onLeft=i<left,j=onLeft?i:i-left,f=.42+.27*(j%3),off=12+13*Math.floor(j/3),x=onLeft?cx-Math.sin(a)*64*f-off:cx+Math.sin(a)*64*f+off,y=top+140+Math.cos(a)*64*f;s+=TBF(x,y+5,sg>0?'+':'−',14,sg>0?C.coral:C.blue)}
  if(label)s+=TF(cx,top+238,label,13,C.muted);
  return s;
 }
@@ -69,7 +69,7 @@ SCENE({id:'electric-charge',name:'Electric charge',tag:'Rubbing moves electrons'
   out+=R(70,170,200,46,s.mat==='glass'?'#efe7f7':'#b98a5c','none',14)+TF(170,236,m.cloth,14,C.ink)+P6_signs(170,197,s.cloth,180);
   out+=counter(56,262,'rod charge',(s.rod>0?'+':'')+s.rod+' nC',s.rod>=0?C.coral:C.blue,110)+counter(178,262,'cloth charge',(s.cloth>0?'+':'')+s.cloth+' nC',s.cloth>=0?C.coral:C.blue,110);
   out+=P6_scope(455,84,s.cap,s.leaves,'electroscope: '+((s.cap+s.leaves)>0?'+':'')+(s.cap+s.leaves)+' nC');
-  out+=TF(170,340,'Each sign stands for about 1 nC (some 6 billion electrons).',13,C.muted);
+  out+=TF(300,372,'Each sign stands for about 1 nC (some 6 billion electrons).',13,C.muted);
   const tot=s.cap+s.leaves;
   const say=s.rod===0&&s.cloth===0&&tot===0?'Everything starts neutral: equal positive and negative charge. Rubbing only moves electrons from one material to the other.'
    :tot!==0?`The electroscope now holds ${tot>0?'+':''}${tot} nC of the same sign as the rod, so its leaves repel each other and spread. Rod + cloth + electroscope still add up to zero.`
@@ -234,9 +234,9 @@ SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a curren
   out+=TF(x0,y1+22,`${s.pairs} pairs ≈ ${V.toFixed(1)} V`,13,C.ink);
   out+=R(x1-4,150,8,60,'#fff','none',0);
   out+=s.closed?L(x1,150,x1,210,C.dark,4):L(x1,150,x1+26,192,C.dark,4);out+=Ci(x1,150,5,C.dark)+Ci(x1,210,5,C.dark)+TF(x1+18,140,s.closed?'closed':'open',13,C.muted,'start');
-  out+=P6_bulb(300,y0,Pw,'');out+=R(270,y1-18,60,36,'#fff',C.dark,8)+TF(300,y1+5,(I*1000).toFixed(0)+' mA',13,C.ink)+TF(300,y1+34,'ammeter',13,C.muted);
   if(I>0){const ph=X.try?0:(s.ph||0),sp=I*0.25;for(let k=0;k<22;k++){const [x,y]=P6_loopPoint(k/22+ph*sp,x0,y0,x1,y1);out+=Ci(x,y,3.5,C.blue)}
    out+=arrow(210,y0-14,250,y0-14,C.coral,2,7)+TF(230,y0-22,'conventional current',13,C.coral)}
+  out+=P6_bulb(300,y0,Pw,'');out+=R(270,y1-18,60,36,'#fff',C.dark,8)+TF(300,y1+5,(I*1000).toFixed(0)+' mA',13,C.ink)+TF(300,y1+34,'ammeter',13,C.muted);
   out+=counter(470,24,'power in bulb',Pw.toFixed(2)+' W',C.amber,116);
   return {svg:out,phase:!s.closed?'With the switch open the loop is broken: no current flows anywhere, however many discs you stack.':`${s.pairs} pairs give about ${V.toFixed(1)} V across a 10 Ω bulb (model), so I = V/R = ${(I*1000).toFixed(0)} mA. Blue dots are electrons, which drift the opposite way to the conventional current arrow.`};
  }});
@@ -277,7 +277,7 @@ SCENE({id:'circuits-series-parallel',name:'Series and parallel',tag:'One path or
  draw(s){
   const V=6,Rb=12;let IA,IB,VA,VB;if(s.mode==='series'){const I=s.broken?0:V/(2*Rb);IA=IB=I;VA=VB=I*Rb}else{IA=V/Rb;VA=V;IB=s.broken?0:V/Rb;VB=s.broken?0:V}
   const PA=IA*VA,PB=IB*VB;let out=heading(s.mode==='series'?'Series: one path, the current is shared by both':'Parallel: two paths, each bulb gets the full 6 V');
-  out+=R(70,170,30,60,'#dfe6ea',C.dark,4)+TF(85,250,'6 V',13,C.ink)+TBF(85,190,'+',14,C.coral);
+  out+=R(70,170,30,60,'#dfe6ea',C.dark,4)+TF(110,205,'6 V',13,C.ink,'start')+TBF(85,190,'+',14,C.coral);
   if(s.mode==='series'){out+=P('M85 170 V90 H520 V300 H85 V230',C.dark,3);out+=P6_bulb(240,90,PA,'A')+(s.broken?R(360,74,40,32,C.bg,'none',4)+TF(380,96,'gap',13,C.coral):P6_bulb(380,90,PB,'B'))}
   else{out+=P('M85 170 V90 H520 V300 H85 V230',C.dark,3)+P('M180 90 V200 H440 V90',C.dark,3);out+=P6_bulb(310,90,PA,'A')+(s.broken?R(290,184,40,32,C.bg,'none',4)+TF(310,206,'gap',13,C.coral):P6_bulb(310,200,PB,'B'))}
   out+=counter(140,318,'bulb A',`${VA.toFixed(1)} V · ${IA.toFixed(2)} A`,C.ink,140)+counter(300,318,'bulb B',`${VB.toFixed(1)} V · ${IB.toFixed(2)} A`,C.ink,140)+counter(460,318,'from battery',`${(s.mode==='series'?IA:IA+IB).toFixed(2)} A`,C.blue,120);
@@ -301,7 +301,7 @@ SCENE({id:'magnetism',name:'Magnetic field',tag:'Iron filings and compasses',
  draw(s){
   const poles=P6_magnet(s.ang);let out=heading('North pole to south pole, outside the magnet');
   if(s.view==='filings')out+=P6_drawLines(P6_lines(poles,{per:12,rad:10}),'#7c858b',1.2);
-  else for(let i=0;i<10;i++)for(let j=0;j<6;j++){const x=48+i*56,y=72+j*55;const near=poles.some(p=>Math.hypot(x-p.x,y-p.y)<34)||Math.abs((x-300)*Math.sin(s.ang)-(y-215)*Math.cos(s.ang))<26&&Math.abs((x-300)*Math.cos(s.ang)+(y-215)*Math.sin(s.ang))<90;if(near)continue;
+  else for(let i=0;i<10;i++)for(let j=0;j<6;j++){const x=48+i*56,y=72+j*55;const near=poles.some(p=>Math.hypot(x-p.x,y-p.y)<34)||Math.abs((x-300)*Math.sin(s.ang)-(y-215)*Math.cos(s.ang))<34&&Math.abs((x-300)*Math.cos(s.ang)+(y-215)*Math.sin(s.ang))<98;if(near)continue;
    const [bx,by]=P6_E(poles,x,y),m=Math.hypot(bx,by)||1,ux=bx/m,uy=by/m;out+=Ci(x,y,14,'#fff',C.line)+`<polygon points="${fmt(x+ux*12)},${fmt(y+uy*12)} ${fmt(x-uy*4)},${fmt(y+ux*4)} ${fmt(x+uy*4)},${fmt(y-ux*4)}" fill="${C.coral}"/><polygon points="${fmt(x-ux*12)},${fmt(y-uy*12)} ${fmt(x-uy*4)},${fmt(y+ux*4)} ${fmt(x+uy*4)},${fmt(y-ux*4)}" fill="#8a969d"/>`}
   const c=Math.cos(s.ang),sn=Math.sin(s.ang);
   out+=`<g transform="translate(300 215) rotate(${fmt(s.ang*180/Math.PI)})"><rect x="-75" y="-16" width="75" height="32" fill="#6f8796" rx="3"/><rect x="0" y="-16" width="75" height="32" fill="${C.coral}" rx="3"/></g>`;
@@ -323,7 +323,7 @@ SCENE({id:'magnetism-oersted',name:'Ørsted’s discovery',tag:'Rerun Ørsted: a
   const Bw=P6_MU0*s.I/(2*Math.PI*.02),th=Math.atan(Bw/2e-5);let out=heading('A current deflects a compass needle');
   const cx=140,cy=200;out+=Ci(cx,cy,92,'#fff',C.line);['N','E','S','W'].forEach((d,i)=>out+=TBF(cx+Math.sin(i*Math.PI/2)*76,cy-Math.cos(i*Math.PI/2)*76+5,d,14,C.muted));
   const a=-th,ux=Math.sin(a),uy=-Math.cos(a);out+=`<polygon points="${fmt(cx+ux*70)},${fmt(cy+uy*70)} ${fmt(cx-uy*8)},${fmt(cy+ux*8)} ${fmt(cx+uy*8)},${fmt(cy-ux*8)}" fill="${C.coral}"/><polygon points="${fmt(cx-ux*70)},${fmt(cy-uy*70)} ${fmt(cx-uy*8)},${fmt(cy+ux*8)} ${fmt(cx+uy*8)},${fmt(cy-ux*8)}" fill="#8a969d"/>`;
-  out+=R(cx-5,80,10,240,s.I?C.amber:'#c9d2d8','none',3,'opacity=".85"');
+  out+=R(cx-4,80,8,240,s.I?C.amber:'#c9d2d8','none',3,'opacity=".45"');
   if(s.I)out+=arrow(cx+22,s.I>0?250:150,cx+22,s.I>0?150:250,C.amber,2.5,8)+TF(cx+30,200,'I',14,C.amber,'start');
   const A=P6_axes(330,70,240,220,{x0:-5,x1:5,y0:-90,y1:90,xt:[-5,0,5],yt:[-90,-45,0,45,90],xl:'current I (A, + = northwards)',yl:'deflection (°, + = west)'});out+=A.svg;
   const pts=[];for(let I=-5;I<=5;I+=.1)pts.push([A.X(I),A.Y(Math.atan(I/2)*180/Math.PI)]);out+=P(P6_path(pts),C.blue,1.6,'none','stroke-dasharray="5 4"');
@@ -405,7 +405,7 @@ SCENE({id:'induction',name:'Electromagnetic induction',tag:'Rerun Faraday: move 
   const mx=300+f.x*800;out+=`<g transform="translate(${fmt(mx)} 120)"><rect x="-60" y="-12" width="60" height="24" fill="${sg>0?'#6f8796':C.coral}"/><rect x="0" y="-12" width="60" height="24" fill="${sg>0?C.coral:'#6f8796'}"/></g>`+TBF(mx+45,125,sg>0?'N':'S',13,'#fff')+TBF(mx-45,125,sg>0?'S':'N',13,'#fff');
   const approaching=f.x<0;if(Math.abs(f.emf)>peak*.05)out+=TF(300,178,approaching?'coil repels the approaching magnet':'coil pulls back on the leaving magnet',13,C.coral);
   // Meter
-  const g=clamp(f.emf/Math.max(peak,1e-9),-1,1);out+=P('M40 300 A60 60 0 0 1 160 300',C.dark,2)+L(100,300,100+56*Math.sin(g*1.1),300-56*Math.cos(g*1.1),C.coral,3)+Ci(100,300,5,C.dark)+TF(100,330,`${(f.emf*1000).toFixed(0)} mV`,14,C.ink)+P('M262 120 H230 V280 H160 M338 120 H370 V350 H100 V305',C.line,1.5);
+  const g=clamp(f.emf/Math.max(peak,1e-9),-1,1);out+=P('M40 300 A60 60 0 0 1 160 300',C.dark,2)+L(100,300,100+56*Math.sin(g*1.1),300-56*Math.cos(g*1.1),C.coral,3)+Ci(100,300,5,C.dark)+TF(100,330,`${(f.emf*1000).toFixed(0)} mV`,14,C.ink)+P('M266 156 V184 H140 V246 M334 156 V196 H60 V250',C.line,1.5);
   const A=P6_axes(250,215,320,120,{x0:0,x1:f.T,y0:-1.15*peak*1000,y1:1.15*peak*1000,xt:[0,+(f.T/2).toFixed(2),+f.T.toFixed(2)],yt:[-Math.round(peak*1000),0,Math.round(peak*1000)],xl:'time (s)',yl:'EMF (mV)'});out+=A.svg;
   if(f.hist.length>1)out+=P(P6_path(f.hist.map(([t,e])=>[A.X(t),A.Y(e*1000)])),C.blue,2);
   return {svg:out,phase:`EMF = −N dΦ/dt. At ${s.v.toFixed(2)} m/s with ${s.N} turns the peak is about ${(peak*1000).toFixed(0)} mV. Entering and leaving give opposite pulses; double the speed and the pulses are twice as tall and half as long.`};
@@ -467,12 +467,12 @@ SCENE({id:'electromagnetic-waves',name:'Electromagnetic wave',tag:'Fields that k
  on:{lam(s,v){s.lam=v},play(s,a,ctx){s.playing=!s.playing;if(s.playing)ctx.every(50,'tick');return 'keep'},tick(s){if(!s.playing)return 'stop';s.t=(s.t+.03)%100;return 'keep'}},
  draw(s){
   const O=(x,y,z)=>[60+x*120+z*55,210-y*85+z*40];let out=heading('E and B at right angles, moving together');
-  out+=arrow(...O(0,0,0),...O(4.1,0,0),C.dark,2,8)+TF(...O(4.1,0,0).map((v,i)=>i?v+18:v),'direction of travel',13,C.muted);
+  out+=arrow(...O(0,0,0),...O(4.1,0,0),C.dark,2,8)+TF(590,O(4.1,0,0)[1]+22,'direction of travel →',13,C.muted,'end');
   const E=P6_wavePts(s.lam,s.t,v=>v),B=P6_wavePts(s.lam,s.t,v=>v);
   out+=P(P6_path(E.map(([x,v])=>O(x,v,0))),C.blue,2.4)+P(P6_path(B.map(([x,v])=>O(x,0,v*.9))),C.coral,2.4);
   for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=L(...O(x,0,0),...O(x,v,0),C.blue,1,'opacity=".5"')+L(...O(x,0,0),...O(x,0,v*.9),C.coral,1,'opacity=".5"')}
   out+=TBF(70,100,'E (electric)',14,C.blue,'start')+TBF(70,350,'B (magnetic)',14,C.coral,'start');
-  const f=P6_C/s.lam;out+=counter(440,300,'frequency',`${(f/1e6).toFixed(0)} MHz`,C.ink,130);
+  const f=P6_C/s.lam;out+=counter(440,326,'frequency',`${(f/1e6).toFixed(0)} MHz`,C.ink,130);
   return {svg:out,phase:`Wavelength ${s.lam.toFixed(1)} m, so frequency = c / λ = ${(f/1e6).toFixed(0)} MHz (a radio wave). E and B rise and fall together, each at right angles to the other and to the direction of travel.`};
  },
  three(s,f,X,project){
@@ -515,7 +515,7 @@ SCENE({id:'electromagnetic-waves-hertz',name:'Hertz’s experiment',tag:'Rerun H
  on:{f(s,v){s.f=v;s.marks=[]},x(s,v){s.x=v},mark(s){s.marks=s.marks.concat(+s.x.toFixed(2)).sort((a,b)=>a-b)},clear(s){s.marks=[]}},
  draw(s){
   const lam=P6_C/(s.f*1e6),amp=x=>Math.abs(Math.sin(2*Math.PI*x/lam));let out=heading('A standing wave between the spark gap and a metal sheet');
-  const X0=540,sc=78;const px=x=>X0-x*sc;out+=R(X0,70,16,220,'#8a969d','none',3)+TF(X0+8,306,'reflector',13,C.muted);
+  const X0=540,sc=78;const px=x=>X0-x*sc;out+=R(X0,70,16,220,'#8a969d','none',3)+TF(X0+8,62,'reflector',13,C.muted);
   out+=R(18,160,40,40,'#fff',C.dark,6)+TF(38,215,'spark gap',13,C.muted)+P('M30 180 l8 -8 l4 14 l8 -10',C.amber,2);
   const pts=[],neg=[];for(let x=0;x<=6.1;x+=.02){pts.push([px(x),180-70*amp(x)]);neg.push([px(x),180+70*amp(x)])}out+=P(P6_path(pts),C.purple,1.6)+P(P6_path(neg),C.purple,1.6);
   s.marks.forEach(m=>out+=L(px(m),110,px(m),250,C.green,2,'stroke-dasharray="4 3"'));
@@ -538,10 +538,10 @@ SCENE({id:'electromagnetic-waves-spectrum',name:'Electromagnetic spectrum',tag:'
  ui:[{range:'e',label:'Wavelength (log scale)',min:-12.5,max:3,step:.05,get:s=>s.e,act:'e',show:v=>P6_sci(Math.pow(10,v),1)+' m'}],
  on:{e(s,v){s.e=v}},
  draw(s){
-  const lam=Math.pow(10,s.e),f=P6_C/lam,eV=1.23984e-6/lam;const X=e=>40+(3-e)/15.5*520;let out=heading('Same waves, from kilometres to femtometres');
+  const lam=Math.pow(10,s.e),f=P6_C/lam,eV=1.23984e-6/lam;const X=e=>40+(3-e)/15.5*520;let out=heading('Same waves, from kilometres to picometres');
   P6_BANDS.forEach(([a,b,n,col])=>{out+=R(X(a),90,X(b)-X(a),56,col,'none',0);});
   for(let nm=380;nm<=750;nm+=10){const e=Math.log10(nm*1e-9);out+=R(X(e),90,Math.max(1,X(Math.log10((nm-10)*1e-9))-X(e)),56,P6_rgbOfNm(nm),'none',0)}
-  P6_BANDS.forEach(([a,b,n])=>{const w=X(b)-X(a);if(w>40)out+=TF((X(a)+X(b))/2,124,n,13,C.ink)});
+  P6_BANDS.forEach(([a,b,n])=>{const w=X(b)-X(a),c=(X(a)+X(b))/2-(n==='Infrared'?10:0);if(w>n.length*7.4+10)out+=TF(c,124,n,13,C.ink)});
   out+=TF(X(-6.27),76,'visible',13,C.ink);
   [3,0,-3,-6,-9,-12].forEach(e=>out+=L(X(e),146,X(e),152,C.muted,1)+TF(X(e),166,['1 km','1 m','1 mm','1 µm','1 nm','1 pm'][[3,0,-3,-6,-9,-12].indexOf(e)],13,C.muted));
   const mx=X(clamp(s.e,-12.5,3));out+=L(mx,82,mx,154,C.dark,3)+`<polygon points="${fmt(mx)},82 ${fmt(mx-7)},72 ${fmt(mx+7)},72" fill="${C.dark}"/>`;

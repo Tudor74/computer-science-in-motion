@@ -95,7 +95,7 @@ SCENE({id:'temperature-heat',name:'Temperature and heat',tag:'How hot is not how
   out+=P7_thermo(225,100,90,s.sparkT,0,1500,'');
   // bath
   out+=R(320,60,250,170,'#fff',C.grid,10)+TB(445,84,`Bath (${s.bathKg} kg of water)`,15,C.ink);
-  out+=R(345,120,150,80,P7_tcol(s.bathT,0,100),'none',10,'opacity=".28"')+P('M345 120V200Q345 208 353 208H487Q495 208 495 200V120',C.blue,2.5);
+  out+=R(345,120,150,80,'#cfe3f2','none',10)+P('M345 120V200Q345 208 353 208H487Q495 208 495 200V120',C.blue,2.5);
   out+=P7_thermo(535,100,90,s.bathT,0,100,'');
   // energy bars, log scale from 1 mJ to 100 MJ
   const lx=v=>60+480*clamp((Math.log10(Math.max(v,1e-4))+4)/12,0,1);
@@ -351,7 +351,7 @@ SCENE({id:'brownian-motion-perrin',name:'Rerun Perrin: counting molecules',tag:'
  ui:[{range:'a',label:'Grain radius',min:.2,max:1,step:.1,get:s=>s.a,act:'a',show:v=>fmt(v)+' µm'},{b:'Record 10 grains',act:'rec'},{b:'Clear',act:'clear'}],
  on:{a(s,v){s.a=v;s.grains=0;s.seed=nextSeed()%997+1},rec(s){s.grains=Math.min(400,s.grains+10)},clear(s){s.grains=0;s.seed=nextSeed()%997+1}},
  draw(s){
-  const F=P7_perrinFit(s),um2=v=>v*1e12,ymax=um2(4*F.D*130)*1.25;let out=heading('Rerun Perrin: measure the spread, count the molecules');
+  const F=P7_perrinFit(s),um2=v=>v*1e12,raw=um2(4*F.D*130)*1.25,stp=10**Math.floor(Math.log10(raw)),ymax=Math.ceil(raw/stp)*stp;let out=heading('Rerun Perrin: measure the spread, count the molecules');
   const pl=P7_plot(70,64,290,220,{x0:0,x1:130,y0:0,y1:ymax,xticks:[0,30,60,90,120],yticks:[0,Math.round(ymax/2),Math.round(ymax)],xlab:'time interval (s)',ylab:'mean square displacement (µm²)'});out+=pl.svg;
   out+=P7_poly([[pl.px(0),pl.py(0)],[pl.px(130),pl.py(um2(4*F.D*130))]],C.line,2,'stroke-dasharray="5 5"');
   if(s.grains){for(const p of F.pts)out+=Ci(pl.px(p[0]),pl.py(um2(p[1])),6,C.coral);out+=P7_poly([[pl.px(0),pl.py(0)],[pl.px(130),pl.py(um2(F.slope*130))]],C.coral,2.5)}
@@ -457,20 +457,20 @@ SCENE({id:'entropy-demon',name:'Maxwell’s demon',tag:'Can information beat the
  draw(s,f,X){
   const sim=P7_demonSim(),fi=P7_frame(s,X,300),cur=sim.frames[fi];
   let out=heading('Maxwell’s demon sorts fast from slow');
-  out+=R(28,58,404,234,'#fff',C.ink,4)+L(230,60,230,150,C.ink,3)+L(230,200,230,290,C.ink,3)+R(222,150,16,50,cur.open?'#fff':'#8a99a3','none',3);
-  out+=Ci(230,138,9,C.purple)+TF(230,124,'demon',13,C.purple);
+  out+=R(28,58,404,234,'#fff',C.ink,4)+L(230,60,230,60+sim.D0,C.ink,3)+L(230,60+sim.D1,230,290,C.ink,3)+L(230,60+sim.D0,230,60+sim.D1,cur.open?'#f2c94c':'#b9c9d3',3,'stroke-dasharray="6 4"');
+  out+=Ci(244,60+sim.D0-10,8,C.purple)+TF(256,60+sim.D0-6,'demon',13,C.purple,'start');
   for(let i=0;i<sim.n;i++){const v=cur.sp[i];out+=Ci(30+cur.pos[2*i],60+cur.pos[2*i+1],4,v>sim.cut?C.coral:C.blue)}
   out+=TF(130,314,'left: mean energy '+cur.eL.toFixed(2),13,C.blue)+TF(330,314,'right: mean energy '+cur.eR.toFixed(2),13,C.coral);
   out+=R(450,64,130,228,'#fff',C.grid,10)+TB(515,90,'Memory',15,C.ink)+TF(515,114,'bits recorded',13,C.muted)+TB(515,140,cur.bits,18,C.purple);
   out+=TF(515,176,'erasing them costs',13,C.muted)+TF(515,194,'at least',13,C.muted)+TB(515,218,cur.bits+' × k ln 2',14,C.ink)+TF(515,242,'of entropy',13,C.muted);
   out+=TF(515,276,'(Landauer 1961)',13,C.muted);
   out+=TF(230,346,'Idealised: the door costs no energy to move; only the memory has a price.',13,C.muted);
-  return {svg:out,phase:`The right side’s mean energy (temperature) rises to ${cur.eR.toFixed(2)} while the left falls to ${cur.eL.toFixed(2)}: a temperature difference from nothing? No: every decision is a bit of information, and erasing ${cur.bits} bits produces at least as much entropy as the sorting removed.`};
+  return {svg:out,phase:fi<15?'At the start both halves have the same mix of fast (coral) and slow (blue) molecules, so the same temperature. The demon watches the door.':`The right side’s mean energy (its temperature) is now ${cur.eR.toFixed(2)} and the left’s ${cur.eL.toFixed(2)}: a temperature difference made without work? No: every decision is a bit of information, and erasing ${cur.bits} bits produces at least as much entropy as the sorting removed.`};
  }});
 let P7_DEMON=null;
 function P7_demonSim(){
  if(P7_DEMON)return P7_DEMON;
- const n=40,W=400,H=230,r=4,rr=rng(41),x=[],y=[],vx=[],vy=[],sig=1.3;
+ const n=50,W=400,H=230,r=4,rr=rng(41),x=[],y=[],vx=[],vy=[],sig=1.6,D0=40,D1=190;
  for(let i=0;i<n;i++){x.push(r+rr()*(W-2*r));y.push(r+rr()*(H-2*r));const sp=sig*Math.sqrt(-2*Math.log(1-rr())),a=6.283*rr();vx.push(sp*Math.cos(a));vy.push(sp*Math.sin(a))}
  const sp0=x.map((_,i)=>Math.hypot(vx[i],vy[i])),cut=[...sp0].sort((a,b)=>a-b)[n/2];
  const frames=[];let bits=0,open=false;
@@ -478,17 +478,17 @@ function P7_demonSim(){
   let eL=0,nL=0,eR=0,nR=0;for(let i=0;i<n;i++){const e=(vx[i]**2+vy[i]**2)/2;if(x[i]<W/2){eL+=e;nL++}else{eR+=e;nR++}}
   const pos=new Float32Array(2*n),sp=new Float32Array(n);for(let i=0;i<n;i++){pos[2*i]=x[i];pos[2*i+1]=y[i];sp[i]=Math.hypot(vx[i],vy[i])}
   frames.push({pos,sp,eL:nL?eL/nL:0,eR:nR?eR/nR:0,bits,open});open=false;
-  for(let k=0;k<2;k++)for(let i=0;i<n;i++){
+  for(let k=0;k<5;k++)for(let i=0;i<n;i++){
    const ox=x[i];x[i]+=vx[i];y[i]+=vy[i];
    if(x[i]<r){x[i]=2*r-x[i];vx[i]=-vx[i]}if(x[i]>W-r){x[i]=2*(W-r)-x[i];vx[i]=-vx[i]}
    if(y[i]<r){y[i]=2*r-y[i];vy[i]=-vy[i]}if(y[i]>H-r){y[i]=2*(H-r)-y[i];vy[i]=-vy[i]}
    const crossing=(ox<W/2)!==(x[i]<W/2);
-   if(crossing){const atDoor=y[i]>90&&y[i]<140,fast=Math.hypot(vx[i],vy[i])>cut,toRight=vx[i]>0;
+   if(crossing){const atDoor=y[i]>D0&&y[i]<D1,fast=Math.hypot(vx[i],vy[i])>cut,toRight=vx[i]>0;
     if(atDoor)bits++;
     const allow=atDoor&&(toRight?fast:!fast);if(allow)open=true;else{x[i]=2*(W/2)-x[i];vx[i]=-vx[i]}}
   }
  }
- P7_DEMON={n,frames,cut};return P7_DEMON;
+ P7_DEMON={n,frames,cut,D0,D1};return P7_DEMON;
 }
 
 /* ======================= Lesson: Heat engines ======================= */
@@ -595,12 +595,12 @@ SCENE({id:'phase-changes',name:'Melting and boiling',tag:'Heat in, temperature f
   const pl=P7_plot(70,64,330,240,{x0:0,x1:P7_QMAX,y0:-30,y1:130,xticks:[0,1000,2000,3000],yticks:[-20,0,50,100],xlab:'energy added (kJ)',ylab:'temperature (°C)'});out+=pl.svg;
   out+=P7_poly(range(201).map(i=>{const q=i/200*P7_QMAX;return [pl.px(q),pl.py(P7_heatCurve(q).T)]}),C.line,2.5);
   out+=P7_poly(range(201).map(i=>i/200*s.Q).map(q=>[pl.px(q),pl.py(P7_heatCurve(q).T)]),C.coral,3.5)+Ci(pl.px(s.Q),pl.py(st.T),7,C.coral);
-  out+=TF(pl.px(200),pl.py(0)-8,'melting 334 kJ',13,C.blue,'start')+TF(pl.px(1900),pl.py(100)-8,'boiling 2257 kJ',13,C.blue);
+  out+=TF(pl.px(420),pl.py(0)+18,'melting 334 kJ',13,C.blue,'start')+TF(pl.px(1900),pl.py(100)-8,'boiling 2257 kJ',13,C.blue);
   // particles
   out+=R(420,64,160,160,'#fff',C.grid,10);const r=rng(9),bx=430,by=74;
   const solid=st.ph==='ice'?1:st.ph==='melting'?1-st.frac:0,gas=st.ph==='steam'?1:st.ph==='boiling'?st.frac:0;
   for(let i=0;i<5;i++)for(let j=0;j<5;j++){const k=i*5+j,isGas=k/25<gas,isSolid=k/25<solid;let x=bx+20+j*28,y=by+20+i*28;
-   if(!isSolid){x=bx+12+r()*136;y=by+(isGas?12+r()*136:60+r()*80)}if(isGas&&!isSolid&&(k%3))continue;out+=Ci(x,y,6,isSolid?'#9cc7e6':isGas?C.coral:C.blue)}
+   if(!isSolid){x=bx+14+r()*122;y=by+(isGas?14+r()*122:60+r()*76)}if(isGas&&!isSolid&&(k%3))continue;out+=Ci(x,y,6,isSolid?'#9cc7e6':isGas?C.coral:C.blue)}
   out+=TB(500,246,{ice:'ice',melting:'melting',water:'liquid water',boiling:'boiling',steam:'steam'}[st.ph],15,C.ink)+TB(500,272,st.T.toFixed(1)+' °C',16,C.coral);
   out+=TF(500,300,'Idealised: steady pressure,',13,C.muted)+TF(500,316,'no heat lost',13,C.muted);
   return {svg:out,phase:st.ph==='melting'||st.ph==='boiling'?`On the plateau the temperature holds at ${st.T} °C: energy is breaking bonds between molecules, not speeding them up (${Math.round(st.frac*100)}% done).`:`In the ${st.ph} phase, added energy raises the temperature: the slope depends on the specific heat capacity.`};
@@ -623,7 +623,7 @@ SCENE({id:'phase-changes-diagram',name:'The phase diagram of water',tag:'Boiling
  draw(s){
   const p=101325*Math.exp(-s.h/8434)+s.extra*101325,Tb=P7_boilT(p);let out=heading('Water: which phase where?');
   const lp=v=>Math.log10(v),pl=P7_plot(80,60,330,250,{x0:-40,x1:400,y0:2,y1:8,xticks:[0,100,200,300,400],yticks:[2,3,4,5,6,7,8],xlab:'temperature (°C)',ylab:'pressure (Pa, log scale)',yfmt:v=>'10'+String(v).split('').map(c=>P7_SUP[c]).join('')});out+=pl.svg;
-  const subl=range(31).map(i=>{const T=-40+i/30*40.01,Tk=T+273.15;return [T,611.657*Math.exp(-2.834e6/461.5*(1/Tk-1/273.16))]});
+  const subl=range(31).map(i=>{const T=-40+i/30*40.01,Tk=T+273.15;return [T,611.657*Math.exp(-2.834e6/461.5*(1/Tk-1/273.16))]}).filter(q=>q[1]>=100);
   const boil=range(61).map(i=>{const T=0.01+i/60*(373.946-0.01);return [T,Math.min(P7_vapP(T),22.064e6)]});
   const melt=[[0.01,611.657],[-8,1e8]];
   out+=P7_poly(subl.map(q=>[pl.px(q[0]),pl.py(lp(q[1]))]),C.ink,2.5)+P7_poly(boil.map(q=>[pl.px(q[0]),pl.py(lp(q[1]))]),C.ink,2.5)+P7_poly(melt.map(q=>[pl.px(q[0]),pl.py(lp(q[1]))]),C.ink,2.5);
@@ -661,5 +661,5 @@ SCENE({id:'phase-changes-evaporation',name:'Evaporation cools',tag:'The fastest 
   out+=TF(500,176,'their share of energy:',13,C.muted)+TB(500,198,(escE/totE*100).toFixed(1)+'%',16,C.coral);
   out+=TF(500,232,'mean energy of the rest:',13,C.muted)+TB(500,256,'−'+(drop*100).toFixed(2)+'%',18,C.blue);
   out+=TF(500,286,'Idealised, one-off escape',13,C.muted);
-  return {svg:out,phase:`Only ${(frac*100).toFixed(1)}% of the molecules are fast enough to leave, but they carry ${(escE/totE*100).toFixed(1)}% of the energy. The rest are slower on average: the liquid’s temperature drops by about ${(drop*100).toFixed(1)}% of its absolute value until heat flows back in.`};
+  return {svg:out,phase:`Only ${(frac*100).toFixed(1)}% of the molecules are fast enough to leave, but they carry ${(escE/totE*100).toFixed(1)}% of the energy. The rest are slower on average: in one idealised step the mean energy of those left falls by ${(drop*100).toFixed(1)}%. Real evaporation removes only a sliver at a time, and heat from the surroundings keeps flowing in, but the direction is the same: cooling.`};
  }});

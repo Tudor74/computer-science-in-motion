@@ -51,12 +51,11 @@ SCENE({id:'work-energy',name:'Work',tag:'Force along the motion',
   let o=heading('Work = force along the motion × distance');
   o+=L(30,y,575,y,C.line,3)+R(x0-30,y-48,60,48,'none',C.line,6,'stroke-dasharray="5 4"');
   o+=arrow(x0,y+20,x0+s.d*sc,y+20,C.green,2.5)+TF(x0+s.d*sc/2,y+40,`distance d = ${P3_n(s.d,1)} m`,14,C.green);
-  o+=R(bx-30,y-48,60,48,C.pale,C.blue,6)+TF(bx,y-19,'box',13,C.muted);
+  o+=R(bx-30,y-48,60,48,C.pale,C.blue,6);
   if(s.F>0){const fx=cx+len*Math.cos(th),fy=cy-len*Math.sin(th);
    o+=L(cx,cy,fx,cy,C.blue,2,'stroke-dasharray="6 4"')+L(fx,cy,fx,fy,C.muted,1.6,'stroke-dasharray="4 4"');
    o+=arrow(cx,cy,fx,fy,C.coral,3.5)+TF(fx+(Math.cos(th)>=0?8:-8),Math.max(52,fy-6),`F = ${P3_n(s.F,0)} N`,14,C.coral,Math.cos(th)>=0?'start':'end');
-   const ar=26;o+=P(`M${cx+ar} ${cy} A${ar} ${ar} 0 0 0 ${fmt(cx+ar*Math.cos(th))} ${fmt(cy-ar*Math.sin(th))}`,C.ink,1.4)+TF(cx+40*Math.cos(th/2),cy-40*Math.sin(th/2)+4,`${s.ang}°`,13,C.ink);
-   o+=TF(cx+len*Math.cos(th)/2,cy+16,`along: ${P3_n(s.F*Math.cos(th),1)} N`,13,C.blue)}
+   const ar=26;o+=P(`M${cx+ar} ${cy} A${ar} ${ar} 0 0 0 ${fmt(cx+ar*Math.cos(th))} ${fmt(cy-ar*Math.sin(th))}`,C.ink,1.4)+TF(cx+40*Math.cos(th/2),cy-40*Math.sin(th/2)+4,`${s.ang}°`,13,C.ink);}
   o+=R(40,305,520,56,W>0.05?C.greenp:W<-0.05?C.coralp:'#f1f5f7','none',10);
   o+=T(300,328,`W = F × d × cos θ = ${P3_n(s.F,0)} × ${P3_n(s.d,1)} × cos ${s.ang}° = ${P3_n(W,1)} J`,15,C.ink);
   o+=TF(300,350,s.ang===90?'Force at right angles to the motion: no energy is transferred.':W<-0.05?'Negative work: the force takes energy away from the box, as friction does.':'Positive work: the force gives the box energy.',13,C.muted);
@@ -103,7 +102,7 @@ SCENE({id:'work-energy-power',name:'Power',tag:'How fast energy is transferred',
   o+=stairs(30,C.blue,clamp(s.t/s.tw,0,1),'walker',s.tw)+stairs(250,C.coral,clamp(s.t/s.tr,0,1),'runner',s.tr);
   o+=TF(240,72,`height ${s.h} m`,13,C.muted);
   o+=P3_bars(478,250,[{l:'walker',v:Pw,col:C.blue,d:0},{l:'runner',v:Pr,col:C.coral,d:0}],Math.max(Pw,Pr),140,44,16);
-  o+=TF(530,80,'power (W)',13,C.muted)+TF(530,290,`E = m g h = ${P3_n(E,0)} J`,13,C.ink)+TF(530,308,`each`,13,C.muted)+TF(530,328,`${P3_n(Pr/746,2)} hp`,13,C.coral);
+  o+=TF(530,80,'power (W)',13,C.muted)+TF(530,290,`E = m g h = ${P3_n(E,0)} J`,13,C.ink)+TF(530,308,`each`,13,C.muted)+TF(530,328,`runner: ${P3_n(Pr/746,2)} hp`,13,C.coral);
   return {svg:o,phase:`Each climber gains m g h = ${P3_n(s.m,0)} × 9.81 × ${s.h} = ${P3_n(E,0)} J. Walking in ${P3_n(s.tw,1)} s needs ${P3_n(Pw,0)} W; running in ${P3_n(s.tr,1)} s needs ${P3_n(Pr,0)} W.`};
  }});
 
@@ -126,7 +125,7 @@ SCENE({id:'energy-conservation',name:'Conservation of energy',tag:'Energy change
   o+=L(70,py,230,py,C.ink,3)+L(px,py,px,py+lp+20,C.grid,1,'stroke-dasharray="4 4"');
   const a0=s.deg*Math.PI/180;o+=Ci(px+lp*Math.sin(a0),py+lp*Math.cos(a0),12,'none',C.line,'stroke-dasharray="3 3"');
   o+=L(px,py,bx,by,C.ink,2)+Ci(bx,by,14,C.blue)+TF(px,py+lp+40,`t = ${P3_n(s.t,1)} s`,14,C.muted);
-  o+=R(318,210-140-6,4*58-14+12,146,'none',C.ink,4,'stroke-dasharray="5 4"')+TF(318,57,`start total ${P3_n(E0,2)} J`,13,C.muted,'start');
+  o+=R(318,48,4*58-14+12,168,'none',C.ink,4,'stroke-dasharray="5 4"')+TF(318,44,`start total ${P3_n(E0,2)} J`,13,C.muted,'start');
   o+=P3_bars(324,210,[{l:'kinetic',v:KE,col:C.blue,d:2},{l:'potential',v:PE,col:C.green,d:2},{l:'heat',v:Q,col:C.coral,d:2},{l:'total',v:KE+PE+Q,col:'#8aa1ae',d:2}],E0,140,44,14);
   // Energy history
   const pts=[[],[],[]];for(let t=0;t<=s.t+1e-9;t+=.05){const [a,b]=P3_at(sim,t),k=.5*m*(s.L*b)**2,pp=m*P3_G*s.L*(1-Math.cos(a));pts[0].push([t,k]);pts[1].push([t,pp]);pts[2].push([t,Math.max(0,E0-k-pp)])}
@@ -230,7 +229,7 @@ SCENE({id:'momentum-impulse',name:'Impulse',tag:'Stopping gently takes longer',
   // Force-time graph, log force axis for comparison
   const gx=60,gy=190,gw=480,gh=140,tmax=.32,fmax=Math.max(Fr,F)*1.05,X=t=>gx+t/tmax*gw,Y=f=>gy+gh-Math.log10(1+f)/Math.log10(1+fmax)*gh;
   o+=R(gx,gy,gw,gh,'#fff',C.grid,6)+R(X(0),Y(Fr),X(.01)-X(0),gy+gh-Y(Fr),C.coralp,C.coral,0)+R(X(0),Y(F),X(s.dt)-X(0),gy+gh-Y(F),C.pale,C.blue,0,'fill-opacity=".8"');
-  o+=TF(X(.01)+6,Y(Fr)+14,`rigid: ${P3_n(Fr/1000,0)} kN for 0.01 s`,13,C.coral,'start')+TF(Math.min(X(s.dt)+6,gx+gw-150),Math.max(Y(F)-6,gy+28),`${P3_n(F/1000,1)} kN for ${s.dt.toFixed(2)} s`,13,C.blue,'start');
+  o+=TF(gx+gw-10,gy+20,`rigid: ${P3_n(Fr/1000,0)} kN for 0.01 s`,13,C.coral,'end')+TF(gx+gw-10,gy+40,`yours: ${P3_n(F/1000,1)} kN for ${s.dt.toFixed(2)} s`,13,C.blue,'end');
   o+=TF(gx+gw/2,gy+gh+18,'time (s); force on a log scale so both fit',13,C.muted);
   return {svg:o,phase:`Stopping ${P3_n(dp,0)} kg·m/s of momentum in ${s.dt.toFixed(2)} s needs ${P3_n(F,0)} N, a deceleration of about ${P3_n(g,0)} g. The rigid stop needs ${P3_n(Fr/F,0)} times more force.`};
  }});
@@ -281,7 +280,7 @@ SCENE({id:'collisions',name:'Collisions',tag:'Momentum always survives a crash',
   [[x1,c.r1,C.blue,'A',after?c.u1:s.v1],[x2,c.r2,C.coral,'B',after?c.u2:s.v2]].forEach(([x,r,col,l,v])=>{o+=Ci(X(x),150-r*sc,r*sc,col)+TB(X(x),155-r*sc,l,14,'#fff');if(Math.abs(v)>.01)o+=arrow(X(x),150-2*r*sc-10,X(x)+v*14,150-2*r*sc-10,col,2.5,7)});
   o+='</g></svg>';
   const before=[s.m1*s.v1,s.m2*s.v2],aft=[s.m1*c.u1,s.m2*c.u2],pmax=Math.max(...before.map(Math.abs),...aft.map(Math.abs),Math.abs(before[0]+before[1]),.1);
-  const sb=(x,vals,lab)=>{let r=TF(x+70,198,lab,13,C.muted);vals.forEach(([v,col,l],i)=>{const h=v/pmax*55,bx=x+i*48;r+=R(bx,h>=0?268-h:268,38,Math.abs(h),col,'none',3)+TF(bx+19,h>=0?262-h:282-h,P3_n(v,1),13,C.ink)+TF(bx+19,345,l,13,C.muted)});return r+L(x-4,268,x+140,268,C.line,1.5)};
+  const sb=(x,vals,lab)=>{let r=TF(x+70,190,lab,13,C.muted);vals.forEach(([v,col,l],i)=>{const h=v/pmax*48,bx=x+i*48;r+=R(bx,h>=0?268-h:268,38,Math.abs(h),col,'none',3)+TF(bx+19,h>=0?262-h:282-h,P3_n(v,1),13,C.ink)+TF(bx+19,354,l,13,C.muted)});return r+L(x-4,268,x+140,268,C.line,1.5)};
   o+=sb(40,[[before[0],C.blue,'A'],[before[1],C.coral,'B'],[before[0]+before[1],'#8aa1ae','total']],'momentum before')+sb(200,[[aft[0],C.blue,'A'],[aft[1],C.coral,'B'],[aft[0]+aft[1],'#8aa1ae','total']],'momentum after');
   const kb=.5*s.m1*s.v1**2+.5*s.m2*s.v2**2,ka=.5*s.m1*c.u1**2+.5*s.m2*c.u2**2;
   o+=P3_bars(400,320,[{l:'KE before',v:kb,col:C.green},{l:'KE after',v:ka,col:ka<kb-1e-6?C.amber:C.green}],Math.max(kb,ka,.01),110,64,24);
@@ -332,7 +331,7 @@ SCENE({id:'collisions-restitution',name:'Coefficient of restitution',tag:'How bo
   const fy=300,sc=80;o+=L(360,fy,420,fy,C.ink,3)+Ci(390,fy-12-y*sc,12,C.coral);
   o+=R(440,60,140,240,'#fff',C.grid,8)+TF(510,82,'bounce heights',13,C.muted);
   for(let n=0;n<=5;n++){const h=s.h0*s.e**(2*n);o+=TF(456,108+n*24,n?`h${n}`:'drop',13,C.muted,'start')+TF(566,108+n*24,`${P3_n(h,2)} m`,13,C.ink,'end')}
-  o+=TF(510,262,'measured e = √(h₁ ÷ h₀)',13,C.muted)+TB(510,284,(Math.sqrt(s.e**2)).toFixed(2),15,C.green);
+  o+=TF(510,262,'e = √(h₁ ÷ h₀)',13,C.muted)+TB(510,284,(Math.sqrt(s.e**2)).toFixed(2),15,C.green);
   const tot=Math.sqrt(2*s.h0/P3_G)*(1+2*s.e/(1-s.e));
   return {svg:o,phase:`The bounce speeds shrink by ${s.e.toFixed(2)} each time, so the heights shrink by ${(s.e*s.e).toFixed(2)}. Infinitely many bounces fit into about ${P3_n(tot,1)} s, a real-world Zeno sum.`};
  }});
@@ -416,8 +415,8 @@ SCENE({id:'oscillations-pendulum',name:'The pendulum',tag:'Only small swings kee
  on:{amp(s,v){s.amp=v;s.t=0},L(s,v){s.L=v;s.t=0},...P3_play(P3_PEND_T)},
  draw(s){
   const a0=s.amp*Math.PI/180,w0=Math.sqrt(P3_G/s.L),T0=2*Math.PI/w0,ratio=2*P3_K(Math.sin(a0/2))/Math.PI,sim=P3_pend(s.amp,0,s.L,P3_PEND_T),[th]=P3_at(sim,s.t),thS=a0*Math.cos(w0*s.t);
-  let o=heading(`True period ${P3_n(T0*ratio,2)} s vs small-angle ${P3_n(T0,2)} s`);const py=150,lp=105;
-  [[110,thS,C.blue,'small-angle formula'],[290,th,C.coral,'exact motion']].forEach(([px,a,col,lab])=>{o+=L(px-40,py,px+40,py,C.ink,3)+L(px,py,px+lp*Math.sin(a),py+lp*Math.cos(a),C.ink,1.6)+Ci(px+lp*Math.sin(a),py+lp*Math.cos(a),11,col)+TF(px,350,lab,13,col)});
+  let o=heading(`True period ${P3_n(T0*ratio,2)} s vs small-angle ${P3_n(T0,2)} s`);const py=150,lp=95;
+  [[110,thS,C.blue,'small-angle formula'],[280,th,C.coral,'exact motion']].forEach(([px,a,col,lab])=>{o+=L(px-40,py,px+40,py,C.ink,3)+L(px,py,px+lp*Math.sin(a),py+lp*Math.cos(a),C.ink,1.6)+Ci(px+lp*Math.sin(a),py+lp*Math.cos(a),11,col)+TF(px,350,lab,13,col)});
   const pts=range(35).map(i=>{const d=5+i*5;return [d,2*P3_K(Math.sin(d*Math.PI/360))/Math.PI]});
   o+=P3_plot(415,80,160,220,{xr:[0,170],yr:[1,2.6],series:[{pts,col:C.coral}],xt:[0,90,170],yt:[1,1.5,2,2.5],xl:'release angle (°)',yl:'period ÷ T₀',dots:[{x:s.amp,y:ratio,col:C.coral,r:6}]});
   return {svg:o,phase:s.amp<=15?`At ${s.amp}° the true period is only ${P3_n((ratio-1)*100,2)} % longer than the formula: small swings keep good time.`:`At ${s.amp}° each swing takes ${P3_n((ratio-1)*100,1)} % longer than 2π √(L/g). The orange pendulum falls further behind every swing (idealised: no friction, rigid rod).`};
@@ -464,7 +463,7 @@ SCENE({id:'rotation',name:'Torque and levers',tag:'Force times distance from the
   const ca=Math.cos(ang),sa=Math.sin(ang),pt=d=>[px+d*sc*ca,py+d*sc*sa];
   o+=L(...pt(-3.1),...pt(3.1),C.amber,8);
   for(let d=-3;d<=3;d+=1)if(d){const [x,y]=pt(d);o+=TF(x,y+22,Math.abs(d)+' m',13,C.muted)}
-  [[-s.d1,s.m1,C.blue],[s.d2,s.m2,C.coral]].forEach(([d,m,col])=>{const [x,y]=pt(d),sz=18+m*.8;o+=R(x-sz/2,y-sz-4,sz,sz,col,'none',4)+TF(x,y-sz/2+1,`${m} kg`,13,'#fff')});
+  [[-s.d1,s.m1,C.blue],[s.d2,s.m2,C.coral]].forEach(([d,m,col])=>{const [x,y]=pt(d),sz=38+m*.5;o+=R(x-sz/2,y-sz-4,sz,sz,col,'none',4)+TF(x,y-sz/2+1,`${m} kg`,13,'#fff')});
   o+=R(30,60,200,50,'#fff',C.grid,8)+TF(130,80,'left torque',13,C.muted)+TB(130,100,`${P3_n(t1,0)} N·m`,15,C.blue);
   o+=R(370,60,200,50,'#fff',C.grid,8)+TF(470,80,'right torque',13,C.muted)+TB(470,100,`${P3_n(t2,0)} N·m`,15,C.coral);
   return {svg:o,phase:`${s.m1} kg × 9.81 × ${s.d1} m = ${P3_n(t1,0)} N·m on the left; ${s.m2} kg × 9.81 × ${s.d2} m = ${P3_n(t2,0)} N·m on the right. ${bal?'Equal torques: no turning.':'The larger torque wins and the beam turns.'}`};

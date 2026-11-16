@@ -42,8 +42,8 @@ SCENE({id:'reflection-refraction',name:'Reflection',tag:'Light bounces at equal 
   out+=Ci(src[0],src[1],13,'#ffd24a','#c79100')+arrow(src[0],src[1],H[0],H[1],C.coral,3,10);
   if(s.rough){const r=rng(5);for(let i=0;i<7;i++){const da=P5_rad(-70+i*23+(r()-.5)*10),L2=120+r()*40;out+=arrow(H[0],H[1],H[0]+L2*Math.sin(da),H[1]-L2*Math.cos(da),C.coral,1.8,8,'opacity=".7"')}}
   else out+=arrow(H[0],H[1],eye[0],eye[1],C.coral,3,10)+P5_eye(eye[0]+14*Math.sin(a),eye[1]-14*Math.cos(a),1,true);
-  out+=P5_arc(H[0],H[1],54,-90-s.ang,-90)+TB(H[0]-70*Math.sin(a/2)-18,H[1]-70*Math.cos(a/2),'i = '+s.ang+'°',15,C.amber,'end');
-  if(!s.rough)out+=P5_arc(H[0],H[1],54,-90,-90+s.ang)+TB(H[0]+70*Math.sin(a/2)+18,H[1]-70*Math.cos(a/2),'r = '+s.ang+'°',15,C.amber,'start');
+  out+=P5_arc(H[0],H[1],54,-90-s.ang,-90)+TB(H[0]-70*Math.sin(a/2)-18,H[1]-70*Math.cos(a/2),'i = '+s.ang+'°',15,C.amber,'end','paint-order="stroke" stroke="#f3f7fa" stroke-width="5"');
+  if(!s.rough)out+=P5_arc(H[0],H[1],54,-90,-90+s.ang)+TB(H[0]+70*Math.sin(a/2)+18,H[1]-70*Math.cos(a/2),'r = '+s.ang+'°',15,C.amber,'start','paint-order="stroke" stroke="#f3f7fa" stroke-width="5"');
   out+=T(300,330,s.rough?'Each tiny patch of the surface still obeys i = r, but the patches face different ways.':'Measured from the normal, not from the mirror.',14,C.muted);
   return {svg:out,phase:s.rough?'Diffuse reflection: every point of the paper sends light towards your eye, wherever you stand. Ibn al-Haytham used this idea to explain vision: light comes from the object to the eye.':`The ray arrives ${s.ang}° from the normal and leaves ${s.ang}° from it on the other side. Mirrors reverse the direction across the normal; they do not choose a new angle.`};
  }});
@@ -65,8 +65,8 @@ SCENE({id:'reflection-refraction-snell',name:'Snell’s law',tag:'The ratio of s
   out+=L(H[0],60,H[0],345,C.muted,1.5,'stroke-dasharray="6 5"');
   const src=[H[0]-140*Math.sin(a),H[1]-140*Math.cos(a)],out2=[H[0]+140*Math.sin(t2),H[1]+140*Math.cos(t2)],refl=[H[0]+110*Math.sin(a),H[1]-110*Math.cos(a)];
   out+=arrow(src[0],src[1],H[0],H[1],C.coral,3,10)+arrow(H[0],H[1],refl[0],refl[1],C.coral,1.4,7,'opacity=".35"')+arrow(H[0],H[1],out2[0],out2[1],C.coral,3,10);
-  out+=P5_arc(H[0],H[1],46,-90-s.ang,-90)+TB(H[0]-26,H[1]-60,'θ₁ = '+s.ang+'°',14,C.amber,'end');
-  out+=P5_arc(H[0],H[1],46,90-P5_deg(t2),90,C.purple)+TB(H[0]+22,H[1]+68,'θ₂ = '+P5_deg(t2).toFixed(1)+'°',14,C.purple,'start');
+  out+=P5_arc(H[0],H[1],46,-90-s.ang,-90)+TB(H[0]-10,H[1]-62,'θ₁ = '+s.ang+'°',14,C.amber,'end','paint-order="stroke" stroke="#f3f7fa" stroke-width="5"');
+  out+=P5_arc(H[0],H[1],46,90-P5_deg(t2),90,C.purple)+TB(H[0]+10,H[1]+66,'θ₂ = '+P5_deg(t2).toFixed(1)+'°',14,C.purple,'start','paint-order="stroke" stroke="#dcecf5" stroke-width="5"');
   // Chart of sin θ2 against sin θ1.
   const cx=410,cy=310,w=170,h=210;out+=L(cx,cy,cx+w,cy,C.line,1.5)+L(cx,cy,cx,cy-h,C.line,1.5)+TF(cx+w/2,cy+30,'sin θ₁ (in)',13,C.muted)+TF(cx-6,cy-h-8,'sin θ₂ (out)',13,C.muted,'start');
   for(const v of [0,.5,1])out+=TF(cx+v*w,cy+15,fmt(v),13,C.muted)+TF(cx-6,cy-v*h+4,fmt(v),13,C.muted,'end');
@@ -102,8 +102,8 @@ SCENE({id:'reflection-refraction-tir',name:'Total internal reflection',tag:'Ligh
   else out+=TB(560,y+(dy>0?-8:14),'→ out the far end',13,C.green,'end');
   out+=R(60,292,480,64,trapped?C.greenp:C.coralp,trapped?C.green:C.coral,10);
   out+=TB(300,318,`critical angle θc = sin⁻¹(1.40 / ${nc.toFixed(2)}) = ${thc.toFixed(1)}°`,15,C.ink);
-  out+=T(300,342,`ray meets the wall at ${wall}° from the normal: ${trapped?'more than θc, so it is trapped':'less than θc, so most of it escapes'}`,14,trapped?C.green:C.coral);
-  return {svg:out,phase:trapped?`The ray hits the core wall ${wall}° from the normal, beyond the critical angle of ${thc.toFixed(1)}°, so none of it can refract out. It bounces about ${bounces} times in this short stretch, and a real fibre carries it for kilometres.`:`At ${wall}° from the normal the ray is inside the critical angle (${thc.toFixed(1)}°), so it refracts out into the cladding. Fibres only accept light within a narrow cone around their axis.`};
+  out+=TF(300,342,`wall angle ${wall}° ${trapped?'>':'<'} θc: ${trapped?'trapped':'most of it escapes'}`,14,trapped?C.green:C.coral);
+  return {svg:out,phase:trapped?`The ray hits the core wall ${wall}° from the normal, beyond the critical angle of ${thc.toFixed(1)}°, so none of it can refract out. It bounces about ${bounces} times in this short stretch, and a real fibre carries it for kilometres.`:`At ${wall}° from the normal the ray is at less than the critical angle (${thc.toFixed(1)}°), so it refracts out into the cladding. Fibres only accept light within a narrow cone around their axis.`};
  }});
 
 /* ---------- Lesson: lenses ---------- */
@@ -118,7 +118,7 @@ SCENE({id:'lenses',name:'Lenses and images',tag:'1/f = 1/u + 1/v',
  init:()=>({u:30,f:10}),
  watch(p){return {u:Math.round(lerp(45,4,smooth(p))),f:10}},
  ui:[{range:'u',label:'Object distance',min:2,max:48,get:s=>s.u,act:'u',show:v=>v+' cm'},{range:'f',label:'Focal length',min:-20,max:20,get:s=>s.f,act:'f',show:v=>v+' cm'}],
- on:{u(s,v){s.u=v},f(s,v){s.f=v}},
+ on:{u(s,v){s.u=v},f(s,v){s.f=Math.abs(v)<4?(v<0?-4:4):v}},
  draw(s){
   const f=Math.abs(s.f)<4?(s.f<0?-4:4):s.f,u=s.u,h=4,sx=5,sy=12,conv=f>0,M=(x,y)=>P5_lensMap(x,y,sx,sy);
   const v=Math.abs(u-f)<.01?Infinity:1/(1/f-1/u),m=-v/u,real=v>0&&isFinite(v);
@@ -132,7 +132,7 @@ SCENE({id:'lenses',name:'Lenses and images',tag:'1/f = 1/u + 1/v',
   rays.forEach((k,i)=>{const yl=h+k*u,ko=k-yl/f,[x0,y0]=M(-u,h),[xl,yl2]=M(0,yl),xe=58,[x2,y2]=M(xe,yl+ko*xe);
    out+=L(x0,y0,xl,yl2,cols[i],2)+L(xl,yl2,x2,y2,cols[i],2);
    if(!real&&isFinite(v)){const xb=Math.max(-56,v*1.2),[x3,y3]=M(xb,yl+ko*xb);out+=L(xl,yl2,x3,y3,cols[i],1.4,'stroke-dasharray="5 4" opacity=".7"')}});
-  if(isFinite(v)&&Math.abs(v)<60){const [ix,iy]=M(v,m*h);out+=arrow(ix,200,ix,iy,C.coral,4,11,real?'':'stroke-dasharray="6 4"')+TF(ix,iy+(m<0?18:-8),real?'real image':'virtual image',13,C.coral)}
+  if(isFinite(v)&&Math.abs(v)<60){const [ix,iy]=M(v,m*h);out+=arrow(ix,200,ix,iy,C.coral,4,11,real?'':'stroke-dasharray="6 4"')+TF(ix+(ix<330&&ix>270?40:0),m<0?Math.max(iy+18,240):Math.min(iy-8,176),real?'real image':'virtual image',13,C.coral,'middle','paint-order="stroke" stroke="#f3f7fa" stroke-width="4"')}
   const desc=!isFinite(v)?'no image: the rays leave parallel':`${real?'real':'virtual'}, ${m<0?'inverted':'upright'}, ${Math.abs(m)>1.02?'larger':Math.abs(m)<.98?'smaller':'same size'}`;
   out+=R(40,326,520,40,'#fff',C.grid,8)+TF(300,351,`1/${fmt(f)} = 1/${u} + 1/v  →  v = ${isFinite(v)?fmt(Math.round(v*10)/10)+' cm':'∞'}   ·   m = ${isFinite(v)?fmt(Math.round(m*100)/100):'∞'}   ·   ${desc}`,14,C.ink);
   return {svg:out,phase:`${desc[0].toUpperCase()+desc.slice(1)}. ${real?'Light really reaches the image point, so a screen placed there would show it.':isFinite(v)?'The rays only seem to come from the image point; your eye traces them back. No screen could catch it.':'The object sits at the focal point.'} Idealised thin lens, rays near the axis.`};
@@ -149,15 +149,15 @@ SCENE({id:'lenses-eye',name:'The eye and glasses',tag:'Focusing on the retina',
  ui:[{choose:[['normal','Typical eye'],['myopic','Short-sighted'],['hyperopic','Long-sighted']],label:'Eye',get:s=>s.eye,act:'eye'},{range:'d',label:'Object distance',min:10,max:600,step:5,get:s=>s.d,act:'d',show:v=>v>=600?'6 m (far)':v+' cm'},{range:'g',label:'Glasses',min:-4,max:4,step:.5,get:s=>s.g,act:'g',show:v=>(v>0?'+':'')+v+' D'}],
  on:{eye(s,v){s.eye=v},d(s,v){s.d=v},g(s,v){s.g=v}},
  draw(s){
-  const Lm=1/60,relax=60+({normal:0,myopic:2,hyperopic:-2})[s.eye],A=4,dm=s.d/100,need=1/Lm+1/dm-s.g,P=clamp(need,relax,relax+A),vergence=P+s.g-1/dm,v=vergence>0?1/vergence:Infinity,sharp=Math.abs(need-P)<.05;
+  const Lm=1/60,relax=60+({normal:0,myopic:2,hyperopic:-2})[s.eye],A=4,dm=s.d/100,need=1/Lm+1/dm-s.g,Pw=clamp(need,relax,relax+A),vergence=Pw+s.g-1/dm,v=vergence>0?1/vergence:Infinity,sharp=Math.abs(need-Pw)<.05;
   let out=heading(sharp?'In focus on the retina':v<Lm?'Focus falls in front of the retina':'Focus falls behind the retina');
-  const ex=330,ret=480,cy=190,vpx=isFinite(v)?clamp(v/Lm*(ret-ex),40,260):260,fx=ex+vpx;
+  const ex=330,ret=480,cy=190,err=need-Pw,vpx=clamp((ret-ex)+err*18,70,260),fx=ex+vpx;void v;
   out+=P(`M${ex-30} ${cy-95}Q${ex-62} ${cy} ${ex-30} ${cy+95}`,C.blue,2.5)+Ci(ex+70,cy,112,'#fbfcfd',C.line)+P(`M${ret-4} ${cy-80}Q${ret+8} ${cy} ${ret-4} ${cy+80}`,C.coral,5)+TF(ret+18,cy-82,'retina',13,C.coral,'start');
-  out+=`<ellipse cx="${ex}" cy="${cy}" rx="${10+(P-relax)*2}" ry="34" fill="#dcecf5" stroke="${C.blue}" stroke-width="2"/>`;
+  out+=`<ellipse cx="${ex}" cy="${cy}" rx="${10+(Pw-relax)*2}" ry="34" fill="#dcecf5" stroke="${C.blue}" stroke-width="2"/>`;
   out+=arrow(60,cy,60,cy-46,C.green,4,11)+TF(60,cy+20,s.d>=600?'6 m away':s.d+' cm away',13,C.green)+TF(60,cy+36,'(not to scale)',13,C.muted);
   if(s.g){const gx=245;out+=s.g>0?P(`M${gx} ${cy-60}Q${gx+14} ${cy} ${gx} ${cy+60}Q${gx-14} ${cy} ${gx} ${cy-60}Z`,C.purple,2,'#efeaf8'):P(`M${gx-8} ${cy-60}H${gx+8}Q${gx} ${cy} ${gx+8} ${cy+60}H${gx-8}Q${gx} ${cy} ${gx-8} ${cy-60}Z`,C.purple,2,'#efeaf8');out+=TF(gx,cy+80,(s.g>0?'+':'')+s.g+' D',13,C.purple)}
   for(const py of [-28,28]){out+=L(60,cy-46,ex,cy+py,C.amber,1.6);const sl=(cy+18-(cy+py))/vpx,tx=Math.min(fx,ret);out+=L(ex,cy+py,tx,cy+py+sl*(tx-ex),C.amber,1.8);if(fx<ret)out+=L(fx,cy+18,ret,cy+18+sl*(ret-fx),C.amber,1.4,'opacity=".7"')}
-  const blur=clamp(Math.abs(vpx-(ret-ex))/(vpx||1)*28,0,14);
+  const blur=clamp(Math.abs(err)*5,0,14);
   out+=R(20,262,150,96,'#fff',C.grid,8)+TF(95,280,'what you see',13,C.muted);
   for(let i=0;i<(blur>1?6:1);i++){const a=i/6*2*Math.PI,dx=blur>1?Math.cos(a)*blur:0,dy=blur>1?Math.sin(a)*blur:0;out+=TB(95+dx,344+dy,'E',54,C.ink,'middle',`opacity="${blur>1?.25:1}"`)}
   out+=TF(420,330,`needs ${need.toFixed(1)} D · eye can give ${relax}–${relax+A} D`,14,sharp?C.green:C.coral)+TF(420,350,sharp?'sharp':'blurred: '+(need>relax+A?'object too close for this eye':'eye cannot relax enough'),14,sharp?C.green:C.coral);
@@ -189,7 +189,7 @@ SCENE({id:'lenses-telescope',name:'Telescopes',tag:'Magnifying angles',
   const ang=.52*M;
   out+=R(40,300,520,58,'#fff',C.grid,8);
   out+=TBF(300,323,`M = ${s.fo} ÷ ${fe} = ${fmt(Math.round(M*10)/10)}×   ·   tube ≈ ${d} cm`,15,C.ink);
-  out+=TF(300,346,`The Moon (0.52° across) looks ${ang.toFixed(1)}° across${kep?', upside down':', upright'}. Angles drawn exaggerated.`,13,C.muted);
+  out+=TF(300,346,`Moon: 0.52° → ${ang.toFixed(1)}° across, ${kep?'upside down':'upright'} · angles exaggerated`,13,C.muted);
   return {svg:out,phase:`${kep?'Kepler':'Galileo'} design: ${fmt(Math.round(M*10)/10)}× magnification from a ${s.fo} cm objective and a ${fe} cm eyepiece. More magnification needs a longer objective or a shorter eyepiece, which is why early telescopes grew very long.`};
  }});
 
@@ -243,7 +243,7 @@ SCENE({id:'colour-spectrum-mixing',name:'Mixing colours',tag:'Adding light, subt
   const lbl=add?['red','green','blue']:['cyan','magenta','yellow'];
   out+=TF(110,110,lbl[0],14,add?'#fff':C.ink)+TF(282,110,lbl[1],14,add?'#fff':C.ink)+TF(195,338,lbl[2],14,add?'#fff':C.ink);
   out+=R(390,90,180,120,P5_hex(mix),C.grid,12)+TBF(480,234,P5_hex(mix).toUpperCase(),16,C.ink)+TF(480,254,'colour in the middle',13,C.muted);
-  out+=T(480,290,add?'Each light adds its own band':'Each filter removes a band',13,C.muted)+T(480,310,add?'of the spectrum to what you see.':'from white light on the paper.',13,C.muted);
+  out+=TF(480,290,add?'Each light adds its own band':'Each filter removes a band',13,C.muted)+TF(480,310,add?'of the spectrum to what you see.':'from white light on the paper.',13,C.muted);
   return {svg:out,phase:add?'Your eye has three kinds of colour receptor, so three lights can imitate almost any colour. Red and green light with no yellow wavelength at all still look yellow.':'Cyan absorbs red, magenta absorbs green and yellow absorbs blue. What survives all the filters is what you see, so mixing more paint leaves less light.'};
  }});
 
@@ -268,12 +268,12 @@ SCENE({id:'colour-spectrum-rainbow',name:'Rainbows',tag:'Light in a raindrop',
   for(let b=.1;b<.99;b+=.08){const [,,p3,e]=trace(b);out+=L(p3[0],p3[1],p3[0]+e[0]*80,p3[1]+e[1]*80,col,1.2,'opacity=".35"')}
   const [p,p2,p3,e]=trace(s.b);
   out+=arrow(20,p[1],p[0],p[1],'#c79100',3,9)+L(p[0],p[1],p2[0],p2[1],col,2.6)+L(p2[0],p2[1],p3[0],p3[1],col,2.6)+arrow(p3[0],p3[1],p3[0]+e[0]*110,p3[1]+e[1]*110,col,3,9);
-  out+=TF(30,p[1]-8,'sunlight',13,C.muted,'start');
+  out+=TF(20,70,'sunlight from the left →',13,C.muted,'start');
   // Chart of the return angle against entry height, for red and violet.
   const gx=330,gy=320,gw=250,gh=230;out+=L(gx,gy,gx+gw,gy,C.line,1.5)+L(gx,gy,gx,gy-gh,C.line,1.5)+TF(gx+gw/2,gy+32,'entry height (0 = centre, 1 = edge)',13,C.muted);
   for(const v of [0,20,40])out+=TF(gx-6,gy-v/45*gh+4,v+'°',13,C.muted,'end');
   for(const [cn,cnm] of [['red',700],['violet',410]]){const nn=P5_nWater(cnm),c2=P5_wl(cnm);let d='',best=0;for(let i=0;i<=100;i++){const b=i/100*.999,th=P5_deg(4*Math.asin(b/nn)-2*Math.asin(b));best=Math.max(best,th);d+=(i?'L':'M')+fmt(gx+b*gw)+' '+fmt(gy-th/45*gh)}
-   out+=P(d,c2,2.4)+TF(gx+gw-4,gy-best/45*gh-8,`${cn} ${best.toFixed(1)}°`,13,c2,'end')}
+   out+=P(d,c2,2.4)+TF(gx+gw-4,cn==='red'?gy-best/45*gh-10:gy-best/45*gh+30,`${cn} peak ${best.toFixed(1)}°`,13,c2,'end','paint-order="stroke" stroke="#f3f7fa" stroke-width="4"')}
   const th=theta(s.b);out+=Ci(gx+s.b*gw,gy-th/45*gh,6,'none',C.ink)+TF(gx+8,gy-gh-6,'angle back from the anti-solar point',13,C.muted,'start');
   return {svg:out,phase:`This ray comes back ${th.toFixed(1)}° from the direction opposite the Sun. Near the peak, many neighbouring rays return at almost the same angle, so light piles up there and you see a bright ${s.col} circle. Idealised spherical drop, one internal reflection.`};
  }});
@@ -353,7 +353,7 @@ SCENE({id:'double-slit-debate',name:'Particles or waves?',tag:'Newton against Hu
   if(s.model==='particle'){const r=rng(31);for(let i=0;i<Math.min(s.n,1200);i++){const slit=i%2?1:-1,sy=cy+slit*d/2+(r()-.5)*6,ty=cy+slit*d/2*((scx-60)/(sx-60))+((r()+r()+r())/3-.5)*22;
     if(i<40)out+=L(60,cy,sx,sy,'#ffd24a',.6,'opacity=".25"')+L(sx,sy,scx,ty,'#ffd24a',.6,'opacity=".25"');out+=Ci(scx-4-r()*14,ty,1.6,'#ffd24a')}}
   else{out+='<clipPath id="p5-debate"><rect x="20" y="52" width="560" height="240"/></clipPath><g clip-path="url(#p5-debate)">';for(const yy of [cy-d/2,cy+d/2])for(let k=1;k<20;k++)out+=P(`M${sx} ${fmt(yy-k*16)}A${k*16} ${k*16} 0 0 1 ${sx} ${fmt(yy+k*16)}`,'#8fd0ff',1,'none','opacity=".35"');
-   out+=R(scx+8,52,120,240,'#141c22','none',0)+'</g>';let c='';for(let y=60;y<=284;y+=2){const I=Math.cos((y-cy)/9)**2*Math.exp(-((y-cy)/80)**2);out+=R(scx-14,y-1,14,2.4,'#8fd0ff','none',0,`opacity="${I.toFixed(3)}"`);c+=(y===60?'M':'L')+fmt(scx+12+I*60)+' '+y}out+=P(c,'#fff',1.4)}
+   out+=R(scx+8,52,120,240,'#141c22','none',0)+'</g>';let c='';for(let y=60;y<=284;y+=2){const I=Math.cos((y-cy)/9)**2*Math.exp(-(((y-cy)/80)**2));out+=R(scx-14,y-1,14,2.4,'#8fd0ff','none',0,`opacity="${I.toFixed(3)}"`);c+=(y===60?'M':'L')+fmt(scx+12+I*60)+' '+y}out+=P(c,'#fff',1.4)}
   out+=R(20,300,560,62,s.reveal?C.greenp:'#f6f9fb',s.reveal?C.green:C.grid,8);
   out+=TF(30,322,'Particles (Newton): two bands · faster in water',13,C.ink,'start')+TF(30,342,'Waves (Huygens, Young): many fringes · slower in water',13,C.ink,'start');
   out+=TF(570,332,s.reveal?'Observed: fringes (Young, 1803) and slower in water (Foucault, 1850)':'',13,C.green,'end');
@@ -377,11 +377,11 @@ SCENE({id:'diffraction-polarisation',name:'Diffraction',tag:'Narrower slit, wide
   out+=R(20,52,560,276,'#141c22','none',8);
   out+=R(120,56,10,cy-gap/2-56,'#7d8c94','none',0)+R(120,cy+gap/2,10,324-(cy+gap/2),'#7d8c94','none',0);
   out+=L(30,cy,120,cy,col,Math.max(2,gap*.8),'opacity=".7"');
-  out+=P(`M130 ${cy-gap/2}L420 ${cy-half*ppm}L420 ${cy+half*ppm}L130 ${cy+gap/2}Z`,'none',0,col,'opacity=".18"');
+  out+=P(`M130 ${cy-gap/2}L420 ${fmt(Math.max(56,cy-half*ppm))}L420 ${fmt(Math.min(324,cy+half*ppm))}L130 ${cy+gap/2}Z`,'none',0,col,'opacity=".18"');
   out+=R(420,56,8,268,'#b9c4ca','none',1);
   let c='';for(let py=58;py<=322;py+=2){const ymm=(py-cy)/ppm,be=Math.PI*s.a*1e-3*ymm*1e-3/(s.lam*1e-9),I=Math.abs(be)<1e-9?1:(Math.sin(be)/be)**2;out+=R(432,py-1,16,2.6,col,'none',0,`opacity="${Math.min(1,I*1.2).toFixed(3)}"`);c+=(py===58?'M':'L')+fmt(456+I*110)+' '+py}
   out+=P(c,'#fff',1.5);
-  out+=L(458,cy-s.a/2*ppm,458,cy+s.a/2*ppm,C.amber,4)+TF(472,cy-s.a/2*ppm-6,'straight-line shadow',13,C.amber,'start');
+  out+=L(458,cy-s.a/2*ppm-3,458,cy+s.a/2*ppm+3,C.amber,4)+TF(410,cy-22,'straight-line shadow →',13,C.amber,'end','paint-order="stroke" stroke="#141c22" stroke-width="4"');
   out+=R(40,338,520,32,'#fff',C.grid,8)+TF(300,359,`first dark band at y = λL/a = ${s.lam} nm × 1 m ÷ ${s.a} mm = ${half.toFixed(1)} mm from the centre`,13,C.ink);
   return {svg:out,phase:`The central band is ${(2*half).toFixed(1)} mm wide while the slit is only ${s.a} mm. Diffraction is why no lens or eye can resolve detail finer than about a wavelength, and why a narrow beam always spreads.`};
  }});
@@ -458,7 +458,7 @@ SCENE({id:'speed-of-light',name:'Rømer and Io',tag:'Light takes time',
  ui:[{range:'month',label:'Months after opposition',min:0,max:12,step:.5,get:s=>s.month,act:'month'},{b:'Time an eclipse of Io',act:'rec'},{b:'Clear',act:'clear'}],
  on:{month(s,v){s.month=v},rec(s){if(Math.abs(s.month-6)<1)return 'keep';const d=P5_dist(s.month),r=rng(nextSeed());s.rec=s.rec.concat([[d,(d-4.2)*P5_AU_S+(r()-.5)*70]]).slice(-12)},clear(s){s.rec=[]}},
  draw(s){
-  const sun=[150,200],sc=36,a=s.month/12*2*Math.PI,E=[sun[0]+sc*Math.cos(a),sun[1]-sc*Math.sin(a)],J=[sun[0]+200,sun[1]],d=P5_dist(s.month),hidden=Math.abs(s.month-6)<1;
+  const sun=[150,200],sc=36,a=s.month/12*2*Math.PI,E=[sun[0]+sc*Math.cos(a),sun[1]-sc*Math.sin(a)],J=[sun[0]+165,sun[1]],d=P5_dist(s.month),hidden=Math.abs(s.month-6)<1;
   let out=heading('Eclipses of Io run late when Earth is far away');
   out+=Ci(sun[0],sun[1],sc,'none',C.line,'stroke-dasharray="4 4"')+Ci(sun[0],sun[1],14,'#ffd24a','#c79100');
   out+=L(E[0],E[1],J[0],J[1],hidden?C.line:C.amber,2,hidden?'stroke-dasharray="4 4"':'')+Ci(E[0],E[1],7,C.blue)+Ci(J[0],J[1],12,'#d9a46b')+Ci(J[0]+20,J[1]-6,3.5,'#888')+TF(J[0],J[1]+28,'Jupiter + Io',13,C.ink)+TF(E[0],E[1]+(E[1]>sun[1]?20:-12),'Earth',13,C.blue);
@@ -486,18 +486,17 @@ SCENE({id:'speed-of-light-fizeau',name:'Fizeau’s toothed wheel',tag:'Timing li
  draw(s,f,X){
   const N=720,Lm=8633,c=299792458,tau=2*Lm/c,frac=(N*s.f*tau)%1,T=1-2*Math.min(frac,1-frac);
   let out=heading('Speed the wheel up until the light disappears');
-  const wx=150,wy=150,rot=X.try?s.f*.7:X.p*s.f*6;
-  out+=Ci(wx,wy,62,'#eef2f4',C.line);for(let k=0;k<36;k++){const a=(k/36)*2*Math.PI+rot;out+=`<rect x="${wx-5}" y="${wy-70}" width="10" height="14" fill="${C.dark}" transform="rotate(${fmt(P5_deg(a))} ${wx} ${wy})"/>`}
+  const wx=165,wy=150,rot=X.try?s.f*.7:X.p*s.f*6,op=(.08+.92*T).toFixed(3);
+  out+=Ci(wx,wy,50,'#eef2f4',C.line);for(let k=0;k<36;k++){const a=(k/36)*2*Math.PI+rot;out+=`<rect x="${wx-4}" y="${wy-57}" width="8" height="12" fill="${C.dark}" transform="rotate(${fmt(P5_deg(a))} ${wx} ${wy})"/>`}
   out+=TF(wx,wy+5,'720 teeth',13,C.muted)+TF(wx,wy+20,'(36 drawn)',13,C.muted);
-  out+=Ci(40,82,10,'#ffd24a','#c79100')+L(40,82,560,82,'#ffd24a',4,'opacity=".9"')+R(556,62,10,40,C.dark,'none',2)+TF(520,52,'mirror 8.63 km away',13,C.muted,'end');
-  out+=L(560,90,wx+8,90,'#ffd24a',4,`opacity="${(.08+.92*T).toFixed(3)}"`)+P5_eye(70,108,1)+L(wx-4,90,82,104,'#ffd24a',3,`opacity="${(.08+.92*T).toFixed(3)}"`);
-  out+=TF(70,134,'brightness '+Math.round(T*100)+'%',13,C.ink);
+  out+=Ci(30,100,10,'#ffd24a','#c79100')+L(30,100,560,100,'#ffd24a',4,'opacity=".9"')+R(556,80,10,40,C.dark,'none',2)+TF(548,74,'mirror 8.63 km away',13,C.muted,'end');
+  out+=L(560,107,72,107,'#ffd24a',4,`opacity="${op}"`)+L(60,88,84,112,C.blue,3)+TF(72,80,'glass plate',13,C.blue)+L(72,107,72,138,'#ffd24a',3,`opacity="${op}"`)+P5_eye(72,152,1)+TF(60,186,'brightness '+Math.round(T*100)+'%',13,C.ink);
+  out+=R(20,212,230,146,'#fff',C.grid,8);
   const gx=270,gy=300,gw=300,gh=110;out+=L(gx,gy,gx+gw,gy,C.line,1.5)+L(gx,gy,gx,gy-gh,C.line,1.5)+TF(gx+gw/2,gy+30,'wheel speed (turns per second)',13,C.muted)+TF(gx-4,gy-gh-8,'returning light',13,C.muted,'start');
   let d='';for(let i=0;i<=150;i++){const ff=i/150*30,fr=(N*ff*tau)%1,tt=1-2*Math.min(fr,1-fr);d+=(i?'L':'M')+fmt(gx+ff/30*gw)+' '+fmt(gy-tt*gh)}out+=P(d,C.amber,2);
   for(const v of [0,10,20,30])out+=TF(gx+v/30*gw,gy+15,v,13,C.muted);out+=Ci(gx+s.f/30*gw,gy-T*gh,6,C.coral);
-  out+=R(20,200,230,150,'#fff',C.grid,8);
-  if(s.rec){const cc=4*N*Lm*s.rec.f;out+=TF(30,224,`recorded ${s.rec.f.toFixed(2)} turns/s`,13,C.ink,'start')+TF(30,248,'c = 4 × N × L × f',13,C.ink,'start')+TF(30,270,`= 4 × 720 × 8633 m × ${s.rec.f.toFixed(2)}`,13,C.ink,'start')+TBF(30,296,`= ${Math.round(cc/1000).toLocaleString('en-GB')} km/s`,15,Math.abs(cc-c)/c<.03?C.green:C.coral,'start')+TF(30,320,Math.abs(cc-c)/c<.03?'close to 299,792 km/s':'not at the darkest point yet',13,C.muted,'start')}
-  else out+=TF(30,224,'Find the first dark point,',13,C.muted,'start')+TF(30,244,'then press Record.',13,C.muted,'start')+TF(30,280,`round trip: ${(tau*1e6).toFixed(1)} μs`,13,C.ink,'start');
+  if(s.rec){const cc=4*N*Lm*s.rec.f;out+=TF(30,236,`recorded ${s.rec.f.toFixed(2)} turns/s`,13,C.ink,'start')+TF(30,260,'c = 4 × N × L × f',13,C.ink,'start')+TF(30,282,`= 4 × 720 × 8633 m × ${s.rec.f.toFixed(2)}`,13,C.ink,'start')+TBF(30,308,`= ${Math.round(cc/1000).toLocaleString('en-GB')} km/s`,15,Math.abs(cc-c)/c<.03?C.green:C.coral,'start')+TF(30,332,Math.abs(cc-c)/c<.03?'close to 299,792 km/s':'not at the darkest point yet',13,C.muted,'start')}
+  else out+=TF(30,236,'Find the first dark point,',13,C.muted,'start')+TF(30,256,'then press Record.',13,C.muted,'start')+TF(30,292,`round trip: ${(tau*1e6).toFixed(1)} μs`,13,C.ink,'start');
   return {svg:out,phase:`Light takes ${(tau*1e6).toFixed(1)} microseconds for the 17 km round trip. At ${s.f.toFixed(2)} turns per second the wheel turns ${(frac).toFixed(2)} of a tooth-and-gap in that time, so ${Math.round(T*100)}% of the light gets back through. Darkness at half a tooth means the light met a tooth.`};
  }});
 
