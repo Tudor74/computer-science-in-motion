@@ -502,7 +502,7 @@ const P3_SKATE_T=10;
 function P3_skI(r){return 1.2+2*4*r*r} // body ≈ 1.2 kg·m² plus two 4 kg arms at radius r (illustrative)
 SCENE({id:'rotation-skater',name:'Angular momentum',tag:'Pull in and spin faster',
  definition:'Angular momentum, L = I ω (moment of inertia × spin rate), stays constant when no outside torque acts. Pull mass closer to the axis and the spin speeds up to keep L the same.',
- example:'A skater spinning once a second with arms out who pulls them in can spin about three times a second, with no push from anywhere.',
+ example:'With these illustrative values, a skater turning once a second with arms out turns about four times a second with them pulled in, with no push from anywhere.',
  desc:'A top view of a spinning skater whose arms move in and out; readouts show moment of inertia falling, spin rate rising and angular momentum staying constant.',
  research:'Kepler’s second law (1609) is conservation of angular momentum for a planet; Euler (1765) treated rigid-body rotation. Body values here are illustrative.',
  dur:12,hint:'Move the arms in or out while spinning. I × ω stays fixed; kinetic energy rises as the arms come in, because the skater’s muscles do work.',
@@ -511,13 +511,13 @@ SCENE({id:'rotation-skater',name:'Angular momentum',tag:'Pull in and spin faster
  ui:[{range:'r',label:'Arm reach (m)',min:.2,max:.8,step:.05,get:s=>s.r,act:'r'},{b:'▶ Spin',act:'go'},{b:'❚❚ Stop',act:'pause'}],
  on:{r(s,v){s.r=v},go(s,a,ctx){s.run=(s.run||0)+1;ctx.every(33,'spin',s.run)},spin(s,tok){if(Number(tok)!==s.run)return 'stop';const L=P3_skI(.8)*2*Math.PI;s.ang+=L/P3_skI(s.r)/30;s.t+=1/30;if(s.t>600){s.run++;return 'stop'}},pause(s){s.run=(s.run||0)+1}},
  draw(s){
-  const L=P3_skI(.8)*2*Math.PI,I=P3_skI(s.r),w=L/I,KE=.5*I*w*w,cx=170,cy=210,rp=s.r*170;let o=heading('Angular momentum L = I ω stays the same');
+  const Lm=P3_skI(.8)*2*Math.PI,I=P3_skI(s.r),w=Lm/I,KE=.5*I*w*w,cx=170,cy=210,rp=s.r*170;let o=heading('Angular momentum L = I ω stays the same');
   o+=Ci(cx,cy,150,'#f6f9fb',C.grid)+Ci(cx,cy,30,C.purple);
   [0,Math.PI].forEach(d=>{const a=s.ang+d;o+=L(cx+28*Math.cos(a),cy+28*Math.sin(a),cx+(30+rp)*Math.cos(a),cy+(30+rp)*Math.sin(a),C.purple,7)+Ci(cx+(30+rp)*Math.cos(a),cy+(30+rp)*Math.sin(a),9,C.coral)});
   o+=TF(cx,cy+5,'head',13,'#fff')+TF(cx,355,'seen from above',13,C.muted);
   const row=(y,l,v,col)=>R(370,y,200,46,'#fff',C.grid,8)+TF(470,y+17,l,13,C.muted)+TB(470,y+38,v,15,col);
-  o+=row(70,'moment of inertia I',`${P3_n(I,2)} kg·m²`,C.ink)+row(126,'spin rate',`${P3_n(w/(2*Math.PI),2)} turns per second`,C.blue)+row(182,'angular momentum L',`${P3_n(L,2)} kg·m²/s`,C.green)+row(238,'kinetic energy',`${P3_n(KE,1)} J`,C.coral);
-  return {svg:o,phase:`With arms at ${P3_n(s.r,2)} m, I = ${P3_n(I,2)} kg·m² and the skater turns ${P3_n(w/(2*Math.PI),2)} times a second. L stays ${P3_n(L,2)} kg·m²/s because nothing outside twists the skater (idealised: frictionless ice).`};
+  o+=row(70,'moment of inertia I',`${P3_n(I,2)} kg·m²`,C.ink)+row(126,'spin rate',`${P3_n(w/(2*Math.PI),2)} turns per second`,C.blue)+row(182,'angular momentum L',`${P3_n(Lm,2)} kg·m²/s`,C.green)+row(238,'kinetic energy',`${P3_n(KE,1)} J`,C.coral);
+  return {svg:o,phase:`With arms at ${P3_n(s.r,2)} m, I = ${P3_n(I,2)} kg·m² and the skater turns ${P3_n(w/(2*Math.PI),2)} times a second. L stays ${P3_n(Lm,2)} kg·m²/s because nothing outside twists the skater (idealised: frictionless ice).`};
  }});
 
 /* ---------- Symmetry and conservation (Noether) ---------- */
@@ -574,7 +574,7 @@ SCENE({id:'symmetry-conservation-noether',name:'Noether’s theorem',tag:'Pair e
  definition:'Noether’s theorem pairs each continuous symmetry with a conserved quantity: space with momentum, time with energy, rotation with angular momentum, and the phase symmetry of quantum fields with electric charge.',
  example:'Because an experiment works the same today as tomorrow, energy is conserved; because it works the same here as across the room, momentum is conserved.',
  desc:'Four symmetries on the left and four conserved quantities on the right; lines join the pairs the learner chooses, coloured green when correct.',
- research:'Noether (1918), invited to Göttingen by Hilbert and Klein; she was not allowed to habilitate as a lecturer until 1919. Einstein called her work penetrating mathematical thinking.',
+ research:'Noether (1918), invited to Göttingen by Hilbert and Klein; she was not allowed to habilitate as a lecturer until 1919. Einstein’s 1935 tribute in the New York Times called her a creative mathematical genius.',
  dur:10,hint:'Press a symmetry, then the quantity you think it conserves. Check when all four are joined.',
  init:()=>({sel:null,pairs:{},checked:false}),
  watch(p){const n=Math.min(4,Math.floor(p*5)),pairs={};P3_NOE_L.slice(0,n).forEach(x=>pairs[x.k]=x.k);return {sel:null,pairs,checked:n===4}},

@@ -194,13 +194,13 @@ SCENE({id:'temperature-heat-rumford',name:'Heat is motion: Rumford’s cannon',t
   for(let i=0;i<4;i++){const a=turn+i*Math.PI/2;out+=L(268,145,268+22*Math.cos(a),145+22*Math.sin(a),'#777',3)}
   if(k>=1){const n=Math.min(12,k*3);for(let i=0;i<n;i++)out+=Ci(70+((i*37)%150),85+((i*13)%28)-(k>=3?i%3*4:0),k>=3?4:3,'#fff',C.blue)}
   if(k>=1)out+=TF(155,260,'horses turn the barrel →',13,C.muted);
-  const pl=P7_plot(320,64,250,200,{x0:0,x1:3,y0:0,y1:110,xticks:[0,1,2,3],yticks:[0,50,100],xlab:'hours',ylab:'water °C',xfmt:v=>v+' h'});out+=pl.svg;
+  const pl=P7_plot(320,64,250,180,{x0:0,x1:3,y0:0,y1:110,xticks:[0,1,2,3],yticks:[0,50,100],xlab:'',ylab:'water °C',xfmt:v=>v+' h'});out+=pl.svg;
   const obs=t=>Math.min(100,15+34*t),cal=t=>15+45*(1-Math.exp(-t/0.7));
   const tEnd=k>=3?3:k>=1?1.2:0,curve=s.view==='caloric'?cal:obs;
   if(k>=2&&s.view!=='caloric')out+=P7_poly(range(31).map(i=>[pl.px(i/10),pl.py(cal(i/10))]),C.muted,2,'stroke-dasharray="5 5"')+TF(pl.px(2.2),pl.py(cal(2.2))+18,'caloric: runs out',13,C.muted);
   if(tEnd>0)out+=P7_poly(range(31).map(i=>i/10*tEnd/3).map(t=>[pl.px(t),pl.py(curve(t))]),s.view==='caloric'?C.purple:C.coral,3);
   if(k>=3&&s.view!=='caloric')out+=L(pl.px(0),pl.py(100),pl.px(3),pl.py(100),C.coral,1.5,'stroke-dasharray="4 4"')+TF(pl.px(2.5),pl.py(100)-6,'boils ≈ 2.5 h',13,C.coral);
-  if(k>=4)out+=R(30,290,540,52,C.greenp,'none',10)+TB(300,314,'Heat is a form of motion, not a fluid',15,C.green)+TF(300,334,'1 calorie of heat ≈ 4.2 J of work (Joule)',13,C.ink);
+  if(k>=4)out+=R(30,292,540,52,C.greenp,'none',10)+TB(300,316,'Heat is a form of motion, not a fluid',15,C.green)+TF(300,336,'1 calorie of heat ≈ 4.2 J of work (Joule)',13,C.ink);
   return {svg:out,phase:f.say+(s.view==='caloric'?' (Purple: what caloric theory would expect if heat were stored in the metal.)':'')};
  }});
 
@@ -522,7 +522,7 @@ SCENE({id:'heat-engines',name:'The Carnot cycle',tag:'The best any heat engine c
   const res=f.leg===0?['hot '+s.Th+' K',C.coral]:f.leg===2?['cold '+s.Tc+' K',C.blue]:['insulated','#8a99a3'];
   out+=R(30,58,110,26,res[1],'none',6,'opacity=".9"')+TB(85,76,res[0],13,'#fff');
   out+=TF(200,140,'heat in',13,C.coral)+TB(200,160,c.Qh.toFixed(0)+' J',14,C.coral)+TF(200,200,'work out',13,C.amber)+TB(200,220,c.W.toFixed(0)+' J',14,C.amber)+TF(200,260,'heat out',13,C.blue)+TB(200,280,c.Qc.toFixed(0)+' J',14,C.blue);
-  out+=TB(420,330,`efficiency = W/Q_hot = 1 − ${s.Tc}/${s.Th} = ${(c.eta*100).toFixed(0)}%`,15,C.green);
+  out+=TBF(420,330,`efficiency = W/Q_hot = 1 − ${s.Tc}/${s.Th} = ${(c.eta*100).toFixed(0)}%`,15,C.green);
   return {svg:out,phase:f.say};
  }});
 
