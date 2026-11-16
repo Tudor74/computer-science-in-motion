@@ -53,7 +53,7 @@ SCENE({id:'sequencing',name:'Sanger sequencing',tag:'Reading DNA with chain-stop
   for(let i=0;i<n;i++){const x=312+i*23,b=seq[i],shown=t>=1&&i<s.r;out+=R(x,188,21,26,shown?tint(B8_COL[b],.75):'#fff',shown?B8_COL[b]:C.grid,4)+(shown?TMF(x+10.5,206,b,15,C.ink,'middle','font-weight="700"'):'')}
   out+=TF(312,240,'Template it was copied from, 3′ → 5′',13,C.muted,'start');
   for(let i=0;i<n;i++){const x=312+i*23,shown=t>=1&&i<s.r;out+=R(x,248,21,26,'#fff',C.grid,4)+(shown?TMF(x+10.5,266,B8_COMP[seq[i]],15,C.muted):'')}
-  out+=TB(450,310,t<1?'Run the gel fully to separate the bands':s.r>=n?'Read complete: 12 bases':`Bases read: ${s.r} of 12`,15,s.r>=n?C.green:C.ink);
+  out+=TB(450,310,t<1?'Run the gel fully first':s.r>=n?'Read complete: 12 bases':`Bases read: ${s.r} of 12`,15,s.r>=n?C.green:C.ink);
   out+=TF(450,334,'A pairs with T, and G with C.',13,C.muted);
   return {svg:out,phase:t<1?'The copies are still bunched near the wells. Run the gel: each copy moves at a speed set by its length, so the bands spread out by size.':s.r>=n?`Read in order of length, the lanes spell ${seq}. Every base pairs with the template underneath. Machines later replaced the four lanes with four coloured dyes in one capillary.`:'The shortest copy is one base long, so it is the lowest band. Its lane tells you the first base of the new strand; the next band up gives the second, and so on.'};
  }});
