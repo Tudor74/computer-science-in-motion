@@ -41,6 +41,6 @@ LESSON({id:'nucleotide-synthesis',name:'Making nucleotides',short:'Nucleotides',
  prior:['ribozymes','miller-urey'],references:['a4-powner-2009','a4-patel-2015','a4-becker-2019','a4-ferris-1996','a4-orgel-2004'],
  ids:['nucleotide-synthesis','nucleotide-synthesis-cyanosulfidic','nucleotide-synthesis-wetdry']});
 
-THREAD({id:'a4-selection',name:'Selection without cells',ids:['replicators','replicators-cross','error-threshold','evolution-in-the-lab']});
+THREAD({id:'a4-selection',name:'Selection without cells',ids:['replicators','replicators-cross','error-threshold']});
 THREAD({id:'a4-cooperation',name:'Cooperation and compartments',ids:['error-threshold-hypercycle','autocatalytic-sets','protocells','membrane-growth']});
 THREAD({id:'a4-chemistry',name:'Chemistry of the first molecules',ids:['miller-urey','meteorite-chemistry','nucleotide-synthesis','nucleotide-synthesis-wetdry','hydrothermal-vents']});
