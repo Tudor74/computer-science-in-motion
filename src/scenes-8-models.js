@@ -71,7 +71,7 @@ SCENE({id:'perceptron',name:'The perceptron learns',tag:'Rosenblatt’s rule',
   const bx=345,by=300,bw=Math.min(18,225/Math.max(1,r.errs.length));out+=L(bx,by,580,by,C.line,1)+TF(bx,214,'mistakes in each pass',13,C.muted,'start');
   r.errs.slice(0,12).forEach((e,i)=>{const h=Math.min(70,e*10);out+=R(bx+i*(bw+3),by-h,bw,h,e?C.coral:C.green,'none',2)});
   out+=TF(bx,by+18,'pass 1 →',13,C.muted,'start');
-  out+=TF(180,352,'arrow: the side called blue · amber ring: on the wrong side',13,C.muted);
+  out+=TF(300,356,'arrow: the side called blue · amber ring: on the wrong side',13,C.muted);
   const conv=s.k>=n&&r.errs[Math.floor(s.k/n)-1]===0&&inEp===0;
   const phase=s.k===0?'The starting line is arbitrary. Each mistake moves the line towards the point it got wrong.':r.last&&r.last.upd?`Point ${r.last.i+1} was on the wrong side, so the weights moved by η × target × input (η = ${D8_ETA}).`:conv?'A whole pass with no mistakes: the line now separates the classes. Rosenblatt proved this always happens if a separating line exists.':s.set==='xor'&&ep>=3?'XOR keeps producing mistakes pass after pass: no straight line can put the blue corners on one side and the coral corners on the other.':'That point was already on the right side, so nothing changed.';
   return {svg:out,phase};
@@ -340,8 +340,8 @@ SCENE({id:'bayesian-perception-reach',name:'Your own prior',tag:'You are the obs
   let out=heading('Where is the hidden target?',26);const lx=v=>40+v*5.2,ly=88;
   out+=L(lx(0),ly,lx(100),ly,C.line,2);[0,20,40,60,80,100].forEach(v=>out+=L(lx(v),ly-5,lx(v),ly+5,C.line,1.4)+TF(lx(v),ly+22,String(v),13,C.muted));
   if(X.try)for(let v=0;v<=100;v+=4)out+=hit(X,'est',v,'Set estimate '+v,R(lx(v)-10,ly-26,20,40,'transparent','none',0));
-  if(s.i<D8_RTRIALS){const t=D8_rTrial(s.seed,s.i);t.dots.forEach(d=>out+=Ci(lx(d),ly-12,5,t.cond==='sharp'?C.blue:C.purple,'#fff'));out+=TF(lx(100),58,`trial ${s.i+1} of ${D8_RTRIALS} · ${t.cond==='sharp'?'sharp cloud':'blurry cloud'}`,13,C.muted,'end')}
-  else out+=TF(lx(100),58,'all trials done',13,C.muted,'end');
+  if(s.i<D8_RTRIALS){const t=D8_rTrial(s.seed,s.i);t.dots.forEach(d=>out+=Ci(lx(d),ly-12,5,t.cond==='sharp'?C.blue:C.purple,'#fff'));out+=TF(lx(100),134,`trial ${s.i+1} of ${D8_RTRIALS} · ${t.cond==='sharp'?'sharp cloud':'blurry cloud'}`,13,C.muted,'end')}
+  else out+=TF(lx(100),134,'all trials done',13,C.muted,'end');
   out+=`<polygon points="${fmt(lx(s.est))},${ly-19} ${fmt(lx(s.est)-7)},${ly-33} ${fmt(lx(s.est)+7)},${ly-33}" fill="${C.coral}"/>`;
   const last=s.res[s.res.length-1];if(last&&!s.sim)out+=TF(40,58,`last: target ${last.x.toFixed(0)}, your estimate ${Math.round(last.e)}`,13,C.green,'start');
   const pl=D8_plot(80,150,260,180,[30,90],[30,90],{xt:[[30,'30'],[90,'90']],yt:[[30,'30'],[60,'60'],[90,'90']],xl:'centre of the dot cloud',xlDy:30,yl:'estimate'});out+=pl.svg;
@@ -431,7 +431,6 @@ SCENE({id:'predictive-processing-action',name:'Acting to fulfil predictions',tag
   out+=Ci(sx,sy,9,C.ink)+R(sx-60,sy+8,150,10,C.grid,'none',3);
   out+=L(sx,sy,sx+len*Math.cos(ang(mu)),sy+len*Math.sin(ang(mu)),C.green,7,'stroke-dasharray="10 6" opacity=".7"');
   out+=L(sx,sy,sx+len*Math.cos(ang(x)),sy+len*Math.sin(ang(x)),C.blue,9);
-  out+=TF(sx+len*Math.cos(ang(mu))+12,sy+len*Math.sin(ang(mu))-8,'predicted',13,C.green,'start')+TF(sx+len*Math.cos(ang(x))+14,sy+len*Math.sin(ang(x))+18,'actual',13,C.blue,'start');
   out+=TF(sx,sy+40,`error ${(mu-x).toFixed(1)}°`,14,C.coral);
   const pl=D8_plot(340,60,230,220,[0,24],[0,90],{xt:[[0,'0'],[12,'12'],[24,'24 steps']],yt:[[0,'0°'],[45,'45°'],[90,'90°']],yl:'arm angle'});out+=pl.svg;
   out+=D8_poly(r.M.slice(0,t+1).map((v,i)=>[pl.X(i),pl.Y(v)]),C.green,2.4,'stroke-dasharray="6 4"')+D8_poly(r.X.slice(0,t+1).map((v,i)=>[pl.X(i),pl.Y(v)]),C.blue,2.6);
@@ -466,7 +465,7 @@ SCENE({id:'embodied-cognition',name:'Catching without calculating',tag:'The outf
   const p2=D8_plot(390,56,180,140,[0,D8_TF],[0,2.5],{xt:[[0,'0 s'],[2,'2'],[4,'4 s']],yl:'tan(gaze angle)'});out+=p2.svg;
   const ta=(t,x)=>{const [bx_,by_]=D8_ball(t),d=x-bx_;return d>.5?by_/d:2.6};const cv=[],ref=[];
   for(let i=1;i<=50;i++){const t=i/50*T_,x=D8_fielder(s.stand,s.run,t);cv.push([p2.X(t),p2.Y(clamp(ta(t,x),0,2.5))])}
-  const c0=ta(.3,D8_fielder(s.stand,s.run,.3))/.3;ref.push([p2.X(0),p2.Y(0)],[p2.X(D8_TF),p2.Y(clamp(c0*D8_TF,0,2.5))]);
+  const c0=s.run?D8_G/(2*D8_VX):ta(.3,s.stand)/.3;ref.push([p2.X(0),p2.Y(0)],[p2.X(D8_TF),p2.Y(clamp(c0*D8_TF,0,2.5))]);
   out+=D8_poly(ref,C.grid,1.6,'stroke-dasharray="6 4"')+D8_poly(cv,C.amber,2.6);
   const miss=fx-D8_RANGE;out+=T(300,300,s.run?`The fielder ends ${Math.abs(miss)<1?'under the ball':Math.abs(miss).toFixed(0)+' m '+(miss>0?'behind':'short of')+' it'}, without ever computing the landing point`:miss>2?`Standing ${miss.toFixed(0)} m beyond the landing spot: the ball's apparent rise slows down`:miss<-2?`Standing ${(-miss).toFixed(0)} m short: the ball's apparent rise speeds up`:'Standing at the landing spot: the ball rises at a perfectly steady rate',15,C.ink);
   out+=TF(480,244,'dashed: steady rise',13,C.muted);
@@ -568,7 +567,7 @@ SCENE({id:'consciousness',name:'Seeing and not seeing',tag:'Backward masking',
   else if(s.ph==='mask')out+=D8_mask(cx,cy);
   else if(s.ph==='ask')out+=TF(cx,cy+5,'Which digit was it?',14,C.ink);
   else out+=Ci(cx,cy,3,C.muted)+TF(cx,cy+30,s.i>=D8_MN?'all trials done':'look at the dot, then Flash',13,C.muted);
-  if(s.ph==='ask'&&!s.sim)D8_DIG.forEach((d,k)=>{const x=cx-105+(k%4)*70,y=210+Math.floor(k/4)*42;out+=hit(X,'ans',d,'Digit '+d,R(x-0,y,58,34,'#fff',C.blue,6)+TBF(x+29,y+23,String(d),16,C.blue))});
+  if(s.ph==='ask'&&!s.sim)D8_DIG.forEach((d,k)=>{const x=cx-120+(k%4)*62,y=210+Math.floor(k/4)*42;out+=hit(X,'ans',d,'Digit '+d,R(x,y,52,34,'#fff',C.blue,6)+TBF(x+26,y+23,String(d),16,C.blue))});
   else{const y=212;[['digit','17 ms'],['blank','to SOA'],['mask','250 ms']].forEach(([l,d],k)=>{const x=40+k*76;out+=R(x,y,68,30,['target','blank','mask'][k]===s.ph?C.pale:'#fff',C.line,4)+TF(x+34,y+20,l,13,C.ink)+TF(x+34,y+48,d,13,C.muted)})}
   const pl=D8_plot(340,60,230,210,[0,150],[0,1],{xt:[[17,'17'],[50,'50'],[83,'83'],[133,'133']],yt:[[0,'0'],[.125,'chance'],[.5,'0.5'],[1,'1']],xl:'delay to mask (ms)',yl:'proportion correct'});out+=pl.svg;
   const cv=[];for(let v=0;v<=150;v+=3)cv.push([pl.X(v),pl.Y(D8_mCurve(v))]);out+=D8_poly(cv,C.green,2.2,'stroke-dasharray="6 4"');
