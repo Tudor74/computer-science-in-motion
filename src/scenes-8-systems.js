@@ -470,7 +470,7 @@ SCENE({id:'platform-economies-tipping',name:'Tipping',tag:'Winner takes most',
  research:['Katz, M. L. & Shapiro, C. (1985). Network externalities, competition, and compatibility. American Economic Review 75, 424–440.','Arthur, W. B. (1989). Competing technologies, increasing returns, and lock-in by historical events. Economic Journal 99, 116–131.','Liebowitz, S. J. & Margolis, S. E. (1990). The fable of the keys. Journal of Law and Economics 33, 1–25 (a sceptical view of lock-in stories).'],
  dur:10,hint:'Give B a small quality edge, then give A a head start. With strong network effects, does the better platform win?',
  init:()=>({g:1.2,qB:.15,s0:.6}),
- watch(p){return p<.5?{g:.3,qB:.15,s0:.6}:{g:1.2,qB:.15,s0:.6}},
+ watch(p){return p<.5?{g:.25,qB:0,s0:.6}:{g:1.2,qB:.15,s0:.6}},
  ui:[{range:'g',label:'Network-effect strength',min:0,max:2,step:.05,get:s=>s.g,act:'g',show:v=>Number(v).toFixed(2)},{range:'qB',label:'B’s quality edge',min:-.4,max:.4,step:.05,get:s=>s.qB,act:'qB',show:v=>Number(v).toFixed(2)},{range:'s0',label:'A’s starting share',min:.1,max:.9,step:.05,get:s=>s.s0,act:'s0',show:v=>Math.round(v*100)+'%'}],
  on:{g(s,v){s.g=Number(v)},qB(s,v){s.qB=Number(v)},s0(s,v){s.s0=Number(v)}},
  draw(s){
