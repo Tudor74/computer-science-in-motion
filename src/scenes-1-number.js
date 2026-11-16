@@ -448,8 +448,8 @@ SCENE({id:'pentatonic-scales-traditions',name:'Pentatonics around the world',tag
   for(let i=0;i<12;i++){const a=-Math.PI/2+i*Math.PI/6;out+=L(cx+Math.cos(a)*(Rr-8),cy+Math.sin(a)*(Rr-8),cx+Math.cos(a)*(Rr+8),cy+Math.sin(a)*(Rr+8),C.line,2)}
   tr.c.forEach((c,i)=>{const a=-Math.PI/2+2*Math.PI*c/1200;out+=L(cx,cy,cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr,C.pale,2)+Ci(cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr,14,C.blue)+TB(cx+Math.cos(a)*(Rr+34),cy+Math.sin(a)*(Rr+34)+5,tr.labels[i],13,C.ink)});
   out+=TF(cx,cy+5,'1200 ¢',13,C.muted);
-  out+=TB(340,90,'degrees (cents)',14,C.muted,'start');
-  tr.c.forEach((c,i)=>{out+=TF(340,118+i*24,`${tr.labels[i]}: ${c}`,14,C.ink,'start')+(i?TF(470,118+i*24,`+${c-tr.c[i-1]}`,13,C.green,'start'):'')});
-  out+=TF(340,250,'grey ticks: the 12 equal semitones',13,C.muted,'start');
+  out+=TB(372,90,'degrees (cents)',14,C.muted,'start');
+  tr.c.forEach((c,i)=>{out+=TF(372,118+i*24,`${tr.labels[i]}: ${c}`,14,C.ink,'start')+(i?TF(500,118+i*24,`+${c-tr.c[i-1]}`,13,C.green,'start'):'')});
+  out+=TF(372,250,'grey ticks: 12 equal semitones',13,C.muted,'start');
   return {svg:out,phase:tr.note};
  }});

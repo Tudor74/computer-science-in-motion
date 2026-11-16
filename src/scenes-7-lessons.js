@@ -16,6 +16,7 @@ SOURCE('m7-shannon',{title:'Shannon, C. E. (1949). Communication in the presence
 SOURCE('m7-zwicker',{title:'Zwicker, E. & Fastl, H. (1990). Psychoacoustics: Facts and Models. Springer.'});
 SOURCE('m7-brandenburg',{title:'Brandenburg, K. (1999). MP3 and AAC explained. AES 17th International Conference on High-Quality Audio Coding.'});
 SOURCE('m7-midi',{title:'MIDI Manufacturers Association (1983). MIDI 1.0 Detailed Specification.',url:'https://midi.org/'});
+SOURCE('m7-emim',{title:'Electronic Music In Motion: a companion course on electronic music, from tape to modular synths.',url:'https://electronic-music-in-motion.puter.site/'});
 SOURCE('m7-mathews',{title:'Mathews, M. V. (1963). The digital computer as a musical instrument. Science 142(3592).'});
 
 LESSON({id:'phonograph',name:'The phonograph',short:'Phonograph',stage:'electric',year:'1877',level:'Introduction',
@@ -28,11 +29,11 @@ LESSON({id:'microphones-speakers',name:'Microphones and loudspeakers',short:'Mic
  ids:['microphones-speakers','microphones-speakers-feedback','microphones-speakers-pickup']});
 LESSON({id:'tape-music',name:'Tape music',short:'Tape music',stage:'electric',year:'1948–1960s',level:'Core',
  why:'Magnetic tape made recorded sound into a material to be cut, reversed, looped and layered, and composers made music from it.',
- prior:['microphones-speakers','envelope'],references:['m7-schaeffer','m7-niebur','m7-oram'],
+ prior:['microphones-speakers','envelope'],references:['m7-schaeffer','m7-niebur','m7-oram','m7-emim'],
  ids:['tape-music','tape-music-edit','tape-music-radiophonic']});
 LESSON({id:'synthesis',name:'Synthesisers',short:'Synthesis',stage:'electric',year:'1964–1980s',level:'Core',
  why:'Building sounds from oscillators, filters and amplifiers gave musicians direct control over timbre.',
- prior:['fourier-timbre','envelope','harmonic-series'],references:['m7-moog','m7-chowning','m7-pinch'],
+ prior:['fourier-timbre','envelope','harmonic-series'],references:['m7-moog','m7-chowning','m7-pinch','m7-emim'],
  ids:['synthesis','synthesis-voltage','synthesis-fm']});
 LESSON({id:'digital-audio',name:'Digital audio',short:'Digital audio',stage:'electric',year:'1928–1990s',level:'Core',
  why:'Sound as a list of numbers can be copied perfectly, but only if it is sampled fast enough and measured finely enough.',
