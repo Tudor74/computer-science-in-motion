@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -59,6 +59,7 @@ footer p{margin:0 0 4px}
 @keyframes reach{0%,10%{transform:translate(0,0)}55%,100%{transform:translate(318px,-58px)}}
 @keyframes hitpulse{0%,50%{opacity:0}60%{opacity:.9}100%{opacity:0}}
 @keyframes swing{0%,100%{transform:rotate(28deg)}50%{transform:rotate(-28deg)}}
+@keyframes stepon{0%,100%{opacity:.25}10%,30%{opacity:1}}
 @keyframes travel{from{stroke-dashoffset:0}to{stroke-dashoffset:-60}}
 @keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1)}}
 .wave{animation:slide 6s linear infinite}
@@ -67,8 +68,9 @@ footer p{margin:0 0 4px}
 .pulse{animation:hitpulse 3.2s ease-out infinite;transform-origin:440px 92px}
 .radar{animation:breathe 7s ease-in-out infinite;transform-origin:300px 110px;transform-box:view-box}
 .route{animation:travel 2.4s linear infinite}
+.step{animation:stepon 2s steps(1) infinite}
 .bob{animation:swing 2.6s ease-in-out infinite;transform-origin:300px 30px;transform-box:view-box}
-@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route,.bob{animation:none}}
+@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route,.bob,.step{animation:none}}
 
 @media(max-width:760px){
  body{padding:6px}
@@ -211,6 +213,26 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://therapies-in-motion.puter.site/">Open Therapies <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="secondary" href="https://therapies-in-motion.puter.site/atlas.html">Therapy Atlas</a></div>
    </div>
   </li>
+  <li class="course electronic">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A sixteen-step sequencer with steps lighting in turn"><rect width="600" height="220" fill="#f3f7fa"/><rect x="60" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:0.000s"/><rect x="91" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:0.125s"/><rect x="122" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:0.250s"/><rect x="153" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:0.375s"/><rect x="184" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:0.500s"/><rect x="215" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:0.625s"/><rect x="246" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:0.750s"/><rect x="277" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:0.875s"/><rect x="308" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:1.000s"/><rect x="339" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:1.125s"/><rect x="370" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:1.250s"/><rect x="401" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:1.375s"/><rect x="432" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:1.500s"/><rect x="463" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:1.625s"/><rect x="494" y="70" width="25" height="44" rx="5" fill="#b0337a" stroke="#d9b3c8" stroke-width="2" class="step" style="animation-delay:1.750s"/><rect x="525" y="70" width="25" height="44" rx="5" fill="#fff" stroke="#d9b3c8" stroke-width="2" class="" style="animation-delay:1.875s"/><path d="M60 170 H120 V140 H180 V170 H240 V140 H300 V170 H360 V140 H420 V170 H480 V140 H540" fill="none" stroke="#b0337a" stroke-width="3"/></svg>
+   <div class="body">
+    <h3>Electronic Music In Motion</h3>
+    <p class="tag">How electronic music works, with live sound</p>
+    <p class="desc">An animated, playable guide to sound, synthesis, digital audio, rhythm, effects and the history of electronic music. Every Try it scene makes live sound in the browser.</p>
+    <ul class="facts" aria-label="Course contents"><li>Sound</li><li>Synthesis</li><li>Digital audio</li><li>Rhythm and effects</li></ul>
+    <div class="links"><a class="open" href="https://electronic-music-in-motion.puter.site/">Open Electronic Music <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+  <li class="course philosophy">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A timeline of thinkers, each holding one idea, linked to the next"><rect width="600" height="220" fill="#f3f7fa"/><line x1="50" y1="150" x2="550" y2="150" stroke="#c7d8e3" stroke-width="3"/><g fill="none" stroke="#5a5f9e" stroke-width="2"><path d="M90 150 Q160 60 230 150"/><path d="M230 150 Q300 70 370 150"/><path d="M370 150 Q440 60 510 150"/></g><g fill="#5a5f9e"><circle cx="90" cy="150" r="10"/><circle cx="230" cy="150" r="10"/><circle cx="370" cy="150" r="10"/><circle cx="510" cy="150" r="10"/></g><text x="90" y="185" text-anchor="middle" font-size="15" fill="#546873">Thales</text><text x="510" y="185" text-anchor="middle" font-size="15" fill="#546873">today</text></svg>
+   <div class="body">
+    <h3>Philosophy In Motion</h3>
+    <p class="tag">Famous thinkers, one idea each</p>
+    <p class="desc">Famous thinkers from Thales to today, one idea each, as animated diagrams you can play, rewind and try.</p>
+    <ul class="facts" aria-label="Course contents"><li>Thales to today</li><li>One idea per thinker</li></ul>
+    <div class="links"><a class="open" href="https://philosophy-in-motion.puter.site/">Open Philosophy <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
   <li class="course thinkers">
    <svg class="motif" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People as points on a map, with ideas travelling between them along routes">
     <rect width="600" height="220" fill="#f3f7fa"/>
@@ -226,6 +248,26 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://thinkers-in-motion.puter.site/">Open Thinkers <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
+  <li class="course rashid">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="Papers along a research timeline from 2000 to 2026, ending in a shield"><rect width="600" height="220" fill="#f3f7fa"/><line x1="50" y1="160" x2="470" y2="160" stroke="#c7d8e3" stroke-width="3"/><rect x="60" y="120" width="28" height="30" rx="4" fill="#1f6f5c" fill-opacity="0.35"/><rect x="104" y="98" width="28" height="52" rx="4" fill="#1f6f5c" fill-opacity="0.41"/><rect x="148" y="110" width="28" height="40" rx="4" fill="#1f6f5c" fill-opacity="0.48"/><rect x="192" y="86" width="28" height="64" rx="4" fill="#1f6f5c" fill-opacity="0.54"/><rect x="236" y="102" width="28" height="48" rx="4" fill="#1f6f5c" fill-opacity="0.61"/><rect x="280" y="78" width="28" height="72" rx="4" fill="#1f6f5c" fill-opacity="0.68"/><rect x="324" y="92" width="28" height="58" rx="4" fill="#1f6f5c" fill-opacity="0.74"/><rect x="368" y="68" width="28" height="82" rx="4" fill="#1f6f5c" fill-opacity="0.80"/><rect x="412" y="84" width="28" height="66" rx="4" fill="#1f6f5c" fill-opacity="0.87"/><rect x="456" y="60" width="28" height="90" rx="4" fill="#1f6f5c" fill-opacity="0.93"/><path d="M520 60 L556 74 V110 C556 136 538 152 520 160 C502 152 484 136 484 110 V74 Z" fill="#1f6f5c"/><path d="M506 108 L516 118 L536 96" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="60" y="185" font-size="14" fill="#546873">2000</text><text x="440" y="185" font-size="14" fill="#546873">2026</text></svg>
+   <div class="body">
+    <h3>Awais Rashid In Motion</h3>
+    <p class="tag">An unofficial guide to one researcher’s published work</p>
+    <p class="desc">An unofficial, animated guide to Professor Awais Rashid’s published research, from object databases in 2000 to operational-technology security in 2026: one paper per scene.</p>
+    <ul class="facts" aria-label="Course contents"><li>Unofficial</li><li>2000–2026</li><li>One paper per scene</li></ul>
+    <div class="links"><a class="open" href="https://awais-rashid-in-motion.puter.site/">Open Awais Rashid <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+  <li class="course future">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A measured trend line continuing as a dashed, clearly labelled prediction to 2040"><rect width="600" height="220" fill="#f3f7fa"/><line x1="60" y1="180" x2="560" y2="180" stroke="#c7d8e3" stroke-width="2"/><line x1="340" y1="40" x2="340" y2="180" stroke="#c7d8e3" stroke-width="2" stroke-dasharray="4 5"/><path d="M60 170 C140 166 220 156 340 128" fill="none" stroke="#192c37" stroke-width="3.5"/><path d="M340 128 C420 108 480 80 550 50" fill="none" stroke="#c45238" stroke-width="3.5" stroke-dasharray="9 7"/><circle cx="340" cy="128" r="6" fill="#192c37"/><text x="200" y="205" text-anchor="middle" font-size="14" fill="#546873">sourced data</text><text x="460" y="205" text-anchor="middle" font-size="14" fill="#c45238">prediction for 2040</text></svg>
+   <div class="body">
+    <h3>The Future In Motion</h3>
+    <p class="tag">Twenty-four technologies: where they stand, and where they might go</p>
+    <p class="desc">From AI and fusion to cultivated meat and satellite internet: where each technology stands today, with sourced data, and a playful, clearly labelled prediction for 2040.</p>
+    <ul class="facts" aria-label="Course contents"><li>24 technologies</li><li>Sourced data</li><li>Labelled predictions</li></ul>
+    <div class="links"><a class="open" href="https://the-future-in-motion.puter.site/">Open The Future <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
  </ul>
 
  <h2 id="ideas-heading">What “in motion” means</h2>
@@ -238,7 +280,7 @@ footer p{margin:0 0 4px}
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Thinkers runs alongside all of them, with the people behind the ideas.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
 </main>
 
 <footer>
