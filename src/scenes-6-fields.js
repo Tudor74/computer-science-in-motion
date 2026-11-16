@@ -215,7 +215,7 @@ SCENE({id:'electric-field-cage',name:'Faraday cage',tag:'No field inside a condu
 /* ---------- Lesson: circuits ---------- */
 // A loop path for moving charges: rectangle from (x0,y0) to (x1,y1).
 function P6_loopPoint(u,x0,y0,x1,y1){const w=x1-x0,h=y1-y0,per=2*(w+h);let d=((u%1)+1)%1*per;if(d<w)return [x0+d,y0];d-=w;if(d<h)return [x1,y0+d];d-=h;if(d<w)return [x1-d,y1];d-=w;return [x0,y1-d]}
-function P6_bulb(x,y,P,label){const t=clamp(P/3,0,1);return (t>0?Ci(x,y,26+12*t,'#ffd84a','none',`opacity="${(.25+.45*t).toFixed(2)}"`):'')+Ci(x,y,18,P6_mix('#eef2f4','#ffd84a',t),C.dark)+P(`M${x-7} ${y+4} Q${x} ${y-10} ${x+7} ${y+4}`,P6_mix('#9aa8b0','#c47a00',t),2)+(label?TF(x,y+38,label,13,C.muted):'')}
+function P6_bulb(x,y,Pw,label){const t=clamp(Pw/3,0,1);return (t>0?Ci(x,y,26+12*t,'#ffd84a','none',`opacity="${(.25+.45*t).toFixed(2)}"`):'')+Ci(x,y,18,P6_mix('#eef2f4','#ffd84a',t),C.dark)+P(`M${x-7} ${y+4} Q${x} ${y-10} ${x+7} ${y+4}`,P6_mix('#9aa8b0','#c47a00',t),2)+(label?TF(x,y+38,label,13,C.muted):'')}
 SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a current',
  definition:'A closed loop of conductors through which charge flows. A source such as a battery gives each coulomb energy (its voltage); the current is the charge passing a point each second, in amperes.',
  example:'Volta stacked pairs of zinc and copper discs separated by brine-soaked card: each pair adds roughly 0.8 V. Close the switch and a current flows at once all round the loop, even though each electron drifts only millimetres a second.',
@@ -358,12 +358,12 @@ SCENE({id:'magnetism-wire-coil',name:'Field of a wire and a coil',tag:'Circles a
   return {svg:out,phase:s.kind==='wire'?`B = μ₀I / 2πr: with ${Math.abs(s.I)} A the field is ${(P6_MU0*Math.abs(s.I)/(2*Math.PI*.02)*1e6).toFixed(0)} µT at 2 cm and halves each time the distance doubles. Reverse the current and the circles reverse.`:`Inside a long coil the loops’ fields add up to a uniform field, B = μ₀nI. The coil behaves like a bar magnet with a north pole at the end where the field comes out.`};
  },
  three(s,f,X,project){
-  const P=project([[-1.6,-1.6,-1.4],[1.6,1.6,1.6]]),sg=Math.sign(s.I)||1,on=s.I!==0;let out='';
-  if(s.kind==='wire'){out+=line3([0,0,-1.4],[0,0,1.6],P,C.amber,5)+arrow3([0,0,.9],[0,0,1.5].map((v,i)=>i===2?(sg>0?1.5:.3):v),P,C.amber,3);
-   for(const z of [-.8,.2,1.1])for(const r of [.5,1,1.5]){const pts=[];for(let k=0;k<=48;k++){const a=k/48*2*Math.PI;pts.push(P([r*Math.cos(a),r*Math.sin(a),z]))}out+=P(P6_path(pts),on?C.purple:C.line,1.4);
-    if(on){const a=.6,q=P([r*Math.cos(a),r*Math.sin(a),z]),q2=P([r*Math.cos(a+sg*.25),r*Math.sin(a+sg*.25),z]);out+=arrow(q[0],q[1],q2[0],q2[1],C.purple,1.6,7)}}}
-  else{const pts=[];for(let k=0;k<=360;k++){const t=k/360,a=t*8*2*Math.PI;pts.push(P([-1.4+2.8*t,.8*Math.cos(a),.8*Math.sin(a)]))}out+=P(P6_path(pts),C.amber,2.2);
-   if(on)for(const [y,z] of [[0,0],[.35,0],[-.35,0],[0,.35],[0,-.35]])out+=arrow3([sg>0?-1.5:1.5,y,z],[sg>0?1.5:-1.5,y,z],P,C.purple,1.8)}
+  const Pj=project([[-1.6,-1.6,-1.4],[1.6,1.6,1.6]]),sg=Math.sign(s.I)||1,on=s.I!==0;let out='';
+  if(s.kind==='wire'){out+=line3([0,0,-1.4],[0,0,1.6],Pj,C.amber,5)+arrow3([0,0,.9],[0,0,1.5].map((v,i)=>i===2?(sg>0?1.5:.3):v),Pj,C.amber,3);
+   for(const z of [-.8,.2,1.1])for(const r of [.5,1,1.5]){const pts=[];for(let k=0;k<=48;k++){const a=k/48*2*Math.PI;pts.push(Pj([r*Math.cos(a),r*Math.sin(a),z]))}out+=P(P6_path(pts),on?C.purple:C.line,1.4);
+    if(on){const a=.6,q=Pj([r*Math.cos(a),r*Math.sin(a),z]),q2=Pj([r*Math.cos(a+sg*.25),r*Math.sin(a+sg*.25),z]);out+=arrow(q[0],q[1],q2[0],q2[1],C.purple,1.6,7)}}}
+  else{const pts=[];for(let k=0;k<=360;k++){const t=k/360,a=t*8*2*Math.PI;pts.push(Pj([-1.4+2.8*t,.8*Math.cos(a),.8*Math.sin(a)]))}out+=P(P6_path(pts),C.amber,2.2);
+   if(on)for(const [y,z] of [[0,0],[.35,0],[-.35,0],[0,.35],[0,-.35]])out+=arrow3([sg>0?-1.5:1.5,y,z],[sg>0?1.5:-1.5,y,z],Pj,C.purple,1.8)}
   return {svg:out,title:'Field of a current in 3D',caption:s.kind==='wire'?'Circles of field in planes at right angles to the wire, getting weaker further out.':'Inside the coil the field runs straight along the axis.'};
  }});
 
@@ -443,7 +443,7 @@ SCENE({id:'induction-transformer',name:'Transformer',tag:'Trading voltage for cu
  ui:[{range:'N1',label:'Primary turns',min:50,max:2000,step:50,get:s=>s.N1,act:'N1'},{range:'N2',label:'Secondary turns',min:50,max:2000,step:50,get:s=>s.N2,act:'N2'},{range:'V1',label:'Input',min:0,max:240,step:10,get:s=>s.V1,act:'V1',show:v=>v+' V'},{choose:[[1,'AC input'],[0,'DC input']],label:'Supply',get:s=>s.ac?1:0,act:'ac'}],
  on:{N1(s,v){s.N1=v},N2(s,v){s.N2=v},V1(s,v){s.V1=v},ac(s,v){s.ac=Number(v)===1}},
  draw(s){
-  const V2=s.ac?s.V1*s.N2/s.N1:0,P=60,I1=s.V1?P/s.V1:0,I2=V2?P/V2:0;let out=heading(s.N2>s.N1?'Step-up: more turns, more volts':s.N2<s.N1?'Step-down: fewer turns, fewer volts':'Equal turns, equal voltage');
+  const V2=s.ac?s.V1*s.N2/s.N1:0,Pw=60,I1=s.V1?Pw/s.V1:0,I2=V2?Pw/V2:0;let out=heading(s.N2>s.N1?'Step-up: more turns, more volts':s.N2<s.N1?'Step-down: fewer turns, fewer volts':'Equal turns, equal voltage');
   out+=R(180,80,240,220,'none','#7d8a92',18,'stroke-width="26"');
   const coil=(x,n,col)=>{let o='';const k=clamp(Math.round(n/100),2,16);for(let i=0;i<k;i++){const y=100+i*(180/k);o+=`<ellipse cx="${x}" cy="${fmt(y+90/k)}" rx="24" ry="${fmt(Math.min(9,80/k))}" fill="none" stroke="${col}" stroke-width="3"/>`}return o};
   out+=coil(180,s.N1,C.blue)+coil(420,s.N2,C.coral);
@@ -476,9 +476,9 @@ SCENE({id:'electromagnetic-waves',name:'Electromagnetic wave',tag:'Fields that k
   return {svg:out,phase:`Wavelength ${s.lam.toFixed(1)} m, so frequency = c / λ = ${(f/1e6).toFixed(0)} MHz (a radio wave). E and B rise and fall together, each at right angles to the other and to the direction of travel.`};
  },
  three(s,f,X,project){
-  const P=project([[0,-1.2,-1.2],[4,1.2,1.2]]);let out=line3([0,0,0],[4.2,0,0],P,C.dark,2);
-  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>P([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>P([x,v*.9,0]))),C.coral,2.4);
-  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],P,C.blue,1)+line3([x,0,0],[x,v*.9,0],P,C.coral,1)}
+  const Pj=project([[0,-1.2,-1.2],[4,1.2,1.2]]);let out=line3([0,0,0],[4.2,0,0],Pj,C.dark,2);
+  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>Pj([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>Pj([x,v*.9,0]))),C.coral,2.4);
+  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],Pj,C.blue,1)+line3([x,0,0],[x,v*.9,0],Pj,C.coral,1)}
   return {svg:out,title:'Electromagnetic wave in 3D',caption:'Blue: electric field in the vertical plane. Coral: magnetic field in the horizontal plane. Both travel along the axis.'};
  }});
 
