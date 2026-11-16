@@ -146,7 +146,7 @@ SCENE({id:'special-relativity-simultaneity',name:'Relativity of simultaneity',ta
 /* ---------- General relativity ---------- */
 SCENE({id:'general-relativity',name:'The equivalence principle',tag:'Gravity or acceleration?',
  research:['Einstein (1907). On the relativity principle and the conclusions drawn from it (the “happiest thought”).','Einstein (1911). On the influence of gravitation on the propagation of light.'],
- definition:'Inside a closed room, being at rest in a gravitational field cannot be told apart from accelerating steadily through empty space. Einstein made this the starting point of general relativity.',
+ definition:'Inside a closed room small enough that tidal effects can be neglected, being at rest in a gravitational field cannot be told apart from accelerating steadily through empty space. (In a big enough room, gravity’s slight differences in strength and direction from place to place give it away.) Einstein made this the starting point of general relativity.',
  example:'A dropped ball hits the floor the same way in a lift resting on Earth and in one accelerating at 9.8 m/s² in deep space. In the accelerating lift a light beam crossing the room bends towards the floor, so gravity must bend light too. A freely falling lift feels like no gravity at all.',
  desc:'A closed lift shown resting on Earth, accelerating in space, or falling freely; a dropped ball and a light beam crossing the lift behave the same in the first two cases and float straight in free fall.',
  dur:12,hint:'Choose where the lift is. Compare the ball and the light beam; the bend is exaggerated so you can see it.',
@@ -509,7 +509,7 @@ SCENE({id:'quantum-interference-which-path',name:'Which slit?',tag:'Looking chan
 SCENE({id:'quantum-interference-uncertainty',name:'The uncertainty principle',tag:'Squeeze one, spread the other',
  research:['Heisenberg (1927). On the perceptible content of quantum theoretical kinematics and mechanics.','Kennard (1927). The form Δx·Δp ≥ ħ/2.'],
  definition:'The more precisely a particle’s position is pinned down, the more spread there must be in its momentum: Δx · Δp ≥ ħ/2. It is a property of waves, not a fault of our instruments.',
- example:'Narrow a single slit and the pattern on the screen spreads out. For light of 500 nm through a 2 μm slit, the central bright band reaches its first dark edge 25 cm from the centre on a screen 1 m away. Halve the slit and the band doubles.',
+ example:'Narrow a single slit and the pattern on the screen spreads out. For light of 500 nm through a 2 μm slit, the first dark edge is where sin θ = λ ÷ a = 0.25: 25.8 cm from the centre on a screen 1 m away. Halve the slit and sin θ doubles to 0.5, putting the edge at 57.7 cm, more than double, because at such wide angles the shortcut y ≈ λL ÷ a no longer holds.',
  desc:'A single slit whose width you set, and the diffraction pattern on a screen 1 m away, with the positions of the first dark fringes and the product of the position and momentum spreads.',
  dur:10,hint:'Narrow the slit and watch the spread on the screen grow.',
  init:()=>({a:2}),
@@ -517,14 +517,14 @@ SCENE({id:'quantum-interference-uncertainty',name:'The uncertainty principle',ta
  ui:[{range:'a',label:'Slit width',min:1,max:10,step:0.5,get:s=>s.a,act:'a',show:v=>v+' μm'}],
  on:{a(s,v){s.a=v}},
  draw(s){
-  const lam=0.5,Lm=1,y1=lam*Lm/s.a*100,sy=v=>200+v*2.2;let out=heading(`Slit ${s.a} μm wide, light 500 nm`);
+  const lam=0.5,Lm=1,sn=lam/s.a,y1=sn<1?Lm*Math.tan(Math.asin(sn))*100:Infinity,sy=v=>200+v*2.2;let out=heading(`Slit ${s.a} μm wide, light 500 nm`);
   const half=s.a*6;out+=R(110,70,10,130-half,C.dark,'none',1)+R(110,200+half,10,130-half,C.dark,'none',1)+arrow(40,200,104,200,'#e0a800',2.5)+TF(115,352,'slit',13,C.muted);
-  let d='';for(let i=0;i<=240;i++){const yc=-60+i*0.5,v=P8_sinc(Math.PI*s.a*1e-6*yc*1e-2/(lam*1e-6*Lm))**2;d+=(i?'L':'M')+fmt(420+v*140)+' '+fmt(sy(yc))}
+  let d='';for(let i=0;i<=240;i++){const yc=-60+i*0.5,v=P8_sinc(Math.PI*s.a*(yc*1e-2/Math.hypot(yc*1e-2,Lm))/lam)**2;d+=(i?'L':'M')+fmt(420+v*140)+' '+fmt(sy(yc))}
   out+=L(420,sy(-60),420,sy(60),C.dark,3)+P(d,C.blue,2.5,'none')+P(d+`L420 ${fmt(sy(60))}L420 ${fmt(sy(-60))}Z`,'none',0,'#1772b722');
   if(y1<=60)out+=L(410,sy(y1),570,sy(y1),C.coral,1.5,'stroke-dasharray="4 4"')+L(410,sy(-y1),570,sy(-y1),C.coral,1.5,'stroke-dasharray="4 4"')+TF(575,sy(y1)-6,`${y1.toFixed(1)} cm`,13,C.coral,'end');
   for(let i=0;i<6;i++)out+=L(124,200,410,200+(i-2.5)*Math.min(60,y1)*0.85,'#f1e2a8',1.4);
   out+=R(150,300,240,56,'#fff',C.grid,8)+TF(270,322,'Δx ≈ slit width; Δp ≈ h/slit width',13,C.ink)+TF(270,342,'narrower slit → wider pattern',13,C.muted);
-  return {svg:out,phase:`The first dark fringes are ${y1.toFixed(1)} cm either side of centre, set by λL/a. Pinning the position down to ${s.a} μm forces a spread of momentum sideways, so the light spreads.`};
+  return {svg:out,phase:`The first dark fringes are ${y1.toFixed(1)} cm either side of centre, where sin θ = λ/a. Pinning the position down to ${s.a} μm forces a spread of momentum sideways, so the light spreads.`};
  }});
 
 /* ---------- Radioactivity ---------- */

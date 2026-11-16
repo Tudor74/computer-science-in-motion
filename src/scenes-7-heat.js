@@ -78,7 +78,7 @@ const P7_frame=(s,X,total)=>X.try?clamp(s.f||0,0,total-1):Math.min(total-1,Math.
 /* ======================= Lesson: Temperature and heat ======================= */
 SCENE({id:'temperature-heat',name:'Temperature and heat',tag:'How hot is not how much',
  definition:'Temperature measures how vigorously the particles of a thing move on average; heat is energy that flows from hotter to colder things. A small hot object can hold far less thermal energy than a large warm one.',
- example:'A grinding spark at 1000 °C lands harmlessly on your hand, while a 40 °C bath can warm you for an hour: the bath holds millions of times more thermal energy.',
+ example:'A single tiny grinding spark at 1000 °C carries so little energy that it may barely be felt, while a 40 °C bath can warm you for an hour: the bath holds millions of times more thermal energy. (Sparks still cause burns, eye injuries and fires, so grinding calls for eye protection and gloves.)',
  research:'Black, J. (lectures from the 1760s, published 1803). Lectures on the Elements of Chemistry: the first clear separation of quantity of heat from temperature.',
  desc:'A thermometer and an energy bar for a tiny hot spark beside a large warm bath; the spark is far hotter but the bath stores vastly more thermal energy above room temperature.',
  dur:9,hint:'Change the spark’s temperature and the bath’s temperature and size. Compare the thermometers with the energy bars (on a log scale).',
