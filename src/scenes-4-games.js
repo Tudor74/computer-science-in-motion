@@ -252,8 +252,9 @@ SCENE({id:'nash-equilibrium-cournot',name:'Two firms choose quantities',tag:'Cou
   let out=heading('Two firms, one market: Cournot’s equilibrium',26);
   const pl=E4_plot(80,56,250,250,[0,90],[0,90],{xt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],yt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],xl:'firm A’s output',yl:'firm B’s output',xlDy:33});
   out+=pl.svg;
-  out+=L(pl.X(45),pl.Y(0),pl.X(0),pl.Y(90),C.blue,2.4)+TF(pl.X(10),pl.Y(80),'A’s best reply',13,C.blue,'start');
-  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4)+TF(pl.X(89),pl.Y(9),'B’s best reply',13,C.coral,'end');
+  out+=L(pl.X(45),pl.Y(0),pl.X(0),pl.Y(90),C.blue,2.4);
+  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4);
+  out+=L(90,352,112,352,C.blue,3)+TF(118,357,'A’s best reply',13,C.blue,'start')+L(230,352,252,352,C.coral,3)+TF(258,357,'B’s best reply',13,C.coral,'start');
   out+=Ci(pl.X(22.5),pl.Y(22.5),5,C.purple)+TF(pl.X(22.5)-8,pl.Y(22.5)+18,'shared monopoly',13,C.purple,'end');
   out+=Ci(pl.X(45),pl.Y(45),5,C.amber)+TF(pl.X(45)+8,pl.Y(45)-6,'price = cost',13,C.amber,'start');
   const pts=E4_cournotPath(s.a,s.b,s.steps);
@@ -270,7 +271,7 @@ SCENE({id:'nash-equilibrium-cournot',name:'Two firms choose quantities',tag:'Cou
   out+=TF(372,206,'Equilibrium (green ring):',13,C.green,'start')+TF(372,224,'30 each, price 60, profit 900',13,C.green,'start');
   out+=TF(372,250,'Shared monopoly (purple):',13,C.purple,'start')+TF(372,268,'22.5 each, price 75, profit 1,013',13,C.purple,'start');
   out+=TF(372,292,'Both would earn more by colluding.',13,C.muted,'start');
-  out+=T(300,370,'Price = 120 − total output; each unit costs 30 to make.',14,C.muted);
+  out+=T(300,376,'Price = 120 − total output; each unit costs 30 to make.',13,C.muted);
   return {svg:out,phase:'Each firm’s best reply is to produce half of whatever demand the rival leaves, net of cost. Repeated replies zigzag into the crossing at 30 each. Like the prisoner’s dilemma, the equilibrium is worse for the firms than sharing a monopoly, which is why cartels form and why they tend to cheat on each other.'};
  }});
 
@@ -446,7 +447,7 @@ SCENE({id:'beauty-contest',name:'Guess two-thirds of the average',tag:'The beaut
   if(cur){
    bins.forEach((c,i)=>{if(c)out+=R(pl.X(i*5)+1,pl.Y(c),pl.X(5)-pl.X(0)-2,pl.Y(0)-pl.Y(c),C.pale,C.line,2)});
    out+=L(pl.X(cur.avg),52,pl.X(cur.avg),172,C.muted,2,'stroke-dasharray="4 4"')+TF(pl.X(cur.avg)+(cur.avg<70?6:-6),88,`average ${fmt(Math.round(cur.avg*10)/10)}`,13,C.muted,cur.avg<70?'start':'end');
-   out+=L(pl.X(cur.target),52,pl.X(cur.target),172,C.green,2.5)+TF(pl.X(cur.target)+(pl.X(cur.target)<150?6:-6),68,`target ${fmt(Math.round(cur.target*10)/10)}`,13,C.green,pl.X(cur.target)<150?'start':'end');
+   out+=L(pl.X(cur.target),52,pl.X(cur.target),172,C.green,2.5)+(pl.X(cur.target)<150?TF(pl.X(cur.avg)+6,68,`target ${fmt(Math.round(cur.target*10)/10)}`,13,C.green,'start'):TF(pl.X(cur.target)-6,68,`target ${fmt(Math.round(cur.target*10)/10)}`,13,C.green,'end'));
    out+=P(`M${fmt(pl.X(cur.you))} 196 l-7 12 h14 z`,C.blue,1.5,C.blue)+TF(pl.X(cur.you)+10,208,s.sim?'simulated':'you',13,C.blue,'start');}
   else out+=T(300,116,'Choose a number from 0 to 100 and press Submit.',15,C.muted);
   out+=TF(300,226,`Round ${Math.min(4,s.mine.length+1)} of 4${s.mine.length>=4?' (finished)':''}`,13,C.muted);
@@ -639,10 +640,10 @@ SCENE({id:'governing-commons',name:'The tragedy of the commons',tag:'Hardin’s 
   const shown=Math.min(60,Math.round(now.cows)),r=E4_rng(5);
   for(let i=0;i<shown;i++){const x=46+r()*178,y=60+r()*126;out+=R(x-6,y-4,12,8,'#fff',C.ink,2,'stroke-width="1.2"')}
   out+=TF(135,216,`grass ${Math.round(now.G)}% · ${Math.round(now.cows)} cows`,13,C.ink);
-  const pl=E4_plot(300,52,270,140,[0,40],[0,100],{xt:[[0,'0'],[20,'20'],[40,'40']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'grass (%) and cows',xlDy:30});
+  const pl=E4_plot(300,52,270,134,[0,40],[0,100],{xt:[[0,'0'],[20,'20'],[40,'40']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'grass (%) and cows',xlDy:36});
   out+=pl.svg;
   out+=E4_poly(sim.slice(0,s.t+1).map((d,i)=>[pl.X(i),pl.Y(d.G)]),C.green,2.6)+E4_poly(sim.slice(0,s.t+1).map((d,i)=>[pl.X(i),pl.Y(Math.min(100,d.cows))]),C.amber,2.4);
-  out+=L(pl.X(s.t),52,pl.X(s.t),192,C.ink,1,'stroke-dasharray="3 4"');
+  out+=L(pl.X(s.t),52,pl.X(s.t),186,C.ink,1,'stroke-dasharray="3 4"');
   out+=R(430,240,12,12,C.green,'none',2)+TF(448,251,'grass',13,C.muted,'start')+R(500,240,12,12,C.amber,'none',2)+TF(518,251,'cows',13,C.muted,'start');
   const tail=sim.slice(20),avgG=tail.reduce((a,d)=>a+d.G,0)/tail.length,avgYield=tail.reduce((a,d)=>a+.01*d.cows*d.G,0)/tail.length;
   out+=R(30,268,540,100,C.pale,'none',10);
@@ -672,7 +673,7 @@ SCENE({id:'governing-commons-game',name:'Fish a shared lake',tag:'A common-pool 
  draw(s){
   const run=E4_fishRun(s.seed,s.mode,s.mine),n=s.mine.length;
   let out=heading(`Fish a shared lake: ${E4_FMODES.find(m=>m[0]===s.mode)[1].toLowerCase()}`,26);
-  const pl=E4_plot(70,56,250,150,[0,8],[0,100],{xt:[[0,'0'],[4,'4'],[8,'8']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'fish in the lake',xlDy:30});
+  const pl=E4_plot(70,56,250,144,[0,8],[0,100],{xt:[[0,'0'],[4,'4'],[8,'8']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'fish in the lake',xlDy:36});
   out+=pl.svg+L(pl.X(0),pl.Y(50),pl.X(8),pl.Y(50),C.green,1.5,'stroke-dasharray="5 4"')+TF(pl.X(8)-4,pl.Y(50)-6,'fastest regrowth',13,C.green,'end');
   out+=E4_poly([[pl.X(0),pl.Y(100)]].concat(run.rows.map((r,i)=>[pl.X(i+1),pl.Y(r.after)])),C.blue,2.6);
   run.rows.forEach((r,i)=>out+=Ci(pl.X(i+1),pl.Y(r.after),4,C.blue,'#fff'));
