@@ -72,17 +72,17 @@ SCENE({id:'wave-basics-speed',name:'Wave speed, frequency and wavelength',tag:'v
  }});
 
 SCENE({id:'wave-basics-energy',name:'Amplitude and energy',tag:'Double the height, four times the energy',
- definition:'The energy a mechanical wave carries grows with the square of its amplitude (and, at fixed amplitude, with the square of its frequency).',
+ definition:'The energy a wave carries grows with the square of its amplitude. How it depends on frequency depends on the wave and on what “amplitude” measures: for a wave on a string, at a fixed displacement amplitude, energy also grows with the square of the frequency; for sound at a fixed pressure amplitude, intensity does not depend on frequency.',
  example:'A sea swell twice as high carries about four times the energy per metre of wave front. Sound twice the pressure amplitude carries four times the intensity.',
  desc:'A wave whose amplitude can be changed, beside bars comparing amplitude and energy relative to a reference wave.',
- dur:9,hint:'Slide the amplitude and frequency. The energy bar grows as amplitude² × frequency², so doubling either quadruples it.',
+ dur:9,hint:'Slide the amplitude and frequency. This is a wave on a string: the energy bar grows as amplitude² × frequency², so doubling either quadruples it.',
  research:'Feynman, Leighton & Sands (1963). The Feynman Lectures on Physics, Vol. I, ch. 47–51: wave energy and intensity ∝ amplitude².',
  init:()=>({amp:1,fq:1}),
  watch(p){return {amp:.5+1.5*smooth(p),fq:1}},
  ui:[{range:'amp',label:'Amplitude',min:.25,max:2,step:.05,get:s=>s.amp,act:'amp',show:v=>'× '+v.toFixed(2)},{range:'fq',label:'Frequency',min:.5,max:2,step:.1,get:s=>s.fq,act:'fq',show:v=>'× '+v.toFixed(1)}],
  on:{amp(s,v){s.amp=v},fq(s,v){s.fq=v}},
  draw(s){
-  const A=s.amp,fq=s.fq,E=A*A*fq*fq;let out=heading('Energy ∝ amplitude² × frequency²');
+  const A=s.amp,fq=s.fq,E=A*A*fq*fq;let out=heading('String wave: energy ∝ amplitude² × frequency²');
   out+=L(30,160,350,160,C.grid,1.5)+P(P4_curve(30,350,120,(x)=>160-A*40*Math.sin(2*Math.PI*fq*(x-30)/160)),C.blue,3);
   out+=P(P4_curve(30,350,120,(x)=>160-40*Math.sin(2*Math.PI*(x-30)/160)),C.line,1.5,'none','stroke-dasharray="5 5"');
   out+=T(190,262,'dashed: reference wave (× 1, × 1)',13,C.muted);

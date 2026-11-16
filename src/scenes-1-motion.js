@@ -21,7 +21,7 @@ function P1_tick(s,limit){if(!s.running)return 'stop';s.el=(performance.now()-s.
 const P1_x1=t=>1.2*t+.35*t*t,P1_v1=t=>1.2+.7*t;
 SCENE({id:'position-speed',name:'Position and speed',tag:'Where, and how fast',
  definition:'Position says where something is along a line. Speed is how quickly position changes: distance travelled divided by the time taken.',
- example:'A cart that covers 12 m in 4 s has an average speed of 3 m/s. On a position–time graph, speed is the steepness (gradient) of the line; a curving line means the speed is changing.',
+ example:'A cart that covers 12 m in 4 s has an average speed of 3 m/s. On a position–time graph, the gradient of the line is the velocity, and its size (ignoring the sign) is the speed; a curving line means the velocity is changing.',
  desc:'A cart rolls along a track while its position–time graph is drawn; a secant line between two times shows the average speed and a tangent shows the speed at one instant.',
  research:'Galileo (1638). Two New Sciences, Third Day: speed defined by distance and time, the basis of every motion graph.',
  dur:12,hint:'Move the time point, then shrink the interval. The average speed over a shrinking interval settles on the instantaneous speed: the slope of the tangent.',
@@ -41,7 +41,7 @@ SCENE({id:'position-speed',name:'Position and speed',tag:'Where, and how fast',
   if(tc>=t2){out+=ln(t1,x1,v,t1-1.3,t1+1.3,C.coral,'stroke-dasharray="7 5"')+ln(t1,x1,avg,t1-.6,t2+.6,C.green);
    out+=Ci(A.X(t1),A.Y(x1),6,C.ink)+Ci(A.X(t2),A.Y(x2),6,C.green);
    out+=TBF(170,354,`average over ${P1_m(t2-t1,2)} s: ${P1_m(avg,2)} m/s`,15,C.green)+TBF(440,354,`at t = ${t1} s: ${P1_m(v,2)} m/s`,15,C.coral)}
-  return {svg:out,phase:tc<t2?'As the cart rolls, each point of the graph records where it was and when. The graph gets steeper because the cart is speeding up.':`Green: the average speed between ${t1} s and ${P1_m(t2,2)} s (change in position ÷ change in time). Coral, dashed: the tangent, whose slope is the speed at exactly ${t1} s. As the interval shrinks, the green line turns into the tangent.`};
+  return {svg:out,phase:tc<t2?'As the cart rolls, each point of the graph records where it was and when. The graph gets steeper because the cart is speeding up.':`Green: the average speed between ${t1} s and ${P1_m(t2,2)} s (change in position ÷ change in time). Coral, dashed: the tangent, whose slope is the velocity (here forwards, so equal to the speed) at exactly ${t1} s. As the interval shrinks, the green line turns into the tangent.`};
  }});
 
 SCENE({id:'position-speed-velocity',name:'Speed and velocity',tag:'Direction matters',

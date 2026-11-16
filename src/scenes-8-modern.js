@@ -369,7 +369,7 @@ const P8_COLOURS={red:{nm:700,name:'Red'},green:{nm:550,name:'Green'},blue:{nm:4
 SCENE({id:'photoelectric-photons',name:'Photons',tag:'Light comes in packets',
  research:['Planck (1900). On the law of distribution of energy in the normal spectrum (energy quanta).','Einstein (1905). Light quanta.','Compton (1923). A quantum theory of the scattering of X-rays by light elements.'],
  definition:'A photon is the smallest packet of light of a given frequency, with energy E = hf (h = 6.626 × 10⁻³⁴ J s). Brighter light of the same colour means more photons, not bigger ones.',
- example:'A red photon at 700 nm carries about 1.8 eV and a blue one at 450 nm about 2.8 eV. Sodium needs 2.3 eV, so a single blue photon can free an electron and no number of red photons can, because each electron absorbs one photon at a time.',
+ example:'A red photon at 700 nm carries about 1.8 eV and a blue one at 450 nm about 2.8 eV. Sodium needs 2.3 eV, so a single blue photon can free an electron and, at ordinary light levels, no number of red photons can, because each electron absorbs one photon at a time. (Very intense laser pulses can make an electron absorb two or more photons at once: multiphoton photoemission.)',
  desc:'Rows of photons of the chosen colour, their number set by brightness and their size by energy, next to an energy ladder comparing red, green, blue and ultraviolet photons with sodium’s work function.',
  dur:10,hint:'Choose a colour and brightness. Compare what the wave picture predicted with what happens.',
  init:()=>({col:'blue',br:2}),
@@ -384,7 +384,7 @@ SCENE({id:'photoelectric-photons',name:'Photons',tag:'Light comes in packets',
   Object.entries(P8_COLOURS).forEach(([k,v],i)=>{const e=1239.84/v.nm,x=Q.sx(i+0.5);out+=R(x-16,Q.sy(e),32,Q.sy(0)-Q.sy(e),P8_nm(v.nm),k===s.col?C.ink:'none',3)+TF(x,288,k==='uv'?'UV':v.name,13,C.muted)});
   out+=L(380,Q.sy(2.3),570,Q.sy(2.3),C.ink,2,'stroke-dasharray="5 4"')+TF(384,Q.sy(2.3)-6,'sodium 2.3 eV',13,C.ink,'start');
   out+=R(20,230,316,120,'#fff',C.grid,8)+TBF(32,252,'Wave picture predicted',13,C.coral,'start')+TF(32,272,'any colour works if bright enough;',13,C.ink,'start')+TF(32,290,'brighter means faster electrons.',13,C.ink,'start')+TBF(32,316,'Observed',13,C.green,'start')+TF(32,336,ok?`${c.name.toLowerCase()} frees electrons even when dim.`:`${c.name.toLowerCase()} frees none, at any brightness.`,13,C.ink,'start');
-  return {svg:out,phase:`Each ${c.name.toLowerCase()} photon carries hf = ${E.toFixed(2)} eV whatever the brightness. Turning up the brightness to ×${s.br} gives ${n} photons, but an electron absorbs them one at a time.`};
+  return {svg:out,phase:`Each ${c.name.toLowerCase()} photon carries hf = ${E.toFixed(2)} eV whatever the brightness. Turning up the brightness to ×${s.br} gives ${n} photons, but at ordinary intensities an electron absorbs them one at a time.`};
  }});
 
 /* ---------- Atomic spectra ---------- */

@@ -338,8 +338,8 @@ SCENE({id:'collisions-restitution',name:'Coefficient of restitution',tag:'How bo
  }});
 
 const P3_CRADLE_T=8;
-SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'Why k balls in means k balls out',
- definition:'In a row of touching, nearly elastic balls, lifting k balls sends exactly k balls out the other side. Only that answer conserves both momentum and kinetic energy.',
+SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'k balls in, k balls out',
+ definition:'In a row of nearly elastic balls, lifting k balls sends about k balls out the other side. That conserves momentum and kinetic energy, but with three or more balls so do other outcomes: the two laws alone do not decide it. The k-out pattern comes from how the impulse passes along the row, which depends on contact and material properties.',
  example:'Lift two balls and two swing out. One ball at twice the speed would carry the right momentum but twice the kinetic energy, so it cannot happen.',
  desc:'Five hanging balls; a chosen number swing in from the left and the same number swing out on the right, beside a check of momentum and energy for the possible outcomes.',
  research:'Collision laws from Wallis, Wren and Huygens (1668–69) and Newton’s Principia (1687); the desk toy itself dates from the 1960s.',
@@ -357,7 +357,7 @@ SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'Why k balls in means
   o+=TF(470,80,'possible outcomes',13,C.muted)+TF(510,104,'momentum',13,C.muted)+TF(570,104,'energy',13,C.muted);
   rows.forEach(([lab,pOk,eOk],i)=>{const y=134+i*40,ok=pOk&&eOk;o+=R(340,y-20,250,32,ok?C.greenp:'#fff',ok?C.green:C.grid,6)+TF(350,y,lab,13,C.ink,'start')+TBF(510,y,pOk?'✓':'✗',15,pOk?C.green:C.coral)+TBF(570,y,eOk?'✓':'✗',15,eOk?C.green:C.coral)});
   o+=TF(465,270,`1 ball at ${s.k}v: momentum ${s.k}mv ✓,`,13,C.muted)+TF(465,290,`energy ½m(${s.k}v)² = ${s.k*s.k} × ½mv²`,13,C.muted)+TF(465,310,`but ${s.k} balls brought ${s.k} × ½mv²`,13,C.muted);
-  return {svg:o,phase:s.k===1?'One ball in, one ball out: the moving ball passes all of its momentum and energy along the row.':`Lift ${s.k} and exactly ${s.k} leave the far end. Both momentum (${s.k} m v) and kinetic energy (${s.k} × ½ m v²) are conserved only by that outcome; real cradles lose a little energy each swing.`};
+  return {svg:o,phase:s.k===1?'One ball in, one ball out: the moving ball passes all of its momentum and energy along the row.':`Lift ${s.k} and ${s.k} leave the far end. That conserves momentum (${s.k} m v) and kinetic energy (${s.k} × ½ m v²), but other outcomes would too: what picks this one is how the impulse travels through hard balls in contact. Real cradles lose a little energy each swing, and the other balls jiggle slightly.`};
  }});
 
 /* ---------- Oscillations ---------- */

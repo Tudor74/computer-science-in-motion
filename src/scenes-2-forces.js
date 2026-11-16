@@ -278,7 +278,7 @@ SCENE({id:'gravitation',name:'The inverse-square law',tag:'One gravity for apple
 
 const P2_G=6.674e-11;
 SCENE({id:'gravitation-cavendish',name:'Weighing the Earth',tag:'Cavendish’s torsion balance',
- definition:'Cavendish measured the tiny attraction between lead balls in his laboratory. That fixed the gravitational constant G, and with it the mass and density of the Earth.',
+ definition:'Cavendish measured the tiny attraction between lead balls in his laboratory. His stated aim and his reported result were the mean density of the Earth; later physicists recast the same measurement as a value of the gravitational constant G, which gives the Earth’s mass.',
  example:'With 158 kg balls 23 cm from 0.73 kg balls, the rod turns by about a thousandth of a radian. From that twist and the balance’s swing period you can calculate G, then the Earth’s mass from g = GM/R².',
  desc:'A top view of a torsion balance: a rod with small balls hangs on a fibre between two large balls; it swings and settles at a small deflection, from which G, the Earth’s mass and its density are computed.',
  dur:12,research:'Cavendish (1798). Experiments to determine the density of the Earth; he reported 5.48 times water (later corrected to 5.45). The modern value is about 5.51.',

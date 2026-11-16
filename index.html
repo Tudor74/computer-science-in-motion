@@ -410,7 +410,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   rotation .......... seesaw torque; the rolling race (3D); the skater.
   symmetry-conservation break a symmetry and watch its conserved quantity drift (Noether).
  4 Waves and sound
-  wave-basics ....... rope vs slinky; v = fλ; energy ∝ A²f².
+  wave-basics ....... rope vs slinky; v = fλ; energy ∝ A² (string at fixed displacement: A²f²).
   superposition ..... pulses pass through; two-source ripple tank (3D); beats.
   standing-waves .... Mersenne's laws; Chladni plates (idealised); open vs closed pipes.
   sound ............. displacement vs pressure; ★ thunder timing; decibels.
@@ -644,7 +644,7 @@ function P1_tick(s,limit){if(!s.running)return 'stop';s.el=(performance.now()-s.
 const P1_x1=t=>1.2*t+.35*t*t,P1_v1=t=>1.2+.7*t;
 SCENE({id:'position-speed',name:'Position and speed',tag:'Where, and how fast',
  definition:'Position says where something is along a line. Speed is how quickly position changes: distance travelled divided by the time taken.',
- example:'A cart that covers 12 m in 4 s has an average speed of 3 m/s. On a position–time graph, speed is the steepness (gradient) of the line; a curving line means the speed is changing.',
+ example:'A cart that covers 12 m in 4 s has an average speed of 3 m/s. On a position–time graph, the gradient of the line is the velocity, and its size (ignoring the sign) is the speed; a curving line means the velocity is changing.',
  desc:'A cart rolls along a track while its position–time graph is drawn; a secant line between two times shows the average speed and a tangent shows the speed at one instant.',
  research:'Galileo (1638). Two New Sciences, Third Day: speed defined by distance and time, the basis of every motion graph.',
  dur:12,hint:'Move the time point, then shrink the interval. The average speed over a shrinking interval settles on the instantaneous speed: the slope of the tangent.',
@@ -664,7 +664,7 @@ SCENE({id:'position-speed',name:'Position and speed',tag:'Where, and how fast',
   if(tc>=t2){out+=ln(t1,x1,v,t1-1.3,t1+1.3,C.coral,'stroke-dasharray="7 5"')+ln(t1,x1,avg,t1-.6,t2+.6,C.green);
    out+=Ci(A.X(t1),A.Y(x1),6,C.ink)+Ci(A.X(t2),A.Y(x2),6,C.green);
    out+=TBF(170,354,`average over ${P1_m(t2-t1,2)} s: ${P1_m(avg,2)} m/s`,15,C.green)+TBF(440,354,`at t = ${t1} s: ${P1_m(v,2)} m/s`,15,C.coral)}
-  return {svg:out,phase:tc<t2?'As the cart rolls, each point of the graph records where it was and when. The graph gets steeper because the cart is speeding up.':`Green: the average speed between ${t1} s and ${P1_m(t2,2)} s (change in position ÷ change in time). Coral, dashed: the tangent, whose slope is the speed at exactly ${t1} s. As the interval shrinks, the green line turns into the tangent.`};
+  return {svg:out,phase:tc<t2?'As the cart rolls, each point of the graph records where it was and when. The graph gets steeper because the cart is speeding up.':`Green: the average speed between ${t1} s and ${P1_m(t2,2)} s (change in position ÷ change in time). Coral, dashed: the tangent, whose slope is the velocity (here forwards, so equal to the speed) at exactly ${t1} s. As the interval shrinks, the green line turns into the tangent.`};
  }});
 
 SCENE({id:'position-speed-velocity',name:'Speed and velocity',tag:'Direction matters',
@@ -1085,7 +1085,7 @@ WORD(
  {key:'speed',title:'Speed',aliases:['speed','speeds'],linkContext:'position-speed',scene:'position-speed',here:'How fast position changes, without direction: distance ÷ time, in m/s.',contrast:'Speed is never negative; velocity can be.',example:'Average speed = 24 m ÷ 8 s = 3 m/s.'},
  {key:'velocity',title:'Velocity',aliases:['velocity','velocities'],linkContext:'position-speed',scene:'position-speed-velocity',here:'Speed with a direction: the rate of change of position, positive or negative along a line.',contrast:'Two objects can have the same speed but opposite velocities.',example:'Walking left at 2 m/s is a velocity of −2 m/s.'},
  {key:'average-speed',title:'Average speed',aliases:['average speed'],linkContext:'position-speed',here:'Total distance divided by total time over an interval.',contrast:'It hides any speeding up or slowing down within the interval.',example:'A journey of 120 km in 2 h has an average speed of 60 km/h.'},
- {key:'instantaneous-speed',title:'Instantaneous speed',aliases:['instantaneous speed','instantaneous'],linkContext:'position-speed',here:'The speed at a single moment: the limit of the average speed over shorter and shorter intervals, the slope of the tangent.',contrast:'A speedometer shows (roughly) instantaneous speed; a journey time gives average speed.',example:'At t = 2 s the cart moves at 2.6 m/s.'},
+ {key:'instantaneous-speed',title:'Instantaneous speed',aliases:['instantaneous speed','instantaneous'],linkContext:'position-speed',here:'The speed at a single moment: the limit of the average speed over shorter and shorter intervals: the size of the tangent’s slope on a position–time graph (the signed slope is the velocity).',contrast:'A speedometer shows (roughly) instantaneous speed; a journey time gives average speed.',example:'At t = 2 s the cart moves at 2.6 m/s.'},
  {key:'gradient',title:'Gradient',aliases:['gradient','slope'],linkContext:'position-speed',here:'The steepness of a graph: rise ÷ run. On a position–time graph it is the velocity; on a velocity–time graph it is the acceleration.',contrast:'A steep line is not a fast-moving object unless the graph is position against time.',example:'A line rising 10 m in 2 s has gradient 5 m/s.'},
  {key:'tangent',title:'Tangent',aliases:['tangent'],linkContext:'position-speed',here:'A straight line that just touches a curve at one point, with the same steepness as the curve there.',contrast:'A secant cuts the curve at two points and gives an average.',example:'The tangent to a position–time curve gives the instantaneous velocity.'},
  {key:'displacement',title:'Displacement',aliases:['displacement'],linkContext:'position-speed',scene:'position-speed-displacement',here:'The straight-line change in position from start to finish, with a direction.',contrast:'Distance is the length of the path actually travelled.',example:'One lap of a track: 400 m distance, zero displacement.'},
@@ -1395,7 +1395,7 @@ SCENE({id:'gravitation',name:'The inverse-square law',tag:'One gravity for apple
 
 const P2_G=6.674e-11;
 SCENE({id:'gravitation-cavendish',name:'Weighing the Earth',tag:'Cavendish’s torsion balance',
- definition:'Cavendish measured the tiny attraction between lead balls in his laboratory. That fixed the gravitational constant G, and with it the mass and density of the Earth.',
+ definition:'Cavendish measured the tiny attraction between lead balls in his laboratory. His stated aim and his reported result were the mean density of the Earth; later physicists recast the same measurement as a value of the gravitational constant G, which gives the Earth’s mass.',
  example:'With 158 kg balls 23 cm from 0.73 kg balls, the rod turns by about a thousandth of a radian. From that twist and the balance’s swing period you can calculate G, then the Earth’s mass from g = GM/R².',
  desc:'A top view of a torsion balance: a rod with small balls hangs on a fibre between two large balls; it swings and settles at a small deflection, from which G, the Earth’s mass and its density are computed.',
  dur:12,research:'Cavendish (1798). Experiments to determine the density of the Earth; he reported 5.48 times water (later corrected to 5.45). The modern value is about 5.51.',
@@ -2006,8 +2006,8 @@ SCENE({id:'collisions-restitution',name:'Coefficient of restitution',tag:'How bo
  }});
 
 const P3_CRADLE_T=8;
-SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'Why k balls in means k balls out',
- definition:'In a row of touching, nearly elastic balls, lifting k balls sends exactly k balls out the other side. Only that answer conserves both momentum and kinetic energy.',
+SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'k balls in, k balls out',
+ definition:'In a row of nearly elastic balls, lifting k balls sends about k balls out the other side. That conserves momentum and kinetic energy, but with three or more balls so do other outcomes: the two laws alone do not decide it. The k-out pattern comes from how the impulse passes along the row, which depends on contact and material properties.',
  example:'Lift two balls and two swing out. One ball at twice the speed would carry the right momentum but twice the kinetic energy, so it cannot happen.',
  desc:'Five hanging balls; a chosen number swing in from the left and the same number swing out on the right, beside a check of momentum and energy for the possible outcomes.',
  research:'Collision laws from Wallis, Wren and Huygens (1668–69) and Newton’s Principia (1687); the desk toy itself dates from the 1960s.',
@@ -2025,7 +2025,7 @@ SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'Why k balls in means
   o+=TF(470,80,'possible outcomes',13,C.muted)+TF(510,104,'momentum',13,C.muted)+TF(570,104,'energy',13,C.muted);
   rows.forEach(([lab,pOk,eOk],i)=>{const y=134+i*40,ok=pOk&&eOk;o+=R(340,y-20,250,32,ok?C.greenp:'#fff',ok?C.green:C.grid,6)+TF(350,y,lab,13,C.ink,'start')+TBF(510,y,pOk?'✓':'✗',15,pOk?C.green:C.coral)+TBF(570,y,eOk?'✓':'✗',15,eOk?C.green:C.coral)});
   o+=TF(465,270,`1 ball at ${s.k}v: momentum ${s.k}mv ✓,`,13,C.muted)+TF(465,290,`energy ½m(${s.k}v)² = ${s.k*s.k} × ½mv²`,13,C.muted)+TF(465,310,`but ${s.k} balls brought ${s.k} × ½mv²`,13,C.muted);
-  return {svg:o,phase:s.k===1?'One ball in, one ball out: the moving ball passes all of its momentum and energy along the row.':`Lift ${s.k} and exactly ${s.k} leave the far end. Both momentum (${s.k} m v) and kinetic energy (${s.k} × ½ m v²) are conserved only by that outcome; real cradles lose a little energy each swing.`};
+  return {svg:o,phase:s.k===1?'One ball in, one ball out: the moving ball passes all of its momentum and energy along the row.':`Lift ${s.k} and ${s.k} leave the far end. That conserves momentum (${s.k} m v) and kinetic energy (${s.k} × ½ m v²), but other outcomes would too: what picks this one is how the impulse travels through hard balls in contact. Real cradles lose a little energy each swing, and the other balls jiggle slightly.`};
  }});
 
 /* ---------- Oscillations ---------- */
@@ -2444,17 +2444,17 @@ SCENE({id:'wave-basics-speed',name:'Wave speed, frequency and wavelength',tag:'v
  }});
 
 SCENE({id:'wave-basics-energy',name:'Amplitude and energy',tag:'Double the height, four times the energy',
- definition:'The energy a mechanical wave carries grows with the square of its amplitude (and, at fixed amplitude, with the square of its frequency).',
+ definition:'The energy a wave carries grows with the square of its amplitude. How it depends on frequency depends on the wave and on what “amplitude” measures: for a wave on a string, at a fixed displacement amplitude, energy also grows with the square of the frequency; for sound at a fixed pressure amplitude, intensity does not depend on frequency.',
  example:'A sea swell twice as high carries about four times the energy per metre of wave front. Sound twice the pressure amplitude carries four times the intensity.',
  desc:'A wave whose amplitude can be changed, beside bars comparing amplitude and energy relative to a reference wave.',
- dur:9,hint:'Slide the amplitude and frequency. The energy bar grows as amplitude² × frequency², so doubling either quadruples it.',
+ dur:9,hint:'Slide the amplitude and frequency. This is a wave on a string: the energy bar grows as amplitude² × frequency², so doubling either quadruples it.',
  research:'Feynman, Leighton & Sands (1963). The Feynman Lectures on Physics, Vol. I, ch. 47–51: wave energy and intensity ∝ amplitude².',
  init:()=>({amp:1,fq:1}),
  watch(p){return {amp:.5+1.5*smooth(p),fq:1}},
  ui:[{range:'amp',label:'Amplitude',min:.25,max:2,step:.05,get:s=>s.amp,act:'amp',show:v=>'× '+v.toFixed(2)},{range:'fq',label:'Frequency',min:.5,max:2,step:.1,get:s=>s.fq,act:'fq',show:v=>'× '+v.toFixed(1)}],
  on:{amp(s,v){s.amp=v},fq(s,v){s.fq=v}},
  draw(s){
-  const A=s.amp,fq=s.fq,E=A*A*fq*fq;let out=heading('Energy ∝ amplitude² × frequency²');
+  const A=s.amp,fq=s.fq,E=A*A*fq*fq;let out=heading('String wave: energy ∝ amplitude² × frequency²');
   out+=L(30,160,350,160,C.grid,1.5)+P(P4_curve(30,350,120,(x)=>160-A*40*Math.sin(2*Math.PI*fq*(x-30)/160)),C.blue,3);
   out+=P(P4_curve(30,350,120,(x)=>160-40*Math.sin(2*Math.PI*(x-30)/160)),C.line,1.5,'none','stroke-dasharray="5 5"');
   out+=T(190,262,'dashed: reference wave (× 1, × 1)',13,C.muted);
@@ -5261,7 +5261,7 @@ const P8_COLOURS={red:{nm:700,name:'Red'},green:{nm:550,name:'Green'},blue:{nm:4
 SCENE({id:'photoelectric-photons',name:'Photons',tag:'Light comes in packets',
  research:['Planck (1900). On the law of distribution of energy in the normal spectrum (energy quanta).','Einstein (1905). Light quanta.','Compton (1923). A quantum theory of the scattering of X-rays by light elements.'],
  definition:'A photon is the smallest packet of light of a given frequency, with energy E = hf (h = 6.626 × 10⁻³⁴ J s). Brighter light of the same colour means more photons, not bigger ones.',
- example:'A red photon at 700 nm carries about 1.8 eV and a blue one at 450 nm about 2.8 eV. Sodium needs 2.3 eV, so a single blue photon can free an electron and no number of red photons can, because each electron absorbs one photon at a time.',
+ example:'A red photon at 700 nm carries about 1.8 eV and a blue one at 450 nm about 2.8 eV. Sodium needs 2.3 eV, so a single blue photon can free an electron and, at ordinary light levels, no number of red photons can, because each electron absorbs one photon at a time. (Very intense laser pulses can make an electron absorb two or more photons at once: multiphoton photoemission.)',
  desc:'Rows of photons of the chosen colour, their number set by brightness and their size by energy, next to an energy ladder comparing red, green, blue and ultraviolet photons with sodium’s work function.',
  dur:10,hint:'Choose a colour and brightness. Compare what the wave picture predicted with what happens.',
  init:()=>({col:'blue',br:2}),
@@ -5276,7 +5276,7 @@ SCENE({id:'photoelectric-photons',name:'Photons',tag:'Light comes in packets',
   Object.entries(P8_COLOURS).forEach(([k,v],i)=>{const e=1239.84/v.nm,x=Q.sx(i+0.5);out+=R(x-16,Q.sy(e),32,Q.sy(0)-Q.sy(e),P8_nm(v.nm),k===s.col?C.ink:'none',3)+TF(x,288,k==='uv'?'UV':v.name,13,C.muted)});
   out+=L(380,Q.sy(2.3),570,Q.sy(2.3),C.ink,2,'stroke-dasharray="5 4"')+TF(384,Q.sy(2.3)-6,'sodium 2.3 eV',13,C.ink,'start');
   out+=R(20,230,316,120,'#fff',C.grid,8)+TBF(32,252,'Wave picture predicted',13,C.coral,'start')+TF(32,272,'any colour works if bright enough;',13,C.ink,'start')+TF(32,290,'brighter means faster electrons.',13,C.ink,'start')+TBF(32,316,'Observed',13,C.green,'start')+TF(32,336,ok?`${c.name.toLowerCase()} frees electrons even when dim.`:`${c.name.toLowerCase()} frees none, at any brightness.`,13,C.ink,'start');
-  return {svg:out,phase:`Each ${c.name.toLowerCase()} photon carries hf = ${E.toFixed(2)} eV whatever the brightness. Turning up the brightness to ×${s.br} gives ${n} photons, but an electron absorbs them one at a time.`};
+  return {svg:out,phase:`Each ${c.name.toLowerCase()} photon carries hf = ${E.toFixed(2)} eV whatever the brightness. Turning up the brightness to ×${s.br} gives ${n} photons, but at ordinary intensities an electron absorbs them one at a time.`};
  }});
 
 /* ---------- Atomic spectra ---------- */

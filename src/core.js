@@ -62,7 +62,7 @@
   rotation .......... seesaw torque; the rolling race (3D); the skater.
   symmetry-conservation break a symmetry and watch its conserved quantity drift (Noether).
  4 Waves and sound
-  wave-basics ....... rope vs slinky; v = fλ; energy ∝ A²f².
+  wave-basics ....... rope vs slinky; v = fλ; energy ∝ A² (string at fixed displacement: A²f²).
   superposition ..... pulses pass through; two-source ripple tank (3D); beats.
   standing-waves .... Mersenne's laws; Chladni plates (idealised); open vs closed pipes.
   sound ............. displacement vs pressure; ★ thunder timing; decibels.
