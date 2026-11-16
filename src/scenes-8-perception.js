@@ -167,7 +167,7 @@ SCENE({id:'consonance-roughness',name:'Roughness and consonance',tag:'Rate it yo
   const cb=M8_cb(450),pl=M8_plot(70,58,490,232,[0,150],[0,1.05],{xt:[[0,'0'],[25,'25'],[50,'50'],[75,'75'],[100,'100'],[150,'150 Hz']],yt:[[0,'smooth'],[1,'rough']],xl:'difference between the two tones (Hz), starting at 400 Hz'});out+=pl.svg;
   const pts=[];for(let i=0;i<=150;i++)pts.push([pl.X(i),pl.Y(M8_pl(i,400))]);out+=M8_poly(pts,C.coral,2.6);
   out+=L(pl.X(cb),58,pl.X(cb),290,C.muted,1.4,'stroke-dasharray="5 4"')+TF(pl.X(cb)-4,74,`critical band ≈ ${Math.round(cb)} Hz`,13,C.muted,'end');
-  out+=TF(pl.X(25)+6,pl.Y(1)+16,'peak ≈ ¼ band',13,C.coral,'start');
+  out+=TF(pl.X(25),51,'peak ≈ ¼ band',13,C.coral);
   s.res.forEach(r=>out+=Ci(pl.X(r.d),pl.Y((r.r-1)/4),6,C.blue,'#fff'));
   const rr=M8_corr(s.res.map(r=>r.r),s.res.map(r=>M8_pl(r.d,400)));
   out+=T(300,352,s.i<9?`Pair ${s.i+1} of 9 · difference hidden until you rate it`:'All nine pairs rated',15,C.ink);
@@ -183,7 +183,7 @@ SCENE({id:'consonance-roughness-beats',name:'Beats, roughness, two tones',tag:'T
  dur:9,hint:'Slide the difference between the tones and press Play. Listen for where throbbing turns into roughness.',
  init:()=>({d:3}),
  watch(p){return {d:Math.round(Math.pow(150,p)*10)/10}},
- ui:[{range:'d',label:'Difference',min:0,max:150,step:.5,get:s=>s.d,act:'d',show:v=>v+' Hz'},{b:'Play 440 Hz + 440 Hz + difference',act:'play'}],
+ ui:[{range:'d',label:'Difference',min:0,max:150,step:.5,get:s=>s.d,act:'d',show:v=>v+' Hz'},{b:'Play both tones',act:'play'}],
  on:{d(s,v){s.d=v},play(s){AUDIO.chord([440,440+s.d],{dur:2,gain:.24})}},
  draw(s){
   const d=s.d,cb=M8_cb(440+d/2);let out=heading(`440 Hz and ${fmt(440+d)} Hz played together`,26);
