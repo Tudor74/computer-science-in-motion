@@ -190,11 +190,11 @@ SCENE({id:'nash-equilibrium',name:'Nash equilibrium',tag:'Best replies that poin
   out+=E4_matrix(x,y,cw,ch,g.rows,g.cols,pay,{colTitle:'Column player',rowTitle:'Row player',eq});
   for(let j=0;j<2;j++){const a=pay[0][j][0],b=pay[1][j][0];if(a!==b){const [f,t]=a>b?[1,0]:[0,1],ax=x+cw*j+14;out+=E4_arrow(ax,y+ch*f+ch/2,ax,y+ch*t+ch/2,C.blue)}}
   for(let i=0;i<2;i++){const a=pay[i][0][1],b=pay[i][1][1];if(a!==b){const [f,t]=a>b?[1,0]:[0,1],ay=y+ch*i+ch-7;out+=E4_arrow(x+cw*f+cw/2,ay,x+cw*t+cw/2,ay,C.coral)}}
-  out+=R(30,280,540,86,C.pale,'none',10);
+  out+=TF(300,274,'Blue numbers and arrows: row player. Coral: column player.',13,C.muted);
+  out+=R(30,288,540,80,C.pale,'none',10);
   const names=eq.map(([i,j])=>`${g.rows[i]} / ${g.cols[j]}`);
-  out+=TBF(46,302,eq.length?`Pure equilibria: ${names.join(' and ')}`:'No pure equilibrium',14,eq.length?C.green:C.coral,'start');
-  out+=E4_lines(46,324,E4_wrap(g.note,78).slice(0,2),13,C.ink);
-  out+=TF(46,358,'Blue numbers: row player. Coral: column player.',13,C.muted,'start');
+  out+=TBF(46,310,eq.length?`Pure equilibria: ${names.join(' and ')}`:'No pure equilibrium',14,eq.length?C.green:C.coral,'start');
+  out+=E4_lines(46,332,E4_wrap(g.note,78).slice(0,2),13,C.ink);
   return {svg:out,phase:'An equilibrium is not necessarily good: in the dilemma it is worse for both than the alternative. It is simply stable: from there, nobody can gain by moving alone. Some games have several, which is why conventions and focal points matter (Schelling 1960).'};
  }});
 
@@ -221,7 +221,7 @@ SCENE({id:'nash-equilibrium-mixed',name:'Mixed strategies: penalty kicks',tag:'B
   out+=E4_poly(line(0),C.coral,2.4)+E4_poly(line(1),C.purple,2.4);
   out+=E4_poly(range(41).map(i=>{const q=i/40;return [pl.X(q),pl.Y(Math.min(f(q,0),f(q,1)))]}),C.ink,4,'opacity=".35"');
   out+=TF(pl.X(.02),pl.Y(f(0,0))-8,'keeper dives natural side',13,C.coral,'start');
-  out+=TF(pl.X(.02),pl.Y(f(0,1))+18,'keeper dives other side',13,C.purple,'start');
+  out+=TF(pl.X(.98),pl.Y(f(1,1))+20,'keeper dives other side',13,C.purple,'end');
   out+=L(pl.X(pStar),pl.Y(50),pl.X(pStar),pl.Y(vStar),C.green,1.5,'stroke-dasharray="4 4"')+Ci(pl.X(pStar),pl.Y(vStar),6,C.green,'#fff');
   const v=Math.min(f(p,0),f(p,1)),best=f(p,0)<f(p,1)?'natural side':f(p,0)>f(p,1)?'other side':'either side';
   out+=L(pl.X(p),pl.Y(50),pl.X(p),pl.Y(100),C.blue,2)+Ci(pl.X(p),pl.Y(v),7,C.blue,'#fff');
@@ -252,8 +252,8 @@ SCENE({id:'nash-equilibrium-cournot',name:'Two firms choose quantities',tag:'Cou
   let out=heading('Two firms, one market: Cournot’s equilibrium',26);
   const pl=E4_plot(80,56,250,250,[0,90],[0,90],{xt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],yt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],xl:'firm A’s output',yl:'firm B’s output',xlDy:33});
   out+=pl.svg;
-  out+=L(pl.X(45),pl.Y(0),pl.X(0),pl.Y(90),C.blue,2.4)+TF(pl.X(46),pl.Y(4),'A’s best reply',13,C.blue,'start');
-  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4)+TF(pl.X(88),pl.Y(8),'B’s best reply',13,C.coral,'end');
+  out+=L(pl.X(45),pl.Y(0),pl.X(0),pl.Y(90),C.blue,2.4)+TF(pl.X(10),pl.Y(80),'A’s best reply',13,C.blue,'start');
+  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4)+TF(pl.X(89),pl.Y(9),'B’s best reply',13,C.coral,'end');
   out+=Ci(pl.X(22.5),pl.Y(22.5),5,C.purple)+TF(pl.X(22.5)-8,pl.Y(22.5)+18,'shared monopoly',13,C.purple,'end');
   out+=Ci(pl.X(45),pl.Y(45),5,C.amber)+TF(pl.X(45)+8,pl.Y(45)-6,'price = cost',13,C.amber,'start');
   const pts=E4_cournotPath(s.a,s.b,s.steps);
@@ -323,7 +323,7 @@ SCENE({id:'axelrod-tournament',name:'Axelrod’s tournament',tag:'Which strategy
    const inner=R(20,y,546,32,r.in?'#fff':'#f3f5f7',r.in?C.grid:'none',8)+TF(36,y+21,(r.in?(k+1)+'. ':'')+r.n,14,r.in?C.ink:C.muted,'start')+(r.in?R(bx(0),y+7,Math.max(2,r.sc*62),18,col,'none',4)+TF(bx(0)+r.sc*62+6,y+21,r.sc.toFixed(2),13,col,'start'):TF(bx(0)+8,y+21,'not entered: press to add',13,C.muted,'start'));
    out+=hit(X,'tog',r.i,`${r.in?'Remove':'Add'} ${r.n}`,inner)});
   const top=order[0];
-  return {svg:out,phase:`${top.n} wins this field${s.noise?` with ${s.noise}% noise`:''}. Nice strategies (never first to defect) do well together; Always defect only prospers when there are cooperators to exploit. Take out Always cooperate and Random and see how the ranking shifts.`};
+  return {svg:out,phase:`${top.n} wins this field${s.noise?` with ${s.noise}% noise`:''}. Nice strategies (never first to defect) do well together; Always defect only prospers when there are cooperators to exploit. Take out Always cooperate and Random and see how the ranking shifts. Against Axelrod’s much more varied real entries, Tit for Tat came first.`};
  }});
 
 const E4_POOL=['tft','grudger','alld','wsls','random'];
@@ -352,7 +352,7 @@ SCENE({id:'axelrod-tournament-play',name:'Guess your opponent',tag:'Ten rounds a
    out+=TF(x+w/2,148,String(i+1),13,C.muted)}
   let ys=0,os=0;for(let i=0;i<n;i++){ys+=E4_PD[s.you[i]][s.them[i]][0];os+=E4_PD[s.you[i]][s.them[i]][1]}
   out+=T(300,176,`Points so far: ${s.sim?'simulated player':'you'} ${ys}, opponent ${os}`,15,C.ink);
-  if(n<10){out+=T(300,214,`Round ${n+1} of 10: choose Cooperate or Defect.`,15,C.muted);
+  if(n<10){out+=T(300,214,s.sim?`Round ${n+1} of 10: a simulated player is choosing.`:`Round ${n+1} of 10: choose Cooperate or Defect.`,15,C.muted);
    out+=E4_lines(300,250,['Clues: does it cooperate first? Does it punish a defection?','Does it forgive, or hold a grudge? Does it look random?'],14,C.muted,'middle',22)}
   else{const truth=E4_opp(s.seed);
    out+=TBF(300,206,s.guess?'':'Who was it? Press your guess.',14,C.ink);
@@ -399,7 +399,7 @@ SCENE({id:'axelrod-tournament-ecology',name:'Survival of the strategies',tag:'Ax
  example:'Always defect does well only while there are unconditional cooperators to exploit; once they are gone it meets retaliators and dies out.',
  desc:'Lines show the share of each of seven strategies over generations, starting equal, with each generation’s shares in proportion to the strategies’ average points against the current mix.',
  research:'Axelrod (1984). The Evolution of Cooperation, chapter 2: the ecological analysis of the second tournament. Axelrod & Hamilton (1981). The evolution of cooperation. Science 211, 1390–1396.',
- dur:12,hint:'Slide through the generations and add noise. Exploiters rise while there is something to exploit, then fall.',
+ dur:12,hint:'Slide through the generations, then add noise: with mistakes, Always defect rises briefly and the strategies that recover from errors take over.',
  init:()=>({gen:60,noise:0}),
  watch(p){return {gen:Math.round(p*60),noise:0}},
  ui:[{range:'gen',label:'Generations',min:0,max:60,get:s=>s.gen,act:'gen'},{range:'noise',label:'Noise',min:0,max:10,get:s=>s.noise,act:'noise',show:v=>v+'%'}],
@@ -440,13 +440,14 @@ SCENE({id:'beauty-contest',name:'Guess two-thirds of the average',tag:'The beaut
  draw(s){
   const runs=E4_bcRun(s.seed,s.mine),cur=runs[runs.length-1];
   let out=heading('Guess two-thirds of the average',26);
-  const pl=E4_plot(60,52,480,120,[0,100],[0,8],{xt:[[0,'0'],[22,'22'],[33,'33'],[50,'50'],[100,'100']],xl:'',yl:''});
+  const bins=Array(20).fill(0);if(cur)cur.others.forEach(v=>bins[Math.min(19,Math.floor(v/5))]++);
+  const pl=E4_plot(60,52,480,120,[0,100],[0,Math.max(8,Math.max(...bins)+1)],{xt:[[0,'0'],[22,'22'],[33,'33'],[50,'50'],[100,'100']],xl:'',yl:''});
   out+=pl.svg;
-  if(cur){const bins=Array(20).fill(0);cur.others.forEach(v=>bins[Math.min(19,Math.floor(v/5))]++);
+  if(cur){
    bins.forEach((c,i)=>{if(c)out+=R(pl.X(i*5)+1,pl.Y(c),pl.X(5)-pl.X(0)-2,pl.Y(0)-pl.Y(c),C.pale,C.line,2)});
-   out+=L(pl.X(cur.avg),52,pl.X(cur.avg),172,C.muted,2,'stroke-dasharray="4 4"')+TF(pl.X(cur.avg)+4,66,`average ${fmt(Math.round(cur.avg*10)/10)}`,13,C.muted,'start');
-   out+=L(pl.X(cur.target),52,pl.X(cur.target),172,C.green,2.5)+TF(pl.X(cur.target)-4,66,`target ${fmt(Math.round(cur.target*10)/10)}`,13,C.green,'end');
-   out+=P(`M${fmt(pl.X(cur.you))} 176 l-7 12 h14 z`,C.blue,1.5,C.blue)+TF(pl.X(cur.you),204,s.sim?'simulated':'you',13,C.blue);}
+   out+=L(pl.X(cur.avg),52,pl.X(cur.avg),172,C.muted,2,'stroke-dasharray="4 4"')+TF(pl.X(cur.avg)+(cur.avg<70?6:-6),88,`average ${fmt(Math.round(cur.avg*10)/10)}`,13,C.muted,cur.avg<70?'start':'end');
+   out+=L(pl.X(cur.target),52,pl.X(cur.target),172,C.green,2.5)+TF(pl.X(cur.target)+(pl.X(cur.target)<150?6:-6),68,`target ${fmt(Math.round(cur.target*10)/10)}`,13,C.green,pl.X(cur.target)<150?'start':'end');
+   out+=P(`M${fmt(pl.X(cur.you))} 196 l-7 12 h14 z`,C.blue,1.5,C.blue)+TF(pl.X(cur.you)+10,208,s.sim?'simulated':'you',13,C.blue,'start');}
   else out+=T(300,116,'Choose a number from 0 to 100 and press Submit.',15,C.muted);
   out+=TF(300,226,`Round ${Math.min(4,s.mine.length+1)} of 4${s.mine.length>=4?' (finished)':''}`,13,C.muted);
   const cols=[70,170,280,400,510],hy=252;
