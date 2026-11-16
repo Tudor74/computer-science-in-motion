@@ -317,12 +317,12 @@ SCENE({id:'vaccines-herd-evidence',name:'A retracted scare',tag:'MMR and autism'
    out+=R(20,256,560,96,C.pale,'none',10)+B7_lines(36,282,B7_wrap(B7_STUDIES[s.k].t,74),14,C.ink,'start',20);
   }else{
    const data=[[1996,92],[1998,88],[2000,88],[2002,84],[2004,80],[2006,85],[2008,85],[2010,89],[2012,92]];
-   const pl=B7_plot(80,56,440,220,[1995,2013],[70,100],{xt:[[1996,'1996'],[2000,'2000'],[2004,'2004'],[2008,'2008'],[2012,'2012']],yt:[[70,'70%'],[80,'80%'],[90,'90%'],[100,'100%']],xl:'year'});out+=pl.svg;
+   const pl=B7_plot(80,56,440,210,[1995,2013],[70,100],{xt:[[1996,'1996'],[2000,'2000'],[2004,'2004'],[2008,'2008'],[2012,'2012']],yt:[[70,'70%'],[80,'80%'],[90,'90%'],[100,'100%']]});out+=pl.svg;
    out+=L(pl.X(1995),pl.Y(95),pl.X(2013),pl.Y(95),C.green,1.8,'stroke-dasharray="6 4"')+TF(pl.X(2013)-4,pl.Y(95)-6,'about 95% needed for measles',13,C.green,'end');
-   out+=L(pl.X(1998),56,pl.X(1998),276,C.coral,1.5,'stroke-dasharray="3 3"')+TF(pl.X(1998)+4,pl.Y(72),'1998 paper',13,C.coral,'start');
+   out+=L(pl.X(1998),56,pl.X(1998),266,C.coral,1.5,'stroke-dasharray="3 3"')+TF(pl.X(1998)+4,pl.Y(72),'1998 paper',13,C.coral,'start');
    out+=B7_poly(data.map(([y,v])=>[pl.X(y),pl.Y(v)]),C.blue,3)+data.map(([y,v])=>Ci(pl.X(y),pl.Y(v),4.5,C.blue)).join('');
-   out+=T(300,320,'Coverage fell to about 80% by 2003–04, and measles became endemic again in England and Wales by 2008.',14,C.ink);
-   out+=TF(300,344,'Values rounded from published annual coverage figures; shown to give the shape, not exact data.',13,C.muted);
+   out+=T(300,310,'Coverage fell to about 80% by 2003–04.',14,C.ink)+T(300,332,'By 2008 measles was endemic again in England and Wales.',14,C.ink);
+   out+=TF(300,358,'Values rounded from published yearly figures: the shape, not exact data.',13,C.muted);
   }
   return {svg:out,phase:'One small, flawed study received enormous attention; the studies that answered it were thousands of times larger. A retraction does not undo a scare: coverage took about a decade to recover, and measles returned in the meantime.'};
  }});
@@ -421,9 +421,9 @@ SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern i
  on:{hox(s,v){s.hox=Number(v)},w(s,v){s.w=Number(v)}},
  draw(s){
   const lamb=1*(.55+.45*s.hox),Wd=5*s.w/100,n=Math.max(1,Math.round(Wd/lamb));let out=heading('Digits as Turing stripes',26);
-  const cx=230,cy=270,R0=56,R1=60+120*Math.min(1.2,s.w/100),span=Math.PI*(.25+.2*s.w/140);
+  const cx=230,cy=270,R1=60+120*Math.min(1.2,s.w/100),R0=.42*R1,span=Math.PI*(.25+.2*s.w/140);
   out+=P(`M${fmt(cx+R1*Math.cos(-Math.PI/2-span))} ${fmt(cy+R1*Math.sin(-Math.PI/2-span))} A${fmt(R1)} ${fmt(R1)} 0 0 1 ${fmt(cx+R1*Math.cos(-Math.PI/2+span))} ${fmt(cy+R1*Math.sin(-Math.PI/2+span))} L${cx+40} ${cy+40} L${cx-40} ${cy+40} Z`,C.line,2,'#fdf3ea');
-  range(n).forEach(i=>{const a=-Math.PI/2-span+(i+.5)/n*2*span,w=Math.min(18,.6*R1*2*span/n);
+  range(n).forEach(i=>{const a=-Math.PI/2-span+(i+.5)/n*2*span,w=Math.min(18,.55*R0*2*span/n);
    out+=L(cx+R0*Math.cos(a),cy+R0*Math.sin(a),cx+(R1-14)*Math.cos(a),cy+(R1-14)*Math.sin(a),C.coral,w);});
   out+=L(cx-40,cy+40,cx+40,cy+40,C.line,2);
   out+=counter(462,60,'digits',String(n),C.coral,118)+counter(462,114,'stripe spacing',`${(lamb*20).toFixed(0)} units`,C.purple,118)+counter(462,168,'bud width',`${(Wd*20).toFixed(0)} units`,C.ink,118);
@@ -477,7 +477,7 @@ SCENE({id:'circulation-heart-pulmonary',name:'Two circuits',tag:'Galen, Ibn al-N
   else{out+=curveArrow(232,224,206,100,-30,C.blue,2.6)+curveArrow(350,104,340,140,-30,C.coral,2.6);
    if(m!=='nafis'){out+=curveArrow(350,254,420,290,-25,C.coral,2.6)+curveArrow(170,292,228,166,-30,C.blue,2.6)}
    else{out+=curveArrow(350,254,420,290,-25,C.coral,2.2)+TF(470,262,'to the body',13,C.muted,'start')}
-   if(m==='malpighi'){range(5).forEach(i=>out+=P(`M${410-i*6} ${288+i} q-30 ${-8+i*4} -60 0`,C.purple,1.4));out+=TF(470,340,'capillaries',13,C.purple,'start')}
+   if(m==='malpighi'){range(5).forEach(i=>out+=P(`M${388-i*5} ${70+i*4} q-22 ${-6+i*3} -46 0`,C.purple,1.4));out+=TF(430,64,'capillaries',13,C.purple,'start')}
    }
   out+=R(30,332,540,44,C.pale,'none',8)+B7_lines(42,350,B7_wrap(M.t,84),13,C.ink,'start',17);
   return {svg:out,phase:'Ibn al-Nafis reasoned from anatomy that the septum is solid; his work was largely unknown in Europe, where Servetus (1553) and Colombo (1559) described the lung circuit again. Harvey closed both loops in 1628, and Malpighi found the capillaries that join them.'};
@@ -560,7 +560,7 @@ SCENE({id:'microbiome-cdiff',name:'A transplant that works',tag:'Faecal microbio
    out+=TF(30,y+14,a.n,14,C.ink,'start');
    range(a.N).forEach(i=>{const q=pts[i],x=30+i*20;out+=Ci(x+8,y+36,8,q?(q.ok?a.c:C.coral):'#fff',q?'none':C.line)});
    const share=pts.length?ok/pts.length:0;out+=R(380,y+24,170*share,22,a.c,'none',4)+R(380,y+24,170,22,'none',C.line,4);
-   out+=TF(380+170*a.k/a.N,y+20,'▼',13,C.ink)+TF(560,y+40,pts.length?`${ok}/${pts.length}`:'',13,C.ink,'end');
+   out+=TF(380+170*a.k/a.N,y+20,'▼',13,C.ink)+TF(556,y+40,pts.length?`${ok}/${pts.length}`:'',13,C.ink,'start');
    out+=TF(380,y+64,`published: ${a.k}/${a.N} (${B7_pct(a.k/a.N)})`,13,C.muted,'start')});
   out+=TF(30,322,'filled: cured after one treatment · coral: infection came back',13,C.muted,'start');
   out+=T(300,354,s.k<42?`${s.k} of 42 patients treated so far.`:'All 42 treated: donor microbes cured most patients after one infusion.',15,C.ink);

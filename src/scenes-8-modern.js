@@ -590,8 +590,8 @@ SCENE({id:'origins-of-life',name:'The Miller–Urey experiment',tag:'Sparks in a
   B8_AA.forEach(([n,v],i)=>{const y=84+i*44,w=amt*v*150;out+=TF(388,y+14,n,13,C.ink,'start')+R(388,y+20,150,12,'#f1f5f7','none',3)+R(388,y+20,w,12,C.green,'none',3)});
   out+=TF(470,272,on?`Day ${s.day} of 7`:'No spark: no energy, no products',13,on?C.ink:C.coral);
   out+=TF(470,292,'bar lengths are illustrative',13,C.muted);
-  out+=TF(470,330,s.gas==='red'?'Glycine and alanine were',13,C.ink)+TF(470,348,s.gas==='red'?'the most abundant.':'',13,C.ink);
-  if(s.gas!=='red')out+=TF(470,330,'Far less from neutral gases',13,C.coral);
+  if(s.gas==='red')out+=TF(470,330,'Glycine and alanine were',13,C.ink)+TF(470,348,'the most abundant.',13,C.ink);
+  else out+=TF(470,330,'Far less from neutral gases',13,C.coral);
   return {svg:out,phase:s.gas==='red'?'Energy from the sparks breaks the gases into reactive fragments that recombine in the water as amino acids. It showed that some building blocks of life form readily, but not how they joined into proteins or cells.':'Geologists now think the early atmosphere was mostly carbon dioxide and nitrogen. Sparks then make far fewer amino acids, unless the water is buffered against acids (Cleaves et al. 2008). Meteorites and vents are other possible sources.'};
  }});
 

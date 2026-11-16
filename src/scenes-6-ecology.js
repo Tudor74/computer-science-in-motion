@@ -99,11 +99,11 @@ SCENE({id:'logistic-growth-yeast',name:'Fitting yeast in a flask',tag:'A real S-
  }});
 
 // Harvesting a logistic stock (Schaefer model): quota or fixed effort.
-function B6_harvest(mode,h){return B6_memo('hv'+mode+h,()=>B6_solve((t,y)=>{const N=Math.max(0,y[0]);return [.5*N*(1-N/1000)-(mode==='quota'?(N>0.5?h:0):h/1000*N)]},[1000],40,.02,10,(t,y)=>[Math.max(0,y[0])]))}
+function B6_harvest(mode,h){return B6_memo('hv'+mode+h,()=>B6_solve((t,y)=>{const N=Math.max(0,y[0]);return [.5*N*(1-N/1000)-(mode==='quota'?(N>0.5?h:0):h/1000*N)]},[1000],60,.02,10,(t,y)=>[Math.max(0,y[0])]))}
 SCENE({id:'logistic-growth-harvest',name:'Harvesting and collapse',tag:'Maximum sustainable yield',
  definition:'A population grows fastest at half its carrying capacity, so in theory harvesting that growth gives the largest catch that can be taken for ever: the maximum sustainable yield. Take a fixed quota above it and the stock collapses.',
  example:'With r = 0.5 per year and K = 1000 the maximum sustainable yield is rK/4 = 125 a year. A quota of 130 a year drives the stock to zero.',
- desc:'A fish stock over 40 years under a fixed quota or a fixed fishing effort, beside the growth curve with the harvest drawn on it; where they cross, the stock can settle.',
+ desc:'A fish stock over 60 years under a fixed quota or a fixed fishing effort, beside the growth curve with the harvest drawn on it; where they cross, the stock can settle.',
  research:'Schaefer, M. B. (1954). Some aspects of the dynamics of populations important to the management of commercial marine fisheries. Bulletin of the Inter-American Tropical Tuna Commission 1, 27–56. Larkin, P. A. (1977). An epitaph for the concept of maximum sustained yield. Transactions of the American Fisheries Society 106, 1–11. Myers, Hutchings & Barrowman (1997). Why do fish stocks collapse? The example of cod in Atlantic Canada. Ecological Applications 7, 91–106.',
  dur:12,hint:'Change the quota or the effort; the rule follows the slider you move. A quota above 125 collapses the stock; effort-based fishing is more forgiving.',
  init:()=>({mode:'quota',q:100,e:20}),
@@ -113,7 +113,7 @@ SCENE({id:'logistic-growth-harvest',name:'Harvesting and collapse',tag:'Maximum 
  on:{mode(s,v){s.mode=v;return 'keep'},q(s,v){s.q=Number(v);s.mode='quota';return 'keep'},e(s,v){s.e=Number(v);s.mode='effort';return 'keep'}},
  draw(s){
   const h=s.mode==='quota'?s.q:s.e*10,sol=B6_harvest(s.mode,h);let out=heading(s.mode==='quota'?`A fixed quota of ${s.q} a year`:`A fixed effort: ${s.e}% of the stock a year`,28);
-  const pl=B6_plot(70,58,270,230,[0,40],[0,1100],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40']],yt:[[0,'0'],[500,'500'],[1000,'1000']],xl:'years',yl:'stock size'});
+  const pl=B6_plot(70,58,270,230,[0,60],[0,1100],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60']],yt:[[0,'0'],[500,'500'],[1000,'1000']],xl:'years',yl:'stock size'});
   out+=pl.svg+B6_poly(sol.map(o=>[pl.X(o.t),pl.Y(o.y[0])]),C.blue,2.8);
   const end=sol[sol.length-1].y[0],gone=end<5;
   const g=B6_plot(400,58,180,160,[0,1000],[0,160],{xt:[[0,'0'],[1000,'1000']],yt:[[0,'0'],[125,'125']],xl:'stock size',xlDy:31,yl:'growth or catch per year'});
@@ -121,7 +121,7 @@ SCENE({id:'logistic-growth-harvest',name:'Harvesting and collapse',tag:'Maximum 
   if(s.mode==='quota')out+=L(g.X(0),g.Y(Math.min(160,h)),g.X(1000),g.Y(Math.min(160,h)),C.coral,2.2);
   else{const k=h/1000,x2=k*1000>160?160/k:1000;out+=L(g.X(0),g.Y(0),g.X(x2),g.Y(Math.min(160,k*x2)),C.coral,2.2)}
   out+=TF(490,270,'green: growth   coral: catch',13,C.muted);
-  out+=counter(400,280,'stock after 40 years',gone?'collapsed':Math.round(end),gone?C.coral:C.blue,180);
+  out+=counter(400,280,'stock after 60 years',gone?'collapsed':Math.round(end),gone?C.coral:C.blue,180);
   const yieldNow=gone?0:(s.mode==='quota'?s.q:h/1000*end);
   out+=counter(400,330,'catch per year then',Math.round(yieldNow),C.ink,180);
   return {svg:out,phase:s.mode==='quota'?(s.q>125?`A quota of ${s.q} is more than the stock can ever grow in a year (at most 125), so it falls every year until nothing is left. Real stocks also fluctuate, so even a quota at exactly 125 is unsafe (Larkin 1977).`:`Where the coral line crosses the green hump the stock can balance its losses. The stock settles at ${Math.round(end)}; a quota close to 125 leaves almost no margin for a bad year.`):`With a fixed effort the catch falls as the stock falls, which pulls it back from the brink. Effort of 50% a year or more (r itself) still empties the sea. The settled catch here is ${Math.round(yieldNow)} a year.`};
@@ -159,7 +159,7 @@ SCENE({id:'predator-prey',name:'Predators and prey',tag:'The Lotka–Volterra cy
  },
  three(s,f,X,project){
   const sol=B6_LV(s.a,s.c,s.x0),tx=Math.max(...sol.map(o=>o.y[0])),ty=Math.max(...sol.map(o=>o.y[1]));
-  const P=project([[0,0,0],[3,3,3]]),sx=v=>v/tx*3,sy=v=>v/ty*3;let o=axes3(P,['prey','predators','time']);
+  const P=project([[0,0,0],[3,3,3.8]]),sx=v=>v/tx*3,sy=v=>v/ty*3;let o=axes3(P,['prey','predators','time'],[3,3,3.8]);
   const pts=sol.map(q=>P([sx(q.y[0]),sy(q.y[1]),q.t/10]));
   o+=`<polyline points="${pts.map(p=>fmt(p[0])+','+fmt(p[1])).join(' ')}" fill="none" stroke="${C.purple}" stroke-width="2.4"/>`;
   const sh=sol.map(q=>P([sx(q.y[0]),sy(q.y[1]),0]));o+=`<polyline points="${sh.map(p=>fmt(p[0])+','+fmt(p[1])).join(' ')}" fill="none" stroke="${C.line}" stroke-width="1.4" stroke-dasharray="4 4"/>`;
@@ -434,7 +434,7 @@ SCENE({id:'food-webs-biomagnification',name:'Poison up the chain',tag:'Biomagnif
 /* ================================================================ island-biogeography */
 SCENE({id:'island-biogeography',name:'The balance on an island',tag:'MacArthur and Wilson’s equilibrium',
  definition:'The number of species on an island settles where new arrivals balance local extinctions. Near islands get more arrivals; large islands have fewer extinctions; so large, near islands hold the most species.',
- example:'A large island close to the mainland might hold 70 of 100 possible species; a small, far island only about 25, even with the same habitat.',
+ example:'In this model a large island 10 km from the mainland holds about 80 of 100 possible species; a small island 90 km away only about 20, even with the same habitat.',
  desc:'Immigration rate falling and extinction rate rising with the number of species, crossing at the equilibrium, beside a map of the island’s size and distance from the mainland.',
  research:'MacArthur, R. H. & Wilson, E. O. (1963). An equilibrium theory of insular zoogeography. Evolution 17, 373–387. MacArthur & Wilson (1967). The Theory of Island Biogeography. Princeton University Press.',
  dur:10,hint:'Change the island’s distance and area. The equilibrium is where the two lines cross.',

@@ -57,8 +57,8 @@ SCENE({id:'enzymes',name:'Enzyme kinetics',tag:'Michaelis and Menten, 1913',
   out+=TF(404,180,s.data.length?`fit error ${B5_num(e,2)} µmol/min`:'no data yet',14,C.ink,'start');
   out+=TF(404,212,'At [S] = Km the rate is',13,C.muted,'start')+TF(404,229,'half of Vmax.',13,C.muted,'start');
   out+=TF(404,258,'Well past Km, adding',13,C.muted,'start')+TF(404,275,'substrate barely helps.',13,C.muted,'start');
-  out+=TF(300,340,'v = Vmax · [S] / (Km + [S])',15,C.ink);
-  out+=TF(300,364,s.data.length>=4&&e<.35?'Good fit: the curve runs through the scatter of your points.':'Measure at low and high [S]: low values pin down Km, high ones Vmax.',13,C.muted);
+  out+=TF(300,350,'v = Vmax · [S] / (Km + [S])',15,C.ink);
+  out+=TF(300,372,s.data.length>=4&&e<.35?'Good fit: the curve runs through the scatter of your points.':'Measure at low and high [S]: low values pin down Km, high ones Vmax.',13,C.muted);
   return {svg:out,phase:'Each dot is one measured initial rate, with a few per cent of measurement noise. Low concentrations fix the slope and so Km; high ones show the ceiling, Vmax. Maud Menten and Leonor Michaelis showed in 1913 that this one curve describes invertase, and it describes many enzymes since.'};
  }});
 
@@ -193,10 +193,10 @@ SCENE({id:'membranes-pumps',name:'Membranes',tag:'Gorter and Grendel’s trough,
  on:{b(s,v){s.b=Number(v);return 'keep'}},
  draw(s){
   const A=s.b/20,pi=B5_film(A),xb=60+480*s.b/100;let out=heading('Spreading the lipids of red blood cells on water',26);
-  out+=R(60,50,480,70,'#d6ebf7',C.line,4)+L(xb,44,xb,126,C.dark,5);
+  out+=R(60,50,480,70,'#fff',C.line,4)+R(62,84,476,34,'#d6ebf7','none',2)+L(xb,44,xb,126,C.dark,5);
   out+=TF(xb+8,66,'barrier',13,C.muted,'start');
-  const n=36,sp=(xb-72)/n;for(let i=0;i<n;i++){const x=66+sp*(i+.5);out+=Ci(x,78,Math.min(5,sp*.45),C.coral)+L(x,83,x,98,C.amber,1.6)}
-  out+=TF(66,140,'lipid heads (coral) sit in the water; tails point up into the air',13,C.muted,'start');
+  const n=36,sp=(xb-72)/n;for(let i=0;i<n;i++){const x=66+sp*(i+.5);out+=L(x,80,x,62,C.amber,1.6)+Ci(x,84,Math.min(5,sp*.45),C.coral)}
+  out+=TF(66,140,'side view: lipid heads (coral) in the water, tails up into the air',13,C.muted,'start');
   const pl=B5_plot(70,166,300,150,[0,5],[0,50],{xt:[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5']],yt:[[0,'0'],[25,'25'],[50,'50']],xl:'film area (units of the cells’ surface)',yl:'film pressure (mN/m)'});
   out+=pl.svg+B5_poly(range(101).map(i=>{const a=1.5+i*.035;return [pl.X(a),pl.Y(B5_film(a))]}),C.muted,1.8)+Ci(pl.X(A),pl.Y(pi),6,C.coral,'#fff');
   out+=L(pl.X(2),166,pl.X(2),316,C.green,1.5,'stroke-dasharray="4 4"');
@@ -261,7 +261,8 @@ SCENE({id:'membranes-pumps-cycle',name:'The sodium–potassium pump',tag:'Skou, 
   const cx=210,gap=openOut?[18,4]:[4,18];
   out+=P(`M${cx-50} 140 L${cx-gap[0]} 140 L${cx-gap[1]} 240 L${cx-50} 240 Z`,C.blue,2.5,C.pale)+P(`M${cx+50} 140 L${cx+gap[0]} 140 L${cx+gap[1]} 240 L${cx+50} 240 Z`,C.blue,2.5,C.pale);
   const ion=(x,y,t)=>Ci(x,y,13,t==='Na'?C.amberp:C.purplep,t==='Na'?C.amber:C.purple)+TF(x,y+5,t==='Na'?'Na⁺':'K⁺',13,t==='Na'?C.amber:C.purple);
-  if(st===0||st===1)[[-14,262],[14,262],[0,282]].forEach(([dx,y])=>out+=ion(cx+dx,st===0?y:y-60,'Na'));
+  if(st===0)[[-24,266],[24,266],[0,292]].forEach(([dx,y])=>out+=ion(cx+dx,y,'Na'));
+  if(st===1)[[-16,206],[16,206],[0,232]].forEach(([dx,y])=>out+=ion(cx+dx,y,'Na'));
   if(st===2)[[-60,100],[0,84],[60,100]].forEach(([dx,y])=>out+=ion(cx+dx,y,'Na'));
   if(st===3||st===4)[[-12,170],[12,206]].forEach(([dx,y])=>out+=ion(cx+dx,y,'K'));
   if(st===5)[[-50,276],[50,276]].forEach(([dx,y])=>out+=ion(cx+dx,y,'K'));
@@ -330,7 +331,7 @@ SCENE({id:'photosynthesis-priestley',name:'Restoring the air',tag:'Priestley and
   if(s.plant){out+=L(160,290,160,200,C.green,3);[[148,230],[172,220],[146,206],[172,196]].forEach(([x,y])=>out+=P(`M160 ${y+6} Q${x} ${y-8} ${x+(x<160?-6:6)} ${y+4}`,C.green,2,C.greenp))}
   out+=TF(130,326,s.light?'standing in the light':'kept in the dark',13,C.muted);
   const pl=B5_plot(290,56,290,224,[0,12],[10,22],{xt:[[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],yt:[[12,'12'],[16,'16'],[21,'21']],xl:'days',yl:'oxygen in the jar (%)'});
-  out+=pl.svg+L(290,pl.Y(17.5),580,pl.Y(17.5),C.amber,1.5,'stroke-dasharray="5 4"')+TF(576,pl.Y(17.5)-6,'enough to relight',13,C.amber,'end');
+  out+=pl.svg+L(290,pl.Y(17.5),580,pl.Y(17.5),C.amber,1.5,'stroke-dasharray="5 4"')+TF(296,pl.Y(17.5)-6,'enough to relight',13,C.amber,'start');
   out+=B5_poly(data.map(([d,O])=>[pl.X(d),pl.Y(O)]),C.green,2.8);
   out+=TF(435,350,relit?`${s.occ==='candle'?'Candle relit':'Air good again'} on about day ${Math.ceil(relit[0])}`:'The air is never restored.',14,relit?C.green:C.coral);
   return {svg:out,phase:'Priestley’s results were not always repeatable, partly because he did not control the light. Ingenhousz showed within a few years that only green parts in sunlight restore the air, and that in the dark plants spoil it slightly, as animals do. Oxygen itself was isolated by Priestley and by Scheele in the 1770s and named by Lavoisier.'};
@@ -338,8 +339,12 @@ SCENE({id:'photosynthesis-priestley',name:'Restoring the air',tag:'Priestley and
 
 // Engelmann (1882): oxygen-seeking bacteria crowd where the light is used.
 const B5_G=(x,m,s)=>Math.exp(-(((x-m)/s)**2)/2);
-const B5_absorb=w=>Math.min(1,(B5_G(w,430,14)+.75*B5_G(w,662,10)+.9*B5_G(w,453,14)+.55*B5_G(w,642,10))/1.25);
-const B5_action=w=>Math.min(1,.85*B5_G(w,440,26)+B5_G(w,675,20)+.28*B5_G(w,560,55));
+const B5_abs0=w=>B5_G(w,430,14)+.75*B5_G(w,662,10)+.9*B5_G(w,453,14)+.55*B5_G(w,642,10);
+const B5_ABSMAX=Math.max(...range(301).map(i=>B5_abs0(400+i)));
+const B5_absorb=w=>B5_abs0(w)/B5_ABSMAX;
+const B5_act0=w=>.85*B5_G(w,440,26)+B5_G(w,675,14)+.28*B5_G(w,560,55);
+const B5_ACTMAX=Math.max(...range(301).map(i=>B5_act0(400+i)));
+const B5_action=w=>B5_act0(w)/B5_ACTMAX;
 function B5_wl(w){let r=0,g=0,b=0;if(w<440){r=(440-w)/40*.6;b=1}else if(w<490){g=(w-440)/50;b=1}else if(w<510){g=1;b=(510-w)/20}else if(w<580){r=(w-510)/70;g=1}else if(w<645){r=1;g=(645-w)/65}else r=1;const f=w>680?.4+.6*(700-w)/20:1;return '#'+[r,g,b].map(v=>Math.round(clamp(v*f,0,1)*230+20).toString(16).padStart(2,'0')).join('')}
 SCENE({id:'photosynthesis-engelmann',name:'Which colours drive it?',tag:'Engelmann’s bacteria, 1882',
  definition:'An action spectrum shows how strongly each colour of light drives photosynthesis. It matches the absorption of chlorophyll: strong in blue and red, weak in green.',
@@ -395,9 +400,9 @@ SCENE({id:'photosynthesis-oxygen',name:'Where the oxygen comes from',tag:'Ruben 
    const L5=B5_LAB[s.lab],pl=B5_plot(340,60,230,170,[0,3],[0,1],{yt:[[0,'0'],[.2,'0.2'],[.5,'0.5'],[1,'1.0']],yl:'heavy oxygen (%)'});
    out+=pl.svg+L(340,pl.Y(.2),570,pl.Y(.2),C.muted,1.2,'stroke-dasharray="4 4"');
    [['water',L5.w],['CO₂',L5.co2],['O₂ made',L5.o2]].forEach(([n,v],i)=>{const x=pl.X(i+.5);out+=R(x-24,pl.Y(v),48,pl.Y(0)-pl.Y(v),i===2?C.green:C.blue,'none',3)+TF(x,pl.Y(v)-6,v.toFixed(2),13,C.ink)+TF(x,252,n,13,C.muted)});
-   out+=TF(566,pl.Y(.2)-5,'natural level',13,C.muted,'end');
-   out+=TF(300,300,hw?'The O₂ matches the water: the gas comes from water.':'The O₂ stays at the natural level: none of it comes from CO₂.',14,C.ink);
-   out+=TF(300,326,'Labelled CO₂ oxygen ends up in the sugar and the new water instead.',13,C.muted);
+   out+=TF(455,278,'dashed line: natural level, 0.20%',13,C.muted);
+   out+=TF(300,310,hw?'The O₂ matches the water: the gas comes from water.':'The O₂ stays at the natural level: none of it comes from CO₂.',14,C.ink);
+   out+=TF(300,336,'Labelled CO₂ oxygen ends up in the sugar and the new water instead.',13,C.muted);
   }
   return {svg:out,phase:'Writing the equation with 12 H₂O on the left and 6 H₂O on the right makes the bookkeeping honest: all 12 oxygen atoms of the O₂ come from water. Ruben and Kamen’s experiments had complications, because oxygen exchanges slowly between water and carbonate, and later work with better controls confirmed the conclusion.'};
  }});
@@ -426,7 +431,7 @@ SCENE({id:'respiration-atp',name:'Respiration is slow burning',tag:'Lavoisier an
  }});
 
 // ATP from one glucose, stage by stage; with and without oxygen.
-const B5_STAGES=[{n:'Glycolysis',where:'cytoplasm',atp:2,nadh:2,fadh:0},{n:'Link reaction',where:'mitochondrion',atp:0,nadh:2,fadh:0},{n:'Krebs cycle',where:'mitochondrion',atp:2,nadh:6,fadh:2},{n:'Electron transport',where:'inner membrane',atp:0,nadh:0,fadh:0}];
+const B5_STAGES=[{n:'Glycolysis',where:'cytoplasm',atp:2,nadh:2,fadh:0},{n:'Link reaction',where:'matrix',atp:0,nadh:2,fadh:0},{n:'Krebs cycle',where:'matrix',atp:2,nadh:6,fadh:2},{n:'Electron transport',where:'inner membrane',atp:0,nadh:0,fadh:0}];
 function B5_yield(stage,o2){if(!o2)return {atp:stage>=1?2:0,ox:0};let atp=0,nadh=0,fadh=0;for(let i=0;i<Math.min(stage,3);i++){atp+=B5_STAGES[i].atp;nadh+=B5_STAGES[i].nadh;fadh+=B5_STAGES[i].fadh}const ox=stage>=4?Math.round(2*1.5+8*2.5+fadh*1.5):0;return {atp:atp+ox,ox,nadh,fadh}}
 SCENE({id:'respiration-atp-yield',name:'How much ATP?',tag:'From one glucose',
  definition:'ATP is the cell’s energy currency. Glycolysis makes 2 ATP from a glucose without oxygen; with oxygen, the Krebs cycle and electron transport chain raise the total to about 30–32.',
@@ -450,7 +455,7 @@ SCENE({id:'respiration-atp-yield',name:'How much ATP?',tag:'From one glucose',
   out+=pl.svg+R(pl.X(.15),pl.Y(y.atp),pl.X(.85)-pl.X(.15),pl.Y(0)-pl.Y(y.atp),C.green,'none',3);
   out+=L(330,pl.Y(38),420,pl.Y(38),C.coral,1.5,'stroke-dasharray="5 4"')+TF(426,pl.Y(38)+4,'old textbook: 38',13,C.coral,'start');
   out+=L(330,pl.Y(32),420,pl.Y(32),C.muted,1.5,'stroke-dasharray="3 3"')+TF(426,pl.Y(32)+4,'modern: 30–32',13,C.muted,'start');
-  out+=TBF(375,pl.Y(y.atp)-8,String(y.atp),16,C.green);
+  out+=y.atp>=4?TBF(375,pl.Y(y.atp)+22,String(y.atp),16,'#fff'):TBF(375,pl.Y(y.atp)-8,String(y.atp),16,C.green);
   out+=TF(426,200,'per glucose',13,C.muted,'start');
   out+=TF(426,240,s.o2?'NADH and FADH₂ pay':'Fermentation recycles',13,C.ink,'start')+TF(426,257,s.o2?'out only in the last stage.':'NADH but adds no ATP.',13,C.ink,'start');
   return {svg:out,phase:'Most of the ATP comes at the end, when electrons from NADH and FADH₂ flow to oxygen. Older books assumed 3 ATP per NADH and 2 per FADH₂, giving 36–38; measured ratios are nearer 2.5 and 1.5, and some energy is spent moving molecules into the mitochondrion, so about 30–32 is the modern estimate.'};
@@ -512,7 +517,7 @@ SCENE({id:'homeostasis',name:'Keeping steady',tag:'Bernard and Cannon',
   const d=B5_temp(s.E,s.fb,s.set),last=d[d.length-1],T=last[1],resp=s.fb?clamp(2*(s.set-T),-6,4):0;
   let out=heading('Core temperature after moving into new surroundings',26);
   const pl=B5_plot(70,56,320,236,[0,120],[0,60],{xt:[[0,'0'],[30,'30'],[60,'60'],[90,'90'],[120,'120']],yt:[[0,'0'],[20,'20'],[37,'37'],[60,'60']],xl:'minutes',yl:'core temperature (°C)'});
-  out+=pl.svg+R(70,pl.Y(38),320,pl.Y(36)-pl.Y(38),C.greenp,'none',0,'opacity=".7"');
+  out+=pl.svg+R(70,pl.Y(38),320,pl.Y(36)-pl.Y(38),C.green,'none',0,'opacity=".22"');
   out+=L(70,pl.Y(clamp(s.E,0,60)),390,pl.Y(clamp(s.E,0,60)),C.amber,1.2,'stroke-dasharray="3 4"')+TF(386,pl.Y(clamp(s.E,0,60))-5,'surroundings',13,C.amber,'end');
   out+=B5_poly(d.map(q=>[pl.X(q[0]),pl.Y(clamp(q[2],0,60))]),C.muted,2,'stroke-dasharray="7 5"');
   if(s.fb)out+=B5_poly(d.map(q=>[pl.X(q[0]),pl.Y(clamp(q[1],0,60))]),C.blue,2.8);
@@ -581,7 +586,7 @@ SCENE({id:'homeostasis-delay',name:'When feedback is slow',tag:'Delays make osci
   const status=gt<1/Math.E?['Smooth return',C.green]:gt<Math.PI/2?['Damped swings',C.amber]:['Growing swings',C.coral];
   out+=R(450,56,132,230,C.pale,'none',10)+TBF(462,80,'gain × delay',14,C.ink,'start')+TBF(462,108,gt.toFixed(2),20,status[1],'start');
   out+=TF(462,134,status[0],14,status[1],'start');
-  const sc=v=>286-v/3*190;out+=L(470,sc(0),470,sc(3),C.line,6);
+  const sc=v=>276-v/3*104;out+=L(470,sc(0),470,sc(3),C.line,6);
   [[1/Math.E,'0.37'],[Math.PI/2,'1.57']].forEach(([v,l])=>out+=L(462,sc(v),478,sc(v),C.ink,1.5)+TF(484,sc(v)+4,l,13,C.muted,'start'));
   out+=Ci(470,sc(Math.min(3,gt)),6,status[1],'#fff');
   out+=TF(300,346,'Strong, fast feedback is good; strong, slow feedback swings.',14,C.ink);
@@ -608,7 +613,7 @@ SCENE({id:'scaling-laws',name:'Kleiber’s law',tag:'Metabolism and body size',
   const f=B5_klFit(s.b);let out=heading('Resting metabolic rate against body mass',26);
   const pl=B5_plot(80,56,330,236,[-2,4],[-1,4],{xt:[[-2,'0.01'],[-1,'0.1'],[0,'1'],[1,'10'],[2,'100'],[3,'1000'],[4,'10⁴']],yt:[[-1,'0.1'],[0,'1'],[1,'10'],[2,'100'],[3,'1000'],[4,'10⁴']],xl:'body mass (kg, log scale)',yl:'resting rate (W, log scale)'});
   out+=pl.svg+L(pl.X(-2),pl.Y(clamp(f.la-2*s.b,-1,4)),pl.X(4),pl.Y(clamp(f.la+4*s.b,-1,4)),C.coral,2.4);
-  B5_KL.forEach((d,i)=>{const x=pl.X(Math.log10(d.m)),y=pl.Y(Math.log10(d.B));out+=Ci(x,y,5.5,C.blue,'#fff');if(['mouse','human','elephant','rabbit','horse'].includes(d.n))out+=TF(x+(d.n==='elephant'?-8:8),y+(d.n==='horse'?16:-8),d.n,13,C.ink,d.n==='elephant'?'end':'start')});
+  B5_KL.forEach((d,i)=>{const x=pl.X(Math.log10(d.m)),y=pl.Y(Math.log10(d.B));out+=Ci(x,y,5.5,C.blue,'#fff');if(['mouse','human','elephant','rabbit','horse'].includes(d.n))out+=TF(x+(d.n==='elephant'?-8:8),y+(['horse','human','rabbit'].includes(d.n)?18:-8),d.n,13,C.ink,d.n==='elephant'?'end':'start')});
   out+=R(430,56,152,236,C.pale,'none',10)+TBF(442,80,`exponent ${s.b.toFixed(2)}`,15,C.coral,'start');
   out+=TF(442,106,`fit error ${f.rms.toFixed(3)}`,14,C.ink,'start')+TF(442,124,'(log₁₀ units)',13,C.muted,'start');
   out+=TF(442,156,`best for these: ${B5_klBest.toFixed(2)}`,14,C.blue,'start');

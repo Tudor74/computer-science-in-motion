@@ -528,7 +528,7 @@ SCENE({id:'finches-beaks-competition',name:'When a competitor arrives',tag:'Char
   const A=B2_axes(70,60,300,220,[8,11],[0,1],{xt:[8,9,10,11],yt:[[0,'0'],[.5,'50%'],[1,'100%']],xl:'beak depth (mm)',yl:'chance of surviving'});out+=A.svg;
   const surv=d=>yes?B2_logistic(-(d-9.4)*2.2-.6):B2_logistic((d-9.4)*2.2-.9);
   out+=P(B2_path(range(61).map(i=>{const d=8+i*.05;return [A.X(d),A.Y(surv(d))]})),yes?C.purple:C.coral,3.5);
-  out+=yes?arrow(A.X(10.8),A.Y(.72),A.X(10.2),A.Y(.72),C.purple,3,10)+TF(A.X(10.95),A.Y(.72)-14,'average beak gets smaller',13,C.purple,'end'):arrow(A.X(9.2),A.Y(.82),A.X(9.7),A.Y(.82),C.coral,3,10)+TF(A.X(9.45),A.Y(.82)-14,'average beak gets deeper',13,C.coral);
+  out+=yes?arrow(A.X(10.8),A.Y(.72),A.X(10.2),A.Y(.72),C.purple,3,10)+TF(A.X(10.95),A.Y(.72)-14,'average beak gets smaller',13,C.purple,'end'):arrow(A.X(9.0),A.Y(.6),A.X(9.5),A.Y(.6),C.coral,3,10)+TF(A.X(9.25),A.Y(.6)-14,'average beak gets deeper',13,C.coral);
   out+=R(400,60,170,220,'#fff',C.grid,8)+B2_title(414,84,'Seeds left to eat',C.ink);
   const seeds=[['small, soft',6,'#b38b4a',true],['large, hard (caltrop)',12,'#6b4f2a',!yes]];
   seeds.forEach(([n,r,c,ok],i)=>{const y=126+i*70;out+=Ci(430,y,r,c)+TF(452,y+5,n,13,C.ink,'start')+TF(452,y+23,ok?'available':'eaten by large finches',13,ok?C.green:C.coral,'start')});
