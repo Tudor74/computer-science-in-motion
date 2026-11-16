@@ -32,72 +32,12 @@
    handler returns 'stop'); both are cancelled when the scene or mode changes.
    Use rng()/shuffled()/nextSeed() for trial order, never Math.random.
 
- PHYSICS ADDITIONS
-   Simulations must be deterministic: integrate with a fixed time step (e.g. 1/120 s, semi-implicit Euler or
-   Verlet) as a pure function of state and time, so Watch, rewind and Try it agree. Never Math.random; use rng().
-   Show units (SI) on every quantity, and label idealisations (no air resistance, frictionless, point mass).
+ MUSIC ADDITIONS
+   Sound comes from AUDIO (below): only on the learner's action, gentle volumes, stopped on scene/mode change.
+   Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
+   Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. ★ = the learner reruns a
- historical experiment and sees their result beside the original.
- 1 Describing motion
-  position-speed .... secant shrinks to tangent; velocity vs speed; distance vs displacement.
-  acceleration ...... area under v–t; the arrow at the top of a throw; braking grows with v².
-  galileo-ramp ...... 1:3:5:7 at any slope; ★ place the bells; diluting gravity with the slope.
-  free-fall ......... hammer and feather (air, vacuum, Moon); ★ time a drop to measure g; the tied stones.
-  projectiles ....... two shadows; range vs angle with drag (illustrative); the monkey always gets hit.
-  relative-motion ... Galileo's ship from shore or deck; river crossing; speeds add (until near c).
- 2 Forces and gravity
-  newton-laws ....... frictionless puck; F = ma; skaters push apart.
-  friction .......... raise the ramp until it slips; stick then slide; area does not matter.
-  circular-motion ... cut the string (tangent, not outward); banked curve; loop-the-loop.
-  gravitation ....... Newton's Moon test; ★ Cavendish weighs the Earth; weight on seven worlds.
-  kepler-orbits ..... Newton's cannon (3D); equal areas; T² ∝ a³ with real planets.
-  fluids ............ float or sink in three fluids; pressure with depth; the hydraulic press.
- 3 Energy and momentum
-  work-energy ....... work at an angle; du Châtelet's clay dents; power on the stairs.
-  energy-conservation damped pendulum's energy bars; ★ Joule's paddle wheel; Sankey diagrams.
-  momentum .......... p vs KE rankings; crumple zones; the rocket equation from discrete throws.
-  collisions ........ 1D with restitution; 2D billiards at 90°; bounce heights; Newton's cradle.
-  oscillations ...... spring; SHM as a shadow of circular motion; exact pendulum period; ★ Huygens's clock.
-  rotation .......... seesaw torque; the rolling race (3D); the skater.
-  symmetry-conservation break a symmetry and watch its conserved quantity drift (Noether).
- 4 Waves and sound
-  wave-basics ....... rope vs slinky; v = fλ; energy ∝ A²f².
-  superposition ..... pulses pass through; two-source ripple tank (3D); beats.
-  standing-waves .... Mersenne's laws; Chladni plates (idealised); open vs closed pipes.
-  sound ............. displacement vs pressure; ★ thunder timing; decibels.
-  doppler ........... wavefronts ahead and behind; Buys Ballot's train; the Mach cone.
-  resonance ......... resonance curve; pushing a swing; Tacoma Narrows as flutter (illustrative model).
- 5 Light
-  reflection-refraction i = r; ★ Snell's constant ratio; total internal reflection in a fibre.
-  lenses ............ ray diagrams; the eye and glasses; telescopes.
-  colour-spectrum ... ★ Newton's second prism; additive vs subtractive mixing; the 42° rainbow.
-  double-slit ....... fringes λL/d; ★ measure λ from fringes; particles vs waves.
-  diffraction-polarisation single slit; gratings; Malus and the three-filter surprise (3D).
-  speed-of-light .... ★ Rømer's Io timings; ★ Fizeau's toothed wheel; Foucault's water race.
- 6 Electricity and magnetism
-  electric-charge ... rub, touch, earth; charging by induction; ★ Coulomb's torsion balance.
-  electric-field .... live field lines; equipotentials; the Faraday cage.
-  circuits .......... Volta's pile; ★ Ohm's resistor vs bulb; series vs parallel.
-  magnetism ......... compasses round a magnet; ★ Ørsted's needle; wire and coil (3D); Ampère's force.
-  induction ......... magnet through a coil (Lenz); generator; transformer (and why DC gives 0 V).
-  electromagnetic-waves E and B travelling (3D); 1/√(μ₀ε₀) vs measured c; ★ Hertz's standing waves; spectrum.
- 7 Heat and matter
-  temperature-heat .. temperature vs stored heat; equilibrium; three modes; Rumford's cannon.
-  kinetic-theory .... wall hits give pressure; Maxwell–Boltzmann emerges; Boyle and Charles.
-  brownian-motion ... the hidden molecules; random walks; ★ Perrin's displacements give Avogadro.
-  entropy ........... gas spreads (S = k ln W); mixing has a direction; waiting times; Maxwell's demon.
-  heat-engines ...... the Carnot cycle on p–V; the efficiency ceiling; heat pumps.
-  phase-changes ..... heating curve plateaus; boiling points by altitude; evaporative cooling.
- 8 Relativity, atoms and quanta
-  special-relativity ★ Michelson–Morley's null result (3D); light clock and muons; simultaneity (3D cones).
-  general-relativity  the lift; Mercury's precession (3D embedding, with caveat); 1919 and GPS.
-  atomic-nucleus .... Thomson vs Rutherford; ★ Geiger–Marsden scattering counts; the pea in a stadium.
-  photoelectric-effect threshold, not brightness; ★ Millikan's h from stopping voltages; photons.
-  atomic-spectra .... Balmer's formula; Bohr's jumps; Fraunhofer lines and helium.
-  quantum-interference particles build fringes one by one; which-path kills them; uncertainty.
-  radioactivity ..... a sample's decay around the half-life curve; carbon dating; fission and E = mc².
-  open-questions .... rotation curves and dark matter (illustrative); Wu's parity violation; the unknowns.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
@@ -221,6 +161,31 @@ function axes3(P,labels=['x','y','z'],end=[3,3,3],from=[0,0,0]){
  let out='';[[end[0],from[1],from[2]],[from[0],end[1],from[2]],[from[0],from[1],end[2]]].forEach((a,i)=>{out+=arrow3(from,a,P,C.muted,1.7);const q=P(a);out+=label3(q[0]+(i===0?15:i===1?-17:0),q[1]+(i===2?-12:20),labels[i],15,C.muted)});
  return out;
 }
+
+/* ---- Sound (Music In Motion): a small offline synthesiser on the Web Audio API. ----
+ Sound plays only in response to the learner (Try it buttons, presses on the diagram) or a Watch scene's
+ explicit "hear it" control, never on its own. Everything stops on scene or mode change and with Mute.
+ AUDIO.tone(hz,{dur,type,gain,at,partials,attack,release}) · AUDIO.chord([hz…],opts) · AUDIO.seq([{hz,at,dur}…],opts)
+ AUDIO.noise({dur,gain,at}) · AUDIO.stopAll() · AUDIO.now() (seconds, for scheduling) · midiHz(m) · noteName(m)
+ partials: array of harmonic amplitudes [1,.5,.33…] for timbre (a PeriodicWave). Volumes are kept gentle. */
+const midiHz=m=>440*Math.pow(2,(m-69)/12);
+const NOTE_NAMES=['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const noteName=m=>NOTE_NAMES[((Math.round(m)%12)+12)%12]+(Math.floor(Math.round(m)/12)-1);
+const AUDIO={ctx:null,muted:false,nodes:new Set(),master:null,
+ get(){if(this.muted)return null;try{if(!this.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;this.ctx=new A();this.master=this.ctx.createGain();this.master.gain.value=.8;this.master.connect(this.ctx.destination)}if(this.ctx.state==='suspended')this.ctx.resume();return this.ctx}catch(_){return null}},
+ now(){const c=this.get();return c?c.currentTime:0},
+ _env(c,g,t0,dur,gain,attack,release){g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(gain,t0+attack);g.gain.setValueAtTime(gain,t0+Math.max(attack,dur-release));g.gain.linearRampToValueAtTime(0,t0+dur)},
+ tone(hz,o={}){const c=this.get();if(!c||!(hz>0))return;const {dur=.6,type='sine',gain=.16,at=0,attack=.01,release=.18,partials=null}=o;
+  try{const t0=c.currentTime+at,osc=c.createOscillator(),g=c.createGain();
+   if(partials){const re=new Float32Array(partials.length+1),im=new Float32Array(partials.length+1);partials.forEach((a,i)=>im[i+1]=a);osc.setPeriodicWave(c.createPeriodicWave(re,im))}else osc.type=type;
+   osc.frequency.setValueAtTime(hz,t0);this._env(c,g,t0,dur,Math.min(gain,.35),attack,Math.min(release,dur/2));osc.connect(g);g.connect(this.master);osc.start(t0);osc.stop(t0+dur+.02);
+   this.nodes.add(osc);osc.onended=()=>this.nodes.delete(osc)}catch(_){}},
+ chord(hzs,o={}){const g=(o.gain||.16)/Math.max(1,Math.sqrt(hzs.length));hzs.forEach(h=>this.tone(h,{...o,gain:g}))},
+ seq(notes,o={}){for(const n of notes)this.tone(n.hz,{...o,...n,at:(o.at||0)+(n.at||0)})},
+ noise(o={}){const c=this.get();if(!c)return;const {dur=.08,gain=.12,at=0}=o;try{const len=Math.max(1,Math.floor(c.sampleRate*dur)),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0),r=rng(len);for(let i=0;i<len;i++)d[i]=(r()*2-1)*(1-i/len);
+  const src=c.createBufferSource(),g=c.createGain();src.buffer=buf;g.gain.value=Math.min(gain,.3);src.connect(g);g.connect(this.master);src.start(c.currentTime+at);this.nodes.add(src);src.onended=()=>this.nodes.delete(src)}catch(_){}},
+ stopAll(){for(const n of this.nodes){try{n.stop()}catch(_){}}this.nodes.clear()},
+ setMuted(m){this.muted=m;if(m)this.stopAll()}};
 
 const SCENES={};
 function SCENE(def){if(SCENES[def.id])console.warn('Duplicate scene',def.id);SCENES[def.id]=def}

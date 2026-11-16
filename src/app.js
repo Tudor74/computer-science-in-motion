@@ -123,7 +123,7 @@ function installThree(){
   if(e.key==='Home')camera={yaw:.62,pitch:.55};if(e.key==='ArrowLeft')camera.yaw-=.12;if(e.key==='ArrowRight')camera.yaw+=.12;if(e.key==='ArrowUp')camera.pitch=clamp(camera.pitch+.08,.15,1.15);if(e.key==='ArrowDown')camera.pitch=clamp(camera.pitch-.08,.15,1.15);redraw3D()}});
 }
 function showScene(){
- const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;clearSceneTimers();
+ const i=indexAt(t),id=route[i];if(i===shown)return;shown=i;clearSceneTimers();AUDIO.stopAll();
  const sc=SCENES[id],les=lessons[lessonOf[id]],st=stages[les.stage],li=les.ids.indexOf(id);
  $('view-controls').hidden=!sc.three;viewMode='auto';camera={yaw:.62,pitch:.55};
  $('term').textContent=sc.name;setWords($('definition'),sc.definition,id);setWords($('example'),sc.example,id);
@@ -334,7 +334,7 @@ function enterTry(sceneChanged){
  if(trySceneId!==sc.id||!sceneChanged){trySceneId=sc.id;recompute(sc);tryK=0;tryU=1;stopRun();buildControls(sc)}
 }
 function setMode(m){
- if(m===mode)return;mode=m;clearSceneTimers();
+ if(m===mode)return;mode=m;clearSceneTimers();AUDIO.stopAll();
  $('mode-watch').setAttribute('aria-pressed',String(m==='watch'));$('mode-try').setAttribute('aria-pressed',String(m==='try'));
  $('try-panel').hidden=m!=='try';$('deck-note').textContent=m==='try'?'Your input · step by step':'Animated · deterministic';
  $('phase').setAttribute('aria-live',m==='try'?'polite':'off');
@@ -354,7 +354,7 @@ function showWord(key,origin,remember=true){
  if(!dlg.open){wordTrail=[];curWord=null;wordOrigin=origin||document.activeElement;setSpeed(0);stopRun();dlg.showModal()}
  if(remember&&curWord&&curWord!==key)wordTrail.push(curWord);curWord=key;
  $('word-title').textContent=g.title;const ctx=lessons[g.linkContext]||lessons[LEGACY_LESSON[g.linkContext]]||lessons[lessonOf[g.scene||g.key]];
- $('word-context').textContent=(ctx?ctx.name:'Physics')+' · word meaning';
+ $('word-context').textContent=(ctx?ctx.name:'Music')+' · word meaning';
  setWords($('word-meaning'),g.here,key);setWords($('word-contrast'),g.contrast,key);setWords($('word-example'),g.example,key);
  $('word-detail').hidden=false;$('word-browser').hidden=true;
  $('word-back').hidden=false;$('word-back').textContent=wordTrail.length?'← Previous word':'← All words';
@@ -387,6 +387,8 @@ try{
  $('mode-watch').addEventListener('click',()=>setMode('watch'));
  $('mode-try').addEventListener('click',()=>setMode('try'));
  installThree();
+ // Sound: one mute switch for the whole page, remembered for this visit only.
+ $('mute').addEventListener('click',()=>{const m=!AUDIO.muted;AUDIO.setMuted(m);$('mute').setAttribute('aria-pressed',String(m));$('mute').textContent=m?'Sound off':'Sound on'});
  svg.addEventListener('click',onSvgAct);svg.addEventListener('keydown',onSvgAct);
  $('previous').addEventListener('click',()=>goTo(indexAt(t)-1));
  $('next').addEventListener('click',()=>goTo(indexAt(t)+1));

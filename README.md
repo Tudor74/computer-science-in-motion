@@ -1,23 +1,22 @@
-# Physics In Motion
+# Music In Motion
 
-A single-file, offline HTML page that tells physics in historical order: Galileo's ramps, Newton's laws and gravity, energy and momentum, waves, light, electricity and magnetism, heat and entropy, relativity, atoms and quanta. In Try it you rerun the classic experiments, and your results appear beside the originals.
+A single-file, offline HTML page that tells the story of music and its science in historical order: ratios on a string, notation, harmony, keys and form, the science of timbre, rhythm around the world, recording and electronic sound, and what the mind does with it all. Try it plays real sound through the browser's own synthesiser, and in the last era you take part in classic listening experiments.
 
-This is the `physics` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository and shares its engine with the CS page (`main`) and HCI In Motion (`hci`). It is part of the [In Motion](https://in-motion.puter.site) family.
+This is the `music` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`) and Physics (`physics`), and is part of the [In Motion](https://in-motion.puter.site) family.
 
-- Open `index.html` in any modern browser. It needs no network and no libraries.
-- **Watch** is deterministic: simulations use a fixed time step, so the same moment always shows the same picture, including when rewinding.
-- **Research** lines name the original work, and say plainly where the popular story is a legend.
+- Open `index.html` in any modern browser. It needs no network, no samples and no libraries.
+- Sound plays only when you press something, and the **Sound on/off** switch mutes everything. Every scene also reads well with the sound off.
 
 ## Route
 
-1. **Describing motion** (1600s): position and speed, acceleration, Galileo's ramp, free fall, projectiles, relative motion
-2. **Forces and gravity** (1600s–1700s): Newton's laws, friction, circular motion, gravitation, Kepler's orbits, fluids
-3. **Energy and momentum**: work and energy, conservation of energy, momentum, collisions, oscillations, rotation, symmetry and conservation (Noether)
-4. **Waves and sound**: wave basics, superposition, standing waves, sound, the Doppler effect, resonance
-5. **Light**: reflection and refraction, lenses, colour and the spectrum, the double slit, diffraction and polarisation, the speed of light
-6. **Electricity and magnetism**: charge, the electric field, circuits, magnetism, induction, electromagnetic waves
-7. **Heat and matter**: temperature and heat, kinetic theory, Brownian motion, entropy, heat engines, changes of phase
-8. **Relativity, atoms and quanta**: special and general relativity, the nucleus, the photoelectric effect, atomic spectra, quantum interference, radioactivity, open questions
+1. **Sound and number** (antiquity): pitch and frequency, the monochord, the harmonic series, consonant ratios, Pythagorean tuning, pentatonic scales
+2. **Writing music down** (500–1600): neumes and the staff, solmisation, note values, modes, canon and round, polyphony
+3. **Harmony** (1600–1750): intervals, triads and chords, cadences, counterpoint, temperament, the circle of fifths
+4. **Keys, form and the orchestra** (1750–1900): major and minor, modulation, motif, sonata form, theme and variation, orchestration
+5. **The science of timbre**: Fourier and timbre, envelopes, resonant instruments, the ear, loudness, voice and formants
+6. **Rhythm around the world**: beat and metre, syncopation, polyrhythm, Euclidean rhythms, swing and groove, rhythmic cycles
+7. **Recording and electronic sound** (1877–): the phonograph, microphones and speakers, tape music, synthesis, digital audio, MIDI and sequencing
+8. **Music and the mind**: the missing fundamental, consonance and roughness, expectation, music and emotion, keeping the beat, auditory illusions
 
 ## Source layout
 
@@ -42,4 +41,4 @@ node test/threads.js          # map connections: merged by name, "Other connecti
 | `src/scenes-N-words.js` | Era N's glossary entries, including the people |
 | `src/curriculum.js` | The eight eras and their header textures |
 | `src/app.js` | Runtime: clock, Watch/Try it, 2D/3D, controls, local map, glossary |
-| `docs/PHYSICS-BRIEF.md` | The brief for era authors: fixed lesson ids, simulation and citation rules, test commands |
+| `docs/MUSIC-BRIEF.md` | The brief for era authors: fixed lesson ids, sound, notation and citation rules, test commands |

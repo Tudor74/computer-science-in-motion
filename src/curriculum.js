@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// Physics in historical order: each era is the moment an idea about motion, force, energy, waves, light,
-// fields, heat or the very small and very fast became measurable. Lessons, sources and connections are
-// registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
+// Music in historical order: from ratios on a string, through notation, harmony, form and the science of
+// timbre, to rhythm traditions, recording, electronic sound and what the mind does with it all. Lessons,
+// sources and connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'motion',name:'1 · Describing motion',years:'1600s',why:'Galileo replaced arguments about why things move with measurements of how they move: position, speed and acceleration, timed on ramps and in free fall.'},
- {id:'forces',name:'2 · Forces and gravity',years:'1600s–1700s',why:'Newton tied motion to force, and the same law of gravity to an apple and the Moon. Kepler’s orbits became a consequence, not a mystery.'},
- {id:'energy',name:'3 · Energy and momentum',years:'1600s–1900s',why:'Some quantities never change in a closed system. Energy and momentum make hard problems easy, and Noether showed why they are conserved.'},
- {id:'waves',name:'4 · Waves and sound',years:'1600s–1800s',why:'A wave carries energy without carrying the medium. Superposition, standing waves, resonance and the Doppler effect follow from that one idea.'},
- {id:'light',name:'5 · Light',years:'1600s–1800s',why:'Light bends, splits into colours, interferes with itself and travels at a finite speed: each discovery came from a careful experiment.'},
- {id:'fields',name:'6 · Electricity and magnetism',years:'1780s–1880s',why:'Charges, currents and magnets turned out to be one subject. Faraday’s fields and Maxwell’s equations predicted waves that travel at the speed of light.'},
- {id:'heat',name:'7 · Heat and matter',years:'1800s–1900s',why:'Heat is the motion of atoms. Counting their arrangements explains pressure, engines, entropy and why time seems to run one way.'},
- {id:'modern',name:'8 · Relativity, atoms and quanta',years:'1880s–today',why:'At high speed and small scale the old rules bend: light sets a speed limit, atoms have nuclei, and energy comes in packets. Some questions are still open.'}
+ {id:'number',name:'1 · Sound and number',years:'Antiquity',why:'A plucked string and a few whole-number ratios: pitch, octaves, fifths and the harmonic series, and the scales built from them.'},
+ {id:'notation',name:'2 · Writing music down',years:'500–1600',why:'Neumes, the staff, solmisation and note values let music travel without a teacher, and made polyphony possible.'},
+ {id:'harmony',name:'3 · Harmony',years:'1600–1750',why:'Intervals stack into chords, chords move in cadences, voices weave in counterpoint, and tuning compromises let every key be played.'},
+ {id:'form',name:'4 · Keys, form and the orchestra',years:'1750–1900',why:'Major and minor keys, modulation, motifs, sonata form and variation, and the colours of the orchestra.'},
+ {id:'timbre',name:'5 · The science of timbre',years:'1800s–1900s',why:'Why a violin and a flute sound different on the same note: harmonics, envelopes, resonant bodies, the ear and loudness.'},
+ {id:'rhythm',name:'6 · Rhythm around the world',years:'Many traditions',why:'Beat and metre, syncopation, polyrhythm, cycles like tala and clave, and the feel of swing.'},
+ {id:'electric',name:'7 · Recording and electronic sound',years:'1877–today',why:'Sound captured on cylinders, tape and numbers, then built from oscillators and filters and sequenced by computers.'},
+ {id:'perception',name:'8 · Music and the mind',years:'Research',why:'What the brain adds: missing fundamentals, roughness and consonance, expectation, emotion, keeping the beat and auditory illusions.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- motion:{w:40,h:40,tile:'<path d="M4 36Q20 4 36 36" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="20" cy="20" r="1.8" fill="currentColor"/>'},
- forces:{w:36,h:36,tile:'<path d="M8 28L28 8M28 8H20M28 8V16" fill="none" stroke="currentColor" stroke-width="1.1"/>'},
- energy:{w:44,h:44,tile:'<path d="M22 4V22" stroke="currentColor" stroke-width="1"/><circle cx="22" cy="30" r="5" fill="none" stroke="currentColor" stroke-width="1.1"/>'},
- waves:{w:48,h:24,tile:'<path d="M0 12Q12 0 24 12T48 12" fill="none" stroke="currentColor" stroke-width="1.1"/>'},
- light:{w:44,h:44,tile:'<path d="M4 22H40M22 4V40M9 9L35 35M35 9L9 35" fill="none" stroke="currentColor" stroke-width=".7"/><circle cx="22" cy="22" r="3" fill="currentColor"/>'},
- fields:{w:48,h:40,tile:'<path d="M6 20C14 4 34 4 42 20C34 36 14 36 6 20Z" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="6" cy="20" r="2" fill="currentColor"/><circle cx="42" cy="20" r="2" fill="currentColor"/>'},
- heat:{w:40,h:40,tile:'<circle cx="8" cy="10" r="2" fill="currentColor"/><circle cx="28" cy="6" r="2" fill="currentColor"/><circle cx="18" cy="26" r="2" fill="currentColor"/><circle cx="34" cy="32" r="2" fill="currentColor"/><path d="M8 10L13 15M28 6L24 11M18 26L23 22" stroke="currentColor" stroke-width=".9"/>'},
- modern:{w:48,h:48,tile:'<ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="currentColor" stroke-width=".9"/><ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="currentColor" stroke-width=".9" transform="rotate(60 24 24)"/><ellipse cx="24" cy="24" rx="18" ry="7" fill="none" stroke="currentColor" stroke-width=".9" transform="rotate(-60 24 24)"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/>'}
+ number:{w:40,h:40,tile:'<path d="M4 20H36" stroke="currentColor" stroke-width="1"/><path d="M4 20Q20 8 36 20Q20 32 4 20" fill="none" stroke="currentColor" stroke-width=".8"/>'},
+ notation:{w:48,h:40,tile:'<path d="M0 8H48M0 14H48M0 20H48M0 26H48M0 32H48" stroke="currentColor" stroke-width=".7"/><ellipse cx="18" cy="23" rx="4" ry="3" fill="currentColor" transform="rotate(-20 18 23)"/><path d="M22 22V6" stroke="currentColor" stroke-width="1"/>'},
+ harmony:{w:36,h:44,tile:'<circle cx="18" cy="10" r="3.5" fill="currentColor"/><circle cx="18" cy="22" r="3.5" fill="currentColor"/><circle cx="18" cy="34" r="3.5" fill="currentColor"/>'},
+ form:{w:56,h:28,tile:'<path d="M4 20L14 8L24 20L34 8L44 20" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="52" cy="14" r="2" fill="currentColor"/>'},
+ timbre:{w:48,h:32,tile:'<path d="M0 16Q6 4 12 16T24 16T36 16T48 16" fill="none" stroke="currentColor" stroke-width="1"/><path d="M0 16Q3 10 6 16T12 16T18 16T24 16T30 16T36 16T42 16T48 16" fill="none" stroke="currentColor" stroke-width=".6"/>'},
+ rhythm:{w:48,h:24,tile:'<circle cx="6" cy="12" r="3" fill="currentColor"/><circle cx="18" cy="12" r="1.5" fill="currentColor"/><circle cx="24" cy="12" r="3" fill="currentColor"/><circle cx="36" cy="12" r="1.5" fill="currentColor"/><circle cx="42" cy="12" r="3" fill="currentColor"/>'},
+ electric:{w:48,h:32,tile:'<path d="M0 22H8V10H16V22H24V10H32V22H40V10H48" fill="none" stroke="currentColor" stroke-width="1"/>'},
+ perception:{w:48,h:48,tile:'<circle cx="24" cy="24" r="6" fill="none" stroke="currentColor"/><circle cx="24" cy="24" r="13" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width=".6"/>'}
 };

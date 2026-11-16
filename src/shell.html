@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Physics In Motion — v0.1</title>
+<title>Music In Motion — v0.1</title>
 <meta name="application-version" content="0.1">
-<meta name="description" content="An offline, animated and interactive route through physics in historical order, from Galileo’s ramps to quanta, where you rerun the classic experiments.">
+<meta name="description" content="An offline, animated and interactive history of music: ratios on a string, notation, harmony, form, timbre, rhythm, recording, electronic sound and the mind, with sound you can play.">
 <style>
 :root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa;--thumb:46px;--zero:17%;--rewind:#f3e7e1}
 *{box-sizing:border-box}
@@ -55,6 +55,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 .mode-buttons button:hover{background:#d7e6ef}
 .mode-buttons button[aria-pressed="true"]:hover{background:#fff}
 .deck-note{font-size:12px;color:var(--muted);text-align:right;line-height:1.3}
+.mute{min-height:40px;padding:4px 10px;font-size:12px;border:0;background:transparent;color:#425d6c}
+.mute[aria-pressed="true"]{color:var(--warm)}
 #drawing{display:block;width:100%;height:auto;aspect-ratio:600/380}
 #drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 #drawing .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -228,13 +230,13 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
 </style>
 </head>
 <body>
-<main class="frame" id="app" aria-label="Physics visual lessons">
+<main class="frame" id="app" aria-label="Music visual lessons">
 <header class="topic-header" id="topic-header">
  <svg class="topic-texture" id="topic-texture" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"></svg>
  <div class="header-row">
   <div class="title-picker">
-   <p class="brand"><a href="https://in-motion.puter.site/" title="All In Motion courses">In Motion</a> · Physics</p>
-   <h1 id="topic-title">Position and speed</h1>
+   <p class="brand"><a href="https://in-motion.puter.site/" title="All In Motion courses">In Motion</a> · Music</p>
+   <h1 id="topic-title">Pitch and frequency</h1>
    <span class="picker-chevron" aria-hidden="true"></span>
    <label class="sr-only" for="route-select">Choose any lesson</label>
    <select id="route-select" aria-label="Choose any lesson"></select>
@@ -260,6 +262,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
      </div>
      <button type="button" id="three-reset" aria-label="Reset three-dimensional view" hidden>Reset view</button>
     </div>
+    <button type="button" id="mute" class="mute" aria-pressed="false" title="Sound plays only when you press something in Try it">Sound on</button>
     <span class="deck-note" id="deck-note">Animated · deterministic</span>
    </div>
    <div class="diagram-viewport" id="diagram-viewport">
@@ -318,7 +321,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
 </section>
 </div>
 <footer class="bottom">
- <nav class="family" id="family" aria-label="In Motion courses">Part of <a href="https://in-motion.puter.site/">In Motion</a>: <a href="https://mathematics-in-motion.puter.site/">Mathematics</a> · <a href="https://computer-science-in-motion.puter.site/">Computer Science</a> · <a href="https://hci-in-motion.puter.site/">HCI</a> · <a href="https://physics-in-motion.puter.site/" aria-current="page">Physics</a> · <a href="https://therapies-in-motion.puter.site/">Therapies</a> · <a href="https://thinkers-in-motion.puter.site/">Thinkers</a></nav>
+ <nav class="family" id="family" aria-label="In Motion courses">Part of <a href="https://in-motion.puter.site/">In Motion</a>: <a href="https://mathematics-in-motion.puter.site/">Mathematics</a> · <a href="https://computer-science-in-motion.puter.site/">Computer Science</a> · <a href="https://hci-in-motion.puter.site/">HCI</a> · <a href="https://physics-in-motion.puter.site/">Physics</a> · <a href="https://music-in-motion.puter.site/" aria-current="page">Music</a> · <a href="https://therapies-in-motion.puter.site/">Therapies</a> · <a href="https://thinkers-in-motion.puter.site/">Thinkers</a></nav>
  <p id="status">v0.1 · Offline · No external files</p>
  <details id="about"><summary>About this page and further reading</summary>
   <p>Every diagram is a pure function of the lesson clock, so play, pause, speed, rewind and replay always show the same picture for the same moment. <b>Try it</b> hands the same diagram to you: change the input, step through, and compare.</p>
@@ -340,7 +343,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <dt>Example</dt><dd id="word-example" class="example-word"></dd>
  </dl></div>
  <div id="word-browser" hidden>
-  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try momentum, entropy, photon…" autocomplete="off">
+  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try octave, cadence, timbre…" autocomplete="off">
   <p id="word-list-count" aria-live="polite"></p><div id="word-list"></div>
  </div>
  <div class="word-footer"><button type="button" id="word-goto" hidden>Go to this topic</button><button type="button" id="word-resume">Close and resume</button></div>
