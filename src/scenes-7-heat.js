@@ -250,7 +250,7 @@ SCENE({id:'kinetic-theory-distribution',name:'The Maxwell–Boltzmann distributi
   // 2D Maxwell–Boltzmann (Rayleigh) with mean square speed fixed by energy: <v²> = v0²
   const sig2=1.4*1.4/2,ray=v=>v/sig2*Math.exp(-v*v/(2*sig2))*bw;
   out+=P7_poly(range(71).map(i=>{const v=i/70*vmax;return [pl.px(v),pl.py(ray(v+bw/2))]}),C.coral,2.5);
-  out+=TF(450,316,'curve: 2D Maxwell–Boltzmann',13,C.coral);
+  out+=TF(562,90,'curve: 2D Maxwell–Boltzmann',13,C.coral,'end');
   return {svg:out,phase:fi<8?'Every particle starts with exactly the same speed: the histogram is a single spike.':'Each collision shares energy unevenly. Total energy stays the same, but the speeds settle into the Maxwell–Boltzmann shape: the most probable way to share energy among many particles.'};
  }});
 
@@ -333,7 +333,7 @@ SCENE({id:'brownian-motion-walk',name:'The random walk',tag:'Distance grows with
   out+=P7_poly(range(61).map(i=>{const t=i*5;return [pl.px(t),pl.py(s.step*Math.sqrt(2*t))]}),C.coral,2.5);
   const meas=[];for(let t=0;t<=s.t;t+=10){let m=0;for(let i=0;i<N;i++){const p=P7_walk(100+i,300,s.step)[t];m+=p[0]**2+p[1]**2}meas.push([pl.px(t),pl.py(Math.sqrt(m/N))])}
   for(const q of meas)out+=Ci(q[0],q[1],3.5,C.blue);
-  out+=TF(450,316,'curve: step × √(2t)',13,C.coral);
+  out+=TF(562,90,'curve: step × √(2t)',13,C.coral,'end');
   return {svg:out,phase:`After ${s.t} steps the walkers are typically ${rms.toFixed(0)} px from the start: about step × √(2t) = ${(s.step*Math.sqrt(2*s.t)).toFixed(0)} px. The mean square distance grows in proportion to time.`};
  }});
 
@@ -352,7 +352,7 @@ SCENE({id:'brownian-motion-perrin',name:'Rerun Perrin: counting molecules',tag:'
  on:{a(s,v){s.a=v;s.grains=0;s.seed=nextSeed()%997+1},rec(s){s.grains=Math.min(400,s.grains+10)},clear(s){s.grains=0;s.seed=nextSeed()%997+1}},
  draw(s){
   const F=P7_perrinFit(s),um2=v=>v*1e12,ymax=um2(4*F.D*130)*1.25;let out=heading('Rerun Perrin: measure the spread, count the molecules');
-  const pl=P7_plot(70,64,290,236,{x0:0,x1:130,y0:0,y1:ymax,xticks:[0,30,60,90,120],yticks:[0,Math.round(ymax/2),Math.round(ymax)],xlab:'time interval (s)',ylab:'mean square displacement (µm²)'});out+=pl.svg;
+  const pl=P7_plot(70,64,290,220,{x0:0,x1:130,y0:0,y1:ymax,xticks:[0,30,60,90,120],yticks:[0,Math.round(ymax/2),Math.round(ymax)],xlab:'time interval (s)',ylab:'mean square displacement (µm²)'});out+=pl.svg;
   out+=P7_poly([[pl.px(0),pl.py(0)],[pl.px(130),pl.py(um2(4*F.D*130))]],C.line,2,'stroke-dasharray="5 5"');
   if(s.grains){for(const p of F.pts)out+=Ci(pl.px(p[0]),pl.py(um2(p[1])),6,C.coral);out+=P7_poly([[pl.px(0),pl.py(0)],[pl.px(130),pl.py(um2(F.slope*130))]],C.coral,2.5)}
   out+=R(390,64,190,236,'#fff',C.grid,10)+TB(485,88,'Your experiment',15,C.ink);
@@ -360,7 +360,7 @@ SCENE({id:'brownian-motion-perrin',name:'Rerun Perrin: counting molecules',tag:'
   out+=TF(485,172,'D from the slope:',13,C.muted)+TB(485,194,s.grains?P7_sci(F.Dest,2)+' m²/s':'—',15,C.ink);
   out+=TF(485,226,'Avogadro’s number:',13,C.muted)+TB(485,250,s.grains?P7_sci(F.NA,2):'—',17,C.green);
   out+=TF(485,276,'accepted 6.02 × 10²³',13,C.muted);
-  out+=TF(215,344,'Simulated measurements with Einstein’s statistics; dashed line is the true value.',13,C.muted);
+  out+=TF(24,350,'Simulated measurements using Einstein’s statistics; dashed line = true value.',13,C.muted,'start');
   const err=s.grains?Math.abs(F.NA/P7_NA-1)*100:0;
   return {svg:out,phase:s.grains?`From ${s.grains} grains the slope gives D = ${P7_sci(F.Dest,2)} m²/s and N_A ≈ ${P7_sci(F.NA,2)}, ${err.toFixed(0)}% from the accepted value. Perrin’s values, by several methods, clustered around 6–7 × 10²³.`:'Record some grains. Each one is tracked and its displacement after 30, 60, 90 and 120 s is squared and averaged.'};
  }});
@@ -511,7 +511,7 @@ SCENE({id:'heat-engines',name:'The Carnot cycle',tag:'The best any heat engine c
  draw(s,f,X){
   const c=P7_carnot(s.Th,s.Tc),allPts=c.legs.flat(),Vmax=Math.max(...allPts.map(p=>p[0]))*1.08,pmax=Math.max(...allPts.map(p=>p[1]))*1.1;
   let out=heading('The Carnot cycle: hot in, work out, waste heat out');
-  const pl=P7_plot(270,64,300,232,{x0:0,x1:Vmax,y0:0,y1:pmax,xticks:[],yticks:[],xlab:'volume →',ylab:'pressure'});out+=pl.svg;
+  const pl=P7_plot(270,64,300,208,{x0:0,x1:Vmax,y0:0,y1:pmax,xticks:[],yticks:[],xlab:'volume →',ylab:'pressure'});out+=pl.svg;
   const cols=[C.coral,C.purple,C.blue,C.green];
   if(f.leg>=4)out+=`<polygon points="${allPts.map(p=>fmt(pl.px(p[0]))+','+fmt(pl.py(p[1]))).join(' ')}" fill="${C.amberp}" stroke="none"/>`;
   c.legs.forEach((leg,l)=>{out+=P7_poly(leg.map(p=>[pl.px(p[0]),pl.py(p[1])]),l<=f.leg-1||f.leg>=4?cols[l]:'#dfe7ec',l===f.leg?4:2.5)});
@@ -522,7 +522,7 @@ SCENE({id:'heat-engines',name:'The Carnot cycle',tag:'The best any heat engine c
   const res=f.leg===0?['hot '+s.Th+' K',C.coral]:f.leg===2?['cold '+s.Tc+' K',C.blue]:['insulated','#8a99a3'];
   out+=R(30,58,110,26,res[1],'none',6,'opacity=".9"')+TB(85,76,res[0],13,'#fff');
   out+=TF(200,140,'heat in',13,C.coral)+TB(200,160,c.Qh.toFixed(0)+' J',14,C.coral)+TF(200,200,'work out',13,C.amber)+TB(200,220,c.W.toFixed(0)+' J',14,C.amber)+TF(200,260,'heat out',13,C.blue)+TB(200,280,c.Qc.toFixed(0)+' J',14,C.blue);
-  out+=TBF(420,330,`efficiency = W/Q_hot = 1 − ${s.Tc}/${s.Th} = ${(c.eta*100).toFixed(0)}%`,15,C.green);
+  out+=TBF(420,342,`efficiency = W/Q_hot = 1 − ${s.Tc}/${s.Th} = ${(c.eta*100).toFixed(0)}%`,15,C.green);
   return {svg:out,phase:f.say};
  }});
 
@@ -546,7 +546,7 @@ SCENE({id:'heat-engines-limit',name:'The efficiency limit',tag:'Why power statio
   out+=TF(124,152,'100 J in',13,C.ink,'start')+TF(124,256,(100*(1-eta)).toFixed(0)+' J wasted (at best)',13,C.ink,'start')+TB(220,186,(100*eta).toFixed(0)+' J work',14,C.amber);
   out+=R(350,70,220,262,'#fff',C.grid,10)+TB(460,96,'Efficiency ceiling',15,C.ink)+R(380,110,40,200,'#eef3f6','none',6)+R(380,110+200*(1-eta),40,200*eta,C.green,'none',6);
   out+=TB(470,170,(eta*100).toFixed(1)+'%',22,C.green,'start')+TF(470,192,'Carnot limit',13,C.muted,'start');
-  if(e)out+=TF(470,236,'real plants:',13,C.muted,'start')+TB(470,256,e[4],13,C.ink,'start')+TF(470,276,'(typical, approximate)',13,C.muted,'start');
+  if(e)out+=TF(495,236,'real plants:',13,C.muted)+TB(495,256,e[4],13,C.ink)+TF(495,280,'typical, approximate',13,C.muted);
   return {svg:out,phase:`Between ${s.Th} K and ${s.Tc} K no engine can convert more than ${(eta*100).toFixed(0)}% of its heat into work, however clever. ${e?`A real ${e[1].toLowerCase()} achieves ${e[4]}.`:'Raising the hot temperature or lowering the cold one is the only way to raise the ceiling.'}`};
  }});
 
