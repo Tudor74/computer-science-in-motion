@@ -203,7 +203,7 @@ const E5_CB=[
  {y:'2009',t:'Zero rates and QE',d:'Bank Rate fell to 0.5%, its lowest in the Bank’s history to that point, and the Bank began buying government bonds with new reserves (quantitative easing).'}];
 SCENE({id:'central-banks-history',name:'A short history of central banks',tag:'From war finance to inflation targets',
  definition:'A central bank issues a country’s money, is banker to the government and to other banks, and today usually sets short-term interest rates to keep inflation near a target.',
- example:'The Bank of England began in 1694 as a way to fund a war; since 1997 it has set interest rates independently to meet a 2% inflation target set by the government.',
+ example:'The Bank of England began in 1694 as a way to fund a war; since 1997 it has set interest rates independently to meet an inflation target set by the government: 2.5% on RPIX at first, and 2% on CPI since the end of 2003.',
  desc:'A timeline of eight milestones from 1668 to 2009. Press a milestone to read what changed.',
  research:'Bagehot, W. (1873). Lombard Street: A Description of the Money Market. Capie, F., Goodhart, C., Fischer, S. & Schnadt, N. (1994). The Future of Central Banking. Cambridge University Press. Bernanke, B. S. et al. (1999). Inflation Targeting: Lessons from the International Experience. Princeton University Press. Bank of England history pages.',
  dur:12,hint:'Press each milestone. Which jobs did central banks gain over time?',

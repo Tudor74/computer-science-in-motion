@@ -156,7 +156,7 @@ SCENE({id:'present-bias',name:'Present bias',tag:'Choose now or later, near and 
 
 SCENE({id:'present-bias-curves',name:'Why preferences reverse',tag:'Exponential against hyperbolic',
  definition:'Exponential discounting shrinks value by the same factor every week; hyperbolic discounting, V = A ÷ (1 + k·t), falls steeply at first and slowly later, so the curves for two rewards can cross.',
- example:'With k = 0.1 per week, £100 at 26 weeks is worth less than £110 at 30 weeks, but as the £100 gets within 30 weeks the ranking flips.',
+ example:'With k = 0.1 per week the curves cross when the £100 is 30 weeks away. At 40 weeks against 44, £110 is worth more today (£20.37 against £20.00); at 4 weeks against 8, £100 is worth more (£71.43 against £61.11).',
  desc:'The present value of £100 at the sooner date and £110 four weeks later, as the sooner date approaches. Choose exponential or hyperbolic discounting and the rate; the crossing point, if any, is marked.',
  research:'Ainslie (1975). Specious reward. Psychological Bulletin 82. Mazur (1987); Laibson (1997) quasi-hyperbolic β–δ model. For the hyperbola, the switch happens when the sooner reward is 40 − 1/k weeks away (for these amounts).',
  dur:10,hint:'Move “weeks until £100” from far to near and watch which reward is worth more. Switch to exponential and the ranking never changes.',
