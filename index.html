@@ -54,7 +54,7 @@ footer{padding:4px 30px 20px;font-size:12.5px;line-height:1.6;color:var(--muted)
 footer p{margin:0 0 4px}
 
 /* Motifs: gentle loops; still under reduced motion. */
-@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-200px)}}
+
 @keyframes blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
 @keyframes reach{0%,10%{transform:translate(0,0)}55%,100%{transform:translate(318px,-58px)}}
 @keyframes hitpulse{0%,50%{opacity:0}60%{opacity:.9}100%{opacity:0}}
@@ -62,7 +62,7 @@ footer p{margin:0 0 4px}
 @keyframes stepon{0%,100%{opacity:.25}10%,30%{opacity:1}}
 @keyframes travel{from{stroke-dashoffset:0}to{stroke-dashoffset:-60}}
 @keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1)}}
-.wave{animation:slide 6s linear infinite}
+
 .bit{animation:blink var(--d,3s) steps(1) infinite}
 .cursor{animation:reach 3.2s cubic-bezier(.2,.75,.3,1) infinite}
 .pulse{animation:hitpulse 3.2s ease-out infinite;transform-origin:440px 92px}
@@ -70,7 +70,7 @@ footer p{margin:0 0 4px}
 .route{animation:travel 2.4s linear infinite}
 .step{animation:stepon 2s steps(1) infinite}
 .bob{animation:swing 2.6s ease-in-out infinite;transform-origin:300px 30px;transform-box:view-box}
-@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route,.bob,.step{animation:none}}
+@media(prefers-reduced-motion:reduce){.bit,.cursor,.pulse,.radar,.route,.bob,.step{animation:none}}
 
 @media(max-width:760px){
  body{padding:6px}
@@ -111,16 +111,17 @@ footer p{margin:0 0 4px}
  <ul class="courses" aria-labelledby="courses-heading">
 
   <li class="course math">
-   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A sine wave sliding past a unit circle">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A point turning round a unit circle traces a sine wave">
     <rect width="600" height="220" fill="#f3f7fa"/>
     <line x1="40" y1="110" x2="580" y2="110" stroke="#c7d8e3" stroke-width="2"/>
     <circle cx="110" cy="110" r="62" fill="#e1eef7" stroke="#abc3d3" stroke-width="2"/>
-    <line x1="110" y1="110" x2="154" y2="66" stroke="#1772b7" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="154" cy="66" r="7" fill="#c45238"/>
-    <line x1="154" y1="66" x2="210" y2="66" stroke="#c45238" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <line id="m-rad" x1="110" y1="110" x2="153.8" y2="66.2" stroke="#1772b7" stroke-width="3" stroke-linecap="round"/>
+    <line id="m-dash" x1="153.8" y1="66.2" x2="200" y2="66.2" stroke="#c45238" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <circle id="m-dot" cx="153.8" cy="66.2" r="7" fill="#c45238"/>
     <svg x="200" y="0" width="380" height="220" viewBox="0 0 380 220" overflow="hidden">
-     <path class="wave" d="M0 110 C 25 48, 75 48, 100 110 S 175 172, 200 110 S 275 48, 300 110 S 375 172, 400 110 S 475 48, 500 110 S 575 172, 600 110" fill="none" stroke="#1772b7" stroke-width="3.5" stroke-linecap="round"/>
+     <path id="m-wave" transform="translate(-25 0)" d="M0 110.0 L4 102.2 L8 94.6 L12 87.2 L16 80.1 L20 73.6 L24 67.6 L28 62.2 L32 57.7 L36 53.9 L40 51.0 L44 49.1 L48 48.1 L52 48.1 L56 49.1 L60 51.0 L64 53.9 L68 57.7 L72 62.2 L76 67.6 L80 73.6 L84 80.1 L88 87.2 L92 94.6 L96 102.2 L100 110.0 L104 117.8 L108 125.4 L112 132.8 L116 139.9 L120 146.4 L124 152.4 L128 157.8 L132 162.3 L136 166.1 L140 169.0 L144 170.9 L148 171.9 L152 171.9 L156 170.9 L160 169.0 L164 166.1 L168 162.3 L172 157.8 L176 152.4 L180 146.4 L184 139.9 L188 132.8 L192 125.4 L196 117.8 L200 110.0 L204 102.2 L208 94.6 L212 87.2 L216 80.1 L220 73.6 L224 67.6 L228 62.2 L232 57.7 L236 53.9 L240 51.0 L244 49.1 L248 48.1 L252 48.1 L256 49.1 L260 51.0 L264 53.9 L268 57.7 L272 62.2 L276 67.6 L280 73.6 L284 80.1 L288 87.2 L292 94.6 L296 102.2 L300 110.0 L304 117.8 L308 125.4 L312 132.8 L316 139.9 L320 146.4 L324 152.4 L328 157.8 L332 162.3 L336 166.1 L340 169.0 L344 170.9 L348 171.9 L352 171.9 L356 170.9 L360 169.0 L364 166.1 L368 162.3 L372 157.8 L376 152.4 L380 146.4 L384 139.9 L388 132.8 L392 125.4 L396 117.8 L400 110.0 L404 102.2 L408 94.6 L412 87.2 L416 80.1 L420 73.6 L424 67.6 L428 62.2 L432 57.7 L436 53.9 L440 51.0 L444 49.1 L448 48.1 L452 48.1 L456 49.1 L460 51.0 L464 53.9 L468 57.7 L472 62.2 L476 67.6 L480 73.6 L484 80.1 L488 87.2 L492 94.6 L496 102.2 L500 110.0 L504 117.8 L508 125.4 L512 132.8 L516 139.9 L520 146.4 L524 152.4 L528 157.8 L532 162.3 L536 166.1 L540 169.0 L544 170.9 L548 171.9 L552 171.9 L556 170.9 L560 169.0 L564 166.1 L568 162.3 L572 157.8 L576 152.4 L580 146.4 L584 139.9 L588 132.8 L592 125.4 L596 117.8 L600 110.0" fill="none" stroke="#1772b7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
+    <circle cx="200" cy="66.2" r="4.5" fill="#c45238" id="m-hit"/>
    </svg>
    <div class="body">
     <h3>Mathematics In Motion</h3>
@@ -445,5 +446,14 @@ footer p{margin:0 0 4px}
  <p>Sources: <a href="https://github.com/Tudor74/mathematics-in-motion">Mathematics In Motion</a> · <a href="https://github.com/Tudor74/computer-science-in-motion">Computer Science In Motion</a> (its <code>hci</code> and <code>physics</code> branches hold HCI and Physics In Motion)</p>
 </footer>
 </div>
+<script>
+/* Mathematics card: one clock turns the radius and slides the sine wave, so the dashed line always lands on the curve. */
+(function(){var q=function(i){return document.getElementById(i)},w=q('m-wave');if(!w||!window.requestAnimationFrame)return;
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+var r=q('m-rad'),d=q('m-dash'),p=q('m-dot'),h=q('m-hit'),R=62,T=6000,s0=25,t0=null;
+function f(t){if(t0===null)t0=t;var sh=(s0+200*((t-t0)%T)/T)%200,a=2*Math.PI*sh/200,x=(110+R*Math.cos(a)).toFixed(1),y=(110-R*Math.sin(a)).toFixed(1);
+w.setAttribute('transform','translate('+(-sh).toFixed(2)+' 0)');r.setAttribute('x2',x);r.setAttribute('y2',y);d.setAttribute('x1',x);d.setAttribute('y1',y);d.setAttribute('y2',y);p.setAttribute('cx',x);p.setAttribute('cy',y);h.setAttribute('cy',y);requestAnimationFrame(f)}
+requestAnimationFrame(f)})();
+</script>
 </body>
 </html>
