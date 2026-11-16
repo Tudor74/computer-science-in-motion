@@ -238,7 +238,7 @@ SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in piec
 /* ================================================================ transcription-translation */
 const B4_GENE='ATGGGCGAAAACTTCTGGTAA';
 SCENE({id:'transcription-translation',name:'From gene to protein',tag:'Transcribe, then translate',
- definition:'A gene is used in two steps. In transcription, RNA polymerase copies one stretch of DNA into messenger RNA (mRNA), with U in place of T. In translation, a ribosome reads the mRNA three bases (a codon) at a time and joins the matching amino acids into a protein, stopping at a stop codon.',
+ definition:'A protein-coding gene is used in two steps. (Other genes make RNAs that work without being translated, such as transfer and ribosomal RNA.) In transcription, RNA polymerase copies one stretch of DNA into messenger RNA (mRNA), with U in place of T. In translation, a ribosome reads the mRNA three bases (a codon) at a time and joins the matching amino acids into a protein, stopping at a stop codon.',
  example:'The mRNA AUG GGC GAA AAC UUC UGG UAA is read as Met–Gly–Glu–Asn–Phe–Trp, then stop.',
  desc:'A short gene on two DNA strands, the mRNA built from it base by base, then the ribosome reading codons into a chain of amino acids.',
  research:'Brenner, S., Jacob, F. & Meselson, M. (1961). An unstable intermediate carrying information from genes to ribosomes for protein synthesis. Nature 190, 576–581. Crick, F. H. C. (1958). On protein synthesis. Symp. Soc. Exp. Biol. 12, 138–163.',

@@ -2873,7 +2873,7 @@ SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in piec
 /* ================================================================ transcription-translation */
 const B4_GENE='ATGGGCGAAAACTTCTGGTAA';
 SCENE({id:'transcription-translation',name:'From gene to protein',tag:'Transcribe, then translate',
- definition:'A gene is used in two steps. In transcription, RNA polymerase copies one stretch of DNA into messenger RNA (mRNA), with U in place of T. In translation, a ribosome reads the mRNA three bases (a codon) at a time and joins the matching amino acids into a protein, stopping at a stop codon.',
+ definition:'A protein-coding gene is used in two steps. (Other genes make RNAs that work without being translated, such as transfer and ribosomal RNA.) In transcription, RNA polymerase copies one stretch of DNA into messenger RNA (mRNA), with U in place of T. In translation, a ribosome reads the mRNA three bases (a codon) at a time and joins the matching amino acids into a protein, stopping at a stop codon.',
  example:'The mRNA AUG GGC GAA AAC UUC UGG UAA is read as Met–Gly–Glu–Asn–Phe–Trp, then stop.',
  desc:'A short gene on two DNA strands, the mRNA built from it base by base, then the ribosome reading codons into a chain of amino acids.',
  research:'Brenner, S., Jacob, F. & Meselson, M. (1961). An unstable intermediate carrying information from genes to ribosomes for protein synthesis. Nature 190, 576–581. Crick, F. H. C. (1958). On protein synthesis. Symp. Soc. Exp. Biol. 12, 138–163.',
@@ -6108,10 +6108,10 @@ const B8_HIST=[
  {n:'Colistin',a:1959,b:2015,aL:'introduced 1959',bL:'mcr-1 2015',d:'A last-resort drug: a transferable resistance gene, mcr-1, was found in China in 2015 (Liu et al. 2016).'},
  {n:'Artemisinin',a:1972,b:2008,aL:'Tu Youyou 1972',bL:'partial 2008',d:'Tu Youyou’s malaria drug (Nobel Prize 2015). Partial resistance was reported in western Cambodia in 2008–9 (Dondorp et al. 2009).'}];
 SCENE({id:'antibiotic-resistance-history',name:'Every drug, then resistance',tag:'From penicillin to colistin',
- definition:'For every antibiotic so far, resistance has appeared after it came into use, sometimes within a year. Fleming warned of this in his 1945 Nobel lecture.',
+ definition:'For every antibiotic so far, resistance has been reported soon after it came into wide use, sometimes within a year. Use did not invent it: resistance genes are often far older, some recovered from 30,000-year-old permafrost. Clinical use selects them and spreads them. Fleming warned of this in his 1945 Nobel lecture.',
  example:'Methicillin was introduced in 1960; resistant Staphylococcus aureus (MRSA) was reported in 1961.',
  desc:'A timeline for five drugs, each with the year it came into use (blue) and the year resistance was reported (coral). Press a drug for details.',
- research:'Fleming (1945). Penicillin. Nobel lecture. Abraham & Chain (1940). Nature 146, 837. Jevons (1961). BMJ 1, 124–125. Liu et al. (2016). Lancet Infectious Diseases 16, 161–168. Dondorp et al. (2009). NEJM 361, 455–467. Murray et al. (2022). Global burden of bacterial antimicrobial resistance in 2019. Lancet 399, 629–655.',
+ research:'Fleming (1945). Penicillin. Nobel lecture. Abraham & Chain (1940). Nature 146, 837. Jevons (1961). BMJ 1, 124–125. D’Costa, V. M. et al. (2011). Antibiotic resistance is ancient. Nature 477, 457–461. Liu et al. (2016). Lancet Infectious Diseases 16, 161–168. Dondorp et al. (2009). NEJM 361, 455–467. Murray et al. (2022). Global burden of bacterial antimicrobial resistance in 2019. Lancet 399, 629–655.',
  dur:10,hint:'Press a drug to read when, and how, resistance appeared.',
  init:()=>({pick:0}),
  watch(p){return {pick:Math.min(4,Math.floor(p*5))}},
