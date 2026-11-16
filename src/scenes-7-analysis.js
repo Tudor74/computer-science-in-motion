@@ -512,7 +512,7 @@ SCENE({id:'crystallography-lattice',name:'Unit cells',tag:'Count the atoms a cry
   const items=c.atoms().map(a=>({at:a.p,svg:PP=>point3(a.p,PP,C7_ELC[a.el],C7_ELR[a.el]*.9,'#fff')}));
   if(s.nb)c.nb.forEach(n=>items.push({at:[(n[0]+c.centre[0])/2,(n[1]+c.centre[1])/2,(n[2]+c.centre[2])/2],svg:PP=>line3(c.centre,n,PP,C.coral,2.6)}));
   out+=sortedItems(items,P);
-  return {svg:out,title:`${s.c} unit cell in 3D`,caption:'Drag to turn the cell. Orange lines join the central atom to its nearest neighbours.'};
+  return {svg:out,title:`${s.c} unit cell in 3D`,caption:'Orange lines join the central atom to its nearest neighbours.'};
  }});
 
 // Milestones of crystallography, with structure size on a log scale.
