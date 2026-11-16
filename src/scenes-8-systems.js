@@ -209,14 +209,14 @@ SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links 
  draw(s){
   const c=E8_gkCurve(),pt=c.find(q=>Math.abs(q.z-s.z)<.01)||c[0];
   let out=heading('How connected is too connected?',26);
-  const A=E8_plot(70,52,340,250,[0,12],[0,1],{xt:[[0,'0'],[2,'2'],[4,'4'],[6,'6'],[8,'8'],[10,'10'],[12,'12']],yt:[[0,'0'],[.5,'50%'],[1,'100%']],xl:'average number of borrowers per bank'});out+=A.svg;
+  const A=E8_plot(70,52,340,240,[0,12],[0,1],{xt:[[0,'0'],[2,'2'],[4,'4'],[6,'6'],[8,'8'],[10,'10'],[12,'12']],yt:[[0,'0'],[.5,'50%'],[1,'100%']],xl:'average number of borrowers per bank'});out+=A.svg;
   out+=P(E8_path(c.map(q=>[A.X(q.z),A.Y(q.freq)])),C.blue,2.4);
   out+=P(E8_path(c.filter(q=>q.ext>0).map(q=>[A.X(q.z),A.Y(q.ext)])),C.coral,2.4);
   out+=L(A.X(s.z),A.Y(0),A.X(s.z),A.Y(1),C.ink,1.4,'stroke-dasharray="4 4"')+Ci(A.X(s.z),A.Y(pt.freq),5,C.blue)+(pt.ext?Ci(A.X(s.z),A.Y(pt.ext),5,C.coral):'');
   out+=counter(430,60,'chance it spreads',E8_pct(pt.freq),C.blue,150)+counter(430,116,'share failing if it does',pt.ext?E8_pct(pt.ext):'—',C.coral,150);
   const zone=pt.freq===0&&s.z<1?'Too few links: shocks cannot travel far.':pt.freq<.2&&pt.ext>.6?'Robust yet fragile: rarely spreads, but total when it does.':pt.freq>=.2?'Fragile: a single failure often spreads widely.':'Well spread: each bank shrugs off one failure.';
   out+=E8_lines(430,190,E8_wrap(zone,24),C.ink,13,17);
-  out+=TF(70,350,'Blue: chance a single failure spreads to 5+ banks. Coral: share of banks that fail when it does. 60 seeded networks per point.',12,C.muted,'start');
+  out+=TF(70,350,'Blue: chance one failure spreads to 5+ banks. Coral: share failing when it does.',12,C.muted,'start')+TF(70,368,'60 seeded networks of 100 banks per point.',12,C.muted,'start');
   return {svg:out,phase:`With ${Number(s.z).toFixed(1)} borrowers per bank on average, one failure spread in ${E8_pct(pt.freq)} of runs${pt.ext?`, and when it did, ${E8_pct(pt.ext)} of banks failed`:''}. ${zone}`};
  }});
 
@@ -224,7 +224,7 @@ SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links 
 // pushes the price down further (Shleifer & Vishny 2011; Greenwood, Landier & Thesmar 2015). Impact is illustrative.
 function E8_fireSale(L0,shock){const lev=[.6,.8,1,1.2,1.4].map(m=>L0*m),q=lev.map(()=>100),Q0=500,D=lev.map(l=>100*(1-1/l));
  let p=1-shock;const path=[1,p];const dead=lev.map(()=>false);let round=0;
- for(;round<14;round++){let sold=0;for(let i=0;i<5;i++){if(dead[i]||q[i]<=0)continue;const e=q[i]*p-D[i];if(e<=0){dead[i]=true;sold+=q[i];q[i]=0;continue}const target=lev[i]*e/p;if(target<q[i]){sold+=q[i]-target;q[i]=target}}
+ for(;round<14;round++){let sold=0;for(let i=0;i<5;i++){if(dead[i]||q[i]<=0)continue;const e=q[i]*p-D[i];if(e<=0){dead[i]=true;sold+=q[i];q[i]=0;continue}const target=lev[i]*e/p;if(target<q[i]){sold+=q[i]-target;D[i]-=(q[i]-target)*p;q[i]=target}}
   if(sold<.05)break;p=Math.max(.05,p*(1-.12*sold/Q0));path.push(p)}
  const eq=q.map((x,i)=>dead[i]?0:Math.max(0,x*p-D[i]));
  return {path,lev,eq,eq0:lev.map(l=>100/l),dead}}
@@ -241,9 +241,9 @@ SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a fal
  draw(s){
   const r=E8_fireSale(s.L,s.shock/100),pmin=r.path[r.path.length-1],nd=r.dead.filter(Boolean).length;
   let out=heading('A spiral of forced sales',26);
-  const A=E8_plot(70,52,260,230,[0,14],[0,1],{xt:[[0,'0'],[7,'7'],[14,'14']],yt:[[0,'0'],[.5,'50'],[1,'100']],xl:'round of selling',yl:'asset price'});out+=A.svg;
-  out+=P(E8_path(r.path.map((v,i)=>[A.X(i),A.Y(v)])),C.coral,2.4);r.path.forEach((v,i)=>{out+=Ci(A.X(i),A.Y(v),3,C.coral)});
-  out+=TF(A.X(r.path.length-1)+6,A.Y(pmin)+(pmin>.8?16:-6),Math.round(pmin*100)+'',13,C.coral,'start');
+  const A=E8_plot(70,52,260,230,[0,14],[.7,1],{xt:[[0,'0'],[7,'7'],[14,'14']],yt:[[.7,'70'],[.8,'80'],[.9,'90'],[1,'100']],xl:'round of selling',yl:'asset price'});out+=A.svg;
+  const Yc=v=>A.Y(Math.max(.7,v));out+=P(E8_path(r.path.map((v,i)=>[A.X(i),Yc(v)])),C.coral,2.4);r.path.forEach((v,i)=>{out+=Ci(A.X(i),Yc(v),3,C.coral)});
+  out+=TF(A.X(r.path.length-1)+8,Yc(pmin)+5,Math.round(pmin*100)+'',13,C.coral,'start');
   const bx=380,bw=38,base=262,sc=170/Math.max(...r.eq0);
   out+=TF(bx,60,'capital: before (light) and after',13,C.muted,'start');
   r.lev.forEach((l,i)=>{const x=bx+i*(bw+4);out+=R(x,base-r.eq0[i]*sc,bw-6,r.eq0[i]*sc,'#cfe0ec','none',3)+R(x+6,base-r.eq[i]*sc,bw-18,r.eq[i]*sc,r.dead[i]?C.coral:C.blue,'none',3);
@@ -251,7 +251,7 @@ SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a fal
   out+=TF(bx,base+34,'leverage of each bank',12,C.muted,'start');
   out+=TF(70,334,`A ${s.shock}% shock ended with the price at ${Math.round(pmin*100)} after ${r.path.length-2} rounds of selling; ${nd} of 5 banks failed.`,13,C.ink,'start');
   out+=TF(70,356,'Leverage = assets ÷ own capital. Price impact of sales is illustrative.',13,C.muted,'start');
-  return {svg:out,phase:pmin>.9-s.shock/100?`At ${s.L}× leverage the sales are small and the price settles near ${Math.round(pmin*100)}: the shock is absorbed.`:`At ${s.L}× leverage a ${s.shock}% fall snowballs to ${Math.round(100-pmin*100)}%: each round of sales cuts everyone’s capital, which forces more sales. ${nd?nd+' bank'+(nd>1?'s':'')+' failed.':''}`};
+  return {svg:out,phase:(1-pmin)<1.6*s.shock/100&&!nd?`At ${s.L}× leverage the sales are small and the price settles near ${Math.round(pmin*100)}: the shock is absorbed.`:`At ${s.L}× leverage a ${s.shock}% fall snowballs to ${Math.round(100-pmin*100)}%: each round of sales cuts everyone’s capital, which forces more sales. ${nd?nd+' bank'+(nd>1?'s':'')+' failed.':''}`};
  }});
 
 /* ================================================================ climate economics */

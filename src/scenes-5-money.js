@@ -83,12 +83,12 @@ SCENE({id:'inflation-money-erosion',name:'What inflation does to £100',tag:'Pur
  on:{pi(s,v){s.pi=Number(v)},yrs(s,v){s.yrs=Number(v)}},
  draw(s){
   const r=s.pi/100,val=t=>100/Math.pow(1+r,t);let out=heading(`What £100 buys, in today’s money, at ${s.pi}% inflation`,26);
-  const pl=E5_plot(70,56,320,236,[0,40],[0,100],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40']],yt:[[0,'£0'],[25,'£25'],[50,'£50'],[75,'£75'],[100,'£100']],xl:'years from now',yl:'buying power of £100'});out+=pl.svg;
+  const pl=E5_plot(70,56,320,220,[0,40],[0,100],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40']],yt:[[0,'£0'],[25,'£25'],[50,'£50'],[75,'£75'],[100,'£100']],xl:'years from now',yl:'buying power of £100'});out+=pl.svg;
   out+=L(pl.X(0),pl.Y(50),pl.X(40),pl.Y(50),C.grid,1.5,'stroke-dasharray="4 4"');
   out+=E5_poly(range(81).map(i=>[pl.X(i/2),pl.Y(100/Math.pow(1.02,i/2))]),C.muted,1.5,'stroke-dasharray="5 4"');
   out+=E5_poly(range(81).map(i=>[pl.X(i/2),pl.Y(val(i/2))]),C.coral,3);
   out+=Ci(pl.X(s.yrs),pl.Y(val(s.yrs)),6,C.coral,'#fff');
-  out+=TF(pl.X(40)-4,pl.Y(100/Math.pow(1.02,40))-8,'2% target',12,C.muted,'end');
+  out+=TF(pl.X(40)-4,pl.Y(100/Math.pow(1.02,40))+16,'2% target',12,C.muted,'end');
   const half=r>0?Math.log(2)/Math.log(1+r):Infinity;
   out+=counter(420,60,`£100 after ${s.yrs} years buys`,E5_gbp(val(s.yrs)),C.coral,150);
   out+=counter(420,118,'prices double in',r>0?half.toFixed(1)+' years':'never',C.ink,150);
@@ -121,7 +121,7 @@ SCENE({id:'inflation-money-hyper',name:'When printing becomes hyperinflation',ta
   Object.keys(E5_HYPER).forEach((k,i)=>{const h=E5_HYPER[k],y=50+i*26,lg=Math.log10(1+h.mo/100),on=k===s.c;
    out+=TF(190,y+14,h.n,13,on?C.ink:C.muted,'end',on?'font-weight="700"':'');
    out+=R(x0,y+2,Math.max(2,lg*sc),16,on?C.coral:C.coralp,'none',3);
-   out+=TF(X(lg)+6,y+14,'×'+(h.mo>=1e4?'10'+E5_sup(Math.round(lg)):(1+h.mo/100).toFixed(h.mo<1?4:0)),12,C.muted,'start')});
+   out+=TF(X(lg)+6,y+14,E5_mult(1+h.mo/100),12,C.muted,'start')});
   out+=L(x0,158,x0+16*sc,158,C.line,1.5);
   [0,4,8,12,16].forEach(v=>out+=L(X(v),154,X(v),162,C.line,1)+TF(X(v),176,v?'×10'+E5_sup(v):'×1',12,C.muted));
   out+=R(30,190,540,176,'#fff',C.grid,10);
@@ -130,6 +130,7 @@ SCENE({id:'inflation-money-hyper',name:'When printing becomes hyperinflation',ta
   out+=E5_lines(48,340,E5_wrap(d.why,80),13,C.ink,'start',16);
   return {svg:out,phase:s.c==='ukqe'?'Quantitative easing swapped bonds for bank reserves. Without a collapse in production or in trust, and with banks holding the new money as reserves, it did not set off runaway inflation.':`${d.n}: prices doubled every ${d.dbl} at the peak. Each hyperinflation combined money printing to pay for deficits with collapsing production and lost trust. Each ended with a fiscal reform and a new, credible currency (Sargent 1982).`};
  }});
+function E5_mult(m){if(m<1e4)return '×'+(m<10?m.toFixed(4):String(Math.round(m)));const e=Math.floor(Math.log10(m));return '×'+(m/Math.pow(10,e)).toFixed(1)+' × 10'+E5_sup(e)}
 function E5_sup(n){const m='⁰¹²³⁴⁵⁶⁷⁸⁹';return String(n).split('').map(c=>m[Number(c)]).join('')}
 
 /* ================================================================ central-banks */
@@ -230,9 +231,9 @@ SCENE({id:'compound-interest',name:'Interest on interest',tag:'Compounding and t
  on:{r(s,v){s.r=Number(v)},yrs(s,v){s.yrs=Number(v)}},
  draw(s){
   const r=s.r/100,P0=1000,cp=t=>P0*Math.pow(1+r,t),sp=t=>P0*(1+r*t),Ty=s.yrs,ymax=E5_nice(cp(Ty));let out=heading(`£1,000 at ${s.r}% a year`,26);
-  const pl=E5_plot(76,52,320,236,[0,Ty],[0,ymax],{xt:E5_ticks(Ty,4).map(v=>[v,String(Math.round(v))]),yt:E5_ticks(ymax,4).map(v=>[v,'£'+E5_short(v)]),xl:'years',yl:'balance'});out+=pl.svg;
+  const pl=E5_plot(76,52,320,222,[0,Ty],[0,ymax],{xt:E5_ticks(Ty,4).map(v=>[v,String(Math.round(v))]),yt:E5_ticks(ymax,4).map(v=>[v,'£'+E5_short(v)]),xl:'years',yl:'balance'});out+=pl.svg;
   const dbl=Math.log(2)/Math.log(1+r);
-  for(let k=1;k*dbl<=Ty;k++){const y=pl.Y(P0*Math.pow(2,k));out+=L(pl.X(k*dbl),y,pl.X(k*dbl),288,C.grid,1,'stroke-dasharray="3 3"')+Ci(pl.X(k*dbl),y,3.5,C.coral)}
+  for(let k=1;k*dbl<=Ty;k++){const y=pl.Y(P0*Math.pow(2,k));out+=L(pl.X(k*dbl),y,pl.X(k*dbl),274,C.grid,1,'stroke-dasharray="3 3"')+Ci(pl.X(k*dbl),y,3.5,C.coral)}
   out+=E5_poly(range(101).map(i=>[pl.X(i/100*Ty),pl.Y(sp(i/100*Ty))]),C.blue,2.5);
   out+=E5_poly(range(101).map(i=>[pl.X(i/100*Ty),pl.Y(cp(i/100*Ty))]),C.coral,3);
   out+=TF(82,70,'compound',13,C.coral,'start')+TF(82,86,'simple',13,C.blue,'start')+TF(82,102,'dots: each doubling',12,C.muted,'start');
@@ -281,9 +282,9 @@ SCENE({id:'compound-interest-surface',name:'Rate and time together',tag:'A map o
  on:{r(s,v){s.r=Number(v)},yrs(s,v){s.yrs=Number(v)}},
  draw(s){
   let out=heading('How many times does the money double?',26);
-  const pl=E5_plot(70,50,330,240,[0,10],[0,50],{xt:[[0,'0%'],[2,'2%'],[4,'4%'],[6,'6%'],[8,'8%'],[10,'10%']],yt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40'],[50,'50']],xl:'interest rate',yl:'years'});out+=pl.svg;
-  const cw=330/20,ch=240/20;
-  for(let i=0;i<20;i++)for(let j=0;j<20;j++){const d=E5_db((i+.5)/2,(j+.5)*2.5);out+=R(70+i*cw,50+240-(j+1)*ch,cw+.3,ch+.3,tint(C.coral,1-clamp(d/7,0,1)*.75),'none',0)}
+  const pl=E5_plot(70,50,330,224,[0,10],[0,50],{xt:[[0,'0%'],[2,'2%'],[4,'4%'],[6,'6%'],[8,'8%'],[10,'10%']],yt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40'],[50,'50']],xl:'interest rate',yl:'years'});out+=pl.svg;
+  const cw=330/20,ch=224/20;
+  for(let i=0;i<20;i++)for(let j=0;j<20;j++){const d=E5_db((i+.5)/2,(j+.5)*2.5);out+=R(70+i*cw,50+224-(j+1)*ch,cw+.3,ch+.3,tint(C.coral,1-clamp(d/7,0,1)*.75),'none',0)}
   for(let k=1;k<=5;k++){const pts=[];for(let i=1;i<=100;i++){const r=i/10,t=k/Math.log2(1+r/100);if(t<=50)pts.push([pl.X(r),pl.Y(t)])}
    out+=E5_poly(pts,C.ink,1.4);if(pts.length){const q=pts[Math.min(pts.length-1,Math.floor(pts.length*.82))];out+=TF(q[0]+4,q[1]-4,(1<<k)+'×',12,C.ink,'start')}}
   out+=Ci(pl.X(s.r),pl.Y(s.yrs),7,C.blue,'#fff');
@@ -370,13 +371,13 @@ SCENE({id:'bank-runs-game',name:'Wait or withdraw?',tag:'A bank run you can join
   const pl=E5_plot(70,122,250,160,[0,9],[0,1.6],{xt:[[0,'0'],[3,'3'],[6,'6'],[9,'9']],yt:[[0,'£0'],[.5,'£0.50'],[1,'£1'],[1.5,'£1.50']],xl:'others who withdraw',yl:'what you get per £1'});out+=pl.svg;
   out+=E5_poly(range(10).map(k=>[pl.X(k),pl.Y(E5_pay(k).s)]),C.blue,2.5)+E5_poly(range(10).map(k=>[pl.X(k),pl.Y(E5_pay(k+1).w)]),C.coral,2.5);
   out+=L(pl.X(4.5),122,pl.X(4.5),282,C.muted,1,'stroke-dasharray="3 3"');
-  out+=TF(pl.X(.2),pl.Y(1.42)-6,'wait',13,C.blue,'start')+TF(pl.X(8.8),pl.Y(.62)-8,'withdraw',13,C.coral,'end');
+  out+=TF(pl.X(.2),pl.Y(1.42)-6,'wait',13,C.blue,'start')+TF(pl.X(8.8),pl.Y(.62)+18,'withdraw',13,C.coral,'end');
   if(i>0)out+=Ci(pl.X(res[i-1].k),pl.Y(res[i-1].c==='out'?E5_pay(res[i-1].k+1).w:E5_pay(res[i-1].k).s),6,C.ink,'#fff');
   out+=TF(360,120,'round · you · others out · got',12,C.muted,'start');
   range(8).forEach(j=>{const y=140+j*20,r=res[j];if(!r){out+=TF(360,y,`${j+1}`,13,C.grid,'start');return}
    out+=TF(360,y,`${j+1}`,13,C.muted,'start')+TF(384,y,r.c==='out'?'withdrew':'waited',13,r.c==='out'?C.coral:C.blue,'start')+TF(470,y,`${r.k}`,13,r.n>=5?C.coral:C.ink,'start')+TF(510,y,`£${r.got.toFixed(2)}`,13,C.ink,'start')});
   out+=T(300,330,'Waiting pays if at most 4 of the other 9 withdraw; otherwise withdrawing pays.',14);
-  out+=TF(300,354,'Two stable outcomes: nobody runs (everyone gets £1.35) or everyone runs (everyone gets £0.65).',13,C.muted);
+  out+=TF(300,354,'Two stable outcomes: nobody runs (all get £1.35) or all run (all get £0.65).',13,C.muted);
   return {svg:out,phase:'Each depositor’s best choice depends on what they expect the others to do. That makes a run self-fulfilling: fear of a run causes one, even at a bank whose loans are sound. Deposit insurance and a lender of last resort are designed to remove that fear.'};
  }});
 
@@ -401,7 +402,7 @@ SCENE({id:'bank-runs-insurance',name:'Stopping runs',tag:'Deposit insurance and 
    const pl=E5_plot(80,56,440,220,[0,9],[0,1.6],{xt:range(10).map(k=>[k,String(k)]),yt:[[0,'£0'],[.5,'£0.50'],[1,'£1'],[1.5,'£1.50']],xl:'other depositors who withdraw',yl:'what you get per £1'});out+=pl.svg;
    out+=E5_poly(range(10).map(k=>[pl.X(k),pl.Y(E5_pay(k+1).w)]),C.coral,2.5)+E5_poly(range(10).map(k=>[pl.X(k),pl.Y(ws(k))]),C.blue,3);
    if(ins)out+=E5_poly(range(10).map(k=>[pl.X(k),pl.Y(E5_pay(k).s)]),C.blue,1.2,'stroke-dasharray="4 4"');
-   out+=TF(pl.X(.2),pl.Y(1.42)-8,ins?'wait (insured)':'wait',13,C.blue,'start')+TF(pl.X(8.8),pl.Y(.6)-10,'withdraw',13,C.coral,'end');
+   out+=TF(pl.X(.2),pl.Y(1.42)-8,ins?'wait (insured)':'wait',13,C.blue,'start')+TF(pl.X(8.8),pl.Y(.6)+20,'withdraw',13,C.coral,'end');
    out+=T(300,334,ins?'Waiting never pays less than withdrawing, so there is no reason to run.':'Once 5 or more others run, waiting pays less: so fear alone can start a run.',15,ins?C.green:C.coral);
    out+=TF(300,358,'Insurance shifts the cost of a failure to the insurer, which is why insured banks are also regulated.',13,C.muted)}
   else{E5_RUNS.forEach((r,i)=>{const y=44+i*96;out+=R(30,y,540,88,'#fff',C.grid,10)+TBF(46,y+24,r.t,15,C.ink,'start')+E5_lines(46,y+46,E5_wrap(r.d,78),13,C.ink,'start',17)});
@@ -454,15 +455,15 @@ SCENE({id:'exchange-rates-trilemma',name:'The impossible trinity',tag:'Pick two 
  ui:[{choose:Object.keys(E5_TRI).map(k=>[k,E5_TRI[k].n]),label:'Choose two',get:s=>s.side,act:'side'}],
  on:{side(s,v){s.side=v}},
  draw(s,f,X){
-  const A=[180,64],B=[50,284],Cc=[310,284],d=E5_TRI[s.side];let out=heading('Pick two of three',26);
+  const A=[170,64],B=[50,284],Cc=[286,284],d=E5_TRI[s.side];let out=heading('Pick two of three',26);
   const sides={peg:[A,B],float:[B,Cc],controls:[A,Cc]};
   for(const k in sides){const [p,q]=sides[k],on=k===s.side,mx=(p[0]+q[0])/2,my=(p[1]+q[1])/2;
    out+=L(p[0],p[1],q[0],q[1],on?C.coral:C.line,on?6:3);
    out+=hit(X,'side',k,E5_TRI[k].n,Ci(mx,my,14,on?C.coral:'#fff',on?C.coral:C.blue,'stroke-width="2"')+TBF(mx,my+5,k==='peg'?'1':k==='float'?'2':'3',13,on?'#fff':C.blue))}
   const corner=(p,l1,l2,dy)=>Ci(p[0],p[1],7,C.ink)+TF(p[0],p[1]+dy,l1,13,C.ink)+TF(p[0],p[1]+dy+15,l2,13,C.ink);
   out+=corner(A,'Fixed','exchange rate',-30)+corner(B,'Free','capital',20)+corner(Cc,'Own interest','rates',20);
-  out+=R(350,56,222,250,'#fff',C.grid,10)+TBF(364,82,d.n,14,C.coral,'start')+TF(364,106,d.give,13,C.ink,'start');
-  out+=E5_lines(364,134,E5_wrap(d.ex,30),13,C.ink,'start',17);
+  out+=R(356,56,216,250,'#fff',C.grid,10)+TBF(368,82,d.n,14,C.coral,'start')+TF(368,106,d.give,13,C.ink,'start');
+  out+=E5_lines(368,134,E5_wrap(d.ex,29),13,C.ink,'start',17);
   out+=TF(300,350,'Rey (2013) argues global money flows constrain even floating countries: debated.',13,C.muted);
   return {svg:out,phase:`${d.n}. ${d.give.replace('You give up: ','The cost: ')}. If capital can move freely and the rate is fixed, any attempt to set a different interest rate sends money flooding in or out until the peg breaks or the rate is brought back in line.`};
  }});
@@ -534,7 +535,7 @@ SCENE({id:'financial-crises-leverage',name:'Leverage',tag:'Borrowed money magnif
   [[10,C.muted],[30,C.coral]].forEach(([l,col])=>out+=E5_poly(range(121).map(i=>[pl.X(i/4),pl.Y(left(l)(i/4))]),col,1.2,'stroke-dasharray="5 4"'));
   out+=E5_poly(range(121).map(i=>[pl.X(i/4),pl.Y(left(s.lev)(i/4))]),C.blue,3);
   out+=Ci(pl.X(s.fall),pl.Y(left(s.lev)(s.fall)),6,C.blue,'#fff');
-  out+=TF(pl.X(30)-4,pl.Y(left(10)(30))-6,'10 to 1',12,C.muted,'end')+TF(pl.X(3.6)+4,pl.Y(-.95),'30 to 1',12,C.coral,'start');
+  out+=TF(pl.X(30)-4,pl.Y(left(10)(30))-6,'10 to 1',12,C.muted,'end')+TF(pl.X(1.2)+4,pl.Y(-.25),'30 to 1',12,C.coral,'start');
   const e=1-s.lev*s.fall/100;
   out+=counter(420,60,'equity left',e<=0?'none':E5_pc(e,0),e<=0?C.coral:C.blue,150)+counter(420,116,'wiped out by a fall of',(100/s.lev).toFixed(1)+'%',C.coral,150)+counter(420,172,`a ${s.fall}% rise adds`,'+'+(s.lev*s.fall).toFixed(0)+'%',C.green,150);
   out+=E5_lines(420,246,['Leverage cuts both ways:','gains and losses are both','multiplied by L.'],13,C.muted);
