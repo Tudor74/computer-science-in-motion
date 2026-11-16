@@ -29,7 +29,7 @@ function P3_plot(x,y,w,h,o){
 function P3_spring(x1,y,x2,coils=10,amp=9){const lead=10,len=x2-x1-2*lead,n=coils*2;let d=`M${fmt(x1)} ${y} L${fmt(x1+lead)} ${y}`;
  for(let i=1;i<=n;i++)d+=` L${fmt(x1+lead+len*(i-.5)/n)} ${y+(i%2?-amp:amp)}`;return P(d+` L${fmt(x2-lead)} ${y} L${fmt(x2)} ${y}`,C.muted,2)}
 // Damped pendulum, semi-implicit Euler, cached per parameter set: θ'' = −(g/L) sin θ − b θ'.
-function P3_pend(deg,b,L,T){return P3_memo(`pend|${deg}|${b}|${L}|${T}`,()=>{const dt=1/240,n=Math.round(T/dt),out=new Float64Array(2*(n+1));let th=deg*Math.PI/180,w=0;out[0]=th;
+function P3_pend(deg,b,L,T){return P3_memo(`pend|${deg}|${b}|${L}|${T}`,()=>{const dt=1/480,n=Math.round(T/dt),out=new Float64Array(2*(n+1));let th=deg*Math.PI/180,w=0;out[0]=th;
  for(let i=1;i<=n;i++){w+=(-(P3_G/L)*Math.sin(th)-b*w)*dt;th+=w*dt;out[2*i]=th;out[2*i+1]=w}return {dt,n,out}})}
 function P3_at(sim,t){const i=clamp(Math.round(t/sim.dt),0,sim.n);return [sim.out[2*i],sim.out[2*i+1]]}
 function P3_K(k){let a=1,b=Math.sqrt(1-k*k);for(let i=0;i<30;i++){const a2=(a+b)/2;b=Math.sqrt(a*b);a=a2}return Math.PI/(2*a)} // complete elliptic integral K(k)
@@ -120,7 +120,8 @@ SCENE({id:'energy-conservation',name:'Conservation of energy',tag:'Energy change
  on:{deg(s,v){s.deg=v;s.t=0},b(s,v){s.b=v;s.t=0},...P3_play(P3_SWING_T)},
  draw(s){
   const m=1,sim=P3_pend(s.deg,s.b,s.L,P3_SWING_T),[th,w]=P3_at(sim,s.t),E0=m*P3_G*s.L*(1-Math.cos(s.deg*Math.PI/180));
-  const KE=.5*m*(s.L*w)**2,PE=m*P3_G*s.L*(1-Math.cos(th)),Q=Math.max(0,E0-KE-PE);let o=heading(`Kinetic + potential + heat = ${P3_n(E0,2)} J`);
+  // With no friction there is no heat; the integrator's tiny energy wobble (<0.3 %) is not shown as heat.
+  const KE=.5*m*(s.L*w)**2,PE=m*P3_G*s.L*(1-Math.cos(th)),Q=s.b===0?0:Math.max(0,E0-KE-PE);let o=heading(`Kinetic + potential + heat = ${P3_n(E0,2)} J`);
   const px=150,py=60,lp=200,bx=px+lp*Math.sin(th),by=py+lp*Math.cos(th);
   o+=L(70,py,230,py,C.ink,3)+L(px,py,px,py+lp+20,C.grid,1,'stroke-dasharray="4 4"');
   const a0=s.deg*Math.PI/180;o+=Ci(px+lp*Math.sin(a0),py+lp*Math.cos(a0),12,'none',C.line,'stroke-dasharray="3 3"');
@@ -128,7 +129,7 @@ SCENE({id:'energy-conservation',name:'Conservation of energy',tag:'Energy change
   o+=R(318,48,4*58-14+12,168,'none',C.ink,4,'stroke-dasharray="5 4"');
   o+=P3_bars(324,210,[{l:'kinetic',v:KE,col:C.blue,d:2},{l:'potential',v:PE,col:C.green,d:2},{l:'heat',v:Q,col:C.coral,d:2},{l:'total',v:KE+PE+Q,col:'#8aa1ae',d:2}],E0,140,44,14);
   // Energy history
-  const pts=[[],[],[]];for(let t=0;t<=s.t+1e-9;t+=.05){const [a,b]=P3_at(sim,t),k=.5*m*(s.L*b)**2,pp=m*P3_G*s.L*(1-Math.cos(a));pts[0].push([t,k]);pts[1].push([t,pp]);pts[2].push([t,Math.max(0,E0-k-pp)])}
+  const pts=[[],[],[]];for(let t=0;t<=s.t+1e-9;t+=.05){const [a,b]=P3_at(sim,t),k=.5*m*(s.L*b)**2,pp=m*P3_G*s.L*(1-Math.cos(a));pts[0].push([t,k]);pts[1].push([t,pp]);pts[2].push([t,s.b===0?0:Math.max(0,E0-k-pp)])}
   o+=P3_plot(318,262,252,76,{xr:[0,P3_SWING_T],yr:[0,E0*1.05],series:[{pts:pts[0],col:C.blue,w:2},{pts:pts[1],col:C.green,w:2},{pts:pts[2],col:C.coral,w:2}],xl:'time (s)'});
   return {svg:o,phase:s.b===0?'With no friction, kinetic and potential energy swap back and forth and their sum never changes (idealised: no air resistance, rigid string).':`Friction turns a little of the swing into heat each time. Kinetic ${P3_n(KE,2)} J + potential ${P3_n(PE,2)} J + heat ${P3_n(Q,2)} J = ${P3_n(E0,2)} J, the starting total.`};
  }});

@@ -2,6 +2,9 @@
 const P8_C=299792458;               // speed of light, m/s (exact)
 const P8_H_EV=4.135667e-15;         // Planck constant, eV·s
 const P8_SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+// Per-item generator: rng() seeds that differ by 1 start almost identically, so spread them first.
+function P8_mix(x){x=Math.imul(x^(x>>>16),0x85ebca6b);x=Math.imul(x^(x>>>13),0xc2b2ae35);return (x^(x>>>16))>>>0}
+const P8_gen=(i,salt)=>rng(P8_mix(P8_mix(i+1)^Math.imul(salt+7,0x9e3779b1))||1);
 function P8_sup(n){return String(n).split('').map(c=>c==='-'?'⁻':P8_SUP[c]||c).join('')}
 // Scientific notation with a real superscript: 3.2 × 10⁻⁵.
 function P8_sci(x,d=2){if(x===0)return '0';const e=Math.floor(Math.log10(Math.abs(x)));if(e>=-2&&e<=4)return Number(x.toPrecision(d+1)).toString();return (x/10**e).toFixed(d-1)+' × 10'+P8_sup(e)}
@@ -96,7 +99,7 @@ SCENE({id:'special-relativity-light-clock',name:'Time dilation',tag:'Moving cloc
   const xs=x0+span*k*u,yp=u<.5?yb-hh*2*u:yt+hh*(2*u-1);
   out+=P(`M${x0} ${yb}L${fmt(x0+span*k/2)} ${fmt(yt)}L${fmt(x0+span*k)} ${yb}`,'#e0a800',2.2,'none','stroke-dasharray="6 4"');
   out+=R(xs-40,yt-6,80,6,C.dark,'none',2)+R(xs-40,yb,80,6,C.dark,'none',2)+Ci(xs,yp,7,'#e0a800')+arrow(xs+46,yt+hh/2,xs+90,yt+hh/2,C.blue,2.5);
-  out+=TF(395,250,`slanted path is γ = ${g.toFixed(2)} times longer, so each tick takes γ times longer`,13,C.muted);
+  out+=TF(395,250,`path ${g.toFixed(2)}× longer, so each tick takes ${g.toFixed(2)}× as long`,13,C.muted);
   const tau=2.2e-6,t=15000/Math.max(b*P8_C,1),noD=Math.exp(-t/tau),yesD=Math.exp(-t/(g*tau)),pc=v=>v>=0.001?(100*v).toFixed(1)+'%':P8_sci(100*v,2)+'%';
   out+=R(20,268,560,94,'#fff',C.grid,8)+TBF(32,290,'Muons from 15 km up, at this speed',13,C.ink,'start');
   out+=TF(32,314,'lifetime in their own frame 2.2 μs',13,C.muted,'start');
@@ -153,7 +156,7 @@ SCENE({id:'general-relativity',name:'The equivalence principle',tag:'Gravity or 
  on:{mode(s,v){s.mode=v}},
  draw(s,f,X){
   const m=s.mode,u=s.u===undefined?1:clamp(s.u*1.25,0,1);let out=heading(m==='earth'?'Resting on Earth':m==='space'?'Accelerating at 9.8 m/s² in empty space':'Falling freely (or drifting in space)');
-  if(m==='space')for(let i=0;i<14;i++){const r=rng(i+7);out+=Ci(30+r()*540,50+r()*300,1.4,'#9fb3c0')}
+  if(m==='space')for(let i=0;i<14;i++){const r=P8_gen(i,7);out+=Ci(30+r()*540,50+r()*300,1.4,'#9fb3c0')}
   if(m==='earth')out+=R(120,318,360,30,'#cbbfa8','none',0)+TF(300,338,'ground',13,C.muted);
   if(m==='space')out+=P('M260 318L300 360L340 318Z',C.amber,2,'#f3c26b')+arrow(520,330,520,250,C.coral,3)+TF(520,350,'thrust',13,C.coral);
   if(m==='earth')out+=arrow(520,230,520,310,C.coral,3)+TF(520,215,'gravity',13,C.coral);
@@ -220,7 +223,7 @@ SCENE({id:'general-relativity-evidence',name:'Testing general relativity',tag:'M
    const Q=P8_plot({x:310,y:80,w:260,h:210,x0:0,x1:3,y0:0,y1:2.5,yt:[0,0.5,1,1.5,2,2.5],yf:v=>v+'″',yl:'deflection at the Sun’s edge'});
    out+=Q.svg+L(310,Q.sy(1.75),570,Q.sy(1.75),C.coral,2,'stroke-dasharray="6 4"')+TF(566,Q.sy(1.75)-5,'Einstein 1.75″',13,C.coral,'end')+L(310,Q.sy(0.87),570,Q.sy(0.87),C.muted,2,'stroke-dasharray="6 4"')+TF(566,Q.sy(0.87)-5,'Newtonian 0.87″',13,C.muted,'end');
    [[1,1.98,0.12,'Sobral'],[2,1.61,0.30,'Príncipe']].forEach(([x,v,e,n])=>{out+=L(Q.sx(x),Q.sy(v-e),Q.sx(x),Q.sy(v+e),C.ink,2)+Ci(Q.sx(x),Q.sy(v),6,C.blue)+TF(Q.sx(x),306,n,13,C.ink)});
-   out+=TF(300,340,'A third set of Sobral plates (about 0.93″) was set aside as faulty; later radio measurements settled it.',13,C.muted);
+   out+=TF(300,340,'A third Sobral set (≈ 0.93″) was set aside;',13,C.muted)+TF(300,358,'later radio measurements settled it.',13,C.muted);
    say='The 1919 values sat nearer Einstein’s prediction, but with wide uncertainties and a disputed data set. Radio interferometry of quasars in the 1970s confirmed 1.75″ to about 1%.';
   }else{
    out=heading('GPS satellite clocks, per day');const bx=120,zero=200,k=2.4;
@@ -248,7 +251,7 @@ SCENE({id:'atomic-nucleus',name:'The nuclear atom',tag:'Thomson’s pudding or R
  draw(s,f,X){
   const ru=s.model==='rutherford',u=s.u===undefined?0.85:clamp(s.u*1.15,0,1),cx=300,cy=205,d=9;let out=heading(ru?'Rutherford: a tiny, heavy nucleus':'Thomson: positive charge spread out like a pudding');
   if(ru)out+=Ci(cx,cy,118,'#f4f8fb',C.line)+Ci(cx,cy,5,C.coral);
-  else{out+=Ci(cx,cy,118,'#f9e7df',C.coral);for(let i=0;i<9;i++){const r=rng(i+3),a=r()*6.28,rr=25+r()*80;out+=Ci(cx+rr*Math.cos(a),cy+rr*Math.sin(a),5,C.blue)}}
+  else{out+=Ci(cx,cy,118,'#f9e7df',C.coral);for(let i=0;i<9;i++){const r=P8_gen(i,3),a=r()*6.28,rr=25+r()*80;out+=Ci(cx+rr*Math.cos(a),cy+rr*Math.sin(a),5,C.blue)}}
   P8_TRACKS.forEach(b=>{const th=ru?2*Math.atan(d/(2*Math.abs(b))):0.012*Math.sign(b)*Math.exp(-Math.abs(b)/60),sg=b<0?-1:1,y=cy+b,p0=[20,y],p1=[cx,y],p2=[cx+300*Math.cos(th),y+sg*300*Math.sin(th)*(ru?1:1)];
    const big=ru&&th>0.5,col=big?C.coral:'#9fb3c0';out+=P8_clip(0,40,600,320,P(`M${p0[0]} ${p0[1]}Q${p1[0]} ${p1[1]} ${fmt(p2[0])} ${fmt(p2[1])}`,col,big?2.4:1.4));
    const q=P8_bez(p0,p1,p2,u);if(q[0]>0&&q[0]<600&&q[1]>40&&q[1]<360)out+=Ci(q[0],q[1],4.5,big?C.coral:C.dark)});
@@ -300,7 +303,7 @@ SCENE({id:'atomic-nucleus-scale',name:'How small is the nucleus?',tag:'A pea in 
   const W=10**lerp(Math.log10(4e-10),Math.log10(4e-14),s.z),px=520/W,cx=300,cy=200,ra=1.44e-10*px,rn=7.0e-15*px;let out=heading('Zooming into a gold atom');
   let inner='';for(let i=6;i>=1;i--)inner+=Ci(cx,cy,ra*i/6,'#cfe2f1','none',`opacity="${0.12+0.08*(6-i)}"`);
   if(rn<26)inner+=Ci(cx,cy,Math.max(1.6,rn),C.coral);
-  else{const r=rng(79),k=Math.round(clamp(rn/3,30,140));for(let i=0;i<k;i++){const a=r()*6.283,rr=Math.sqrt(r())*(rn-6);inner+=Ci(cx+rr*Math.cos(a),cy+rr*Math.sin(a),Math.max(4,rn/9),i%5<2?C.coral:'#9fb3c0','#fff','stroke-width="1"')}}
+  else{const r=rng(790001),k=Math.round(clamp(rn/3,30,140));for(let i=0;i<k;i++){const a=r()*6.283,rr=Math.sqrt(r())*(rn-6);inner+=Ci(cx+rr*Math.cos(a),cy+rr*Math.sin(a),Math.max(4,rn/9),i%5<2?C.coral:'#9fb3c0','#fff','stroke-width="1"')}}
   out+=P8_clip(40,60,520,280,inner)+R(40,60,520,280,'none',C.grid,8);
   const nice=10**Math.floor(Math.log10(W/3)),len=nice*px,lab=nice>=1e-12?(nice/1e-12)+' pm':(nice/1e-15)+' fm';
   out+=L(60,326,60+len,326,C.ink,3)+TBF(60+len/2,318,lab,13,C.ink);
@@ -324,9 +327,9 @@ SCENE({id:'photoelectric-effect',name:'The photoelectric effect',tag:'Colour mat
   const E=P8_H_EV*s.f*1e14,phi=P8_METALS[s.m].phi,ke=E-phi,nm=P8_C/(s.f*1e14)*1e9,col=P8_nm(nm),t=X.try?0.4:(X.p*6)%1,nPh=Math.round(s.I/10);
   let out=heading(`${nm<380?'Ultraviolet':nm>780?'Infrared':'Visible'} light, ${nm.toFixed(0)} nm, on ${P8_METALS[s.m].name.toLowerCase()}`);
   out+=R(24,150,60,60,'#3a4a55','none',8)+Ci(84,180,12,col);
-  for(let i=0;i<nPh;i++){const r=rng(i+11),y=150+r()*60,x=96+((r()+t)%1)*220;out+=P(`M${fmt(x)} ${fmt(y)}q4 -6 8 0t8 0t8 0`,col,2.2)}
+  for(let i=0;i<nPh;i++){const r=P8_gen(i,11),y=150+r()*60,x=96+((r()+t)%1)*220;out+=P(`M${fmt(x)} ${fmt(y)}q4 -6 8 0t8 0t8 0`,col,2.2)}
   out+=R(326,96,18,186,'#a9b4bb',C.dark,3)+TF(335,304,P8_METALS[s.m].name,13,C.muted);
-  if(ke>0)for(let i=0;i<nPh;i++){const r=rng(i+71),y=110+r()*160,len=24+44*Math.sqrt(ke/3),x=350+((r()+t)%1)*90;out+=Ci(x,y,4.5,C.blue)+arrow(x+6,y,x+6+len*0.45,y-6+12*r(),C.blue,1.6,6)}
+  if(ke>0)for(let i=0;i<nPh;i++){const r=P8_gen(i,71),y=110+r()*160,len=24+44*Math.sqrt(ke/3),x=350+((r()+t)%1)*90;out+=Ci(x,y,4.5,C.blue)+arrow(x+6,y,x+6+len*0.45,y-6+12*r(),C.blue,1.6,6)}
   const Q=P8_plot({x:470,y:96,w:100,h:180,x0:0,x1:1,y0:0,y1:7,yt:[0,2,4,6],yf:v=>v+' eV'});out+=Q.svg;
   out+=R(482,Q.sy(E),34,Q.sy(0)-Q.sy(E),col,'none',2)+L(470,Q.sy(phi),570,Q.sy(phi),C.ink,2,'stroke-dasharray="5 4"')+TF(552,Q.sy(phi)-5,'φ',14,C.ink)+TF(499,Q.sy(E)-5,'hf',13,C.ink);
   if(ke>0)out+=L(530,Q.sy(phi),530,Q.sy(E),C.blue,4)+TF(546,(Q.sy(phi)+Q.sy(E))/2,'KE',13,C.blue,'start');
@@ -335,7 +338,7 @@ SCENE({id:'photoelectric-effect',name:'The photoelectric effect',tag:'Colour mat
  }});
 
 const P8_MILL_PRESET=[6,7,8,9,10,11,12];
-const P8_noise=i=>(rng(i*7919+13)()-0.5)*0.06;
+const P8_noise=i=>(P8_gen(i,13)()-0.5)*0.06;
 function P8_fit(pts){const q=pts.filter(p=>p.V>0);if(q.length<2)return null;const n=q.length,mx=sum(q.map(p=>p.f))/n,my=sum(q.map(p=>p.V))/n,sxx=sum(q.map(p=>(p.f-mx)**2));if(sxx<1e-9)return null;const m=sum(q.map(p=>(p.f-mx)*(p.V-my)))/sxx;return {m,c:my-m*mx}}
 function P8_measure(m,f,i){const V=P8_H_EV*f*1e14-P8_METALS[m].phi;return {f,V:V>0?Math.max(0.01,V+P8_noise(i)):0}}
 SCENE({id:'photoelectric-millikan',name:'Rerun Millikan’s measurement',tag:'Measuring Planck’s constant',
@@ -378,9 +381,9 @@ SCENE({id:'photoelectric-photons',name:'Photons',tag:'Light comes in packets',
   const n=s.br*5,size=6+E*3;for(let i=0;i<n;i++){const x=50+(i%10)*28,y=96+Math.floor(i/10)*46;out+=Ci(x,y,size,P8_nm(c.nm),'#fff')}
   out+=TF(180,74,`brightness ×${s.br} → ${n} photons per moment`,13,C.muted);
   const Q=P8_plot({x:380,y:70,w:190,h:200,x0:0,x1:4,y0:0,y1:5.5,yt:[0,1,2,3,4,5],yf:v=>v+' eV'});out+=Q.svg;
-  Object.entries(P8_COLOURS).forEach(([k,v],i)=>{const e=1239.84/v.nm,x=Q.sx(i+0.5);out+=R(x-16,Q.sy(e),32,Q.sy(0)-Q.sy(e),P8_nm(v.nm),k===s.col?C.ink:'none',3)+TF(x,288,v.name.slice(0,6),13,C.muted)});
-  out+=L(380,Q.sy(2.3),570,Q.sy(2.3),C.ink,2,'stroke-dasharray="5 4"')+TF(566,Q.sy(2.3)-5,'sodium 2.3 eV',13,C.ink,'end');
-  out+=R(30,230,330,120,'#fff',C.grid,8)+TBF(42,252,'Wave picture predicted',13,C.coral,'start')+TF(42,272,'any colour works if bright enough;',13,C.ink,'start')+TF(42,290,'brighter means faster electrons.',13,C.ink,'start')+TBF(42,316,'Observed',13,C.green,'start')+TF(42,336,ok?`${c.name.toLowerCase()} frees electrons even when dim.`:`${c.name.toLowerCase()} frees none, at any brightness.`,13,C.ink,'start');
+  Object.entries(P8_COLOURS).forEach(([k,v],i)=>{const e=1239.84/v.nm,x=Q.sx(i+0.5);out+=R(x-16,Q.sy(e),32,Q.sy(0)-Q.sy(e),P8_nm(v.nm),k===s.col?C.ink:'none',3)+TF(x,288,k==='uv'?'UV':v.name,13,C.muted)});
+  out+=L(380,Q.sy(2.3),570,Q.sy(2.3),C.ink,2,'stroke-dasharray="5 4"')+TF(384,Q.sy(2.3)-6,'sodium 2.3 eV',13,C.ink,'start');
+  out+=R(20,230,316,120,'#fff',C.grid,8)+TBF(32,252,'Wave picture predicted',13,C.coral,'start')+TF(32,272,'any colour works if bright enough;',13,C.ink,'start')+TF(32,290,'brighter means faster electrons.',13,C.ink,'start')+TBF(32,316,'Observed',13,C.green,'start')+TF(32,336,ok?`${c.name.toLowerCase()} frees electrons even when dim.`:`${c.name.toLowerCase()} frees none, at any brightness.`,13,C.ink,'start');
   return {svg:out,phase:`Each ${c.name.toLowerCase()} photon carries hf = ${E.toFixed(2)} eV whatever the brightness. Turning up the brightness to ×${s.br} gives ${n} photons, but an electron absorbs them one at a time.`};
  }});
 
@@ -598,7 +601,7 @@ SCENE({id:'radioactivity-fission',name:'Nuclear fission',tag:'Splitting uranium'
 function P8_vis(r){const x=r/3;return 1-(1+x)*Math.exp(-x)} // enclosed visible mass (exponential profile, spherical approximation)
 const P8_VIS_K=(()=>{let m=0;for(let r=0.2;r<30;r+=0.2)m=Math.max(m,P8_vis(r)/r);return 175*175/m})();
 const P8_vVis=r=>Math.sqrt(P8_VIS_K*P8_vis(r)/Math.max(r,0.05)),P8_vHalo=(r,h)=>Math.sqrt(h*200*200*(1-4/r*Math.atan(r/4)));
-const P8_ROT=range(14).map(i=>{const r=2+i*2,n=rng(i+70)();return [r,Math.sqrt(P8_vVis(r)**2+P8_vHalo(r,1)**2)+(n-0.5)*14]});
+const P8_ROT=range(14).map(i=>{const r=2+i*2,n=P8_gen(i,70)();return [r,Math.sqrt(P8_vVis(r)**2+P8_vHalo(r,1)**2)+(n-0.5)*14]});
 SCENE({id:'open-questions',name:'Dark matter',tag:'Galaxies spin too fast',
  research:['Zwicky (1933). The redshift of extragalactic nebulae (missing mass in the Coma cluster).','Rubin & Ford (1970). Rotation of the Andromeda nebula from a spectroscopic survey of emission regions. Astrophysical Journal.'],
  definition:'Stars and gas in the outer parts of spiral galaxies orbit as fast as those further in, instead of slowing down like outer planets. Either there is much more unseen mass (dark matter), or gravity behaves differently on galactic scales. It is still open.',
