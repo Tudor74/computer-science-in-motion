@@ -37,14 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: biology is mostly populations, rates and feedback, so most of Try it is a simulation the
-   learner steers, with classic experiments rerun on screen. Cells: resolve two points, rerun Hooke's arithmetic,
-   cut a cube, burst a red cell, tilt Pasteur's flask. Evolution: select moths, breed, fit the Grants' drought.
-   Heredity: grow Mendel's seeds, test-cross, drift with Wright–Fisher lines. Molecules: Meselson–Stahl bands,
-   pick tRNAs, shift a reading frame, flip the lac switch. Energy: fit Michaelis–Menten, relight Priestley's
-   candle, break a feedback loop with delay. Ecosystems: fit yeast, harvest a fishery, remove Paine's starfish.
-   Bodies: run an epidemic and a herd-immunity grid, grow Turing spots, redo Harvey's sum. Modern: read a Sanger
-   gel, build a tree, aim a CRISPR guide, replay Lenski's freezer. Myths are corrected and debates labelled.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

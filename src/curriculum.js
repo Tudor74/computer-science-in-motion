@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// Biology in historical order: from the first microscopes and cells, through evolution and heredity, the
-// molecules of life and its chemistry, ecosystems and bodies, to sequencing, gene editing and the origin of life.
+// Language in historical order: from clay tokens and the first scripts, through the discovery of language
+// families and sound laws, structure, grammar, how children learn, meaning, language in society, to machines.
 // Lessons, sources and connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'cells',name:'1 · Cells',years:'1665–1900',why:'Lenses revealed that living things are made of cells, that cells come from cells, and that germs cause disease.'},
- {id:'evolution',name:'2 · Evolution',years:'1830–1930',why:'Deep time, variation and selection: how populations change and new species form.'},
- {id:'heredity',name:'3 · Heredity',years:'1866–1950',why:'Mendel’s ratios, chromosomes, and the mathematics of genes in populations.'},
- {id:'molecules',name:'4 · The molecules of life',years:'1944–1970',why:'DNA’s double helix, how it copies itself, and how genes become proteins and are switched on and off.'},
- {id:'metabolism',name:'5 · Energy and chemistry',years:'1900–1980',why:'Enzymes, photosynthesis, respiration, membranes and the balance a body keeps.'},
- {id:'ecology',name:'6 · Ecosystems',years:'1920–1980',why:'Predators and prey, growth and limits, food webs, islands and the cycling of matter.'},
- {id:'bodies',name:'7 · Bodies and disease',years:'1880–today',why:'Immunity, epidemics and vaccines, how an embryo makes patterns, the heart and the microbiome.'},
- {id:'modern',name:'8 · Reading and writing life',years:'1977–today',why:'Sequencing, the tree of life, CRISPR, evolution in a flask, antibiotic resistance and how life began.'}
+ {id:'writing',name:'1 · Writing',years:'3400 BCE–1500',why:'Tokens became tablets, pictures became sounds, the alphabet spread, lost scripts were cracked and print multiplied text.'},
+ {id:'families',name:'2 · Families and sound laws',years:'1786–1900',why:'Languages turned out to be relatives, and their sounds change by regular laws that let us rebuild lost ancestors.'},
+ {id:'structure',name:'3 · Structure',years:'1916–1960',why:'Signs, phonemes and word parts, Zipf’s law, the information in English, and whether language shapes thought.'},
+ {id:'grammar',name:'4 · Grammar',years:'1957–2000',why:'Trees, recursion and formal grammars, sentences that lead you astray, universals and a sign language born in a school.'},
+ {id:'learning',name:'5 · Learning language',years:'1970–today',why:'Babies tuning to sounds, finding words in a stream, learning meanings fast, critical periods, bilingualism and reading.'},
+ {id:'meaning',name:'6 · Meaning and use',years:'1950–today',why:'Reference, implicature, speech acts, metaphor, colour words and how conversation takes turns.'},
+ {id:'society',name:'7 · Language in society',years:'1960–today',why:'Variation and change, contact and creoles, dying languages, accents and bias, and English around the world.'},
+ {id:'machines',name:'8 · Language machines',years:'1949–today',why:'Machine translation, n-grams, word vectors, attention and large language models, and what they do and do not understand.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- cells:{w:44,h:44,tile:'<circle cx="22" cy="22" r="14" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="24" cy="20" r="4" fill="currentColor" opacity=".5"/>'},
- evolution:{w:44,h:40,tile:'<path d="M22 38V24M22 24L10 8M22 24L34 8M16 16L20 6" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- heredity:{w:40,h:40,tile:'<path d="M4 20H36M20 4V36" stroke="currentColor" stroke-width=".8"/><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="28" cy="28" r="3" fill="none" stroke="currentColor"/>'},
- molecules:{w:24,h:48,tile:'<path d="M4 0Q20 12 4 24T4 48M20 0Q4 12 20 24T20 48" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M8 6H16M8 18H16M8 30H16M8 42H16" stroke="currentColor" stroke-width=".6"/>'},
- metabolism:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9" stroke-dasharray="6 4"/><path d="M30 12L33 17L27 17Z" fill="currentColor"/>'},
- ecology:{w:48,h:32,tile:'<path d="M0 16Q12 2 24 16T48 16" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M0 20Q12 30 24 20T48 20" fill="none" stroke="currentColor" stroke-width=".6"/>'},
- bodies:{w:40,h:36,tile:'<path d="M20 32C6 22 6 10 13 8C17 7 20 11 20 11C20 11 23 7 27 8C34 10 34 22 20 32Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- modern:{w:48,h:24,tile:'<rect x="2" y="8" width="8" height="8" fill="currentColor" opacity=".7"/><rect x="14" y="8" width="8" height="8" fill="none" stroke="currentColor"/><rect x="26" y="8" width="8" height="8" fill="currentColor" opacity=".4"/><rect x="38" y="8" width="8" height="8" fill="none" stroke="currentColor"/>'}
+ writing:{w:40,h:28,tile:'<path d="M6 8L12 8L9 12ZM20 8L26 8L23 12ZM10 18L16 18L13 22Z" fill="currentColor" opacity=".7"/>'},
+ families:{w:44,h:40,tile:'<path d="M22 4V14M22 14L10 28M22 14L34 28M10 28L4 36M10 28L16 36" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ structure:{w:40,h:32,tile:'<rect x="4" y="10" width="10" height="12" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="16" y="10" width="8" height="12" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="26" y="10" width="10" height="12" fill="currentColor" opacity=".4"/>'},
+ grammar:{w:44,h:36,tile:'<path d="M22 4L10 18M22 4L34 18M10 18L4 32M10 18L16 32" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ learning:{w:48,h:24,tile:'<path d="M0 12Q6 2 12 12T24 12T36 12T48 12" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M14 4V20M34 4V20" stroke="currentColor" stroke-width=".5"/>'},
+ meaning:{w:44,h:32,tile:'<path d="M4 6H24V18H12L6 24V18H4Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M28 12H40V22H38V26L34 22H28Z" fill="currentColor" opacity=".4"/>'},
+ society:{w:48,h:28,tile:'<circle cx="10" cy="14" r="6" fill="none" stroke="currentColor"/><circle cx="24" cy="14" r="6" fill="none" stroke="currentColor"/><circle cx="38" cy="14" r="6" fill="currentColor" opacity=".35"/>'},
+ machines:{w:44,h:36,tile:'<circle cx="6" cy="8" r="2.5" fill="currentColor"/><circle cx="6" cy="28" r="2.5" fill="currentColor"/><circle cx="22" cy="18" r="2.5" fill="currentColor"/><circle cx="38" cy="18" r="2.5" fill="none" stroke="currentColor"/><path d="M6 8L22 18L6 28M22 18H38" stroke="currentColor" stroke-width=".7"/>'}
 };

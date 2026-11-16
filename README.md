@@ -1,19 +1,19 @@
-# Biology In Motion
+# Language In Motion
 
-A single-file, offline HTML page that tells the story of biology in historical order: cells, evolution, heredity, the molecules of life, energy and chemistry, ecosystems, bodies and disease, and reading and writing life. In Try it you steer the simulations (selection, crosses, enzymes, predators and prey, epidemics, Turing patterns) and rerun classic experiments. Popular myths are corrected and contested findings labelled.
+A single-file, offline HTML page that tells the story of how people have understood language, in historical order: writing, families and sound laws, structure, grammar, how children learn, meaning and use, language in society, and language machines. In Try it you build trees, apply sound laws, train tiny models, and take part in classic experiments with your results drawn beside the published ones. Myths are labelled and debates presented as open.
 
-This is the `biology` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`), Physics (`physics`), Music (`music`), Mind (`mind`) and Ted Nelson (`nelson`), and is part of the [In Motion](https://in-motion.puter.site) family.
+This is the `language` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **Cells** (1665–1900): microscopes, cell theory, surface and volume, diffusion and osmosis, cell division, germ theory
-2. **Evolution** (1830–1930): deep time, natural selection, artificial selection, sexual selection, speciation, finches' beaks
-3. **Heredity** (1866–1950): Mendel's crosses, Punnett squares, chromosomes and linkage, Hardy–Weinberg, genetic drift, quantitative traits
-4. **The molecules of life** (1944–1970): the double helix, replication, transcription and translation, the genetic code, gene regulation, mutation
-5. **Energy and chemistry** (1900–1980): enzymes, membranes and pumps, photosynthesis, respiration and ATP, homeostasis, scaling laws
-6. **Ecosystems** (1920–1980): logistic growth, predators and prey, competition and niches, food webs, island biogeography, nutrient cycles
-7. **Bodies and disease** (1880–today): the immune system, epidemics, vaccines and herd immunity, morphogenesis, the heart, the microbiome
-8. **Reading and writing life** (1977–today): sequencing, phylogenetic trees, CRISPR, evolution in the lab, antibiotic resistance, the origins of life
+1. **Writing** (3400 BCE–1500): clay tokens, logograms, the alphabet, decipherment, printing, scripts of the world
+2. **Families and sound laws** (1786–1900): language families, the comparative method, Grimm's law, the Great Vowel Shift, phonetics and the IPA, language trees
+3. **Structure** (1916–1960): Saussure's sign, phonemes, morphology, Zipf's law, redundancy and entropy, linguistic relativity
+4. **Grammar** (1957–2000): syntax trees, recursion, formal grammars, garden paths, universals, sign languages
+5. **Learning language**: infant perception, statistical learning, word learning, critical periods, bilingualism, the reading brain
+6. **Meaning and use**: reference and sense, implicature, speech acts, metaphor, colour terms, turn-taking
+7. **Language in society**: variation, the S-curve of change, contact and creoles, endangered languages, accents and attitudes, world Englishes
+8. **Language machines**: machine translation, n-grams, word embeddings, attention, large language models, the understanding debate
 
 ## Source layout
 
