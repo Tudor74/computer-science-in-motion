@@ -396,7 +396,7 @@ function E4_eco(noise,gens){const {A}=E4_tour(E4_allKeys,noise),n=A.length;let x
  for(let g=0;g<gens;g++){const f=A.map(row=>row.reduce((a,v,j)=>a+v*x[j],0)),mean=f.reduce((a,v,i)=>a+v*x[i],0);x=x.map((v,i)=>v*f[i]/mean);hist.push(x.slice())}return hist}
 SCENE({id:'axelrod-tournament-ecology',name:'Survival of the strategies',tag:'Axelrod’s ecological tournament',
  definition:'In an ecological tournament each strategy’s share of the next generation grows with its score against the current population, so strategies must do well against whoever survives.',
- example:'Always defect grows at first by exploiting the unconditional cooperators, then starves once they are gone and the retaliators remain.',
+ example:'Always defect does well only while there are unconditional cooperators to exploit; once they are gone it meets retaliators and dies out.',
  desc:'Lines show the share of each of seven strategies over generations, starting equal, with each generation’s shares in proportion to the strategies’ average points against the current mix.',
  research:'Axelrod (1984). The Evolution of Cooperation, chapter 2: the ecological analysis of the second tournament. Axelrod & Hamilton (1981). The evolution of cooperation. Science 211, 1390–1396.',
  dur:12,hint:'Slide through the generations and add noise. Exploiters rise while there is something to exploit, then fall.',
@@ -415,7 +415,8 @@ SCENE({id:'axelrod-tournament-ecology',name:'Survival of the strategies',tag:'Ax
   out+=TBF(384,62,`Generation ${s.gen}`,14,C.ink,'start');
   ord.forEach((st,k)=>{const y=86+k*30;out+=R(384,y-11,14,14,E4_COL[st.k],'none',3)+TF(404,y+1,st.n,13,C.ink,'start')+TF(578,y+1,E4_pct(st.v),13,C.muted,'end')});
   out+=T(300,366,'Shares start equal; noise uses the same averaged tournament as before.',14,C.muted);
-  return {svg:out,phase:'Always defect gains early, feeding on Always cooperate and Random. As its prey disappears it meets mostly retaliators and declines, while the nice, retaliatory strategies take over. Axelrod saw the same pattern when he ran the 63 real entries this way.'};
+  const ad=hist.map(x=>x[5]),rose=Math.max(...ad.slice(0,15))>ad[0]+.005;
+  return {svg:out,phase:(rose?'Always defect grows at first, feeding on the unconditional cooperators, then declines as its prey disappears and it meets retaliators.':'Here Always defect shrinks from the start: there are too few cooperators to exploit and too many retaliators.')+' The nice, retaliatory strategies take over, as Axelrod found when he ran the real entries of his second tournament this way.'+(s.noise?' With noise, the strategies that recover from mistakes do best.':'')};
  }});
 
 /* ---------------------------------------------------------------- beauty-contest */
@@ -464,9 +465,9 @@ function E4_ch(tau,K=8){const f=range(K+1).map(k=>Math.exp(-tau)*Math.pow(tau,k)
  const tot=f.reduce((a,b)=>a+b,0),mean=g.reduce((a,v,k)=>a+v*f[k],0)/tot;return {f:f.map(v=>v/tot),g,mean}}
 SCENE({id:'beauty-contest-levels',name:'Steps of thinking',tag:'Level-k and the cognitive hierarchy',
  definition:'Level-k models describe players who think a limited number of steps ahead: level 0 picks at random, level 1 best-responds to level 0, level 2 to level 1, and so on. The cognitive hierarchy lets each level expect a mix of lower levels.',
- example:'Simple level-k reasoning gives 33, then 22, then 15. With an average of about 1.5 thinking steps, the cognitive hierarchy predicts a first-round average in the mid-30s, close to what experiments find.',
+ example:'Simple level-k reasoning gives 33, then 22, then 15. With an average of 1 to 1.5 thinking steps, the cognitive hierarchy predicts a first-round average of about 34 to 38, close to what experiments find.',
  desc:'Bars show how much of the population thinks k steps for an average depth τ, with each level’s guess underneath, and the predicted average guess on a number line beside Nagel’s observed first-round average.',
- research:'Stahl & Wilson (1995), Games and Economic Behavior 10; Nagel (1995). Camerer, Ho & Chong (2004). A cognitive hierarchy model of games. Quarterly Journal of Economics 119, 861–898: average depth τ ≈ 1.5 fits many games.',
+ research:'Stahl & Wilson (1995), Games and Economic Behavior 10; Nagel (1995). Camerer, Ho & Chong (2004). A cognitive hierarchy model of games. Quarterly Journal of Economics 119, 861–898: an average depth τ of about 1.5 fits many games.',
  dur:10,hint:'Move the average number of thinking steps. At τ = 0 everyone guesses at random; as τ grows the predicted average falls towards the equilibrium, 0.',
  init:()=>({tau:1.5}),
  watch(p){return {tau:Math.round(p*40)/10}},
@@ -484,7 +485,7 @@ SCENE({id:'beauty-contest-levels',name:'Steps of thinking',tag:'Level-k and the 
   out+=P(`M${fmt(nx(mean))} 290 l-7 -12 h14 z`,C.blue,1.5,C.blue)+TF(nx(mean),270,`predicted ${fmt(Math.round(mean*10)/10)}`,13,C.blue);
   out+=P(`M${fmt(nx(37))} 310 l-7 12 h14 z`,C.green,1.5,C.green)+TF(nx(37)+12,346,'observed ≈ 37 (Nagel 1995)',13,C.green,'start');
   out+=T(300,374,`τ = ${s.tau.toFixed(1)}: the predicted average guess is ${fmt(Math.round(mean*10)/10)}`,14,C.ink);
-  return {svg:out,phase:'People are not irrational here; they are reasoning a step or two about others who also reason a step or two. Around 1.5 steps on average reproduces typical first-round averages. Only if everyone reasons without limit, and knows everyone else does, do guesses reach 0.'};
+  return {svg:out,phase:'People are not irrational here; they are reasoning a step or two about others who also reason a step or two. Between 1 and 1.5 steps on average reproduces typical first-round averages. Only if everyone reasons without limit, and knows everyone else does, do guesses reach 0.'};
  }});
 
 // Keynes's newspaper contest: own taste, average taste, and what people expect average opinion to be (illustrative).
@@ -624,7 +625,7 @@ SCENE({id:'governing-commons',name:'The tragedy of the commons',tag:'Hardin’s 
  example:'Each herder who adds a cow gains its whole value but shares the damage to the grass with everyone, so herds grow until the pasture is ruined.',
  desc:'A toy pasture over 40 seasons. With open access, herders keep adding cows while a cow pays its way; with a quota, the herd is capped at the level the grass can sustain. Lines show grass and cows season by season.',
  research:'Hardin (1968). The tragedy of the commons. Science 162, 1243–1248. Gordon (1954), Journal of Political Economy 62: open-access fisheries dissipate their value. Hardin (1998), Science 280, later wrote that he should have said the “unmanaged” commons. This is a toy model with illustrative numbers.',
- dur:12,hint:'Change the number of herders and the rule. Under open access, more herders means faster growth and a deeper collapse; the quota holds the herd at the sustainable level.',
+ dur:12,hint:'Change the rule and the number of herders, then slide through the seasons. Under open access the herd grows while a cow pays its way, then crashes; the quota holds it near the sustainable level.',
  init:()=>({n:6,rule:'open',t:40}),
  watch(p){return {n:6,rule:p<.5?'open':'quota',t:Math.round(((p*2)%1)*40)}},
  ui:[{choose:[['open','Open access'],['quota','Shared quota']],label:'Rule',get:s=>s.rule,act:'rule'},{range:'n',label:'Herders',min:2,max:16,get:s=>s.n,act:'n'},{range:'t',label:'Season',min:0,max:40,get:s=>s.t,act:'t'}],
@@ -645,8 +646,8 @@ SCENE({id:'governing-commons',name:'The tragedy of the commons',tag:'Hardin’s 
   const tail=sim.slice(20),avgG=tail.reduce((a,d)=>a+d.G,0)/tail.length,avgYield=tail.reduce((a,d)=>a+.01*d.cows*d.G,0)/tail.length;
   out+=R(30,268,540,100,C.pale,'none',10);
   out+=TBF(46,290,`Seasons 20–40: grass averages ${Math.round(avgG)}%, grass eaten ${fmt(Math.round(avgYield*10)/10)} a season`,14,C.ink,'start');
-  out+=TF(46,314,'The most the pasture can give for ever is 12.5 a season, at half its full growth.',13,C.ink,'start');
-  out+=E4_lines(46,336,s.rule==='open'?['Open access: herds grow until a cow barely pays its upkeep, and overshoot.','More herders add cows faster, so the swings are deeper.']:['The quota caps the herd at 25 cows, which takes the sustainable 12.5 a season.','Hardin’s answer was “mutual coercion, mutually agreed upon”.'],13,C.muted);
+  out+=TF(46,314,'The most the pasture can give for ever is 12.5 a season, grazed down to half each time.',13,C.ink,'start');
+  out+=E4_lines(46,336,s.rule==='open'?['Open access: herds grow until a cow barely pays its upkeep, then overshoot','and crash, keeping the grass far below its most productive level.']:['The quota caps the herd at 25 cows, eating about 11 a season, close to the most.','Hardin’s answer was “mutual coercion, mutually agreed upon”.'],13,C.muted);
   return {svg:out,phase:'Hardin’s argument is about open access: nobody can be kept out and nobody limits the take. Elinor Ostrom showed that many real commons are neither open access nor run by a state, and that their users often make and enforce rules that work.'};
  }});
 
