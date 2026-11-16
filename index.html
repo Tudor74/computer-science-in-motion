@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}.chemistry{--accent:#4f7a1c}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -145,6 +145,20 @@ footer p{margin:0 0 4px}
     <p class="desc">Describe motion, then forces and gravity, energy and momentum, waves, light, electricity and magnetism, heat and entropy, and finally relativity, atoms and quanta. In Try it you rerun the classic experiments: Galileo’s bells, Cavendish weighing the Earth, Young’s slits, Fizeau’s toothed wheel, Rutherford’s gold foil and Millikan’s photoelectric plot. Popular legends are labelled as legends.</p>
     <ul class="facts" aria-label="Course size"><li>8 eras</li><li>51 lessons</li><li>159 scenes</li><li>Rerun the experiments</li></ul>
     <div class="links"><a class="open" href="https://physics-in-motion.puter.site/">Open Physics <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
+  <li class="course chemistry">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A benzene ring with its delocalised circle, beside a flask">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <polygon points="345.0,126.0 300.0,152.0 255.0,126.0 255.0,74.0 300.0,48.0 345.0,74.0" fill="none" stroke="#192c37" stroke-width="3.5"/><g class="step"><circle cx="300" cy="100" r="30" fill="none" stroke="#6a8f2a" stroke-width="3"/></g><path d="M120 50H150M128 50V95L105 150Q100 162 112 162H166Q178 162 173 150L150 95V50" fill="none" stroke="#546873" stroke-width="2.5"/><path d="M110 140Q139 130 168 140L173 150Q178 162 166 162H112Q100 162 105 150Z" fill="#cfe3a8"/><g font-size="15" fill="#546873"><text x="450" y="80">C₆H₆</text><text x="450" y="104">139 pm</text><text x="450" y="128">every bond</text></g><text x="300" y="200" text-anchor="middle" font-size="14" fill="#546873">A flat ring of six equal bonds: shown by Kathleen Lonsdale’s X-rays, 1929</text>
+   </svg>
+   <div class="body">
+    <h3>Chemistry In Motion</h3>
+    <p class="tag">From the alchemist’s still to AlphaFold, in historical order</p>
+    <p class="desc">Alchemy to chemistry, atoms and weights, the periodic table, bonds and shapes, reactions, the chemistry of carbon, reading molecules, and modern chemistry. In Try it you pour mercury into Boyle’s tube, fill Mendeleev’s gaps, build Lewis structures, push an equilibrium, read an NMR spectrum and titrate drop by drop. Myths are corrected and the ethics of Haber, thalidomide and plastics stated plainly.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>48 lessons</li><li>145 scenes</li><li>Do the chemistry</li></ul>
+    <div class="links"><a class="open" href="https://chemistry-in-motion.puter.site/">Open Chemistry <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
 
@@ -359,7 +373,7 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://awais-rashid-in-motion.puter.site/">Open Awais Rashid <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
-  <li class="course future wide">
+  <li class="course future">
    <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A measured trend line continuing as a dashed, clearly labelled prediction to 2040"><rect width="600" height="220" fill="#f3f7fa"/><line x1="60" y1="180" x2="560" y2="180" stroke="#c7d8e3" stroke-width="2"/><line x1="340" y1="40" x2="340" y2="180" stroke="#c7d8e3" stroke-width="2" stroke-dasharray="4 5"/><path d="M60 170 C140 166 220 156 340 128" fill="none" stroke="#192c37" stroke-width="3.5"/><path d="M340 128 C420 108 480 80 550 50" fill="none" stroke="#c45238" stroke-width="3.5" stroke-dasharray="9 7"/><circle cx="340" cy="128" r="6" fill="#192c37"/><text x="200" y="205" text-anchor="middle" font-size="14" fill="#546873">sourced data</text><text x="460" y="205" text-anchor="middle" font-size="14" fill="#c45238">prediction for 2040</text></svg>
    <div class="body">
     <h3>The Future In Motion</h3>
@@ -381,7 +395,7 @@ footer p{margin:0 0 4px}
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Biology follows life from cells to genomes, Abiogenesis asks how it might have started, Computer Science shows how machines use it, HCI shows how people meet those machines, Economics shows how people trade, choose and cooperate, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Mind makes you the participant in the experiments that shaped psychology, Language traces how we came to understand speech and writing, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Ted Nelson In Motion follows one thinker’s hypertext ideas from the memex to the web, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Chemistry shows what matter is made of and how it changes, Biology follows life from cells to genomes, Abiogenesis asks how it might have started, Computer Science shows how machines use it, HCI shows how people meet those machines, Economics shows how people trade, choose and cooperate, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Mind makes you the participant in the experiments that shaped psychology, Language traces how we came to understand speech and writing, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Ted Nelson In Motion follows one thinker’s hypertext ideas from the memex to the web, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
 </main>
 
 <footer>
