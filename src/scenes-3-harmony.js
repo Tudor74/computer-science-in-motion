@@ -13,7 +13,7 @@ const M3_pc=m=>((m%12)+12)%12;
 const M3_isBlack=m=>[1,3,6,8,10].includes(M3_pc(m));
 function M3_spell(m,step){const o=Math.floor(step/7),L=step-7*o;return {step,a:m-(M3_NAT[L]+12*(o+1)),m}}
 function M3_root(m){const [L,a]=M3_ROOT[M3_pc(m)],o=Math.floor((m-a-M3_NAT[L])/12)-1;return M3_spell(m,L+7*o)}
-function M3_nm(n,oct=true){const L=((n.step%7)+7)%7;return M3_LET[L]+(M3_ACC[n.a]||'?')+(oct?Math.floor(n.step/7):'')}
+function M3_nm(n,oct=true){const L=((n.step%7)+7)%7;return M3_LET[L]+(M3_ACC[n.a]??'?')+(oct?Math.floor(n.step/7):'')}
 function M3_intName(s){return s<=12?M3_INT[s]:s===24?'two octaves':'octave + '+M3_INT[s-12]}
 function M3_upper(lo,s){return M3_spell(lo.m+s,lo.step+(s>12?7+M3_OFF[s-12]:M3_OFF[s]))}
 function M3_class(s){const r=M3_pc(s);
@@ -245,7 +245,7 @@ const M3_CAD={
  interrupted:{n:'Interrupted cadence',rn:['V','vi'],ch:[[43,62,67,71],[45,60,64,72]],feel:'a surprise: the ear expected I'}};
 const M3_VOICE=[{n:'bass',c:C.coral},{n:'tenor',c:C.purple},{n:'alto',c:C.green},{n:'soprano',c:C.blue}];
 function M3_grand(out,xs,chords,opts={}){ // chords: arrays of midi (B,T,A,S); draws a grand staff with voice colours
- const g=11,yT=112,yBs=200;out+=M3_staff(40,560,yT,g,'treble')+M3_staff(40,560,yBs,g,'bass')+L(40,yT-4*g,40,yBs,C.muted,1.6);
+ const g=11,yT=112,yBs=200,x2=opts.x2||560;out+=M3_staff(40,x2,yT,g,'treble')+M3_staff(40,x2,yBs,g,'bass')+L(40,yT-4*g,40,yBs,C.muted,1.6);
  chords.forEach((ch,ci)=>{if(!ch)return;ch.forEach((m,v)=>{const n=M3_root(m),onT=v>=2,col=(opts.voiceCol||(vv=>M3_VOICE[vv].c))(v,ci);
   out+=M3_head(xs[ci]+(v===1&&ch[2]-ch[1]<=2?14:0),n,onT?M3_TREB:M3_BASS,onT?yT:yBs,g,col,'w')})});
  if(opts.lines)for(let ci=0;ci+1<chords.length;ci++){const a=chords[ci],b=chords[ci+1];if(!a||!b)continue;
@@ -265,9 +265,9 @@ SCENE({id:'cadences',name:'Cadence',tag:'How a phrase comes to rest',
  on:{c(s,v){s.c=v},play(s){const c=M3_CAD[s.c];M3_tone(c.ch[0],{dur:1});M3_tone(c.ch[1],{at:1.1,dur:1.6});return 'keep'}},
  draw(s){
   const c=M3_CAD[s.c];let out=heading(`${c.n}: ${c.rn[0]} → ${c.rn[1]} in C major`);
-  out=M3_grand(out,[230,390],c.ch,{lines:true});
-  out+=TB(230,248,c.rn[0],19,C.ink)+TB(390,248,c.rn[1],19,C.ink)+arrow(262,243,355,243,C.muted,1.6);
-  M3_VOICE.slice().reverse().forEach((v,i)=>out+=Ci(470,64+i*22,5,v.c)+TF(482,69+i*22,v.n,13,C.ink,'start'));
+  out=M3_grand(out,[180,340],c.ch,{lines:true,x2:430});
+  out+=TB(180,248,c.rn[0],19,C.ink)+TB(340,248,c.rn[1],19,C.ink)+arrow(212,243,305,243,C.muted,1.6);
+  M3_VOICE.slice().reverse().forEach((v,i)=>out+=Ci(470,90+i*26,6,v.c)+TF(484,95+i*26,v.n,14,C.ink,'start'));
   out+=R(80,282,440,46,'#fff',C.grid,10)+T(300,311,`Sounds ${c.feel}.`,16,C.ink);
   out+=TF(300,352,s.c==='plagal'?'The plagal cadence closes many hymns on the word “Amen”.':s.c==='interrupted'?'The bass rises a step to A instead of falling to C.':s.c==='imperfect'?'Phrases that end on V invite an answering phrase.':'The soprano’s B rises to C: the leading note goes home.',13,C.muted);
   return {svg:out,phase:`${c.n}: ${c.rn.join(' to ')}. It sounds ${c.feel}. Notice how little the upper voices move: most go by step or stay put.`};
@@ -290,9 +290,9 @@ SCENE({id:'cadences-voice-leading',name:'Voice leading',tag:'Each voice takes th
   const k=f.k,done=v=>{const idx=M3_VL.findIndex(x=>x&&x.v===v);return idx>0&&idx<=k},cur=f.x&&f.x.v;
   let out=heading('V7 → I in C major, one voice at a time');
   const second=M3_V7[1].map((m,v)=>done(v)||k===5?m:null);
-  out=M3_grand(out,[230,390],[M3_V7[0],second.some(x=>x!==null)?second.map((m,v)=>m===null?M3_V7[0][v]:m):null],
-   {voiceCol:(v,ci)=>ci===1&&second[v]===null?'#c7d3da':(cur===v||k===5?M3_VOICE[v].c:ci===0?M3_VOICE[v].c:M3_VOICE[v].c),lines:v=>done(v)||k===5});
-  out+=TB(230,248,'V7',19,C.ink)+TB(390,248,'I',19,C.ink);
+  out=M3_grand(out,[180,340],[M3_V7[0],second.some(x=>x!==null)?second.map((m,v)=>m===null?M3_V7[0][v]:m):null],
+   {voiceCol:(v,ci)=>ci===1&&second[v]===null?'#c7d3da':(cur===v||k===5?M3_VOICE[v].c:ci===0?M3_VOICE[v].c:M3_VOICE[v].c),lines:v=>done(v)||k===5,x2:430});
+  out+=TB(180,248,'V7',19,C.ink)+TB(340,248,'I',19,C.ink);
   if(cur!==undefined&&cur!==null&&cur>=0){out+=R(450,62,125,40,'#fff',M3_VOICE[cur].c,10)+TB(512,88,M3_VOICE[cur].n,15,M3_VOICE[cur].c)}
   out+=R(60,282,480,48,'#fff',C.grid,10)+T(300,311,f.say,14,C.ink);
   return {svg:out,phase:f.say+' Huron (2001) argues these rules help the ear hear each voice as a separate stream.'};
