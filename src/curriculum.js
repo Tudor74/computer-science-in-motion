@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// Ted Nelson's ideas in the order he had them: from Bush's memex and a student's index cards, through
-// hypertext, Computer Lib and Xanadu, to the web he criticised and the tools that took up his ideas.
+// Biology in historical order: from the first microscopes and cells, through evolution and heredity, the
+// molecules of life and its chemistry, ecosystems and bodies, to sequencing, gene editing and the origin of life.
 // Lessons, sources and connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'roots',name:'1 · Before hypertext',years:'1945–1960',why:'Bush’s memex, associative trails and a student who found that ideas do not come in a line.'},
- {id:'hypertext',name:'2 · Naming hypertext',years:'1960–1965',why:'Project Xanadu begins, and a 1965 paper names hypertext, hypermedia and a file structure built for change.'},
- {id:'systems',name:'3 · The first systems',years:'1967–1974',why:'HES and FRESS at Brown, Engelbart’s demo, and ideas like stretchtext that are still unusual today.'},
- {id:'computerlib',name:'4 · Computer Lib',years:'1974',why:'“You can and must understand computers now”: a self-published manifesto for personal, playful computing.'},
- {id:'xanadu',name:'5 · Xanadu’s design',years:'1981–1992',why:'Transclusion, two-way links, permanent addresses and a royalty for every quotation.'},
- {id:'web',name:'6 · The web arrives',years:'1989–2000',why:'A simpler hypertext won. What one-way links, broken links and lost versions cost, measured.'},
- {id:'later',name:'7 · Later structures',years:'1995–2014',why:'ZigZag’s many dimensions, Xanadu Space and OpenXanadu’s side-by-side documents.'},
- {id:'legacy',name:'8 · Reading and legacy',years:'Research',why:'What studies say about reading hypertext, and where his ideas live on: backlinks, versions, annotation, content addresses.'}
+ {id:'cells',name:'1 · Cells',years:'1665–1900',why:'Lenses revealed that living things are made of cells, that cells come from cells, and that germs cause disease.'},
+ {id:'evolution',name:'2 · Evolution',years:'1830–1930',why:'Deep time, variation and selection: how populations change and new species form.'},
+ {id:'heredity',name:'3 · Heredity',years:'1866–1950',why:'Mendel’s ratios, chromosomes, and the mathematics of genes in populations.'},
+ {id:'molecules',name:'4 · The molecules of life',years:'1944–1970',why:'DNA’s double helix, how it copies itself, and how genes become proteins and are switched on and off.'},
+ {id:'metabolism',name:'5 · Energy and chemistry',years:'1900–1980',why:'Enzymes, photosynthesis, respiration, membranes and the balance a body keeps.'},
+ {id:'ecology',name:'6 · Ecosystems',years:'1920–1980',why:'Predators and prey, growth and limits, food webs, islands and the cycling of matter.'},
+ {id:'bodies',name:'7 · Bodies and disease',years:'1880–today',why:'Immunity, epidemics and vaccines, how an embryo makes patterns, the heart and the microbiome.'},
+ {id:'modern',name:'8 · Reading and writing life',years:'1977–today',why:'Sequencing, the tree of life, CRISPR, evolution in a flask, antibiotic resistance and how life began.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- roots:{w:44,h:32,tile:'<rect x="4" y="6" width="14" height="20" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="24" y="6" width="14" height="20" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M18 16H24" stroke="currentColor"/>'},
- hypertext:{w:48,h:32,tile:'<path d="M4 8H20M4 14H16M4 20H20M28 12H44M28 18H40" stroke="currentColor" stroke-width=".9"/><path d="M20 8Q26 4 28 12" fill="none" stroke="currentColor" stroke-width=".8"/>'},
- systems:{w:40,h:32,tile:'<rect x="6" y="4" width="28" height="20" rx="2" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M14 28H26" stroke="currentColor"/>'},
- computerlib:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M20 8V32M8 20H32" stroke="currentColor" stroke-width=".6"/>'},
- xanadu:{w:48,h:36,tile:'<rect x="2" y="6" width="16" height="24" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="30" y="6" width="16" height="24" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M18 14L30 12M18 22L30 24" stroke="currentColor" stroke-width=".8"/>'},
- web:{w:40,h:40,tile:'<path d="M20 4L36 20L20 36L4 20Z" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M4 20H36M20 4V36" stroke="currentColor" stroke-width=".5"/>'},
- later:{w:40,h:40,tile:'<path d="M6 6H34M6 20H34M6 34H34M6 6V34M20 6V34M34 6V34" stroke="currentColor" stroke-width=".6"/>'},
- legacy:{w:48,h:28,tile:'<circle cx="8" cy="14" r="3" fill="currentColor"/><circle cx="24" cy="14" r="3" fill="none" stroke="currentColor"/><circle cx="40" cy="14" r="3" fill="currentColor"/><path d="M11 14H21M27 14H37" stroke="currentColor" stroke-width=".8"/>'}
+ cells:{w:44,h:44,tile:'<circle cx="22" cy="22" r="14" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="24" cy="20" r="4" fill="currentColor" opacity=".5"/>'},
+ evolution:{w:44,h:40,tile:'<path d="M22 38V24M22 24L10 8M22 24L34 8M16 16L20 6" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ heredity:{w:40,h:40,tile:'<path d="M4 20H36M20 4V36" stroke="currentColor" stroke-width=".8"/><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="28" cy="28" r="3" fill="none" stroke="currentColor"/>'},
+ molecules:{w:24,h:48,tile:'<path d="M4 0Q20 12 4 24T4 48M20 0Q4 12 20 24T20 48" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M8 6H16M8 18H16M8 30H16M8 42H16" stroke="currentColor" stroke-width=".6"/>'},
+ metabolism:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9" stroke-dasharray="6 4"/><path d="M30 12L33 17L27 17Z" fill="currentColor"/>'},
+ ecology:{w:48,h:32,tile:'<path d="M0 16Q12 2 24 16T48 16" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M0 20Q12 30 24 20T48 20" fill="none" stroke="currentColor" stroke-width=".6"/>'},
+ bodies:{w:40,h:36,tile:'<path d="M20 32C6 22 6 10 13 8C17 7 20 11 20 11C20 11 23 7 27 8C34 10 34 22 20 32Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ modern:{w:48,h:24,tile:'<rect x="2" y="8" width="8" height="8" fill="currentColor" opacity=".7"/><rect x="14" y="8" width="8" height="8" fill="none" stroke="currentColor"/><rect x="26" y="8" width="8" height="8" fill="currentColor" opacity=".4"/><rect x="38" y="8" width="8" height="8" fill="none" stroke="currentColor"/>'}
 };

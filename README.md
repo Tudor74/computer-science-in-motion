@@ -1,19 +1,19 @@
-# Ted Nelson In Motion
+# Biology In Motion
 
-A single-file, offline HTML page that follows Ted Nelson's ideas in the order he had them: Bush's memex and a student's index cards, the naming of hypertext, the first systems at Brown, Computer Lib, Xanadu's design, the web that won instead, ZigZag and OpenXanadu, and what research says about reading hypertext today. In Try it you build each structure yourself: a trail, a zippered list, a transclusion, a two-way link, a link that rots.
+A single-file, offline HTML page that tells the story of biology in historical order: cells, evolution, heredity, the molecules of life, energy and chemistry, ecosystems, bodies and disease, and reading and writing life. In Try it you steer the simulations (selection, crosses, enzymes, predators and prey, epidemics, Turing patterns) and rerun classic experiments. Popular myths are corrected and contested findings labelled.
 
-This is the `nelson` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`), Physics (`physics`), Music (`music`) and Mind (`mind`), and is part of the [In Motion](https://in-motion.puter.site) family.
+This is the `biology` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`), Physics (`physics`), Music (`music`), Mind (`mind`) and Ted Nelson (`nelson`), and is part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **Before hypertext** (1945–1960): the memex, associative trails, non-sequential writing, index cards
-2. **Naming hypertext** (1960–1965): coining hypertext, zippered lists, hypermedia, version history
-3. **The first systems** (1967–1974): HES at Brown, Engelbart's demo, FRESS, stretchtext
-4. **Computer Lib** (1974): Computer Lib, Dream Machines, fantics, thinkertoys
-5. **Xanadu's design** (1981–1992): transclusion, two-way links, transcopyright, tumblers
-6. **The web arrives** (1989–2000): web against Xanadu, link rot, embedded markup, the curse of Xanadu
-7. **Later structures** (1995–2014): ZigZag, Xanadu Space, OpenXanadu, parallel documents
-8. **Reading and legacy**: reading hypertext, backlinks, content addressing, deep interconnection
+1. **Cells** (1665–1900): microscopes, cell theory, surface and volume, diffusion and osmosis, cell division, germ theory
+2. **Evolution** (1830–1930): deep time, natural selection, artificial selection, sexual selection, speciation, finches' beaks
+3. **Heredity** (1866–1950): Mendel's crosses, Punnett squares, chromosomes and linkage, Hardy–Weinberg, genetic drift, quantitative traits
+4. **The molecules of life** (1944–1970): the double helix, replication, transcription and translation, the genetic code, gene regulation, mutation
+5. **Energy and chemistry** (1900–1980): enzymes, membranes and pumps, photosynthesis, respiration and ATP, homeostasis, scaling laws
+6. **Ecosystems** (1920–1980): logistic growth, predators and prey, competition and niches, food webs, island biogeography, nutrient cycles
+7. **Bodies and disease** (1880–today): the immune system, epidemics, vaccines and herd immunity, morphogenesis, the heart, the microbiome
+8. **Reading and writing life** (1977–today): sequencing, phylogenetic trees, CRISPR, evolution in the lab, antibiotic resistance, the origins of life
 
 ## Source layout
 
