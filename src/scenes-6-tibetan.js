@@ -55,7 +55,7 @@ SCENE({id:'tibetan-translation-team',name:'Scholar and translator',tag:'Building
  draw(s){
   const t=P6_CALQ[s.i],n=t.parts.length,w=150,x0=300-(n*w+(n-1)*12)/2;let out=P6_head('est','Scholar and translator');
   out+=R(60,74,220,46,C.amberp,'none',8)+TF(170,92,'Indian scholar (paṇḍita)',12,C.muted)+TBF(170,110,'explains the Sanskrit',12,C.ink)+R(320,74,220,46,C.pale,'none',8)+TF(430,92,'Tibetan translator (lotsāwa)',12,C.muted)+TBF(430,110,'writes the Tibetan',12,C.ink)+arrow(282,97,318,97,C.line,2,6);
-  out+=TF(300,144,'Sanskrit',11,C.muted)+TBF(300,166,t.sk,20,C.ink)+TF(300,184,t.en,12,C.muted);
+  out+=TF(300,140,'Sanskrit',11,C.muted)+TBF(300,167,t.sk,20,C.ink)+TF(300,185,t.en,12,C.muted);
   t.parts.forEach((q,i)=>{const x=x0+i*(w+12);out+=R(x,198,w,58,C.pale,C.blue,8)+TBF(x+w/2,222,q[0],16,C.blue)+TF(x+w/2,244,q[1],12,C.ink)});
   out+=TF(300,276,'Tibetan: '+t.parts.map(q=>q[0]).join(' '),13,C.ink);
   out+=P6_panel(292,74)+TF(56,314,'Chinese, for contrast',11,C.muted,'start')+TBF(56,336,t.zh,16,C.coral,'start')+TF(170,336,t.zhn,13,C.ink,'start')+TF(56,356,'Both pairs and teams signed their work in a colophon at the end of the text.',12,C.muted,'start');
@@ -284,7 +284,7 @@ SCENE({id:'mongolian-manchu-relay',name:'Translating a translation',tag:'What ea
 
 const P6_LEX=[
  {en:'Buddha',rows:[['Sanskrit','buddha','“awakened”'],['Chinese','fó','a sound, short for fótuó'],['Tibetan','sangs rgyas','a translation: “awakened and opened out”'],['Mongolian','burqan','borrowed through Old Uyghur'],['Manchu','fucihi','generally traced to Chinese fó']]},
- {en:'dharma, the teaching',rows:[['Sanskrit','dharma','“what holds”: law, teaching'],['Chinese','fǎ','an existing word: “law, method”'],['Tibetan','chos','an existing word given this sense'],['Mongolian','nom','through Uyghur and Sogdian, from Greek nomos, “law”'],['Manchu','nomun','from Mongolian nom']]},
+ {en:'dharma, the teaching',rows:[['Sanskrit','dharma','“what holds”: law, teaching'],['Chinese','fǎ','an existing word: “law, method”'],['Tibetan','chos','an existing word given this sense'],['Mongolian','nom','via Uyghur and Sogdian, from Greek nomos'],['Manchu','nomun','from Mongolian nom']]},
  {en:'guru, a teacher',rows:[['Sanskrit','guru','“weighty”: a teacher'],['Chinese','lǎma','a sound, from Tibetan'],['Tibetan','bla ma','a translation: “the higher one”'],['Mongolian','blam-a','borrowed from Tibetan'],['Manchu','lama','borrowed from Tibetan']]}];
 SCENE({id:'mongolian-manchu-quadrilingual',name:'One word in five languages',tag:'Where each language got its terms',
  definition:'As Buddhism moved between languages, each one built its vocabulary differently: by translating the meaning, by copying the sound, or by borrowing a word from a neighbour.',
