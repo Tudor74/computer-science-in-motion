@@ -37,7 +37,15 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: this is a history of a body of texts, not religious instruction, and the learner works
+   the mechanisms that carried it. Oral: recite alone or in a group and watch slips accumulate or get caught.
+   Baskets: sort texts into Vinaya, Sutta and Abhidhamma. Councils: compare the six Vinayas' accounts, read
+   Ashoka's edicts, slide the Buddha's dates between chronologies. Writing: prepare a palm leaf, date a birch-bark
+   scroll by radiocarbon. Chinese: staff a translation team, judge a text as the cataloguers did. Tibetan: build
+   calques from the standard glossary, sort texts into Kangyur and Tengyur, compare the canons. Printing: carve
+   and print a block, fill Haeinsa's shelves. Modern: collate editions, read a Taisho reference, compare parallels.
+   Every scene is tagged traditional account, established or debated; each tradition is described in its own
+   terms; the Buddha is never drawn as a figure; script impressions are labelled as impressions.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
