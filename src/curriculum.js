@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// Economics in historical order: from pins and comparative advantage, through margins and markets, the
-// Depression and macroeconomics, games, money and crises, behaviour, development and inequality, to economies as
-// complex systems. Lessons, sources and connections are registered by each era's files (src/scenes-N-lessons.js).
+// Chemistry in historical order: from four elements and the alchemist's still, through atoms and the periodic
+// table, bonds and reactions, carbon's chemistry and the instruments that read molecules, to modern materials,
+// the atmosphere and computation. Lessons, sources and connections are registered by each era's files.
 const CURRICULUM={version:1,
 stages:[
- {id:'classical',name:'1 · Classical economics',years:'1776–1870',why:'The pin factory, comparative advantage, Malthus’s race between people and food, and diminishing returns.'},
- {id:'marginal',name:'2 · Margins and markets',years:'1870–1930',why:'Value at the margin, supply and demand, elasticity, surplus, equilibrium and the costs markets ignore.'},
- {id:'macro',name:'3 · The whole economy',years:'1929–1975',why:'The Depression, GDP, the multiplier, unemployment and inflation, and a world monetary system.'},
- {id:'games',name:'4 · Strategy and games',years:'1944–1990',why:'Dilemmas, equilibria, tournaments of cooperation, auctions and governing the commons.'},
- {id:'money',name:'5 · Money and finance',years:'1950–today',why:'Inflation, central banks, compounding, bank runs, exchange rates and financial crises.'},
- {id:'behaviour',name:'6 · Behaviour and experiments',years:'1979–today',why:'Fairness, present bias, public goods, nudges and markets run in the lab, with the learner taking part.'},
- {id:'development',name:'7 · Growth and inequality',years:'1956–today',why:'Growth models, inequality curves, poverty traps, randomised trials, institutions and trade.'},
- {id:'systems',name:'8 · Economies as systems',years:'1990–today',why:'Agent-based markets, networks and contagion, climate, automation, platforms and measuring wellbeing.'}
+ {id:'alchemy',name:'1 · From alchemy to chemistry',years:'400 BCE–1790',why:'Four elements, the still, Boyle’s air, phlogiston, and Lavoisier’s balance that kept mass constant.'},
+ {id:'atoms',name:'2 · Atoms and weights',years:'1800–1870',why:'Dalton’s atoms, Avogadro’s volumes, electricity splitting compounds, gas laws and the light of elements.'},
+ {id:'periodic',name:'3 · The periodic table',years:'1869–1932',why:'Mendeleev’s predictions, noble gases, radioactivity, atomic number, isotopes and electron shells.'},
+ {id:'bonding',name:'4 · Bonds and shapes',years:'1916–1960',why:'Shared and transferred electrons, molecular shapes, orbitals, hydrogen bonds and electronegativity.'},
+ {id:'reactions',name:'5 · Reactions',years:'1850–1950',why:'Rates, equilibrium, acids and bases, redox and batteries, catalysts, and the energy that decides direction.'},
+ {id:'organic',name:'6 · The chemistry of carbon',years:'1828–1970',why:'Carbon skeletons, functional groups, benzene’s ring, handedness, polymers and building molecules by design.'},
+ {id:'analysis',name:'7 · Reading molecules',years:'1900–today',why:'Chromatography, infrared, NMR, mass spectrometry, crystallography and titration: how chemists see.'},
+ {id:'modern',name:'8 · Modern chemistry',years:'1950–today',why:'Semiconductors, nanomaterials, click chemistry, green chemistry, the atmosphere and computing molecules.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- classical:{w:40,h:32,tile:'<path d="M6 26V10M14 26V14M22 26V8M30 26V16" stroke="currentColor" stroke-width="1.2"/>'},
- marginal:{w:44,h:40,tile:'<path d="M6 6Q20 30 38 34M6 34Q20 10 38 6" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- macro:{w:48,h:28,tile:'<path d="M0 18Q8 6 16 14T32 12T48 18" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- games:{w:40,h:40,tile:'<rect x="6" y="6" width="12" height="12" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="22" y="6" width="12" height="12" fill="currentColor" opacity=".35"/><rect x="6" y="22" width="12" height="12" fill="currentColor" opacity=".35"/><rect x="22" y="22" width="12" height="12" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- money:{w:40,h:40,tile:'<circle cx="20" cy="20" r="11" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="20" cy="20" r="7" fill="none" stroke="currentColor" stroke-width=".5"/>'},
- behaviour:{w:44,h:32,tile:'<circle cx="14" cy="16" r="6" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="30" cy="16" r="6" fill="currentColor" opacity=".35"/>'},
- development:{w:44,h:36,tile:'<path d="M4 32L40 32M4 32Q30 30 40 4" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M4 32L40 4" stroke="currentColor" stroke-width=".5" stroke-dasharray="3 3"/>'},
- systems:{w:44,h:40,tile:'<circle cx="8" cy="8" r="2.5" fill="currentColor"/><circle cx="34" cy="12" r="2.5" fill="currentColor"/><circle cx="20" cy="30" r="2.5" fill="currentColor"/><path d="M8 8L34 12L20 30Z" fill="none" stroke="currentColor" stroke-width=".7"/>'}
+ alchemy:{w:40,h:40,tile:'<path d="M20 6L34 32H6Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M12 22H28" stroke="currentColor" stroke-width=".7"/>'},
+ atoms:{w:40,h:40,tile:'<circle cx="20" cy="20" r="8" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="20" cy="20" r="2.5" fill="currentColor"/>'},
+ periodic:{w:44,h:32,tile:'<rect x="4" y="6" width="10" height="10" fill="none" stroke="currentColor" stroke-width=".8"/><rect x="16" y="6" width="10" height="10" fill="currentColor" opacity=".3"/><rect x="28" y="6" width="10" height="10" fill="none" stroke="currentColor" stroke-width=".8"/><rect x="4" y="18" width="10" height="10" fill="currentColor" opacity=".3"/><rect x="16" y="18" width="10" height="10" fill="none" stroke="currentColor" stroke-width=".8"/>'},
+ bonding:{w:44,h:28,tile:'<circle cx="10" cy="14" r="5" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="34" cy="14" r="5" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M15 12H29M15 16H29" stroke="currentColor" stroke-width=".8"/>'},
+ reactions:{w:48,h:24,tile:'<path d="M4 9H40M36 5L40 9L36 13M44 15H8M12 11L8 15L12 19" fill="none" stroke="currentColor" stroke-width=".8"/>'},
+ organic:{w:40,h:40,tile:'<path d="M20 6L32 13V27L20 34L8 27V13Z" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="20" cy="20" r="6" fill="none" stroke="currentColor" stroke-width=".6"/>'},
+ analysis:{w:48,h:28,tile:'<path d="M2 24H46M6 24V20M14 24V8M20 24V18M30 24V4M38 24V16" stroke="currentColor" stroke-width=".9"/>'},
+ modern:{w:44,h:40,tile:'<path d="M8 10L20 4L32 10L32 24L20 30L8 24Z" fill="none" stroke="currentColor" stroke-width=".7"/><path d="M20 4V30M8 10L32 24M32 10L8 24" stroke="currentColor" stroke-width=".4"/>'}
 };

@@ -37,14 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: each economic idea is a mechanism the learner steers, and classic experiments are played
-   with the learner's choices drawn beside the published results. Classical: run the pin factory, split labour
-   between cloth and wine. Margins: drag supply and demand, tax a market, trade in an Edgeworth box. Macro: set
-   the MPC, walk the Phillips curve, toggle the trilemma. Games: play the dilemma, Axelrod's strategies, Nagel's
-   2/3 game, a Vickrey auction and a shared lake. Money: set a Taylor rule, play a bank run. Behaviour: ultimatum,
-   public goods, present bias, a double auction. Development: grow a Solow economy, move money to change a Gini,
-   randomise a trial. Systems: herding markets, bank contagion, discount rates, platform tipping. Schools of
-   thought are presented fairly and replication status is marked.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

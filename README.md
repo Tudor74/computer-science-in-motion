@@ -1,19 +1,19 @@
-# Economics In Motion
+# Chemistry In Motion
 
-A single-file, offline HTML page that tells the history of economic ideas in order: classical economics, margins and markets, the whole economy, strategy and games, money and finance, behaviour and experiments, growth and inequality, and economies as systems. In Try it you steer the mechanisms (supply and demand, the multiplier, a bank run, a Solow economy) and take part in classic experiments, with your choices drawn beside the published results. Schools of thought are presented fairly and replication status is marked.
+A single-file, offline HTML page that tells the story of chemistry in historical order: from alchemy to chemistry, atoms and weights, the periodic table, bonds and shapes, reactions, the chemistry of carbon, reading molecules, and modern chemistry. In Try it you do the chemistry on screen: weigh reactants on Lavoisier's balance, squeeze Boyle's tube, fill Mendeleev's gaps, build Lewis structures, push an equilibrium, titrate to an end point and read a spectrum. Myths are corrected and the ethics of chemistry stated plainly.
 
-This is the `economics` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `chemistry` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **Classical economics** (1776–1870): the division of labour, the invisible hand, comparative advantage, Malthus, diminishing returns, the labour theory of value
-2. **Margins and markets** (1870–1930): marginal utility, supply and demand, elasticity, consumer surplus, general equilibrium, externalities
-3. **The whole economy** (1929–1975): the Great Depression, national accounts, the multiplier, unemployment and the Phillips curve, Keynes and Hayek, Bretton Woods
-4. **Strategy and games** (1944–1990): the prisoner's dilemma, Nash equilibrium, Axelrod's tournament, the beauty contest, auctions, governing the commons
-5. **Money and finance**: inflation and money, central banks, compound interest, bank runs, exchange rates, financial crises
-6. **Behaviour and experiments**: the ultimatum game, present bias, the public-goods game, nudges, market experiments, prospect theory in markets
-7. **Growth and inequality**: Solow growth, Lorenz curves, poverty traps, randomised trials, institutions, trade and globalisation
-8. **Economies as systems**: agent-based markets, network contagion, climate economics, automation and labour, platform economies, measuring wellbeing
+1. **From alchemy to chemistry** (400 BCE–1790): four elements, alchemy and distillation, Boyle's law, phlogiston, conservation of mass, the discovery of oxygen
+2. **Atoms and weights** (1800–1870): Dalton's atoms, Avogadro, electrolysis, the ideal gas, flame spectra, atomic weights
+3. **The periodic table** (1869–1932): the periodic table, noble gases, radioactivity, atomic number, isotopes, electron shells
+4. **Bonds and shapes** (1916–1960): Lewis structures, ionic and covalent bonds, VSEPR shapes, orbitals and hybrids, hydrogen bonds, electronegativity
+5. **Reactions** (1850–1950): reaction rates, equilibrium, acids and bases, redox and batteries, catalysis, free energy
+6. **The chemistry of carbon** (1828–1970): carbon skeletons, functional groups, benzene and aromaticity, stereochemistry, polymers, total synthesis
+7. **Reading molecules** (1900–today): chromatography, infrared spectroscopy, NMR, mass spectrometry, crystallography, titration
+8. **Modern chemistry** (1950–today): semiconductors, nanomaterials, click chemistry, green chemistry, atmospheric chemistry, computational chemistry
 
 ## Source layout
 
