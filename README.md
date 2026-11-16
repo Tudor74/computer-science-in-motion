@@ -1,19 +1,19 @@
-# Abiogenesis In Motion
+# Economics In Motion
 
-A single-file, offline HTML page on how life might have begun, told in historical order: the fall of spontaneous generation, life's chemistry, the early Earth, the RNA world, metabolism-first ideas, the first cells, the last common ancestor, and the search for life elsewhere. Every scene says whether its idea has been demonstrated, is plausible, or is speculative: after the first era, almost all of this is open science.
+A single-file, offline HTML page that tells the history of economic ideas in order: classical economics, margins and markets, the whole economy, strategy and games, money and finance, behaviour and experiments, growth and inequality, and economies as systems. In Try it you steer the mechanisms (supply and demand, the multiplier, a bank run, a Solow economy) and take part in classic experiments, with your choices drawn beside the published results. Schools of thought are presented fairly and replication status is marked.
 
-This is the `abiogenesis` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `economics` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **Spontaneous generation** (350 BCE–1862): Aristotle, Redi's flies, Needham and Spallanzani, Pasteur and Pouchet
-2. **Life's chemistry** (1828–1970): Wöhler's urea, Oparin and Haldane, Miller–Urey, meteorite chemistry
-3. **The early Earth**: the Hadean, the oldest evidence of life, the bombardment timeline, panspermia
-4. **An RNA world?**: ribozymes, replicators, the error threshold, nucleotide synthesis
-5. **Metabolism first?**: hydrothermal vents, the iron–sulphur world, autocatalytic sets, proton gradients
-6. **The first cells**: coacervates, protocells, membrane growth, chirality
-7. **The last common ancestor**: LUCA, the origin of the genetic code, rooting the tree, the origins of viruses
-8. **Life elsewhere**: habitable zones, icy moons, biosignatures, defining life
+1. **Classical economics** (1776–1870): the division of labour, the invisible hand, comparative advantage, Malthus, diminishing returns, the labour theory of value
+2. **Margins and markets** (1870–1930): marginal utility, supply and demand, elasticity, consumer surplus, general equilibrium, externalities
+3. **The whole economy** (1929–1975): the Great Depression, national accounts, the multiplier, unemployment and the Phillips curve, Keynes and Hayek, Bretton Woods
+4. **Strategy and games** (1944–1990): the prisoner's dilemma, Nash equilibrium, Axelrod's tournament, the beauty contest, auctions, governing the commons
+5. **Money and finance**: inflation and money, central banks, compound interest, bank runs, exchange rates, financial crises
+6. **Behaviour and experiments**: the ultimatum game, present bias, the public-goods game, nudges, market experiments, prospect theory in markets
+7. **Growth and inequality**: Solow growth, Lorenz curves, poverty traps, randomised trials, institutions, trade and globalisation
+8. **Economies as systems**: agent-based markets, network contagion, climate economics, automation and labour, platform economies, measuring wellbeing
 
 ## Source layout
 

@@ -37,13 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: almost everything after era 1 is open science, so every scene carries a status tag
-   (demonstrated, plausible or speculative) and rival ideas sit side by side. Try it is mostly simulations the
-   learner steers: Redi's jars, Spallanzani's seals, Pasteur's flasks at altitude; Miller–Urey's spark and its
-   archive; zircon clocks and contested fossils; Spiegelman's shrinking replicator, Eigen's error threshold and
-   hypercycles; vent gradients, autocatalytic sets and proton power; vesicles that grow, divide and compete; a
-   gene-sharing threshold for LUCA and random genetic codes; habitable zones, Enceladus's plume, and rating
-   biosignature claims on NASA's confidence scale. The page never implies the problem is solved.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
