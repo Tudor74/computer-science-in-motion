@@ -417,8 +417,8 @@ SCENE({id:'isotopes-uses',name:'Isotopes as tools',tag:'Tracers, heavy water and
 
 /* ---------- Lesson: electron-shells ---------- */
 function C3_shells(z){const caps=[2,8,8,2];const out=[];let left=z;for(const c of caps){if(left<=0)break;out.push(Math.min(c,left));left-=c}return out}
-SCENE({id:'electron-shells',name:'Electron shells',tag:'Why the rows have 2, 8 and 8',
- definition:'Niels Bohr’s 1913 model put electrons in shells around the nucleus. Gilbert Lewis and Irving Langmuir used shells to explain chemistry: atoms with a full outer shell are inert, and atoms gain, lose or share electrons to reach one. The first rows of the table hold 2, then 8, then 8 elements because those are the numbers that fill the first three shells.',
+SCENE({id:'electron-shells',name:'Electron shells',tag:'Rows of 2, 8 and 8',
+ definition:'Niels Bohr’s 1913 model put electrons in shells around the nucleus. Gilbert Lewis and Irving Langmuir used shells to explain chemistry: atoms with a full outer shell are inert, and atoms gain, lose or share electrons to reach one. The first rows of the table hold 2, then 8, then 8 elements. The first two shells hold 2 and 8, but the third shell can hold 18: the third row ends at 8 because the 4s subshell fills before 3d (next scene).',
  example:'Sodium (Z = 11) has shells 2, 8, 1: one outer electron, easily lost, like lithium (2, 1) and potassium (2, 8, 8, 1). Chlorine (2, 8, 7) is one short of a full shell and easily takes one.',
  desc:'A shell diagram for elements 1–20, with outer electrons in coral, the shell counts, and the group the element belongs to. The 3D view shows the shells as nested spheres. This simple picture works up to calcium; heavier elements need subshells.',
  research:['Bohr, N. (1913). On the constitution of atoms and molecules. Philosophical Magazine 26, 1–25.','Lewis, G. N. (1916). The atom and the molecule. Journal of the American Chemical Society 38, 762–785.','Langmuir, I. (1919). The arrangement of electrons in atoms and molecules. Journal of the American Chemical Society 41, 868–934.'],
