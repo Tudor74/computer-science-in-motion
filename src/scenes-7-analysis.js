@@ -96,7 +96,6 @@ SCENE({id:'chromatography-tlc',name:'Thin-layer chromatography and Rf',tag:'Meas
   const match=selInfo&&selInfo.id.startsWith('U')?C7_TLC.find(d=>Math.abs(C7_rf(d.k,s.pol)-selInfo.rf)<1e-9):null;
   out+=counter(tx,186,'matches standard',selInfo&&selInfo.id.startsWith('U')?(match?match.n:'none'):'—',C.green,150);
   out+=C7_lines(tx,262,['Press a spot to measure it.','The unknown holds two dyes.'],13,C.muted);
-  out+=T(300,370,selInfo?`Rf ${C7_f(selInfo.rf)}: the same wherever the front stops.`:'Press a spot.',15);
   return {svg:out,phase:'Because Rf is a ratio, it does not depend on how far the front has run, only on the plate, the solvent and the temperature. Chemists run unknowns beside standards on the same plate, because Rf values from different plates rarely agree to better than a few hundredths.'};
  }});
 
@@ -185,7 +184,7 @@ SCENE({id:'ir-spectroscopy-match',name:'Reading an infrared spectrum',tag:'Match
  draw(s,f,X){
   const myst=s.c==='mystery',key=myst?C7_IRK[Math.floor(rng(s.seed)()*3)]:s.c,d=C7_IR[key];
   let out=heading(myst?'Mystery spectrum: what is it?':`Infrared spectrum of ${d.n} (${d.f})`,26);
-  const pl=C7_plot(60,52,500,200,[4000,500],[0,100],{xt:[[4000,'4000'],[3000,'3000'],[2000,'2000'],[1500,'1500'],[1000,'1000'],[500,'500']],xl:'wavenumber (cm⁻¹)',xlDy:32,yl:'% transmittance',yt:[[0,'0'],[50,'50'],[100,'100']]});
+  const pl=C7_plot(60,52,500,200,[4000,500],[0,100],{xt:[[4000,'4000'],[3000,'3000'],[2000,'2000'],[1500,'1500'],[1000,'1000'],[500,'500']],xl:'wavenumber (cm⁻¹)',xlDy:32,yl:'% transmittance',yt:[[50,'50'],[100,'100']]});
   out+=pl.svg;
   const Tr=v=>100-90*Math.min(1,d.pk.reduce((a,[c,w,h])=>a+h*Math.exp(-((v-c)*(v-c))/(2*w*w/4)),0));
   const Xr=pl.X;
@@ -263,7 +262,7 @@ SCENE({id:'nmr',name:'Nuclei in a magnet',tag:'Resonance frequency rises with th
   const nu=C7_NUC[s.nuc],f=nu.g*s.B,ex=6.62607e-34*f*1e6/(2*1.380649e-23*298)*1e6;
   let out=heading(`${nu.n} at ${s.B.toFixed(1)} T`,26);
   for(let i=0;i<5;i++)out+=arrow(70+i*45,330,70+i*45,70,'#c9dbe7',2,8);
-  out+=TF(160,350,'field B',13,C.muted);
+  out+=TF(40,62,'field B',13,C.muted,'start');
   const cx=160,cy=200;out+=P(`M${cx-48} ${cy-58} Q${cx} ${cy-80} ${cx+48} ${cy-58}`,C.purple,1.6,'none','stroke-dasharray="4 3"');
   out+=P(`M${cx-48} ${cy-58} Q${cx} ${cy-36} ${cx+48} ${cy-58}`,C.purple,1.6);
   out+=L(cx,cy,cx+30,cy-62,C.purple,4)+Ci(cx,cy,16,C.coral)+TBF(cx,cy+5,s.nuc==='1H'?'H':s.nuc.replace(/\d/g,''),13,'#fff');
@@ -425,7 +424,7 @@ SCENE({id:'mass-spectrometry-fragments',name:'Breaking molecules into pieces',ta
   C7_BUT.bonds.forEach(b=>{const on=s.cut.includes(b.id);out+=hit(X,'cut',b.id,`Cut bond ${b.id}`,G(R(b.x-30,y-18,60,36,'#fff0','none',0)+L(b.x-26,y,b.x+26,y,on?C.coral:C.ink,3,on?'stroke-dasharray="6 5"':'')+TF(b.x,y-14,b.id,13,on?C.coral:C.muted)))});
   atoms.forEach(([x,l])=>{out+=TBF(x,y+6,l,18,C.ink)});
   out+=L(210,y+16,210,y+40,C.ink,2)+L(216,y+16,216,y+40,C.ink,2)+TBF(213,y+58,'O',16,C.coral);
-  const pl=C7_plot(60,190,500,120,[0,80],[0,125],{xt:[0,20,40,60,80].map(v=>[v,String(v)]),xl:'m/z',xlDy:32});out+=pl.svg;
+  const pl=C7_plot(60,190,500,120,[0,80],[0,125],{xt:[0,20,40,60,80].map(v=>[v,String(v)])});out+=pl.svg+TF(566,pl.Y(0)+4,'m/z',13,C.muted,'start');
   const expl=new Map();s.cut.forEach(id=>C7_BUT.bonds.find(b=>b.id===id).frags.forEach(([m,l])=>{if(!expl.has(m))expl.set(m,l)}));expl.set(72,'M⁺•, the whole molecule');
   C7_BUT.peaks.forEach(([m,h])=>{const on=expl.has(m);out+=R(pl.X(m)-5,pl.Y(h),10,pl.Y(0)-pl.Y(h),on?C.coral:C.line,'none',2)+TF(m===27?pl.X(m)-7:pl.X(m),pl.Y(h)-5,String(m),13,on?C.coral:C.muted,m===27?'end':'middle')});
   const explained=C7_BUT.peaks.filter(p=>expl.has(p[0])).length;
