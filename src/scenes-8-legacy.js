@@ -11,7 +11,7 @@ function T8_fnv(str){let h=0x811c9dc5;for(let i=0;i<str.length;i++){h^=str.charC
 // A twelve-page hypertext with one-way links. Tasks start at Start; clicks are compared with the shortest path.
 const T8_PAGES={home:'Start',memex:'Memex',trails:'Trails',hyper:'Hypertext',xan:'Xanadu',trans:'Transclusion',two:'Two-way',lib:'Computer Lib',web:'The web',rot:'Link rot',zz:'ZigZag',ver:'Versions'};
 const T8_OUT={home:['memex','lib','web'],memex:['trails','hyper'],trails:['memex','ver'],hyper:['xan','home'],xan:['trans','two','zz'],trans:['ver','xan'],two:['web'],lib:['hyper','zz'],web:['rot','home'],rot:['two'],zz:['lib'],ver:['trans','rot']};
-const T8_POS={home:[340,64],memex:[435,64],trails:[530,64],lib:[340,110],hyper:[435,110],ver:[530,110],zz:[340,156],xan:[435,156],trans:[530,156],web:[340,202],two:[435,202],rot:[530,202]};
+const T8_POS={lib:[340,64],home:[435,64],memex:[530,64],zz:[340,110],hyper:[435,110],trails:[530,110],two:[340,156],xan:[435,156],ver:[530,156],web:[340,202],rot:[435,202],trans:[530,202]};
 const T8_TASKS=['ver','zz','rot','trans'];
 function T8_bfs(from,to){const d={[from]:0},q=[from];while(q.length){const u=q.shift();if(u===to)return d[u];for(const v of T8_OUT[u])if(d[v]===undefined){d[v]=d[u]+1;q.push(v)}}return Infinity}
 const T8_SIMPATH=['home','web','home','memex','trails','memex','hyper','xan','trans'];
@@ -31,7 +31,7 @@ SCENE({id:'reading-hypertext',name:'Try it: lost in hyperspace?',tag:'Navigating
   again(s){s.task=0;s.cur='home';s.clicks=0;s.path=['home'];if(s.res.length>8)s.res=s.res.slice(-8);return 'keep'}},
  draw(s,f,X){
   const done=s.task>=T8_TASKS.length,target=done?null:T8_TASKS[s.task];let out=heading(done?'Round complete':`Task ${s.task+1} of 4: find “${T8_PAGES[target]}”`,26);
-  out+=R(20,44,260,196,'#fff',C.grid,8)+TBF(34,68,done?'—':T8_PAGES[s.cur],17,C.ink,'start')+TF(266,68,done?'':`${s.clicks} click${s.clicks===1?'':'s'}`,13,C.muted,'end');
+  out+=R(20,44,260,196,'#fff',C.grid,8)+TBF(34,68,done?'Done':T8_PAGES[s.cur],17,C.ink,'start')+TF(266,68,done?'':`${s.clicks} click${s.clicks===1?'':'s'}`,13,C.muted,'end');
   if(!done){out+=TF(34,90,'Links on this page:',13,C.muted,'start');
    T8_OUT[s.cur].forEach((to,i)=>{const y=100+i*40;out+=hit(X,'go',to,`Link to ${T8_PAGES[to]}`,R(34,y,232,32,C.pale,C.blue,6)+TF(46,y+21,'→ '+T8_PAGES[to],13,C.blue,'start'))})}
   else out+=T8_lines(34,100,['All four pages found.','Press New round to try again,','perhaps with the map switched','the other way.'],13,C.ink);
@@ -42,7 +42,7 @@ SCENE({id:'reading-hypertext',name:'Try it: lost in hyperspace?',tag:'Navigating
   else out+=TF(438,146,'Map hidden',14,C.muted);
   out+=TBF(20,262,'Clicks per task: yours against the shortest route',13,C.ink,'start');
   const base=352,bh=v=>Math.min(v,10)*7.5;out+=L(20,base,580,base,C.line,1.5);
-  s.res.slice(-8).forEach((r,i)=>{const x=40+i*68;out+=R(x,base-bh(r.s),22,bh(r.s),'#c9d6de','none',3)+R(x+24,base-bh(r.c),22,bh(r.c),r.map?C.blue:C.purple,'none',3)+TF(x+34,base-bh(r.c)-5,String(r.c),13,C.ink)+TF(x+23,base+16,T8_PAGES[r.t].split(' ')[0],13,C.muted)});
+  s.res.slice(-8).forEach((r,i)=>{const x=40+i*68;out+=R(x,base-bh(r.s),22,bh(r.s),'#c9d6de','none',3)+R(x+24,base-bh(r.c),22,bh(r.c),r.map?C.blue:C.purple,'none',3)+TF(x+34,base-bh(r.c)-5,String(r.c),13,C.ink)+TF(x+23,base+16,{ver:'Versions',zz:'ZigZag',rot:'Link rot',trans:'Transcl.'}[r.t],13,C.muted)});
   if(!s.res.length)out+=TF(300,320,'Finish a task to see your bar',13,C.muted);
   out+=TF(580,262,'grey shortest · blue map · purple no map',13,C.muted,'end');
   const extra=s.res.length?` So far: ${s.res.map(r=>r.c).reduce((a,b)=>a+b,0)} clicks against ${s.res.map(r=>r.s).reduce((a,b)=>a+b,0)} on the shortest routes.`:'';
@@ -67,7 +67,7 @@ SCENE({id:'reading-hypertext-load',name:'Links cost attention',tag:'Cognitive lo
   out+=R(x0,y0,w,h,'#fff',C.grid,4);[0,.25,.5,.75,1].forEach(v=>{out+=L(x0-4,Y(v),x0,Y(v),C.line,1)+TF(x0-8,Y(v)+4,Math.round(v*100)+'%',13,C.muted,'end')});
   [1,4,8,12].forEach(v=>{out+=TF(X(v),y0+h+18,String(v),13,C.muted)});out+=TF(x0+w/2,y0+h+38,'links per page',13,C.muted)+TF(x0,y0-8,'comprehension (illustrative)',13,C.muted,'start');
   for(const k of ['high','low']){let d='';for(let l=1;l<=12;l+=.5)d+=(l===1?'M':'L')+fmt(X(l))+' '+fmt(Y(T8_comp(l,k,s.net)));out+=P(d,k==='high'?C.blue:C.coral,k===s.know?3:1.6,'none',k===s.know?'':'stroke-dasharray="5 4"')}
-  out+=TF(X(12)-4,Y(T8_comp(12,'high',s.net))-8,'high knowledge',13,C.blue,'end')+TF(X(12)-4,Y(T8_comp(12,'low',s.net))+18,'low knowledge',13,C.coral,'end');
+  out+=TF(X(12)-4,Y(T8_comp(12,'high',s.net))-14,'high knowledge',13,C.blue,'end')+TF(X(12)-4,Y(T8_comp(12,'low',s.net))+18,'low knowledge',13,C.coral,'end');
   const c=T8_comp(s.links,s.know,s.net);out+=Ci(X(s.links),Y(c),7,C.ink);
   const load=clamp(.12+.06*s.links*(s.net?1.3:1),0,1);
   out+=TBF(430,72,'Decision load',13,C.ink,'start')+R(430,82,150,22,'#eef3f6','none',6)+R(430,82,150*load,22,load>.6?C.coral:C.amber,'none',6);
@@ -147,7 +147,7 @@ SCENE({id:'backlinks-rank',name:'Backlinks as votes',tag:'Ranking pages by who l
   const links=T8_WL.concat(s.extra),r=T8_rank(links,6,.85,s.iters||60),ins=range(6).map(i=>links.filter(l=>l[1]===i).length);let out=heading('Each link is a vote, weighted by the voter’s rank',26);
   const top=Math.max(...r),order=range(6).sort((a,b)=>r[b]-r[a]);
   order.forEach((i,k)=>{const y=58+k*42;out+=TF(20,y+20,T8_WIKI[i],13,C.ink,'start')+R(110,y+4,260,24,'#eef3f6','none',5)+R(110,y+4,260*r[i]/top,24,k===0?C.blue:tint(C.blue,.35),'none',5)+TBF(376,y+21,(r[i]*100).toFixed(1)+'%',13,C.ink,'start')+TF(440,y+21,`${ins[i]} in`,13,C.green,'start')});
-  out+=TBF(500,72,'Added links',13,C.ink,'start')+T8_lines(500,96,s.extra.length?s.extra.map(l=>`${T8_WIKI[l[0]].slice(0,6)} → ${T8_WIKI[l[1]].slice(0,6)}`):['(none yet)'],13,s.extra.length?C.coral:C.muted,'start',20);
+  const added=s.extra.map(l=>`${T8_WIKI[l[0]]} → ${T8_WIKI[l[1]]}`);out+=TF(20,356,'Added: '+(added.length?added.slice(-3).join(' · ')+(added.length>3?` (+${added.length-3})`:''):'none yet'),13,added.length?C.coral:C.muted,'start');
   out+=TF(20,330,`Damping 0.85 · ${links.length} links · ${s.iters?`after ${s.iters} iterations`:'converged'} · bars sorted by rank`,13,C.muted,'start');
   return {svg:out,phase:`${T8_WIKI[order[0]]} ranks highest with ${(r[order[0]]*100).toFixed(1)}% of the rank and ${ins[order[0]]} incoming links. Rank is not just a count: a link from a well-linked page is worth more.`};
  }});
@@ -227,7 +227,7 @@ SCENE({id:'content-addressing-merkle',name:'Versions that share their parts',tag
  }});
 
 // Wiki templates: content included by reference into many pages, against a manual copy.
-const T8_TPL={orig:'Term coined: 1965',fix:'Term coined: 1965, in an ACM conference paper',vand:'Term coined: (vandalised text)'};
+const T8_TPL={orig:'Term coined: 1965',fix:'Term coined: 1965, in an ACM conference paper',vand:'Term coined: (vandalised)'};
 SCENE({id:'content-addressing-transclusion',name:'Transclusion in wikis',tag:'Templates included by reference',
  definition:'MediaWiki, the software behind Wikipedia, calls including one page inside another “transclusion”, borrowing Nelson’s word. A template is written once and shown on many pages, so a correction appears everywhere at once; so would vandalism, which is why heavily used templates are protected.',
  example:'Correct the hypertext fact box once and three articles update; an article that pasted a copy of the box stays out of date.',
@@ -254,14 +254,14 @@ SCENE({id:'content-addressing-transclusion',name:'Transclusion in wikis',tag:'Te
  }});
 
 /* =========================== deep-interconnection =========================== */
-const T8_ALL=[['memex','Memex',1],['associative-trails','Trails',1],['non-sequential-writing','Non-sequential writing',1],['index-cards','Index cards',1],
+const T8_ALL=[['memex','Memex',1],['associative-trails','Trails',1],['non-sequential-writing','Non-sequential',1],['index-cards','Index cards',1],
  ['coining-hypertext','Coining hypertext',2],['zippered-lists','Zippered lists',2],['hypermedia','Hypermedia',2],['version-history','Version history',2],
  ['hes-brown','HES at Brown',3],['nls-demo','NLS demo',3],['fress','FRESS',3],['stretchtext','Stretchtext',3],
  ['computer-lib','Computer Lib',4],['dream-machines','Dream Machines',4],['fantics','Fantics',4],['thinkertoys','Thinkertoys',4],
  ['transclusion','Transclusion',5],['two-way-links','Two-way links',5],['transcopyright','Transcopyright',5],['tumblers','Tumblers',5],
- ['web-vs-xanadu','Web against Xanadu',6],['link-rot','Link rot',6],['embedded-markup','Embedded markup',6],['curse-of-xanadu','Curse of Xanadu',6],
- ['zigzag','ZigZag',7],['xanadu-space','Xanadu Space',7],['open-xanadu','OpenXanadu',7],['parallel-documents','Parallel documents',7],
- ['reading-hypertext','Reading hypertext',8],['backlinks','Backlinks',8],['content-addressing','Content addressing',8],['deep-interconnection','Deep interconnection',8]];
+ ['web-vs-xanadu','Web vs Xanadu',6],['link-rot','Link rot',6],['embedded-markup','Embedded markup',6],['curse-of-xanadu','Curse of Xanadu',6],
+ ['zigzag','ZigZag',7],['xanadu-space','Xanadu Space',7],['open-xanadu','OpenXanadu',7],['parallel-documents','Parallel docs',7],
+ ['reading-hypertext','Reading hypertext',8],['backlinks','Backlinks',8],['content-addressing','Content addresses',8],['deep-interconnection','Intertwingled',8]];
 const T8_IDX=Object.fromEntries(T8_ALL.map((a,i)=>[a[0],i]));
 const T8_E=[['memex','associative-trails'],['memex','coining-hypertext'],['memex','nls-demo'],['associative-trails','backlinks'],['associative-trails','reading-hypertext'],['non-sequential-writing','coining-hypertext'],['non-sequential-writing','index-cards'],
  ['index-cards','zippered-lists'],['index-cards','zigzag'],['coining-hypertext','hes-brown'],['coining-hypertext','hypermedia'],['coining-hypertext','web-vs-xanadu'],['zippered-lists','zigzag'],['zippered-lists','version-history'],
@@ -270,7 +270,7 @@ const T8_E=[['memex','associative-trails'],['memex','coining-hypertext'],['memex
  ['transclusion','xanadu-space'],['transclusion','open-xanadu'],['transclusion','transcopyright'],['transclusion','content-addressing'],['two-way-links','backlinks'],['two-way-links','link-rot'],['transcopyright','tumblers'],
  ['tumblers','content-addressing'],['tumblers','open-xanadu'],['web-vs-xanadu','embedded-markup'],['web-vs-xanadu','link-rot'],['link-rot','content-addressing'],['embedded-markup','open-xanadu'],['curse-of-xanadu','transcopyright'],
  ['curse-of-xanadu','web-vs-xanadu'],['zigzag','deep-interconnection'],['xanadu-space','parallel-documents'],['reading-hypertext','deep-interconnection'],['backlinks','deep-interconnection'],['dream-machines','xanadu-space']].map(([a,b])=>[T8_IDX[a],T8_IDX[b]]);
-const T8_ERA=['#1772b7','#2c776c','#7156a6','#9a6200','#c45238','#2f6e8e','#5a5f9e','#1f6f5c'];
+const T8_ERA=['#1772b7','#2c776c','#7156a6','#9a6200','#b0337a','#2f6e8e','#5a5f9e','#1f6f5c'];
 const T8_ang=i=>-Math.PI/2+(i+.5)*2*Math.PI/32;
 const T8_nb=i=>T8_E.filter(e=>e[0]===i||e[1]===i).map(e=>e[0]===i?e[1]:e[0]);
 SCENE({id:'deep-interconnection',name:'Everything is deeply intertwingled',tag:'This course as a network',
@@ -292,7 +292,7 @@ SCENE({id:'deep-interconnection',name:'Everything is deeply intertwingled',tag:'
   const cross=T8_E.filter(([a,b])=>T8_ALL[a][2]!==T8_ALL[b][2]).length;
   out+=R(372,48,208,304,C.pale,'none',10);
   if(s.sel>=0){const a=T8_ALL[s.sel];out+=T8_lines(386,74,T8_wrap(a[1],22),15,C.ink,'start',19).replace(/<text /g,'<text font-weight="700" ')+TF(386,74+19*T8_wrap(a[1],22).length,`era ${a[2]} · ${nb.length} connections`,13,C.muted,'start');
-   nb.slice(0,8).forEach((j,k)=>{const y=128+k*26;out+=Ci(392,y-4,5,T8_ERA[T8_ALL[j][2]-1])+TF(404,y,T8_ALL[j][1],13,C.ink,'start')+TF(574,y,'era '+T8_ALL[j][2],13,C.muted,'end')})}
+   nb.slice(0,8).forEach((j,k)=>{const y=128+k*26;out+=Ci(392,y-4,5,T8_ERA[T8_ALL[j][2]-1])+TF(404,y,`${T8_ALL[j][2]} · ${T8_ALL[j][1]}`,13,C.ink,'start')})}
   else out+=T8_lines(386,78,['Press a dot to see','a lesson’s connections.'],13,C.ink);
   out+=TF(386,338,`${cross} of ${T8_E.length} links cross eras`,13,C.muted,'start');
   const a=s.sel>=0?T8_ALL[s.sel]:null,nbe=nb.filter(j=>T8_ALL[j][2]!==a?.[2]).length;
@@ -324,12 +324,14 @@ SCENE({id:'deep-interconnection-tree',name:'A tree cuts connections',tag:'Hierar
  on:{by(s,v){s.by=v;return 'keep'}},
  draw(s){
   const groups=T8_GROUPS[s.by],where={},pos={};let out=heading('Whatever folders you choose, some links are cut',26);
-  groups.forEach(([g,items],gi)=>{const x=20+gi*194;out+=R(x,80,176,230,'#f6f9fb',C.grid,10)+TBF(x+88,100,g,13,C.ink);
-   items.forEach((it,k)=>{where[it]=gi;const y=126+k*46;pos[it]=[x+88,y+14];out+=R(x+12,y,152,30,'#fff',C.blue,6)+TF(x+88,y+20,T8_ALL[T8_IDX[it]][1],13,C.ink)})});
-  let kept=0,cut=0;
-  T8_TL.forEach(([a,b])=>{const pa=pos[a],pb=pos[b];if(where[a]===where[b]){kept++;out+=P(`M ${pa[0]-76} ${pa[1]} C ${pa[0]-96} ${pa[1]}, ${pb[0]-96} ${pb[1]}, ${pb[0]-76} ${pb[1]}`,C.blue,2.4)}
-   else{cut++;const my=Math.min(pa[1],pb[1])-60-((pa[0]+pb[0])%3)*8;out+=P(`M ${pa[0]} ${pa[1]-15} C ${pa[0]} ${my}, ${pb[0]} ${my}, ${pb[0]} ${pb[1]-15}`,C.coral,1.8,'none','stroke-dasharray="5 4" stroke-opacity=".85"')}});
-  out+=counter(150,322,'kept in a folder',String(kept),C.blue,140)+counter(310,322,'cut by the tree',String(cut),C.coral,140);
+  groups.forEach(([g,items],gi)=>{const x=20+gi*194;out+=R(x,48,176,176,'#f6f9fb',C.grid,10)+TBF(x+88,70,g,13,C.ink);
+   items.forEach((it,k)=>{where[it]=gi;const y=84+k*34;pos[it]=[x+88,y+13];out+=R(x+18,y,146,26,'#fff',C.blue,6)+TF(x+91,y+18,T8_ALL[T8_IDX[it]][1],13,C.ink)})});
+  let kept=0,cut=0;const cuts=[];
+  T8_TL.forEach(([a,b])=>{const pa=pos[a],pb=pos[b];if(where[a]===where[b]){kept++;out+=P(`M ${pa[0]-73} ${pa[1]} C ${pa[0]-86} ${pa[1]}, ${pb[0]-86} ${pb[1]}, ${pb[0]-73} ${pb[1]}`,C.blue,2.4)}
+   else{cut++;cuts.push(T8_ALL[T8_IDX[a]][1]+' — '+T8_ALL[T8_IDX[b]][1])}});
+  out+=TBF(20,248,'Links cut by the folders',13,C.coral,'start');
+  cuts.forEach((c,i)=>{out+=TF(20+(i%2)*290,270+Math.floor(i/2)*20,'✂ '+c,13,C.ink,'start')});
+  out+=counter(150,330,'kept in a folder',String(kept),C.blue,140)+counter(310,330,'cut by the tree',String(cut),C.coral,140);
   return {svg:out,phase:`Filed ${s.by==='era'?'by date':'by '+s.by}, ${kept} of ${T8_TL.length} links stay inside a folder and ${cut} are cut. No choice of folders keeps them all.`};
  }});
 
