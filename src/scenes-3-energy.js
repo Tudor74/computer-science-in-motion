@@ -120,12 +120,12 @@ SCENE({id:'energy-conservation',name:'Conservation of energy',tag:'Energy change
  on:{deg(s,v){s.deg=v;s.t=0},b(s,v){s.b=v;s.t=0},...P3_play(P3_SWING_T)},
  draw(s){
   const m=1,sim=P3_pend(s.deg,s.b,s.L,P3_SWING_T),[th,w]=P3_at(sim,s.t),E0=m*P3_G*s.L*(1-Math.cos(s.deg*Math.PI/180));
-  const KE=.5*m*(s.L*w)**2,PE=m*P3_G*s.L*(1-Math.cos(th)),Q=Math.max(0,E0-KE-PE);let o=heading('Kinetic + potential + heat = constant');
+  const KE=.5*m*(s.L*w)**2,PE=m*P3_G*s.L*(1-Math.cos(th)),Q=Math.max(0,E0-KE-PE);let o=heading(`Kinetic + potential + heat = ${P3_n(E0,2)} J`);
   const px=150,py=60,lp=200,bx=px+lp*Math.sin(th),by=py+lp*Math.cos(th);
   o+=L(70,py,230,py,C.ink,3)+L(px,py,px,py+lp+20,C.grid,1,'stroke-dasharray="4 4"');
   const a0=s.deg*Math.PI/180;o+=Ci(px+lp*Math.sin(a0),py+lp*Math.cos(a0),12,'none',C.line,'stroke-dasharray="3 3"');
   o+=L(px,py,bx,by,C.ink,2)+Ci(bx,by,14,C.blue)+TF(px,py+lp+40,`t = ${P3_n(s.t,1)} s`,14,C.muted);
-  o+=R(318,48,4*58-14+12,168,'none',C.ink,4,'stroke-dasharray="5 4"')+TF(318,44,`start total ${P3_n(E0,2)} J`,13,C.muted,'start');
+  o+=R(318,48,4*58-14+12,168,'none',C.ink,4,'stroke-dasharray="5 4"');
   o+=P3_bars(324,210,[{l:'kinetic',v:KE,col:C.blue,d:2},{l:'potential',v:PE,col:C.green,d:2},{l:'heat',v:Q,col:C.coral,d:2},{l:'total',v:KE+PE+Q,col:'#8aa1ae',d:2}],E0,140,44,14);
   // Energy history
   const pts=[[],[],[]];for(let t=0;t<=s.t+1e-9;t+=.05){const [a,b]=P3_at(sim,t),k=.5*m*(s.L*b)**2,pp=m*P3_G*s.L*(1-Math.cos(a));pts[0].push([t,k]);pts[1].push([t,pp]);pts[2].push([t,Math.max(0,E0-k-pp)])}
@@ -157,7 +157,7 @@ SCENE({id:'energy-conservation-joule',name:'Joule’s paddle wheel',tag:'Falling
   // Thermometer
   const thx=430,frac=clamp(dT/0.6,0,1);o+=R(thx-9,70,18,220,'#fff',C.line,9)+Ci(thx,300,16,C.coral)+R(thx-5,290-210*frac,10,210*frac+6,C.coral,'none',5);
   o+=TF(thx,330,`+${P3_n(dT,3)} °C`,14,C.coral);
-  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TB(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TB(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TB(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.19',13,C.muted);
+  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TBF(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TBF(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TBF(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.19',13,C.muted);
   return {svg:o,phase:drops?`${P3_n(E,0)} J of falling work became ${P3_n(cal,1)} calories of heat in the water, giving ${P3_n(Jcal,2)} J per calorie.${s.leak?' Heat that leaks away before it is measured makes the answer too high, which is why Joule insulated the tank.':''}`:'Each fall of the weights turns the paddles, and the churned water warms very slightly. Count the falls, measure the temperature, and compare.'};
  }});
 
@@ -464,8 +464,8 @@ SCENE({id:'rotation',name:'Torque and levers',tag:'Force times distance from the
   o+=L(...pt(-3.1),...pt(3.1),C.amber,8);
   for(let d=-3;d<=3;d+=1)if(d){const [x,y]=pt(d);o+=TF(x,y+22,Math.abs(d)+' m',13,C.muted)}
   [[-s.d1,s.m1,C.blue],[s.d2,s.m2,C.coral]].forEach(([d,m,col])=>{const [x,y]=pt(d),sz=38+m*.5;o+=R(x-sz/2,y-sz-4,sz,sz,col,'none',4)+TF(x,y-sz/2+1,`${m} kg`,13,'#fff')});
-  o+=R(30,60,200,50,'#fff',C.grid,8)+TF(130,80,'left torque',13,C.muted)+TB(130,100,`${P3_n(t1,0)} N·m`,15,C.blue);
-  o+=R(370,60,200,50,'#fff',C.grid,8)+TF(470,80,'right torque',13,C.muted)+TB(470,100,`${P3_n(t2,0)} N·m`,15,C.coral);
+  o+=R(30,60,200,50,'#fff',C.grid,8)+TF(130,80,'left torque',13,C.muted)+TBF(130,100,`${P3_n(t1,0)} N·m`,15,C.blue);
+  o+=R(370,60,200,50,'#fff',C.grid,8)+TF(470,80,'right torque',13,C.muted)+TBF(470,100,`${P3_n(t2,0)} N·m`,15,C.coral);
   return {svg:o,phase:`${s.m1} kg × 9.81 × ${s.d1} m = ${P3_n(t1,0)} N·m on the left; ${s.m2} kg × 9.81 × ${s.d2} m = ${P3_n(t2,0)} N·m on the right. ${bal?'Equal torques: no turning.':'The larger torque wins and the beam turns.'}`};
  }});
 
@@ -514,7 +514,7 @@ SCENE({id:'rotation-skater',name:'Angular momentum',tag:'Pull in and spin faster
   o+=Ci(cx,cy,150,'#f6f9fb',C.grid)+Ci(cx,cy,30,C.purple);
   [0,Math.PI].forEach(d=>{const a=s.ang+d;o+=L(cx+28*Math.cos(a),cy+28*Math.sin(a),cx+(30+rp)*Math.cos(a),cy+(30+rp)*Math.sin(a),C.purple,7)+Ci(cx+(30+rp)*Math.cos(a),cy+(30+rp)*Math.sin(a),9,C.coral)});
   o+=TF(cx,cy+5,'head',13,'#fff')+TF(cx,355,'seen from above',13,C.muted);
-  const row=(y,l,v,col)=>R(370,y,200,46,'#fff',C.grid,8)+TF(470,y+17,l,13,C.muted)+TB(470,y+38,v,15,col);
+  const row=(y,l,v,col)=>R(370,y,200,46,'#fff',C.grid,8)+TF(470,y+17,l,13,C.muted)+TBF(470,y+38,v,15,col);
   o+=row(70,'moment of inertia I',`${P3_n(I,2)} kg·m²`,C.ink)+row(126,'spin rate',`${P3_n(w/(2*Math.PI),2)} turns per second`,C.blue)+row(182,'angular momentum L',`${P3_n(Lm,2)} kg·m²/s`,C.green)+row(238,'kinetic energy',`${P3_n(KE,1)} J`,C.coral);
   return {svg:o,phase:`With arms at ${P3_n(s.r,2)} m, I = ${P3_n(I,2)} kg·m² and the skater turns ${P3_n(w/(2*Math.PI),2)} times a second. L stays ${P3_n(Lm,2)} kg·m²/s because nothing outside twists the skater (idealised: frictionless ice).`};
  }});
