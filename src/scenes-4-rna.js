@@ -145,9 +145,9 @@ SCENE({id:'replicators',name:'Spiegelman’s monster',tag:'Evolution in a test t
   out+=TF(70,62,'each bar is one RNA molecule, tallest first',13,C.muted,'start');
   const bw=12;fr.L.slice().sort((a,b)=>b-a).forEach((l,i)=>{const h=l/4200*130;out+=R(70+i*bw,210-h,bw-2,h,l<1000?C.coral:C.blue,'none',1)});
   out+=L(66,210,556,210,C.ink,1.5)+L(62,80,66,80,C.muted,1)+TF(58,84,'4,200',13,C.muted,'end')+TF(58,214,'0',13,C.muted,'end');
-  const pl=A4_plot(70,240,486,90,[0,74],[0,4200],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60'],[74,'74']],yt:[[0,'0'],[4200,'4,200']],xl:'transfer',xlDy:32});
+  const pl=A4_plot(70,240,486,90,[0,74],[0,4200],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60'],[74,'74']],yt:[[0,'0'],[4200,'4,200']]});
   out+=pl.svg+A4_poly(all.filter(q=>q.g<=fr.g).map(q=>[pl.X(q.g),pl.Y(q.mean)]),C.coral,2.6);
-  out+=TBF(300,372,`transfer ${fr.g}: average ${Math.round(fr.mean).toLocaleString('en-GB')} bases, shortest ${fr.min.toLocaleString('en-GB')}`,13,C.ink);
+  out+=TBF(300,370,`after transfer ${fr.g} of 74: average ${Math.round(fr.mean).toLocaleString('en-GB')} bases, shortest ${fr.min.toLocaleString('en-GB')}`,13,C.ink);
   return {svg:out,phase:`Status: demonstrated. After ${fr.g} transfers the average length is ${Math.round(fr.mean).toLocaleString('en-GB')} bases. Selection rewarded only fast copying, so genes for making a virus were lost: evolution by natural selection, with no cell at all. Here the enzyme was supplied by the experimenters, which an RNA world would not have had.`};
  }});
 
@@ -298,7 +298,7 @@ SCENE({id:'error-threshold-hypercycle',name:'Hypercycles',tag:'Cooperation and i
   out+=pl.svg;const seen=all.filter(q=>q.t<=fr.t);
   for(let i=0;i<s.n;i++)out+=A4_poly(seen.map(q=>[pl.X(q.t),pl.Y(q.x[i])]),A4_HCOL[i],2);
   if(s.par==='on')out+=A4_poly(seen.map(q=>[pl.X(q.t),pl.Y(q.p)]),C.coral,2.8);
-  out+=TF(410,346,s.par==='on'?(fr.p>.5?'The parasite has taken over the loop':'The parasite is spreading'):s.n>=5?'Five or more members: endless oscillation':s.n===4?'Four members: the swings die away only slowly':'Three or fewer: the shares settle quickly',13,s.par==='on'?C.coral:C.ink);
+  out+=TF(410,346,s.par==='on'?(fr.p>.5?'The parasite has taken over the loop':'The parasite is spreading'):s.n>=5?'Five or more members: endless oscillation':s.n===4?'Four members: long-lasting swings, fading very slowly if at all':'Three or fewer: the shares settle quickly',13,s.par==='on'?C.coral:C.ink);
   return {svg:out,phase:'Status: speculative. Hypercycles show how short replicators could cooperate to hold more information, but in a well-mixed soup they are easily hijacked by parasites. Keeping molecules together, in patches on mineral surfaces or inside compartments, is the usual proposed rescue.'};
  }});
 

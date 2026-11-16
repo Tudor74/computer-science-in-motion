@@ -43,12 +43,12 @@ SCENE({id:'wohler-urea',name:'Wöhler’s urea',tag:'A substance of life from a 
    out+=TF(ax,234,'ammonium ion NH₄⁺',13,C.ink)+TF(bx,234,'cyanate ion OCN⁻',13,C.ink);
    if(k===2)out+=P(`M${ax+50} 120Q300 70 ${bx-50} 120`,C.amber,2.5,'none','stroke-dasharray="6 4"')+TF(300,84,'a hydrogen moves; N joins C',13,C.amber);
   } else {
-   const cx=300,cy=165;
+   const cx=300,cy=150;
    out+=A2_bond(cx,cy,cx,cy-50,2)+A2_bond(cx,cy,cx-55,cy+30)+A2_bond(cx,cy,cx+55,cy+30);
    out+=A2_bond(cx-55,cy+30,cx-90,cy+10)+A2_bond(cx-55,cy+30,cx-60,cy+70)+A2_bond(cx+55,cy+30,cx+90,cy+10)+A2_bond(cx+55,cy+30,cx+60,cy+70);
    out+=A2_atom(cx,cy,'C')+A2_atom(cx,cy-50,'O')+A2_atom(cx-55,cy+30,'N')+A2_atom(cx+55,cy+30,'N');
    out+=A2_atom(cx-90,cy+10,'H',10)+A2_atom(cx-60,cy+70,'H',10)+A2_atom(cx+90,cy+10,'H',10)+A2_atom(cx+60,cy+70,'H',10);
-   out+=TF(cx,268,'urea (NH₂)₂CO',13,C.ink);
+   out+=TF(cx,256,'urea (NH₂)₂CO',13,C.ink);
   }
   const rows=[['C',1],['H',4],['N',2],['O',1]];
   out+=TBF(300,288,'Atoms present at every step',14,C.ink);
