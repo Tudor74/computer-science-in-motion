@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -264,6 +264,20 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://philosophy-in-motion.puter.site/">Open Philosophy <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
+  <li class="course nelson">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="Two documents side by side, with a highlighted passage in one joined by a moving line to the same passage in the other">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <rect x="60" y="40" width="170" height="140" rx="6" fill="#fff" stroke="#c7d8e3" stroke-width="2"/><rect x="72" y="62" width="145" height="7" rx="3" fill="#d7e2e9"/><rect x="72" y="80" width="130" height="7" rx="3" fill="#d7e2e9"/><rect x="72" y="98" width="145" height="7" rx="3" fill="#e9a23b"/><rect x="72" y="116" width="130" height="7" rx="3" fill="#d7e2e9"/><rect x="72" y="134" width="145" height="7" rx="3" fill="#d7e2e9"/><rect x="72" y="152" width="130" height="7" rx="3" fill="#d7e2e9"/><rect x="370" y="40" width="170" height="140" rx="6" fill="#fff" stroke="#c7d8e3" stroke-width="2"/><rect x="382" y="62" width="145" height="7" rx="3" fill="#d7e2e9"/><rect x="382" y="80" width="130" height="7" rx="3" fill="#d7e2e9"/><rect x="382" y="98" width="145" height="7" rx="3" fill="#d7e2e9"/><rect x="382" y="116" width="130" height="7" rx="3" fill="#d7e2e9"/><rect x="382" y="134" width="145" height="7" rx="3" fill="#e9a23b"/><rect x="382" y="152" width="130" height="7" rx="3" fill="#d7e2e9"/><path class="route" d="M217 101 C290 101 300 137 382 137" fill="none" stroke="#c87a00" stroke-width="3" stroke-dasharray="10 5"/><text x="300" y="205" text-anchor="middle" font-size="14" fill="#546873">A passage quoted by transclusion: one source, visibly connected</text>
+   </svg>
+   <div class="body">
+    <h3>Ted Nelson In Motion</h3>
+    <p class="tag">From the memex to “intertwingled”: one thinker’s ideas, in the order he had them</p>
+    <p class="desc">Bush’s memex and a student’s index cards, the 1965 paper that named hypertext, the first systems at Brown, Computer Lib, Xanadu’s transclusion and two-way links, the web that won instead, ZigZag and OpenXanadu, and what research says about reading hypertext. In Try it you build each structure yourself, from a memex trail to a link that rots. Where accounts differ, both are shown.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>32 lessons</li><li>96 scenes</li><li>Build the structures</li></ul>
+    <div class="links"><a class="open" href="https://ted-nelson-in-motion.puter.site/">Open Ted Nelson <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
   <li class="course thinkers">
    <svg class="motif" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People as points on a map, with ideas travelling between them along routes">
     <rect width="600" height="220" fill="#f3f7fa"/>
@@ -289,7 +303,7 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://awais-rashid-in-motion.puter.site/">Open Awais Rashid <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
-  <li class="course future">
+  <li class="course future wide">
    <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A measured trend line continuing as a dashed, clearly labelled prediction to 2040"><rect width="600" height="220" fill="#f3f7fa"/><line x1="60" y1="180" x2="560" y2="180" stroke="#c7d8e3" stroke-width="2"/><line x1="340" y1="40" x2="340" y2="180" stroke="#c7d8e3" stroke-width="2" stroke-dasharray="4 5"/><path d="M60 170 C140 166 220 156 340 128" fill="none" stroke="#192c37" stroke-width="3.5"/><path d="M340 128 C420 108 480 80 550 50" fill="none" stroke="#c45238" stroke-width="3.5" stroke-dasharray="9 7"/><circle cx="340" cy="128" r="6" fill="#192c37"/><text x="200" y="205" text-anchor="middle" font-size="14" fill="#546873">sourced data</text><text x="460" y="205" text-anchor="middle" font-size="14" fill="#c45238">prediction for 2040</text></svg>
    <div class="body">
     <h3>The Future In Motion</h3>
@@ -311,7 +325,7 @@ footer p{margin:0 0 4px}
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Mind makes you the participant in the experiments that shaped psychology, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Mind makes you the participant in the experiments that shaped psychology, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Ted Nelson In Motion follows one thinker’s hypertext ideas from the memex to the web, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
 </main>
 
 <footer>
