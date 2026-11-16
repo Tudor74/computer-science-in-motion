@@ -60,7 +60,7 @@ SCENE({id:'agent-based-markets',name:'A market of many minds',tag:'Herding makes
   const A=E8_plot(60,52,500,160,[0,n-1],[lo,hi],{yt:[[lo,String(lo)],[100,'100'],[hi,String(hi)]],yl:'price'});out+=A.svg;
   out+=L(A.X(0),A.Y(100),A.X(n-1),A.Y(100),C.muted,1.2,'stroke-dasharray="5 4"');
   out+=P(E8_path(p.map((v,i)=>[A.X(i),A.Y(v)])),C.blue,1.6);
-  const B=E8_plot(60,236,500,58,[0,n-1],[0,1],{yt:[[0,'0'],[1,'all']],xt:[[0,'day 0'],[200,'200'],[399,'400']],yl:'share following the trend'});out+=B.svg;
+  const B=E8_plot(60,236,500,58,[0,n-1],[0,1],{yt:[[0,'0'],[1,'all']],xt:[[100,'day 100'],[200,'200'],[300,'300'],[399,'400']],yl:'share following the trend'});out+=B.svg;
   out+=P(E8_path(w.map((v,i)=>[B.X(i),B.Y(v)]))+`L${fmt(B.X(n-1))} ${fmt(B.Y(0))}L${fmt(B.X(0))} ${fmt(B.Y(0))}Z`,'none',0,'#f3d6cb');
   out+=P(E8_path(w.map((v,i)=>[B.X(i),B.Y(v)])),C.coral,1.4);
   out+=TF(60,346,`Run ${s.seed} · largest one-day move ${(st.maxAbs*100).toFixed(1)}% · furthest from value ${Math.round(Math.max(...p.map(v=>Math.abs(v-100))))}`,13,C.ink,'start');
@@ -92,8 +92,8 @@ SCENE({id:'agent-based-markets-tails',name:'Fat tails',tag:'Big days are far too
   out+=TF(500,174,`bell curve expects ${exp4.toFixed(2)}`,13,C.muted);
   out+=counter(420,188,'clustering of big moves',st.ac.toFixed(2),st.ac>.15?C.coral:C.green,160);
   out+=TF(500,252,'(0 means none)',13,C.muted);
-  out+=E8_lines(420,282,['Real markets: excess kurtosis','often 5 or more for daily','returns (Cont 2001).'],C.ink,13,17);
-  out+=TF(70,346,'Coral bars: days beyond four standard deviations. Grey: the bell curve with the same spread.',13,C.muted,'start');
+  out+=E8_lines(420,282,['Real daily returns:','excess kurtosis often','5 or more (Cont 2001).'],C.ink,13,17);
+  out+=TF(70,350,'Coral: beyond four standard deviations. Grey: bell curve, same spread.',13,C.muted,'start');
   return {svg:out,phase:st.kurt<1?`With herding at ${Number(s.h).toFixed(2)} the returns are close to a bell curve: excess kurtosis ${st.kurt.toFixed(1)}, and big days are about as rare as it predicts.`:`With herding at ${Number(s.h).toFixed(2)} the tails are fat: ${st.big} days beyond four standard deviations where a bell curve expects ${exp4.toFixed(2)}, and big moves cluster together. Copying alone is enough to produce this.`};
  }});
 
@@ -137,8 +137,8 @@ SCENE({id:'agent-based-markets-elfarol',name:'The El Farol bar',tag:'You against
   out+=counter(460,112,'average attendance',played.length?mean.toFixed(1):'—',C.ink,120);
   out+=counter(460,168,'crowded weeks',played.length?Math.round(crowd/played.length*100)+'%':'—',C.coral,120);
   if(X&&X.try)out+=counter(460,224,'your score',(s.score>0?'+':'')+s.score,s.score>=0?C.green:C.coral,120);
-  out+=TF(60,334,'Grey points: the starting history. Rings: your weeks (green went, uncrowded; coral went, crowded; grey stayed home).',12,C.muted,'start');
-  out+=TF(60,354,'Rules of thumb only; nobody knows what the others will do.',13,C.muted,'start');
+  out+=TF(60,338,'Grey points: starting history. Your weeks are ringed: green went and it was fine,',12,C.muted,'start');
+  out+=TF(60,356,'coral went and it was crowded, grey stayed home.',12,C.muted,'start');
   return {svg:out,phase:played.length<3?'Week by week, each simulated person forecasts attendance with whichever rule has worked best lately, and goes only if the forecast is under the threshold.':`Over ${played.length} weeks the average was ${mean.toFixed(1)} against a threshold of ${s.th}: no one planned it, yet attendance hovers near the limit. It never settles, because any rule that everyone trusts stops working.`};
  }});
 

@@ -6,7 +6,7 @@ const E6_mix=n=>{let x=(n+0x9e3779b9)>>>0;x=Math.imul(x^(x>>>16),0x85ebca6b)>>>0
 const E6_rng=n=>rng(E6_mix(n));
 const E6_sig=z=>1/(1+Math.exp(-z));
 const E6_poly=(pts,col,w=2.2,extra='')=>pts.length?P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L'),col,w,'none',extra):'';
-const E6_money=v=>'£'+(Math.round(v*100)/100).toFixed(2);
+const E6_money=v=>{const r=Math.round(v*100)/100;return (r<0?'−£':'£')+Math.abs(r).toFixed(2)};
 // Plot frame mapping data to drawing units.
 function E6_plot(x0,y0,w,h,xr,yr,o={}){
  const X=v=>x0+(v-xr[0])/(xr[1]-xr[0])*w,Y=v=>y0+h-(v-yr[0])/(yr[1]-yr[0])*h;
@@ -493,11 +493,11 @@ SCENE({id:'prospect-theory-markets-plott',name:'Is the endowment effect real?',t
  draw(s){
   let out=heading('Selling price ÷ buying price for mugs',26);
   if(s.proc==='debate'){
-   out+=R(40,56,250,240,C.greenp,'none',10)+TBF(165,84,'Gap is procedural',15,C.green);
+   out+=R(40,56,250,170,C.greenp,'none',10)+TBF(165,84,'Gap is procedural',15,C.green);
    ['Misunderstanding the elicitation','method inflates selling prices.','Train people and use anonymity,','and the mug gap goes away.','(Plott & Zeiler 2005)'].forEach((t,i)=>out+=TF(165,114+i*22,t,13,C.ink));
-   out+=R(310,56,250,240,C.amberp,'none',10)+TBF(435,84,'Gap is real, sometimes',15,C.amber);
+   out+=R(310,56,250,170,C.amberp,'none',10)+TBF(435,84,'Gap is real, sometimes',15,C.amber);
    ['Under the same controls the gap','persisted for lotteries (Isoni,','Loomes & Sugden 2011). It varies','with goods and framing; loss','aversion is one explanation.'].forEach((t,i)=>out+=TF(435,114+i*22,t,13,C.ink));
-   out+=T(300,334,'Both sides agree that procedures matter. How much is still argued.',14,C.ink);}
+   out+=T(300,272,'Both sides agree that procedures matter. How much is still argued.',14,C.ink);}
   else{const base=290,sc=70,bars=[['original procedure',2.5,s.proc==='kkt'],['full controls',1.0,s.proc==='ctrl']];
    out+=L(130,base,470,base,C.line,1.5)+L(130,base-sc,470,base-sc,C.green,1.5,'stroke-dasharray="6 4"')+TF(474,base-sc+4,'1 = no gap',12,C.green,'start');
    bars.forEach(([l,v,sel],i)=>{const x=170+i*170;out+=R(x,base-v*sc,110,v*sc,sel?C.blue:C.line,'none',4)+TBF(x+55,base-v*sc-8,`≈${v.toFixed(1)}×`,16,sel?C.blue:C.muted)+TF(x+55,base+20,l,13,C.ink)});
