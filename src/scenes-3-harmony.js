@@ -70,6 +70,8 @@ function M3_keys(X,act,x0,y0,w,h,lo,hi,col){
   b+=hit(X,act,m,`${noteName(m)}${c?', marked':''}. Press to choose.`,R(x,y0,ww*.6,h*.6,c||C.dark,C.ink,2))}
  return o+b;
 }
+function M3_wrap(x,y,text,max,size,col,lh=19){const w=text.split(' '),lines=[''];w.forEach(t=>{const l=lines[lines.length-1];if((l+' '+t).trim().length>max)lines.push(t);else lines[lines.length-1]=(l+' '+t).trim()});
+ return lines.map((l,i)=>T(x,y+(i-(lines.length-1)/2)*lh,l,size,col)).join('')}
 const M3_tone=(ms,o={})=>AUDIO.chord(ms.map(midiHz),{dur:1.3,partials:M3_PARTIALS,...o});
 function M3_arp(ms,step=.32,o={}){ms.forEach((m,i)=>AUDIO.tone(midiHz(m),{dur:.5,partials:M3_PARTIALS,gain:.14,at:(o.at||0)+i*step}))}
 
@@ -117,8 +119,8 @@ SCENE({id:'intervals-consonance',name:'Why some intervals blend',tag:'Simple rat
   out+=TF(x0,176,'both together',13,C.ink,'start')+wave(228,24,t=>(Math.sin(2*Math.PI*t)+Math.sin(2*Math.PI*t*n/d))/2*1.6,C.ink,2.2);
   for(let k=0;k*d<=cyc;k++){const x=x0+W*(k*d)/cyc;out+=L(x,186,x,272,C.green,1.6,'stroke-dasharray="5 4"')}
   out+=TF(x0+W,290,`${cyc} cycles of the lower note`,13,C.muted,'end');
-  const msg=d<=cyc?`The combined wave repeats every ${d} cycle${d===1?'':'s'} of the lower note.`:`The combined wave repeats only every ${d} cycles of the lower note, off this chart.`;
-  out+=T(300,318,msg,16,d<=cyc?C.green:C.coral);
+  const msg=d<=cyc?`The combined wave repeats every ${d} cycle${d===1?'':'s'} of the lower note.`:`The pattern repeats only every ${d} cycles: off this chart.`;
+  out+=T(300,318,msg,15,d<=cyc?C.green:C.coral);
   out+=T(300,346,`Just ratio ${fmt(n/d)} · equal-tempered ${et.toFixed(3)} (close, but not exact)`,14,C.muted);
   return {svg:out,phase:`${msg} Simple ratios share many harmonics, which is one reason many listeners hear them as smooth. Culture and familiarity also shape what sounds consonant.`};
  }});
@@ -161,12 +163,12 @@ SCENE({id:'triads-chords',name:'Triad',tag:'Chords stacked in thirds',
  ui:[{choose:[['maj','Major'],['min','Minor'],['dim','Diminished'],['aug','Augmented']],label:'Quality',get:s=>s.q,act:'q'},{b:'Play',act:'play'}],
  on:{q(s,v){s.q=v},key(s,m){m=Number(m);s.root=m>75?m-12:m},play(s){const ms=[0,...M3_Q[s.q].iv].map(x=>s.root+x);M3_tone(ms);M3_arp(ms,.35,{at:1.4});return 'keep'}},
  draw(s,f,X){
-  const q=M3_Q[s.q],r=M3_root(s.root),t3=M3_spell(s.root+q.iv[0],r.step+2),t5=M3_spell(s.root+q.iv[1],r.step+4),g=12,yB=165,cols=[C.coral,C.blue,C.green];
+  const q=M3_Q[s.q],r=M3_root(s.root),t3=M3_spell(s.root+q.iv[0],r.step+2),t5=M3_spell(s.root+q.iv[1],r.step+4),g=15,yB=170,cols=[C.coral,C.blue,C.green];
   let out=heading(`${M3_nm(r,false)} ${q.n}: ${M3_nm(r,false)} – ${M3_nm(t3,false)} – ${M3_nm(t5,false)}`);
-  out+=M3_staff(40,240,yB,g)+M3_chord(150,[r,t3,t5],M3_TREB,yB,g,(n,i)=>cols[i]);
+  out+=M3_staff(40,245,yB,g)+M3_chord(160,[r,t3,t5],M3_TREB,yB,g,(n,i)=>cols[i]);
   const ys=[r,t3,t5].map(n=>M3_y(n.step,M3_TREB,yB,g));
-  out+=P(`M262 ${fmt(ys[0])}H270V${fmt(ys[1])}H262`,C.blue,1.6)+TF(278,(ys[0]+ys[1])/2+5,`${M3_THIRD(q.iv[0])} (${q.iv[0]})`,13,C.blue,'start');
-  out+=P(`M262 ${fmt(ys[1]-2)}H270V${fmt(ys[2])}H262`,C.green,1.6)+TF(278,(ys[1]+ys[2])/2+5,`${M3_THIRD(q.iv[1]-q.iv[0])} (${q.iv[1]-q.iv[0]})`,13,C.green,'start');
+  out+=P(`M262 ${fmt(ys[0])}H270V${fmt(ys[1])}H262`,C.blue,1.6)+TF(278,(ys[0]+ys[1])/2+10,`${M3_THIRD(q.iv[0])} (${q.iv[0]})`,13,C.blue,'start');
+  out+=P(`M262 ${fmt(ys[1]-2)}H270V${fmt(ys[2])}H262`,C.green,1.6)+TF(278,(ys[1]+ys[2])/2,`${M3_THIRD(q.iv[1]-q.iv[0])} (${q.iv[1]-q.iv[0]})`,13,C.green,'start');
   const fifth=q.iv[1]===7?'perfect 5th':q.iv[1]===6?'diminished 5th':'augmented 5th';
   out+=R(400,82,170,92,'#fff',C.grid,9)+TF(485,104,'outer interval',13,C.muted)+TB(485,130,fifth,16,C.ink)+TF(485,156,`${q.iv[1]} semitones`,13,C.muted);
   out+=M3_keys(X,'key',30,232,540,100,60,83,m=>m===s.root?cols[0]:m===s.root+q.iv[0]?cols[1]:m===s.root+q.iv[1]?cols[2]:null);
@@ -294,7 +296,7 @@ SCENE({id:'cadences-voice-leading',name:'Voice leading',tag:'Each voice takes th
    {voiceCol:(v,ci)=>ci===1&&second[v]===null?'#c7d3da':(cur===v||k===5?M3_VOICE[v].c:ci===0?M3_VOICE[v].c:M3_VOICE[v].c),lines:v=>done(v)||k===5,x2:430});
   out+=TB(180,248,'V7',19,C.ink)+TB(340,248,'I',19,C.ink);
   if(cur!==undefined&&cur!==null&&cur>=0){out+=R(450,62,125,40,'#fff',M3_VOICE[cur].c,10)+TB(512,88,M3_VOICE[cur].n,15,M3_VOICE[cur].c)}
-  out+=R(60,282,480,48,'#fff',C.grid,10)+T(300,311,f.say,14,C.ink);
+  out+=R(50,280,500,58,'#fff',C.grid,10)+M3_wrap(300,314,f.say,60,14,C.ink);
   return {svg:out,phase:f.say+' Huron (2001) argues these rules help the ear hear each voice as a separate stream.'};
  }});
 
@@ -408,7 +410,7 @@ SCENE({id:'counterpoint-motion',name:'Kinds of motion',tag:'Parallel, similar, c
    if(i<3){const yu1=M3_y(M3_root(m.u[i]).step,M3_TREB,yB,g),yu2=M3_y(M3_root(m.u[i+1]).step,M3_TREB,yB,g),yl1=M3_y(M3_root(m.l[i]).step,M3_TREB,yB,g),yl2=M3_y(M3_root(m.l[i+1]).step,M3_TREB,yB,g);
     out+=arrow(x+14,yu1,x+86,yu2,C.blue,1.8,7)+(m.l[i]===m.l[i+1]?L(x+14,yl1,x+86,yl2,C.coral,1.8,'stroke-dasharray="4 3"'):arrow(x+14,yl1,x+86,yl2,C.coral,1.8,7))}});
   out+=TF(300,yB+70,'interval between the voices',13,C.muted);
-  out+=R(60,300,480,44,'#fff',C.grid,10)+T(300,327,m.say,13.5,C.ink);
+  out+=R(50,296,500,58,'#fff',C.grid,10)+M3_wrap(300,330,m.say,60,14,C.ink);
   return {svg:out,phase:m.say};
  }});
 
@@ -447,7 +449,7 @@ SCENE({id:'counterpoint-species',name:'The five species',tag:'Fux’s graded ste
   out+=L(x0+4*bw-16,yB,x0+4*bw-16,yB-4*g,C.ink,2.6);
   out+=Ci(110,262,5,'#8fa3ae')+TF(120,267,'cantus firmus',13,C.muted,'start')+Ci(260,262,5,C.blue)+TF(270,267,'counterpoint',13,C.muted,'start');
   if(s.sp===4)out+=Ci(410,262,5,C.coral)+TF(420,267,'suspension',13,C.muted,'start');
-  out+=R(40,292,520,48,'#fff',C.grid,10)+T(300,321,sp.say,13.5,C.ink);
+  out+=R(40,290,520,62,'#fff',C.grid,10)+M3_wrap(300,326,sp.say,62,14,C.ink);
   return {svg:out,phase:sp.say+' Only the first four bars are shown, so the line does not reach a final cadence.'};
  }});
 
@@ -521,10 +523,10 @@ SCENE({id:'temperament-keys',name:'Every key a different colour',tag:'Well tempe
  draw(s,f,X){
   const c=M3_TUNE[s.sys].c,third=k=>{let v=c[(k+4)%12]-c[k];if(v<0)v+=1200;return v},yAt=v=>320-(v-375)*4.2;
   let out=heading(`Major thirds in every key: ${M3_TUNE[s.sys].n}`);
-  for(const [v,lab,col] of [[386.31,'pure 386¢',C.green],[400,'equal 400¢',C.muted]])out+=L(52,yAt(v),572,yAt(v),col,1.3,'stroke-dasharray="5 4"')+TF(48,yAt(v)+4,lab,13,col,'end');
-  for(let k=0;k<12;k++){const v=third(k),x=62+k*43,y=yAt(Math.min(432,v)),on=k===s.k,wolf=v>420;
-   out+=hit(X,'k',k,`${M3_PCN[k]} major: third ${v.toFixed(1)} cents. Press to play.`,R(x,y,30,320-y,on?C.blue:wolf?C.coral:C.purple,'none',3)+R(x-5,52,40,285,'transparent','none',3));
-   out+=TB(x+15,343,M3_PCN[k],14,on?C.blue:C.ink)+TF(x+15,y-6,v.toFixed(0),13,wolf?C.coral:C.muted)}
+  for(const [v,lab,col] of [[386.31,'pure 386¢',C.green],[400,'equal 400¢',C.muted]])out+=L(108,yAt(v),572,yAt(v),col,1.3,'stroke-dasharray="5 4"')+TF(102,yAt(v)+4,lab,13,col,'end');
+  for(let k=0;k<12;k++){const v=third(k),x=112+k*38,y=yAt(Math.min(432,v)),on=k===s.k,wolf=v>420;
+   out+=hit(X,'k',k,`${M3_PCN[k]} major: third ${v.toFixed(1)} cents. Press to play.`,R(x,y,28,320-y,on?C.blue:wolf?C.coral:C.purple,'none',3)+R(x-4,52,36,285,'transparent','none',3));
+   out+=TB(x+14,343,M3_PCN[k],14,on?C.blue:C.ink)+TF(x+14,y-6,v.toFixed(0),13,wolf?C.coral:C.muted)}
   const vs=[...Array(12).keys()].map(third),wolves=vs.filter(v=>v>420).length;
   return {svg:out,phase:s.sys==='et'?'Every third is exactly 400 cents: every key sounds the same, and none is pure.':`Thirds range from ${Math.min(...vs).toFixed(0)} to ${Math.max(...vs).toFixed(0)} cents${wolves?`; ${wolves} are wolf thirds`:''}. Bach’s “well-tempered” meant usable in every key, not necessarily equal; which tuning he used is still debated.`};
  }});
@@ -603,9 +605,9 @@ SCENE({id:'circle-of-fifths-function',name:'Harmonic function',tag:'Tonic, subdo
  on:{add(s,d){if(s.prog.length<8)s.prog.push(Number(d))},undo(s){s.prog.pop()},
   play(s){s.prog.forEach((d,i)=>M3_tone(M3_degree('C',d,false).map(n=>n.m),{at:i*.8,dur:.75}));return 'keep'}},
  draw(s){
-  let out=heading('Tonic, subdominant, dominant');const n=s.prog.length,w=66,x0=300-n*w/2;let retro=0;
+  let out=heading('Tonic, subdominant, dominant');const n=s.prog.length,w=70,x0=300-n*w/2;let retro=0;
   s.prog.forEach((d,i)=>{const fn=M3_FN_OF[d],x=x0+i*w,col=M3_FCOL[fn];
-   out+=R(x+4,90,w-12,110,'#fff',col,10)+TB(x+w/2-2,140,M3_roman(d,M3_degree('C',d,false)),20,col)+TF(x+w/2-2,170,fn==='T'?'tonic':fn==='S'?'subdom.':'dominant',13,C.muted);
+   out+=R(x+3,90,w-6,110,'#fff',col,10)+TB(x+w/2-2,140,M3_roman(d,M3_degree('C',d,false)),20,col)+TF(x+w/2-2,170,fn==='T'?'tonic':fn==='S'?'subdom':'dom',13,C.muted);
    out+=TF(x+w/2-2,190,M3_degree('C',d,false).map(n=>M3_nm(n,false)).join(''),13,C.muted);
    if(i>0){const pf=M3_FN_OF[s.prog[i-1]],bad=pf==='D'&&fn==='S';if(bad)retro++;out+=arrow(x-4,220,x+8,220,bad?C.amber:C.line,1.8,6)}});
   if(!n)out+=T(300,150,'Add a chord to begin.',16,C.muted);

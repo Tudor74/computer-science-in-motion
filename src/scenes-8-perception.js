@@ -258,7 +258,7 @@ const M8_TUNES=[{name:'Twinkle',notes:[60,60,67,67,69,69,67],next:65},{name:'Ode
 function M8_nextProbs(notes){const last=notes[notes.length-1],w=[];for(let m=60;m<=76;m++)w.push(Math.pow(M8_KKMAJ[M8_pc(m)],2)*Math.exp(-Math.abs(m-last)/2.5));const z=sum(w);return w.map(x=>x/z)}
 SCENE({id:'expectation-melody',name:'What comes next?',tag:'Surprise in bits',
  definition:'Listeners continuously predict the next note. Expected notes are usually close in pitch and stable in the key; an unexpected note carries more surprise, measurable in bits.',
- example:'After “Twinkle, twinkle, little star” (C C G G A A G) most people expect F next, a step down to a stable note. A leap to C♯ would be highly surprising.',
+ example:'After “Twinkle, twinkle, little star” (C C G G A A G) the tune steps down to F, a close and stable note; a repeated G is also likely. A leap to C♯ would be highly surprising.',
  desc:'A short melody above a bar chart of predicted probabilities for the next note and a keyboard; pressing a key shows its probability and its surprise in bits.',
  research:'Huron (2006). Sweet Anticipation: Music and the Psychology of Expectation. Narmour (1990); Krumhansl & Kessler (1982). The model here is a simplified toy: proximity × tonal fit.',
  dur:10,hint:'Choose a tune, then press the key you expect next. Your choice is played after the tune, with its probability and surprise.',
@@ -272,8 +272,8 @@ SCENE({id:'expectation-melody',name:'What comes next?',tag:'Surprise in bits',
   const tn=M8_TUNES[s.t],pr=M8_nextProbs(tn.notes),best=60+pr.indexOf(Math.max(...pr));let out=heading(`${tn.name}: which note comes next?`,26);
   out+=M8_roll(tn.notes.concat(s.pick!==null?[s.pick]:[]),60,40,500,70,58,78,{slots:tn.notes.length+1,hl:s.pick!==null?tn.notes.length:-1});
   const kb=M8_keys(X,90,276,42,74,60,76,'pick',m=>m===s.pick?C.amberp:null);
-  for(let m=60;m<=76;m++){const p=kb.pos[m];if(!p)continue;const h=pr[m-60]*360;out+=R(p.x-(p.black?6:9),268-h,p.black?12:18,h,m===best?C.green:C.blue,'none',3)}
-  out+=TF(80,140,'predicted chance of each next note',13,C.muted,'start');
+  for(let m=60;m<=76;m++){const p=kb.pos[m];if(!p)continue;const h=pr[m-60]/Math.max(...pr)*104;out+=R(p.x-(p.black?6:9),268-h,p.black?12:18,h,m===best?C.green:C.blue,'none',3)}
+  out+=TF(80,138,'predicted chance of each next note (tallest = most expected)',13,C.muted,'start');
   out+=kb.svg;
   let line;if(s.pick!==null){const p=pr[s.pick-60],rank=1+pr.filter(x=>x>p).length;line=`${noteName(s.pick)}: chance ${Math.round(p*100)}%, surprise ${(-Math.log2(p)).toFixed(1)} bits (rank ${rank}) · the tune continues with ${noteName(tn.next)}`}
   else line=s.showNext?`Most expected: ${noteName(best)} (${Math.round(Math.max(...pr)*100)}%) · the tune actually continues with ${noteName(tn.next)}`:'Press the key you expect next.';
@@ -332,8 +332,7 @@ SCENE({id:'music-emotion',name:'Music and emotion',tag:'Cues listeners use',
   out+=Ci(cx+va*R0*.9,cy-ar*R0*.9,11,C.amber,'#fff');
   const rows=[['Tempo',`${s.tempo} bpm`,'faster → more energetic'],['Mode',s.mode,'major → brighter (learned)'],['Loudness',`${s.loud}%`,'louder → more energetic'],['Register',s.reg==='mid'?'middle':s.reg,'higher → brighter']];
   rows.forEach(([a,b,c],i)=>{const y=64+i*58;out+=R(22,y,270,48,'#f6f9fb','none',6)+TB(34,y+20,a,14,C.ink,'start')+T(280,y+20,b,14,C.blue,'end')+TF(34,y+39,c,13,C.muted,'start')});
-  out+=TF(300,346,'Dot position: illustrative weights summarising typical Western listener judgements, not a measurement.',13,C.muted);
-  out+=TF(300,366,'horizontal: negative ↔ positive · vertical: calm ↔ energetic',13,C.muted);
+  out+=TF(170,340,'Dot: illustrative weights,',13,C.muted)+TF(170,358,'not a measurement.',13,C.muted);
   return {svg:out,phase:'Tempo and loudness shape perceived energy for listeners from many cultures; the major-happy, minor-sad link is weaker and learned. Fritz and colleagues (2009) found that Mafa listeners in Cameroon still recognised happy, sad and scary Western excerpts above chance.'};
  }});
 
@@ -382,11 +381,11 @@ SCENE({id:'music-emotion-mozart',name:'The “Mozart effect”',tag:'Checking a 
   const bars=[{l:'Chabris: Mozart vs silence or relaxation',d:.09,from:1},{l:'Pietschnig: Mozart vs no music',d:.37,from:2},{l:'Pietschnig: other music vs no music',d:.38,from:2},{l:'Pietschnig: Mozart vs other music',d:.15,from:2}];
   const x0=300,sc=420;out+=L(x0,60,x0,250,C.line,1.4);[0,.2,.5].forEach(v=>{const x=x0+v*sc;out+=L(x,60,x,250,C.grid,1)+TF(x,268,v===0?'0':v===.2?'0.2 small':'0.5 medium',13,C.muted)});
   bars.forEach((b,i)=>{const y=70+i*44,on=s.v>=b.from;out+=TF(x0-10,y+20,b.l,13,on?C.ink:C.line,'end');if(on)out+=R(x0,y+6,b.d*sc,22,i===3?C.coral:C.blue,'none',4)+TBF(x0+b.d*sc+8,y+22,b.d.toFixed(2),13,C.ink,'start')});
-  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher on a spatial reasoning task','after 10 minutes of a Mozart sonata. The gain lasted 10–15 minutes. It was never an IQ claim.'],
-   ['Chabris (1999) pooled 16 studies: the average gain was tiny, about 1.4 IQ-scale points,','and fits a brief boost in arousal rather than anything special about Mozart.'],
-   ['Pietschnig and colleagues (2010) pooled about 40 studies: any music gives about the same small gain','over silence. Mozart versus other music is small, and larger effects came mostly from one laboratory.'],
-   ['Thompson, Schellenberg and Husain (2001): upbeat Mozart beat slow, sad Albinoni, but the difference','vanished once mood and arousal were taken into account. Enjoyment and alertness do the work.']][s.v];
-  out+=R(30,288,540,70,'#f6f9fb','none',8)+TF(300,316,txt[0],13,C.ink)+TF(300,340,txt[1],13,C.ink);
+  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher','on a spatial reasoning task after 10 minutes of a Mozart sonata.','The gain lasted 10–15 minutes. It was never a claim about IQ.'],
+   ['Chabris (1999) pooled 16 studies: the average gain was tiny,','about 1.4 points on an IQ-like scale, and fits a brief boost','in arousal rather than anything special about Mozart.'],
+   ['Pietschnig and colleagues (2010) pooled about 40 studies: any music','gives about the same small gain over silence. Mozart versus other music','is small, and the larger effects came mostly from one laboratory.'],
+   ['Thompson, Schellenberg and Husain (2001): upbeat Mozart beat slow, sad','Albinoni, but the difference vanished once mood and arousal','were taken into account. Enjoyment and alertness do the work.']][s.v];
+  out+=R(40,282,520,92,'#f6f9fb','none',8)+txt.map((t,i)=>TF(300,306+i*24,t,13,C.ink)).join('');
   return {svg:out,phase:'A small, short-lived effect on one task became a popular myth that music makes babies smarter. The careful conclusion: music can briefly lift mood and alertness, which helps a little on some tasks.'};
  }});
 
@@ -464,7 +463,7 @@ SCENE({id:'beat-entrainment-range',name:'How fast can we follow?',tag:'Limits of
   const x=lx(clamp(s.ioi,80,2400));out+=`<polygon points="${fmt(x)},${y-2} ${fmt(x-8)},${y-16} ${fmt(x+8)},${y-16}" fill="${C.ink}"/>`+L(x,y,x,y+56,C.ink,2);
   const zone=s.ioi<150?'Too fast to tap on every beat: people tap every second or fourth beat instead.':s.ioi>1800?'So slow that people stop predicting and start reacting, so taps come after the clicks.':s.ioi>=500&&s.ioi<=750?'Near the rate many adults choose when asked to tap at a comfortable speed.':'People can synchronise here, anticipating each beat.';
   out+=T(300,290,zone,14,C.ink);
-  out+=TF(300,330,'Zone edges are approximate: Repp (2005) gives about 100 ms and 1.8 s; they shift with age and training.',13,C.muted);
+  out+=TF(300,326,'Zone edges are approximate: Repp (2005) gives about 100–150 ms and 1.8 s.',13,C.muted)+TF(300,346,'They shift with age, training and task.',13,C.muted);
   return {svg:out,phase:'Musical tempos mostly sit inside the band where we can predict beats. Very fast notes are grouped into slower beats, and very slow pulses are subdivided.'};
  }});
 
@@ -492,12 +491,12 @@ SCENE({id:'auditory-illusions',name:'The endless staircase',tag:'Shepard tones',
   return {svg:out,phase:'Each step moves every partial up a semitone. The top partials fade out under the curve while new ones fade in at the bottom, so there is no top or bottom to the sound: only its pitch class (chroma) changes.'};
  },
  three(s,f,X,project){
-  const P=project([[-1.2,-1.2,0],[1.2,1.2,3.2]]),pc=((s.step%12)+12)%12,pts=[];for(let m=0;m<=36;m++){const a=m*Math.PI/6;pts.push([Math.cos(a),Math.sin(a),m/12])}
-  let out='';for(let m=0;m<36;m++)out+=line3(pts[m],pts[m+1],P,C.line,2);
+  const P=project([[-1.2,-1.2,0],[1.2,1.2,3.2]]),pc=((s.step%12)+12)%12,pts=[];for(let m=0;m<=144;m++){const a=m*Math.PI/24;pts.push([Math.cos(a),Math.sin(a),m/48])}
+  let out='';for(let m=0;m<144;m++)out+=line3(pts[m],pts[m+1],P,C.line,2);
   for(let k=0;k<12;k++){const a=k*Math.PI/6;out+=line3([Math.cos(a)*1.15,Math.sin(a)*1.15,0],[Math.cos(a),Math.sin(a),0],P,C.grid,1)}
   const circ=[];for(let m=0;m<=48;m++){const a=m*Math.PI/24;circ.push([Math.cos(a),Math.sin(a),0])}for(let m=0;m<48;m++)out+=line3(circ[m],circ[m+1],P,C.coral,2);
-  const h=((s.step%36)+36)%36;out+=point3(pts[h],P,C.blue,9)+point3([Math.cos(pc*Math.PI/6),Math.sin(pc*Math.PI/6),0],P,C.coral,9);
-  const q=P(pts[h]);out+=label3(q[0]+16,q[1]-12,'ordinary note',13,C.blue,'text-anchor="start"');const q2=P([Math.cos(pc*Math.PI/6),Math.sin(pc*Math.PI/6),0]);out+=label3(q2[0]+16,q2[1]+18,'Shepard tone',13,C.coral,'text-anchor="start"');
+  const h=4*(((s.step%36)+36)%36);out+=point3(pts[h],P,C.blue,9)+point3([Math.cos(pc*Math.PI/6),Math.sin(pc*Math.PI/6),0],P,C.coral,9);
+  const q=P(pts[h]);out+=label3(q[0]+16,q[1]-12,'ordinary note',13,C.blue,'text-anchor="start"');const q2=P([Math.cos(pc*Math.PI/6),Math.sin(pc*Math.PI/6),0]);out+=label3(q2[0]+40,q2[1]+24,'Shepard tone',13,C.coral,'text-anchor="start"');
   return {svg:out,title:'The pitch helix',caption:'Pitch has two parts: height (up the helix) and chroma (around it). An ordinary note climbs the helix; a Shepard tone has chroma but no height, so it lives on the flat circle and can circle for ever.'};
  }});
 
@@ -524,7 +523,7 @@ SCENE({id:'auditory-illusions-tritone',name:'The tritone paradox',tag:'Up or dow
   const lg=[[C.coral,'heard falling'],[C.blue,'heard rising'],[C.amber,'mixed'],['#f1f5f7','not tried yet']];lg.forEach(([c,l],i)=>{out+=R(350,92+i*30,18,18,c,c==='#f1f5f7'?C.line:'none',4)+TF(376,106+i*30,l,14,C.ink,'start')});
   const tried=Object.keys(s.ans).length;out+=TF(350,240,s.i<12?`Pair ${s.i+1} of 12`:'Round complete',15,C.ink,'start')+TF(350,264,`${tried} of 12 starting notes tried`,13,C.muted,'start');
   if(s.sim)out+=TF(350,288,'Watch shows one simulated listener',13,C.muted,'start');
-  out+=TF(300,360,'Most listeners hear a coherent half of the circle as falling; where that half sits differs from person to person.',13,C.muted);
+  out+=TF(300,354,'Most listeners hear about half of the circle as falling;',13,C.muted)+TF(300,374,'where that half sits differs from person to person.',13,C.muted);
   return {svg:out,phase:'Physically each pair is ambiguous: every partial moves up or down by the same half-octave. Your brain resolves it using a sense of which pitch classes are “high”, which Deutsch found differs systematically between listeners.'};
  }});
 
@@ -540,7 +539,7 @@ SCENE({id:'auditory-illusions-risset',name:'The endless accelerando',tag:'Risset
  init:()=>({T:8}),
  watch(p){return {T:8,head:p}},
  ui:[{range:'T',label:'Cycle length',min:4,max:16,step:1,get:s=>s.T,act:'T',show:v=>v+' s'},{b:'Play two cycles',act:'play'}],
- on:{T(s,v){s.T=v},play(s){const ev=M8_risset(s.T);for(const c of [0,1])ev.forEach(e=>{if(e.w>.08)M8_click(c*s.T+e.t,{hz:700+e.k*0,gain:.24*e.w})})}},
+ on:{T(s,v){s.T=v},play(s){const ev=M8_risset(s.T);for(const c of [0,1])ev.forEach(e=>{if(e.w>.08)M8_click(c*s.T+e.t,{hz:700,gain:.24*e.w})})}},
  draw(s){
   const ev=M8_risset(s.T);let out=heading(`Four pulse layers over one ${s.T}-second cycle`,26);
   out+=R(80,48,480,240,'#fff',C.grid,4);
