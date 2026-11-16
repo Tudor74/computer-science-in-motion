@@ -620,7 +620,7 @@ SCENE({id:'reading-brain-dyslexia',name:'Dyslexia without the myths',tag:'Sort c
  dur:12,hint:'For each card press ✓ if you think the evidence supports it, or ✗ if it is a myth. The evidence appears once you answer.',
  init:()=>({ans:{},sel:0}),
  watch(p){const k=Math.min(6,Math.floor(p*7)),ans={};for(let i=0;i<k;i++)ans[i]=L5_DYS[i].v;return {ans,sel:Math.max(0,k-1)}},
- ui:[{b:'Start again',act:'reset'}],
+ ui:[],
  on:{mark(s,v){const [i,a]=String(v).split(':').map(Number);s.ans={...s.ans,[i]:a};s.sel=i},reset(s){s.ans={};s.sel=0}},
  draw(s,f,X){
   let out=heading('Supported, or a myth?');
