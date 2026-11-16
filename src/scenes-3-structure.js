@@ -565,7 +565,7 @@ SCENE({id:'linguistic-relativity-snow',name:'The snow-words myth',tag:'A myth ex
  draw(s){
   let out='';
   if(s.v==='growth'){out+=heading(`Claimed number of snow words, by ${s.yr}`);
-   const pl=L3_plot(90,56,460,230,[1900,1990],[0,110],[[1900,'1900'],[1920,'1920'],[1940,'1940'],[1960,'1960'],[1980,'1980']],[[0,'0'],[50,'50'],[100,'100']],null,'words claimed');out+=pl.svg;
+   const pl=L3_plot(90,56,460,230,[1900,1990],[0,110],[[1900,'1900'],[1920,'1920'],[1940,'1940'],[1960,'1960'],[1980,'1980']],[[50,'50'],[100,'100']],null,'words claimed');out+=pl.svg;
    L3_SNOWBARS.forEach(([y,n,lab,col],i)=>{if(y>s.yr)return;out+=R(pl.X(y)-12,pl.Y(n),24,pl.Y(0)-pl.Y(n),col,'none',4)+TF(pl.X(y)+(i===3?-16:16),pl.Y(n)+(i>=2?18:-8),lab,13,C.ink,i===3?'end':'start')});
    out+=TF(320,330,'Retellings as traced by Martin (1986) and Pullum (1991); later figures approximate',13,C.muted)}
   else if(s.v==='english'){out+=heading('English has plenty of snow words too');

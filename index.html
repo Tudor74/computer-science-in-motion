@@ -392,7 +392,13 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
+ INTERACTION DESIGN NOTE: the learner operates the structures of language or takes part in the classic experiments.
+   Writing: press tokens into tablets, evolve letter shapes, crack a script with Kober's grids. Families: apply
+   Grimm's law and the Great Vowel Shift, reconstruct a proto-word. Structure: fit Zipf, play Shannon's guessing
+   game. Grammar: merge words into trees, read garden-path sentences against the clock. Learning: segment
+   Saffran's syllable stream. Meaning: judge implicatures, sort colour terms. Society: sample Labov's stores,
+   spread a change through a network. Machines: generate n-gram text, do word-vector arithmetic, read attention.
+   Myths are labelled and open debates are presented as open.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
@@ -2500,7 +2506,7 @@ SCENE({id:'linguistic-relativity-snow',name:'The snow-words myth',tag:'A myth ex
  draw(s){
   let out='';
   if(s.v==='growth'){out+=heading(`Claimed number of snow words, by ${s.yr}`);
-   const pl=L3_plot(90,56,460,230,[1900,1990],[0,110],[[1900,'1900'],[1920,'1920'],[1940,'1940'],[1960,'1960'],[1980,'1980']],[[0,'0'],[50,'50'],[100,'100']],null,'words claimed');out+=pl.svg;
+   const pl=L3_plot(90,56,460,230,[1900,1990],[0,110],[[1900,'1900'],[1920,'1920'],[1940,'1940'],[1960,'1960'],[1980,'1980']],[[50,'50'],[100,'100']],null,'words claimed');out+=pl.svg;
    L3_SNOWBARS.forEach(([y,n,lab,col],i)=>{if(y>s.yr)return;out+=R(pl.X(y)-12,pl.Y(n),24,pl.Y(0)-pl.Y(n),col,'none',4)+TF(pl.X(y)+(i===3?-16:16),pl.Y(n)+(i>=2?18:-8),lab,13,C.ink,i===3?'end':'start')});
    out+=TF(320,330,'Retellings as traced by Martin (1986) and Pullum (1991); later figures approximate',13,C.muted)}
   else if(s.v==='english'){out+=heading('English has plenty of snow words too');
@@ -2840,7 +2846,7 @@ SCENE({id:'formal-grammars',name:'The Chomsky hierarchy',tag:'Grammars as machin
  on:{p(s,v){s.p=Number(v)}},
  draw(s,f,X){
   let out=heading('Each class of grammar needs a stronger machine');
-  const regs=[[16,52,316,316,'Recursively enumerable · Turing machine','#f6f4fb',C.purple],[34,100,280,262,'Context-sensitive · growing tape','#fbf3e3',C.amber],[52,148,244,208,'Context-free · a stack','#e8f2f8',C.blue],[70,196,208,154,'Regular · finite states','#e6f3ef',C.green]];
+  const regs=[[16,52,316,316,'Recursively enumerable · Turing machine','#f6f4fb',C.purple],[34,100,280,262,'Context-sensitive','#fbf3e3',C.amber],[52,148,244,208,'Context-free · a stack','#e8f2f8',C.blue],[70,196,208,154,'Regular · finite states','#e6f3ef',C.green]];
   regs.forEach(([x,y,w,h,l,fill,col])=>out+=R(x,y,w,h,fill,col,14)+TBF(x+12,y+20,l,13,col,'start'));
   const cur=L4_PAT.find(q=>q.n===s.p);
   L4_PAT.forEach(q=>{const on=q.n===s.p;out+=hit(X,'p',q.n,`Pattern ${q.l}`,Ci(q.at[0],q.at[1]+(q.lvl==='Regular'?10:0),on?14:11,on?C.coral:'#fff',on?C.coral:C.ink)+TBF(q.at[0],q.at[1]+(q.lvl==='Regular'?15:5),String(q.n),13,on?'#fff':C.ink))});
@@ -3063,7 +3069,7 @@ SCENE({id:'garden-paths-constraints',name:'Does meaning steer the parser?',tag:'
   const noun=s.pl<25?'evidence':s.pl<75?'(a noun in between)':'defendant';
   let out=heading('How much does “by the lawyer” slow the reader?');
   out+=TF(300,62,`“The ${noun} examined by the lawyer turned out to be unreliable.”`,14,C.ink,'middle','font-style="italic"');
-  const pl=L4_plot(110,86,400,200,[0,100],[0,120],[[0,'cannot examine'],[100,'can examine']],[[0,'0'],[60,'60'],[120,'120 ms']],null,'extra time');out+=pl.svg;
+  const pl=L4_plot(110,86,400,200,[0,100],[0,120],[[0,'cannot examine'],[100,'can examine']],[[60,'60'],[120,'120 ms']],null,'extra time');out+=pl.svg;
   const syn=x=>70,con=x=>8+.9*x;
   if(s.th!=='constraint')out+=P(`M${fmt(pl.X(0))} ${fmt(pl.Y(syn(0)))} L${fmt(pl.X(100))} ${fmt(pl.Y(syn(100)))}`,C.purple,3)+TF(pl.X(4),pl.Y(syn(0))-8,'syntax first: always misled at first',13,C.purple,'start');
   if(s.th!=='syntax')out+=P(`M${fmt(pl.X(0))} ${fmt(pl.Y(con(0)))} L${fmt(pl.X(100))} ${fmt(pl.Y(con(100)))}`,C.green,3)+TF(pl.X(96),pl.Y(con(100))+20,'constraint-based',13,C.green,'end');

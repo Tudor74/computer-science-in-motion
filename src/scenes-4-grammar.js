@@ -254,7 +254,7 @@ SCENE({id:'formal-grammars',name:'The Chomsky hierarchy',tag:'Grammars as machin
  on:{p(s,v){s.p=Number(v)}},
  draw(s,f,X){
   let out=heading('Each class of grammar needs a stronger machine');
-  const regs=[[16,52,316,316,'Recursively enumerable · Turing machine','#f6f4fb',C.purple],[34,100,280,262,'Context-sensitive · growing tape','#fbf3e3',C.amber],[52,148,244,208,'Context-free · a stack','#e8f2f8',C.blue],[70,196,208,154,'Regular · finite states','#e6f3ef',C.green]];
+  const regs=[[16,52,316,316,'Recursively enumerable · Turing machine','#f6f4fb',C.purple],[34,100,280,262,'Context-sensitive','#fbf3e3',C.amber],[52,148,244,208,'Context-free · a stack','#e8f2f8',C.blue],[70,196,208,154,'Regular · finite states','#e6f3ef',C.green]];
   regs.forEach(([x,y,w,h,l,fill,col])=>out+=R(x,y,w,h,fill,col,14)+TBF(x+12,y+20,l,13,col,'start'));
   const cur=L4_PAT.find(q=>q.n===s.p);
   L4_PAT.forEach(q=>{const on=q.n===s.p;out+=hit(X,'p',q.n,`Pattern ${q.l}`,Ci(q.at[0],q.at[1]+(q.lvl==='Regular'?10:0),on?14:11,on?C.coral:'#fff',on?C.coral:C.ink)+TBF(q.at[0],q.at[1]+(q.lvl==='Regular'?15:5),String(q.n),13,on?'#fff':C.ink))});
@@ -477,7 +477,7 @@ SCENE({id:'garden-paths-constraints',name:'Does meaning steer the parser?',tag:'
   const noun=s.pl<25?'evidence':s.pl<75?'(a noun in between)':'defendant';
   let out=heading('How much does “by the lawyer” slow the reader?');
   out+=TF(300,62,`“The ${noun} examined by the lawyer turned out to be unreliable.”`,14,C.ink,'middle','font-style="italic"');
-  const pl=L4_plot(110,86,400,200,[0,100],[0,120],[[0,'cannot examine'],[100,'can examine']],[[0,'0'],[60,'60'],[120,'120 ms']],null,'extra time');out+=pl.svg;
+  const pl=L4_plot(110,86,400,200,[0,100],[0,120],[[0,'cannot examine'],[100,'can examine']],[[60,'60'],[120,'120 ms']],null,'extra time');out+=pl.svg;
   const syn=x=>70,con=x=>8+.9*x;
   if(s.th!=='constraint')out+=P(`M${fmt(pl.X(0))} ${fmt(pl.Y(syn(0)))} L${fmt(pl.X(100))} ${fmt(pl.Y(syn(100)))}`,C.purple,3)+TF(pl.X(4),pl.Y(syn(0))-8,'syntax first: always misled at first',13,C.purple,'start');
   if(s.th!=='syntax')out+=P(`M${fmt(pl.X(0))} ${fmt(pl.Y(con(0)))} L${fmt(pl.X(100))} ${fmt(pl.Y(con(100)))}`,C.green,3)+TF(pl.X(96),pl.Y(con(100))+20,'constraint-based',13,C.green,'end');
