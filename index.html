@@ -40,7 +40,10 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}
+/* Five courses: the last card spans both columns, with its motif beside the text. */
+.course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
 
 .ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 24px;padding:0;list-style:none}
 .ideas li{background:#f6f9fb;border-radius:10px;padding:12px 14px}
@@ -55,13 +58,15 @@ footer p{margin:0 0 4px}
 @keyframes blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
 @keyframes reach{0%,10%{transform:translate(0,0)}55%,100%{transform:translate(318px,-58px)}}
 @keyframes hitpulse{0%,50%{opacity:0}60%{opacity:.9}100%{opacity:0}}
+@keyframes travel{from{stroke-dashoffset:0}to{stroke-dashoffset:-60}}
 @keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1)}}
 .wave{animation:slide 6s linear infinite}
 .bit{animation:blink var(--d,3s) steps(1) infinite}
 .cursor{animation:reach 3.2s cubic-bezier(.2,.75,.3,1) infinite}
 .pulse{animation:hitpulse 3.2s ease-out infinite;transform-origin:440px 92px}
 .radar{animation:breathe 7s ease-in-out infinite;transform-origin:300px 110px;transform-box:view-box}
-@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar{animation:none}}
+.route{animation:travel 2.4s linear infinite}
+@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route{animation:none}}
 
 @media(max-width:760px){
  body{padding:6px}
@@ -69,6 +74,8 @@ footer p{margin:0 0 4px}
  .lede{font-size:16.5px}
  main{padding:16px 14px 6px}
  .courses{grid-template-columns:1fr}
+ .course.wide{display:flex}
+ .course.wide .motif{aspect-ratio:600/220;height:auto;min-height:0}
  .ideas{grid-template-columns:1fr}
  footer{padding:4px 14px 16px}
 }
@@ -85,8 +92,9 @@ footer p{margin:0 0 4px}
    <pattern id="t-cs" patternUnits="userSpaceOnUse" width="28" height="28"><path d="M28 0H0V28" fill="none" stroke="currentColor" stroke-width="1.1"/></pattern>
    <pattern id="t-hci" patternUnits="userSpaceOnUse" width="36" height="36"><path d="M18 10V26M10 18H26" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="18" cy="18" r="5" fill="none" stroke="currentColor"/></pattern>
    <pattern id="t-ther" patternUnits="userSpaceOnUse" width="48" height="48"><circle cx="24" cy="24" r="11" fill="none" stroke="currentColor"/><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width=".8"/></pattern>
+   <pattern id="t-think" patternUnits="userSpaceOnUse" width="44" height="44"><path d="M6 6L22 16L38 6M22 16V34M6 38L22 34L38 38" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="22" cy="16" r="2.4" fill="currentColor"/><circle cx="22" cy="34" r="2.4" fill="currentColor"/></pattern>
   </defs>
-  <rect width="25%" height="100%" fill="url(#t-math)"/><rect x="25%" width="25%" height="100%" fill="url(#t-cs)"/><rect x="50%" width="25%" height="100%" fill="url(#t-hci)"/><rect x="75%" width="25%" height="100%" fill="url(#t-ther)"/>
+  <rect width="20%" height="100%" fill="url(#t-math)"/><rect x="20%" width="20%" height="100%" fill="url(#t-cs)"/><rect x="40%" width="20%" height="100%" fill="url(#t-hci)"/><rect x="60%" width="20%" height="100%" fill="url(#t-ther)"/><rect x="80%" width="20%" height="100%" fill="url(#t-think)"/>
  </svg>
  <p class="eyebrow">In Motion</p>
  <h1>Ideas you can play, pause, rewind and try</h1>
@@ -183,6 +191,21 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://therapies-in-motion.puter.site/">Open Therapies <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="secondary" href="https://therapies-in-motion.puter.site/atlas.html">Therapy Atlas</a></div>
    </div>
   </li>
+  <li class="course thinkers wide">
+   <svg class="motif" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People as points on a map, with ideas travelling between them along routes">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <g fill="none" stroke="#c7d8e3" stroke-width="2"><path d="M90 150 Q180 40 300 90"/><path d="M300 90 Q420 140 510 60"/><path d="M300 90 Q330 170 440 180"/><path d="M90 150 Q200 200 300 170"/></g>
+    <g fill="none" stroke="#2f6e8e" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="10 50" class="route"><path d="M90 150 Q180 40 300 90"/><path d="M300 90 Q420 140 510 60"/><path d="M300 90 Q330 170 440 180"/><path d="M90 150 Q200 200 300 170"/></g>
+    <g stroke="#fff" stroke-width="3"><circle cx="90" cy="150" r="13" fill="#2f6e8e"/><circle cx="300" cy="90" r="17" fill="#c46a55"/><circle cx="510" cy="60" r="12" fill="#2f6e8e"/><circle cx="440" cy="180" r="11" fill="#2f6e8e"/><circle cx="300" cy="170" r="10" fill="#2f6e8e"/></g>
+   </svg>
+   <div class="body">
+    <h3>Thinkers In Motion</h3>
+    <p class="tag">The people behind the ideas, and how ideas travel</p>
+    <p class="desc">A gallery of 384 thinkers, entries on the knowledge they share, and an animated atlas that follows how ideas travel from one mind to the next. Where the other courses explain ideas, this one introduces the people behind them.</p>
+    <ul class="facts" aria-label="Course contents"><li>384 thinkers</li><li>24 shared-knowledge entries</li><li>Animated atlas</li></ul>
+    <div class="links"><a class="open" href="https://thinkers-in-motion.puter.site/">Open Thinkers <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
  </ul>
 
  <h2 id="ideas-heading">What “in motion” means</h2>
@@ -195,7 +218,7 @@ footer p{margin:0 0 4px}
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Thinkers runs alongside all of them, with the people behind the ideas.</p>
 </main>
 
 <footer>
