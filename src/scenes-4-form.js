@@ -22,11 +22,15 @@ function M4_note(x,st,acc,dur,y,g,col=C.ink,showAcc=true){
  const filled=dur<2;
  out+=`<ellipse cx="${fmt(x)}" cy="${fmt(ny)}" rx="${fmt(g*.62)}" ry="${fmt(g*.44)}" transform="rotate(-20 ${fmt(x)} ${fmt(ny)})" fill="${filled?col:'#fff'}" stroke="${col}" stroke-width="1.6"/>`;
  if(dur<4){const up=st<6,sx=up?x+g*.58:x-g*.58,sy=up?ny-g*3.4:ny+g*3.4;out+=L(sx,ny,sx,sy,col,1.5);
-  if(dur===.5||dur===.75)out+=P(`M${sx} ${sy} q ${g*.9} ${up?g*.8:-g*.8} ${g*.5} ${up?g*2:-g*2}`,col,1.5)}
+  if(dur===.5||dur===.75||dur===.25)out+=P(`M${sx} ${sy} q ${g*.9} ${up?g*.8:-g*.8} ${g*.5} ${up?g*2:-g*2}`,col,1.5);
+  if(dur===.25)out+=P(`M${sx} ${sy+(up?g*.9:-g*.9)} q ${g*.9} ${up?g*.8:-g*.8} ${g*.5} ${up?g*2:-g*2}`,col,1.5)}
  if(dur===3||dur===1.5||dur===.75)out+=Ci(x+g*1.05,ny-(st%2===0?g*.25:0),1.8,col);
  if(showAcc&&acc!==null&&acc!==undefined&&acc!==0)out+=TF(x-g*1.45,ny+g*.42,M4_ACC(acc),Math.round(g*1.5),col);
  return out;
 }
+// Wrap text into lines of at most n characters (for long captions inside the drawing).
+function M4_wrap(t,n){const w=String(t).split(' '),out=[];let line='';for(const x of w){if((line+' '+x).trim().length>n&&line){out.push(line);line=x}else line=(line+' '+x).trim()}if(line)out.push(line);return out}
+const M4_lines=(x,y,t,n,size,col,anchor='middle',lh=18)=>M4_wrap(t,n).map((l,i)=>TF(x,y+i*lh,l,size,col,anchor)).join('');
 const M4_bar=(x,y,g)=>L(x,y,x,y+4*g,'#8aa1ae',1.4);
 // Lay out a melody on a staff, highlighting note index hl. notes: [{st,acc,dur}]. Returns svg.
 function M4_melody(notes,x0,y,w,g,hl=-1,col=C.ink,hlCol=C.coral,opts={}){
@@ -79,7 +83,7 @@ SCENE({id:'major-minor',name:'The major scale',tag:'Tone, tone, semitone…',
   sc.forEach((n,i)=>{const x=x0+80+i*58;out+=M4_note(x,n.st,n.acc,1,y,g,i===s.pos?C.coral:C.ink);out+=TF(x,y+4*g+38,M4_name(n.st,n.acc),14,C.ink)});
   M4_PAT.major.forEach((st,i)=>{const x=x0+80+i*58+29,semi=st===1;out+=R(x-15,y+4*g+50,30,22,semi?C.coralp:C.pale,'none',6)+TBF(x,y+4*g+66,semi?'S':'T',13,semi?C.coral:C.blue)});
   const marks={};sc.forEach(n=>marks[M4_midi(n.st,n.acc)]=C.blue);
-  out+=M4_keys(90,254,420,M4_midi(k[1],k[2])-(k[1]>=4?12:0)>=60?60:48,84,marks,56);
+  out+=M4_keys(90,254,420,60,84,marks,56);
   const acc=sc.slice(0,7).filter(n=>n.acc).map(n=>M4_name(n.st,n.acc));
   return {svg:out,phase:`${k[0]} major: ${sc.map(n=>M4_name(n.st,n.acc)).join(' ')}. ${acc.length?'It needs '+acc.join(', ')+' to keep the semitones between notes 3–4 and 7–8.':'Only white keys: the semitones fall naturally between E–F and B–C.'}`};
  }});
@@ -102,13 +106,12 @@ SCENE({id:'major-minor-forms',name:'Three forms of the minor scale',tag:'Natural
   out+=M4_staff(x0,y,520,g);
   sc.forEach((n,i)=>{const x=x0+80+i*58,raised=n.acc!==nat[i].acc;out+=M4_note(x,n.st,n.acc,1,y,g,i===s.pos?C.coral:raised?C.green:C.ink);out+=TF(x,y+4*g+38,M4_name(n.st,n.acc),14,raised?C.green:C.ink,'middle',raised?'font-weight="700"':'')});
   M4_PAT[s.form].forEach((st,i)=>{const x=x0+80+i*58+29,lab=st===1?'S':st===2?'T':'T+S';out+=R(x-17,y+4*g+50,34,22,st===1?C.coralp:st===3?C.amberp:C.pale,'none',6)+TBF(x,y+4*g+66,lab,13,st===1?C.coral:st===3?C.amber:C.blue)});
-  out+=TF(300,y+4*g+108,s.form==='natural'?'Same notes as its relative major, starting on the 6th degree.':s.form==='harmonic'?'Raised 7th: a semitone below the tonic, as in major. Gap of three semitones (T+S) between 6 and 7.':'Raised 6th and 7th going up remove that awkward gap; descending melodies usually return to natural minor.',14,C.muted);
+  out+=M4_lines(300,y+4*g+104,s.form==='natural'?'Same notes as its relative major, starting on the 6th degree.':s.form==='harmonic'?'Raised 7th: a semitone below the tonic, as in major. That leaves a gap of three semitones (T+S) between 6 and 7.':'Raised 6th and 7th going up remove that gap; descending melodies usually return to natural minor.',66,14,C.muted);
   return {svg:out,phase:`${k[0]} ${s.form} minor: ${sc.map(n=>M4_name(n.st,n.acc)).join(' ')}. The green notes are raised compared with the natural minor.`};
  }});
 
 // Frère Jacques (traditional French round, public domain), first two bars twice.
-const M4_FRERE=[0,1,2,0,0,1,2,0,2,3,4,2,3,4].map((st,i)=>({st,acc:0,dur:[10,13].includes(i)?2:1}));
-M4_FRERE.splice(11,1);M4_FRERE.splice(10,0,{st:4,acc:0,dur:2});
+const M4_FRERE=[[0,1],[1,1],[2,1],[0,1],[0,1],[1,1],[2,1],[0,1],[2,1],[3,1],[4,2],[2,1],[3,1],[4,2]].map(([st,dur])=>({st,acc:0,dur}));
 const M4_REL=[['major','C major'],['parallel','C minor (parallel)'],['relative','A minor (relative)']];
 function M4_frereIn(key){
  return M4_FRERE.map(n=>{if(key==='major')return n;if(key==='relative')return {...n,st:n.st-2,acc:0};
@@ -204,9 +207,9 @@ SCENE({id:'modulation-timeline',name:'A key journey through a piece',tag:'Away a
  draw(s,f,X){
   let out=heading('An illustrative key plan: away and home');const tot=sum(M4_PLAN.map(p=>p.w));let x=40;
   M4_PLAN.forEach((p,i)=>{const w=520*p.w/tot,on=i===s.sel;out+=hit(X,'seg',i,p.lab,R(x+2,110,w-4,70,p.col,on?C.ink:'none',8,`opacity="${on||s.sel<0?1:.75}"`)+TBF(x+w/2,152,p.key,18,'#fff'));
-   out+=TF(x+w/2,206+(i%2)*20,p.lab,12.5,C.ink);x+=w});
+   out+=TF(x+w/2,206+(i%3)*20,p.lab,12.5,C.ink);x+=w});
   if(s.head!==undefined){const hx=40+520*s.head;out+=L(hx,96,hx,192,C.ink,2.5)+`<polygon points="${fmt(hx)},96 ${fmt(hx-6)},86 ${fmt(hx+6)},86" fill="${C.ink}"/>`}
-  out+=TB(40,272,'tension',14,C.coral,'start');
+  out+=TB(40,274,'tension',14,C.coral,'start');
   let px=40;const tens=[0,.45,.6,.7,.95,0];let d='';M4_PLAN.forEach((p,i)=>{const w=520*p.w/tot;d+=(i?'L':'M')+fmt(px)+' '+fmt(340-tens[i]*60)+' L'+fmt(px+w)+' '+fmt(340-tens[i]*60)+' ';px+=w});
   out+=P(d,C.coral,2.5)+L(40,340,560,340,C.line,1.5);
   const cur=s.sel>=0?M4_PLAN[s.sel]:null;
@@ -327,10 +330,10 @@ SCENE({id:'sonata-form-keys',name:'Sonata form in major and minor',tag:'Where th
  on:{home(s,v){s.home=v},sec(s,v){s.sel=Number(v);const c=M4_KEYPLAN[s.home][s.sel].ch;AUDIO.chord(c.map(midiHz),{dur:1.1,type:'triangle'})}},
  draw(s,f,X){
   const plan=M4_KEYPLAN[s.home];let out=heading(s.home==='major'?'C major home: second subject in the dominant':'C minor home: second subject in the relative major');
-  plan.forEach((p,i)=>{const x=40+i*132,on=i===s.sel;out+=hit(X,'sec',i,`${p.part} in ${p.key}`,R(x,90,120,130,p.col,on?C.ink:'none',10,`opacity="${on?1:.85}"`)+TBF(x+60,124,p.part,13,'#fff')+TB(x+60,170,p.key,22,'#fff'));
+  plan.forEach((p,i)=>{const x=40+i*132,on=i===s.sel;out+=hit(X,'sec',i,`${p.part} in ${p.key}`,R(x,90,120,130,p.col,on?C.ink:'none',10,`opacity="${on?1:.85}"`)+TBF(x+60,124,p.part,13,'#fff')+TB(x+60,170,p.key,19,'#fff'));
    if(i<3)out+=arrow(x+122,155,x+130,155,C.muted,2,6)});
   out+=TF(106,244,'exposition',13,C.muted)+TF(306,244,'development',13,C.muted)+TF(434,244,'recapitulation',13,C.muted);
-  out+=R(40,270,520,76,'#fff',C.grid,10)+TB(300,298,`Second subject: ${plan[1].key} → ${plan[3].key}`,17,C.ink)+TF(300,324,s.home==='major'?'Contrast of tonic and dominant, resolved when both themes share the tonic.':'Major contrast in the exposition; the return in minor makes the ending darker.',14,C.muted);
+  out+=R(40,270,520,76,'#fff',C.grid,10)+TB(300,298,`Second subject: ${plan[1].key} → ${plan[3].key}`,17,C.ink)+TF(300,324,s.home==='major'?'Tonic–dominant contrast, resolved when both themes share the tonic.':'A major-key contrast first; the return in minor darkens the ending.',14,C.muted);
   return {svg:out,phase:`${plan[s.sel].part}: ${plan[s.sel].key}. ${s.home==='minor'?'Minor-key movements usually move to the relative major, which shares the key signature.':'Major-key movements usually move to the dominant, a fifth higher.'}`};
  }});
 const M4_KEYPLAN={major:[{part:'First subject',key:'C major',col:'#1772b7',ch:[48,60,64,67]},{part:'Second subject',key:'G major',col:'#2c776c',ch:[43,59,62,67]},{part:'Development',key:'many keys',col:'#7156a6',ch:[45,60,64,69]},{part:'Both subjects',key:'C major',col:'#1772b7',ch:[48,60,64,67]}],
@@ -349,10 +352,10 @@ SCENE({id:'sonata-form-history',name:'Practice first, theory later',tag:'Who mad
  draw(s,f,X){
   let out=heading('Sonata form: practice first, theory later');const x=y=>40+520*(y-1760)/100;
   out+=L(40,150,560,150,C.line,3);for(let y=1760;y<=1860;y+=20)out+=L(x(y),144,x(y),156,C.line,2)+TF(x(y),176,y,13,C.muted);
-  M4_SONATA_HIST.forEach((h,i)=>{const theory=['Reicha','A. B. Marx'].includes(h.who),cx=x(h.y),cy=theory?110:190,on=i===s.sel;out+=L(cx,150,cx,cy,C.line,1.5)+hit(X,'pick',i,`${h.who}, ${h.y}`,Ci(cx,cy,on?11:8,theory?C.purple:C.blue,on?C.ink:'none')+TF(cx,theory?cy-18:cy+26,h.who,13,C.ink))});
+  let ci=0;M4_SONATA_HIST.forEach((h,i)=>{const theory=['Reicha','A. B. Marx'].includes(h.who),cx=x(h.y),cy=theory?110:(ci++%2?214:190),on=i===s.sel;out+=L(cx,150,cx,cy,C.line,1.5)+hit(X,'pick',i,`${h.who}, ${h.y}`,Ci(cx,cy,on?11:8,theory?C.purple:C.blue,on?C.ink:'none'))+TF(theory?cx:cx+(cx>430?-14:14),theory?cy-18:cy+5,h.who,13,C.ink,theory?'middle':(cx>430?'end':'start'))});
   out+=TF(50,72,'theorists',13,C.purple,'start')+TF(50,236,'composers',13,C.blue,'start');
-  const h=M4_SONATA_HIST[s.sel];out+=R(40,262,520,86,'#fff',C.grid,10)+TB(300,290,`${h.y} · ${h.who}`,17,C.ink)+TF(300,316,h.what,14,C.ink);
-  if(h.who==='Fanny Hensel'||h.who==='Clara Schumann')out+=TF(300,338,h.who==='Fanny Hensel'?'Family pressure kept most of her music unpublished in her lifetime; some songs appeared under Felix’s name.':'She also faced doubts about women composing, and later focused on performing.',12.5,C.muted);
+  const h=M4_SONATA_HIST[s.sel];out+=R(40,248,520,122,'#fff',C.grid,10)+TB(300,274,`${h.y} · ${h.who}`,17,C.ink)+M4_lines(300,298,h.what,70,14,C.ink);
+  if(h.who==='Fanny Hensel'||h.who==='Clara Schumann')out+=M4_lines(300,338,h.who==='Fanny Hensel'?'Family pressure kept most of her music unpublished in her lifetime; some songs appeared under Felix’s name.':'She too met doubts about women composing, and later concentrated on performing.',74,12.5,C.muted,'middle',16);
   return {svg:out,phase:`${h.who} (${h.y}): ${h.what}`};
  }});
 
@@ -379,7 +382,7 @@ SCENE({id:'theme-variation',name:'Theme and variations',tag:'Same tune, new clot
   const notes=M4_VARS[s.v].n;let out=heading(s.v==='theme'?'The theme':'Variation: '+s.v);
   out+=M4_melody(notes,20,74,560,10,s.pos,C.ink,C.coral);
   if(s.v==='harmony'){let bt=0;const beats=sum(notes.map(n=>n.dur));notes.forEach(n=>{if(n.chord)out+=TBF(60+500*(bt+.35)/beats,190,noteName(n.chord[0]).replace(/\d/,'')+(n.chord[1]-n.chord[0]===3?'m':''),14,C.purple);bt+=n.dur})}
-  out+=R(40,214,520,70,'#fff',C.grid,10)+TF(300,244,M4_VARS[s.v].say.split(':')[0],16,C.ink,'middle','font-weight="700"')+TF(300,268,M4_VARS[s.v].say.split(':').slice(1).join(':').trim().slice(0,84),13.5,C.muted);
+  out+=R(40,206,520,92,'#fff',C.grid,10)+TF(300,232,M4_VARS[s.v].say.split(':')[0],16,C.ink,'middle','font-weight="700"')+M4_lines(300,256,M4_VARS[s.v].say.split(':').slice(1).join(':').trim(),72,13.5,C.muted,'middle',18);
   out+=TF(300,318,'Mozart’s set (K. 265, c. 1781) has twelve variations on this tune.',14,C.muted);
   return {svg:out,phase:M4_VARS[s.v].say};
  }});
@@ -422,10 +425,10 @@ SCENE({id:'theme-variation-sets',name:'Famous variation sets',tag:'A form that l
  }});
 
 /* ---------- Lesson: orchestration ---------- */
-const M4_SEATS=[{fam:'strings',n:'1st violins',x:150,y:270,col:'#2c776c'},{fam:'strings',n:'2nd violins',x:205,y:215,col:'#2c776c'},{fam:'strings',n:'violas',x:395,y:215,col:'#2c776c'},{fam:'strings',n:'cellos',x:450,y:270,col:'#2c776c'},{fam:'strings',n:'double basses',x:500,y:200,col:'#2c776c'},
- {fam:'woodwind',n:'flutes',x:270,y:175,col:'#1772b7'},{fam:'woodwind',n:'oboes',x:330,y:175,col:'#1772b7'},{fam:'woodwind',n:'clarinets',x:270,y:140,col:'#1772b7'},{fam:'woodwind',n:'bassoons',x:330,y:140,col:'#1772b7'},
- {fam:'brass',n:'horns',x:185,y:125,col:'#9a6200'},{fam:'brass',n:'trumpets',x:290,y:100,col:'#9a6200'},{fam:'brass',n:'trombones',x:355,y:100,col:'#9a6200'},{fam:'brass',n:'tuba',x:415,y:110,col:'#9a6200'},
- {fam:'percussion',n:'timpani',x:300,y:68,col:'#c45238'},{fam:'percussion',n:'percussion',x:410,y:66,col:'#c45238'}];
+const M4_SEATS=[{fam:'strings',n:'1st violins',x:180,y:268,col:'#2c776c'},{fam:'strings',n:'2nd violins',x:150,y:216,col:'#2c776c'},{fam:'strings',n:'violas',x:410,y:216,col:'#2c776c'},{fam:'strings',n:'cellos',x:420,y:268,col:'#2c776c'},{fam:'strings',n:'double basses',x:515,y:216,col:'#2c776c'},
+ {fam:'woodwind',n:'flutes',x:160,y:164,col:'#1772b7'},{fam:'woodwind',n:'oboes',x:255,y:164,col:'#1772b7'},{fam:'woodwind',n:'clarinets',x:345,y:164,col:'#1772b7'},{fam:'woodwind',n:'bassoons',x:440,y:164,col:'#1772b7'},
+ {fam:'brass',n:'horns',x:150,y:112,col:'#9a6200'},{fam:'brass',n:'trumpets',x:250,y:112,col:'#9a6200'},{fam:'brass',n:'trombones',x:350,y:112,col:'#9a6200'},{fam:'brass',n:'tuba',x:450,y:112,col:'#9a6200'},
+ {fam:'percussion',n:'timpani',x:250,y:62,col:'#c45238'},{fam:'percussion',n:'percussion',x:350,y:62,col:'#c45238'}];
 const M4_FAM={strings:'Strings: the largest family, playing most of the time. Many players per part.',woodwind:'Woodwind: flutes, oboes, clarinets and bassoons, usually two of each in a classical orchestra.',brass:'Brass: horns, trumpets, trombones and tuba. Loud, so seated at the back.',percussion:'Percussion: timpani tuned to the key, plus drums and cymbals added in the 1800s.'};
 SCENE({id:'orchestration',name:'The orchestra',tag:'Families of instruments',
  definition:'A symphony orchestra groups instruments into four families: strings, woodwind, brass and percussion. Seating puts the quieter, more numerous strings at the front and the loud brass and percussion at the back.',
@@ -439,10 +442,10 @@ SCENE({id:'orchestration',name:'The orchestra',tag:'Families of instruments',
  on:{fam(s,v){s.fam=v}},
  draw(s,f,X){
   let out=heading('One common seating plan');
-  out+=P('M60 320 Q300 10 540 320 Z',C.line,2,'#f7f9fa');
-  M4_SEATS.forEach(seat=>{const on=seat.fam===s.fam;out+=hit(X,'fam',seat.fam,`${seat.n} (${seat.fam})`,Ci(seat.x,seat.y,on?22:18,on?seat.col:tint(seat.col,.65),on?C.ink:'none'))+TF(seat.x,seat.y+(seat.y>250?36:-26)+(seat.y<90?52:0),seat.n,12.5,on?C.ink:C.muted)});
-  out+=R(270,318,60,22,C.dark,'none',6)+TBF(300,334,'conductor',12,'#fff');
-  out+=R(40,352,520,24,'none','none',0)+TF(300,368,M4_FAM[s.fam],13.5,C.ink);
+  out+=R(30,40,540,268,'#f7f9fa',C.line,40);
+  M4_SEATS.forEach(seat=>{const on=seat.fam===s.fam;out+=hit(X,'fam',seat.fam,`${seat.n} (${seat.fam})`,Ci(seat.x,seat.y,on?16:13,on?seat.col:tint(seat.col,.65),on?C.ink:'none'))+TF(seat.x,seat.y+30,seat.n,12.5,on?C.ink:C.muted)});
+  out+=R(262,300,76,22,C.dark,'none',6)+TBF(300,316,'conductor',12,'#fff');
+  out+=M4_lines(300,344,M4_FAM[s.fam],78,13.5,C.ink,'middle',18);
   return {svg:out,phase:M4_FAM[s.fam]+' Seating varies; this is one widely used layout.'};
  }});
 

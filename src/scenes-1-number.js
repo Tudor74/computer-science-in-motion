@@ -62,11 +62,11 @@ SCENE({id:'pitch-frequency-octave',name:'The octave doubles',tag:'Equal steps fo
   const lin=f=>50+500*f/1800,lg=M1_logX(50,500,55*.85,1760*1.15);
   out+=TB(50,72,'Hertz ruler (linear)',14,C.muted,'start')+L(50,110,550,110,C.line,3);
   for(const v of [0,500,1000,1500])out+=L(lin(v),104,lin(v),116,C.muted,1.5)+TF(lin(v),132,v+' Hz',13,C.muted);
-  out+=TB(50,192,'Ear’s ruler (logarithmic)',14,C.muted,'start')+L(50,230,550,230,C.line,3);
+  out+=TB(50,166,'Ear’s ruler (logarithmic)',14,C.muted,'start')+L(50,230,550,230,C.line,3);
   for(let i=0;i<6;i++){if(i>=s.shown)continue;const hz=55*2**i,on=i===s.sel;
    const a=Ci(lin(hz),110,on?10:7,on?C.coral:C.blue),b=Ci(lg(hz),230,on?12:9,on?C.coral:C.blue)+TB(lg(hz),262,'A'+(i+1),15,on?C.coral:C.ink)+TF(lg(hz),282,hz+' Hz',13,C.muted);
    out+=hit(X,'pick',i,`A${i+1}, ${hz} hertz`,a)+hit(X,'pick',i,`A${i+1}, ${hz} hertz`,b);
-   if(i>0)out+=curveArrow(lg(hz/2)+12,214,lg(hz)-12,214,-14,C.green,1.8)+TF((lg(hz/2)+lg(hz))/2,192+(i%2?0:-12)+12,'×2',13,C.green);
+   if(i>0)out+=curveArrow(lg(hz/2)+12,216,lg(hz)-12,216,-12,C.green,1.8)+TF((lg(hz/2)+lg(hz))/2,198,'×2',13,C.green);
   }
   out+=T(300,330,'Same distance on the ear’s ruler = same ratio of frequencies',15,C.ink);
   out+=T(300,356,'(the hertz gaps double: 55, 110, 220, 440, 880…)',14,C.muted);
@@ -147,7 +147,7 @@ SCENE({id:'monochord-ratios',name:'Six, eight, nine, twelve',tag:'The Pythagorea
   out+=L(x0,100,x0+w,100,C.ink,3);for(let i=0;i<=12;i++)out+=L(x0+i*u,92,x0+i*u,108,C.line,1.5)+(i%3===0?TF(x0+i*u,84,String(12-i),13,C.muted):'');
   out+=TF(x0-6,104,'',13);
   lens.forEach((Lg,i)=>{const y=150+i*48,on=i===s.k,xr=x0+(12-Lg)*u;
-   const inner=R(x0,y-16,w,34,on?C.amberp:'#fff',on?C.amber:C.grid,8)+R(xr,y-10,Lg*u,22,on?C.blue:C.pale,'none',5)+TB(x0+10,y+6,`${Lg} parts`,14,on?C.ink:C.muted,'start')+TB(x0+w-10,y+6,`${rat[i]} · ${names[i]}`,14,on?C.coral:C.ink,'end');
+   const inner=R(x0,y-16,w,34,on?C.amberp:'#fff',on?C.amber:C.grid,8)+R(xr,y-10,Lg*u,22,on?'#bcd7ec':C.pale,'none',5)+TB(x0+10,y+6,`${Lg} parts`,14,on?C.ink:C.muted,'start')+TB(x0+w-10,y+6,`${rat[i]} · ${names[i]}`,14,on?C.coral:C.ink,'end');
    out+=hit(X,'pick',i,`${Lg} parts: ${names[i]}`,inner)});
   out+=T(300,352,'Between the fourth (9) and the fifth (8): 9 : 8, the whole tone',15,C.green);
   return {svg:out,phase:`A stopped length of ${lens[s.k]} parts against the open 12 gives ${rat[s.k]}: the ${names[s.k]}. Simple whole numbers, simple sounds — the observation at the root of Greek music theory.`};
@@ -352,9 +352,9 @@ SCENE({id:'pythagorean-tuning-comma',name:'The Pythagorean comma',tag:'129.75 is
  on:{pair(){AUDIO.chord([261.63,261.63*531441/524288],{dur:2.4,type:'sine',gain:.24});return 'keep'},seq(){AUDIO.seq([{hz:261.63*531441/524288,at:0,dur:.7},{hz:261.63,at:.8,dur:.7}],{type:'triangle',gain:.15});return 'keep'}},
  draw(s,f,X){
   const u=X.try?1:smooth(X.p*1.6);let out=heading('Twelve fifths overshoot seven octaves');
-  const sc=1.6,b1=129.746*u,b2=128*u;
+  const sc=1.15,b1=129.746*u,b2=128*u;
   out+=R(90,250-b1*sc,110,b1*sc,C.blue,'none',6)+TB(145,240-b1*sc,'(3/2)¹² = 129.75',15,C.blue)+TF(145,272,'twelve fifths',13,C.muted);
-  out+=R(240,250-b2*sc,110,b2*sc,C.green,'none',6)+TB(295,236-b2*sc+16,'2⁷ = 128',15,C.green)+TF(295,272,'seven octaves',13,C.muted);
+  out+=R(240,250-b2*sc,110,b2*sc,C.green,'none',6)+TB(295,240-b2*sc,'2⁷ = 128',15,C.green)+TF(295,272,'seven octaves',13,C.muted);
   out+=counter(400,80,'ratio',(531441/524288).toFixed(5),C.coral,160)+counter(400,140,'comma',M1_cents(531441/524288).toFixed(2)+' cents',C.coral,160)+counter(400,200,'beats at middle C',(261.63*(531441/524288-1)).toFixed(2)+' /s',C.amber,160);
   out+=R(40,292,520,62,'#fff',C.grid,8)+M1_wave(44,294,512,58,1,t=>Math.cos(Math.PI*3.565*t)*Math.sin(2*Math.PI*40*t),C.purple,1.2,700);
   out+=TF(300,372,'one second of C + B♯ (fine wave slowed for display): the envelope throbs 3.6 times',13,C.muted);
@@ -375,7 +375,7 @@ SCENE({id:'pythagorean-tuning-thirds',name:'Two kinds of major third',tag:'81:64
   const th={just:[5/4,'just 5:4',C.green],equal:[2**(1/3),'equal tempered',C.blue],pyth:[81/64,'Pythagorean 81:64',C.coral]};
   let out=heading('Major thirds in three tunings');const X=c=>60+480*(c-370)/50;
   out+=L(60,150,540,150,C.line,3);for(let c=370;c<=420;c+=10)out+=L(X(c),144,X(c),156,C.muted,1.5)+TF(X(c),176,c+'¢',13,C.muted);
-  Object.entries(th).forEach(([k,[r,n,col]],i)=>{const c=M1_cents(r),on=k===s.t;out+=L(X(c),100,X(c),150,col,on?4:2)+Ci(X(c),100,on?9:6,col)+TF(X(c),i===1?84:72-0*i,n,13,col)+TF(X(c),i===1?70:88,c.toFixed(1)+'¢',13,col)});
+  Object.entries(th).forEach(([k,[r,n,col]],i)=>{const c=M1_cents(r),on=k===s.t,anc=['end','middle','start'][i],dx=[-10,0,10][i];out+=L(X(c),112,X(c),150,col,on?4:2)+Ci(X(c),112,on?9:6,col)+TF(X(c)+dx,72,n,13,col,anc)+TF(X(c)+dx,90,c.toFixed(1)+'¢',13,col,anc)});
   out+=P(`M${X(386.31)} 200 L${X(386.31)} 214 L${X(407.82)} 214 L${X(407.82)} 200`,C.purple,2)+TF((X(386.31)+X(407.82))/2,234,'syntonic comma 21.5¢',13,C.purple);
   const r=th[s.t][0],beat=Math.abs(4*261.63*r-5*261.63);
   out+=counter(70,262,'ratio',s.t==='equal'?'2^(4/12)':s.t==='just'?'5 : 4':'81 : 64',th[s.t][2],140)+counter(230,262,'frequency over C4',M1_f2(261.63*r)+' Hz',C.ink,140)+counter(390,262,'beats per second',beat<.05?'0':beat.toFixed(1),beat<.05?C.green:C.coral,140);

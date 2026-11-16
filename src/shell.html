@@ -56,6 +56,10 @@ button:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-v
 .mode-buttons button[aria-pressed="true"]:hover{background:#fff}
 .deck-note{font-size:12px;color:var(--muted);text-align:right;line-height:1.3}
 .mute{min-height:40px;padding:4px 10px;font-size:12px;border:0;background:transparent;color:#425d6c}
+/* The toolbar wraps as a whole rather than squeezing button labels onto two lines. */
+.deck-toolbar{flex-wrap:wrap;row-gap:4px}
+.mode-buttons button,.view-mode-buttons button,.mute{white-space:nowrap}
+.deck-note{margin-left:auto}
 .mute[aria-pressed="true"]{color:var(--warm)}
 #drawing{display:block;width:100%;height:auto;aspect-ratio:600/380}
 #drawing text{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
