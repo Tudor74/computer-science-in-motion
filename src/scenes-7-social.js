@@ -191,7 +191,7 @@ SCENE({id:'theory-of-mind-age',name:'When children pass',tag:'A curve with age',
   out+=TF(x0+w/2,y0+h+38,'age in months',13,C.muted);
   out+=L(x0,Y(50),x0+w,Y(50),C.amber,1.5,'stroke-dasharray="6 5"')+TF(x0+w-6,Y(50)-6,'chance',13,C.amber,'end');
   const pts=[];for(let m=24;m<=72;m+=1)pts.push(fmt(X(m))+' '+fmt(Y(100*D7_tomP(m))));out+=P('M'+pts.join(' L'),C.blue,3);
-  out+=TF(X(66),Y(100*D7_tomP(66))+22,'summary of studies',13,C.blue,'end');
+  out+=TF(x0+10,y0+20,'blue curve: summary of studies',13,C.blue,'start');
   out+=Ci(X(15),Y(50),7,'none',C.purple,'stroke-dasharray="3 3" stroke-width="2"')+TF(X(15)+12,Y(50)+28,'looking-time tasks,',13,C.purple,'start')+TF(X(15)+12,Y(50)+45,'15 months: contested',13,C.purple,'start');
   out+=L(X(s.age),y0,X(s.age),y0+h,C.coral,1.5);
   s.pts.forEach(([m,v])=>out+=Ci(X(m),Y(v),6,C.coral,'#fff'));
@@ -234,8 +234,8 @@ function D7_lines(seed,i){const r=D7_rng(seed*31+i*7+3);const std=Math.round(70+
  if(Math.abs(o[0]-o[1])<12)o[1]=std+(o[0]>std?-d2:d2);
  const comps=[];let k=0;for(let j=0;j<3;j++)comps.push(j===pos?std:clamp(o[k++],35,145));return {std,comps,correct:pos}}
 function D7_cards(X,t,base,act,mark){
- let out=R(40,60,150,170,'#fff',C.grid,8)+L(115,base,115,base-t.std,C.ink,5)+TF(115,base+22,'standard',13,C.muted);
- out+=R(220,60,340,170,'#fff',C.grid,8);
+ let out=R(40,60,150,186,'#fff',C.grid,8)+L(115,base,115,base-t.std,C.ink,5)+TF(115,base+22,'standard',13,C.muted);
+ out+=R(220,60,340,186,'#fff',C.grid,8);
  t.comps.forEach((len,j)=>{const x=290+j*100,col=mark&&mark(j)||C.ink;out+=hit(X,act,j,'Line '+'ABC'[j],R(x-36,64,72,190,'transparent','none',4)+L(x,base,x,base-len,col,5))+TBF(x,base+22,'ABC'[j],15,col)});
  return out}
 SCENE({id:'conformity',name:'Asch’s lines',tag:'Judging alone, and in a group',
@@ -349,7 +349,7 @@ SCENE({id:'obedience',name:'Milgram’s shock board',tag:'Reconstructed, not re-
   out+=TF(344,144,s.guess===null?'Predictions before the study:':`Your guess: ${s.guess} of 40`,14,C.ink,'start');
   out+=TF(344,168,'Yale seniors: about 1% (0.5 of 40)',13,C.muted,'start')+TF(344,188,'Psychiatrists: about 1 in 1,000',13,C.muted,'start');
   out+=s.shown?TBF(344,222,'Result: 26 of 40 (65%)',15,C.coral,'start')+TF(344,246,'all 40 reached 300 V',13,C.coral,'start'):TF(344,222,'Result hidden until 450 V',13,C.muted,'start');
-  out+=R(30,288,550,64,'#fff4ec','none',8)+D7_para(42,308,'The “learner” was an actor and no shocks were given, but participants believed they might be. Many sweated, trembled or laughed nervously. Studies like this led to modern ethics review.',90,13,C.ink,'start',18);
+  out+=R(30,288,550,64,'#fff4ec','none',8)+D7_para(42,308,'The “learner” was an actor and no shocks were given, but participants believed they might be. Many sweated, trembled or laughed nervously. Studies like this led to modern ethics review.',80,13,C.ink,'start',18);
   return {svg:out,phase:'The first people stopped at 300 volts, when the learner pounded on the wall. Milgram’s conclusion was not that people are cruel, but that ordinary people can be drawn into harmful acts by a situation and an authority.'};
  }});
 
@@ -537,7 +537,7 @@ SCENE({id:'replication-crisis-paths',name:'The garden of forking paths',tag:'Fin
  dur:12,hint:'Switch on the researcher’s choices one at a time and watch the false positives grow. There is no real effect in any of these studies.',
  init:()=>({a:'0',b:'0',c:'0'}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {a:k>=1?'1':'0',b:k>=2?'1':'0',c:k>=3?'1':'0'}},
- ui:[{choose:[['0','Off'],['1','On']],label:'Two outcome measures',get:s=>s.a,act:'a'},{choose:[['0','Off'],['1','On']],label:'Peek, then add 10 per group',get:s=>s.b,act:'b'},{choose:[['0','Off'],['1','On']],label:'Drop outliers if it helps',get:s=>s.c,act:'c'}],
+ ui:[{choose:[['0','One measure'],['1','Two measures']],label:'Outcome measures',get:s=>s.a,act:'a'},{choose:[['0','Fixed sample'],['1','Peek, add 10']],label:'Sample size',get:s=>s.b,act:'b'},{choose:[['0','Keep all data'],['1','Drop outliers']],label:'Outliers',get:s=>s.c,act:'c'}],
  on:{a(s,v){s.a=v},b(s,v){s.b=v},c(s,v){s.c=v}},
  draw(s){
   const o={a:s.a==='1',b:s.b==='1',c:s.c==='1'},res=D7_fp(o),rate=100*res.filter(Boolean).length/res.length;
@@ -554,7 +554,7 @@ SCENE({id:'replication-crisis-paths',name:'The garden of forking paths',tag:'Fin
   return {svg:out,phase:'Each choice looks reasonable on its own. Together, and unreported, they let chance masquerade as discovery. Preregistering the analysis closes these paths.'};
  }});
 
-const D7_QZ=[['Anchoring on an arbitrary number','h','Replicated strongly in Many Labs 1 (2014).'],['Ego depletion (willpower runs out)','f','23-lab test found almost no effect (Hagger et al. 2016).'],['Power poses change hormones','f','Ranehill et al. (2015) found no hormone change; feelings of power: weak.'],['Reading “elderly” words slows walking','f','Doyen et al. (2012) failed to replicate Bargh et al. (1996).'],['Holding a pen to smile makes cartoons funnier','m','Failed in a 17-lab test (2016); a 2022 multilab study found a small effect.'],['Gain versus loss framing','h','Replicated in Many Labs 1 (2014).'],['Images of money make people more pro-free-market','f','Failed in Many Labs 1 (2014).'],['Testing yourself improves recall','h','Robust across hundreds of studies (Rowland 2014).']];
+const D7_QZ=[['Anchoring on an arbitrary number','h','Replicated strongly in Many Labs 1 (2014).'],['Ego depletion (willpower runs out)','f','23-lab test found almost no effect (Hagger et al. 2016).'],['Power poses change hormones','f','Ranehill et al. (2015) found no hormone change; feelings of power: weak.'],['Reading “elderly” words slows walking','f','Doyen et al. (2012) failed to replicate Bargh et al. (1996).'],['A pen-held smile makes cartoons funnier','m','Failed in a 17-lab test (2016); a 2022 multilab study found a small effect.'],['Gain versus loss framing','h','Replicated in Many Labs 1 (2014).'],['Images of money shift political views','f','Failed in Many Labs 1 (2014).'],['Testing yourself improves recall','h','Robust across hundreds of studies (Rowland 2014).']];
 SCENE({id:'replication-crisis-quiz',name:'Which ones held up?',tag:'Predict, then check',
  definition:'Researchers and even lay people can predict fairly well which findings will replicate: surprising, small-sample effects with weak evidence fail more often.',
  example:'In a prediction market run alongside the Reproducibility Project, bets on which studies would replicate were right about 71% of the time.',
@@ -596,7 +596,7 @@ SCENE({id:'replication-crisis-fixes',name:'Power and preregistration',tag:'How s
   out+=L(x0,Y(.8),x0+w,Y(.8),C.green,1.5,'stroke-dasharray="6 5"')+TF(x0+6,Y(.8)-6,'80% target',13,C.green,'start');
   const pts=[];for(let n=5;n<=150;n+=1)pts.push(fmt(X(n))+' '+fmt(Y(D7_pow(d,n))));out+=P('M'+pts.join(' L'),C.blue,3);
   [5,50,100,150].forEach(n=>out+=TF(X(n),y0+h+18,String(n),13,C.muted));out+=TF(x0+w/2,y0+h+38,'people per group',13,C.muted);
-  out+=Ci(X(s.n),Y(pw),7,C.coral,'#fff')+TBF(X(s.n)+(s.n>110?-10:10),Y(pw)+(pw>.85?18:-10),Math.round(pw*100)+'%',14,C.coral,s.n>110?'end':'start');
+  out+=Ci(X(s.n),Y(pw),7,C.coral,'#fff');
   out+=TBF(400,64,'Positive results reported',14,C.ink,'start');
   [['Standard papers',96,C.coral],['Registered reports',44,C.green]].forEach(([l,v,c],i)=>{const x=410+i*90,bh=v*1.7;out+=R(x,250-bh,60,bh,c,'none',4)+TBF(x+30,244-bh,v+'%',13,C.ink)+TF(x+30,270,l.split(' ')[0],13,C.muted)+TF(x+30,286,l.split(' ')[1],13,C.muted)});
   out+=T(300,352,`${s.n} per group: a real effect of d = ${fmt(d)} would be detected ${Math.round(pw*100)}% of the time`,15,C.ink);

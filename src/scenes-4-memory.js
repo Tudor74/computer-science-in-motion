@@ -331,7 +331,7 @@ SCENE({id:'encoding-context-specificity',name:'Encoding specificity',tag:'The ri
   out+=Ci(150,170,86,C.pale,C.blue,'fill-opacity=".85"');
   out+=TF(150,72,'stored at study',13,C.blue)+TF(110,150,'soil',14,C.ink)+TF(104,178,'frost',14,C.ink)+TF(118,206,'earth',14,C.ink);
   if(c.x)out+=Ci(c.x,170,72,C.coralp,C.coral,'fill-opacity=".6"')+TF(c.x+24,90,'brought by the cue',13,C.coral)+(s.cue==='strong'?TF(c.x+30,158,'heat',14,C.ink)+TF(c.x+34,186,'weather',14,C.ink)+TF(c.x+28,214,'drink',14,C.ink):'');
-  out+=TBF(s.cue==='weak'?196:172,s.cue==='weak'?236:178,'COLD',17,C.ink);
+  out+=TBF(s.cue==='weak'?200:172,176,'COLD',17,C.ink);
   const ov=s.cue==='weak'?'large overlap':s.cue==='strong'?'small overlap':'no cue: nothing to match';
   out+=TF(180,282,ov,14,s.cue==='weak'?C.green:s.cue==='strong'?C.amber:C.muted);
   out+=L(408,252,580,252,C.line,1.5)+TF(494,62,'recall (illustrative)',13,C.muted);
