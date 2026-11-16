@@ -208,9 +208,9 @@ const NW_HTTP={
  admin:{label:'GET /admin',req:['GET /admin HTTP/1.1','Host: example.com','Accept: text/html'],route:2,code:403,status:'403 Forbidden',head:['Content-Type: text/html','Content-Length: 19'],body:'<h1>Staff only</h1>',page:'Staff only',path:'/admin'}};
 const NW_ROUTES=['GET /  → home page','POST /contact → save, redirect','GET /admin → staff only','anything else → 404'];
 SCENE({id:'http',name:'HTTP',tag:'Requests and responses',
- definition:'The Hypertext Transfer Protocol: a browser sends a text request naming a method and a path, and the server sends back a response with a status code, headers and usually a body.',
+ definition:'The Hypertext Transfer Protocol: a browser sends a request naming a method and a path, and the server sends back a response with a status code, headers and usually a body. In HTTP/1.1, shown here, both are plain text; HTTP/2 and HTTP/3 carry the same messages in binary frames.',
  example:'GET /missing gets “404 Not Found”. Submitting a form with POST often gets “303 See Other”, telling the browser where to go next. HTTPS is the same conversation inside an encrypted connection.',
- desc:'A browser and a server exchange a request and a response; the request text, the server’s matching route, the response with its status code highlighted, and the rendered page are shown.',
+ desc:'A browser and a server exchange a request and a response; the HTTP/1.1 request text, the server’s matching route, the response with its status code highlighted, and the rendered page are shown.',
  dur:10,hint:'Choose a request and step through: request out, route matched, response back, page shown.',
  init:()=>({req:'home'}),
  ui:[{choose:Object.keys(NW_HTTP).map(k=>[k,NW_HTTP[k].label]),label:'Request',get:s=>s.req,act:'req'}],

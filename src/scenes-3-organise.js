@@ -335,7 +335,7 @@ SCENES['array-3d'].three=(s,f,X,project)=>{
 function OR_dyn(n){let cap=1,copies=0;const per=[];for(let k=1;k<=n;k++){let c=1;if(k>cap){copies+=cap;c+=cap;cap*=2}per.push(c)}return {cap,copies,per,grew:n>1&&((n-1)&(n-2))===0}}
 SCENE({id:'dynamic-array',name:'Dynamic array',tag:'Growing by doubling',
  definition:'An array that grows as you append. When it is full it allocates a block twice the size and copies everything across; because doubling is rare, an append costs a constant amount of work on average (amortised).',
- example:'Python lists and JavaScript arrays work this way. Appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
+ example:'Doubling is a simple teaching model. Real lists grow by other fixed proportions (CPython’s list grows by about an eighth, through capacities 0, 4, 8, 16, 24, 32 …), which keeps the average append just as cheap. With doubling, appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
  desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes at powers of two.',
  dur:12,hint:'Press Append and watch the capacity double when the array is full. The chart shows rare expensive appends among many cheap ones.',
  init:()=>({n:5}),

@@ -497,20 +497,20 @@ SCENE({id:'control-characters',name:'Control characters',tag:'Invisible codes th
  }});
 
 SCENE({id:'text-sorting',name:'Sorting text by code',tag:'Why “Zebra” comes before “apple”',
- definition:'Comparing text by character codes puts every capital letter before every lowercase one, and compares digits one at a time, so plain code order is not dictionary order.',
- example:'By code, “Zebra” (Z = 90) comes before “apple” (a = 97), and “10” before “9” because “1” (49) is less than “9” (57). A dictionary comparison ignores case and reads whole numbers.',
- desc:'Two lists of the same words, one in character-code order and one in dictionary order, joined by lines that cross wherever the orders disagree.',
- dur:10,hint:'Edit the comma-separated words, then compare code order with case-insensitive or dictionary order.',
+ definition:'Comparing text by character codes puts every capital letter before every lowercase one, and compares digits one at a time, so plain code order is not the order people expect.',
+ example:'By code, “Zebra” (Z = 90) comes before “apple” (a = 97), and “10” before “9” because “1” (49) is less than “9” (57). Three separate choices fix different things: ignoring case; language-aware collation, which also files é with e; and natural (numeric) sorting, which reads “10” as ten. Collation alone does not read numbers: numeric sorting is an extra option, switched on here.',
+ desc:'Two lists of the same words, one in character-code order and one in a chosen order (ignoring case, or language-aware with numbers read as numbers), joined by lines that cross wherever the orders disagree.',
+ dur:10,hint:'Edit the comma-separated words, then compare code order with case-insensitive order or language-aware, numeric order.',
  init:()=>({words:'apple,Banana,cherry,Zebra,10,9,éclair',mode:'dict'}),
  watch(p){return {words:'apple,Banana,cherry,Zebra,10,9,éclair',mode:p<.5?'case':'dict',reveal:clamp((p%.5)*3,0,1)}},
- ui:[{text:'Words',label:'Words',get:s=>s.words,act:'set',max:48},{choose:[['case','Ignore case'],['dict','Dictionary']],label:'Right-hand order',get:s=>s.mode,act:'mode'}],
+ ui:[{text:'Words',label:'Words',get:s=>s.words,act:'set',max:48},{choose:[['case','Ignore case'],['dict','Language + numeric']],label:'Right-hand order',get:s=>s.mode,act:'mode'}],
  on:{set(s,v){s.words=v},mode(s,v){s.mode=v}},
  draw(s){
   const ws=[...new Set(s.words.split(',').map(w=>w.trim()).filter(Boolean))].slice(0,7);
   const byCode=ws.slice().sort((a,b)=>a<b?-1:a>b?1:0),col=new Intl.Collator('en-GB',{sensitivity:'base',numeric:true});
   const right=ws.slice().sort(s.mode==='dict'?col.compare:(a,b)=>{const x=a.toLowerCase(),y=b.toLowerCase();return x<y?-1:x>y?1:0});
   let out=heading('The same words in two orders');const rh=38,y0=70;
-  out+=TBF(150,58,'By character code',14,C.ink)+TBF(450,58,s.mode==='dict'?'Dictionary order':'Ignoring case',14,C.blue);
+  out+=TBF(150,58,'By character code',14,C.ink)+TBF(450,58,s.mode==='dict'?'Language-aware, numeric':'Ignoring case',14,C.blue);
   const rv=s.reveal===undefined?1:s.reveal;let crosses=0;
   byCode.forEach((w,i)=>{const j=right.indexOf(w),y=y0+i*rh,y2=y0+j*rh;if(i!==j)crosses++;out+=P(`M240 ${y+16}C305 ${y+16} 295 ${y2+16} 360 ${y2+16}`,i===j?C.line:C.coral,i===j?1.5:2.2,'none',`opacity="${rv}"`)});
   byCode.forEach((w,i)=>{const y=y0+i*rh,c=w.codePointAt(0);out+=R(60,y,180,32,'#fff',C.grid,6)+TMF(72,y+22,w.length>11?w.slice(0,10)+'…':w,15,C.ink,'start')+TF(230,y+21,`${String.fromCodePoint(c)} ${c}`,13,C.muted,'end')});

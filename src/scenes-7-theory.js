@@ -83,7 +83,7 @@ function TH_railroad(parts,y,litOn){
 }
 SCENE({id:'regular-expression',name:'Regular expression',tag:'A pattern is a machine',
  definition:'A compact pattern describing a set of strings, built from letters, choices (|), optional parts (?) and repetition (* and +).',
- example:'colou?r matches both “color” and “colour”. Every regular expression can be turned into a finite automaton, and back again.',
+ example:'colou?r matches both “color” and “colour”. Every regular expression can be turned into a finite automaton, and back again. That holds for regular expressions in the mathematical sense; the regex engines in programming languages (PCRE, Perl, Python) add extras such as backreferences that no finite automaton can match.',
  desc:'A railroad diagram of the pattern, a path that a matching string can follow from left to right, above a test sentence with matches highlighted.',
  dur:12,hint:'Pick a pattern and edit the test text. Highlighted parts are matches: strings with a route through the diagram.',
  init:()=>({i:0,text:TH_REGEX[0].sample}),

@@ -1106,20 +1106,20 @@ SCENE({id:'control-characters',name:'Control characters',tag:'Invisible codes th
  }});
 
 SCENE({id:'text-sorting',name:'Sorting text by code',tag:'Why “Zebra” comes before “apple”',
- definition:'Comparing text by character codes puts every capital letter before every lowercase one, and compares digits one at a time, so plain code order is not dictionary order.',
- example:'By code, “Zebra” (Z = 90) comes before “apple” (a = 97), and “10” before “9” because “1” (49) is less than “9” (57). A dictionary comparison ignores case and reads whole numbers.',
- desc:'Two lists of the same words, one in character-code order and one in dictionary order, joined by lines that cross wherever the orders disagree.',
- dur:10,hint:'Edit the comma-separated words, then compare code order with case-insensitive or dictionary order.',
+ definition:'Comparing text by character codes puts every capital letter before every lowercase one, and compares digits one at a time, so plain code order is not the order people expect.',
+ example:'By code, “Zebra” (Z = 90) comes before “apple” (a = 97), and “10” before “9” because “1” (49) is less than “9” (57). Three separate choices fix different things: ignoring case; language-aware collation, which also files é with e; and natural (numeric) sorting, which reads “10” as ten. Collation alone does not read numbers: numeric sorting is an extra option, switched on here.',
+ desc:'Two lists of the same words, one in character-code order and one in a chosen order (ignoring case, or language-aware with numbers read as numbers), joined by lines that cross wherever the orders disagree.',
+ dur:10,hint:'Edit the comma-separated words, then compare code order with case-insensitive order or language-aware, numeric order.',
  init:()=>({words:'apple,Banana,cherry,Zebra,10,9,éclair',mode:'dict'}),
  watch(p){return {words:'apple,Banana,cherry,Zebra,10,9,éclair',mode:p<.5?'case':'dict',reveal:clamp((p%.5)*3,0,1)}},
- ui:[{text:'Words',label:'Words',get:s=>s.words,act:'set',max:48},{choose:[['case','Ignore case'],['dict','Dictionary']],label:'Right-hand order',get:s=>s.mode,act:'mode'}],
+ ui:[{text:'Words',label:'Words',get:s=>s.words,act:'set',max:48},{choose:[['case','Ignore case'],['dict','Language + numeric']],label:'Right-hand order',get:s=>s.mode,act:'mode'}],
  on:{set(s,v){s.words=v},mode(s,v){s.mode=v}},
  draw(s){
   const ws=[...new Set(s.words.split(',').map(w=>w.trim()).filter(Boolean))].slice(0,7);
   const byCode=ws.slice().sort((a,b)=>a<b?-1:a>b?1:0),col=new Intl.Collator('en-GB',{sensitivity:'base',numeric:true});
   const right=ws.slice().sort(s.mode==='dict'?col.compare:(a,b)=>{const x=a.toLowerCase(),y=b.toLowerCase();return x<y?-1:x>y?1:0});
   let out=heading('The same words in two orders');const rh=38,y0=70;
-  out+=TBF(150,58,'By character code',14,C.ink)+TBF(450,58,s.mode==='dict'?'Dictionary order':'Ignoring case',14,C.blue);
+  out+=TBF(150,58,'By character code',14,C.ink)+TBF(450,58,s.mode==='dict'?'Language-aware, numeric':'Ignoring case',14,C.blue);
   const rv=s.reveal===undefined?1:s.reveal;let crosses=0;
   byCode.forEach((w,i)=>{const j=right.indexOf(w),y=y0+i*rh,y2=y0+j*rh;if(i!==j)crosses++;out+=P(`M240 ${y+16}C305 ${y+16} 295 ${y2+16} 360 ${y2+16}`,i===j?C.line:C.coral,i===j?1.5:2.2,'none',`opacity="${rv}"`)});
   byCode.forEach((w,i)=>{const y=y0+i*rh,c=w.codePointAt(0);out+=R(60,y,180,32,'#fff',C.grid,6)+TMF(72,y+22,w.length>11?w.slice(0,10)+'…':w,15,C.ink,'start')+TF(230,y+21,`${String.fromCodePoint(c)} ${c}`,13,C.muted,'end')});
@@ -2674,7 +2674,7 @@ SCENES['array-3d'].three=(s,f,X,project)=>{
 function OR_dyn(n){let cap=1,copies=0;const per=[];for(let k=1;k<=n;k++){let c=1;if(k>cap){copies+=cap;c+=cap;cap*=2}per.push(c)}return {cap,copies,per,grew:n>1&&((n-1)&(n-2))===0}}
 SCENE({id:'dynamic-array',name:'Dynamic array',tag:'Growing by doubling',
  definition:'An array that grows as you append. When it is full it allocates a block twice the size and copies everything across; because doubling is rare, an append costs a constant amount of work on average (amortised).',
- example:'Python lists and JavaScript arrays work this way. Appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
+ example:'Doubling is a simple teaching model. Real lists grow by other fixed proportions (CPython’s list grows by about an eighth, through capacities 0, 4, 8, 16, 24, 32 …), which keeps the average append just as cheap. With doubling, appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
  desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes at powers of two.',
  dur:12,hint:'Press Append and watch the capacity double when the array is full. The chart shows rare expensive appends among many cheap ones.',
  init:()=>({n:5}),
@@ -5833,9 +5833,9 @@ const NW_HTTP={
  admin:{label:'GET /admin',req:['GET /admin HTTP/1.1','Host: example.com','Accept: text/html'],route:2,code:403,status:'403 Forbidden',head:['Content-Type: text/html','Content-Length: 19'],body:'<h1>Staff only</h1>',page:'Staff only',path:'/admin'}};
 const NW_ROUTES=['GET /  → home page','POST /contact → save, redirect','GET /admin → staff only','anything else → 404'];
 SCENE({id:'http',name:'HTTP',tag:'Requests and responses',
- definition:'The Hypertext Transfer Protocol: a browser sends a text request naming a method and a path, and the server sends back a response with a status code, headers and usually a body.',
+ definition:'The Hypertext Transfer Protocol: a browser sends a request naming a method and a path, and the server sends back a response with a status code, headers and usually a body. In HTTP/1.1, shown here, both are plain text; HTTP/2 and HTTP/3 carry the same messages in binary frames.',
  example:'GET /missing gets “404 Not Found”. Submitting a form with POST often gets “303 See Other”, telling the browser where to go next. HTTPS is the same conversation inside an encrypted connection.',
- desc:'A browser and a server exchange a request and a response; the request text, the server’s matching route, the response with its status code highlighted, and the rendered page are shown.',
+ desc:'A browser and a server exchange a request and a response; the HTTP/1.1 request text, the server’s matching route, the response with its status code highlighted, and the rendered page are shown.',
  dur:10,hint:'Choose a request and step through: request out, route matched, response back, page shown.',
  init:()=>({req:'home'}),
  ui:[{choose:Object.keys(NW_HTTP).map(k=>[k,NW_HTTP[k].label]),label:'Request',get:s=>s.req,act:'req'}],
@@ -6886,7 +6886,7 @@ function TH_railroad(parts,y,litOn){
 }
 SCENE({id:'regular-expression',name:'Regular expression',tag:'A pattern is a machine',
  definition:'A compact pattern describing a set of strings, built from letters, choices (|), optional parts (?) and repetition (* and +).',
- example:'colou?r matches both “color” and “colour”. Every regular expression can be turned into a finite automaton, and back again.',
+ example:'colou?r matches both “color” and “colour”. Every regular expression can be turned into a finite automaton, and back again. That holds for regular expressions in the mathematical sense; the regex engines in programming languages (PCRE, Perl, Python) add extras such as backreferences that no finite automaton can match.',
  desc:'A railroad diagram of the pattern, a path that a matching string can follow from left to right, above a test sentence with matches highlighted.',
  dur:12,hint:'Pick a pattern and edit the test text. Highlighted parts are matches: strings with a route through the diagram.',
  init:()=>({i:0,text:TH_REGEX[0].sample}),
