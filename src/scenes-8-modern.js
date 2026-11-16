@@ -453,9 +453,9 @@ SCENE({id:'atmospheric-chemistry-hole',name:'The ozone hole and its repair',tag:
   out+=P(C8_path(range(111).map(i=>[A.X(1960+i),A.Y(C8_hole(1960+i,true))])),C.blue,3);
   [[1985,'hole reported'],[1987,'Montreal Protocol']].forEach(([y,t],i)=>{out+=L(A.X(y),A.Y(60),A.X(y),A.Y(0),C.grid,1.5)+TF(A.X(y)+(i?6:-6),A.Y(56)+i*16,t,13,C.muted,i?'start':'end')});
   const v=C8_hole(s.y,s.proto);out+=L(A.X(s.y),A.Y(60),A.X(s.y),A.Y(0),C.ink,1.5)+Ci(A.X(s.y),A.Y(v),7,s.proto?C.blue:C.coral);
-  out+=TF(70,328,'Antarctica ≈ 14 million km².',13,C.muted,'start');
-  out+=TBF(560,328,`${s.y}: about ${v.toFixed(0)} million km²${s.proto?'':' (world avoided)'}`,14,C.ink,'end');
-  out+=TF(300,354,'Curves are smoothed and approximate, after WMO 2022 and Newman et al. 2009.',13,C.muted);
+  out+=TF(70,328,'Antarctica ≈ 14 million km²; dashed line capped at 60.',13,C.muted,'start');
+  out+=TBF(560,354,`${s.y}: about ${v.toFixed(0)} million km²${s.proto?'':' (world avoided)'}`,14,C.ink,'end');
+  out+=TF(70,374,'Smoothed and approximate, after WMO 2022 and Newman et al. 2009.',13,C.muted,'start');
   return {svg:out,phase:s.proto?(s.y<1978?`${s.y}: no ozone hole yet; CFCs are building up in the atmosphere.`:s.y<2015?`${s.y}: the hole is near its largest, about ${v.toFixed(0)} million km², even though CFC production was cut from 1987. CFCs take decades to leave the air.`:`${s.y}: the hole is slowly shrinking, to about ${v.toFixed(0)} million km². Recovery to 1980 levels is projected around 2066.`):`In the world without the Protocol, the hole would have kept growing: about ${v.toFixed(0)} million km² by ${s.y}. The Montreal Protocol is the most successful environmental treaty so far.`};
  }});
 

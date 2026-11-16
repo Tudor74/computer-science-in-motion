@@ -237,7 +237,7 @@ SCENE({id:'electrolysis',name:'Splitting water',tag:'Electricity pulls a compoun
   const Q=s.I*s.t*60,ne=Q/C2_F,vH=ne/2*C2_VM20*1000,vO=ne/4*C2_VM20*1000;
   let out=heading('2H₂O → 2H₂ + O₂ by electricity');
   out+=R(120,250,300,70,'#d6e6f2',C.line,6);// trough
-  const tube=(x,v,lab,col)=>{const cap=180,h=Math.min(1,v/cap)*170;return R(x,70,46,200,'#f4f9fc',C.line,6)+R(x+2,72,42,h,col,'none',4)+TB(x+23,62,lab,15,C.ink)};
+  const cap=Math.max(180,vH*1.08),tube=(x,v,lab,col)=>{const h=Math.min(1,v/cap)*170;return R(x,70,46,200,'#f4f9fc',C.line,6)+R(x+2,72,42,h,col,'none',4)+TB(x+23,62,lab,15,C.ink)};
   out+=tube(170,vH,'H₂','#ffffff')+tube(324,vO,'O₂','#fbe3dc');
   out+=R(184,262,18,46,'#7b8c96','none',2)+R(338,262,18,46,'#7b8c96','none',2);
   out+=TB(193,352,'cathode (−)',13,C.ink)+TB(347,352,'anode (+)',13,C.ink);
@@ -462,7 +462,7 @@ SCENE({id:'flame-spectra-sun',name:'The chemistry of the stars',tag:'Dark lines 
   else if(s.m==='white')out+=C2_strip(50,90,500,90,[],'bright');
   else if(s.m==='absorb')out+=C2_strip(50,90,500,90,na,'bright');
   else{out+=C2_strip(50,90,500,90,C2_FRAUN.map(([nm])=>({nm,w:1.8})),'bright');
-   C2_FRAUN.filter(f=>f[1]).forEach(([nm,l],i)=>{const x=C2_nmx(50,500,nm);out+=TBF(x,84,l,13,C.ink)});}
+   C2_FRAUN.filter(f=>f[1]).forEach(([nm,l],i)=>{const x=C2_nmx(50,500,nm);out+=TBF(l==='K'?x-2:l==='H'?x+2:x,84,l,13,C.ink,l==='K'?'end':l==='H'?'start':'middle')});}
   if(s.he){const x=C2_nmx(50,500,587.6);out+=R(x-14,210,28,28,'#0d1418','none',3)+R(x-1.5,210,3,28,C2_wl(587.6),'none',0)+TF(x-20,229,'helium 587.6 nm, from the Sun’s edge',13,C.ink,'end')}
     out+=R(50,250,500,96,'#fff',C.grid,10);
   const txt={hot:['A hot gas gives bright lines on a dark background.','Sodium: two yellow lines at 589.0 and 589.6 nm.'],white:['A hot solid or dense gas gives a continuous rainbow.','No lines: every wavelength is present.'],absorb:['Pass white light through cooler sodium vapour:','dark lines appear exactly where sodium emits.'],sun:['The Sun’s cooler outer layers absorb: D = sodium, C and F = hydrogen,','H and K = calcium, b = magnesium. Chemistry at 150 million km.']}[s.m];

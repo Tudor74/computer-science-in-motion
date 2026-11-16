@@ -385,14 +385,14 @@ function C6_tetDraw(cx,cy,m,order,mirror){
 }
 SCENE({id:'stereochemistry',name:'Left- and right-handed molecules',tag:'van ’t Hoff and Le Bel, 1874',
  definition:'A carbon atom with four different groups can be arranged in two ways that are mirror images and cannot be superimposed, like a left and a right hand. Such molecules are chiral, and the two forms are labelled R and S by ranking the groups.',
- example:'Natural alanine in proteins is the S form. Bromochloromethane, with two identical hydrogens, is not chiral: its mirror image is the same molecule.',
+ example:'Natural alanine in proteins is the S form; choosing alanine starts on it. Bromochloromethane, with two identical hydrogens, is not chiral: its mirror image is the same molecule.',
  desc:'A tetrahedral carbon drawn with wedges and dashes beside its mirror image, with each labelled R or S; the learner swaps two groups or rotates three and sees which changes the handedness.',
  research:'van ’t Hoff, J. H. (1874). Voorstel tot uitbreiding der … structuurformules in de ruimte. Le Bel, J. A. (1874). Bulletin de la Société Chimique de Paris 22, 337–347. Cahn, R. S., Ingold, C. & Prelog, V. (1966). Specification of molecular chirality. Angewandte Chemie International Edition 5, 385–415.',
  dur:12,hint:'Swap two groups and the label flips; rotate three and it does not. Try the molecule with two hydrogens, then turn the model in 3D.',
  init:()=>({m:'bcf',order:[0,1,2,3]}),
  watch(p){const k=Math.floor(p*4);return {m:k<3?'bcf':'cbr',order:k===1?[0,1,3,2]:k===2?[1,2,0,3]:[0,1,2,3]}},
  ui:[{choose:[['bcf','CHBrClF'],['ala','Alanine'],['cbr','CH₂BrCl']],label:'Molecule',get:s=>s.m,act:'m'},{b:'Swap two groups',act:'swap'},{b:'Rotate three',act:'rot'}],
- on:{m(s,v){s.m=v;s.order=[0,1,2,3];return 'keep'},swap(s){const o=s.order.slice();[o[2],o[3]]=[o[3],o[2]];s.order=o;return 'keep'},rot(s){const o=s.order;s.order=[o[1],o[2],o[0],o[3]];return 'keep'}},
+ on:{m(s,v){s.m=v;s.order=v==='ala'?[0,1,3,2]:[0,1,2,3];return 'keep'},swap(s){const o=s.order.slice();[o[2],o[3]]=[o[3],o[2]];s.order=o;return 'keep'},rot(s){const o=s.order;s.order=[o[1],o[2],o[0],o[3]];return 'keep'}},
  draw(s){
   const m=C6_MOLS[s.m],L1=C6_RS(m,s.order,false),L2=C6_RS(m,s.order,true);
   let out=heading(m.n[0].toUpperCase()+m.n.slice(1),30);
