@@ -147,7 +147,7 @@ SCENE({id:'lewis-structures-formal-charge',name:'Formal charge and resonance',ta
   if(m.ch)out+=TBF(230,335,'overall charge −1',13,C.blue);
   const x=410;out+=TBF(x,78,s.hy?'What is measured':'Formal charges',14,C.ink,'start');
   if(s.hy)out+=C4_wrap(x,100,m.real,25,13,C.ink);
-  else{const tot=sum(fc.map(Math.abs));out+=TF(x,100,fc.map((v,i)=>`${A[i][0]} ${v>0?'+':v<0?'−':''}${Math.abs(v)}`).join(' · '),13,C.ink,'start');
+  else{const tot=sum(fc.map(Math.abs));out+=TF(x,100,fc.map((v,i)=>`${A[i][0]}: ${v>0?'+':v<0?'−':''}${Math.abs(v)}`).join('  '),13,C.ink,'start');
    out+=TF(x,120,`Sum of sizes: ${tot}`,13,C.ink,'start');
    const best=Math.min(...m.S.map(t=>sum(C4_fc(m,t).map(Math.abs))));const eq=m.S.filter(t=>sum(C4_fc(m,t).map(Math.abs))===best).length;
    out+=C4_wrap(x,150,tot>best?'Larger formal charges than another structure: a poorer description.':eq>1?`${eq} structures tie for the smallest charges. The molecule is a blend: press Hybrid.`:'The smallest formal charges possible: the best single structure.',25,13,tot>best?C.coral:C.green)}
@@ -185,7 +185,7 @@ SCENE({id:'ionic-covalent',name:'From covalent to ionic',tag:'One continuum, not
  }});
 
 /* ionic-covalent-born-haber */
-const C4_BH=[{t:'Na(s) + ½Cl₂(g)',e:0,step:'start'},{t:'Na(g) + ½Cl₂(g)',e:107,step:'Turn sodium into gas: +107'},{t:'Na(g) + Cl(g)',e:229,step:'Break half a Cl–Cl bond: +122'},{t:'Na⁺(g) + e⁻ + Cl(g)',e:725,step:'Remove sodium’s electron: +496'},{t:'Na⁺(g) + Cl⁻(g)',e:376,step:'Chlorine gains the electron: −349'},{t:'NaCl(s)',e:-411,step:'Ions pack into the crystal: −787'}];
+const C4_BH=[{t:'Na(s) + ½Cl₂(g)',e:0,step:'Start: sodium metal and chlorine gas, energy set at zero'},{t:'Na(g) + ½Cl₂(g)',e:107,step:'Turn sodium into gas: +107'},{t:'Na(g) + Cl(g)',e:229,step:'Break half a Cl–Cl bond: +122'},{t:'Na⁺(g) + e⁻ + Cl(g)',e:725,step:'Remove sodium’s electron: +496'},{t:'Na⁺(g) + Cl⁻(g)',e:376,step:'Chlorine gains the electron: −349'},{t:'NaCl(s)',e:-411,step:'Ions pack into the crystal: −787'}];
 SCENE({id:'ionic-covalent-born-haber',name:'The Born–Haber cycle',tag:'Why salt holds together',
  definition:'The Born–Haber cycle (1919) builds an ionic solid from its elements in imaginary steps whose energies can be measured. Because energy is conserved, the steps must add up to the measured heat of formation, which reveals the one quantity that cannot be measured directly: the lattice enthalpy.',
  example:'Making Na⁺ and Cl⁻ from the elements costs energy overall (+376 kJ/mol). Salt still forms readily because packing the ions into a crystal releases 787 kJ/mol.',
@@ -249,12 +249,12 @@ function C4_dirs(n){const s=Math.sqrt(8/9),t=a=>a*Math.PI/180;
 function C4_lone(n,l){const o=n===3?[0]:n===4?[0,1]:n===5?[2,3,4]:n===6?[0,1]:[];return o.slice(0,l)}
 const C4_SHAPES={2:['linear'],3:['trigonal planar','bent'],4:['tetrahedral','trigonal pyramidal','bent'],5:['trigonal bipyramidal','seesaw','T-shaped','linear'],6:['octahedral','square pyramidal','square planar']};
 const C4_EXAMPLE={'2-0':'CO₂, BeCl₂','3-0':'BF₃','3-1':'SO₂','4-0':'CH₄','4-1':'NH₃','4-2':'H₂O','5-0':'PCl₅','5-1':'SF₄','5-2':'ClF₃','5-3':'XeF₂','6-0':'SF₆','6-1':'BrF₅','6-2':'XeF₄'};
+function C4_centre(P,c){const o=P([0,0,0]);return C4_atom(o[0],o[1],c,21)}
 function C4_shape(drawP,c,x,n,l,R0=1){
  // returns items for depth sorting: bonds+atoms and lone-pair lobes
  const dirs=C4_dirs(n),lone=C4_lone(n,l),items=[];
- dirs.forEach((d,i)=>{const v=d.map(q=>q*R0);if(lone.includes(i)){const tip=d.map(q=>q*.66*R0),mid=d.map(q=>q*.4*R0);items.push({at:tip,svg:P=>{const o=P([0,0,0]),p=P(tip),m=P(mid),dx=p[0]-o[0],dy=p[1]-o[1],len=Math.hypot(dx,dy)||1,ang=Math.atan2(dy,dx)*180/Math.PI,nx=-dy/len*5,ny=dx/len*5,q=P(d.map(t=>t*.5*R0));return `<ellipse cx="${fmt(m[0])}" cy="${fmt(m[1])}" rx="${fmt(Math.max(13,len*.55))}" ry="14" transform="rotate(${fmt(ang)} ${fmt(m[0])} ${fmt(m[1])})" fill="${C.amberp}" stroke="${C.amber}" stroke-width="1.5" opacity=".92"/>`+Ci(q[0]+nx,q[1]+ny,3.4,C.amber)+Ci(q[0]-nx,q[1]-ny,3.4,C.amber)}})}
+ dirs.forEach((d,i)=>{const v=d.map(q=>q*R0);if(lone.includes(i)){const tip=d.map(q=>q*.7*R0),mid=d.map(q=>q*.48*R0);items.push({at:tip,svg:P=>{const o=P([0,0,0]),p=P(tip),m=P(mid),dx=p[0]-o[0],dy=p[1]-o[1],len=Math.hypot(dx,dy)||1,ang=Math.atan2(dy,dx)*180/Math.PI,nx=-dy/len*5,ny=dx/len*5,q=P(d.map(t=>t*.5*R0));return `<ellipse cx="${fmt(m[0])}" cy="${fmt(m[1])}" rx="${fmt(Math.max(12,len*.36))}" ry="13" transform="rotate(${fmt(ang)} ${fmt(m[0])} ${fmt(m[1])})" fill="${C.amberp}" stroke="${C.amber}" stroke-width="1.5" opacity=".92"/>`+Ci(q[0]+nx,q[1]+ny,3.4,C.amber)+Ci(q[0]-nx,q[1]-ny,3.4,C.amber)}})}
   else items.push({at:v,svg:P=>{const o=P([0,0,0]),p=P(v);return L(o[0],o[1],p[0],p[1],C.ink,4)+C4_atom(p[0],p[1],x,17)}})});
- items.push({at:[0,0,0],svg:P=>{const o=P([0,0,0]);return C4_atom(o[0],o[1],c,21)}});
  return items;
 }
 const C4_VS={CO2:['CO₂','C','O',2,0,'180°'],BF3:['BF₃','B','F',3,0,'120°'],CH4:['CH₄','C','H',4,0,'109.5°'],NH3:['NH₃','N','H',4,1,'107°'],H2O:['H₂O','O','H',4,2,'104.5°'],PCl5:['PCl₅','P','Cl',5,0,'90° and 120°'],SF6:['SF₆','S','F',6,0,'90°'],XeF4:['XeF₄','Xe','F',6,2,'90°']};
@@ -271,14 +271,14 @@ SCENE({id:'vsepr-shapes',name:'VSEPR shapes',tag:'Electron pairs push apart',
  on:{m(s,v){s.m=v;return 'keep'}},
  draw(s){
   const [nm,c,x,n,l,ang]=C4_VS[s.m];let out=heading(`${nm}: ${C4_SHAPES[n][l]}`,28);
-  const P=v=>C4_proj(v,200,200,105);out+=sortedItems(C4_shape(P,c,x,n,l),P);
+  const P=v=>C4_proj(v,200,200,105);out+=sortedItems(C4_shape(P,c,x,n,l),P)+C4_centre(P,c);
   const px=400;out+=TBF(px,90,'Electron groups',14,C.ink,'start')+TF(px,110,`${n} around ${c}: ${n-l} bond${n-l>1?'s':''}, ${l} lone pair${l===1?'':'s'}`,13,C.ink,'start');
   out+=TBF(px,142,'Shape',14,C.ink,'start')+TF(px,162,C4_SHAPES[n][l],13,C.ink,'start');
   out+=TBF(px,194,'Bond angle',14,C.ink,'start')+TF(px,214,ang,13,C.ink,'start');
   out+=C4_wrap(px,246,s.m==='CO2'?'A double bond counts as one group: two groups, a straight line.':l?'Lone pairs take up room but are not “seen” in the shape, which is named from the atoms alone.':'All groups are bonds, so the shape matches the arrangement of electron groups.',27,13,C.muted);
   return {svg:out,phase:`${nm}: ${n} electron groups (${l} lone), ${C4_SHAPES[n][l]}, ${ang}.`};
  },
- three(s,f,X,project){const [nm,c,x,n,l]=C4_VS[s.m];const P=project([-1.3,1.3,-1.3,1.3,-1.3,1.3]);return {svg:sortedItems(C4_shape(P,c,x,n,l),P),title:`${nm} in 3D`,caption:`${C4_SHAPES[n][l]}: drag to turn. Amber lobes are lone pairs.`}}
+ three(s,f,X,project){const [nm,c,x,n,l]=C4_VS[s.m];const P=project([-1.05,1.05,-1.05,1.05,-1.05,1.05]);return {svg:sortedItems(C4_shape(P,c,x,n,l),P)+C4_centre(P,c),title:`${nm} in 3D`,caption:`${nm}: ${C4_SHAPES[n][l]}. Amber lobes are lone pairs.`}}
 });
 
 /* vsepr-shapes-domains */
@@ -293,8 +293,8 @@ SCENE({id:'vsepr-shapes-domains',name:'Counting electron groups',tag:'From AXE n
  ui:[{range:'n',label:'Electron groups',min:2,max:6,get:s=>s.n,act:'n'},{range:'l',label:'Lone pairs',min:0,max:3,get:s=>s.l,act:'l'}],
  on:{n(s,v){s.n=v;s.l=Math.min(s.l,C4_SHAPES[v].length-1);return 'keep'},l(s,v){s.l=Math.min(v,C4_SHAPES[s.n].length-1);return 'keep'}},
  draw(s){
-  const n=s.n,l=Math.min(s.l,C4_SHAPES[n].length-1),geo=C4_SHAPES[n][0];let out=heading(`AX${n-l}E${l}: ${C4_SHAPES[n][l]}`,28);
-  const P=v=>C4_proj(v,200,200,100);out+=sortedItems(C4_shape(P,'A','X',n,l),P);
+  const n=s.n,l=Math.min(s.l,C4_SHAPES[n].length-1),geo=C4_SHAPES[n][0];const sb=k=>String(k).replace(/\d/g,d=>'₀₁₂₃₄₅₆₇₈₉'[d]);let out=heading(`AX${sb(n-l)}E${sb(l)}: ${C4_SHAPES[n][l]}`,28);
+  const P=v=>C4_proj(v,200,200,100);out+=sortedItems(C4_shape(P,'A','X',n,l),P)+C4_centre(P,'A');
   const px=400;out+=TBF(px,90,'Electron groups',14,C.ink,'start')+TF(px,110,`${n}: arranged ${geo}`,13,C.ink,'start');
   out+=TBF(px,142,'Shape of the atoms',14,C.ink,'start')+TF(px,162,C4_SHAPES[n][l],13,C.ink,'start');
   out+=TBF(px,194,'Example',14,C.ink,'start')+TF(px,214,C4_EXAMPLE[n+'-'+l]||'—',13,C.ink,'start');
@@ -351,14 +351,14 @@ SCENE({id:'orbitals-hybrids',name:'Orbitals and hybrids',tag:'Shapes of electron
  draw(s){
   const k=s.k,n=C4_hn[k];let out=heading(`${C4_ORB.find(q=>q[0]===k)[1]} orbital (cross-section)`,28);
   const cx=200,cy=200,sc=60;out+=L(cx-150,cy,cx+150,cy,C.grid,1.2)+L(cx,cy-140,cx,cy+140,C.grid,1.2);
-  if(n){const alpha=Math.acos(-1/n);out+=C4_lobe(k,cx,cy,sc,alpha,true);out+=TF(cx+Math.cos(alpha/2)*40,cy-Math.sin(alpha/2)*40-6,Math.round(alpha*1800/Math.PI)/10+'°',13,C.muted)}
+  if(n){const alpha=Math.acos(-1/n);out+=C4_lobe(k,cx,cy,sc,alpha,true);out+=TF(cx+Math.cos(alpha/2)*138,cy-Math.sin(alpha/2)*138,Math.round(alpha*1800/Math.PI)/10+'° apart',13,C.muted)}
   out+=C4_lobe(k,cx,cy,sc)+Ci(cx,cy,4,C.ink);
   const px=400;out+=TBF(px,90,'Make-up',14,C.ink,'start');
   out+=TF(px,110,k==='s'?'pure s: same in every direction':k==='p'?'pure p: two lobes, a node between':`${Math.round(100/(1+n))}% s, ${Math.round(100*n/(1+n))}% p`,13,C.ink,'start');
   if(n){out+=TBF(px,142,'Angle between hybrids',14,C.ink,'start')+TF(px,162,`cos θ = −1/${n} → ${Math.round(Math.acos(-1/n)*1800/Math.PI)/10}°`,13,C.ink,'start');
    out+=TF(px,184,['','sp: linear, as in CO₂’s carbon','sp²: trigonal, as in ethene','sp³: tetrahedral, as in methane'][n],13,C.muted,'start')}
   out+=C4_wrap(px,226,'Blue and coral mark the wave’s sign, not charge. Hybrids are a model chosen to match known shapes.',27,13,C.muted);
-  return {svg:out,phase:k==='s'?'An s orbital is spherical.':k==='p'?'A p orbital has two lobes of opposite sign with a node at the nucleus.':`An ${k} hybrid mixes s and p into one big lobe; equivalent ${k} hybrids point ${Math.round(Math.acos(-1/n)*1800/Math.PI)/10}° apart.`};
+  return {svg:out,phase:k==='s'?'An s orbital is spherical.':k==='p'?'A p orbital has two lobes of opposite sign with a node at the nucleus.':`An ${C4_ORB.find(q=>q[0]===k)[1]} hybrid mixes s and p into one big lobe; equivalent hybrids point ${Math.round(Math.acos(-1/n)*1800/Math.PI)/10}° apart.`};
  }});
 
 /* orbitals-hybrids-methane */
@@ -416,9 +416,9 @@ SCENE({id:'orbitals-hybrids-mo',name:'Molecular orbitals',tag:'Why oxygen is mag
    out+=TF(275,q.y+5,q.n,13,q.b?C.blue:C.coral,'start')});
   const bo=(bE-aE)/2;const px=390;
   out+=TBF(px,90,'Bond order',14,C.ink,'start')+TF(px,110,`(${bE} − ${aE}) ÷ 2 = ${bo%1?bo.toFixed(1):bo}`,13,C.ink,'start');
-  out+=TBF(px,142,'Unpaired electrons',14,C.ink,'start')+TF(px,162,`${unp}: ${unp?'attracted by a magnet (paramagnetic)':'not attracted (diamagnetic)'}`,13,C.ink,'start');
+  out+=TBF(px,142,'Unpaired electrons',14,C.ink,'start')+C4_wrap(px,162,`${unp}: ${unp?'attracted by a magnet (paramagnetic)':'not attracted (diamagnetic)'}`,26,13,C.ink);
   const note={H2p:'Half a bond: H₂⁺ exists, weaker than H₂.',H2:'One bond: 436 kJ/mol to break it.',He2p:'Half a bond: He₂⁺ is seen in gas discharges.',He2:'Bond order 0: helium stays as single atoms (apart from an extremely weak van der Waals pair).',N2:'A triple bond, as in the Lewis structure.',O2:'A double bond, as Lewis says, but with two unpaired electrons: oxygen is magnetic.'}[s.m];
-  out+=C4_wrap(px,196,note,27,13,C.muted);
+  out+=C4_wrap(px,214,note,27,13,C.muted);
   out+=TF(80,350,'blue: bonding · coral: antibonding (*)',13,C.muted,'start');
   return {svg:out,phase:`${mo.n}: bond order ${bo}, ${unp} unpaired electron${unp===1?'':'s'}. ${note}`};
  }});
@@ -441,7 +441,7 @@ SCENE({id:'hydrogen-bonds',name:'Hydrogen bonds',tag:'Water’s anomalous boilin
   [-150,-100,-50,0,50,100].forEach(v=>{out+=L(x0-6,y0(v),x0+w,y0(v),C.grid,1)+TF(x0-10,y0(v)+4,String(v),13,C.muted,'end')});
   ['2','3','4','5'].forEach((r,i)=>{out+=TF(xp(i),340,'row '+r,13,C.muted)});
   Object.keys(C4_BP).forEach(g=>{if(s.g!=='all'&&s.g!==g)return;const d=C4_BP[g],col=C4_GC[g];let path='';d.forEach((q,i)=>{path+=(i?'L':'M')+fmt(xp(i))+' '+fmt(y0(q[1]))});out+=P(path,col,2.5);
-   d.forEach((q,i)=>{out+=Ci(xp(i),y0(q[1]),6,col,'#fff');const lab=TF(xp(i)+9,y0(q[1])+(g==='17'?14:-8),q[0],13,col,'start');if(s.g!=='all'||i===0)out+=lab})});
+   d.forEach((q,i)=>{out+=Ci(xp(i),y0(q[1]),6,col,'#fff');const lab=i===0?TF(xp(i)-12,y0(q[1])+5,q[0],13,col,'end'):TF(xp(i)+9,y0(q[1])+(g==='17'?14:-8),q[0],13,col,'start');if(s.g!=='all'||i===0)out+=lab})});
   if(s.ex&&(s.g==='all'||s.g==='16')){const ys=C4_BP[16].slice(1).map(q=>q[1]),xs=[1,2,3],mx=2,my=sum(ys)/3,b=sum(xs.map((x,i)=>(x-mx)*(ys[i]-my)))/2,pred=my-b*mx;
    out+=P(`M${fmt(xp(0))} ${fmt(y0(pred))}L${fmt(xp(3))} ${fmt(y0(my+b))}`,C.blue,1.8,'none','stroke-dasharray="5 5"')+Ci(xp(0),y0(pred),6,'#fff',C.blue)+TF(xp(0)+10,y0(pred)+18,`trend: about ${Math.round(pred/10)*10} °C`,13,C.blue,'start')}
   out+=C4_wrap(485,90,'Groups 15–17 start with N, O or F, which form hydrogen bonds. Group 14 (carbon) does not, and rises smoothly.',16,13,C.muted);
@@ -466,7 +466,7 @@ SCENE({id:'hydrogen-bonds-ice',name:'Why ice floats',tag:'Densest at 4 °C',
   [.996,.997,.998,.999,1].forEach(r=>{out+=L(x0,Y0(r),x0+w,Y0(r),C.grid,1)+TF(x0-6,Y0(r)+4,r.toFixed(3),13,C.muted,'end')});
   [-10,0,10,20,30].forEach(t=>{out+=TF(X0(t),322,t+'°',13,C.muted)});
   let path='';for(let t=-10;t<=30;t+=.5)path+=(t===-10?'M':'L')+fmt(X0(t))+' '+fmt(Y0(C4_rho(t)));out+=P(path,C.blue,2.5);
-  out+=L(X0(0),70,X0(0),300,C.muted,1.2,'stroke-dasharray="4 4"')+TF(X0(-5),80,'supercooled',13,C.muted);
+  out+=L(X0(0),70,X0(0),300,C.muted,1.2,'stroke-dasharray="4 4"')+TF(X0(0)-6,80,'supercooled',13,C.muted,'end');
   out+=L(X0(4),Y0(.99997)-6,X0(4),Y0(.99997)-30,C.coral,1.5)+TF(X0(4)+4,Y0(.99997)-34,'peak ≈ 4 °C',13,C.coral,'start');
   const r=C4_rho(s.t);out+=Ci(X0(s.t),Y0(r),7,C.coral,'#fff')+TBF(300,352,`${s.t} °C: ${r.toFixed(5)} g/cm³ · ice: 0.917 g/cm³`,14,C.ink);
   // beaker with floating ice
@@ -499,7 +499,7 @@ SCENE({id:'hydrogen-bonds-dna',name:'Hydrogen bonds in DNA',tag:'Two bonds or th
   const tx=470,ty0=90,th=200,Y=t=>ty0+th-(t-60)/60*th;out+=R(tx-10,ty0,20,th,'#fff',C.ink,10)+R(tx-6,Y(tm),12,ty0+th-Y(tm),C.coral,'none',6);
   [60,80,100,120].forEach(t=>{out+=L(tx+12,Y(t),tx+20,Y(t),C.ink,1.5)+TF(tx+24,Y(t)+4,t+'°',13,C.muted,'start')});
   out+=TF(tx,ty0+th+24,'Tm = 69.3 + 0.41 × %GC',13,C.ink);
-  out+=C4_wrap(40,300,`${n} G–C pairs (3 hydrogen bonds each), ${10-n} A–T pairs (2 each): ${3*n+2*(10-n)} hydrogen bonds in all.`,62,13,C.ink);
+  out+=C4_wrap(40,300,`${n} G–C pairs (3 hydrogen bonds each), ${10-n} A–T pairs (2 each): ${3*n+2*(10-n)} hydrogen bonds in all.`,50,13,C.ink);
   return {svg:out,phase:`${gc}% G–C: predicted melting temperature ${tm.toFixed(1)} °C. Hydrogen bonds pair the bases; stacking between neighbours adds much of the stability.`};
  }});
 
@@ -527,7 +527,7 @@ SCENE({id:'electronegativity',name:'Electronegativity',tag:'Who pulls the shared
   out+=TF(px,96,`${C4_EN[a].toFixed(2)} and ${C4_EN[b].toFixed(2)}`,13,C.ink,'start')+TF(px,116,`difference ${d.toFixed(2)}`,13,C.ink,'start');
   out+=TF(px,140,cls,13,d<.4?C.green:d<1.7?C.blue:C.purple,'start');
   if(d>=.05)out+=C4_wrap(px,164,`${neg} takes the larger share: ${neg} is δ−, ${pos} is δ+.`,26,13,C.muted);
-  out+=C4_wrap(24,272,'Rises across a row, falls down a group. Noble gases are left out: on this scale they rarely form bonds.',60,13,C.muted);
+  out+=C4_wrap(24,272,'Rises across a row, falls down a group. Pauling’s scale gives the lighter noble gases no value because they rarely form bonds.',60,13,C.muted);
   return {svg:out,phase:`${a}–${b}: difference ${d.toFixed(2)}, ${cls}.`};
  }});
 
@@ -579,7 +579,8 @@ SCENE({id:'electronegativity-scales',name:'Two scales, one idea',tag:'Pauling an
   out+=L(x0,y0,x0+w,y0,C.ink,1.5)+L(x0,y0,x0,y0-h,C.ink,1.5)+TF(x0+w/2,y0+40,'Mulliken: (ionisation energy + electron affinity) ÷ 2',13,C.muted);
   out+=L(X0(2.5),Y0(fit.a+fit.b*2.5),X0(11),Y0(fit.a+fit.b*11),C.blue,1.6,'stroke-dasharray="5 4"');
   C4_MU.forEach(q=>{const on=s.h||q[0]!=='H',xm=(q[1]+q[2])/2,x=X0(xm),y=Y0(q[3]),sel=q[0]===s.sel;
-   out+=hit(X,'pt',q[0],`${q[0]}: Mulliken ${xm.toFixed(2)} eV, Pauling ${q[3]}`,Ci(x,y,sel?8:6,on?(q[0]==='H'?C.coral:C.blue):'#fff',on?'#fff':C.line)+TF(x+9,y-7,q[0],13,on?C.ink:C.muted,'start'))});
+   const off={Li:[-10,-6,'end'],Na:[9,15,'start'],C:[9,16,'start'],S:[-9,-6,'end'],N:[-9,-6,'end'],Br:[9,16,'start']}[q[0]]||[9,-7,'start'];
+   out+=hit(X,'pt',q[0],`${q[0]}: Mulliken ${xm.toFixed(2)} eV, Pauling ${q[3]}`,Ci(x,y,sel?8:6,on?(q[0]==='H'?C.coral:C.blue):'#fff',on?'#fff':C.line)+TF(x+off[0],y+off[1],q[0],13,on?C.ink:C.muted,off[2]))});
   const q=C4_MU.find(r=>r[0]===s.sel);const px=430;
   out+=TBF(px,80,'Fit',14,C.ink,'start')+TF(px,100,`r = ${fit.r.toFixed(3)}`,13,C.ink,'start')+TF(px,118,`${pts.length} elements`,13,C.muted,'start');
   out+=TBF(px,150,q[0],14,C.ink,'start')+TF(px,170,`IE ${q[1]} eV`,13,C.ink,'start')+TF(px,188,`EA ${q[2]} eV`,13,C.ink,'start')+TF(px,206,`Mulliken ${((q[1]+q[2])/2).toFixed(2)}`,13,C.ink,'start')+TF(px,224,`Pauling ${q[3]}`,13,C.ink,'start');
