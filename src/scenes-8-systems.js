@@ -285,13 +285,13 @@ SCENE({id:'climate-economics',name:'Discounting the future',tag:'How much is a h
   return {svg:out,phase:`At r = ${r.toFixed(2)}%, £1,000 of damage in 100 years is worth £${E8_pv(r,100).toFixed(0)} today, and in 200 years £${E8_pv(r,200).toFixed(E8_pv(r,200)<10?2:0)}. Most of the gap between Stern and Nordhaus comes from this one number.`};
  },
  three(s,f,X,project){
-  const r0=s.rho+s.eta*s.g,P3=project([0,6,0,200,0,1]),faces=[],nr=12,nt=10;
-  for(let i=0;i<nr;i++)for(let j=0;j<nt;j++){const ra=i*6/nr,rb=(i+1)*6/nr,ta=j*200/nt,tb=(j+1)*200/nt;
-   const z=(r,t)=>E8_pv(r,t)/1000;const avg=(z(ra,ta)+z(rb,tb))/2;faces.push({pts:[[ra,ta,z(ra,ta)],[rb,ta,z(rb,ta)],[rb,tb,z(rb,tb)],[ra,tb,z(ra,tb)]],fill:avg>.5?'#2c776c':avg>.15?'#6fae9d':avg>.03?'#b9d9cf':'#e4efeb',stroke:'#ffffff'})}
+  const r0=s.rho+s.eta*s.g,u=r=>r/3,w=t=>t/100,h=v=>v*1.4,P3=project([0,2,0,2,0,1.4]),faces=[],nr=12,nt=10,z=(r,t)=>E8_pv(r,t)/1000;
+  for(let i=0;i<nr;i++)for(let j=0;j<nt;j++){const ra=i*6/nr,rb=(i+1)*6/nr,ta=j*200/nt,tb=(j+1)*200/nt;const avg=(z(ra,ta)+z(rb,tb))/2;
+   faces.push({pts:[[u(ra),w(ta),h(z(ra,ta))],[u(rb),w(ta),h(z(rb,ta))],[u(rb),w(tb),h(z(rb,tb))],[u(ra),w(tb),h(z(ra,tb))]],fill:avg>.5?'#2c776c':avg>.15?'#6fae9d':avg>.03?'#b9d9cf':'#e4efeb',stroke:'#ffffff'})}
   let out=paintFaces(faces,P3);
-  const rc=clamp(r0,0,6);out+=P(E8_path(range(21).map(k=>{const t=k*10,q=P3([rc,t,E8_pv(rc,t)/1000]);return [q[0],q[1]]})),C.coral,3);
-  out+=axes3(P3,['rate, %','years ahead','value today'],[6.6,220,1.15]);
-  return {svg:out,title:'Value today of £1,000 of future harm',caption:`Height: what £1,000 of harm is worth today, over discount rates 0–6% and 0–200 years. The coral line is your rate (${r0.toFixed(2)}%). Drag to turn.`};
+  const rc=clamp(r0,0,6);out+=P(E8_path(range(21).map(k=>{const t=k*10,q=P3([u(rc),w(t),h(z(rc,t))]);return [q[0],q[1]]})),C.coral,3);
+  out+=axes3(P3,['rate 0–6%','0–200 years','value today'],[2.2,2.2,1.6]);
+  return {svg:out,title:'Value today of £1,000 of future harm',caption:`Height: what £1,000 of harm is worth today, over discount rates of 0–6% and 0–200 years ahead. The coral line is your rate (${r0.toFixed(2)}%).`};
  }});
 
 const E8_SCC=[
@@ -344,12 +344,12 @@ SCENE({id:'climate-economics-tax',name:'A price on carbon',tag:'Make the pollute
   out+=R(A.X(a),A.Y(s.tax),A.X(100)-A.X(a),A.Y(0)-A.Y(s.tax),'#cfe0f0','none',0);
   out+=P(E8_path(range(51).map(i=>[A.X(i*2),A.Y(E8_mac(i*2))])),C.green,2.4);
   out+=L(A.X(0),A.Y(s.tax),A.X(100),A.Y(s.tax),C.blue,2)+TF(A.X(2),A.Y(s.tax)-6,'tax $'+s.tax,13,C.blue,'start');
-  out+=L(A.X(0),A.Y(s.scc),A.X(100),A.Y(s.scc),C.coral,1.6,'stroke-dasharray="6 4"')+TF(A.X(98),A.Y(s.scc)-6,'social cost $'+s.scc,13,C.coral,'end');
+  out+=L(A.X(0),A.Y(s.scc),A.X(100),A.Y(s.scc),C.coral,1.6,'stroke-dasharray="6 4"')+TF(Math.abs(s.tax-s.scc)<30?A.X(40):A.X(2),A.Y(s.scc)-6,'social cost $'+s.scc,13,C.coral,'start');
   out+=Ci(A.X(a),A.Y(Math.min(300,s.tax)),5,C.blue);
   const cost=100*Math.pow(a/100,3)*100,rev=s.tax*(100-a)/100*40;
   out+=counter(450,60,'emissions cut',Math.round(a)+'%',C.green,130)+counter(450,116,'efficient cut',Math.round(aEff)+'%',C.coral,130);
   out+=E8_lines(450,190,E8_wrap(Math.abs(a-aEff)<3?'The tax matches the harm: cuts stop exactly where they stop being worth it.':a<aEff?'Too low: some cuts cheaper than the harm they prevent are not being made.':'Too high: some cuts now cost more than the harm they prevent.',20),C.ink,13,17);
-  out+=TF(70,350,`Illustrative cost curve. Revenue on the remaining emissions would be about $${Math.round(rev)} billion if the world emitted 40 billion tonnes.`,12,C.muted,'start');
+  out+=TF(70,350,'Illustrative cost curve.',12,C.muted,'start')+TF(70,368,`If the world emitted 40 billion tonnes, the tax would raise about $${Math.round(rev).toLocaleString('en-GB')} billion a year.`,12,C.muted,'start');
   return {svg:out,phase:`A $${s.tax} tax cuts ${Math.round(a)}% of emissions in this model; matching the social cost of $${s.scc} would cut ${Math.round(aEff)}%. Real cost curves are uncertain, and a tax also raises revenue that can be returned or spent.`};
  }});
 
