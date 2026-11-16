@@ -301,9 +301,9 @@ SCENE({id:'photosynthesis',name:'Where does a tree’s mass come from?',tag:'Van
   if(!s.guess)out+=TF(436,220,'Where did the mass come from?',14,C.ink)+TF(436,244,'Choose your guess below.',13,C.muted);
   else{
    const seg=[['water held in the wood',.5,C.blue],['carbon and oxygen from CO₂',.46,C.green],['hydrogen from water',.035,'#6aa4c8'],['minerals from soil',.005,C.amber]];
-   out+=TBF(300,196,`You said: ${({soil:'the soil',water:'the water',air:'the air'})[s.guess]}`,14,s.guess==='air'?C.green:C.coral,'start');
+   out+=TBF(300,196,`Guess: ${({soil:'the soil',water:'the water',air:'the air'})[s.guess]}`,14,s.guess==='air'?C.green:C.coral,'start');
    let x=300;seg.forEach(([n,f,c])=>{out+=R(x,208,Math.max(2,f*280),26,c,'none',2);x+=f*280});
-   seg.forEach(([n,f,c],i)=>out+=R(300,250+i*22,12,12,c,'none',2)+TF(318,261+i*22,`${n} ≈ ${f<.01?'<1':Math.round(f*100)}%`,13,C.ink,'start'));
+   seg.forEach(([n,f,c],i)=>out+=R(300,250+i*22,12,12,c,'none',2)+TF(318,261+i*22,`${n}: ${f<.01?'under 1%':'about '+Math.round(f*100)+'%'}`,13,C.ink,'start'));
   }
   return {svg:out,phase:s.guess?'About half of fresh wood is water. Nearly all the dry matter is carbon and oxygen fixed from carbon dioxide in the air; water supplies the hydrogen, and the soil only a little mineral. The shares here are illustrative for wood. Van Helmont was right that soil was not the source, but nobody yet knew that air contained a gas plants could use.':'Van Helmont’s careful weighing ruled out the soil. His answer, water, was half right: he could not know about carbon dioxide, which was not identified until the 1750s.'};
  }});
