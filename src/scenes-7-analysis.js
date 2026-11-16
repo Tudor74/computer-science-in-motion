@@ -573,7 +573,7 @@ SCENE({id:'titration',name:'Titrating to the end point',tag:'One drop turns the 
   out+=TF(bx,fy+50,`${s.v.toFixed(2)} mL added`,14,C.ink);
   const pl=C7_plot(250,60,310,230,[0,50],[0,14],{xt:[[0,'0'],[25,'25'],[50,'50 mL']],yt:[[0,'0'],[7,'7'],[14,'14']],yl:'pH',xl:'volume of NaOH added',xlDy:32});out+=pl.svg;
   out+=L(pl.X(25),pl.Y(0),pl.X(25),pl.Y(14),C.muted,1,'stroke-dasharray="4 4"')+TF(pl.X(25)+4,pl.Y(13.2),'equivalence',13,C.muted,'start');
-  out+=R(pl.X(0),pl.Y(10),pl.X(50)-pl.X(0),pl.Y(8.2)-pl.Y(10),'#f3d6e8','none',0,'opacity=".6"');
+  out+=R(pl.X(0),pl.Y(10),pl.X(50)-pl.X(0),pl.Y(8.2)-pl.Y(10),'#f3d6e8','none',0,'opacity=".6"')+TF(pl.X(50)-6,pl.Y(9.1)+5,'pink above 8.2',13,'#a8357a','end');
   const pts=[];for(let v=0;v<=s.v+1e-9;v=Math.round((v+.05)*100)/100)pts.push([pl.X(v),pl.Y(C7_pHstrong(v))]);
   out+=C7_poly(pts,C.coral,2.2)+Ci(pl.X(s.v),pl.Y(pH),5,C.coral);
   out+=T(405,350,`pH ${pH.toFixed(2)}${pH>=8.2?' · pink: end point reached':''}`,16,pH>=8.2?C.coral:C.ink);
@@ -598,7 +598,7 @@ SCENE({id:'titration-curves',name:'Choosing an indicator',tag:'Strong and weak a
   let out=heading(`${s.a==='weak'?'Ethanoic acid':'Hydrochloric acid'} with ${ind.n}`,26);
   const pl=C7_plot(70,56,360,250,[0,40],[0,14],{xt:[[0,'0'],[12.5,'12.5'],[25,'25'],[40,'40 mL']],yt:[[0,'0'],[4,'4'],[7,'7'],[10,'10'],[14,'14']],yl:'pH',xl:'volume of NaOH added',xlDy:32});out+=pl.svg;
   out+=R(pl.X(0),pl.Y(ind.hi),pl.X(40)-pl.X(0),pl.Y(ind.lo)-pl.Y(ind.hi),ind.c2,'none',0,'opacity=".22"');
-  out+=TF(pl.X(40)-4,pl.Y(ind.hi)-4,`${ind.n} ${ind.lo}–${ind.hi}`,13,C.muted,'end');
+  out+=TF(pl.X(0)+6,pl.Y(ind.hi)-5,`${ind.n} changes at pH ${ind.lo}–${ind.hi}`,13,C.muted,'start');
   const other=s.a==='weak'?v=>C7_pHstrong(v):v=>C7_pHweak(v);
   out+=C7_poly(range(401).map(i=>{const v=i/10;return [pl.X(v),pl.Y(other(v))]}),C.line,1.5,'stroke-dasharray="5 4"');
   out+=C7_poly(range(401).map(i=>{const v=i/10;return [pl.X(v),pl.Y(f(v))]}),C.coral,2.6);
@@ -628,15 +628,15 @@ SCENE({id:'titration-concordant',name:'Concordant results',tag:'Repeat until two
   const r=rng(s.seed),ca=.08+r()*.04,eq=ca*25/.1;const tit=s.runs.map((k,i)=>{const rr=rng(s.seed*31+i*7+1);return k==='r'?Math.round((eq+.4+rr()*.8)*20)/20:Math.round((eq+(rr()-.5)*.24)*20)/20});
   let out=heading('Titrating an acid of unknown concentration',26);
   out+=TF(60,62,'25.00 mL of acid, titrated with 0.100 mol/dm³ NaOH',13,C.muted,'start');
-  out+=TBF(80,92,'run',13,C.muted,'start')+TBF(200,92,'titre (mL)',13,C.muted,'end')+TBF(240,92,'type',13,C.muted,'start')+TBF(340,92,'concordant',13,C.muted,'start');
+  out+=TBF(80,92,'run',13,C.muted,'start')+TBF(200,92,'titre (mL)',13,C.muted,'end')+TBF(240,92,'type',13,C.muted,'start')+TBF(320,92,'concordant',13,C.muted,'start');
   const acc=tit.map((t,i)=>({t,i,rough:s.runs[i]==='r'})).filter(x=>!x.rough);
   const conc=new Set();acc.forEach(a=>acc.forEach(b=>{if(a.i!==b.i&&Math.abs(a.t-b.t)<=.10+1e-9){conc.add(a.i);conc.add(b.i)}}));
-  tit.forEach((t,i)=>{const y=118+i*28,rough=s.runs[i]==='r';out+=TF(80,y,String(i+1),14,C.ink,'start')+TF(200,y,t.toFixed(2),14,rough?C.muted:C.ink,'end')+TF(240,y,rough?'rough':'accurate',14,rough?C.muted:C.ink,'start')+(conc.has(i)?TF(340,y,'✓',16,C.green,'start'):'')});
+  tit.forEach((t,i)=>{const y=118+i*28,rough=s.runs[i]==='r';out+=TF(80,y,String(i+1),14,C.ink,'start')+TF(200,y,t.toFixed(2),14,rough?C.muted:C.ink,'end')+TF(240,y,rough?'rough':'accurate',14,rough?C.muted:C.ink,'start')+(conc.has(i)?TF(345,y,'✓',16,C.green,'start'):'')});
   if(!tit.length)out+=TF(80,124,'No runs yet: start with a rough run.',14,C.muted,'start');
   const used=[...conc].map(i=>tit[i]),mean=used.length?used.reduce((a,b)=>a+b,0)/used.length:null,cc=mean?.1*mean/25:null;
-  out+=counter(420,90,'mean concordant titre',mean?mean.toFixed(2)+' mL':'—',C.blue,150);
-  out+=counter(420,148,'acid concentration',cc?cc.toFixed(4)+' M':'—',C.ink,150);
-  out+=counter(420,206,'true concentration',used.length>=2?ca.toFixed(4)+' M':'hidden',used.length>=2?C.green:C.muted,150);
+  out+=counter(432,90,'mean concordant titre',mean?mean.toFixed(2)+' mL':'—',C.blue,140);
+  out+=counter(432,148,'acid concentration',cc?cc.toFixed(4)+' M':'—',C.ink,140);
+  out+=counter(432,206,'true concentration',used.length>=2?ca.toFixed(4)+' M':'hidden',used.length>=2?C.green:C.muted,140);
   if(cc)out+=TF(495,280,`error ${((cc-ca)/ca*100).toFixed(2)}%`,13,Math.abs(cc-ca)/ca<.005?C.green:C.coral);
   out+=T(300,350,mean?`c = 0.100 × ${mean.toFixed(2)} ÷ 25.00 = ${cc.toFixed(4)} mol/dm³`:'Two titres within 0.10 mL are needed.',15);
   return {svg:out,phase:'Each burette reading carries about ±0.05 mL, so a titre carries about ±0.1 mL: under half a per cent on 24 mL. That is why titration, two centuries old, is still used to check the concentrations that newer instruments are calibrated against.'};
