@@ -283,7 +283,7 @@ function P5_fringe(y,lam,d,Lm){const a=d/4,ph=Math.PI*d*1e-3*y*1e-3/(lam*1e-9*Lm
 SCENE({id:'double-slit',name:'Young’s double slit',tag:'Light interferes with itself',
  definition:'Light passing through two narrow slits spreads out from each, and the two waves add up or cancel. The result is bright and dark fringes spaced Δy = λL ÷ d, where λ is the wavelength, L the distance to the screen and d the slit separation.',
  example:'With 550 nm green light, slits 0.30 mm apart and a screen 1 m away, the bright fringes are 1.8 mm apart. Halve the slit separation and they spread to 3.7 mm.',
- research:'Thomas Young (1804). Experimental demonstration of the general law of the interference of light, Philosophical Transactions 94 (lectures of 1802–1803).',
+ research:'Thomas Young (1804). The Bakerian Lecture: Experiments and calculations relative to physical optics, Philosophical Transactions 94 (demonstrations of 1802–1803).',
  desc:'Waves spread from two slits in a barrier and overlap; on the screen at the right, bright and dark fringes appear, with a brightness curve beside them.',
  dur:12,hint:'Change the wavelength, the slit separation and the screen distance, and watch the fringe spacing λL/d.',
  init:()=>({lam:550,d:.3,L:1}),
