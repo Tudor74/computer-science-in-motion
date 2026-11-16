@@ -1008,7 +1008,7 @@ const R1_FLOATS=[[0.1,'0.1'],[0.5,'0.5'],[3.75,'3.75'],[-2.5,'−2.5'],[1/3,'1/3
 function R1_f32(v){const dv=new DataView(new ArrayBuffer(4));dv.setFloat32(0,v);return dv.getUint32(0)}
 SCENE({id:'floating-point',name:'Floating point',tag:'Scientific notation in binary',
  definition:'A floating-point number stores a sign, an exponent and a fraction (mantissa), like scientific notation in base 2. Most decimals, such as 0.1, can only be stored approximately.',
- example:'0.1 becomes 1.6 × 2⁻⁴, but 1.6 has no exact binary fraction, so 0.1 is stored as 0.100000001490116… That is why 0.1 + 0.2 shows as 0.30000000000000004.',
+ example:'0.1 becomes 1.6 × 2⁻⁴, but 1.6 has no exact binary fraction, so it is rounded: as a 32-bit float (shown here) 0.1 is stored as 0.100000001490116…, and as a 64-bit double, the default in most languages, as 0.1000000000000000055… That 64-bit rounding is why 0.1 + 0.2 shows as 0.30000000000000004.',
  desc:'Thirty-two bit cells split into sign, exponent and mantissa fields, with the decoded value and the rounding error below.',
  dur:12,hint:'Pick a value and compare what is stored with what you asked for. 0.5 and 3.75 are exact; 0.1 and 1/3 are not.',
  init:()=>({i:0}),
@@ -1800,7 +1800,7 @@ function IN_bits(t,v){if(t==='int')return bin(v,8);if(t==='str')return bin(48+v,
 const IN_TSHOW={int:v=>String(v),float:v=>v.toFixed(1),str:v=>`"${v}"`},IN_TNAME={int:'integer',float:'float',str:'string'};
 SCENE({id:'data-types',name:'Data types',tag:'The same symbols, different meanings',
  definition:'A value’s type says what kind of data it is (whole number, decimal number, text, true/false) and therefore which operations make sense and what they do.',
- example:'3 + 4 is 7, but "3" + "4" is "34", and 3 + "4" is an error. Inside the computer the integer 3 is 00000011 while the character "3" is 00110011.',
+ example:'In Python, 3 + 4 is 7, but "3" + "4" is "34", and 3 + "4" is an error (JavaScript instead converts the 3 and gives "34"; each language has its own rules). Inside the computer the integer 3 is 00000011 while the character "3" is 00110011.',
  desc:'Two values with type labels and their stored bit patterns, an operator between them, and the result with its type, or an error.',
  dur:12,hint:'Change each value’s type and the operator. Watch the bit patterns and the result change.',
  init:()=>({ta:'int',tb:'str',op:'+'}),
@@ -5372,13 +5372,13 @@ SCENE({id:'ma-jit',name:'Just-in-time compilation',tag:'Compile only what is bus
 /* ---- Process lesson ---- */
 SCENE({id:'ma-threads',name:'Threads',tag:'Several paths through one program',
  definition:'A thread is one sequence of instructions being carried out. A process can contain several threads: each has its own program counter and stack, but they all share the process’s memory.',
- example:'A web browser tab might use one thread to draw the page and another to download images. Because threads share memory, one thread can see a value another has just written; separate processes cannot.',
+ example:'A web browser tab might use one thread to draw the page and another to download images. Because threads share memory, one thread can see a value another has just written. Separate processes cannot ordinarily reach each other’s private memory, unless they deliberately set up shared memory.',
  desc:'On one side, two threads inside a single process sharing one variable x; on the other, two separate processes each with their own copy of x. A value written by the first is or is not seen by the second.',
  dur:12,hint:'Choose threads or processes and the value A writes, then step. Does B see it?',
  init:()=>({mode:'threads',v:5}),
  ui:[{choose:[['threads','Two threads, one process'],['procs','Two processes']],label:'Layout',get:s=>s.mode,act:'mode'},{range:'v',label:'A writes x =',min:1,max:9,get:s=>s.v,act:'v'}],
  on:{mode(s,v){s.mode=v},v(s,v){s.v=v}},
- trace(s){const th=s.mode==='threads';return [{k:0,say:th?'One process, two threads. Each thread has its own program counter and stack, but x lives in memory they share.':'Two separate processes. The operating system gives each its own memory, so each has its own x.'},{k:1,say:`A runs x = ${s.v}.`},{k:2,say:`B runs print(x) and sees ${th?s.v:0}. ${th?'Shared memory makes cooperation easy, and mistakes easy too.':'Processes are isolated: to share data they must send messages or use a shared file.'}`}]},
+ trace(s){const th=s.mode==='threads';return [{k:0,say:th?'One process, two threads. Each thread has its own program counter and stack, but x lives in memory they share.':'Two separate processes. The operating system gives each its own memory, so each has its own x.'},{k:1,say:`A runs x = ${s.v}.`},{k:2,say:`B runs print(x) and sees ${th?s.v:0}. ${th?'Shared memory makes cooperation easy, and mistakes easy too.':'Processes are isolated: to share data they send messages, use a file, or ask the operating system for an explicitly shared memory region.'}`}]},
  draw(s,f,X){
   const th=s.mode==='threads',xa=f.k>=1?s.v:0;let out=heading(th?'Threads share their process’s memory':'Processes each have their own memory',24);
   const thread=(x,y,name,line,active)=>R(x,y,150,92,active?C.amberp:'#fff',active?C.amber:C.line,10)+TB(x+75,y+22,'Thread '+name,14,C.ink)+TMF(x+75,y+48,line,14,C.ink)+TF(x+75,y+72,'own PC · own stack',12,C.muted);

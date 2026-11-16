@@ -821,13 +821,13 @@ SCENE({id:'ma-jit',name:'Just-in-time compilation',tag:'Compile only what is bus
 /* ---- Process lesson ---- */
 SCENE({id:'ma-threads',name:'Threads',tag:'Several paths through one program',
  definition:'A thread is one sequence of instructions being carried out. A process can contain several threads: each has its own program counter and stack, but they all share the process’s memory.',
- example:'A web browser tab might use one thread to draw the page and another to download images. Because threads share memory, one thread can see a value another has just written; separate processes cannot.',
+ example:'A web browser tab might use one thread to draw the page and another to download images. Because threads share memory, one thread can see a value another has just written. Separate processes cannot ordinarily reach each other’s private memory, unless they deliberately set up shared memory.',
  desc:'On one side, two threads inside a single process sharing one variable x; on the other, two separate processes each with their own copy of x. A value written by the first is or is not seen by the second.',
  dur:12,hint:'Choose threads or processes and the value A writes, then step. Does B see it?',
  init:()=>({mode:'threads',v:5}),
  ui:[{choose:[['threads','Two threads, one process'],['procs','Two processes']],label:'Layout',get:s=>s.mode,act:'mode'},{range:'v',label:'A writes x =',min:1,max:9,get:s=>s.v,act:'v'}],
  on:{mode(s,v){s.mode=v},v(s,v){s.v=v}},
- trace(s){const th=s.mode==='threads';return [{k:0,say:th?'One process, two threads. Each thread has its own program counter and stack, but x lives in memory they share.':'Two separate processes. The operating system gives each its own memory, so each has its own x.'},{k:1,say:`A runs x = ${s.v}.`},{k:2,say:`B runs print(x) and sees ${th?s.v:0}. ${th?'Shared memory makes cooperation easy, and mistakes easy too.':'Processes are isolated: to share data they must send messages or use a shared file.'}`}]},
+ trace(s){const th=s.mode==='threads';return [{k:0,say:th?'One process, two threads. Each thread has its own program counter and stack, but x lives in memory they share.':'Two separate processes. The operating system gives each its own memory, so each has its own x.'},{k:1,say:`A runs x = ${s.v}.`},{k:2,say:`B runs print(x) and sees ${th?s.v:0}. ${th?'Shared memory makes cooperation easy, and mistakes easy too.':'Processes are isolated: to share data they send messages, use a file, or ask the operating system for an explicitly shared memory region.'}`}]},
  draw(s,f,X){
   const th=s.mode==='threads',xa=f.k>=1?s.v:0;let out=heading(th?'Threads share their process’s memory':'Processes each have their own memory',24);
   const thread=(x,y,name,line,active)=>R(x,y,150,92,active?C.amberp:'#fff',active?C.amber:C.line,10)+TB(x+75,y+22,'Thread '+name,14,C.ink)+TMF(x+75,y+48,line,14,C.ink)+TF(x+75,y+72,'own PC · own stack',12,C.muted);

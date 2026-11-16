@@ -399,7 +399,7 @@ const R1_FLOATS=[[0.1,'0.1'],[0.5,'0.5'],[3.75,'3.75'],[-2.5,'−2.5'],[1/3,'1/3
 function R1_f32(v){const dv=new DataView(new ArrayBuffer(4));dv.setFloat32(0,v);return dv.getUint32(0)}
 SCENE({id:'floating-point',name:'Floating point',tag:'Scientific notation in binary',
  definition:'A floating-point number stores a sign, an exponent and a fraction (mantissa), like scientific notation in base 2. Most decimals, such as 0.1, can only be stored approximately.',
- example:'0.1 becomes 1.6 × 2⁻⁴, but 1.6 has no exact binary fraction, so 0.1 is stored as 0.100000001490116… That is why 0.1 + 0.2 shows as 0.30000000000000004.',
+ example:'0.1 becomes 1.6 × 2⁻⁴, but 1.6 has no exact binary fraction, so it is rounded: as a 32-bit float (shown here) 0.1 is stored as 0.100000001490116…, and as a 64-bit double, the default in most languages, as 0.1000000000000000055… That 64-bit rounding is why 0.1 + 0.2 shows as 0.30000000000000004.',
  desc:'Thirty-two bit cells split into sign, exponent and mantissa fields, with the decoded value and the rounding error below.',
  dur:12,hint:'Pick a value and compare what is stored with what you asked for. 0.5 and 3.75 are exact; 0.1 and 1/3 are not.',
  init:()=>({i:0}),

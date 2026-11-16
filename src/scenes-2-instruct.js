@@ -357,7 +357,7 @@ function IN_bits(t,v){if(t==='int')return bin(v,8);if(t==='str')return bin(48+v,
 const IN_TSHOW={int:v=>String(v),float:v=>v.toFixed(1),str:v=>`"${v}"`},IN_TNAME={int:'integer',float:'float',str:'string'};
 SCENE({id:'data-types',name:'Data types',tag:'The same symbols, different meanings',
  definition:'A value’s type says what kind of data it is (whole number, decimal number, text, true/false) and therefore which operations make sense and what they do.',
- example:'3 + 4 is 7, but "3" + "4" is "34", and 3 + "4" is an error. Inside the computer the integer 3 is 00000011 while the character "3" is 00110011.',
+ example:'In Python, 3 + 4 is 7, but "3" + "4" is "34", and 3 + "4" is an error (JavaScript instead converts the 3 and gives "34"; each language has its own rules). Inside the computer the integer 3 is 00000011 while the character "3" is 00110011.',
  desc:'Two values with type labels and their stored bit patterns, an operator between them, and the result with its type, or an error.',
  dur:12,hint:'Change each value’s type and the operator. Watch the bit patterns and the result change.',
  init:()=>({ta:'int',tb:'str',op:'+'}),
