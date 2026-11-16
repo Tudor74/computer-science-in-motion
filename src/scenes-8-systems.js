@@ -453,12 +453,11 @@ SCENE({id:'platform-economies',name:'Two-sided markets',tag:'Who pays, and who g
   const bar=(x,label,v,col,price)=>R(x,90,90,200,'#eef3f6','none',6)+R(x,90+200*(1-v),90,200*v,col,'none',6)+TBF(x+45,84+200*(1-v)-2,Math.round(v*100)+'%',15,C.ink)+TF(x+45,312,label,14,C.ink)+TF(x+45,332,(price<0?'paid ':'pays ')+Math.abs(price).toFixed(2),13,price<0?C.green:C.muted);
   out+=bar(70,'buyers join',o.nB,C.blue,s.pB)+bar(200,'sellers join',o.nS,C.purple,s.pS);
   out+=curveArrow(165,150,195,150,-20,C.muted,1.6)+curveArrow(195,190,165,190,-20,C.muted,1.6);
-  out+=TF(180,128,'0.3',12,C.muted)+TF(180,214,'0.8',12,C.muted);
   out+=counter(330,70,'platform profit',o.profit.toFixed(3),o.profit>=E8_best.profit-.002?C.green:C.ink,140);
   out+=counter(330,126,'best possible',E8_best.profit.toFixed(3),C.muted,140);
   out+=E8_lines(330,200,['Best prices here:',`buyers ${E8_best.pB.toFixed(2)}, sellers ${E8_best.pS.toFixed(2)}`],C.ink,13,17);
   out+=E8_lines(330,250,E8_wrap('The side whose presence is worth more to the other gets the lower price.',30),C.muted,13,17);
-  out+=TF(30,366,'Arrows: how much each side gains per member of the other side. Illustrative model.',12,C.muted,'start');
+  out+=TF(30,366,'Each seller is worth 0.3 to a buyer; each buyer is worth 0.8 to a seller. Illustrative model.',12,C.muted,'start');
   return {svg:out,phase:`At these prices ${Math.round(o.nB*100)}% of buyers and ${Math.round(o.nS*100)}% of sellers join, and profit is ${o.profit.toFixed(3)}. The best prices charge buyers ${E8_best.pB.toFixed(2)} and sellers ${E8_best.pS.toFixed(2)}: buyers are cheap to attract and valuable to sellers.`};
  }});
 
@@ -484,7 +483,7 @@ SCENE({id:'platform-economies-tipping',name:'Tipping',tag:'Winner takes most',
   out+=counter(430,60,'A’s final share',Math.round(end*100)+'%',C.blue,140)+counter(430,116,'outcome',verdict,end>.9||end<.1?C.coral:C.green,140);
   out+=E8_lines(430,196,E8_wrap(end>.9&&s.qB>0?'The worse platform won: its head start mattered more than quality.':end<.1&&s.s0>.5?'B overcame A’s head start with quality and network pull.':verdict==='Both survive'?'Network effects are too weak to force a single winner.':'The bigger or better platform took the market.',20),C.ink,13,17);
   out+=TF(70,350,'Illustrative model: each period a quarter of users move towards the platform offering more.',12,C.muted,'start');
-  return {svg:out,phase:`Strength ${Number(s.g).toFixed(2)}, B’s edge ${Number(s.qB).toFixed(2)}, A starting at ${Math.round(s.s0*100)}%: ${verdict.toLowerCase()} (A ends at ${Math.round(end*100)}%). Where tipping happens, history and timing can matter as much as quality.`};
+  return {svg:out,phase:`Strength ${Number(s.g).toFixed(2)}, B’s edge ${Number(s.qB).toFixed(2)}, A starting at ${Math.round(s.s0*100)}%: ${verdict==='Both survive'?'both survive':verdict.replace('Tipped','tipped')} (A ends at ${Math.round(end*100)}%). Where tipping happens, history and timing can matter as much as quality.`};
  }});
 
 // Critical mass (Granovetter 1978): each person joins if at least their personal threshold share has joined.
@@ -512,7 +511,7 @@ SCENE({id:'platform-economies-chicken-egg',name:'Critical mass',tag:'The chicken
   const B=E8_plot(370,52,200,250,[0,30],[0,1],{xt:[[0,'0'],[15,'15'],[30,'30']],yt:[[0,'0'],[1,'100%']],xl:'period'});out+=B.svg;
   out+=P(E8_path(path.map((v,t)=>[B.X(t),B.Y(v)])),end>.5?C.green:C.coral,2.4);
   out+=TF(370,46,end>.5?'fills up':'empties',13,end>.5?C.green:C.coral,'start');
-  out+=TF(60,356,`Launch at ${Math.round(s.n0*100)}%: the platform ends at ${Math.round(end*100)}%. The tipping point in this model is about 40%.`,13,C.ink,'start');
+  out+=TF(60,356,`Launch at ${Math.round(s.n0*100)}%: the platform ends at ${Math.round(end*100)}%. The tipping point in this model is about 35%.`,13,C.ink,'start');
   return {svg:out,phase:end>.5?`Launching with ${Math.round(s.n0*100)}% is past critical mass: each round more thresholds are crossed and the platform fills.`:`Launching with ${Math.round(s.n0*100)}% is not enough: too few thresholds are crossed and people drift away until the platform is nearly empty.`};
  }});
 
@@ -532,17 +531,17 @@ SCENE({id:'measuring-wellbeing',name:'Does money buy happiness?',tag:'The Easter
  draw(s){
   let out=heading(s.view==='time'?'A rich country over fifty years (stylised)':'Income and life satisfaction across countries',26);
   if(s.view==='time'){
-   const A=E8_plot(70,52,420,240,[1972,2022],[0,10],{xt:[[1972,'1972'],[1997,'1997'],[2022,'2022']],yt:[[0,'0'],[5,'5'],[10,'10']],yl:'life satisfaction (0–10) and income'});out+=A.svg;
+   const A=E8_plot(70,52,420,226,[1972,2022],[0,10],{xt:[[1972,'1972'],[1997,'1997'],[2022,'2022']],yt:[[0,'0'],[5,'5'],[10,'10']],yl:'life satisfaction (0–10) and income'});out+=A.svg;
    out+=P(E8_path(range(51).map(i=>[A.X(1972+i),A.Y(2+3.5*i/50)])),C.green,2.4)+TF(A.X(2022)-4,A.Y(5.5)-8,'income per head (index)',13,C.green,'end');
    out+=P(E8_path(range(51).map(i=>[A.X(1972+i),A.Y(7.1+.15*Math.sin(i/4)-.004*i)])),C.blue,2.4)+TF(A.X(2022)-4,A.Y(7)+20,'average life satisfaction',13,C.blue,'end');
-   out+=E8_lines(70,330,E8_wrap('Income more than doubles; average life satisfaction barely moves. Stevenson and Wolfers find rises in many countries; Easterlin argues the long-run trend is flat. Still debated.',88),C.ink,13,17);
+   out+=E8_lines(70,326,E8_wrap('Income more than doubles; average life satisfaction barely moves. Stevenson and Wolfers find rises in many countries; Easterlin argues the long-run trend is flat. Still debated.',88),C.ink,13,17);
    return {svg:out,phase:'Over decades of growth, average life satisfaction in some rich countries hardly changed. Explanations include comparing ourselves with others and getting used to higher incomes; others argue the data show modest rises.'};
   }
-  const lg=s.view==='log',A=E8_plot(70,52,420,240,lg?[Math.log(800),Math.log(90000)]:[0,90000],[2,9],{xt:lg?[[Math.log(1000),'$1k'],[Math.log(4000),'$4k'],[Math.log(16000),'$16k'],[Math.log(64000),'$64k']]:[[0,'$0'],[30000,'$30k'],[60000,'$60k'],[90000,'$90k']],yt:[[2,'2'],[5,'5'],[8,'8']],xl:lg?'income per head (log scale)':'income per head',yl:'life satisfaction (0–10)'});out+=A.svg;
+  const lg=s.view==='log',A=E8_plot(70,52,420,226,lg?[Math.log(800),Math.log(90000)]:[0,90000],[2,9],{xt:lg?[[Math.log(1000),'$1k'],[Math.log(4000),'$4k'],[Math.log(16000),'$16k'],[Math.log(64000),'$64k']]:[[0,'$0'],[30000,'$30k'],[60000,'$60k'],[90000,'$90k']],yt:[[2,'2'],[5,'5'],[8,'8']],xl:lg?'income per head (log scale)':'income per head',yl:'life satisfaction (0–10)'});out+=A.svg;
   E8_CTRY.forEach(c=>{out+=Ci(A.X(lg?Math.log(c.gdp):c.gdp),A.Y(c.ls),4.5,C.blue,'#fff','stroke-width="1"')});
   out+=P(E8_path(range(41).map(i=>{const lgx=Math.log(800)+i/40*(Math.log(90000)-Math.log(800)),g=Math.exp(lgx);return [A.X(lg?lgx:g),A.Y(2.4+.75*Math.log(g/1000))]})),C.coral,2.2);
-  out+=E8_lines(70,336,E8_wrap(lg?'On a log scale the rise is a straight line: each doubling of income adds about the same.':'On an ordinary scale the curve flattens at the top, but each extra $1,000 still adds a little.',88),C.ink,13,17);
-  out+=TF(70,370,'Stylised countries following the published pattern, not real data.',12,C.muted,'start');
+  out+=E8_lines(70,330,E8_wrap(lg?'On a log scale the rise is a straight line: each doubling of income adds about the same.':'On an ordinary scale the curve flattens at the top, but each extra $1,000 still adds a little.',88),C.ink,13,17);
+  out+=TF(70,368,'Stylised countries following the published pattern, not real data.',12,C.muted,'start');
   return {svg:out,phase:lg?'Across countries, life satisfaction rises roughly in a straight line with the logarithm of income: doubling income adds about 0.5 points on the 0–10 ladder in this stylised data, whether a country is poor or rich.':'On an ordinary scale the rich countries look as if they have reached a plateau, but that is the curve of a logarithm, not a ceiling.'};
  }});
 
@@ -564,9 +563,9 @@ SCENE({id:'measuring-wellbeing-hdi',name:'The Human Development Index',tag:'Heal
    out+=TBF(40,y+14,n,14,C.ink,'start')+TF(40,y+32,sub,12,C.muted,'start')+R(200,y,220,22,'#eef3f6','none',4)+R(200,y,220*v,22,col,'none',4)+TF(430,y+16,v.toFixed(3),13,C.ink,'start')});
   out+=L(40,250,560,250,C.grid,1.2);
   out+=TBF(40,282,'HDI (geometric mean)',14,C.ink,'start')+R(200,268,220,24,'#eef3f6','none',4)+R(200,268,220*o.hdi,24,C.purple,'none',4)+TBF(430,286,o.hdi.toFixed(3),15,C.purple,'start');
-  out+=TF(40,322,'Simple average, for comparison',13,C.muted,'start')+R(200,310,220,16,'#eef3f6','none',4)+R(200,310,220*o.arith,16,'#c9bfe0','none',4)+TF(430,323,o.arith.toFixed(3),13,C.muted,'start');
+  out+=TF(40,322,'Simple average',13,C.muted,'start')+R(200,310,220,16,'#eef3f6','none',4)+R(200,310,220*o.arith,16,'#c9bfe0','none',4)+TF(430,323,o.arith.toFixed(3),13,C.muted,'start');
   const band=o.hdi>=.8?'very high':o.hdi>=.7?'high':o.hdi>=.55?'medium':'low';
-  out+=TF(40,358,`UNDP band: ${band} human development. Report range for 2022: 0.380 (Somalia) to 0.967 (Switzerland).`,12,C.ink,'start');
+  out+=TF(40,352,`UNDP band: ${band} human development.`,13,C.ink,'start')+TF(40,370,'2022 range: 0.380 (Somalia) to 0.967 (Switzerland).',12,C.muted,'start');
   return {svg:out,phase:`HDI ${o.hdi.toFixed(3)} (${band}). The geometric mean (${o.hdi.toFixed(3)}) sits below the simple average (${o.arith.toFixed(3)}) when the three parts are uneven, so a weak dimension pulls the whole index down.`};
  }});
 
@@ -594,7 +593,7 @@ SCENE({id:'measuring-wellbeing-doughnut',name:'The doughnut',tag:'A floor for pe
   out+=TF(cx,cy-4,'social',12,C.muted)+TF(cx,cy+12,'foundation',12,C.muted);
   out+=TF(cx,40+12,'ecological ceiling',12,C.muted);
   const c=E8_CEIL[s.pick];
-  out+=TBF(345,80,c[0],15,C.ink,'start')+TBF(345,102,c[1]?'Transgressed':'Within the boundary',14,c[1]?C.coral:C.green,'start')+E8_lines(345,126,E8_wrap(c[2],28),C.ink,13,17);
+  out+=TBF(345,80,c[0],15,C.ink,'start')+TBF(345,102,c[1]?'Transgressed':'Within the boundary',14,c[1]?C.coral:C.green,'start')+E8_lines(345,126,E8_wrap(c[2].replace(/^Transgressed: /,''),28),C.ink,13,17);
   out+=E8_lines(345,214,E8_wrap('Inner ring: food, health, education, income, water, energy, networks, housing, gender equality, social equity, political voice, peace and justice.',30),C.muted,12,16);
   out+=TF(30,366,'Coral: transgressed (Richardson et al. 2023). Green band: the safe and just space.',12,C.muted,'start');
   return {svg:out,phase:`${c[0]}: ${c[2]} The doughnut is a way to frame goals; whether economies can meet the floor without breaking the ceiling is the open question (O’Neill et al. 2018 found no country yet does both).`};
