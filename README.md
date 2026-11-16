@@ -1,19 +1,19 @@
-# Chemistry In Motion
+# Senses In Motion
 
-A single-file, offline HTML page that tells the story of chemistry in historical order: from alchemy to chemistry, atoms and weights, the periodic table, bonds and shapes, reactions, the chemistry of carbon, reading molecules, and modern chemistry. In Try it you do the chemistry on screen: weigh reactants on Lavoisier's balance, squeeze Boyle's tube, fill Mendeleev's gaps, build Lewis structures, push an equilibrium, titrate to an end point and read a spectrum. Myths are corrected and the ethics of chemistry stated plainly.
+A single-file, offline HTML page on how human vision, hearing, smell and touch work, two eras each, then the senses together. Within each sense the story follows the order of discovery from the organ to the brain. In Try it you take part where a screen allows it (illusions, colour matching, hearing and localisation with headphones, the McGurk effect, home smell and touch tests) and see your results beside the published ones. Safety rules apply throughout: no fast flicker, gentle volumes, and no screen test is a diagnosis.
 
-This is the `chemistry` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `senses` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **From alchemy to chemistry** (400 BCE–1790): four elements, alchemy and distillation, Boyle's law, phlogiston, conservation of mass, the discovery of oxygen
-2. **Atoms and weights** (1800–1870): Dalton's atoms, Avogadro, electrolysis, the ideal gas, flame spectra, atomic weights
-3. **The periodic table** (1869–1932): the periodic table, noble gases, radioactivity, atomic number, isotopes, electron shells
-4. **Bonds and shapes** (1916–1960): Lewis structures, ionic and covalent bonds, VSEPR shapes, orbitals and hybrids, hydrogen bonds, electronegativity
-5. **Reactions** (1850–1950): reaction rates, equilibrium, acids and bases, redox and batteries, catalysis, free energy
-6. **The chemistry of carbon** (1828–1970): carbon skeletons, functional groups, benzene and aromaticity, stereochemistry, polymers, total synthesis
-7. **Reading molecules** (1900–today): chromatography, infrared spectroscopy, NMR, mass spectrometry, crystallography, titration
-8. **Modern chemistry** (1950–today): semiconductors, nanomaterials, click chemistry, green chemistry, atmospheric chemistry, computational chemistry
+1. **The eye**: optics, photoreceptors, dark adaptation, trichromacy, opponent colour, colour blindness
+2. **Seeing**: lateral inhibition, depth and stereo, motion, illusions, faces, the blind spot
+3. **The ear**: outer and middle ear, the cochlea, hair cells, the range of hearing, hearing loss, cochlear implants
+4. **Listening**: localisation, auditory scenes, speech perception, pitch, masking, hearing in noise
+5. **Smell**: odorant receptors, the olfactory bulb, thresholds, mixtures, smell and memory, smell loss
+6. **Taste and flavour**: five tastes, retronasal smell, pheromones, smell and emotion, smell training, how many smells
+7. **Touch**: skin receptors, acuity, vibration, pain, temperature, proprioception
+8. **Senses together**: multisensory integration, the rubber hand, synaesthesia, sensory substitution, ageing, affective touch
 
 ## Source layout
 
