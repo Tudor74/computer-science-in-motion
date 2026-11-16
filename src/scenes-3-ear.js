@@ -171,8 +171,8 @@ SCENE({id:'cochlea-map',name:'The place map',tag:'About 5 mm per octave',
   out+=TF(px+pw,py+18,'mm',12,C.muted,'start')+TF(px+4,py-ph-8,'best frequency, Hz (log)',12,C.muted,'start');
   let d='';for(let i=0;i<=70;i++){const m=i/2,v=S3_greenF(1-m/35);d+=(i?'L':'M')+fmt(px+m/35*pw)+' '+fmt(fy(Math.max(20,v)))}out+=P(d,C.blue,2.6);
   out+=Ci(px+s.mm/35*pw,fy(Math.max(20,fr)),7,C.coral);
-  if(x2<=1)out+=L(px+(1-x2)*pw,fy(f2),px+s.mm/35*pw,fy(f2),C.green,2,'stroke-dasharray="4 3"')+TF(px+s.mm/35*pw+10,fy(f2)+4,`one octave up: ${fmt(oct)} mm towards the base`,12,C.green,'start');
-  return {svg:out,phase:x2<=1?`Here ${s.mm} mm from the base the best frequency is ${S3_fstr(fr)}. Doubling it to ${S3_fstr(f2)} means moving ${fmt(oct)} mm towards the base. Near the apex octaves are squeezed into less length.`:`At the base the best frequency is about ${S3_fstr(fr)}, near the upper limit of human hearing.`};
+  if(oct>0)out+=L(px+(1-x2)*pw,fy(f2),px+s.mm/35*pw,fy(f2),C.green,2,'stroke-dasharray="4 3"')+(s.mm<20?TF(px+s.mm/35*pw+10,fy(f2)+17,`+1 octave: ${fmt(oct)} mm`,12,C.green,'start'):TF(px+(1-x2)*pw-8,fy(f2)+4,`+1 octave: ${fmt(oct)} mm`,12,C.green,'end'));
+  return {svg:out,phase:oct>0?`Here ${s.mm} mm from the base the best frequency is ${S3_fstr(fr)}. Doubling it to ${S3_fstr(f2)} means moving ${fmt(oct)} mm towards the base. Near the apex octaves are squeezed into less length.`:`At the base the best frequency is about ${S3_fstr(fr)}, near the upper limit of human hearing.`};
  }});
 
 const S3_BK_STEPS=8;

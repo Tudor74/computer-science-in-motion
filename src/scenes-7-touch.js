@@ -167,9 +167,9 @@ SCENE({id:'touch-acuity',name:'Your two-point map',tag:'Test yourself with a pap
    out+=TF(122,y+5,lab,13,sel?C.ink:C.muted,'end')+R(pl.X(1),y-9,pl.X(v)-pl.X(1),18,sel?'#b9d4e6':'#dde8ef','none',3);
    if(s.mine[k])out+=Ci(pl.X(Math.min(60,s.mine[k])),y,7,C.coral,'#fff')});
   if(!s.sim&&X&&X.try)out+=L(pl.X(s.mm),pl.Y(8),pl.X(s.mm),pl.Y(0),C.amber,1.6,'stroke-dasharray="4 4"');
-  out+=R(130,322,12,12,'#b9d4e6','none',2)+TF(148,333,'published (approx.)',13,C.muted,'start')+Ci(300,328,6,C.coral,'#fff')+TF(312,333,s.sim?'simulated participant':'your values',13,C.muted,'start');
+  out+=R(366,72,12,12,'#b9d4e6','none',2)+TF(384,83,'published (approx.)',13,C.muted,'start')+Ci(372,102,6,C.coral,'#fff')+TF(384,107,s.sim?'simulated':'your values',13,C.muted,'start');
   const n=Object.keys(s.mine).length;
-  out+=T(300,362,n?`${n} of 8 sites recorded`:'Record a site to add your own dot.',15,C.ink);
+  out+=T(300,372,n?`${n} of 8 sites recorded`:'Record a site to add your own dot.',15,C.ink);
   return {svg:out,phase:s.sim?'A simulated participant’s values land near the published bars: a few millimetres on the fingertip and lips, several centimetres on the back and calf. Watch shows simulated data.':n?`You recorded ${n} site${n>1?'s':''}. Compare your dots with the bars: home measurements are rough, because the two tips must touch at the same moment with the same pressure. Nothing leaves this page.`:'Pick a site, find your smallest “two” gap with a paperclip, set the slider and press Record. This is a rough home test, not a clinical measurement.'};
  }});
 
@@ -223,7 +223,7 @@ SCENE({id:'touch-acuity-grating',name:'A better test',tag:'Grating orientation',
   out+=Ci(pl.X(s.w),pl.Y(fn(s.w)),7,C.ink,'#fff');
   out+=R(400,80,180,200,'#f6f9fb','none',8)+TBF(410,104,'At '+s.w.toFixed(1)+' mm',14,C.ink,'start')+TF(410,128,`${Math.round(fn(s.w)*100)}% ${s.test==='two'?'said “two”':'correct'}`,13,C.ink,'start');
   out+=TF(410,160,s.test==='two'?'Problem: people feel':'Two choices only:',13,C.muted,'start')+TF(410,180,s.test==='two'?'one firm tip as “two”':'chance is 50%, and',13,C.muted,'start')+TF(410,200,s.test==='two'?'and one light tip as':'there is no free',13,C.muted,'start')+TF(410,220,s.test==='two'?'“one”: cues other':'pressure cue to use.',13,C.muted,'start')+(s.test==='two'?TF(410,240,'than space leak in.',13,C.muted,'start'):TF(410,240,'75% at about 1 mm.',13,C.green,'start'));
-  out+=T(300,350,s.test==='two'?'A test that says “two” for one point cannot measure spatial resolution.':'Ridges about 1 mm wide are the true limit at the fingertip.',15,C.ink);
+  out+=T(300,366,s.test==='two'?'A test that says “two” for one point cannot measure spatial resolution.':'Ridges about 1 mm wide are the true limit at the fingertip.',15,C.ink);
   return {svg:out,phase:s.test==='two'?`Even with a single tip, a simulated participant says “two” about 25% of the time. The two-point test mixes spatial resolution with judgements about pressure, which is why Craig & Johnson (2000) argued it should be retired. Simulated curve.`:`Grating orientation runs from 50% (guessing) to near 100%; 75% correct falls at about 1 mm ridges on the fingertip (Van Boven & Johnson 1994). Simulated curve with the published threshold.`};
  }});
 

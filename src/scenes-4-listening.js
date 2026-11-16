@@ -116,7 +116,7 @@ SCENE({id:'sound-localisation-duplex',name:'Rayleigh’s duplex theory',tag:'Low
  draw(s){
   let out=heading('Which clue works at which frequency?',26);
   const lx=f=>70+Math.log(f/200)/Math.log(40)*460;
-  const pl=S4_plot(70,62,460,120,[0,1],[0,3],{yt:[[0,'0'],[1,'1'],[2,'2'],[3,'3 ms']]});out+=pl.svg;
+  const pl=S4_plot(70,62,460,120,[0,1],[0,3],{yt:[[1,'1'],[2,'2'],[3,'3 ms']]});out+=pl.svg;
   const per=[];for(let i=0;i<=80;i++){const f=200*Math.pow(40,i/80);per.push([lx(f),pl.Y(Math.min(3,1000/f))])}
   out+=S4_poly(per,C.blue,2.4)+L(70,pl.Y(S4_ITDMAX/1000),530,pl.Y(S4_ITDMAX/1000),C.coral,2,'stroke-dasharray="6 5"');
   out+=TF(526,pl.Y(S4_ITDMAX/1000)-6,'largest ITD 0.66 ms',13,C.coral,'end')+TF(lx(260),pl.Y(2.9)+4,'one cycle',13,C.blue,'start');
@@ -276,12 +276,11 @@ SCENE({id:'auditory-scene-mistuning',name:'A harmonic that pops out',tag:'Groupi
   play(s){range(S4_MIS_N).forEach(i=>{const n=i+1,f=S4_MIS_F0*n*(n===s.h?1+s.mis/100:1);AUDIO.tone(f,{dur:1.4,gain:.12/Math.sqrt(S4_MIS_N)})})}},
  draw(s){
   const out0=s.mis>=3;let out=heading(s.mis===0?'All ten partials in tune: one buzzy tone':out0?`The ${s.h}${s.h===2?'nd':s.h===3?'rd':'th'} harmonic now stands out`:'Slightly off: still part of the whole',26);
-  const pl=S4_plot(50,70,520,200,[0,2200],[0,1],{xt:[[200,'200'],[600,'600'],[1000,'1000'],[1400,'1400'],[1800,'1800'],[2000,'2000 Hz']],xl:'frequency'});out+=pl.svg;
+  const pl=S4_plot(50,70,520,200,[0,2200],[0,1],{xt:[[200,'200'],[600,'600'],[1000,'1000'],[1400,'1400'],[1800,'1800'],[2000,'2000 Hz']],xl:'frequency (dashed: multiples of 200 Hz)'});out+=pl.svg;
   for(let n=1;n<=S4_MIS_N;n++){const slot=S4_MIS_F0*n,f=n===s.h?slot*(1+s.mis/100):slot,x=pl.X(f);
    out+=L(pl.X(slot),pl.Y(1),pl.X(slot),pl.Y(0),C.grid,1,'stroke-dasharray="3 4"');
    out+=R(x-5,pl.Y(.85/Math.sqrt(n)+.1),10,pl.Y(0)-pl.Y(.85/Math.sqrt(n)+.1),n===s.h&&s.mis?C.coral:C.blue,'none',3)}
   if(s.mis){const x=pl.X(S4_MIS_F0*s.h*(1+s.mis/100));out+=TF(x,pl.Y(.97),`${fmt(S4_MIS_F0*s.h*(1+s.mis/100))} Hz`,13,C.coral)}
-  out+=TF(310,300,'dashed lines: exact multiples of 200 Hz',13,C.muted);
   out+=T(300,356,`${s.mis}% off · threshold for low harmonics is roughly 1–3% (Moore et al. 1986)`,15,C.ink);
   return {svg:out,phase:s.mis===0?'Every partial sits on a multiple of 200 Hz, so the brain groups them into one sound with one pitch.':out0?'Off its slot, the partial no longer fits the harmonic template; the brain assigns it to a separate source and you hear it as its own tone.':'A small shift still lets the partial join the group, though it may nudge the pitch slightly.'};
  }});
@@ -344,7 +343,7 @@ SCENE({id:'speech-perception-categories',name:'From “ba” to “da”',tag:'Y
   ans(s,a){if(s.i>=14)return;s.res.push({k:S4_contOrder(s.seed)[s.i],da:Number(a)===1});s.i++},again(s){s.seed=nextSeed();s.i=0;s.res=[]}},
  draw(s,f,X){
   let out=heading(s.i<14?`Trial ${s.i+1} of 14`:'All fourteen trials done',26);
-  const pl=S4_plot(80,64,440,216,[0,6],[0,100],{xt:range(7).map(k=>[k,String(Math.round(S4_contF2(k)))]),yt:[[0,'0'],[50,'50'],[100,'100%']],xl:'second-formant start (Hz): “ba” → “da”',yl:'answered “da”'});out+=pl.svg;
+  const pl=S4_plot(80,64,440,216,[0,6],[0,100],{xt:range(7).map(k=>[k,String(Math.round(S4_contF2(k)))]),yt:[[50,'50'],[100,'100%']],xl:'second-formant start (Hz): “ba” → “da”',yl:'answered “da”'});out+=pl.svg;
   const typ=[];for(let i=0;i<=60;i++){const k=i/10;typ.push([pl.X(k),pl.Y(100*S4_logistic(k,3,2.6))])}out+=S4_poly(typ,C.muted,2,'stroke-dasharray="6 5"');
   out+=TF(pl.X(5.9),pl.Y(100*S4_logistic(5.9,3,2.6))+18,'typical',13,C.muted,'end');
   const by=range(7).map(k=>{const r=s.res.filter(x=>x.k===k);return r.length?100*r.filter(x=>x.da).length/r.length:null});
