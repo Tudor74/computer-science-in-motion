@@ -249,7 +249,7 @@ SCENE({id:'membrane-growth-permeability',name:'Leaky by design',tag:'What crosse
 /* ---------------------------------------------------------------- chirality */
 const A6_MOLS={ala:{name:'Alanine (an amino acid)',groups:['NH₂','COOH','CH₃','H'],life:'L'},rib:{name:'Glyceraldehyde (a simple sugar)',groups:['OH','CHO','CH₂OH','H'],life:'D'}};
 SCENE({id:'chirality',name:'Life is one-handed',tag:'Homochirality',
- definition:'Many molecules of life come in two mirror-image forms, like left and right hands, that cannot be superimposed. Life uses only one of each: L-amino acids in proteins and D-sugars in RNA and DNA. Chemistry without life makes both equally.',
+ definition:'Many molecules of life come in two mirror-image forms, like left and right hands, that cannot be superimposed. Life’s core polymers use only one of each: L-amino acids in proteins and D-sugars in RNA and DNA. (A few D-amino acids are made for special uses, such as bacterial cell walls, but ribosomes build proteins from L forms only.) Chemistry without life makes both equally.',
  example:'The amino acids from Miller’s spark experiment were an equal (racemic) mix of left- and right-handed forms; a living cell’s proteins use left-handed ones only.',
  desc:'A molecule and its mirror image, drawn with a wedge (towards you) and a dash (away). Switch the molecule and its handedness; the panel says which form life uses.',
  research:'Pasteur, L. (1848), who separated mirror-image crystals of tartaric acid. Joyce, G. F. et al. (1984). Chiral selection in poly(C)-directed synthesis of oligo(G). Nature 310, 602–604 (enantiomeric cross-inhibition). Blackmond, D. G. (2010). The origin of biological homochirality. Cold Spring Harbor Perspectives in Biology 2, a002147.',
