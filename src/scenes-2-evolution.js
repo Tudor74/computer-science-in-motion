@@ -139,7 +139,7 @@ const B2_rankOrder=B2_MOTHS.map((m,i)=>[m.rank,i]).sort((a,b)=>a[0]-b[0]).map(p=
 function B2_moth(x,y,a,dark){const c=dark?'#2f3438':'#e9e4d8',st=dark?'#151a1d':'#9a9384';return `<g transform="translate(${fmt(x)} ${fmt(y)}) rotate(${fmt(a*25)})"><path d="M0 0L-13 -7Q-15 4 -4 6Z" fill="${c}" stroke="${st}" stroke-width="1"/><path d="M0 0L13 -7Q15 4 4 6Z" fill="${c}" stroke="${st}" stroke-width="1"/><ellipse cx="0" cy="0" rx="2" ry="6" fill="${st}"/></g>`}
 SCENE({id:'natural-selection',name:'Natural selection',tag:'Darwin and Wallace, 1858',
  definition:'Natural selection: individuals vary, some of the variation is inherited, and variants that leave more offspring become more common in the next generation. Over many generations the population changes.',
- example:'On soot-darkened tree bark, birds find pale moths more easily than dark ones. If dark moths leave just 30% more offspring, dark moths go from rare to the large majority within a few dozen generations.',
+ example:'On soot-darkened tree bark, birds find pale moths more easily than dark ones. If pale moths leave 30% fewer offspring than dark ones, dark moths go from 5% to almost all moths within a few dozen generations.',
  desc:'A patch of tree bark with 48 moths, dark and pale, beside a graph of the share of dark moths over generations; the curve rises in an S shape when the background is dark and falls when it is pale.',
  research:'Darwin, C. & Wallace, A. R. (1858). On the tendency of species to form varieties. Journal of the Proceedings of the Linnean Society, Zoology 3, 45–62; Darwin, C. (1859). On the Origin of Species.',
  dur:12,hint:'Choose the bark colour and how strongly birds pick out the easier-to-see moths, then press Run or step through the generations.',
@@ -333,7 +333,7 @@ SCENE({id:'sexual-selection-runaway',name:'Runaway selection',tag:'Fisher’s fe
  desc:'A toy model of a male trait and a female preference over 40 generations. Two sliders set how strongly the two are linked in offspring and how costly the trait is. A time graph shows both values, and a second graph plots preference against trait, spiralling outward when the loop runs away and settling when the cost wins.',
  research:'Fisher, R. A. (1930). The Genetical Theory of Natural Selection; Lande, R. (1981). Models of speciation by sexual selection on polygenic traits. PNAS 78, 3721–3725; Zahavi, A. (1975). Mate selection: a selection for a handicap. Journal of Theoretical Biology 53, 205–214. This is a toy model, not a fitted one.',
  dur:10,hint:'Raise the link between trait and preference above the cost and the loop runs away. Clear runaway is hard to demonstrate in the wild; costly signals of good genes (Zahavi’s handicap) are a rival explanation.',
- init:()=>({c:.6,cost:.2}),
+ init:()=>({c:.8,cost:.16}),
  trace(s){let t=.1,p=.2;const fr=[];for(let g=0;g<=40;g++){fr.push({g,t,p});const dt=.3*p-s.cost*t;t=Math.max(0,t+dt);p=Math.max(0,p+s.c*dt)}return fr},
  ui:[{range:'c',label:'Link (genetic correlation)',min:0,max:1,step:.05,get:s=>s.c,act:'c',show:v=>B2_m(v,2)},{range:'cost',label:'Survival cost',min:0,max:.4,step:.02,get:s=>s.cost,act:'cost',show:v=>B2_m(v,2)}],
  on:{c(s,v){s.c=v;return 'run'},cost(s,v){s.cost=v;return 'run'}},

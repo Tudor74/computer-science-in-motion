@@ -425,7 +425,7 @@ SCENE({id:'food-webs-biomagnification',name:'Poison up the chain',tag:'Biomagnif
   const pl=B6_plot(150,58,300,250,[0,5],[-6,2],{yt:[[-6,'0.000001'],[-4,'0.0001'],[-2,'0.01'],[0,'1'],[2,'100']],yl:'parts per million (log scale)'});
   out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(5),pl.Y(0),C.coral,1.2,'stroke-dasharray="5 5"')+TF(pl.X(5)+6,pl.Y(0)+4,'1 ppm',13,C.coral,'start');
   vals.forEach((v,i)=>{const lg=clamp(Math.log10(v),-6,2),x=pl.X(i+.2),w=pl.X(.6)-pl.X(0);out+=R(x,pl.Y(lg),w,pl.Y(-6)-pl.Y(lg),[C.blue,C.green,C.purple,C.amber,C.coral][i],'none',4);
-   out+=TF(x+w/2,pl.Y(lg)-6,B6_k(v),13,C.ink);out+=TF(x+w/2,pl.Y(-6)+17,lv[i],13,C.muted)});
+   out+=TF(x+w/2,pl.Y(lg)-6,v<.001?String(Number(v.toPrecision(1))):B6_k(v),13,C.ink);out+=TF(x+w/2,pl.Y(-6)+17,lv[i],13,C.muted)});
   out+=TF(300,352,'fish = small fish · big fish = predatory fish · birds = fish-eating birds',13,C.muted);
   const top=vals[4];
   return {svg:out,phase:s.persist?`A persistent chemical gains about ${s.f}× at each step after entering plankton, reaching ${B6_k(top)} ppm in birds from ${base} ppm in water. Ratcliffe found British peregrine and sparrowhawk eggshells thinner after 1947, when DDT came into use; Silent Spring made the problem public, and DDT was banned for farm use in many countries in the 1970s.`:'A chemical that breaks down or is excreted does not build up: each level holds less than the one below.'};
