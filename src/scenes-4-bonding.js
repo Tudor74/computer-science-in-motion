@@ -142,8 +142,9 @@ SCENE({id:'lewis-structures-formal-charge',name:'Formal charge and resonance',ta
   m.b.forEach(([i,j],b)=>{const a=A[i],c=A[j];if(s.hy){const avg=sum(m.S.map(t=>t.o[b]))/m.S.length,lo=Math.floor(avg);out+=C4_bond(a[1],a[2],c[1],c[2],avg>lo?lo+1:lo,C.ink,20,20,avg>lo);
     const dx=c[1]-a[1],dy=c[2]-a[2],d=Math.hypot(dx,dy);out+=TF((a[1]+c[1])/2-dy/d*22,(a[2]+c[2])/2+dx/d*22+4,avg%1?(Math.abs(avg-4/3)<.01?'1⅓':'1½'):String(avg),13,C.blue)}
    else out+=C4_bond(a[1],a[2],c[1],c[2],st.o[b],C.ink)});
-  if(!s.hy)A.forEach((a,i)=>{if(st.lp[i]){const nb=m.b.filter(b=>b.includes(i)).map(b=>A[b[0]===i?b[1]:b[0]]).map(q=>[q[1],q[2]]);C4_lpDirs(a[1],a[2],nb,st.lp[i]).forEach(t=>{out+=C4_pair(a[1],a[2],t)})}});
-  A.forEach((a,i)=>{out+=C4_atom(a[1],a[2],a[0],20);if(!s.hy&&fc[i]){out+=Ci(a[1]+22,a[2]-22,10,fc[i]>0?C.coralp:C.pale,fc[i]>0?C.coral:C.blue)+TBF(a[1]+22,a[2]-17.5,fc[i]>0?'+'+fc[i]:'−'+(-fc[i]),12,fc[i]>0?C.coral:C.blue)}});
+  const used=A.map(()=>[]);
+  if(!s.hy)A.forEach((a,i)=>{const nb=m.b.filter(b=>b.includes(i)).map(b=>A[b[0]===i?b[1]:b[0]]).map(q=>[q[1],q[2]]);used[i]=nb.map(([x,y])=>Math.atan2(y-a[2],x-a[1]));if(st.lp[i]){C4_lpDirs(a[1],a[2],nb,st.lp[i]).forEach(t=>{out+=C4_pair(a[1],a[2],t);used[i].push(t)})}});
+  A.forEach((a,i)=>{out+=C4_atom(a[1],a[2],a[0],20);if(!s.hy&&fc[i]){let best=0,bd=-1;range(16).map(k=>k*Math.PI/8).forEach(t=>{const d=used[i].length?Math.min(...used[i].map(u=>C4_angDist(t,u))):9;if(d>bd+1e-9){bd=d;best=t}});const bx=a[1]+Math.cos(best)*40,by=a[2]+Math.sin(best)*40;out+=Ci(bx,by,11,fc[i]>0?C.coralp:C.pale,fc[i]>0?C.coral:C.blue)+TBF(bx,by+4.5,fc[i]>0?'+'+fc[i]:'−'+(-fc[i]),12,fc[i]>0?C.coral:C.blue)}});
   if(m.ch)out+=TBF(230,335,'overall charge −1',13,C.blue);
   const x=410;out+=TBF(x,78,s.hy?'What is measured':'Formal charges',14,C.ink,'start');
   if(s.hy)out+=C4_wrap(x,100,m.real,25,13,C.ink);
@@ -199,8 +200,8 @@ SCENE({id:'ionic-covalent-born-haber',name:'The Born–Haber cycle',tag:'Why sal
  draw(s){
   const Y=e=>330-(e+411)*265/1136;let out=heading('Building salt in steps (kJ/mol)',26);
   for(let i=0;i<=s.k;i++){const lv=C4_BH[i],y=Y(lv.e);out+=L(70,y,290,y,i===s.k?C.ink:C.line,i===s.k?3:2)+TF(300,y+4,lv.t,13,i===s.k?C.ink:C.muted,'start');
-   if(i>0){const y0=Y(C4_BH[i-1].e),x=86+i*36,up=lv.e>C4_BH[i-1].e;out+=arrow(x,y0,x,y,up?C.coral:C.green,2.4,8);const v=lv.e-C4_BH[i-1].e;out+=TF(x+4,(y0+y)/2+4,(v>0?'+':'−')+Math.abs(v),13,up?C.coral:C.green,'start')}}
-  if(s.k===5){out+=arrow(60,Y(0),60,Y(-411),C.blue,2.4,8)+TF(56,Y(-200),'−411',13,C.blue,'end')}
+   if(i>0){const y0=Y(C4_BH[i-1].e),x=[0,80,120,160,200,250][i],up=lv.e>C4_BH[i-1].e;out+=arrow(x,y0,x,y,up?C.coral:C.green,2.4,8);const v=lv.e-C4_BH[i-1].e;out+=TF(x+4,y0+(y-y0)*.6+4,(v>0?'+':'−')+Math.abs(v),13,up?C.coral:C.green,'start')}}
+  if(s.k===5){out+=arrow(52,Y(0),52,Y(-411),C.blue,2.4,8)+TF(48,Y(-200),'−411',13,C.blue,'end')}
   out+=TF(300,362,s.k===5?'Lattice enthalpy = −411 − (107 + 122 + 496 − 349) = −787':C4_BH[s.k].step,13,C.ink);
   const ph=s.k===0?'Start from sodium metal and chlorine gas, set at zero.':s.k<5?C4_BH[s.k].step+' kJ/mol.':'Hess’s law closes the cycle: the measured heat of formation (−411) fixes the lattice enthalpy at −787 kJ/mol.';
   return {svg:out,phase:ph};
@@ -241,9 +242,9 @@ SCENE({id:'ionic-covalent-properties',name:'Bonds and properties',tag:'What the 
 /* ======================================================= vsepr-shapes */
 function C4_dirs(n){const s=Math.sqrt(8/9),t=a=>a*Math.PI/180;
  if(n===2)return [[1,0,0],[-1,0,0]];
- if(n===3)return [0,120,240].map(a=>[Math.cos(t(a)),Math.sin(t(a)),0]);
- if(n===4)return [[0,0,1]].concat([0,120,240].map(a=>[s*Math.cos(t(a)),s*Math.sin(t(a)),-1/3]));
- if(n===5)return [[0,0,1],[0,0,-1]].concat([0,120,240].map(a=>[Math.cos(t(a)),Math.sin(t(a)),0]));
+ if(n===3)return [90,210,330].map(a=>[Math.cos(t(a)),Math.sin(t(a)),0]);
+ if(n===4)return [[0,0,1]].concat([90,210,330].map(a=>[s*Math.cos(t(a)),s*Math.sin(t(a)),-1/3]));
+ if(n===5)return [[0,0,1],[0,0,-1]].concat([90,210,330].map(a=>[Math.cos(t(a)),Math.sin(t(a)),0]));
  return [[0,0,1],[0,0,-1],[1,0,0],[-1,0,0],[0,1,0],[0,-1,0]];}
 // which domain indices hold lone pairs (equatorial first for 5; trans pair first for 6)
 function C4_lone(n,l){const o=n===3?[0]:n===4?[0,1]:n===5?[2,3,4]:n===6?[0,1]:[];return o.slice(0,l)}
@@ -272,13 +273,13 @@ SCENE({id:'vsepr-shapes',name:'VSEPR shapes',tag:'Electron pairs push apart',
  draw(s){
   const [nm,c,x,n,l,ang]=C4_VS[s.m];let out=heading(`${nm}: ${C4_SHAPES[n][l]}`,28);
   const P=v=>C4_proj(v,200,200,105);out+=sortedItems(C4_shape(P,c,x,n,l),P)+C4_centre(P,c);
-  const px=400;out+=TBF(px,90,'Electron groups',14,C.ink,'start')+TF(px,110,`${n} around ${c}: ${n-l} bond${n-l>1?'s':''}, ${l} lone pair${l===1?'':'s'}`,13,C.ink,'start');
-  out+=TBF(px,142,'Shape',14,C.ink,'start')+TF(px,162,C4_SHAPES[n][l],13,C.ink,'start');
-  out+=TBF(px,194,'Bond angle',14,C.ink,'start')+TF(px,214,ang,13,C.ink,'start');
-  out+=C4_wrap(px,246,s.m==='CO2'?'A double bond counts as one group: two groups, a straight line.':l?'Lone pairs take up room but are not “seen” in the shape, which is named from the atoms alone.':'All groups are bonds, so the shape matches the arrangement of electron groups.',27,13,C.muted);
+  const px=390;out+=TBF(px,82,'Electron groups',14,C.ink,'start')+TF(px,102,`${n} around ${c}`,13,C.ink,'start')+TF(px,120,`${n-l} bond${n-l>1?'s':''}, ${l} lone pair${l===1?'':'s'}`,13,C.ink,'start');
+  out+=TBF(px,152,'Shape',14,C.ink,'start')+TF(px,172,C4_SHAPES[n][l],13,C.ink,'start');
+  out+=TBF(px,204,'Bond angle',14,C.ink,'start')+TF(px,224,ang,13,C.ink,'start');
+  out+=C4_wrap(px,256,s.m==='CO2'?'A double bond counts as one group: two groups, a straight line.':l?'Lone pairs take up room but are not “seen” in the shape, which is named from the atoms alone.':'All groups are bonds, so the shape matches the arrangement of electron groups.',27,13,C.muted);
   return {svg:out,phase:`${nm}: ${n} electron groups (${l} lone), ${C4_SHAPES[n][l]}, ${ang}.`};
  },
- three(s,f,X,project){const [nm,c,x,n,l]=C4_VS[s.m];const P=project([-1.05,1.05,-1.05,1.05,-1.05,1.05]);return {svg:sortedItems(C4_shape(P,c,x,n,l),P)+C4_centre(P,c),title:`${nm} in 3D`,caption:`${nm}: ${C4_SHAPES[n][l]}. Amber lobes are lone pairs.`}}
+ three(s,f,X,project){const [nm,c,x,n,l]=C4_VS[s.m];const P=project([-.72,.72,-.72,.72,-.72,.72]);return {svg:sortedItems(C4_shape(P,c,x,n,l),P)+C4_centre(P,c),title:`${nm} in 3D`,caption:`${nm}: ${C4_SHAPES[n][l]}. Amber lobes are lone pairs.`}}
 });
 
 /* vsepr-shapes-domains */
@@ -295,10 +296,10 @@ SCENE({id:'vsepr-shapes-domains',name:'Counting electron groups',tag:'From AXE n
  draw(s){
   const n=s.n,l=Math.min(s.l,C4_SHAPES[n].length-1),geo=C4_SHAPES[n][0];const sb=k=>String(k).replace(/\d/g,d=>'₀₁₂₃₄₅₆₇₈₉'[d]);let out=heading(`AX${sb(n-l)}E${sb(l)}: ${C4_SHAPES[n][l]}`,28);
   const P=v=>C4_proj(v,200,200,100);out+=sortedItems(C4_shape(P,'A','X',n,l),P)+C4_centre(P,'A');
-  const px=400;out+=TBF(px,90,'Electron groups',14,C.ink,'start')+TF(px,110,`${n}: arranged ${geo}`,13,C.ink,'start');
-  out+=TBF(px,142,'Shape of the atoms',14,C.ink,'start')+TF(px,162,C4_SHAPES[n][l],13,C.ink,'start');
-  out+=TBF(px,194,'Example',14,C.ink,'start')+TF(px,214,C4_EXAMPLE[n+'-'+l]||'—',13,C.ink,'start');
-  if(s.l>l)out+=C4_wrap(px,246,`With ${n} groups, at most ${C4_SHAPES[n].length-1} lone pair${C4_SHAPES[n].length-1===1?' is':'s are'} shown here.`,27,13,C.muted);
+  const px=390;out+=TBF(px,90,'Electron groups',14,C.ink,'start')+TF(px,110,`${n}, arranged`,13,C.ink,'start')+TF(px,126,geo,13,C.ink,'start');
+  out+=TBF(px,158,'Shape of the atoms',14,C.ink,'start')+TF(px,178,C4_SHAPES[n][l],13,C.ink,'start');
+  out+=TBF(px,210,'Example',14,C.ink,'start')+TF(px,230,C4_EXAMPLE[n+'-'+l]||'—',13,C.ink,'start');
+  if(s.l>l)out+=C4_wrap(px,262,`With ${n} groups, at most ${C4_SHAPES[n].length-1} lone pair${C4_SHAPES[n].length-1===1?' is':'s are'} shown here.`,27,13,C.muted);
   return {svg:out,phase:`${n} electron groups (${geo}) with ${l} lone pair${l===1?'':'s'}: ${C4_SHAPES[n][l]}, as in ${C4_EXAMPLE[n+'-'+l]}.`};
  }});
 
@@ -437,13 +438,13 @@ SCENE({id:'hydrogen-bonds',name:'Hydrogen bonds',tag:'Water’s anomalous boilin
  ui:[{choose:[['all','All'],['14','Group 14'],['15','Group 15'],['16','Group 16'],['17','Group 17']],label:'Show',get:s=>s.g,act:'g'},{b:'Extrapolate water',act:'ex'}],
  on:{g(s,v){s.g=v;return 'keep'},ex(s){s.ex=!s.ex;return 'keep'}},
  draw(s){
-  let out=heading('Boiling points of simple hydrides (°C)',26);const x0=90,w=380,y0=v=>320-(v+180)/300*270,xp=i=>x0+i*w/3;
-  [-150,-100,-50,0,50,100].forEach(v=>{out+=L(x0-6,y0(v),x0+w,y0(v),C.grid,1)+TF(x0-10,y0(v)+4,String(v),13,C.muted,'end')});
+  let out=heading('Boiling points of simple hydrides (°C)',26);const x0=140,w=330,y0=v=>320-(v+180)/300*270,xp=i=>x0+i*w/3;
+  [-150,-100,-50,0,50,100].forEach(v=>{out+=L(x0-74,y0(v),x0+w,y0(v),C.grid,1)+TF(x0-78,y0(v)+4,String(v),13,C.muted,'end')});
   ['2','3','4','5'].forEach((r,i)=>{out+=TF(xp(i),340,'row '+r,13,C.muted)});
   Object.keys(C4_BP).forEach(g=>{if(s.g!=='all'&&s.g!==g)return;const d=C4_BP[g],col=C4_GC[g];let path='';d.forEach((q,i)=>{path+=(i?'L':'M')+fmt(xp(i))+' '+fmt(y0(q[1]))});out+=P(path,col,2.5);
    d.forEach((q,i)=>{out+=Ci(xp(i),y0(q[1]),6,col,'#fff');const lab=i===0?TF(xp(i)-12,y0(q[1])+5,q[0],13,col,'end'):TF(xp(i)+9,y0(q[1])+(g==='17'?14:-8),q[0],13,col,'start');if(s.g!=='all'||i===0)out+=lab})});
   if(s.ex&&(s.g==='all'||s.g==='16')){const ys=C4_BP[16].slice(1).map(q=>q[1]),xs=[1,2,3],mx=2,my=sum(ys)/3,b=sum(xs.map((x,i)=>(x-mx)*(ys[i]-my)))/2,pred=my-b*mx;
-   out+=P(`M${fmt(xp(0))} ${fmt(y0(pred))}L${fmt(xp(3))} ${fmt(y0(my+b))}`,C.blue,1.8,'none','stroke-dasharray="5 5"')+Ci(xp(0),y0(pred),6,'#fff',C.blue)+TF(xp(0)+10,y0(pred)+18,`trend: about ${Math.round(pred/10)*10} °C`,13,C.blue,'start')}
+   out+=P(`M${fmt(xp(0))} ${fmt(y0(pred))}L${fmt(xp(3))} ${fmt(y0(my+b))}`,C.blue,1.8,'none','stroke-dasharray="5 5"')+Ci(xp(0),y0(pred),6,'#fff',C.blue)+TF(xp(0)-12,y0(pred)+5,`≈ ${Math.round(pred/10)*10} °C`.replace('-','−'),13,C.blue,'end')}
   out+=C4_wrap(485,90,'Groups 15–17 start with N, O or F, which form hydrogen bonds. Group 14 (carbon) does not, and rises smoothly.',16,13,C.muted);
   return {svg:out,phase:s.ex?'Extending the trend of H₂S, H₂Se and H₂Te puts water’s boiling point near −90 °C; hydrogen bonds lift it to 100 °C.':'NH₃, H₂O and HF boil far higher than their heavier relatives because of hydrogen bonding; methane follows the trend.'};
  }});
