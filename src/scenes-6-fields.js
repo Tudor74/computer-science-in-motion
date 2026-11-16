@@ -413,7 +413,7 @@ SCENE({id:'induction',name:'Electromagnetic induction',tag:'Rerun Faraday: move 
 
 SCENE({id:'induction-generator',name:'Generator',tag:'Spinning a coil makes AC',
  definition:'A coil turning in a magnetic field has a flux through it that rises and falls, so it produces an alternating voltage: EMF = N B A ω sin ωt, peaking when the coil’s sides cut the field fastest.',
- example:'A coil of 100 turns, 10 cm square, spinning 50 times a second in a 0.1 T field gives a peak of about 3.1 V. Mains generators do the same with stronger fields, more turns and huge turbines.',
+ example:'A coil of 100 turns, 10 cm square, spinning 50 times a second in a 0.1 T field gives a peak of about 31 V. Mains generators do the same with stronger fields, more turns and huge turbines.',
  desc:'A rectangular coil turning between magnet poles, seen end-on, beside the sine-shaped EMF it produces over time with the current moment marked.',
  dur:10,hint:'Change the speed, turns and field strength and see the peak voltage change. Press Play to turn the coil.',
  research:'Faraday (1831) built the first disc generator; Pixii (1832) the first alternating-current generator.',
