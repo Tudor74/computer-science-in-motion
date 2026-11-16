@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -58,6 +58,7 @@ footer p{margin:0 0 4px}
 @keyframes blink{0%,45%{opacity:1}50%,95%{opacity:0}100%{opacity:1}}
 @keyframes reach{0%,10%{transform:translate(0,0)}55%,100%{transform:translate(318px,-58px)}}
 @keyframes hitpulse{0%,50%{opacity:0}60%{opacity:.9}100%{opacity:0}}
+@keyframes swing{0%,100%{transform:rotate(28deg)}50%{transform:rotate(-28deg)}}
 @keyframes travel{from{stroke-dashoffset:0}to{stroke-dashoffset:-60}}
 @keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1)}}
 .wave{animation:slide 6s linear infinite}
@@ -66,7 +67,8 @@ footer p{margin:0 0 4px}
 .pulse{animation:hitpulse 3.2s ease-out infinite;transform-origin:440px 92px}
 .radar{animation:breathe 7s ease-in-out infinite;transform-origin:300px 110px;transform-box:view-box}
 .route{animation:travel 2.4s linear infinite}
-@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route{animation:none}}
+.bob{animation:swing 2.6s ease-in-out infinite;transform-origin:300px 30px;transform-box:view-box}
+@media(prefers-reduced-motion:reduce){.wave,.bit,.cursor,.pulse,.radar,.route,.bob{animation:none}}
 
 @media(max-width:760px){
  body{padding:6px}
@@ -92,9 +94,10 @@ footer p{margin:0 0 4px}
    <pattern id="t-cs" patternUnits="userSpaceOnUse" width="28" height="28"><path d="M28 0H0V28" fill="none" stroke="currentColor" stroke-width="1.1"/></pattern>
    <pattern id="t-hci" patternUnits="userSpaceOnUse" width="36" height="36"><path d="M18 10V26M10 18H26" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="18" cy="18" r="5" fill="none" stroke="currentColor"/></pattern>
    <pattern id="t-ther" patternUnits="userSpaceOnUse" width="48" height="48"><circle cx="24" cy="24" r="11" fill="none" stroke="currentColor"/><circle cx="24" cy="24" r="19" fill="none" stroke="currentColor" stroke-width=".8"/></pattern>
+   <pattern id="t-phys" patternUnits="userSpaceOnUse" width="48" height="24"><path d="M0 12Q12 0 24 12T48 12" fill="none" stroke="currentColor" stroke-width="1.1"/></pattern>
    <pattern id="t-think" patternUnits="userSpaceOnUse" width="44" height="44"><path d="M6 6L22 16L38 6M22 16V34M6 38L22 34L38 38" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="22" cy="16" r="2.4" fill="currentColor"/><circle cx="22" cy="34" r="2.4" fill="currentColor"/></pattern>
   </defs>
-  <rect width="20%" height="100%" fill="url(#t-math)"/><rect x="20%" width="20%" height="100%" fill="url(#t-cs)"/><rect x="40%" width="20%" height="100%" fill="url(#t-hci)"/><rect x="60%" width="20%" height="100%" fill="url(#t-ther)"/><rect x="80%" width="20%" height="100%" fill="url(#t-think)"/>
+  <rect width="16.7%" height="100%" fill="url(#t-math)"/><rect x="16.7%" width="16.7%" height="100%" fill="url(#t-phys)"/><rect x="33.3%" width="16.7%" height="100%" fill="url(#t-cs)"/><rect x="50%" width="16.7%" height="100%" fill="url(#t-hci)"/><rect x="66.7%" width="16.7%" height="100%" fill="url(#t-ther)"/><rect x="83.3%" width="16.7%" height="100%" fill="url(#t-think)"/>
  </svg>
  <p class="eyebrow">In Motion</p>
  <h1>Ideas you can play, pause, rewind and try</h1>
@@ -123,6 +126,23 @@ footer p{margin:0 0 4px}
     <p class="desc">Start with collections, rules and reasons. Then build and transform shapes and vectors, make change precise with limits, measure uncertainty, study spaces with structure, treat whole functions as objects, and finally compare mathematical theories themselves. A 3D view slides in where depth helps.</p>
     <ul class="facts" aria-label="Course size"><li>7 stages</li><li>28 lessons</li><li>202 terms</li><li>2D and 3D</li></ul>
     <div class="links"><a class="open" href="https://mathematics-in-motion.puter.site/">Open Mathematics <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
+  <li class="course physics">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A pendulum swinging, with its arc and timing marks">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <line x1="230" y1="30" x2="370" y2="30" stroke="#8aa1ae" stroke-width="4" stroke-linecap="round"/>
+    <path d="M222 165 A150 150 0 0 0 378 165" fill="none" stroke="#e8d7b0" stroke-width="3" stroke-dasharray="4 7"/>
+    <g class="bob"><line x1="300" y1="30" x2="300" y2="178" stroke="#192c37" stroke-width="2.5"/><circle cx="300" cy="186" r="15" fill="#9a6200"/></g>
+    <text x="470" y="120" text-anchor="middle" font-size="17" fill="#546873">T = 2π√(L/g)</text>
+   </svg>
+   <div class="body">
+    <h3>Physics In Motion</h3>
+    <p class="tag">From Galileo’s ramps to quanta, in historical order</p>
+    <p class="desc">Describe motion, then forces and gravity, energy and momentum, waves, light, electricity and magnetism, heat and entropy, and finally relativity, atoms and quanta. In Try it you rerun the classic experiments: Galileo’s bells, Cavendish weighing the Earth, Young’s slits, Fizeau’s toothed wheel, Rutherford’s gold foil and Millikan’s photoelectric plot. Popular legends are labelled as legends.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>51 lessons</li><li>159 scenes</li><li>Rerun the experiments</li></ul>
+    <div class="links"><a class="open" href="https://physics-in-motion.puter.site/">Open Physics <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
 
@@ -191,7 +211,7 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://therapies-in-motion.puter.site/">Open Therapies <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="secondary" href="https://therapies-in-motion.puter.site/atlas.html">Therapy Atlas</a></div>
    </div>
   </li>
-  <li class="course thinkers wide">
+  <li class="course thinkers">
    <svg class="motif" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People as points on a map, with ideas travelling between them along routes">
     <rect width="600" height="220" fill="#f3f7fa"/>
     <g fill="none" stroke="#c7d8e3" stroke-width="2"><path d="M90 150 Q180 40 300 90"/><path d="M300 90 Q420 140 510 60"/><path d="M300 90 Q330 170 440 180"/><path d="M90 150 Q200 200 300 170"/></g>
@@ -212,18 +232,18 @@ footer p{margin:0 0 4px}
  <ul class="ideas" aria-labelledby="ideas-heading">
   <li><b>One idea per scene</b><span>A term, a plain-English definition, an example and one diagram, so nothing competes for attention.</span></li>
   <li><b>The same moment, the same picture</b><span>Each diagram is drawn from the lesson clock. Pause, rewind or replay and you see exactly what you saw before.</span></li>
-  <li><b>Hold to rewind</b><span>In Mathematics, Computer Science and HCI, the speed slider runs backwards while held and pauses when released. Forward speed stays where you set it.</span></li>
-  <li><b>Try it</b><span>In the Computer Science and HCI courses, the same diagram responds to your input. In HCI you take part in the classic experiments.</span></li>
+  <li><b>Hold to rewind</b><span>In Mathematics, Physics, Computer Science and HCI, the speed slider runs backwards while held and pauses when released. Forward speed stays where you set it.</span></li>
+  <li><b>Try it</b><span>In Physics, Computer Science and HCI, the same diagram responds to your input. In Physics and HCI you rerun the classic experiments yourself.</span></li>
   <li><b>Words that explain themselves</b><span>Underlined words open a short meaning, a distinction and an example. Search every word from the header.</span></li>
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Thinkers runs alongside all of them, with the people behind the ideas.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Computer Science shows how machines use it, HCI shows how people meet those machines, and Therapies turns to how people help one another. Thinkers runs alongside all of them, with the people behind the ideas.</p>
 </main>
 
 <footer>
  <p>The courses share one visual language: large touch targets, keyboard controls, a caption under every diagram, respect for reduced motion, and en-GB spelling.</p>
- <p>Sources: <a href="https://github.com/Tudor74/mathematics-in-motion">Mathematics In Motion</a> · <a href="https://github.com/Tudor74/computer-science-in-motion">Computer Science In Motion</a> (the <code>hci</code> branch holds HCI In Motion)</p>
+ <p>Sources: <a href="https://github.com/Tudor74/mathematics-in-motion">Mathematics In Motion</a> · <a href="https://github.com/Tudor74/computer-science-in-motion">Computer Science In Motion</a> (its <code>hci</code> and <code>physics</code> branches hold HCI and Physics In Motion)</p>
 </footer>
 </div>
 </body>
