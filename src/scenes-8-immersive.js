@@ -48,7 +48,7 @@ SCENE({id:'head-mounted-display',name:'Head-mounted display',tag:'The picture fo
   out+=TF(195,320,`What each eye is shown: turn ${s.yaw}°, look ${s.pitch>=0?'up':'down'} ${Math.abs(s.pitch)}°`,13,C.muted);
   // Plan view: the room seen from above, the head and its field of view.
   const mx=490,my=170,sc=26;out+=R(mx-3*sc,my-3*sc,6*sc,6*sc,'#fff',C.ink,4);
-  out+=L(mx-sc,my-3*sc,mx+sc,my-3*sc,'#e0a800',5)+TF(mx,my-3*sc-8,'window',13,C.amber)+L(mx+3*sc,my-sc*.5,mx+3*sc,my+sc,C.coral,5)+TF(mx+3*sc+4,my-sc*.9,'door',13,C.coral,'start');
+  out+=L(mx-sc,my-3*sc,mx+sc,my-3*sc,'#e0a800',5)+TF(mx,my-3*sc-8,'window',13,C.amber)+L(mx+3*sc,my-sc*.5,mx+3*sc,my+sc,C.coral,5)+TF(mx+3*sc-8,my-sc*.9,'door',13,C.coral,'end');
   out+=R(mx-2.2*sc,my-2.2*sc,1.4*sc,1*sc,C.pale,C.line,3)+TF(mx-1.5*sc,my-1.5*sc+5,'table',12,C.muted);
   const a=s.yaw*H8_DEG,r=2.7*sc,w=45*H8_DEG;
   out+=P(`M${mx} ${my}L${fmt(mx+r*Math.sin(a-w))} ${fmt(my-r*Math.cos(a-w))}A${r} ${r} 0 0 1 ${fmt(mx+r*Math.sin(a+w))} ${fmt(my-r*Math.cos(a+w))}Z`,C.blue,1.5,'#1772b733');

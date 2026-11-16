@@ -428,7 +428,7 @@ SCENE({id:'hypertext-memex',name:'Memex trails',tag:'Bush, “As We May Think”
 
 SCENE({id:'hypertext-transclusion',name:'Transclusion and two-way links',tag:'Nelson’s Xanadu versus the web',
  definition:'In Ted Nelson’s Xanadu design, a quotation is included by reference (transclusion), so it stays connected to its source, and links are visible from both ends. The web instead copies text and uses one-way links that can break.',
- example:'Quote a paragraph on the web and the author later corrects it: your copy is now out of date, and if the page moves your link shows “404 Not Found”. With transclusion the quote updates and the source can list everyone who quotes it.',
+ example:'Quote a paragraph on the web and the author later corrects it: your copy is now out of date, and if the page moves your link shows “404 Not Found”. With Xanadu transclusion the quote stays tied to the exact version you quoted, so its words never silently change, while readers can see that a newer version exists; and the source can list everyone who quotes it. (A live embed, by contrast, simply shows the latest text.)',
  research:'Nelson, T. H. (1981). Literary Machines. Mindful Press. Nelson, T. H. (1995). The heart of connection: hypermedia unified by transclusion. Communications of the ACM, 38(8), 31–33.',
  desc:'Your document A quoting a passage of source document B, either as a copy with a one-way link or as a live transclusion with a two-way link; editing or deleting B shows the consequences.',
  dur:12,hint:'Choose copy or transclusion, then have the author edit or delete the source.',
@@ -440,18 +440,18 @@ SCENE({id:'hypertext-transclusion',name:'Transclusion and two-way links',tag:'Ne
   const oldT='“Links should work in both directions.”',newT='“Links must work in both directions.”',src=s.edited?newT:oldT,tr=s.mode==='transclude';
   let out=heading(tr?'Transclusion: the quote is a window onto the source':'Copy and paste: the quote is a snapshot');
   out+=R(20,56,260,270,'#fff',C.grid,10)+TB(36,84,'Your essay (A)',16,C.ink,'start')+range(3).map(r=>R(36,100+r*14,220-(r*31)%70,6,'#dfe7ec','none',2)).join('');
-  const qa=tr?(s.deleted?oldT:src):oldT,cut=t=>{const k=t.lastIndexOf(' ',24);return [t.slice(0,k),t.slice(k+1)]};
+  const qa=oldT,cut=t=>{const k=t.lastIndexOf(' ',24);return [t.slice(0,k),t.slice(k+1)]};
   out+=R(36,160,228,70,tr?C.greenp:'#f6f6f6',tr?C.green:C.line,8,tr?'stroke-dasharray="6 4"':'')+T(48,190,cut(qa)[0],14,C.ink,'start')+T(48,210,cut(qa)[1],14,C.ink,'start');
-  if(!tr&&s.edited&&!s.deleted)out+=TB(150,252,'⚠ out of date',14,C.coral);
+  if(!tr&&s.edited&&!s.deleted)out+=TB(150,252,'⚠ out of date',14,C.coral);if(tr&&s.edited&&!s.deleted)out+=TB(150,252,'newer version exists',14,C.green);
   out+=range(3).map(r=>R(36,268+r*14,210-(r*29)%60,6,'#dfe7ec','none',2)).join('');
   // Source document B.
   if(s.deleted&&!tr){out+=R(330,56,250,150,'#fff',C.coral,10,'stroke-dasharray="6 4"')+TB(455,120,'404 Not Found',22,C.coral)+TF(455,150,'the link points nowhere',13,C.muted)}
-  else{out+=R(330,56,250,150,'#fff',C.grid,10)+TB(346,84,'Source (B)'+(s.deleted?' · kept version':''),15,C.ink,'start')+R(346,100,218,52,s.edited?C.amberp:'#f3f7fa','none',6)+T(356,122,cut(src)[0],14,C.ink,'start')+T(356,142,cut(src)[1],14,C.ink,'start')}
+  else{out+=R(330,56,250,150,'#fff',C.grid,10)+TB(346,84,'Source (B)'+(s.deleted?' · kept version':tr&&s.edited?' · version 2':''),15,C.ink,'start')+R(346,100,218,52,s.edited?C.amberp:'#f3f7fa','none',6)+T(356,122,cut(src)[0],14,C.ink,'start')+T(356,142,cut(src)[1],14,C.ink,'start')}
   if(tr){out+=P('M264 195 C 300 195 300 126 346 126',C.green,8,'none','opacity=".25"')+R(346,166,218,30,C.greenp,'none',6)+TF(455,186,'← quoted in: Your essay (A)',13,C.green)}
   else out+=arrow(264,170,328,120,s.deleted?C.coral:C.blue,2.5)+TF(300,138,'link',13,C.muted);
-  const say=tr?(s.deleted?'Xanadu’s design keeps every published version, so the transcluded quote never breaks and still credits its source.':s.edited?'The author edited B, and your quote shows the change, because it is a live window onto B rather than a copy. B also knows who quotes it.':'The quoted passage is included by reference: it stays connected to B, and the link can be followed from either end.')
+  const say=tr?(s.deleted?'Xanadu’s design keeps every published version, so the transcluded quote never breaks and still credits its source.':s.edited?'The author published version 2 of B. Your quote stays pinned to version 1, the words you actually quoted, and readers can see that a newer version exists and compare the two. B also knows who quotes it.':'The quoted passage is included by reference: it stays connected to B, and the link can be followed from either end.')
    :(s.deleted?'The page has gone, so the one-way link fails. Nothing told you: a web link does not know what points at it.':s.edited?'B was corrected, but your copy still shows the old words. Copies drift from their sources.':'The quote is a copy, and the link points one way only: B cannot see that you quoted it.');
-  out+=R(330,226,250,100,tr?C.greenp:'#f3f7fa','none',10)+TB(455,252,tr?'Two-way, by reference':'One-way, by copy',15,tr?C.green:C.ink)+TF(455,278,tr?'edits flow through, credit kept':'edits lost, links can break',13,C.muted)+TF(455,302,tr?'Xanadu (designed from 1960)':'World Wide Web (1989)',13,C.muted);
+  out+=R(330,226,250,100,tr?C.greenp:'#f3f7fa','none',10)+TB(455,252,tr?'Two-way, by reference':'One-way, by copy',15,tr?C.green:C.ink)+TF(455,278,tr?'versions kept, credit kept':'edits lost, links can break',13,C.muted)+TF(455,302,tr?'Xanadu (designed from 1960)':'World Wide Web (1989)',13,C.muted);
   return {svg:out,phase:say};
  }});
 
