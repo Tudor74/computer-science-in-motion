@@ -160,7 +160,7 @@ SCENE({id:'classical-conditioning',name:'Classical conditioning',tag:'Bell, food
  dur:14,hint:'Pair the bell with food a few times, then ring the bell alone until the response fades, then rest and test again. The update rule here is a simplified one (see prediction error in era 8).',
  init:()=>({V:0,peak:0,hist:[],last:null}),
  watch(p){const n=Math.min(D2_CC_SEQ.length,Math.floor(p*(D2_CC_SEQ.length+1)));const st={V:0,peak:0,hist:[],last:null};D2_CC_SEQ.slice(0,n).forEach(k=>{D2_ccApply(st,k);st.last=k});return st},
- ui:[{b:'Bell + food',act:'pair'},{b:'Bell alone',act:'bell'},{b:'Food alone',act:'food'},{b:'Rest a day',act:'rest'},{b:'Reset',act:'reset'}],
+ ui:[{b:'Bell + food',act:'pair'},{b:'Bell alone',act:'bell'},{b:'Food alone',act:'food'},{b:'Rest a day',act:'rest'}],
  on:{pair(s){D2_tick();D2_ccApply(s,'pair');s.last='pair'},bell(s){D2_tick();D2_ccApply(s,'bell');s.last='bell'},food(s){D2_ccApply(s,'food');s.last='food'},rest(s){D2_ccApply(s,'rest');s.last='rest'},reset(s){s.V=0;s.peak=0;s.hist=[];s.last=null}},
  draw(s){
   let out=heading('What does the bell come to mean?',26);const last=s.hist[s.hist.length-1];
@@ -279,7 +279,7 @@ SCENE({id:'law-of-effect-selection',name:'Selection by consequences',tag:'Stampi
  dur:12,hint:'Choose which action the box rewards, then run blocks of five trials. Reset and pick a different rewarded action to see that the outcome, not the action itself, does the work.',
  init:()=>({w:[1,1,1,1],hist:[],n:0,rew:1}),
  watch(p){const st={w:[1,1,1,1],hist:[],n:0,rew:1};return D2_selRun(st,Math.floor(p*12)*5)},
- ui:[{choose:D2_BEH.map((b,i)=>[i,b]),label:'Rewarded',get:s=>s.rew,act:'rew'},{b:'Run 5 trials',act:'run'},{b:'Reset',act:'reset'}],
+ ui:[{choose:D2_BEH.map((b,i)=>[i,b]),label:'Rewarded',get:s=>s.rew,act:'rew'},{b:'Run 5 trials',act:'run'}],
  on:{rew(s,v){s.rew=Number(v);s.w=[1,1,1,1];s.hist=[];s.n=0},run(s){D2_selRun(s,5)},reset(s){s.w=[1,1,1,1];s.hist=[];s.n=0}},
  draw(s){
   let out=heading(`Only “${D2_BEH[s.rew]}” opens the door`,26);const tot=sum(s.w),cols=[C.amber,C.blue,C.purple,C.green];

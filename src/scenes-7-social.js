@@ -423,7 +423,7 @@ SCENE({id:'cognitive-dissonance',name:'Dissonance and its reduction',tag:'Changi
  dur:12,hint:'Press beliefs to switch them on or off, or try the three ways to reduce dissonance.',
  init:()=>({on:[1,1,1,1,0,0],risk:5,quit:false}),
  watch(p){return p<.25?{on:[1,1,1,1,0,0],risk:5,quit:false}:p<.5?{on:[1,1,1,1,1,1],risk:5,quit:false}:p<.75?{on:[1,1,1,1,1,1],risk:2,quit:false}:{on:[1,1,1,1,0,0],risk:5,quit:true}},
- ui:[{b:'Add excuses',act:'excuse'},{b:'Play down the risk',act:'trivial'},{b:'Quit smoking',act:'quit'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Add excuses',act:'excuse'},{b:'Play down the risk',act:'trivial'},{b:'Quit smoking',act:'quit'}],
  on:{tog(s,i){i=Number(i);s.on[i]=s.on[i]?0:1},excuse(s){s.on[4]=1;s.on[5]=1},trivial(s){s.risk=s.risk>2?2:5},quit(s){s.quit=!s.quit},reset(s){s.on=[1,1,1,1,0,0];s.risk=5;s.quit=false}},
  draw(s,f,X){
   const r=D7_dis(s);let out=heading('Beliefs around a behaviour',24);

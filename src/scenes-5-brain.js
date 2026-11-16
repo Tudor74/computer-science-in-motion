@@ -137,7 +137,7 @@ SCENE({id:'hebbian-synapse',name:'Hebb’s rule',tag:'Fire together, wire togeth
  dur:12,hint:'Try A alone first, then pair A with B several times, then try A alone again.',
  init:()=>({ev:[]}),
  watch(p){const seq=['A','AB','AB','AB','AB','AB','A'];return {ev:seq.slice(0,1+Math.min(6,Math.floor(p*7)))}},
- ui:D5_HEBB_W.map(([e,l])=>({b:l,act:'go',arg:e})).concat([{b:'Start again',act:'reset'}]),
+ ui:D5_HEBB_W.map(([e,l])=>({b:l,act:'go',arg:e})),
  on:{go(s,e){s.ev.push(e||'A');if(s.ev.length>12)s.ev.shift();const r=D5_hebbRun(s.ev);if(r.log[r.log.length-1].fired)D5_clicks([0]);return 'keep'},reset(s){s.ev=[];return 'keep'}},
  draw(s,f,X){
   const r=D5_hebbRun(s.ev),last=r.log[r.log.length-1],w=r.log.length>1?r.log[r.log.length-2].w:.2,wNow=r.w;let out=heading('Pairing strengthens the weak input');
@@ -167,7 +167,7 @@ SCENE({id:'hebbian-synapse-ltp',name:'Long-term potentiation',tag:'A synapse tha
  dur:12,hint:'Give ten test pulses for a baseline, then a burst, then more test pulses. Simulated responses with small random noise.',
  init:()=>({ev:[]}),
  watch(p){const ev=[];const n=Math.floor(p*42);for(let i=0;i<n;i++)ev.push(i===10?'tet':'test');return {ev}},
- ui:[{b:'Test pulse',act:'test'},{b:'Ten test pulses',act:'ten'},{b:'Burst (100 Hz, 1 s)',act:'tet'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Test pulse',act:'test'},{b:'Ten test pulses',act:'ten'},{b:'Burst (100 Hz, 1 s)',act:'tet'}],
  on:{test(s){if(s.ev.length<70)s.ev.push('test');return 'keep'},ten(s){for(let i=0;i<10&&s.ev.length<70;i++)s.ev.push('test');return 'keep'},tet(s){if(s.ev.length<70)s.ev.push('tet');return 'keep'},reset(s){s.ev=[];return 'keep'}},
  draw(s){
   const r=D5_ltpRun(s.ev);let out=heading('One burst, a lasting change');

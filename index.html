@@ -325,7 +325,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
 </section>
 </div>
 <footer class="bottom">
- <nav class="family" id="family" aria-label="In Motion courses">Part of <a href="https://in-motion.puter.site/">In Motion</a>: <a href="https://mathematics-in-motion.puter.site/">Mathematics</a> · <a href="https://computer-science-in-motion.puter.site/">Computer Science</a> · <a href="https://hci-in-motion.puter.site/">HCI</a> · <a href="https://physics-in-motion.puter.site/">Physics</a> · <a href="https://music-in-motion.puter.site/">Music</a> · <a href="https://mind-in-motion.puter.site/" aria-current="page">Mind</a> · <a href="https://electronic-music-in-motion.puter.site/">Electronic Music</a> · <a href="https://therapies-in-motion.puter.site/">Therapies</a> · <a href="https://thinkers-in-motion.puter.site/">Thinkers</a></nav>
+ <nav class="family" id="family" aria-label="In Motion courses">Part of <a href="https://in-motion.puter.site/">In Motion</a>: <a href="https://mathematics-in-motion.puter.site/">Mathematics</a> · <a href="https://computer-science-in-motion.puter.site/">Computer Science</a> · <a href="https://hci-in-motion.puter.site/">HCI</a> · <a href="https://physics-in-motion.puter.site/">Physics</a> · <a href="https://music-in-motion.puter.site/">Music</a> · <a href="https://mind-in-motion.puter.site/" aria-current="page">Mind</a> · <a href="https://ted-nelson-in-motion.puter.site/">Ted Nelson</a> · <a href="https://biology-in-motion.puter.site/">Biology</a> · <a href="https://language-in-motion.puter.site/">Language</a> · <a href="https://abiogenesis-in-motion.puter.site/">Abiogenesis</a> · <a href="https://economics-in-motion.puter.site/">Economics</a> · <a href="https://chemistry-in-motion.puter.site/">Chemistry</a> · <a href="https://senses-in-motion.puter.site/">Senses</a> · <a href="https://tripitaka-in-motion.puter.site/">Tripitaka</a> · <a href="https://techno-in-motion.puter.site/">Techno</a> · <a href="https://electronic-music-in-motion.puter.site/">Electronic Music</a> · <a href="https://philosophy-in-motion.puter.site/">Philosophy</a> · <a href="https://therapies-in-motion.puter.site/">Therapies</a> · <a href="https://thinkers-in-motion.puter.site/">Thinkers</a> · <a href="https://awais-rashid-in-motion.puter.site/">Awais Rashid</a> · <a href="https://the-future-in-motion.puter.site/">The Future</a></nav>
  <p id="status">v0.1 · Offline · No external files</p>
  <details id="about"><summary>About this page and further reading</summary>
   <p>Every diagram is a pure function of the lesson clock, so play, pause, speed, rewind and replay always show the same picture for the same moment. <b>Try it</b> hands the same diagram to you: change the input, step through, and compare.</p>
@@ -1344,7 +1344,7 @@ SCENE({id:'classical-conditioning',name:'Classical conditioning',tag:'Bell, food
  dur:14,hint:'Pair the bell with food a few times, then ring the bell alone until the response fades, then rest and test again. The update rule here is a simplified one (see prediction error in era 8).',
  init:()=>({V:0,peak:0,hist:[],last:null}),
  watch(p){const n=Math.min(D2_CC_SEQ.length,Math.floor(p*(D2_CC_SEQ.length+1)));const st={V:0,peak:0,hist:[],last:null};D2_CC_SEQ.slice(0,n).forEach(k=>{D2_ccApply(st,k);st.last=k});return st},
- ui:[{b:'Bell + food',act:'pair'},{b:'Bell alone',act:'bell'},{b:'Food alone',act:'food'},{b:'Rest a day',act:'rest'},{b:'Reset',act:'reset'}],
+ ui:[{b:'Bell + food',act:'pair'},{b:'Bell alone',act:'bell'},{b:'Food alone',act:'food'},{b:'Rest a day',act:'rest'}],
  on:{pair(s){D2_tick();D2_ccApply(s,'pair');s.last='pair'},bell(s){D2_tick();D2_ccApply(s,'bell');s.last='bell'},food(s){D2_ccApply(s,'food');s.last='food'},rest(s){D2_ccApply(s,'rest');s.last='rest'},reset(s){s.V=0;s.peak=0;s.hist=[];s.last=null}},
  draw(s){
   let out=heading('What does the bell come to mean?',26);const last=s.hist[s.hist.length-1];
@@ -1463,7 +1463,7 @@ SCENE({id:'law-of-effect-selection',name:'Selection by consequences',tag:'Stampi
  dur:12,hint:'Choose which action the box rewards, then run blocks of five trials. Reset and pick a different rewarded action to see that the outcome, not the action itself, does the work.',
  init:()=>({w:[1,1,1,1],hist:[],n:0,rew:1}),
  watch(p){const st={w:[1,1,1,1],hist:[],n:0,rew:1};return D2_selRun(st,Math.floor(p*12)*5)},
- ui:[{choose:D2_BEH.map((b,i)=>[i,b]),label:'Rewarded',get:s=>s.rew,act:'rew'},{b:'Run 5 trials',act:'run'},{b:'Reset',act:'reset'}],
+ ui:[{choose:D2_BEH.map((b,i)=>[i,b]),label:'Rewarded',get:s=>s.rew,act:'rew'},{b:'Run 5 trials',act:'run'}],
  on:{rew(s,v){s.rew=Number(v);s.w=[1,1,1,1];s.hist=[];s.n=0},run(s){D2_selRun(s,5)},reset(s){s.w=[1,1,1,1];s.hist=[];s.n=0}},
  draw(s){
   let out=heading(`Only “${D2_BEH[s.rew]}” opens the door`,26);const tot=sum(s.w),cols=[C.amber,C.blue,C.purple,C.green];
@@ -3435,7 +3435,7 @@ SCENE({id:'hebbian-synapse',name:'Hebb’s rule',tag:'Fire together, wire togeth
  dur:12,hint:'Try A alone first, then pair A with B several times, then try A alone again.',
  init:()=>({ev:[]}),
  watch(p){const seq=['A','AB','AB','AB','AB','AB','A'];return {ev:seq.slice(0,1+Math.min(6,Math.floor(p*7)))}},
- ui:D5_HEBB_W.map(([e,l])=>({b:l,act:'go',arg:e})).concat([{b:'Start again',act:'reset'}]),
+ ui:D5_HEBB_W.map(([e,l])=>({b:l,act:'go',arg:e})),
  on:{go(s,e){s.ev.push(e||'A');if(s.ev.length>12)s.ev.shift();const r=D5_hebbRun(s.ev);if(r.log[r.log.length-1].fired)D5_clicks([0]);return 'keep'},reset(s){s.ev=[];return 'keep'}},
  draw(s,f,X){
   const r=D5_hebbRun(s.ev),last=r.log[r.log.length-1],w=r.log.length>1?r.log[r.log.length-2].w:.2,wNow=r.w;let out=heading('Pairing strengthens the weak input');
@@ -3465,7 +3465,7 @@ SCENE({id:'hebbian-synapse-ltp',name:'Long-term potentiation',tag:'A synapse tha
  dur:12,hint:'Give ten test pulses for a baseline, then a burst, then more test pulses. Simulated responses with small random noise.',
  init:()=>({ev:[]}),
  watch(p){const ev=[];const n=Math.floor(p*42);for(let i=0;i<n;i++)ev.push(i===10?'tet':'test');return {ev}},
- ui:[{b:'Test pulse',act:'test'},{b:'Ten test pulses',act:'ten'},{b:'Burst (100 Hz, 1 s)',act:'tet'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Test pulse',act:'test'},{b:'Ten test pulses',act:'ten'},{b:'Burst (100 Hz, 1 s)',act:'tet'}],
  on:{test(s){if(s.ev.length<70)s.ev.push('test');return 'keep'},ten(s){for(let i=0;i<10&&s.ev.length<70;i++)s.ev.push('test');return 'keep'},tet(s){if(s.ev.length<70)s.ev.push('tet');return 'keep'},reset(s){s.ev=[];return 'keep'}},
  draw(s){
   const r=D5_ltpRun(s.ev);let out=heading('One burst, a lasting change');
@@ -5222,7 +5222,7 @@ SCENE({id:'cognitive-dissonance',name:'Dissonance and its reduction',tag:'Changi
  dur:12,hint:'Press beliefs to switch them on or off, or try the three ways to reduce dissonance.',
  init:()=>({on:[1,1,1,1,0,0],risk:5,quit:false}),
  watch(p){return p<.25?{on:[1,1,1,1,0,0],risk:5,quit:false}:p<.5?{on:[1,1,1,1,1,1],risk:5,quit:false}:p<.75?{on:[1,1,1,1,1,1],risk:2,quit:false}:{on:[1,1,1,1,0,0],risk:5,quit:true}},
- ui:[{b:'Add excuses',act:'excuse'},{b:'Play down the risk',act:'trivial'},{b:'Quit smoking',act:'quit'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Add excuses',act:'excuse'},{b:'Play down the risk',act:'trivial'},{b:'Quit smoking',act:'quit'}],
  on:{tog(s,i){i=Number(i);s.on[i]=s.on[i]?0:1},excuse(s){s.on[4]=1;s.on[5]=1},trivial(s){s.risk=s.risk>2?2:5},quit(s){s.quit=!s.quit},reset(s){s.on=[1,1,1,1,0,0];s.risk=5;s.quit=false}},
  draw(s,f,X){
   const r=D7_dis(s);let out=heading('Beliefs around a behaviour',24);
