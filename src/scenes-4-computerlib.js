@@ -245,7 +245,7 @@ SCENE({id:'fantics-ten-minutes',name:'The ten-minute rule',tag:'If it cannot be 
    out+=hit(X,'f',i,(on?'Remove ':'Add ')+t,R(20,y,280,30,on?(blocked?'#f1f1f1':C.pale):'#fff',on?(blocked?C.line:C.blue):C.grid,6)+TF(32,y+20,t,13,blocked?C.muted:C.ink,'start')+TF(288,y+20,blocked?'blocked':m+' min',13,blocked?C.muted:on?C.blue:C.muted,'end'))});
   const tot=s.on.reduce((a,i)=>a+(T4_FEAT[i][2]&&s.wheels?0:T4_FEAT[i][1]),0),sc=200/24,base=340;
   out+=L(330,base,580,base,C.line,2);
-  out+=R(400,base-tot*sc,90,tot*sc,tot>10?C.coral:C.green,'none',4)+TBF(445,base-tot*sc-8,tot+' min',15,tot>10?C.coral:C.green);
+  out+=R(400,base-tot*sc,90,tot*sc,tot>10?C.coral:C.green,'none',4)+TBF(498,base-tot*sc+18,tot+' min',15,tot>10?C.coral:C.green,'start');
   out+=L(340,base-10*sc,570,base-10*sc,C.ink,2,'stroke-dasharray="6 4"')+TF(570,base-10*sc-6,'10 minutes',13,C.ink,'end');
   out+=TF(445,base+20,s.wheels?'training wheels on':'all switched-on features',13,C.muted);
   return {svg:out,phase:tot>10?`About ${tot} minutes to teach: too complicated by Nelson’s rule.${s.wheels?'':' Training wheels would hide the advanced features at first.'}`:`About ${tot} minutes: within the rule.${s.wheels?' In Carroll and Carrithers’s study, newcomers with training wheels got started faster and made fewer errors.':''}`};
