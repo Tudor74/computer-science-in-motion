@@ -86,7 +86,7 @@ SCENE({id:'sequencing-shotgun',name:'Shotgun sequencing',tag:'Shred, read, reass
   out+=TF(36,268,`Assembled contigs (overlap of ${B8_OV} or more bases)`,13,C.muted,'start');
   ctg.forEach((c,i)=>{out+=R(36+c[0]*11,274,(c[1]-c[0]+1)*11-2,10,i%2?C.purple:C.blue,'none',3)});
   const c=s.n*s.len/G,gap=cov.filter(v=>!v).length/G,eGap=Math.exp(-c),eCtg=s.n*Math.exp(-c*(1-B8_OV/s.len));
-  out+=counter(36,298,'Coverage c = NL/G',c.toFixed(1)+'×',C.ink,128)+counter(172,298,'Unread bases',Math.round(gap*100)+'%',C.coral,128)+counter(308,298,'Predicted: e^−c',Math.round(eGap*100)+'%',C.muted,128)+counter(444,298,'Contigs / predicted',`${ctg.length} / ${eCtg.toFixed(1)}`,C.blue,128);
+  out+=counter(36,298,'Coverage c = NL/G',c.toFixed(1)+'×',C.ink,128)+counter(172,298,'Unread bases',Math.round(gap*100)+'%',C.coral,128)+counter(308,298,'Predicted: e^−c',Math.round(eGap*100)+'%',C.muted,128)+counter(444,298,'Contigs / predicted',`${ctg.length} / ${Math.max(1,eCtg).toFixed(1)}`,C.blue,128);
   out+=TF(300,358,'Predictions are averages for a long genome (Lander & Waterman 1988);',13,C.muted)+TF(300,375,'one draw varies, and reads cannot overhang the ends, so ends are read less.',13,C.muted);
   return {svg:out,phase:`${s.n} reads of ${s.len} bases give coverage ${c.toFixed(1)}×. With random starts some bases are still never read (about e^−c of them on average), so the genome comes back in ${ctg.length} piece${ctg.length===1?'':'s'}. Real projects aim for 8× or more, and repeats longer than a read remain hard to place.`};
  }});
@@ -163,7 +163,7 @@ SCENE({id:'phylogenetic-trees',name:'Trees from sequences',tag:'Count difference
   for(const c of cl)out+=B8_drawClade(c,C.blue);
   B8_TAXA.forEach((n,i)=>{const y=B8_tipY(i);out+=L(486,y,B8_TX,y,C.blue,2.4)+TF(B8_TX+6,y+5,n,14,C.ink,'start')});
   out+=L(B8_TX-B8_TS,312,B8_TX,312,C.ink,2)+TF(B8_TX-B8_TS/2,330,'1 difference',13,C.muted);
-  if(last){const names=g=>g.m.map(i=>B8_SHORT[i]).join('+');out+=TF(300,370,`Join ${s.k}: ${names(last.a)} with ${names(last.b)} — average difference ${fmt(last.d)}, so they meet at ${fmt(last.d/2)}`,13,C.ink)}
+  if(last){const names=g=>g.m.slice().sort((x,y)=>x-y).map(i=>B8_SHORT[i]).join('+');out+=TF(300,370,`Join ${s.k}: ${names(last.a)} with ${names(last.b)} — average difference ${fmt(last.d)}, so they meet at ${fmt(last.d/2)}`,13,C.ink)}
   else out+=TF(300,370,'No joins yet: the smallest number in the table is joined first.',13,C.muted);
   return {svg:out,phase:s.k===0?'Every species starts on its own. The table counts the sites where each pair differs; the smallest entry, Human–Chimp with 1, will be joined first.':s.k<4?'After a join, the new group’s distance to each other species is the average over its members (the highlighted cells). The closest pair is joined again.':'The finished tree groups human and chimpanzee, then gorilla, then mouse, with chicken outside. UPGMA assumes every lineage changes at the same rate; modern methods (maximum likelihood, Bayesian) drop that assumption.'};
  }});
@@ -204,7 +204,7 @@ SCENE({id:'phylogenetic-trees-rotate',name:'Reading a tree',tag:'Spin the branch
 /* ---- three domains ---- */
 const B8_ORG={
  ecoli:{n:'E. coli',note:'A gut bacterium. In every scheme it sits with the bacteria.'},
- cyano:{n:'Cyanobacterium',note:'Photosynthetic bacteria; one was engulfed long ago and became the chloroplast.'},
+ cyano:{n:'Cyanobacteria',note:'Photosynthetic bacteria; one was engulfed long ago and became the chloroplast.'},
  methano:{n:'Methanogen',note:'Looks like a bacterium under a microscope, but its ribosomal RNA put it in a separate domain: the Archaea (Woese & Fox 1977).'},
  asgard:{n:'Asgard archaeon',note:'Archaea discovered from environmental DNA in 2015–17; they carry genes once thought unique to eukaryotes.'},
  amoeba:{n:'Amoeba',note:'A single-celled eukaryote, once lumped into “Protista” with many unrelated groups.'},
@@ -226,7 +226,7 @@ SCENE({id:'phylogenetic-trees-domains',name:'Three domains of life',tag:'Woese�
  ui:[{choose:[['kingdoms','Five kingdoms'],['domains','Three domains'],['two','Two domains']],label:'Scheme',get:s=>s.view,act:'view'}],
  on:{view(s,v){s.view=v;if(v!=='two'&&s.pick==='asgard')s.pick='methano';return 'keep'},pick(s,v){s.pick=v;return 'keep'}},
  draw(s,f,X){
-  const V=B8_VIEWS[s.view],n=V.cols.length,w=n===5?106:150,gap=n===5?8:30,x0=(600-(n*w+(n-1)*gap))/2;let out=heading(V.title,26);
+  const V=B8_VIEWS[s.view],n=V.cols.length,w=n===5?110:150,gap=n===5?6:30,x0=(600-(n*w+(n-1)*gap))/2;let out=heading(V.title,26);
   const cx=i=>x0+i*(w+gap)+w/2;
   V.cols.forEach(([name,orgs],i)=>{const x=x0+i*(w+gap);out+=R(x,48,w,30,C.pale,'none',6)+TBF(x+w/2,68,name,14,C.ink);
    orgs.forEach((o,j)=>{const on=s.pick===o;out+=B8_btn(X,'pick',o,`About ${B8_ORG[o].n}`,x+6,86+j*30,w-12,26,B8_ORG[o].n,{fill:on?C.coralp:'#fff',stroke:on?C.coral:C.line,sel:on})})});
@@ -234,7 +234,7 @@ SCENE({id:'phylogenetic-trees-domains',name:'Three domains of life',tag:'Woese�
    const ae=(cx(1)+cx(2))/2;out+=B8_poly([[cx(0),232],[rx,ry]],C.blue,2.4)+B8_poly([[cx(1),232],[ae,270],[cx(2),232]],C.blue,2.4)+B8_poly([[ae,270],[rx,ry]],C.blue,2.4)+Ci(rx,ry,5,C.blue)+TF(rx,ry+18,'root: the last universal common ancestor',13,C.muted)}
   if(s.view==='two'){const rx=300,ry=318,ar=cx(1),eu=cx(2);out+=L(cx(0),212,cx(0),232,C.blue,2.4)+L(ar,212,ar,232,C.blue,2.4)+L(eu,212,eu,232,C.blue,2.4);
    out+=B8_poly([[cx(0),232],[rx,ry]],C.blue,2.4)+B8_poly([[ar,232],[ar+40,262],[eu,232]],C.blue,2.4)+B8_poly([[ar+40,262],[rx,ry]],C.blue,2.4)+Ci(rx,ry,5,C.blue);
-   out+=R(x0+w+gap-8,44,2*w+gap+16,198,'none',C.purple,10,'stroke-dasharray="6 4"')+TF(cx(1)+(cx(2)-cx(1))/2,258,'eukaryotes branch inside the Archaea',13,C.purple)+TF(rx,ry+18,'root: the last universal common ancestor',13,C.muted)}
+   out+=R(x0+w+gap-8,44,2*w+gap+16,198,'none',C.purple,10,'stroke-dasharray="6 4"')+TF(330,300,'eukaryotes branch inside the Archaea',13,C.purple,'start')+TF(rx,ry+18,'root: the last universal common ancestor',13,C.muted)}
   if(s.view==='kingdoms')out+=TF(300,260,'Grouped by appearance and nutrition: no tree of descent behind the boxes.',13,C.muted);
   const note=B8_ORG[s.pick].note,words=note.split(' '),lines=[''];words.forEach(wd=>{if((lines[lines.length-1]+' '+wd).length>78)lines.push(wd);else lines[lines.length-1]=(lines[lines.length-1]+' '+wd).trim()});
   lines.slice(0,2).forEach((l,i)=>{out+=TF(300,(lines.length>1?358:366)+i*16,l,13,C.ink)});
@@ -263,7 +263,7 @@ SCENE({id:'phylogenetic-trees-endosymbiosis',name:'Endosymbiosis',tag:'Cells ins
   out+=`<ellipse cx="${cx}" cy="${cy}" rx="118" ry="104" fill="${C.pale}" stroke="${C.blue}" stroke-width="2.5"/>`;
   out+=Ci(cx-40,cy-30,30,'#d6e4ee',C.blue)+TF(cx-40,cy-25,'nucleus',13,C.ink);
   const bact=(x,y,col,inside,label)=>{let o='';if(inside)o+=`<ellipse cx="${x}" cy="${y}" rx="34" ry="20" fill="none" stroke="${C.ink}" stroke-width="1.4" stroke-dasharray="${s.step>=3||label==='chloroplast'?'0':'4 3'}"/>`;o+=`<ellipse cx="${x}" cy="${y}" rx="28" ry="15" fill="${tint(col,.6)}" stroke="${col}" stroke-width="2"/>`+Ci(x+8,y,5,'none',col);return o+TF(x,y+(inside?34:30),label,13,col)};
-  if(s.step===1)out+=bact(282,92,C.coral,false,'bacterium');
+  if(s.step===1)out+=bact(236,66,C.coral,false,'bacterium');
   if(s.step===2)out+=bact(cx+45,cy+40,C.coral,true,'engulfed bacterium');
   if(s.step>=3)out+=bact(cx+45,cy+40,C.coral,true,'mitochondrion');
   if(s.step>=4)out+=bact(cx-40,cy+55,C.green,true,'chloroplast');
@@ -278,7 +278,7 @@ SCENE({id:'phylogenetic-trees-endosymbiosis',name:'Endosymbiosis',tag:'Cells ins
 /* ---------------------------------------------------------------- CRISPR */
 // Target DNA (top strand, 5′→3′). NGG PAM sites follow the 20-base windows starting at 4 and 9 only.
 const B8_TGT='ATGCTACGTTCAGCTACCATGACTAGGCATGGAC';
-const B8_SEED=[19,17,15,13];
+const B8_MM={none:[],far:[0,2],near:[19]};
 const B8_rna=b=>b==='T'?'U':b;
 const B8_swap=b=>({A:'C',C:'G',G:'T',T:'A'})[b];
 SCENE({id:'crispr',name:'CRISPR–Cas9',tag:'A guide RNA finds its match',
@@ -286,13 +286,13 @@ SCENE({id:'crispr',name:'CRISPR–Cas9',tag:'A guide RNA finds its match',
  example:'Doudna and Charpentier showed in 2012 that a single designed guide RNA could direct Cas9 to cut a chosen DNA sequence, which made gene editing far simpler.',
  desc:'A 34-base stretch of DNA with a Cas9 window that can slide along it. The guide RNA copies the window; Cas9 cuts three bases before the PAM only if the next three bases read NGG and the guide matches near the PAM.',
  research:'Jinek, Chylinski, Fonfara, Hauer, Doudna & Charpentier (2012). A programmable dual-RNA–guided DNA endonuclease in adaptive bacterial immunity. Science 337, 816–821. Fu et al. (2013) found that guides with mismatches can still cut off-target sites; the mismatch rule here is simplified.',
- dur:12,hint:'Slide the window along the DNA. Only two positions are followed by NGG. Add mismatches near the PAM to see the cut fail.',
- init:()=>({pos:4,mm:0}),
- watch(p){const k=Math.floor(p*14);return k<12?{pos:k,mm:0}:{pos:4,mm:k-11}},
- ui:[{range:'pos',label:'Guide position',min:0,max:11,get:s=>s.pos,act:'pos'},{range:'mm',label:'Mismatches near the PAM',min:0,max:4,get:s=>s.mm,act:'mm'}],
- on:{pos(s,v){s.pos=Number(v);return 'keep'},mm(s,v){s.mm=Number(v);return 'keep'}},
+ dur:12,hint:'Slide the window along the DNA. Only two positions are followed by NGG. Then add mismatches far from or next to the PAM.',
+ init:()=>({pos:4,mm:'none'}),
+ watch(p){const k=Math.floor(p*14);return k<12?{pos:k,mm:'none'}:{pos:4,mm:k===12?'far':'near'}},
+ ui:[{range:'pos',label:'Guide position',min:0,max:11,get:s=>s.pos,act:'pos'},{choose:[['none','Perfect match'],['far','2 mismatches far from PAM'],['near','1 mismatch next to PAM']],label:'Guide',get:s=>s.mm,act:'mm'}],
+ on:{pos(s,v){s.pos=Number(v);return 'keep'},mm(s,v){s.mm=v;return 'keep'}},
  draw(s){
-  const t=B8_TGT,p=s.pos,x=i=>30+i*16,pam=t.slice(p+20,p+23),pamOK=pam[1]==='G'&&pam[2]==='G',mmSet=new Set(B8_SEED.slice(0,s.mm).map(i=>p+i)),cut=pamOK&&s.mm<=1;
+  const t=B8_TGT,p=s.pos,x=i=>30+i*16,pam=t.slice(p+20,p+23),pamOK=pam[1]==='G'&&pam[2]==='G',mmSet=new Set(B8_MM[s.mm].map(i=>p+i)),cut=pamOK&&s.mm!=='near';
   let out=heading('Cas9 cuts only where the guide matches and a PAM follows',26);
   out+=R(x(p)-6,108,20*16+4,138,tint(C.purple,.85),C.purple,14)+TBF(x(p)-2,124,'Cas9',13,C.purple,'start');
   out+=TF(x(p+10)-8,124,'guide RNA',13,C.purple);
@@ -304,11 +304,11 @@ SCENE({id:'crispr',name:'CRISPR–Cas9',tag:'A guide RNA finds its match',
   if(cut){const cx=x(p+17)-4;out+=L(cx,170,cx,236,C.coral,2.4,'stroke-dasharray="4 3"')+TBF(cx,262,'cut',14,C.coral)}
   for(let i=0;i<t.length;i+=5)out+=TF(x(i)+4,96,i+1,13,C.muted);
   const lines=[`Window at base ${p+1}; the next three bases read ${pam}: ${pamOK?'a valid NGG PAM.':'not NGG, so no grip.'}`,
-   s.mm?`${s.mm} mismatch${s.mm>1?'es':''} next to the PAM: ${s.mm>1?'the match fails.':'often still cut (off-target risk).'}`:'Guide and DNA match at all 20 positions.',
-   cut?'Result: Cas9 cuts both strands three bases before the PAM.':'Result: no cut.'];
+   s.mm==='near'?'1 mismatch next to the PAM, in the seed region: binding fails.':s.mm==='far'?'2 mismatches far from the PAM: often tolerated (off-target risk).':'Guide and DNA match at all 20 positions.',
+   cut?(s.mm==='far'?'Result: still cut, so a near-match elsewhere could be cut too.':'Result: Cas9 cuts both strands three bases before the PAM.'):'Result: no cut.'];
   out+=TF(300,282,'The guide has the top strand’s sequence and pairs with the bottom strand.',13,C.muted);
   lines.forEach((l,i)=>{out+=TF(300,306+i*21,l,13,i===2?(cut?C.green:C.coral):C.ink)});
-  return {svg:out,phase:cut?'The guide pairs with the DNA and the PAM is present, so Cas9 makes a blunt double-strand cut. The cell then repairs the break, often imperfectly, which can knock out a gene, or copies in a supplied template.':pamOK?'The PAM is right but the guide no longer matches near it. The bases next to the PAM (the seed) matter most; real tolerance of mismatches varies, so off-target cuts are checked for.':'Without an NGG motif right after the matching stretch, Cas9 does not bind firmly enough to cut, however good the match. That is how bacteria avoid cutting their own CRISPR arrays.'};
+  return {svg:out,phase:cut&&s.mm==='far'?'Mismatches far from the PAM are often tolerated, so a stretch of DNA elsewhere in the genome that nearly matches the guide may be cut too: an off-target edit (Fu et al. 2013). Guides are chosen to avoid near-matches.':cut?'The guide pairs with the DNA and the PAM is present, so Cas9 makes a blunt double-strand cut. The cell then repairs the break, often imperfectly, which can knock out a gene, or copies in a supplied template.':pamOK?'The PAM is right, but a mismatch in the seed region next to the PAM stops the guide pairing there, so Cas9 lets go. Mismatches far from the PAM are tolerated much more, which is where off-target cuts come from.':'Without an NGG motif right after the matching stretch, Cas9 does not bind firmly enough to cut, however good the match. That is how bacteria avoid cutting their own CRISPR arrays.'};
  }});
 
 /* ---- bacterial immunity: acquiring spacers ---- */
@@ -505,7 +505,8 @@ SCENE({id:'antibiotic-resistance',name:'Antibiotic resistance',tag:'The mutant s
   out+=R(dx(1),314,dx(8)-dx(1),16,C.coralp,'none',3)+TF((dx(1)+dx(8))/2,348,'mutant selection window',13,C.coral)+L(70,330,550,330,C.ink,1.5);
   B8_DOSES.forEach(v=>{out+=L(dx(v),326,dx(v),334,C.ink,1.2)+TF(dx(v),368,String(v),13,C.muted)});
   out+=P(`M${fmt(dx(dose))} 312 l-7 -9 h14 z`,C.blue,1,C.blue);
-  return {svg:out,phase:dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
+  const enriched=tot>0&&share>1e-7*1.5;
+  return {svg:out,phase:dose<1&&!enriched?'At this very low dose the susceptible cells still grow faster than the resistant ones, which pay a cost for resistance, so resistance does not spread.':dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
  }});
 
 /* ---- the MEGA-plate ---- */
