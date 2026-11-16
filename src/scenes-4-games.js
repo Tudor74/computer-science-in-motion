@@ -89,7 +89,7 @@ function E4_classify(T,Rw,Pn,S){
  if(T>Rw&&Rw>Pn&&Pn>S)return ['Prisoner’s dilemma',C.coral,2*Rw>T+S?'Defecting is best whatever the other does, yet both defecting is worse for both than both cooperating.':'A dilemma, but taking turns to exploit each other beats steady cooperation (2R is not above T + S), so it is a weak one when repeated.'];
  if(Rw>T&&Pn>S)return ['Stag hunt',C.blue,'Cooperate if you trust the other to cooperate, defect if not: two equilibria, and the question is trust, not temptation.'];
  if(T>Rw&&S>Pn)return ['Chicken (snowdrift)',C.amber,'Your best move is the opposite of theirs: two equilibria, each with one player giving way.'];
- if(Rw>=T&&S>=Pn)return ['Harmony',C.green,'Cooperating is best whatever the other does: no dilemma at all.'];
+ if(Rw>T&&S>Pn)return ['Harmony',C.green,'Cooperating is best whatever the other does: no dilemma at all.'];
  return ['Another game',C.muted,'With ties or unusual orderings the game has no standard name. Try separating the four payoffs.'];
 }
 SCENE({id:'prisoners-dilemma-dominance',name:'What makes it a dilemma',tag:'Four payoffs, four games',
@@ -146,7 +146,7 @@ SCENE({id:'prisoners-dilemma-repeated',name:'Playing again',tag:'Backward induct
    out+=TBF(30,60,'Theory, solving backwards from the last round',14,C.coral,'start');
    for(let i=0;i<n;i++)out+=R(x0+i*w+1,70,w-2,24,C.coralp,C.coral,3)+(w>=22?TBF(x0+i*w+w/2,87,'D',13,C.coral):'');
    if(n>1)out+=E4_arrow(x0+n*w-4,106,x0+4,106,C.coral,1.8)+TF(300,124,'last round: nothing to lose by defecting, so defect; then the round before, and so on',13,C.muted);
-   out+=TBF(30,156,'Typical lab play: cooperation falls near the known end',14,C.green,'start');
+   out+=TBF(30,156,'Typical lab play (illustrative shape): cooperation falls near the end',14,C.green,'start');
    const base=280,hmax=100;
    for(let i=0;i<n;i++){const c=E4_endCurve(i,n);out+=R(x0+i*w+2,base-c*hmax,w-4,c*hmax,C.greenp,C.green,3)}
    out+=L(x0-6,base,x0+n*w+6,base,C.line,1.5)+L(x0-6,base-hmax,x0+n*w+6,base-hmax,C.grid,1,'stroke-dasharray="4 4"');
@@ -163,7 +163,7 @@ SCENE({id:'prisoners-dilemma-repeated',name:'Playing again',tag:'Backward induct
    out+=Ci(mx(d),196,8,ok?C.green:C.coral,'#fff')+TF(mx(.5),238,'chance of another round, δ',13,C.muted);
    out+=TB(300,272,ok?'Cooperation can sustain itself':'Grabbing now pays more',16,ok?C.green:C.coral);
   }
-  out+=R(30,302,540,68,C.pale,'none',10)+TBF(46,322,'The first dilemma experiment (RAND, 1950)',13,C.ink,'start')+E4_lines(46,342,['Two colleagues played 100 rounds of an unequal dilemma. Theory said','defect throughout; both cooperated in 60 of the 100 rounds (Flood 1958).'],13,C.ink);
+  out+=R(30,306,540,66,C.pale,'none',10)+TBF(46,326,'The first dilemma experiment (RAND, 1950)',13,C.ink,'start')+E4_lines(46,346,['Two colleagues played 100 rounds of an unequal dilemma. Theory said','defect throughout; both cooperated in 60 of the 100 rounds (Flood 1958).'],13,C.ink);
   return {svg:out,phase:s.mode==='finite'?'Backward induction says a known last round unravels everything. People do not play that way: they cooperate for most of the game and defect as the end approaches. The lab curve here is an illustrative shape of that end-game effect.':`With a ${Math.round(s.delta*100)}% chance of another round, cooperating for ever is worth ${fmt(Math.round(s.delta>=.995?999:3/(1-s.delta)*10)/10)} points against ${fmt(Math.round((5+s.delta/(1-s.delta))*10)/10)} for defecting now. Above 50% the future casts a long enough shadow.`};
  }});
 
@@ -189,7 +189,7 @@ SCENE({id:'nash-equilibrium',name:'Nash equilibrium',tag:'Best replies that poin
   let out=heading(`${g.n}: where do the arrows meet?`,26);
   out+=E4_matrix(x,y,cw,ch,g.rows,g.cols,pay,{colTitle:'Column player',rowTitle:'Row player',eq});
   for(let j=0;j<2;j++){const a=pay[0][j][0],b=pay[1][j][0];if(a!==b){const [f,t]=a>b?[1,0]:[0,1],ax=x+cw*j+14;out+=E4_arrow(ax,y+ch*f+ch/2,ax,y+ch*t+ch/2,C.blue)}}
-  for(let i=0;i<2;i++){const a=pay[i][0][1],b=pay[i][1][1];if(a!==b){const [f,t]=a>b?[1,0]:[0,1],ay=y+ch*i+ch-12;out+=E4_arrow(x+cw*f+cw/2,ay,x+cw*t+cw/2,ay,C.coral)}}
+  for(let i=0;i<2;i++){const a=pay[i][0][1],b=pay[i][1][1];if(a!==b){const [f,t]=a>b?[1,0]:[0,1],ay=y+ch*i+ch-7;out+=E4_arrow(x+cw*f+cw/2,ay,x+cw*t+cw/2,ay,C.coral)}}
   out+=R(30,280,540,86,C.pale,'none',10);
   const names=eq.map(([i,j])=>`${g.rows[i]} / ${g.cols[j]}`);
   out+=TBF(46,302,eq.length?`Pure equilibria: ${names.join(' and ')}`:'No pure equilibrium',14,eq.length?C.green:C.coral,'start');
@@ -215,7 +215,7 @@ SCENE({id:'nash-equilibrium-mixed',name:'Mixed strategies: penalty kicks',tag:'B
   const pStar=(k[1][1]-k[1][0])/((k[0][0]-k[1][0])-(k[0][1]-k[1][1])),vStar=f(pStar,0);
   const qStar=(k[0][1]-k[1][1])/((k[0][1]-k[1][1])-(k[0][0]-k[1][0]));
   let out=heading('Penalty kicks: the best mix is unpredictable',26);
-  const pl=E4_plot(80,62,320,220,[0,1],[50,100],{xt:[[0,'0%'],[.5,'50%'],[1,'100%']],yt:[[50,'50%'],[75,'75%'],[100,'100%']],xl:'how often the kicker shoots to their natural side',yl:'chance of scoring'});
+  const pl=E4_plot(80,62,320,220,[0,1],[50,100],{xt:[[0,'0%'],[.5,'50%'],[1,'100%']],yt:[[50,'50%'],[75,'75%'],[100,'100%']],xl:'how often the kicker shoots to their natural side',yl:'chance of scoring',xlDy:32});
   out+=pl.svg;
   const line=c=>[[pl.X(0),pl.Y(f(0,c))],[pl.X(1),pl.Y(f(1,c))]];
   out+=E4_poly(line(0),C.coral,2.4)+E4_poly(line(1),C.purple,2.4);
@@ -227,13 +227,12 @@ SCENE({id:'nash-equilibrium-mixed',name:'Mixed strategies: penalty kicks',tag:'B
   out+=L(pl.X(p),pl.Y(50),pl.X(p),pl.Y(100),C.blue,2)+Ci(pl.X(p),pl.Y(v),7,C.blue,'#fff');
   out+=R(420,62,160,220,C.pale,'none',10);
   out+=TBF(500,84,'Chance of scoring',13,C.ink)+TF(500,102,'kicker ↓  keeper →',13,C.muted);
-  [['N','O']].forEach(()=>{});
   const cx=[478,540],cy=[150,184];out+=TBF(cx[0],128,'N',13,C.muted)+TBF(cx[1],128,'O',13,C.muted)+TBF(440,cy[0]+4,'N',13,C.muted)+TBF(440,cy[1]+4,'O',13,C.muted);
   for(let i=0;i<2;i++)for(let j=0;j<2;j++)out+=TF(cx[j],cy[i]+4,Math.round(k[i][j])+'%',13,C.ink);
   out+=TF(432,214,'N: natural side',13,C.muted,'start')+TF(432,232,'O: other side',13,C.muted,'start');
   out+=TF(432,256,`Rounded from`,13,C.muted,'start')+TF(432,272,'Palacios-Huerta 2003',13,C.muted,'start');
-  out+=TB(300,328,`Keeper’s best dive: ${best}. You score ${Math.round(v*10)/10}%.`,15,C.blue);
-  out+=T(300,354,`Equilibrium: kicker ${Math.round(pStar*1000)/10}% natural, keeper ${Math.round(qStar*1000)/10}% natural, ${Math.round(vStar*10)/10}% scored`,14,C.green);
+  out+=TB(300,344,`Keeper’s best dive: ${best}. You score ${Math.round(v*10)/10}%.`,15,C.blue);
+  out+=T(300,370,`Equilibrium: kicker ${Math.round(pStar*1000)/10}% natural, keeper ${Math.round(qStar*1000)/10}% natural, ${Math.round(vStar*10)/10}% scored`,14,C.green);
   return {svg:out,phase:'The keeper reads any pattern and dives to whichever side hurts you more, so your chance is the lower line. It peaks where the lines cross: there the keeper’s dive no longer matters. Professional kickers and keepers mixed almost exactly in these proportions.'};
  }});
 
@@ -254,7 +253,7 @@ SCENE({id:'nash-equilibrium-cournot',name:'Two firms choose quantities',tag:'Cou
   const pl=E4_plot(80,56,250,250,[0,90],[0,90],{xt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],yt:[[0,'0'],[30,'30'],[60,'60'],[90,'90']],xl:'firm A’s output',yl:'firm B’s output',xlDy:33});
   out+=pl.svg;
   out+=L(pl.X(45),pl.Y(0),pl.X(0),pl.Y(90),C.blue,2.4)+TF(pl.X(46),pl.Y(4),'A’s best reply',13,C.blue,'start');
-  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4)+TF(pl.X(70),pl.Y(13),'B’s best reply',13,C.coral);
+  out+=L(pl.X(0),pl.Y(45),pl.X(90),pl.Y(0),C.coral,2.4)+TF(pl.X(88),pl.Y(8),'B’s best reply',13,C.coral,'end');
   out+=Ci(pl.X(22.5),pl.Y(22.5),5,C.purple)+TF(pl.X(22.5)-8,pl.Y(22.5)+18,'shared monopoly',13,C.purple,'end');
   out+=Ci(pl.X(45),pl.Y(45),5,C.amber)+TF(pl.X(45)+8,pl.Y(45)-6,'price = cost',13,C.amber,'start');
   const pts=E4_cournotPath(s.a,s.b,s.steps);
@@ -387,7 +386,7 @@ SCENE({id:'axelrod-tournament-noise',name:'When mistakes happen',tag:'Noise, ech
   out+=TF(552,163,'rounds 1 to 60 →',13,C.muted,'end');
   const bx=v=>220+v*100;out+=TBF(30,198,'Long-run average per round (2,000 rounds)',14,C.ink,'start');
   E4_PAIRS.forEach((k,i)=>{const m=E4_match(k,k,2000,nz,77),v=(m.sa+m.sb)/2,y=212+i*40,sel=k===s.pair;
-   out+=TF(210,y+19,E4_NAME[k],14,sel?C.ink:C.muted,'end')+R(bx(0),y+4,v*100,22,E4_COL[k],sel?C.ink:'none',4,sel?'stroke-width="2"':'')+TF(bx(v)+6,y+20,v.toFixed(2),13,E4_COL[k],'start')});
+   out+=TF(210,y+19,E4_NAME[k],14,sel?C.ink:C.muted,'end')+R(bx(0),y+4,v*100,22,E4_COL[k],sel?C.ink:'none',4,sel?'stroke-width="2"':'')+TF(v>2.55?bx(3)+6:bx(v)+6,y+20,v.toFixed(2),13,E4_COL[k],'start')});
   out+=L(bx(3),206,bx(3),336,C.green,1.5,'stroke-dasharray="4 4"')+TF(bx(3),352,'3 = steady cooperation',13,C.green);
   return {svg:out,phase:'One mistake between two Tit for Tat players sets off alternating retaliation, and a second can lock them into mutual defection; their average sinks towards that of random play. Forgiving some defections, or shifting after a bad result, lets cooperation recover.'};
  }});
@@ -408,13 +407,13 @@ SCENE({id:'axelrod-tournament-ecology',name:'Survival of the strategies',tag:'Ax
  draw(s){
   const hist=E4_eco(s.noise/100,60),now=hist[s.gen];
   let out=heading('Which strategies survive?',26);
-  const pl=E4_plot(70,56,330,250,[0,60],[0,.6],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60']],yt:[[0,'0%'],[.3,'30%'],[.6,'60%']],xl:'generation',yl:'share of the population'});
+  const pl=E4_plot(70,56,290,250,[0,60],[0,.6],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60']],yt:[[0,'0%'],[.3,'30%'],[.6,'60%']],xl:'generation',yl:'share of the population'});
   out+=pl.svg;
   E4_ST.forEach((st,i)=>{out+=E4_poly(hist.slice(0,s.gen+1).map((x,g)=>[pl.X(g),pl.Y(Math.min(.6,x[i]))]),E4_COL[st.k],2.4)});
   out+=L(pl.X(s.gen),56,pl.X(s.gen),306,C.ink,1,'stroke-dasharray="3 4"');
   const ord=E4_ST.map((st,i)=>({...st,v:now[i]})).sort((a,b)=>b.v-a.v);
-  out+=TBF(420,62,`Generation ${s.gen}`,14,C.ink,'start');
-  ord.forEach((st,k)=>{const y=86+k*30;out+=R(420,y-11,14,14,E4_COL[st.k],'none',3)+TF(442,y+1,st.n,13,C.ink,'start')+TF(578,y+1,E4_pct(st.v),13,C.muted,'end')});
+  out+=TBF(384,62,`Generation ${s.gen}`,14,C.ink,'start');
+  ord.forEach((st,k)=>{const y=86+k*30;out+=R(384,y-11,14,14,E4_COL[st.k],'none',3)+TF(404,y+1,st.n,13,C.ink,'start')+TF(578,y+1,E4_pct(st.v),13,C.muted,'end')});
   out+=T(300,366,'Shares start equal; noise uses the same averaged tournament as before.',14,C.muted);
   return {svg:out,phase:'Always defect gains early, feeding on Always cooperate and Random. As its prey disappears it meets mostly retaliators and declines, while the nice, retaliatory strategies take over. Axelrod saw the same pattern when he ran the 63 real entries this way.'};
  }});
@@ -479,8 +478,8 @@ SCENE({id:'beauty-contest-levels',name:'Steps of thinking',tag:'Level-k and the 
   const bw=60,x0=78,base=200;
   for(let k=0;k<=6;k++){const x=x0+k*(bw+10),h=f[k]*260;
    out+=R(x,base-h,bw,h,C.pale,C.blue,4)+TF(x+bw/2,base-h-6,E4_pct(f[k]),13,C.blue);
-   out+=TBF(x+bw/2,base+20,k===0?'level 0':`level ${k}`,13,C.ink)+TF(x+bw/2,base+38,`guess ${fmt(Math.round(g[k]*10)/10)}`,13,C.muted)}
-  out+=L(x0-6,base,x0+7*(bw+10)-4,base,C.line,1.5);
+   out+=TBF(x+bw/2,base+20,k===0?'level 0':`level ${k}`,13,C.ink)+TF(x+bw/2,base+38,fmt(Math.round(g[k]*10)/10),13,C.muted)}
+  out+=L(x0-6,base,x0+7*(bw+10)-4,base,C.line,1.5)+TF(x0-10,base+38,'guess',13,C.muted,'end');
   const nx=v=>60+v*4.8;out+=L(nx(0),300,nx(100),300,C.line,2);[0,25,50,75,100].forEach(v=>out+=L(nx(v),296,nx(v),304,C.muted,1.5)+TF(nx(v),322,String(v),13,C.muted));
   out+=P(`M${fmt(nx(mean))} 290 l-7 -12 h14 z`,C.blue,1.5,C.blue)+TF(nx(mean),270,`predicted ${fmt(Math.round(mean*10)/10)}`,13,C.blue);
   out+=P(`M${fmt(nx(37))} 310 l-7 12 h14 z`,C.green,1.5,C.green)+TF(nx(37)+12,346,'observed ≈ 37 (Nagel 1995)',13,C.green,'start');
@@ -503,14 +502,13 @@ SCENE({id:'beauty-contest-keynes',name:'Keynes’s beauty contest',tag:'Average 
  draw(s){
   const key=['own','avg','exp'][s.deg-1],best=E4_FACES.reduce((b,f,i)=>f[key]>E4_FACES[b][key]?i:b,0);
   let out=heading('Pick the face others will pick',26);
-  E4_FACES.forEach((fc,i)=>{const cx=70+i*92,cy=96,sel=i===best;
+  E4_FACES.forEach((fc,i)=>{const cx=60+i*84,cy=96,sel=i===best;
    out+=Ci(cx,cy,30,sel?C.amberp:'#fff',sel?C.amber:C.line,sel?'stroke-width="3"':'');
    out+=Ci(cx-10,cy-6,3,C.ink)+Ci(cx+10,cy-6,3,C.ink);
    const smile=[8,4,-2,10,6,0][i];out+=P(`M${cx-12} ${cy+10} Q${cx} ${cy+10+smile} ${cx+12} ${cy+10}`,C.ink,2);
    out+=TBF(cx,cy+50,fc.n,14,sel?C.amber:C.ink);
    [['own',C.blue],['avg',C.purple],['exp',C.green]].forEach(([k,col],j)=>{const y=168+j*30,w=fc[k]*160;out+=R(cx-36,y,Math.max(1,w),18,col,k===key?C.ink:'none',3,k===key?'stroke-width="1.6"':'opacity=".55"')});
   });
-  out+=TF(30,182,'',13,C.ink);
   out+=TF(582,182,'own taste',13,C.blue,'end')+TF(582,212,'most like',13,C.purple,'end')+TF(582,242,'expected pick',13,C.green,'end');
   out+=R(30,272,540,98,C.pale,'none',10);
   out+=TBF(46,294,['First degree: you pick the face you like best.','Second degree: you pick the face most people like.','Third degree: you pick what people expect most people to pick.'][s.deg-1],14,C.ink,'start');
@@ -544,7 +542,7 @@ SCENE({id:'auctions',name:'Four ways to sell',tag:'English, Dutch and sealed bid
   out+=L(bx(0),48,bx(0),262,C.line,1.5);[0,25,50,75,100].forEach(v=>out+=TF(bx(v),280,String(v),13,C.muted));
   vals.forEach((v,i)=>{const y=54+i*42,act=a.active[i],win=a.winner===i;
    out+=TBF(70,y+21,`Bidder ${E4_BID[i]}`,14,win?C.green:act?C.ink:C.muted,'middle');
-   out+=R(bx(0),y+6,v*3.6,22,win?C.greenp:C.pale,win?C.green:'none',4,act?'':'opacity=".45"')+TF(bx(v)+6,y+22,`value ${v}`,13,act?C.muted:C.grid,'start');
+   out+=R(bx(0),y+6,v*3.6,22,win?C.greenp:C.pale,win?C.green:'none',4,act?'':'opacity=".45"')+TF(bx(v)+6,y+22,`value ${v}`,13,C.muted,'start',act?'':'opacity=".6"');
    if(a.bids)out+=L(bx(a.bids[i]),y+2,bx(a.bids[i]),y+32,C.blue,3)+TF(bx(a.bids[i])-4,y+2,`bid ${a.bids[i]}`,13,C.blue,'end');
    if((s.fmtK==='first'||s.fmtK==='second')&&!a.bids)out+=R(bx(0)+4,y+9,26,16,'#fff',C.muted,2)+P(`M${bx(0)+4} ${y+9} l13 9 l13 -9`,C.muted,1.2);
    if(s.fmtK==='english'&&!act)out+=TF(bx(v)+70,y+22,'dropped out',13,C.coral,'start')});
@@ -639,11 +637,11 @@ SCENE({id:'governing-commons',name:'The tragedy of the commons',tag:'Hardin’s 
   const shown=Math.min(60,Math.round(now.cows)),r=E4_rng(5);
   for(let i=0;i<shown;i++){const x=46+r()*178,y=60+r()*126;out+=R(x-6,y-4,12,8,'#fff',C.ink,2,'stroke-width="1.2"')}
   out+=TF(135,216,`grass ${Math.round(now.G)}% · ${Math.round(now.cows)} cows`,13,C.ink);
-  const pl=E4_plot(300,52,270,150,[0,40],[0,100],{xt:[[0,'0'],[20,'20'],[40,'40']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'grass (%) and cows'});
+  const pl=E4_plot(300,52,270,140,[0,40],[0,100],{xt:[[0,'0'],[20,'20'],[40,'40']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'grass (%) and cows',xlDy:30});
   out+=pl.svg;
   out+=E4_poly(sim.slice(0,s.t+1).map((d,i)=>[pl.X(i),pl.Y(d.G)]),C.green,2.6)+E4_poly(sim.slice(0,s.t+1).map((d,i)=>[pl.X(i),pl.Y(Math.min(100,d.cows))]),C.amber,2.4);
-  out+=L(pl.X(s.t),52,pl.X(s.t),202,C.ink,1,'stroke-dasharray="3 4"');
-  out+=R(310,236,12,12,C.green,'none',2)+TF(328,247,'grass',13,C.muted,'start')+R(390,236,12,12,C.amber,'none',2)+TF(408,247,'cows',13,C.muted,'start');
+  out+=L(pl.X(s.t),52,pl.X(s.t),192,C.ink,1,'stroke-dasharray="3 4"');
+  out+=R(430,240,12,12,C.green,'none',2)+TF(448,251,'grass',13,C.muted,'start')+R(500,240,12,12,C.amber,'none',2)+TF(518,251,'cows',13,C.muted,'start');
   const tail=sim.slice(20),avgG=tail.reduce((a,d)=>a+d.G,0)/tail.length,avgYield=tail.reduce((a,d)=>a+.01*d.cows*d.G,0)/tail.length;
   out+=R(30,268,540,100,C.pale,'none',10);
   out+=TBF(46,290,`Seasons 20–40: grass averages ${Math.round(avgG)}%, grass eaten ${fmt(Math.round(avgYield*10)/10)} a season`,14,C.ink,'start');
@@ -672,7 +670,7 @@ SCENE({id:'governing-commons-game',name:'Fish a shared lake',tag:'A common-pool 
  draw(s){
   const run=E4_fishRun(s.seed,s.mode,s.mine),n=s.mine.length;
   let out=heading(`Fish a shared lake: ${E4_FMODES.find(m=>m[0]===s.mode)[1].toLowerCase()}`,26);
-  const pl=E4_plot(70,56,250,170,[0,8],[0,100],{xt:[[0,'0'],[4,'4'],[8,'8']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'fish in the lake'});
+  const pl=E4_plot(70,56,250,150,[0,8],[0,100],{xt:[[0,'0'],[4,'4'],[8,'8']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'season',yl:'fish in the lake',xlDy:30});
   out+=pl.svg+L(pl.X(0),pl.Y(50),pl.X(8),pl.Y(50),C.green,1.5,'stroke-dasharray="5 4"')+TF(pl.X(8)-4,pl.Y(50)-6,'fastest regrowth',13,C.green,'end');
   out+=E4_poly([[pl.X(0),pl.Y(100)]].concat(run.rows.map((r,i)=>[pl.X(i+1),pl.Y(r.after)])),C.blue,2.6);
   run.rows.forEach((r,i)=>out+=Ci(pl.X(i+1),pl.Y(r.after),4,C.blue,'#fff'));
@@ -689,8 +687,8 @@ SCENE({id:'governing-commons-game',name:'Fish a shared lake',tag:'A common-pool 
   if(last)out+=TBF(46,278,`Last season: you took ${fmt(Math.round(last.you*10)/10)}, the others ${last.others.map(x=>fmt(Math.round(x*10)/10)).join(', ')}`,13,C.ink,'start');
   else out+=TBF(46,278,'Choose your catch and press Fish.',13,C.ink,'start');
   const note={silent:'Without talking, the others each take 5 to 8: well above what the lake can replace.',talk:'With talking, the others agree on 3 each, but some cheat and take 6.',sanction:'With talking and fines, cheating is rare and the agreed 3 mostly holds.'}[s.mode];
-  out+=E4_lines(46,302,E4_wrap(note,82),13,C.ink);
-  out+=TF(46,352,'If everyone takes more than the lake regrows, the stock collapses and later catches vanish.',13,C.muted,'start');
+  out+=E4_lines(46,302,E4_wrap(note,72),13,C.ink);
+  out+=TF(46,352,'Take more than the lake regrows and the stock collapses.',13,C.muted,'start');
   return {svg:out,phase:'The lake regrows fastest when half full. Taking 3 each keeps it there; taking more pays this season and costs every season after. Talking alone helps, and the ability to fine cheats helps more, as Ostrom and her colleagues found in the lab.'};
  }});
 

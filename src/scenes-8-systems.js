@@ -356,7 +356,7 @@ SCENE({id:'climate-economics-tax',name:'A price on carbon',tag:'Make the pollute
 /* ================================================================ automation and labour */
 // Illustrative occupation groups: employment weight, automation probability of the whole occupation (Frey &
 // Osborne style), and the share of a typical worker's tasks that could be automated (Arntz et al. style).
-const E8_OCC=[['Office and admin',14,.96,.62],['Sales',11,.92,.55],['Food preparation',9,.86,.66],['Transport',7,.82,.58],['Production',6,.79,.73],['Construction',5,.72,.42],['Maintenance',4,.6,.4],['Business and finance',6,.38,.4],['Personal care',4,.3,.25],['Healthcare support',3,.45,.35],['Management',7,.15,.25],['Computing and engineering',5,.07,.3],['Health professionals',6,.1,.22],['Education',6,.05,.18],['Arts and media',3,.08,.2],['Community services',4,.06,.15]];
+const E8_OCC=[['Office and admin',14,.96,.62],['Sales',11,.92,.55],['Food preparation',9,.86,.66],['Transport',7,.82,.58],['Production',6,.79,.73],['Construction',5,.68,.42],['Maintenance',4,.6,.4],['Business and finance',6,.38,.4],['Personal care',4,.3,.25],['Healthcare support',3,.45,.35],['Management',7,.15,.25],['Computing, engineering',5,.07,.3],['Health professionals',6,.1,.22],['Education',6,.05,.18],['Arts and media',3,.08,.2],['Community services',4,.06,.15]];
 SCENE({id:'automation-labour',name:'Jobs or tasks?',tag:'Why 47% and 9% can both be “right”',
  definition:'A job is a bundle of tasks. Frey and Osborne estimated whether whole occupations could be automated and found 47% of US jobs at high risk. Arntz, Gregory and Zierahn looked at the tasks individual workers actually do, which vary within an occupation, and found about 9% across rich countries.',
  example:'A bank clerk’s occupation may score high, but a particular clerk who spends half the day advising customers does many tasks a machine cannot. Counting tasks lowers the share at high risk.',
@@ -392,7 +392,7 @@ SCENE({id:'automation-labour-polarisation',name:'The hollowing middle',tag:'Rout
  on:{set(s,v){s.set=v;return 'keep'},band(s,a){s.band=Number(a);return 'keep'}},
  draw(s,f,X){
   let out=heading('Employment growth along the wage scale',26);
-  const A=E8_plot(70,52,330,230,[0,100],[-1,1],{xt:[[0,'lowest paid'],[50,'middle'],[100,'highest paid']],yt:[[-1,'shrank'],[0,'0'],[1,'grew']],xl:'occupations ordered by starting wage'});out+=A.svg;
+  const A=E8_plot(70,52,330,230,[0,100],[-1,1],{xt:[[12,'lowest paid'],[50,'middle'],[88,'highest paid']],yt:[[-1,'shrank'],[0,'0'],[1,'grew']],xl:'occupations ordered by starting wage'});out+=A.svg;
   out+=L(A.X(0),A.Y(0),A.X(100),A.Y(0),C.line,1.2);
   if(s.set==='us'){const fn=x=>.75*Math.exp(-Math.pow((x-4)/9,2))+.85*Math.pow(x/100,3)-.55*Math.exp(-Math.pow((x-45)/20,2))+.05;out+=P(E8_path(range(101).map(x=>[A.X(x),A.Y(clamp(fn(x),-1,1))])),C.blue,2.6)}
   else{[[-0,.35],[1,-.8],[2,.6]].forEach(([i,v])=>{const x0=A.X(i*33.3+3),x1=A.X(i*33.3+30);out+=R(x0,v>0?A.Y(v):A.Y(0),x1-x0,Math.abs(A.Y(v)-A.Y(0)),v>0?C.blue:C.coral,'none',3)})}
