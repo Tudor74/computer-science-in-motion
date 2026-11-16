@@ -82,9 +82,9 @@ SCENE({id:'missing-fundamental',name:'Missing fundamental',tag:'Pitch from a pat
   out+=R(50,206,520,112,'#fff',C.grid,4);
   if(!h.length)out+=T(310,267,'All harmonics are off: silence.',15,C.muted);
   else{const pts=[];let mx=0;const ys=[];for(let i=0;i<=320;i++){const t=i/320*15e-3;let y=0;h.forEach(n=>y+=M8_AMP[n-1]*Math.sin(2*Math.PI*n*M8_F0*t));ys.push(y);mx=Math.max(mx,Math.abs(y))}
-   ys.forEach((y,i)=>pts.push([60+i/320*500,262-y/(mx||1)*44]));
+   ys.forEach((y,i)=>pts.push([60+i/320*500,274-y/(mx||1)*36]));
    const per=5/g;for(let k=1;k*per<15.001;k++){const x=60+k*per/15*500;out+=L(x,210,x,314,C.amber,1.4,'stroke-dasharray="4 4"')}
-   out+=M8_poly(pts,C.ink,1.8)+TF(64,224,`combined wave repeats every ${fmt(per)} ms`,13,C.amber,'start')}
+   out+=M8_poly(pts,C.ink,1.8)+TF(64,226,`combined wave repeats every ${fmt(per)} ms`,13,C.amber,'start')}
   ['0','5','10','15 ms'].forEach((l,i)=>out+=TF(60+i*500/3,334,l,13,C.muted));
   const pitch=h.length?M8_F0*g:0,low=h.length?M8_F0*h[0]:0;
   if(h.length)out+=T(300,364,`Lowest component ${low} Hz · repeating pattern gives a pitch of about ${pitch} Hz`,15,C.ink);
@@ -114,7 +114,7 @@ SCENE({id:'missing-fundamental-match',name:'Match the pitch',tag:'You are the li
    +TF(32,152,`missing fundamental ${last.f0} Hz`,14,C.blue,'start')+TF(32,174,`your match ${last.m} Hz`,14,C.ink,'start')+TBF(32,200,`→ ${c}`,14,c.startsWith('the missing')?C.green:C.amber,'start')}
   else out+=TF(150,130,'The sound has three components.',14,C.muted)+TF(150,150,'Its fundamental is missing.',14,C.muted)+TF(150,178,'What pitch do you hear?',15,C.ink);
   out+=TF(150,262,s.sim?'Simulated listener (Watch)':'Your matches',13,C.muted);
-  const pl=M8_plot(330,48,240,252,[140,260],[100,900],{xt:[[150,'150'],[200,'200'],[250,'250']],yt:[[100,'100'],[300,'300'],[500,'500'],[700,'700'],[900,'900']],xl:'missing fundamental (Hz)',yl:'your match (Hz)'});out+=pl.svg;
+  const pl=M8_plot(330,62,240,238,[140,260],[100,900],{xt:[[150,'150'],[200,'200'],[250,'250']],yt:[[100,'100'],[300,'300'],[500,'500'],[700,'700'],[900,'900']],xl:'missing fundamental (Hz)',yl:'your match (Hz)'});out+=pl.svg;
   const line=(k,col,dash,lab)=>{const a=Math.max(140,100/k),b=Math.min(260,900/k);out+=L(pl.X(a),pl.Y(k*a),pl.X(b),pl.Y(k*b),col,2,dash?'stroke-dasharray="6 5"':'')+TF(pl.X(b)-4,pl.Y(k*b)-6,lab,13,col,'end')};
   line(1,C.blue,false,'fundamental');line(2,C.muted,true,'octave');line(3,C.coral,false,'lowest part');
   s.res.forEach(r=>out+=Ci(pl.X(r.f0),pl.Y(clamp(r.m,100,900)),6,C.ink,'#fff'));
@@ -142,7 +142,7 @@ SCENE({id:'missing-fundamental-speaker',name:'Bass from small speakers',tag:'The
   out+=R(50,44,Math.max(0,lx(s.cut)-50),220,'#fbefe9','none',4)+TF(56,62,'speaker too small to move air here',13,C.coral,'start');
   const pts=[];for(let i=0;i<=200;i++){const f=25*Math.pow(40,i/200);pts.push([lx(f),258-M8_spk(f,s.cut)*190])}out+=M8_poly(pts,C.coral,2.4);
   for(let n=1;n<=8;n++){const f=n*f0;if(f>1000)break;const x=lx(f),a=190/n,g=M8_spk(f,s.cut);out+=R(x-6,258-a,12,a,C.pale,C.line,3)+R(x-6,258-a*g,12,a*g,C.blue,'none',3)}
-  [25,50,100,200,500,1000].forEach(f=>out+=TF(lx(f),282,String(f),13,C.muted));out+=TF(560,282,'Hz',13,C.muted,'end');
+  [25,50,100,200,500].forEach(f=>out+=TF(lx(f),282,String(f),13,C.muted));out+=TF(lx(1000),282,'1000 Hz',13,C.muted,'end');
   const g1=M8_spk(f0,s.cut);
   out+=T(300,316,`The ${fmt(f0)} Hz fundamental comes out at ${Math.round(g1*100)}% · harmonics above ${s.cut} Hz pass well`,15,C.ink);
   out+=TF(300,340,'pale = original harmonic · blue = what the speaker plays · coral = speaker response',13,C.muted);
@@ -418,7 +418,7 @@ SCENE({id:'beat-entrainment',name:'Keeping the beat',tag:'Tap along',
   const as=s.sim?s.taps.map((t,i)=>({i,a:t-s.clicks[i]})).filter(e=>e.i>=3):M8_asyn(s);
   as.forEach(e=>out+=Ci(pl.X(e.i+1),pl.Y(clamp(e.a,-200,200)),5,C.blue,'#fff'));
   const vals=as.map(e=>e.a),m=M8_mean(vals),sd=M8_sd(vals);
-  out+=T(430,362,vals.length>=3?`mean ${m<0?'−':'+'}${Math.abs(Math.round(m))} ms · spread (SD) ${Math.round(sd)} ms · ${vals.length} taps`:'The first three clicks are for settling in.',14,C.ink);
+  out+=T(300,362,vals.length>=3?`mean ${m<0?'−':'+'}${Math.abs(Math.round(m))} ms · spread (SD) ${Math.round(sd)} ms · ${vals.length} taps`:'The first three clicks are for settling in.',14,C.ink);
   return {svg:out,phase:s.sim?'A simulated tapper leads the clicks by about 45 ms, inside the range typical for non-musicians.':vals.length>=3?(m<0?'You tapped ahead of the clicks on average, as most people do. One explanation: the brain synchronises the felt touch with the heard click, and touch signals take longer to arrive.':'You tapped after the clicks on average. Device delays (mouse release, audio output) can shift this; try the Space bar with the pad focused.'):'Each dot will show how far each tap was from its click. Below zero means early.'};
  }});
 

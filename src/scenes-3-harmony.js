@@ -60,6 +60,7 @@ function M3_chord(x,notes,base,yB,g,col){
 }
 // A keyboard from midi lo to hi. col(m) returns a fill for a lit key or null.
 function M3_keys(X,act,x0,y0,w,h,lo,hi,col){
+ if(!act)X=null;
  const whites=[];for(let m=lo;m<=hi;m++)if(!M3_isBlack(m))whites.push(m);
  const ww=w/whites.length;let o='',b='';
  whites.forEach((m,i)=>{const c=col(m),x=x0+i*ww;
@@ -90,7 +91,7 @@ SCENE({id:'intervals',name:'Interval',tag:'The distance between two notes',
   out+=M3_staff(40,300,yB,g);
   out+=M3_head(110,ln,M3_TREB,yB,g,C.coral)+M3_head(175,un,M3_TREB,yB,g,C.blue)+M3_chord(250,[ln,un],M3_TREB,yB,g,n=>n===ln?C.coral:C.blue);
   out+=T(110,yB+40,M3_nm(ln),14,C.coral)+T(175,yB+40,M3_nm(un),14,C.blue)+T(250,yB+40,'together',13,C.muted);
-  out+=TB(455,82,M3_intName(n),22,C.ink)+T(455,108,`${n} semitone${n===1?'':'s'} · spans ${n>12?'more than an octave':M3_NUM[n]+' letter name'+(M3_NUM[n]===1?'':'s')}`,14,C.muted);
+  out+=TB(455,82,M3_intName(n),22,C.ink)+TF(455,108,`${n} semitone${n===1?'':'s'} · ${n>12?'over an octave':M3_NUM[n]+' letter'+(M3_NUM[n]===1?'':'s')}`,14,C.muted);
   out+=R(340,124,230,34,cls.fill,cls.col,17)+TBF(455,146,cls.k,13,cls.col);
   out+=M3_keys(X,'key',30,210,540,118,60,84,m=>m===s.a?C.coral:m===s.b?C.blue:null);
   return {svg:out,phase:`${M3_nm(ln)} to ${M3_nm(un)}: ${n} semitone${n===1?'':'s'}, a ${M3_intName(n)} (${cls.k}). Counting letters names the interval; counting semitones gives its exact size.`};
@@ -191,7 +192,7 @@ SCENE({id:'triads-chords-inversions',name:'Inversions and sevenths',tag:'Which n
   let out=heading(`${M3_nm(r,false)} ${s.kind==='tri'?'major':'dominant seventh'}, ${M3_INVN[s.inv]}`);
   out+=M3_staff(40,300,yB,g)+M3_chord(170,ns,M3_TREB,yB,g,n=>n===bass?C.coral:n.m%12===s.root%12?C.purple:C.blue);
   out+=Ci(170,M3_y(bass.step,M3_TREB,yB,g),g*1.1,'none',C.coral,'stroke-dasharray="3 3"');
-  const fig=M3_FIG[s.kind][s.inv];out+=TB(170,yB+42,fig[0],17,C.ink)+(fig[1]?TB(170,yB+62,fig[1],17,C.ink):'');
+  const fig=M3_FIG[s.kind][s.inv];out+=TB(170,yB+42,fig[0],17,C.ink)+(fig[1]?TB(170,yB+68,fig[1],17,C.ink):'');
   out+=TF(240,yB+50,'figures',13,C.muted,'start');
   out+=R(345,70,225,100,'#fff',C.grid,9)+TF(457,94,'in the bass',13,C.muted)+TB(457,122,M3_nm(bass,false),22,C.coral)+TF(457,150,s.inv===0?'the root':['','the third','the fifth','the seventh'][s.inv],14,C.ink);
   out+=M3_keys(X,null,30,240,540,95,48,95,m=>ns.some(n=>n.m===m)?(m===bass.m?C.coral:C.blue):null);

@@ -94,15 +94,15 @@ SCENE({id:'beat-metre-hierarchy',name:'The metrical grid',tag:'Levels of strong 
  on:M6_seqOn(M6_MH,{sig(s,v,ctx){s.sig=v;M6_restart(s,ctx,M6_MH);return 'keep'},col(s,i){M6_MH.step(s,Number(i));return 'keep'}}),
  draw(s,f,X){
   const L6=M6_LEVELS[s.sig],n=L6.n,per=s.sig==='6/8'?6:4,pos=M6_pos(s,X,n,s.bpm/60*per);let out=heading(`${s.sig}: how many levels land on each moment?`);
-  const x0=70,cw=470/n,base=250,dy=26;
-  L6.names.forEach((nm,k)=>out+=TF(56,base-k*dy+5,nm,13,C.muted,'end'));
+  const x0=130,cw=430/n,base=250,dy=26;
+  L6.names.forEach((nm,k)=>out+=TF(120,base-k*dy+5,nm,13,C.muted,'end'));
   for(let i=0;i<n;i++){const x=x0+i*cw+cw/2,lv=L6.levels(i),cur=i===pos;let col='';
    for(let k=0;k<lv;k++)col+=Ci(x,base-k*dy,7,k===lv-1&&lv>=3?C.blue:'#8fb3ca');
    if(cur)col+=R(x-cw/2+2,base-lv*dy+8,cw-4,lv*dy+10,'none',C.amber,6);
-   out+=hit(X,'col',i,`Position ${i+1}: ${lv} levels`,R(x-cw/2+2,base-4*dy-14,cw-4,4*dy+30,'transparent','none',4)+col);
+   out+=hit(X,'col',i,`Position ${i+1}: ${lv} levels`,R(x-cw/2+1,base-4*dy-14,cw-2,4*dy+30,'transparent','none',4)+col);
    out+=TF(x,base+30,i%per===0?String(i/per+1):'·',14,i%per===0?C.ink:C.muted);
   }
-  out+=L(x0,base+12,x0+470,base+12,C.line,1.5);
+  out+=L(x0,base+12,x0+430,base+12,C.line,1.5);
   out+=T(300,330,s.sig==='6/8'?'6/8 groups six quavers as two beats of three: compound metre.':s.sig==='3/4'?'3/4: three crotchet beats, simple triple metre.':'4/4: four crotchet beats, the strongest on 1, then 3.',15,C.ink);
   return {svg:out,phase:`Each dot is one pulse level; a taller column is a stronger moment. Musicians play with this grid: stressing a short column (an off-beat) is how syncopation begins.`};
  }});
@@ -127,7 +127,7 @@ SCENE({id:'beat-metre-hemiola',name:'Hemiola',tag:'Six as two threes or three tw
    for(let gI=0;gI<6/size;gI++){const a=bx+gI*size*dx-12,b=a+(size-1)*dx+24;out+=P(`M${a} 112V100H${b}V112`,m==='68'?C.blue:C.coral,2)}
    for(let j=0;j<6;j++){const i=bar*6+j,x=bx+j*dx,acc=M6_hemAcc(s.mode,i),cur=i===pos;
     out+=Ci(x,150,acc?15:8,acc?(m==='68'?C.blue:C.coral):'#cfe0eb');if(cur)out+=Ci(x,150,(acc?15:8)+7,'none',C.amber);
-    out+=TF(x,186,acc?'ONE':'and',13,acc?C.ink:C.muted);}
+    out+=TF(x,186,acc?'ONE':(m==='68'&&j%3===2?'a':'and'),13,acc?C.ink:C.muted);}
    if(bar===0)out+=L(x0+225,96,x0+225,196,C.line,2);
   }
   out+=R(70,226,460,62,'#fff',C.grid,10)+T(300,252,'Same notes, same tempo: only the accents move.',15,C.ink)+T(300,274,'Two beats of three feel lilting; three beats of two feel square.',14,C.muted);
@@ -194,7 +194,7 @@ SCENE({id:'syncopation-backbeat',name:'Backbeat and off-beat',tag:'Which beats g
   return {svg:out,phase:s.style==='backbeat'?'The snare (coral) cracks on beats 2 and 4, metrically weaker than 1 and 3. That push against the grid is the backbeat.':s.style==='onedrop'?'In the one drop the bass drum and rim fall on beat 3 and beat 1 is left empty, while the guitar skanks on every off-beat.':s.style==='floor'?'Four on the floor: the bass drum marks every beat while the hi-hat fills the off-beats in between.':`A march accents ${accents.join(' and ')||'the strong beats'} with the snare: the loudness agrees with the metre.`};
  }});
 
-const M6_GROOVE=[[0,4,8,12],[0,4,6,12],[0,3,6,10,12],[2,6,10,14],[0,3,6,9,11,14],[3,7,11,15]];
+const M6_GROOVE=[[0,4,8,12],[0,4,6,12],[0,3,6,10,12],[0,3,7,10,14],[3,6,10,14],[1,3,6,9,11,14]];
 const M6_GR={ms:s=>60000/s.bpm/4,N:()=>16,step(s,i){if(M6_GROOVE[s.k].includes(i))M6_sound('mid');if(i%4===0)M6_sound('low');if(i%2===0)M6_sound('hat')}};
 SCENE({id:'syncopation-groove',name:'Groove and the sweet spot',tag:'How much syncopation makes us move',
  definition:'Groove is the pleasurable urge to move with music. In listening experiments it rises with syncopation up to a point, then falls when the rhythm becomes too hard to follow.',
@@ -210,7 +210,7 @@ SCENE({id:'syncopation-groove',name:'Groove and the sweet spot',tag:'How much sy
   const pos=M6_pos(s,X,16,s.bpm/60*4),pats=M6_GROOVE.map(p=>({p,sc:M6_sync(M6_set16(p)).total})),cur=pats[s.k];let out=heading('More syncopation is not always more groove');
   out+=M6_row(X,60,58,30,30,16,i=>cur.p.includes(i),pos,{beatEvery:4});
   const gx=80,gy=320,gw=440,gh=180,max=14,fx=x=>gx+x/max*gw,fy=v=>gy-v*gh;
-  out+=L(gx,gy,gx+gw,gy,C.line,2)+L(gx,gy,gx,gy-gh,C.line,2)+TF(gx+gw/2,gy+28,'syncopation score →',13,C.muted)+TF(gx-8,gy-gh/2,'urge to move',13,C.muted,'end');
+  out+=L(gx,gy,gx+gw,gy,C.line,2)+L(gx,gy,gx,gy-gh,C.line,2)+TF(gx+gw/2,gy+28,'syncopation score →',13,C.muted)+TF(gx+6,gy-gh-8,'↑ urge to move',13,C.muted,'start');
   let d='';for(let x=0;x<=max;x+=.25){const v=Math.max(0,1-Math.pow((x-6)/7.5,2));d+=(x?'L':'M')+fmt(fx(x))+' '+fmt(fy(v*.95))}
   out+=P(d,C.purple,3)+TF(gx+gw-4,gy-gh+6,'illustrative shape',13,C.muted,'end');
   pats.forEach((q,i)=>{const v=Math.max(0,1-Math.pow((q.sc-6)/7.5,2))*.95;out+=Ci(fx(q.sc),fy(v),i===s.k?9:5,i===s.k?C.coral:'#fff',i===s.k?C.coral:C.purple)});
@@ -232,19 +232,19 @@ SCENE({id:'polyrhythm',name:'Polyrhythm',tag:'Two pulses at once',
  on:M6_seqOn(M6_PR,{a(s,v,ctx){s.a=v;M6_restart(s,ctx,M6_PR);return 'keep'},b(s,v,ctx){s.b=v;M6_restart(s,ctx,M6_PR);return 'keep'},cycle(s,v,ctx){s.cycle=v;M6_restart(s,ctx,M6_PR);return 'keep'}}),
  draw(s,f,X){
   const N=M6_lcm(s.a,s.b),pos=M6_pos(s,X,N,N/s.cycle);let out=heading(`${s.a} against ${s.b}`);
-  const cx=170,cy=200;
-  out+=M6_ring(X,cx,cy,120,N,i=>i%(N/s.a)===0,pos,{col:()=>C.blue,big:11});
-  out+=M6_ring(X,cx,cy,70,N,i=>i%(N/s.b)===0,pos,{col:()=>C.coral,big:11,ring:'#e3d5cf'});
+  const cx=150,cy=205;
+  out+=M6_ring(X,cx,cy,110,N,i=>i%(N/s.a)===0,pos,{col:()=>C.blue,big:11});
+  out+=M6_ring(X,cx,cy,64,N,i=>i%(N/s.b)===0,pos,{col:()=>C.coral,big:11,ring:'#e3d5cf'});
   out+=TF(cx,cy+5,'cycle',13,C.muted);
-  const x0=330,cw=Math.min(36,240/N);
+  const x0=350,cw=Math.min(34,220/N);
   out+=TF(x0,92,`Composite on ${N} equal steps`,14,C.ink,'start','font-weight="650"');
   out+=TF(x0-6,128,s.a+':',13,C.blue,'end')+M6_row(X,x0,112,cw,24,N,i=>i%(N/s.a)===0,pos,{col:()=>C.blue});
   out+=TF(x0-6,164,s.b+':',13,C.coral,'end')+M6_row(X,x0,148,cw,24,N,i=>i%(N/s.b)===0,pos,{col:()=>C.coral});
   const both=range(N).filter(i=>i%(N/s.a)===0||i%(N/s.b)===0),iois=both.map((v,k)=>(both[k+1]??N)-v);
   out+=TF(x0-6,200,'both:',13,C.ink,'end')+M6_row(X,x0,184,cw,24,N,i=>both.includes(i),pos,{col:i=>i===0?C.purple:'#8b78bd'});
   out+=TF(x0,236,'gaps: '+iois.join(' · '),14,C.ink,'start');
-  out+=TF(x0,262,`They coincide only on step 1 (${M6_gcd(s.a,s.b)===1?'once per cycle':M6_gcd(s.a,s.b)+' times per cycle'}).`,13,C.muted,'start');
-  return {svg:out,phase:`Divide one cycle into ${N} tiny steps (the lowest common multiple of ${s.a} and ${s.b}): the ${s.a}-pulse lands every ${N/s.a} steps and the ${s.b}-pulse every ${N/s.b}. Together they make the uneven composite rhythm ${iois.join('-')}.`};
+  out+=TF(x0,262,M6_gcd(s.a,s.b)===1?'They meet only on step 1.':`They meet ${M6_gcd(s.a,s.b)} times per cycle.`,13,C.muted,'start');
+  return {svg:out,phase:`Divide one cycle into ${N} tiny steps (the lowest common multiple of ${s.a} and ${s.b}): the ${s.a}-pulse lands every ${N/s.a} step${N/s.a>1?'s':''} and the ${s.b}-pulse every ${N/s.b}. Together they make the composite rhythm ${iois.join('-')}.${s.a===s.b?' With equal counts there is no cross-rhythm at all.':''}`};
  }});
 
 const M6_RATIOS={'3:2':[3,2],'4:3':[4,3],'5:4':[5,4],'3:4':[3,4]};
@@ -283,14 +283,14 @@ SCENE({id:'polyrhythm-bell',name:'The standard bell pattern',tag:'Seven strokes 
  on:M6_seqOn(M6_BP,{feel(s,v){s.feel=v;return 'keep'},bpm(s,v,ctx){s.bpm=v;M6_restart(s,ctx,M6_BP);return 'keep'}}),
  draw(s,f,X){
   const pos=M6_pos(s,X,12,s.bpm/60*3),step=s.feel==='4'?3:4;let out=heading('Seven bell strokes in twelve pulses');
-  const cx=190,cy=205;
-  out+=M6_ring(X,cx,cy,120,12,i=>M6_BELL.includes(i),pos,{col:()=>C.amber,big:12,labels:i=>String(i+1)});
+  const cx=170,cy=205;
+  out+=M6_ring(X,cx,cy,115,12,i=>M6_BELL.includes(i),pos,{col:()=>C.amber,big:12,labels:i=>String(i+1)});
   if(s.feel!=='none')for(let i=0;i<12;i+=step){const a=-Math.PI/2+i*M6_TAU/12;out+=Ci(cx+72*Math.cos(a),cy+72*Math.sin(a),9,C.blue);}
   if(s.feel!=='none'){let d='';for(let i=0;i<=12;i+=step){const a=-Math.PI/2+(i%12)*M6_TAU/12;d+=(i?'L':'M')+fmt(cx+72*Math.cos(a))+' '+fmt(cy+72*Math.sin(a))}out+=P(d,C.blue,1.5,'none','opacity=".5"')}
-  out+=TB(420,110,'Bell gaps',15,C.amber)+TM(420,136,'2 · 2 · 1 · 2 · 2 · 2 · 1',15,C.ink);
-  out+=TB(420,186,s.feel==='4'?'Dance beat in 4':s.feel==='3'?'Dance beat in 3':'No beat',15,C.blue);
-  out+=TF(420,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/4)':'',13,C.muted);
-  out+=T(420,264,'Strokes on beats:',14,C.ink)+TB(420,288,s.feel==='none'?'—':String(M6_BELL.filter(i=>i%step===0).length)+' of '+(12/step),17,C.ink);
+  out+=TB(450,110,'Bell gaps',15,C.amber)+TMF(450,136,'2 2 1 2 2 2 1',15,C.ink);
+  out+=TB(450,186,s.feel==='4'?'Dance beat in 4':s.feel==='3'?'Dance beat in 3':'No beat',15,C.blue);
+  out+=TF(450,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/4)':'',13,C.muted);
+  out+=T(450,264,'Strokes on beats:',14,C.ink)+TB(450,288,s.feel==='none'?'—':String(M6_BELL.filter(i=>i%step===0).length)+' of '+(12/step),17,C.ink);
   return {svg:out,phase:`The bell’s seven strokes fall on pulses ${M6_BELL.map(i=>i+1).join(', ')}. ${s.feel==='none'?'Heard alone, many listeners find it ambiguous where the beat is.':'Against the dance beat only some strokes coincide; the rest cross it, giving the pattern its drive.'}`};
  }});
 
@@ -316,12 +316,12 @@ SCENE({id:'euclidean-rhythms',name:'Euclidean rhythms',tag:'Spread k hits over n
   if(pts.length>1)out+=P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join('L')+'Z',C.blue,2,C.pale);
   out+=M6_ring(X,cx,cy,r,s.n,i=>b[i],pos,{big:11});
   const on=range(s.n).filter(i=>b[i]),gaps=on.map((v,k)=>(on[k+1]??on[0]+s.n)-v);
-  out+=TB(440,96,'Pattern',15,C.ink)+TM(440,122,b.map(x=>x?'x':'.').join(''),17,C.ink);
-  out+=TB(440,170,'Gaps between hits',15,C.ink)+TM(440,196,gaps.join(' · ')||'—',16,C.blue);
+  out+=TB(440,96,'Pattern',15,C.ink)+TMF(440,122,b.map(x=>x?'x':'.').join(''),17,C.ink);
+  out+=TB(440,170,'Gaps between hits',15,C.ink)+TMF(440,196,gaps.join(' ')||'—',15,C.blue);
   const nm=M6_nameOf(s.k,s.n);
   out+=R(330,226,220,64,nm?C.amberp:'#fff',nm?C.amber:C.grid,10)+T(440,252,nm?'Known as':'No common name here',14,C.muted)+(nm?TB(440,276,nm,14,C.ink):'');
-  out+=TF(440,316,'Only two gap sizes ever appear: as even as possible.',13,C.muted);
-  return {svg:out,phase:`${s.k} hits in ${s.n} steps leave gaps of ${[...new Set(gaps)].join(' and ')} steps, the most even spacing possible. ${nm?`Up to rotation this is the ${nm}.`:'Toussaint (2005) found that many rhythms from around the world are patterns like this.'}`};
+  out+=TF(440,316,'At most two gap sizes:',13,C.muted)+TF(440,334,'as even as possible.',13,C.muted);
+  return {svg:out,phase:`${s.k} hits in ${s.n} steps leave gaps of ${[...new Set(gaps)].sort((a,b)=>b-a).join(' and ')} step${gaps.every(g=>g===1)?'':'s'}, the most even spacing possible. ${nm?`Up to rotation this is the ${nm}.`:'Toussaint (2005) found that many rhythms from around the world are patterns like this.'}`};
  }});
 
 // Bjorklund (2003): repeatedly pair remaining groups, as in Euclid's algorithm on the counts.
@@ -426,8 +426,9 @@ SCENE({id:'swing-groove-tempo',name:'Swing and tempo',tag:'Faster tunes swing le
   return {svg:out,phase:`At ${s.bpm} BPM the trend gives about ${r.toFixed(1)}:1, so the short note lasts ${Math.round(beat/(r+1))} ms. Friberg and Sundström (2002) found the short note stayed roughly constant in absolute time across tempi, which is why the ratio falls as the beat gets shorter.`};
  }});
 
-const M6_MT={ms:s=>60000/s.bpm,N:()=>4,step(s,i){const beat=60/s.bpm,f=2/3,lag=s.lag/1000;M6_sound('hat',0);M6_sound('hat',beat*f);
- AUDIO.tone(392,{dur:.13,type:'triangle',gain:.15,at:Math.max(0,lag)});AUDIO.tone(440,{dur:.1,type:'triangle',gain:.13,at:beat*f+(s.all?Math.max(0,lag):0)})}};
+const M6_MT={ms:s=>60000/s.bpm,N:()=>4,step(s,i){const beat=60/s.bpm,f=2/3,lag=s.lag/1000;const d=Math.max(0,-lag),o=Math.max(0,lag);M6_sound('hat',d);M6_sound('hat',d+beat*f);
+ // a negative offset (soloist ahead) is played by delaying the drummer instead, since sound cannot start before now
+ AUDIO.tone(392,{dur:.13,type:'triangle',gain:.15,at:o});AUDIO.tone(440,{dur:.1,type:'triangle',gain:.13,at:beat*f+(s.all?o:d)})}};
 SCENE({id:'swing-groove-microtiming',name:'Laying back',tag:'Tiny timing differences between players',
  definition:'Microtiming is the small, systematic offset of one player against another, often tens of milliseconds. It is far too small to write down, yet it shapes the feel of a groove.',
  example:'Friberg and Sundström found jazz soloists landing slightly behind the drummer on the downbeats while lining up with them on the off-beats; Keil called such offsets “participatory discrepancies”.',
@@ -439,8 +440,8 @@ SCENE({id:'swing-groove-microtiming',name:'Laying back',tag:'Tiny timing differe
  ui:[{range:'lag',label:'Soloist offset (ms)',min:-40,max:80,step:5,get:s=>s.lag,act:'lag'},{choose:[['down','Downbeats only'],['all','Every note']],label:'Which notes',get:s=>s.all?'all':'down',act:'which'},{b:'Play / stop',act:'play'}],
  on:M6_seqOn(M6_MT,{lag(s,v){s.lag=v;return 'keep'},which(s,v){s.all=v==='all';return 'keep'}}),
  draw(s,f,X){
-  const pos=M6_pos(s,X,4,s.bpm/60),beatMs=60000/s.bpm,x0=80,bw=115,pxms=bw/beatMs;let out=heading(s.lag>0?`Soloist ${s.lag} ms behind the drummer`:s.lag<0?`Soloist ${-s.lag} ms ahead of the drummer`:'Soloist exactly with the drummer');
-  out+=TF(x0-10,128,'drummer',13,C.ink,'end')+TF(x0-10,208,'soloist',13,C.ink,'end');
+  const pos=M6_pos(s,X,4,s.bpm/60),beatMs=60000/s.bpm,x0=120,bw=108,pxms=bw/beatMs;let out=heading(s.lag>0?`Soloist ${s.lag} ms behind the drummer`:s.lag<0?`Soloist ${-s.lag} ms ahead of the drummer`:'Soloist exactly with the drummer');
+  out+=TF(x0-24,128,'drummer',13,C.ink,'end')+TF(x0-24,208,'soloist',13,C.ink,'end');
   for(let b=0;b<4;b++){const x=x0+b*bw,cur=b===pos;out+=L(x,96,x,240,cur?C.amber:'#dbe5ec',cur?3:1.5)+TF(x,262,String(b+1),14,C.ink,'middle','font-weight="700"');
    out+=Ci(x,124,8,C.blue)+Ci(x+bw*2/3,124,6,C.blue);
    const d=s.lag*pxms,o=s.all?d:0;out+=Ci(x+d,204,9,C.coral)+Ci(x+bw*2/3+o,204,7,C.coral);
@@ -459,21 +460,21 @@ SCENE({id:'rhythmic-cycles',name:'Rhythmic cycles: tala',tag:'Teentaal’s sixte
  example:'Teentaal’s theka on the tabla: Dha Dhin Dhin Dha | Dha Dhin Dhin Dha | Dha Tin Tin Ta | Ta Dhin Dhin Dha. Claps fall on beats 1, 5 and 13; a wave of the hand marks the empty section (khali) at beat 9.',
  desc:'A circle of sixteen beats labelled with the tabla syllables of the Teentaal theka, with sam, the claps and khali marked and a playhead moving round.',
  dur:11,research:['Clayton, M. (2000). Time in Indian Music: Rhythm, Metre, and Form in North Indian Rāg Performance.','Natyashastra (traditionally attributed to Bharata; compiled roughly 200 BCE–200 CE): an early source on tala.'],
- hint:'Set the speed and press Play. Listen for the change in sound in the khali section (beats 9–12), where the bass strokes drop out.',
+ hint:'Set the speed and press Play. Listen for the khali section: on Tin Tin Ta Ta (beats 10–13) the bass strokes drop out, then return before sam.',
  init:()=>({mpm:120,playing:false,pos:-1}),
  watch(){return {mpm:120,playing:false,pos:-1}},
  ui:[{range:'mpm',label:'Speed (matras/min)',min:60,max:240,step:4,get:s=>s.mpm,act:'mpm'},{b:'Play / stop',act:'play'}],
  on:M6_seqOn(M6_TT,{mpm(s,v,ctx){s.mpm=v;M6_restart(s,ctx,M6_TT);return 'keep'}}),
  draw(s,f,X){
   const pos=M6_pos(s,X,16,s.mpm/60);let out=heading('Teentaal: 4 + 4 + 4 + 4 beats');
-  const cx=200,cy=205;
-  out+=M6_ring(X,cx,cy,118,16,i=>i in M6_TEEN_MARK,pos,{col:i=>i===8?C.coral:i===0?C.purple:C.blue,big:11,labels:i=>M6_TEEN[i],lr:30,labelCol:i=>i>=8&&i<12?C.coral:C.ink});
-  for(const k in M6_TEEN_MARK){const a=-Math.PI/2+k*M6_TAU/16;out+=TBF(cx+92*Math.cos(a),cy+92*Math.sin(a)+5,M6_TEEN_MARK[k],14,k==='8'?C.coral:k==='0'?C.purple:C.blue)}
+  const cx=175,cy=205;
+  out+=M6_ring(X,cx,cy,112,16,i=>i in M6_TEEN_MARK,pos,{col:i=>i===8?C.coral:i===0?C.purple:C.blue,big:11,labels:i=>M6_TEEN[i],lr:30,labelCol:i=>i>=8&&i<12?C.coral:C.ink});
+  for(const k in M6_TEEN_MARK){const a=-Math.PI/2+k*M6_TAU/16;out+=TBF(cx+88*Math.cos(a),cy+88*Math.sin(a)+5,M6_TEEN_MARK[k],14,k==='8'?C.coral:k==='0'?C.purple:C.blue)}
   out+=TB(cx,cy-4,'sam',16,C.purple)+TF(cx,cy+16,'beat 1',13,C.muted);
-  out+=TB(450,104,'Signs',15,C.ink);
-  [['X','sam: clap, the strongest beat',C.purple],['2, 3','other claps (tali)',C.blue],['0','khali: a wave, no clap',C.coral]].forEach(([m,t,c],i)=>{out+=TBF(390,136+i*30,m,14,c,'start')+TF(428,136+i*30,t,13,C.ink,'start')});
-  out+=T(450,250,pos>=0?`Beat ${pos+1}: ${M6_TEEN[pos]}`:'Theka: Dha Dhin Dhin Dha …',15,C.ink);
-  out+=TF(450,276,'Tin and Ta: no bass stroke',13,C.coral);
+  out+=TB(450,104,'Signs',15,C.ink,'start');
+  [['X','sam: clap',C.purple],['2, 3','claps (tali)',C.blue],['0','khali: a wave',C.coral]].forEach(([m,t,c],i)=>{out+=TBF(400,136+i*28,m,14,c,'start')+TF(440,136+i*28,t,13,C.ink,'start')});
+  out+=T(470,250,pos>=0?`Beat ${pos+1}: ${M6_TEEN[pos]}`:'Theka on the tabla',15,C.ink,'middle');
+  out+=TF(470,276,'Tin and Ta:',13,C.coral)+TF(470,294,'no bass stroke',13,C.coral);
   return {svg:out,phase:'The cycle is felt from sam to sam. In the khali section the bass of the tabla drops out (Tin, Ta), so even without seeing the hands a listener can tell where they are in the cycle.'};
  }});
 

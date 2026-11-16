@@ -49,7 +49,7 @@ function M2_keys(X,x0,y0,w,h,lo,hi,o={}){
  const whites=[],blacks=[];for(let m=lo;m<=hi;m++)(M2_W.includes(M2_mod(m,12))?whites:blacks).push(m);
  const xOf={};whites.forEach((m,i)=>xOf[m]=x0+i*w);let out='';
  for(const m of whites){const mk=o.mark&&o.mark(m);out+=hit(X,o.act||'key',m,`${noteName(m)} key`,R(xOf[m],y0,w-2,h,mk||'#fff',C.line,4));
-  if(o.label){const lb=o.label(m);if(lb)out+=TF(xOf[m]+w/2-1,y0+h-9,lb,13,mk?'#fff':C.muted)}}
+  if(o.label){const lb=o.label(m);if(lb)out+=TF(xOf[m]+w/2-1,y0+h-9,lb,13,[C.blue,C.coral,C.green,C.purple,C.dark].includes(mk)?'#fff':mk?C.ink:C.muted)}}
  for(const m of blacks){const x=xOf[m-1]+w*.66,mk=o.mark&&o.mark(m);out+=hit(X,o.act||'key',m,`${noteName(m)} key`,R(x,y0,w*.62,h*.6,mk||C.dark,'none',3))}
  return out;
 }
@@ -145,7 +145,7 @@ SCENE({id:'solmisation',name:'Solmisation',tag:'Ut, re, mi, fa, sol, la',
   M2_HYMN.forEach(([syl,words],i)=>{const x=60+i*84,y=300-i*38,on=s.lit===i;
    out+=hit(X,'step',i,`${syl}: ${words}, starts on ${M2_name(i)}`,G(R(x,y,80,38,on?C.blue:C.pale,'none',6)+TB(x+40,y+25,syl,17,on?'#fff':C.ink)));
    out+=TF(x+40,y+56,M2_name(i).slice(0,1),14,on?C.blue:C.muted,'middle','font-weight="700"');
-   out+=TF(x+2,y-8,words,13,on?C.ink:C.muted,'start','font-style="italic"')});
+   out+=TF(x+78,y-8,words,13,on?C.ink:C.muted,'end','font-style="italic"')});
   out+=T(300,54,'The syllables name positions in a scale, not fixed frequencies',13,C.muted);
   return {svg:out,phase:s.lit>=0?`${M2_HYMN[s.lit][0]}: “${M2_HYMN[s.lit][1]}” begins on ${M2_name(s.lit).slice(0,1)}. Singers learned the sound of each step by remembering the line that starts on it.`:'Guido taught singers to remember how each step sounds by linking it to a familiar hymn line. The syllables became ut, re, mi, fa, sol, la.'};
  }});
@@ -308,7 +308,7 @@ SCENE({id:'modes-melody',name:'Final and reciting tone',tag:'Home and the note y
   const pts=M2_TUNE.map((d,i)=>[150+i*55,yOf(d)]);out+=P('M'+pts.map(p=>p.map(fmt).join(' ')).join(' L'),C.ink,2.4);
   pts.forEach(([x,y],i)=>out+=Ci(x,y,ph>=i&&ph<i+1?9:6,ph>=i&&ph<i+1?C.coral:C.ink));
   out+=TF(560,yOf(0)+18,'final',13,C.blue,'end')+TF(560,yOf(ten-st)-8,'reciting tone',13,C.purple,'end');
-  return {svg:out,phase:`The tune climbs a fourth and comes home. In ${s.mode} the semitones (marked S) fall in different places from other modes, so the same shape sounds brighter or darker.`};
+  return {svg:out,phase:`The tune climbs a fifth and comes home. In ${s.mode} the semitones (marked S) fall in different places from other modes, so the same shape sounds brighter or darker.`};
  }});
 
 // Maqam Rast on C: C D E-half-flat F G A B-half-flat C. Neutral steps are about three quarter tones.
@@ -464,6 +464,6 @@ SCENE({id:'polyphony-hildegard',name:'Hildegard of Bingen',tag:'Chant with a soa
   out+=P('M'+l.map((st,i)=>fmt(x(i))+' '+fmt(y(st))).join(' L'),s.which==='wide'?C.purple:C.blue,2.4);
   l.forEach((st,i)=>out+=Ci(x(i),y(st),ph>=i&&ph<i+1?8:5,ph>=i&&ph<i+1?C.coral:C.ink));
   const lo=Math.min(...l),hi=Math.max(...l),semis=M2_m(hi)-M2_m(lo);
-  out+=R(556,y(hi),16,y(lo)-y(hi),s.which==='wide'?C.purplep:C.pale,s.which==='wide'?C.purple:C.blue,6)+TF(564,y(lo)+22,`${semis} semitones`,13,C.ink,'middle','font-weight="700"');
-  return {svg:out,phase:s.which==='wide'?`This line spans ${semis} semitones, well over an octave, with an opening leap of a fifth. Hildegard’s chants are known for this soaring range and for setting her own visionary poetry.`:`This line moves by step and spans ${semis} semitones, the compact range of most Gregorian chant.`};
+  out+=R(556,y(hi),16,y(lo)-y(hi),s.which==='wide'?C.purplep:C.pale,s.which==='wide'?C.purple:C.blue,6)+TF(572,y(lo)+22,`${semis} semitones`,13,C.ink,'end','font-weight="700"');
+  return {svg:out,phase:s.which==='wide'?`This line spans ${semis} semitones, ${semis>=24?'two full octaves':'well over an octave'}, with an opening leap of a fifth. Hildegard’s chants are known for this soaring range and for setting her own visionary poetry.`:`This line moves by step and spans ${semis} semitones, the compact range of most Gregorian chant.`};
  }});
