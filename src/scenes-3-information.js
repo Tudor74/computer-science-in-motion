@@ -245,14 +245,14 @@ SCENE({id:'selective-attention',name:'The Stroop effect',tag:'Be the participant
   D3_CONDS.forEach((c,i)=>{const d=s.data[c],m=D3_mean(d),x=88+i*82;if(d.length){const h=clamp(m,0,1.4)*sc;out+=R(x,base-h,60,h,c==='incongruent'?C.coral:c==='congruent'?C.green:C.blue,'none',4)+TBF(x+30,base-h-6,D3_ms(m),13,C.ink)}out+=TF(x+30,base+18,c,13,C.muted)});
   const ci=s.data.congruent,ii=s.data.incongruent,ok=ci.length>=2&&ii.length>=2;
   out+=R(360,226,226,110,'#fff',C.grid,8)+TF(473,248,s.sim?'simulated participant':`trial ${Math.min(s.i+1,24)} of 24 · errors ${s.errors}`,13,C.muted);
-  out+=TF(473,276,'interference: incongruent − congruent',13,C.muted)+TB(473,306,ok?D3_ms(D3_mean(ii)-D3_mean(ci)):'—',20,C.coral);
+  out+=TF(473,276,'incongruent − congruent',13,C.muted)+TB(473,306,ok?D3_ms(D3_mean(ii)-D3_mean(ci)):'—',20,C.coral);
   out+=TF(473,328,'often about 50–150 ms',13,C.muted);
   return {svg:out,phase:ok?(D3_mean(ii)>D3_mean(ci)?'Your incongruent trials were slower: the word’s meaning was read even though you were trying to ignore it.':'No slowing this time; with few trials, chance can hide the effect. Try another run.'):'Congruent: the word matches the ink. Incongruent: it names another colour. Neutral: XXXX. The gap between incongruent and congruent is the Stroop interference.'};
  }});
 
 const D3_EV=[
  {id:'tone',l:'Tone',what:'a steady 400 Hz tone',v:'Usually noticed',col:C.green,lines:['Physical changes get through: Cherry’s listeners','reported a tone in the ignored ear.']},
- {id:'voice',l:'Voice change',what:'man’s voice → woman’s voice',v:'Usually noticed',col:C.green,lines:['A change of speaker (pitch and voice quality) is','noticed, even though the words are not.']},
+ {id:'voice',l:'Voice change',what:'male → female voice',v:'Usually noticed',col:C.green,lines:['A change of speaker (pitch and voice quality) is','noticed, even though the words are not.']},
  {id:'lang',l:'Language',what:'English → German',v:'Usually missed',col:C.coral,lines:['Listeners could not say what language the ignored','speech was in, or whether it changed.']},
  {id:'rev',l:'Backwards',what:'speech is played backwards',v:'Usually missed',col:C.coral,lines:['Reversed speech keeps the voice but loses the words;','most listeners noticed nothing odd.']},
  {id:'rep',l:'Repeated words',what:'words repeated 35 times',v:'Not remembered',col:C.coral,lines:['Moray (1959): words heard 35 times in the ignored','ear were recognised no better than new words.']},
@@ -435,7 +435,7 @@ SCENE({id:'mental-rotation',name:'Turning shapes in the mind',tag:'Be the partic
  draw(s,f,X){
   let out=heading('Same shape turned, or its mirror image?');
   out+=R(40,44,240,150,'#fff',C.grid,10)+R(320,44,240,150,'#fff',C.grid,10);
-  if(s.phase==='run'&&!s.blank&&s.trial){const tr=s.trial,cells=D3_SHAPES[tr.shape];out+=D3_shape(cells,160,116,24,0,0,C.blue)+D3_shape(cells,440,116,24,tr.sign*tr.ang,tr.mir,C.blue);if(!X.try)out+=TF(440,186,`${tr.ang}°${tr.mir?' · mirror':''}`,13,C.muted)}
+  if(s.phase==='run'&&!s.blank&&s.trial){const tr=s.trial,cells=D3_SHAPES[tr.shape];out+=D3_shape(cells,160,116,24,0,0,C.blue)+D3_shape(cells,440,116,24,tr.sign*tr.ang,tr.mir,C.blue);if(!X.try)out+=TF(440,190,`${tr.ang}°${tr.mir?' · mirror':''}`,13,C.muted)}
   else out+=TF(300,124,s.phase==='done'?'Finished':X.try?'Press Start':'',15,C.muted);
   out+=D3_key(X,'ans',0,'Same shape',160,202,120,36,'Same')+D3_key(X,'ans',1,'Mirror image',320,202,120,36,'Mirror');
   const pl=D3_plot(96,252,250,80,[0,180],[0,2.5],[[0,'0°'],[90,'90°'],[180,'180°']],[[0,'0'],[1,'1'],[2,'2 s']],null,null);out+=pl.svg;
