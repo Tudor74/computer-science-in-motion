@@ -1,19 +1,19 @@
-# Senses In Motion
+# Tripitaka In Motion
 
-A single-file, offline HTML page on how human vision, hearing, smell and touch work, two eras each, then the senses together. Within each sense the story follows the order of discovery from the organ to the brain. In Try it you take part where a screen allows it (illusions, colour matching, hearing and localisation with headphones, the McGurk effect, home smell and touch tests) and see your results beside the published ones. Safety rules apply throughout: no fast flicker, gentle volumes, and no screen test is a diagnosis.
+A single-file, offline HTML page on the history of the Buddhist canon (the Tripitaka, "three baskets"), in historical order: spoken teaching, the three baskets, the councils and Ashoka, writing it down, translation into Chinese, the Tibetan and other canons, printing, and the canon today. It is a history of a body of texts, not religious instruction. In Try it you see how group recitation keeps a text stable, place texts in their baskets, follow a passage across languages, and print a woodblock page. Every scene says whether it shows a traditional account, an established finding, or something scholars debate, and each tradition is described in its own terms.
 
-This is the `senses` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `tripitaka` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
 ## Route
 
-1. **The eye**: optics, photoreceptors, dark adaptation, trichromacy, opponent colour, colour blindness
-2. **Seeing**: lateral inhibition, depth and stereo, motion, illusions, faces, the blind spot
-3. **The ear**: outer and middle ear, the cochlea, hair cells, the range of hearing, hearing loss, cochlear implants
-4. **Listening**: localisation, auditory scenes, speech perception, pitch, masking, hearing in noise
-5. **Smell**: odorant receptors, the olfactory bulb, thresholds, mixtures, smell and memory, smell loss
-6. **Taste and flavour**: five tastes, retronasal smell, pheromones, smell and emotion, smell training, how many smells
-7. **Touch**: skin receptors, acuity, vibration, pain, temperature, proprioception
-8. **Senses together**: multisensory integration, the rubber hand, synaesthesia, sensory substitution, ageing, affective touch
+1. **Spoken teaching**: oral recitation, memory techniques, the reciters, the languages of the teaching
+2. **The three baskets**: the three baskets, the Vinaya, the Suttas, the Abhidhamma
+3. **Councils and Ashoka**: the first council, the second council and the schools, Ashoka's edicts, dating the Buddha
+4. **Writing it down**: palm leaf, the Gandhāran scrolls, the commentaries, the Sanskrit canons
+5. **Into Chinese**: the first translations, Kumārajīva, Xuanzang, the catalogues
+6. **Tibetan and other canons**: Tibetan translation, the Kangyur and Tengyur, comparing canons, Mongolian and Manchu canons
+7. **Printing**: the Diamond Sūtra of 868, the Song editions, the Tripitaka Koreana, royal editions
+8. **The canon today**: the Pali Text Society, the Taishō edition, digital canons, parallels and new finds
 
 ## Source layout
 

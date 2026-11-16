@@ -37,15 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: the learner experiences each sense where a screen allows, and their results are drawn
-   beside the published ones. Eye: focus an image, mix three lights to match a colour, hold an afterimage,
-   simulate colour blindness. Seeing: Mach bands, a random-dot stereogram, the waterfall illusion, classic
-   illusions, your own blind spot. Ear: the cochlea's travelling wave, a relative hearing sweep, an implant
-   vocoder. Listening: headphone localisation, streaming, the McGurk effect, masking. Smell and flavour cannot
-   be delivered by a screen, so those eras use simulations and kitchen tests (hold your nose and taste).
-   Touch: two-point thresholds with paperclips, gate control, hot and cool channels. Together: cue combination,
-   the rubber hand, synaesthesia tests. Safety: no flicker above 3 per second, gentle sounds with ramped
-   onsets, and no screen test is a diagnosis. Myths (tongue map, pheromones, a trillion smells) are labelled.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
