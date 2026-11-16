@@ -29,7 +29,7 @@ SCENE({id:'computer-lib',name:'Computer Lib / Dream Machines',tag:'A book with t
  draw(s,f,X){
   const sd=T4_SIDES[s.side],other=T4_SIDES[s.side==='lib'?'dream':'lib'];let out=heading('One book, two front covers');
   out+=R(30,50,230,290,sd.col,'none',6)+R(42,62,206,266,'#fff','none',4);
-  out+=TB(145,120,sd.title,22,sd.col)+T(145,160,sd.sub.split(' ').slice(0,4).join(' '),14,C.ink)+T(145,180,sd.sub.split(' ').slice(4).join(' '),14,C.ink);
+  out+=TB(145,120,sd.title,22,sd.col)+T4_wrap(sd.sub,20).map((l,i)=>T(145,158+i*20,l,14,C.ink)).join('');
   out+=TF(145,236,'Ted Nelson · 1974',13,C.muted)+L(70,256,220,256,C.grid,1.5);
   out+=TF(145,288,'(the back is '+other.title+',',13,C.muted)+TF(145,306,'printed upside down)',13,C.muted);
   sd.topics.forEach(([t,d],i)=>{const y=58+i*58,on=i===s.open;out+=hit(X,'open',i,'Read: '+t,R(286,y,294,50,on?C.pale:'#fff',on?sd.col:C.grid,8)+TBF(300,y+30,t,14,on?sd.col:C.ink,'start'))});
@@ -68,7 +68,7 @@ SCENE({id:'computer-lib-cybercrud',name:'Cybercrud',tag:'“The computer won’t
 
 const T4_MEDIA={
  text:{label:'Text',show:'Hi!',nums:[72,105,33],how:'each character is a code number (here ASCII/Unicode)'},
- picture:{label:'Picture',grid:[0,9,9,0,9,3,3,9,9,3,3,9,0,9,9,0],nums:[0,9,9,0,'…'],how:'each dot is a brightness number'},
+ picture:{label:'Picture',grid:[0,9,9,0,9,3,3,9,9,3,3,9,0,9,9,0],nums:[0,9,9,0,'…'],how:'each dot is a number for its shade (0 light, 9 dark)'},
  music:{label:'Music',notes:[60,64,67],nums:[60,64,67],how:'each note is a pitch number (MIDI: middle C = 60)'},
  numbers:{label:'Numbers',show:'3 + 4',nums:[3,4,7],how:'numbers stay numbers; the sum is 7'}};
 SCENE({id:'computer-lib-everything',name:'Not just arithmetic',tag:'One machine for every kind of symbol',
