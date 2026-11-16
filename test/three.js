@@ -18,7 +18,7 @@ const shots=process.env.SHOTS||path.resolve(__dirname,'shots');fs.mkdirSync(shot
   const txt=await p.$eval('#three-drawing',e=>e.textContent);if(/NaN|undefined|could not be drawn/.test(txt))fails.push(id+': bad 3D text '+txt.slice(0,80));
   await p.screenshot({path:path.join(shots,'three-'+id+'.png'),clip:await p.evaluate(()=>{const r=document.querySelector('.diagram-deck').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}})});
   // Drag turns the camera and pauses.
-  await p.click('#play');const box=await (await p.$('#three-drawing')).boundingBox();const y0=(await st()).camera.yaw;
+  await p.click('#play');await p.$eval('#three-drawing',e=>e.scrollIntoView({block:'center'}));const box=await (await p.$('#three-drawing')).boundingBox();const y0=(await st()).camera.yaw;
   await p.mouse.move(box.x+200,box.y+150);await p.mouse.down();await p.mouse.move(box.x+300,box.y+160,{steps:4});await p.mouse.up();
   const s1=await st();ok(s1.speed===0,id+': turning pauses');ok(Math.abs(s1.camera.yaw-y0)>.3,id+': drag turns');
   await p.click('#three-reset');ok(Math.abs((await st()).camera.yaw-.62)<1e-9,id+': reset view');

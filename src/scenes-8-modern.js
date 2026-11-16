@@ -421,7 +421,7 @@ SCENE({id:'atomic-spectra-bohr',name:'Bohr’s energy levels',tag:'Jumps make li
  on:{lo(s,v){s.lo=Number(v);if(s.hi<=s.lo)s.hi=s.lo+1},hi(s,v){s.hi=Math.max(Number(v),s.lo+1)},lvl(s,n){n=Number(n);if(n>s.lo)s.hi=n;else{s.lo=Math.min(3,n);if(s.hi<=s.lo)s.hi=s.lo+1}}},
  draw(s,f,X){
   const E=n=>-13.6/(n*n),sy=e=>80+(e+14)/14*0,yOf=e=>300-((e+13.6)/13.6)*210;let out=heading(`Jump from n = ${s.hi} to n = ${s.lo}`);
-  for(let n=1;n<=7;n++){const y=yOf(E(n)),on=n===s.hi||n===s.lo;out+=hit(X,'lvl',n,`Level ${n}, ${E(n).toFixed(2)} eV`,R(40,y-7,220,14,'transparent','none',0)+L(70,y,250,y,on?C.ink:C.line,on?3:2))+TF(62,y+5,'n='+n,13,on?C.ink:C.muted,'end')+(n<=3?TF(256,y+5,E(n).toFixed(2)+' eV',13,C.muted,'start'):'')}
+  for(let n=1;n<=7;n++){const y=yOf(E(n)),on=n===s.hi||n===s.lo;out+=hit(X,'lvl',n,`Level ${n}, ${E(n).toFixed(2)} eV`,R(40,y-7,220,14,'transparent','none',0)+L(70,y,250,y,on?C.ink:C.line,on?3:2))+(n<=3?TF(62,y+5,'n='+n,13,on?C.ink:C.muted,'end'):n===5?TF(62,y+5,'n ≥ 4',13,C.muted,'end'):'')+(n<=3?TF(256,y+5,E(n).toFixed(2)+' eV',13,C.muted,'start'):'')}
   out+=L(70,yOf(0),250,yOf(0),C.line,1,'stroke-dasharray="4 4"')+TF(256,yOf(0)+5,'0 (free)',13,C.muted,'start');
   const dE=E(s.hi)*-1-(E(s.lo)*-1),eph=13.6*(1/(s.lo*s.lo)-1/(s.hi*s.hi)),lam=1e9/(P8_RH*(1/(s.lo*s.lo)-1/(s.hi*s.hi))),col=P8_nm(lam);
   out+=arrow(160,yOf(E(s.hi)),160,yOf(E(s.lo))-2,col==='#8f7bb5'||col==='#8a3a2a'?C.coral:col,4,10);
@@ -429,7 +429,7 @@ SCENE({id:'atomic-spectra-bohr',name:'Bohr’s energy levels',tag:'Jumps make li
   out+=TF(470,268,'Bohr’s orbits: right energies,',13,C.muted)+TF(470,284,'wrong picture of motion',13,C.muted);
   const lx=v=>40+(Math.log10(v)-Math.log10(90))/(Math.log10(2000)-Math.log10(90))*520;
   out+=R(40,310,520,16,'#e9eef1','none',4)+R(lx(380),310,lx(700)-lx(380),16,'none','none',0)+P8_rainbow(lx(380),310,lx(700)-lx(380),16,380,700,.9)+TF(lx(150),344,'ultraviolet',13,C.muted)+TF(lx(1300),344,'infrared',13,C.muted);
-  out+=L(lx(lam),302,lx(lam),334,C.ink,3)+TBF(clamp(lx(lam),80,520),360,`${lam.toFixed(1)} nm · ${eph.toFixed(2)} eV`,14,C.ink);
+  out+=L(lx(lam),302,lx(lam),334,C.ink,3)+TBF(clamp(lx(lam),130,470),360,`${lam.toFixed(1)} nm · ${eph.toFixed(2)} eV`,14,C.ink);
   return {svg:out,phase:`Falling from n = ${s.hi} (${E(s.hi).toFixed(2)} eV) to n = ${s.lo} (${E(s.lo).toFixed(2)} eV) releases one photon of ${eph.toFixed(2)} eV, wavelength ${lam.toFixed(1)} nm${lam<380?', in the ultraviolet':lam>780?', in the infrared':''}. ${s.lo===2?'This is a Balmer line.':s.lo===1?'This is a Lyman line.':'This is a Paschen line.'}`};
  }});
 
@@ -521,7 +521,7 @@ SCENE({id:'quantum-interference-uncertainty',name:'The uncertainty principle',ta
   const half=s.a*6;out+=R(110,70,10,130-half,C.dark,'none',1)+R(110,200+half,10,130-half,C.dark,'none',1)+arrow(40,200,104,200,'#e0a800',2.5)+TF(115,352,'slit',13,C.muted);
   let d='';for(let i=0;i<=240;i++){const yc=-60+i*0.5,v=P8_sinc(Math.PI*s.a*1e-6*yc*1e-2/(lam*1e-6*Lm))**2;d+=(i?'L':'M')+fmt(420+v*140)+' '+fmt(sy(yc))}
   out+=L(420,sy(-60),420,sy(60),C.dark,3)+P(d,C.blue,2.5,'none')+P(d+`L420 ${fmt(sy(60))}L420 ${fmt(sy(-60))}Z`,'none',0,'#1772b722');
-  if(y1<=60)out+=L(410,sy(y1),570,sy(y1),C.coral,1.5,'stroke-dasharray="4 4"')+L(410,sy(-y1),570,sy(-y1),C.coral,1.5,'stroke-dasharray="4 4"')+TF(575,sy(y1)+4,`${y1.toFixed(1)} cm`,13,C.coral,'end');
+  if(y1<=60)out+=L(410,sy(y1),570,sy(y1),C.coral,1.5,'stroke-dasharray="4 4"')+L(410,sy(-y1),570,sy(-y1),C.coral,1.5,'stroke-dasharray="4 4"')+TF(575,sy(y1)-6,`${y1.toFixed(1)} cm`,13,C.coral,'end');
   for(let i=0;i<6;i++)out+=L(124,200,410,200+(i-2.5)*Math.min(60,y1)*0.85,'#f1e2a8',1.4);
   out+=R(150,300,240,56,'#fff',C.grid,8)+TF(270,322,'Δx ≈ slit width; Δp ≈ h/slit width',13,C.ink)+TF(270,342,'narrower slit → wider pattern',13,C.muted);
   return {svg:out,phase:`The first dark fringes are ${y1.toFixed(1)} cm either side of centre, set by λL/a. Pinning the position down to ${s.a} μm forces a spread of momentum sideways, so the light spreads.`};
@@ -594,7 +594,7 @@ SCENE({id:'radioactivity-fission',name:'Nuclear fission',tag:'Splitting uranium'
   if(st>=4)out+=TBF(410,166,`lost ${dm.toFixed(3)} u`,13,C.coral,'start')+TBF(410,190,`≈ ${(dm*931.494).toFixed(0)} MeV`,14,C.coral,'start')+TF(410,210,'(≈ 200 MeV in all)',13,C.muted,'start');
   const gens=[0,1,2,3,4,5,6].map(g=>s.k**g);out+=TBF(300,254,`Chain reaction, ${s.k.toFixed(1)} follow-on fissions each`,13,s.k>1?C.coral:s.k<1?C.blue:C.ink);
   gens.forEach((n,g)=>{const x=60+g*76,hgt=Math.min(70,10*Math.log10(1+n)*8);out+=R(x,340-hgt,46,hgt,s.k>1?C.coral:C.blue,'none',3)+TF(x+23,356,'gen '+g,13,C.muted)+TF(x+23,336-hgt,n<10?n.toFixed(1):P8_sci(n,2),13,C.ink)});
-  return {svg:out,phase:f.say+(st>=4?` With ${s.k.toFixed(1)} follow-on fissions each, generation 6 has ${P8_sci(gens[6],2)} fissions: ${s.k>1?'growing (supercritical)':s.k<1?'dying out (subcritical)':'steady (critical, as in a reactor)'}.`:'')};
+  return {svg:out,phase:f.say+(st>=4?` With ${s.k.toFixed(1)} follow-on fissions each, generation 6 has ${P8_sci(gens[6],2)} fission${Math.abs(gens[6]-1)<1e-9?'':'s'}: ${s.k>1?'growing (supercritical)':s.k<1?'dying out (subcritical)':'steady (critical, as in a reactor)'}.`:'')};
  }});
 
 /* ---------- Open questions ---------- */
@@ -639,7 +639,7 @@ SCENE({id:'open-questions-parity',name:'A broken mirror symmetry',tag:'Chien-Shi
   let out=heading('Cobalt-60 nuclei lined up, then decaying');
   const nucleus=(cx,spinUp,up,down,label)=>{let o=Ci(cx,200,26,C.purple,'#4e3a78')+`<ellipse cx="${cx}" cy="200" rx="46" ry="14" fill="none" stroke="${C.ink}" stroke-width="2"/>`;
    o+=spinUp?arrow(cx,174,cx,98,C.ink,3)+P(`M${cx+40} 192l8 -6l-1 10z`,C.ink,1.5,C.ink):arrow(cx,226,cx,302,C.ink,3)+P(`M${cx-40} 192l-8 -6l1 10z`,C.ink,1.5,C.ink);
-   o+=TF(cx+(spinUp?14:14),spinUp?110:296,'spin',13,C.ink,'start');
+   o+=TF(cx-12,spinUp?104:300,'spin',13,C.ink,'end');
    for(let i=0;i<up;i++){const a=-Math.PI/2+(i-(up-1)/2)*0.28;o+=arrow(cx+30*Math.cos(a),200+30*Math.sin(a),cx+105*Math.cos(a),200+105*Math.sin(a),C.blue,2,7)}
    for(let i=0;i<down;i++){const a=Math.PI/2+(i-(down-1)/2)*0.22;o+=arrow(cx+30*Math.cos(a),200+30*Math.sin(a),cx+105*Math.cos(a),200+105*Math.sin(a),C.blue,2,7)}
    return o+TBF(cx,352,label,14,C.ink)};
@@ -670,7 +670,7 @@ SCENE({id:'open-questions-unknowns',name:'What we do not know yet',tag:'The edge
   P8_Q.filter(q=>q.pct).forEach(q=>{const a1=a0+q.pct/100*2*Math.PI,big=a1-a0>Math.PI?1:0,on=q.k===s.q,dd=on?8:0,mx=Math.cos((a0+a1)/2)*dd,my=Math.sin((a0+a1)/2)*dd;
    const path=`M${fmt(cx+mx)} ${fmt(cy+my)}L${fmt(cx+mx+r*Math.cos(a0))} ${fmt(cy+my+r*Math.sin(a0))}A${r} ${r} 0 ${big} 1 ${fmt(cx+mx+r*Math.cos(a1))} ${fmt(cy+my+r*Math.sin(a1))}Z`;
    out+=hit(X,'q',q.k,`${q.t}, ${q.pct}%`,P(path,'#fff',2,q.col));const am=(a0+a1)/2,lr=q.pct<10?r+22:r*0.62;out+=TBF(cx+mx+lr*Math.cos(am),cy+my+lr*Math.sin(am)+5,q.pct+'%',14,q.pct<10?C.ink:'#fff');a0=a1});
-  P8_Q.forEach((q,i)=>{const y=70+i*34,on=q.k===s.q;out+=hit(X,'q',q.k,q.t,R(300,y,280,28,on?C.amberp:'#fff',on?C.amber:C.grid,6)+TF(312,y+19,q.t,13,C.ink,'start')+TF(568,y+19,'open',13,C.coral,'end'))});
+  P8_Q.forEach((q,i)=>{const y=70+i*34,on=q.k===s.q;out+=hit(X,'q',q.k,q.t,R(300,y,280,28,on?C.amberp:'#fff',on?C.amber:C.grid,6)+TF(312,y+19,q.t,13,C.ink,'start')+TF(568,y+19,q.k==='ord'?'known':'open',13,q.k==='ord'?C.green:C.coral,'end'))});
   out+=R(300,246,280,112,'#fff',C.grid,8)+TBF(312,266,cur.t,14,C.ink,'start')+cur.lines.map((l,i)=>TF(312,288+i*17,l,13,C.ink,'start')).join('');
   return {svg:out,phase:`${cur.t}: ${cur.lines.join(' ')} (${cur.r})`};
  }});
