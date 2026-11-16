@@ -87,7 +87,7 @@ SCENE({id:'sequencing-shotgun',name:'Shotgun sequencing',tag:'Shred, read, reass
   ctg.forEach((c,i)=>{out+=R(36+c[0]*11,274,(c[1]-c[0]+1)*11-2,10,i%2?C.purple:C.blue,'none',3)});
   const c=s.n*s.len/G,gap=cov.filter(v=>!v).length/G,eGap=Math.exp(-c),eCtg=s.n*Math.exp(-c*(1-B8_OV/s.len));
   out+=counter(36,298,'Coverage c = NL/G',c.toFixed(1)+'×',C.ink,128)+counter(172,298,'Unread bases',Math.round(gap*100)+'%',C.coral,128)+counter(308,298,'Predicted: e^−c',Math.round(eGap*100)+'%',C.muted,128)+counter(444,298,'Contigs / predicted',`${ctg.length} / ${eCtg.toFixed(1)}`,C.blue,128);
-  out+=TF(300,366,'Predictions are averages (Lander & Waterman 1988); a single draw varies.',13,C.muted);
+  out+=TF(300,362,'Predictions are averages for a long genome (Lander & Waterman 1988);',13,C.muted)+TF(300,378,'one draw varies, and reads cannot overhang the ends, so ends are read less.',13,C.muted);
   return {svg:out,phase:`${s.n} reads of ${s.len} bases give coverage ${c.toFixed(1)}×. With random starts some bases are still never read (about e^−c of them on average), so the genome comes back in ${ctg.length} piece${ctg.length===1?'':'s'}. Real projects aim for 8× or more, and repeats longer than a read remain hard to place.`};
  }});
 
@@ -154,7 +154,7 @@ SCENE({id:'phylogenetic-trees',name:'Trees from sequences',tag:'Count difference
   B8_ALN.forEach((seq,i)=>{const y=80+i*22,on=s.sel.includes(i);
    out+=hit(X,'pick',i,`Select ${B8_TAXA[i]}`,R(26,y-15,62,20,on?C.pale:'#fff',on?C.blue:C.grid,4)+TF(31,y,B8_TAXA[i],13,C.ink,'start'));
    [...seq].forEach((ch,j)=>{const diff=on&&B8_ALN[a][j]!==B8_ALN[b][j];if(diff)out+=R(93+j*13,y-14,12,19,C.coralp,'none',2);out+=TMF(99+j*13,y,ch,14,diff?C.coral:C.ink)})});
-  out+=TF(30,208,`${B8_TAXA[a]} vs ${B8_TAXA[b]}: ${B8_D[a][b]} differ`,13,C.coral,'start');
+  out+=TF(30,208,`${B8_TAXA[a]} vs ${B8_TAXA[b]}: ${B8_D[a][b]} site${B8_D[a][b]===1?' differs':'s differ'}`,13,C.coral,'start');
   const last=joins[joins.length-1],hl=new Set();if(last)for(const p of last.a.m)for(const q of last.b.m){hl.add(p+'-'+q);hl.add(q+'-'+p)}
   B8_SHORT.forEach((n,i)=>{out+=TBF(112+i*30,232,n,13,C.muted)+TBF(80,256+i*20,n,13,C.muted,'end')});
   for(let i=0;i<5;i++)for(let j=0;j<5;j++){const x=98+j*30,y=242+i*20,h=hl.has(i+'-'+j);out+=R(x,y,28,18,h?C.coralp:i===j?'#f1f5f7':'#fff',h?C.coral:C.grid,3)+TF(x+14,y+14,i===j?'–':B8_D[i][j],13,h?C.coral:C.ink)}
@@ -296,7 +296,7 @@ SCENE({id:'crispr',name:'CRISPR–Cas9',tag:'A guide RNA finds its match',
   let out=heading('Cas9 cuts only where the guide matches and a PAM follows',26);
   out+=R(x(p)-6,108,20*16+4,138,tint(C.purple,.85),C.purple,14)+TBF(x(p)-2,124,'Cas9',13,C.purple,'start');
   out+=TF(x(p+10)-8,124,'guide RNA',13,C.purple);
-  for(let i=0;i<20;i++){const b=mmSet.has(p+i)?B8_swap(t[p+i]):t[p+i];out+=TMF(x(i+p)+4,152,B8_rna(b),14,mmSet.has(p+i)?C.coral:C.purple,'middle','font-weight="700"')+L(x(i+p)+4,158,x(i+p)+4,184,mmSet.has(p+i)?C.coral:C.purplep,1.4)}
+  for(let i=0;i<20;i++){const b=mmSet.has(p+i)?B8_swap(t[p+i]):t[p+i];out+=TMF(x(i+p)+4,152,B8_rna(b),14,mmSet.has(p+i)?C.coral:C.purple,'middle','font-weight="700"')+(mmSet.has(p+i)?L(x(i+p)+4,158,x(i+p)+4,184,C.coral,1.4):'')}
   out+=R(x(p+20)-3,180,3*16+2,50,pamOK?C.greenp:C.coralp,pamOK?C.green:C.coral,5);
   for(let i=0;i<t.length;i++){out+=TMF(x(i)+4,200,t[i],14,C.ink)+TMF(x(i)+4,222,B8_COMP[t[i]],14,C.muted)}
   out+=TF(22,200,'5′',13,C.muted,'end')+TF(22,222,'3′',13,C.muted,'end');
@@ -306,7 +306,8 @@ SCENE({id:'crispr',name:'CRISPR–Cas9',tag:'A guide RNA finds its match',
   const lines=[`Window at base ${p+1}; the next three bases read ${pam}: ${pamOK?'a valid NGG PAM.':'not NGG, so no grip.'}`,
    s.mm?`${s.mm} mismatch${s.mm>1?'es':''} next to the PAM: ${s.mm>1?'the match fails.':'often still cut (off-target risk).'}`:'Guide and DNA match at all 20 positions.',
    cut?'Result: Cas9 cuts both strands three bases before the PAM.':'Result: no cut.'];
-  lines.forEach((l,i)=>{out+=TF(300,294+i*22,l,13,i===2?(cut?C.green:C.coral):C.ink)});
+  out+=TF(300,282,'The guide has the top strand’s sequence and pairs with the bottom strand.',13,C.muted);
+  lines.forEach((l,i)=>{out+=TF(300,306+i*21,l,13,i===2?(cut?C.green:C.coral):C.ink)});
   return {svg:out,phase:cut?'The guide pairs with the DNA and the PAM is present, so Cas9 makes a blunt double-strand cut. The cell then repairs the break, often imperfectly, which can knock out a gene, or copies in a supplied template.':pamOK?'The PAM is right but the guide no longer matches near it. The bases next to the PAM (the seed) matter most; real tolerance of mismatches varies, so off-target cuts are checked for.':'Without an NGG motif right after the matching stretch, Cas9 does not bind firmly enough to cut, however good the match. That is how bacteria avoid cutting their own CRISPR arrays.'};
  }});
 
@@ -421,7 +422,7 @@ SCENE({id:'evolution-in-the-lab-citrate',name:'Citrate: a rare innovation',tag:'
  example:'Replays started from Ara−3 clones frozen before generation 20,000 never re-evolved citrate use; some replays from later clones did. The population’s history had made the innovation possible.',
  desc:'A timeline of the Ara−3 population with its three steps (potentiation, actualisation, refinement), and replay experiments started from frozen samples of different ages, with the share that evolved citrate use.',
  research:'Blount, Borland & Lenski (2008). Historical contingency and the evolution of a key innovation in an experimental population of Escherichia coli. PNAS 105, 7899–7906. Blount et al. (2012). Genomic analysis of a key innovation in an experimental Escherichia coli population. Nature 489, 513–518. Replay success rates here are illustrative.',
- dur:12,hint:'Choose how old the frozen sample is, then run 40 replays. Older samples never get there; later ones sometimes do.',
+ dur:12,hint:'Choose which generation’s frozen sample to start from, then run 40 replays. Samples from early generations never get there; later ones sometimes do.',
  init:()=>({g:20000,runs:{},seed:4}),
  watch(p){return {g:B8_REPLAY[Math.min(5,Math.floor(p*6))],runs:B8_watchRuns(Math.floor(p*7)),seed:4}},
  ui:[{choose:B8_REPLAY.map(g=>[String(g),'Gen '+g.toLocaleString('en-GB')]),label:'Start replays from',get:s=>String(s.g),act:'g'},{b:'Run 40 replays',act:'run'}],
@@ -583,7 +584,7 @@ SCENE({id:'origins-of-life',name:'The Miller–Urey experiment',tag:'Sparks in a
   out+=Ci(220,118,58,'#f3f7fa',C.ink)+TF(220,104,s.gas==='red'?'CH₄  NH₃':'CO₂  N₂',13,C.ink)+TF(220,124,s.gas==='red'?'H₂  H₂O':'H₂O',13,C.ink);
   out+=L(176,150,196,140,C.muted,2.5)+L(264,150,244,140,C.muted,2.5);
   if(on)out+=P('M198 140 L208 132 L214 144 L224 134 L230 146 L242 140',C.amber,2.2);
-  out+=R(290,180,20,80,'#e6eff5',C.blue,6)+TF(300,172,'condenser',13,C.blue);
+  out+=R(290,180,20,80,'#e6eff5',C.blue,6)+TF(282,224,'condenser',13,C.blue,'end');
   const tr=tint('#8a5a2b',1-Math.min(1,amt*1.2)*.75);out+=P('M196 270 L196 300 Q221 326 246 300 L246 270',C.ink,2.5)+P('M200 296 Q221 318 242 296 Z',tr,1,tr)+TF(221,340,'trap',13,C.ink);
   out+=Ci(90,290,34,'#e6eff5',C.ink)+R(62,290,56,22,C.pale,'none',4)+TF(90,348,'boiling water',13,C.ink)+P('M78 334 Q84 324 90 334 Q96 324 102 334',C.coral,2);
   out+=TF(463,60,'Amino acids in the trap',13,C.ink);
@@ -623,11 +624,11 @@ SCENE({id:'origins-of-life-rna-world',name:'The RNA world',tag:'Copying without 
   return {svg:out,phase:`At ${Math.round(1/mu).toLocaleString('en-GB')} bases per error and advantage σ = ${s.sig}, information survives up to about ${Math.round(Lm).toLocaleString('en-GB')} bases. Longer genomes need more accurate copying, but accurate copying needs the enzymes a longer genome encodes: Eigen’s paradox, still unsolved.`};
  },
  three(s,f,X,project){
-  const P3=project([0,5,0,4,0,2.4]),Z=(u,v)=>B8_master(Math.pow(10,-6+u),Math.pow(10,1+v),s.sig)*2.2;let out='';
+  const P3=project([0,5,0,4,0,3.8]),Z=(u,v)=>B8_master(Math.pow(10,-6+u),Math.pow(10,1+v),s.sig)*3.6;let out='';
   for(let j=0;j<=16;j++){const v=j/4;const pts=range(26).map(i=>[i/5,v,Z(i/5,v)]);for(let i=0;i<25;i++)out+=line3(pts[i],pts[i+1],P3,C.line,1.1)}
   for(let i=0;i<=20;i++){const u=i/4;const pts=range(33).map(j=>[u,j/8,Z(u,j/8)]);for(let j=0;j<32;j++)out+=line3(pts[j],pts[j+1],P3,C.grid,1)}
   const u=s.mu+6,v=s.L-1;out+=point3([u,v,Z(u,v)],P3,C.coral,7,'#fff');
-  out+=axes3(P3,['errors per base (log)','length (log)','perfect copies'],[5.4,4.4,2.6]);
+  out+=axes3(P3,['errors per base (log)','length (log)','perfect copies'],[5.4,4.4,4]);
   return {svg:out,title:'The error-threshold landscape',caption:'Height is the share of perfect copies. It falls to zero along a ridge where length × error rate passes ln σ: a cliff that any early replicator had to stay behind.'};
  }});
 
@@ -654,11 +655,11 @@ SCENE({id:'origins-of-life-vents',name:'Where did life begin?',tag:'Deep-sea ven
    out+=P('M100 298 L112 150 Q120 120 130 150 L142 230 L152 170 Q160 140 170 170 L184 298 Z',C.muted,2,'#e9e4da');
    out+=P('M121 290 L121 170',C.amber,3,'none','stroke-dasharray="5 5"')+P('M161 290 L161 190',C.amber,3,'none','stroke-dasharray="5 5"');
    out+=TF(145,316,'vent fluid, pH 9–11, 40–90 °C',13,C.amber);[[94,200],[192,230]].forEach(([x,y])=>{out+=arrow(x+(x<145?-28:28),y,x+(x<145?2:-2),y,C.coral,2,7)});
-   out+=TF(145,340,'H⁺ gradient across thin walls',13,C.coral)}
+   out+=TF(145,96,'H⁺ gradient across thin walls',13,C.coral)}
   else{out+=R(20,48,250,250,'#eef6fb','none',8)+Ci(230,80,18,C.amberp,C.amber)+TF(230,114,'UV',13,C.amber);
    out+=P('M20 220 Q80 190 145 200 Q210 210 270 186 L270 298 L20 298 Z',C.muted,2,'#e9e4da');
    out+=P('M80 214 Q145 248 210 214 Z',C.blue,2,tint(C.blue,.7))+TF(145,264,'shallow pool',13,C.blue);
-   out+=TF(145,316,'wet–dry cycles on volcanic land',13,C.ink)+TF(145,340,'(Darwin’s “warm little pond”, 1871)',13,C.muted)}
+   out+=TF(145,316,'wet–dry cycles on volcanic land',13,C.ink)+TF(145,150,'(Darwin’s “warm little pond”, 1871)',13,C.muted)}
   out+=TBF(360,60,'Vent',13,vent?C.blue:C.muted,'middle')+TBF(511,60,'Pond',13,!vent?C.blue:C.muted,'middle');
   B8_HYP.forEach((h,i)=>{const y=70+i*48,on=s.row===i;out+=hit(X,'row',i,`Compare: ${h.r}`,R(282,y,302,44,on?C.pale:'#fff',on?C.blue:C.line,6)+TBF(288,y+16,h.r,13,C.ink,'start')+TF(360,y+35,h.v,13,vent?C.ink:C.muted,'middle')+TF(511,y+35,h.p,13,!vent?C.ink:C.muted,'middle'))});
   const d=B8_HYP[s.row].d,cut=d.length>80?d.lastIndexOf(' ',80):-1;out+=TF(300,354,cut>0?d.slice(0,cut):d,13,C.ink)+(cut>0?TF(300,372,d.slice(cut+1),13,C.ink):'');
