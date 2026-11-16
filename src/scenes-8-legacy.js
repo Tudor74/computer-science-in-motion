@@ -134,7 +134,7 @@ function T8_rank(links,n=6,d=.85,it=60){let r=Array(n).fill(1/n);const out=range
  for(let k=0;k<it;k++){const nr=Array(n).fill((1-d)/n);for(let i=0;i<n;i++){if(out[i].length)out[i].forEach(j=>nr[j]+=d*r[i]/out[i].length);else for(let j=0;j<n;j++)nr[j]+=d*r[i]/n}r=nr}return r}
 SCENE({id:'backlinks-rank',name:'Backlinks as votes',tag:'Ranking pages by who links to them',
  definition:'Search engines turned the web’s one-way links into backlinks by crawling every page, then treated each backlink as a vote. PageRank weights each vote by the rank of the page casting it, shared among that page’s links.',
- example:'Hypertext is linked from Xanadu and Web, and both of those are linked in turn, so Hypertext ranks highest. Add a link from ZigZag to Memex and Memex climbs.',
+ example:'Xanadu ranks highest: it is linked from Hypertext, itself well linked, and from ZigZag. Add a link from ZigZag to Memex and Memex climbs from about 13% to about 20%.',
  desc:'Bars of each page’s PageRank (with its count of incoming links), recomputed when you add a link, and the link list that drives them.',
  research:['Brin, S. & Page, L. (1998). The anatomy of a large-scale hypertextual web search engine. Computer Networks and ISDN Systems 30, 107–117.','Kleinberg, J. M. (1999). Authoritative sources in a hyperlinked environment. Journal of the ACM 46(5), 604–632.'],
  dur:10,hint:'Choose a page to link from and a page to link to, then add the link. Watch the ranks and the incoming-link counts change.',
@@ -299,10 +299,10 @@ SCENE({id:'deep-interconnection',name:'Everything is deeply intertwingled',tag:'
   return {svg:out,phase:a?`${a[1]} (era ${a[2]}) connects to ${nb.length} lessons, ${nbe} of them in other eras. Across the course, ${cross} of ${T8_E.length} connections cross from one era to another.`:`Across the course, ${cross} of ${T8_E.length} connections cross from one era to another.`};
  },
  three(s,f,X,project){
-  const pt=i=>[3*Math.cos(T8_ang(i)),3*Math.sin(T8_ang(i)),(T8_ALL[i][2]-1)*.55+(i%4)*.12];const P=project([-3.2,3.2,-3.2,3.2,0,4.4]);let out='';
+  const pt=i=>[3*Math.cos(T8_ang(i)),3*Math.sin(T8_ang(i)),(T8_ALL[i][2]-1)*.5+(i%4)*.12];const P=project([-4.4,4.4,-4.4,4.4,0,4]);let out='';
   T8_E.forEach(([a,b])=>{const on=a===s.sel||b===s.sel;out+=line3(pt(a),pt(b),P,on?C.coral:'#cfdbe3',on?2.6:1)});
   out+=sortedItems(T8_ALL.map((a,i)=>({at:pt(i),svg:Q=>point3(pt(i),Q,i===s.sel?C.coral:T8_ERA[a[2]-1],i===s.sel?8:5.5,'#fff')})),P);
-  for(let e=0;e<8;e++){const q=P([3.6*Math.cos(T8_ang(e*4+1.5)),3.6*Math.sin(T8_ang(e*4+1.5)),e*.55+.2]);out+=label3(q[0],q[1],'era '+(e+1),13,T8_ERA[e])}
+  for(let e=0;e<8;e++){const q=P([4.3*Math.cos(T8_ang(e*4+1.5)),4.3*Math.sin(T8_ang(e*4+1.5)),e*.5+.2]);out+=label3(q[0],q[1],'era '+(e+1),13,T8_ERA[e])}
   return {svg:out,title:'Eras as a rising helix',caption:'Each era sits one step higher. Straight lines that climb or fall many steps join ideas decades apart, which is most of them.'};
  }});
 
