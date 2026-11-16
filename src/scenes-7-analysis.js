@@ -51,11 +51,11 @@ SCENE({id:'chromatography',name:'Tsvet’s coloured bands',tag:'A leaf extract s
   const rows=C7_PIG.map(g=>{const K=C7_K(g.k,s.pol),d=s.t*u/(1+K),wd=6+2.2*Math.sqrt(s.t*(1+.3*K));return {...g,K,d,wd,out:d>len}});
   rows.slice().reverse().forEach(r=>{if(r.out)return;const y=top+r.d;out+=R(x+2,Math.max(top,y-r.wd/2),w-4,Math.min(r.wd,top+len-Math.max(top,y-r.wd/2)),r.col,'none',3,'opacity=".82"')});
   const done=rows.filter(r=>r.out).sort((a,b)=>a.K-b.K);
-  out+=TF(x+w/2,top+len+40,done.length?'out: '+done.map(r=>r.n.split(' ')[0]).join(', '):'nothing out yet',13,C.muted);
   out+=TBF(230,64,'pigment',13,C.muted,'start')+TBF(410,64,'sticks (K)',13,C.muted,'end')+TBF(560,64,'travelled',13,C.muted,'end');
   rows.forEach((r,i)=>{const y=96+i*42;out+=R(230,y-14,16,16,r.col,'none',3)+TF(254,y,r.n,14,C.ink,'start')+TF(410,y,C7_f(r.K,1),14,C.ink,'end')+TF(560,y,r.out?'eluted':Math.round(r.d/len*100)+'%',14,r.out?C.green:C.ink,'end')});
-  out+=C7_lines(230,282,C7_wrap('Speed down the column = solvent speed ÷ (1 + K). A pigment that sticks twice as hard spends twice as long held on the chalk.',46),13,C.muted);
-  out+=T(300,360,s.t===0?'The extract sits as one green band at the top.':done.length?`${done.length} pigment${done.length>1?'s have':' has'} washed out, least sticky first.`:'The single green band has split by colour.',15);
+  out+=TF(230,262,done.length?'washed out: '+done.map(r=>r.n).join(', '):'nothing has washed out yet',13,done.length?C.green:C.muted,'start');
+  out+=C7_lines(230,290,C7_wrap('Speed down the column = solvent speed ÷ (1 + K). A pigment that sticks twice as hard spends twice as long held on the chalk.',46),13,C.muted);
+  out+=T(330,362,s.t===0?'The extract sits as one green band at the top.':done.length?`${done.length} pigment${done.length>1?'s have':' has'} washed out, least sticky first.`:'The single green band has split by colour.',15);
   return {svg:out,phase:'Tsvet named the method from the Greek for colour-writing (his own surname also means colour in Russian). It was largely ignored until the 1930s, when it was rediscovered for vitamins and carotenoids; today it underlies most chemical analysis.'};
  }});
 
@@ -79,14 +79,14 @@ SCENE({id:'chromatography-tlc',name:'Thin-layer chromatography and Rf',tag:'Meas
   out+=R(px,py,pw,ph,'#fbfbf6',C.line,4,'stroke-width="2"');
   out+=R(px+1,front,pw-2,base-front+30,'#e8f1f7','none',0);
   out+=L(px,base,px+pw,base,C.muted,1.2,'stroke-dasharray="4 4"')+TF(px+pw+6,base+4,'start',13,C.muted,'start');
-  out+=L(px,front,px+pw,front,C.blue,2)+TF(px+pw+6,front+4,'front',13,C.blue,'start');
+  out+=L(px,front,px+pw,front,C.blue,2)+(base-front>22?TF(px+pw+6,front+4,'front',13,C.blue,'start'):'');
   const lanes=[...C7_TLC.map(d=>({id:d.n,lab:d.n,spots:[d]})),{id:'U',lab:'unknown',spots:[C7_TLC[1],C7_TLC[2]]}];
   let selInfo=null;
   lanes.forEach((ln,i)=>{const lx=px+34+i*58;out+=TF(lx,py+ph+18,ln.lab,13,C.muted);
    ln.spots.forEach((d,j)=>{const rf=C7_rf(d.k,s.pol),y=base-rf*(front<base?(base-front):0),id=ln.id==='U'?'U'+(j+1):ln.id,on=s.sel===id;
     if(on)selInfo={rf,y,lx,col:d.col,id};
     out+=hit(X,'pick',id,`Spot ${id}, Rf ${C7_f(rf)}`,Ci(lx,y,on?11:9,d.col,on?C.ink:'none',on?'stroke-width="2.5" opacity=".9"':'opacity=".8"'))})});
-  if(selInfo){const {y,lx,rf}=selInfo,mx=px+pw+58;
+  if(selInfo&&base-front>40){const {y,lx,rf}=selInfo,mx=px+pw+58;
    out+=L(lx,y,mx,y,C.ink,1,'stroke-dasharray="3 3"');
    out+=arrow(mx,base,mx,y,C.ink,2,7)+arrow(mx+26,base,mx+26,front,C.blue,2,7);
    out+=TF(mx-4,(base+y)/2,'spot',13,C.ink,'end')+TF(mx+30,(base+front)/2,'front',13,C.blue,'start');}
@@ -95,7 +95,7 @@ SCENE({id:'chromatography-tlc',name:'Thin-layer chromatography and Rf',tag:'Meas
   out+=counter(tx,128,'Rf = spot ÷ front',selInfo?C7_f(selInfo.rf):'—',C.blue,150);
   const match=selInfo&&selInfo.id.startsWith('U')?C7_TLC.find(d=>Math.abs(C7_rf(d.k,s.pol)-selInfo.rf)<1e-9):null;
   out+=counter(tx,186,'matches standard',selInfo&&selInfo.id.startsWith('U')?(match?match.n:'none'):'—',C.green,150);
-  out+=C7_lines(tx,262,['Press a spot to measure it.','The unknown holds two dyes.'],13,C.muted);
+  out+=C7_lines(tx,262,['Press a spot to','measure it. The','unknown has two dyes.'],13,C.muted);
   return {svg:out,phase:'Because Rf is a ratio, it does not depend on how far the front has run, only on the plate, the solvent and the temperature. Chemists run unknowns beside standards on the same plate, because Rf values from different plates rarely agree to better than a few hundredths.'};
  }});
 
@@ -114,10 +114,10 @@ SCENE({id:'chromatography-gc',name:'Gas chromatography',tag:'Hotter is faster, b
  on:{T(s,v){s.T=Number(v)}},
  draw(s){
   const pk=C7_gcPeaks(s.T),tmax=Math.max(3,pk[4].t*1.12);let out=heading(`Five alkanes at ${s.T} °C`,26);
-  const pl=C7_plot(60,60,500,210,[0,tmax],[0,1.15],{xt:[0,.25,.5,.75,1].map(u=>[u*tmax,(u*tmax).toFixed(tmax<10?1:0)]),xl:'time after injection (minutes)',yl:'detector signal'});out+=pl.svg;
+  const pl=C7_plot(60,60,500,210,[0,tmax],[0,1.35],{xt:[0,.25,.5,.75,1].map(u=>[u*tmax,(u*tmax).toFixed(tmax<10?1:0)]),xl:'time after injection (minutes)',yl:'detector signal'});out+=pl.svg;
   const sig=t=>pk.reduce((a,g)=>a+C7_gauss(t,g.t,g.sg)*(.55+.45/(1+g.k*.15)),0);
   out+=C7_poly(range(601).map(i=>{const t=i/600*tmax;return [pl.X(t),pl.Y(Math.min(1.12,sig(t)))]}),C.blue,2.2);
-  pk.forEach((g,i)=>{const h=Math.min(1.1,.55+.45/(1+g.k*.15));out+=TF(pl.X(g.t),pl.Y(h)-8-(i%2)*15,g.n,13,C.ink)});
+  pk.forEach((g,i)=>{const h=Math.min(1.1,.55+.45/(1+g.k*.15));out+=TF(pl.X(g.t),pl.Y(h)-8-(i%2)*18,g.n,13,C.ink)});
   let rmin=99,pair='';for(let i=0;i<4;i++){const a=pk[i],b=pk[i+1],r=(b.t-a.t)/(2*(a.sg+b.sg));if(r<rmin){rmin=r;pair=a.n+'/'+b.n}}
   out+=counter(60,316,'run time',pk[4].t.toFixed(1)+' min',C.ink,150);
   out+=counter(225,316,'closest pair',pair,C.ink,190);
@@ -237,9 +237,9 @@ SCENE({id:'ir-spectroscopy-greenhouse',name:'Why some gases trap heat',tag:'Infr
   out+=TBF(346,86,md.act?'Dipole changes: absorbs infrared':'No dipole change: infrared passes',14,md.act?C.green:C.coral,'start');
   out+=C7_lines(346,112,C7_wrap(md.why,32),13,C.ink,'start',18);
   const ax0=50,ax1=550,Xw=v=>ax0+(4000-v)/3600*(ax1-ax0),y=290;
-  out+=R(Xw(1500),y-34,Xw(400)-Xw(1500),34,C.amberp,'none',0)+TF((Xw(1500)+Xw(400))/2,y-12,'Earth glows most here (7–25 µm)',13,C.amber);
+  out+=R(Xw(1500),y-34,Xw(400)-Xw(1500),34,C.amberp,'none',0)+TF(Xw(400),y-44,'band where Earth glows most (7–25 µm)',13,C.amber,'end');
   out+=L(ax0,y,ax1,y,C.ink,1.5);[4000,3000,2000,1500,1000,500].forEach(v=>{out+=L(Xw(v),y,Xw(v),y+5,C.ink,1)+TF(Xw(v),y+21,String(v),13,C.muted)});
-  out+=L(Xw(md.wn),y-46,Xw(md.wn),y,md.act?C.green:C.muted,3,md.act?'':'stroke-dasharray="4 3"')+Ci(Xw(md.wn),y-46,5,md.act?C.green:C.muted);
+  out+=L(Xw(md.wn),y-28,Xw(md.wn),y,md.act?C.green:C.muted,3,md.act?'':'stroke-dasharray="4 3"')+Ci(Xw(md.wn),y-28,5,md.act?C.green:C.muted);
   out+=T(300,350,`${md.wn.toLocaleString('en-GB')} cm⁻¹ = ${(10000/md.wn).toFixed(1)} µm${md.act?'':' (seen only by Raman spectroscopy)'}`,15,C.ink);
   return {svg:out,phase:'This selection rule is why the 99% of the air that is nitrogen, oxygen and argon does almost nothing to Earth’s outgoing heat, while a few hundred parts per million of CO₂ matter a great deal. Eunice Foote reported CO₂’s warming in 1856; Tyndall measured the absorption of many gases in 1859–61.'};
  }});
@@ -272,7 +272,7 @@ SCENE({id:'nmr',name:'Nuclei in a magnet',tag:'Resonance frequency rises with th
   out+=TF(406,mid+gap/2+5,'aligned (lower)',13,C.blue,'start')+TF(406,mid-gap/2+5,'against (higher)',13,C.coral,'start');
   out+=arrow(350,mid+gap/2-4,350,mid-gap/2+6,C.purple,2.2,7)+TF(344,mid,'radio photon',13,C.purple,'end');
   out+=counter(300,56,'resonance frequency',f<1000?f.toFixed(1)+' MHz':(f/1000).toFixed(2)+' GHz',C.purple,150);
-  out+=counter(460,56,'extra aligned per million',ex.toFixed(1),C.blue,130);
+  out+=counter(460,56,'spare per million',ex.toFixed(1),C.blue,130);
   out+=T(300,360,`ν = ${nu.g.toFixed(2)} MHz/T × ${s.B.toFixed(1)} T = ${f.toFixed(0)} MHz`,15);
   return {svg:out,phase:`Only about ${ex.toFixed(0)} nuclei in every million are spare in the lower level; the signal comes from that tiny excess. That is why NMR needs strong magnets and why carbon-13, rarer and weaker, takes far longer to record than hydrogen-1.`};
  }});
@@ -297,7 +297,7 @@ SCENE({id:'nmr-shift',name:'Chemical shift',tag:'Each kind of hydrogen sings its
  draw(s,f,X){
   const d=C7_NMR[s.m],g=d.grp[Math.min(s.g,d.grp.length-1)];let out=heading(`¹H NMR of ${d.n}`,26);
   const pl=C7_plot(60,56,500,190,[10,0],[0,1.25],{xt:[10,8,6,4,2,0].map(v=>[v,String(v)]),xl:'chemical shift δ (ppm)',xlDy:32});
-  const Xp=v=>60+(10-v)/10*500;out+=pl.svg;
+  const Xp=v=>60+(10-v)/10*500;out+=pl.svg+R(Xp(g.d+.3),pl.Y(1.0),Xp(g.d-.3)-Xp(g.d+.3),pl.Y(0)-pl.Y(1.0),C.coralp,'none',3);
   const J=7/60,hz=.03;
   const sig=v=>d.grp.reduce((a,gg)=>{const c=C7_BIN(gg.m-1),tot=c.reduce((x,y)=>x+y,0);return a+c.reduce((b,cv,j)=>b+cv/tot*gg.h/3*C7_gauss(v,gg.d+(j-(gg.m-1)/2)*J,hz),0)},0);
   out+=C7_poly(range(1001).map(i=>{const v=10-i/100;return [Xp(v),pl.Y(Math.min(1.2,sig(v)*.9))]}),C.ink,1.6);
@@ -305,7 +305,6 @@ SCENE({id:'nmr-shift',name:'Chemical shift',tag:'Each kind of hydrogen sings its
   let ip=[[Xp(10),pl.Y(1.18)]];order.forEach(gg=>{const x1=Xp(gg.d+.35),x2=Xp(gg.d-.35);ip.push([x1,pl.Y(1.18-acc/tot*.45)]);acc+=gg.h;ip.push([x2,pl.Y(1.18-acc/tot*.45)])});ip.push([Xp(0),ip[ip.length-1][1]]);
   out+=C7_poly(ip,C.green,1.6);out+=TF(Xp(9.9),pl.Y(1.18)-6,'integration',13,C.green,'start');
   out+=L(Xp(0),pl.Y(0),Xp(0),pl.Y(.25),C.muted,1.5)+TF(Xp(0)-4,pl.Y(.3),'TMS',13,C.muted,'end');
-  d.grp.forEach((gg,i)=>{const on=i===s.g;out+=hit(X,'g',i,`Peak at ${gg.d} ppm`,Ci(Xp(gg.d),pl.Y(0)+16,on?9:7,on?C.coral:'#fff',C.coral,'stroke-width="2"'))});
   d.grp.forEach((gg,i)=>{const on=i===s.g;out+=C7_btn(X,'g',i,`Group ${gg.l}`,60+i*170,298,156,34,gg.l,{sel:on,ink:on?C.coral:C.ink,stroke:on?C.coral:C.line,bold:on})});
   out+=T(300,362,`${g.l}: δ ${g.d} ppm, ${g.h} H, ${C7_MULT[g.m-1]}${g.note?' · '+g.note:''}`,15,C.ink);
   return {svg:out,phase:'The position says what a hydrogen is next to, the area says how many there are, and the splitting says how many neighbours it has. Together they let chemists piece a structure together, which is why NMR became the organic chemist’s main tool from the 1960s.'};
@@ -362,7 +361,7 @@ SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turn
   out+=TF(sx+150,sy-205,'magnetic field into the page',13,C.muted);
   C7_NE.forEach(([m,ab])=>{const r=C7_rad(m,s.B)*scale,hitDet=Math.abs(r-120)<1.6;
    out+=P(`M${sx} ${sy} A${fmt(r)} ${fmt(r)} 0 0 1 ${fmt(sx+2*r)} ${sy}`,m===20?C.blue:m===22?C.coral:C.purple,Math.max(1.2,Math.sqrt(ab)*.5),'none',hitDet?'':'opacity=".55"');
-   if(sx+2*r<det-10||sx+2*r>det+10)out+=TF(sx+2*r,sy+18,String(m),13,m===20?C.blue:m===22?C.coral:C.purple)});
+   if(m!==21&&(sx+2*r<det-12||sx+2*r>det+12))out+=TF(sx+2*r,sy+(m===22?34:18),String(m),13,m===20?C.blue:C.coral)});
   out+=R(det-10,sy-4,20,30,C.green,'none',3)+TF(det,sy+44,'detector',13,C.green);
   const mz=C7_mzAt(s.B);
   const pl=C7_plot(400,70,170,190,[19,23],[0,100],{xt:[[19,'19'],[20,'20'],[21,'21'],[22,'22'],[23,'23']],xl:'m/z',xlDy:32,yl:'abundance (%)',yt:[[0,'0'],[50,'50'],[100,'100']]});out+=pl.svg;
@@ -392,7 +391,7 @@ SCENE({id:'mass-spectrometry-isotopes',name:'Isotope patterns',tag:'Count the ch
  draw(s,f,X){
   const r=rng(s.seed),mc=Math.floor(r()*4),mb=Math.floor(r()*3),mys=X&&X.try?C7_pattern(mc,mb):null,pat=C7_pattern(s.cl,s.br);
   let out=heading(`${s.cl} Cl, ${s.br} Br: the molecular-ion cluster`,26);
-  const mmax=Math.max(10,...pat.map(p=>p[0]),...(mys||[]).map(p=>p[0]));
+  const mmax=Math.max(4,...pat.map(p=>p[0]),...(mys||[]).map(p=>p[0]));
   const pl=C7_plot(70,60,470,220,[-1,mmax+1],[0,110],{xt:range(mmax/2+1).map(i=>[i*2,i?'M+'+i*2:'M']),yt:[[0,'0'],[50,'50'],[100,'100']],yl:'relative height'});out+=pl.svg;
   if(mys)mys.forEach(([m,h])=>{out+=R(pl.X(m)-20,pl.Y(h),40,pl.Y(0)-pl.Y(h),'none',C.coral,2,'stroke-width="2" stroke-dasharray="5 4"')});
   pat.forEach(([m,h])=>{out+=R(pl.X(m)-13,pl.Y(h),26,pl.Y(0)-pl.Y(h),C.blue,'none',2)+TF(pl.X(m),pl.Y(h)-6,Math.round(h).toString(),13,C.blue)});

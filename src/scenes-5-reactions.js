@@ -44,14 +44,14 @@ SCENE({id:'reaction-rates',name:'Why heat speeds reactions',tag:'Collisions and 
  on:{T(s,v){s.T=Number(v)},Ea(s,v){s.Ea=Number(v)}},
  draw(s){
   let out=heading('Only the fast tail can react',26);
-  const Emax=Math.max(30,Math.ceil(s.Ea*1.25/10)*10),ymax=.35,pl=C5_plot(70,56,480,200,[0,Emax],[0,ymax],{xt:range(4).map(i=>[i*Emax/3,String(Math.round(i*Emax/3))+(i===3?' kJ/mol':'')]),yt:[[0,'0']],xl:'energy of a molecule',xlDy:32,yl:'share of molecules'});out+=pl.svg;
+  const Emax=Math.max(30,Math.ceil(s.Ea*1.25/30)*30),ymax=.35,pl=C5_plot(70,56,480,200,[0,Emax],[0,ymax],{xt:range(4).map(i=>[i*Emax/3,String(Math.round(i*Emax/3))+(i===3?' kJ/mol':'')]),yt:[[0,'0']],xl:'energy of a molecule',xlDy:32,yl:'share of molecules'});out+=pl.svg;
   const ea=Math.min(s.Ea,Emax),tail=[];for(let i=0;i<=60;i++){const E=ea+(Emax-ea)*i/60;tail.push([pl.X(E),pl.Y(Math.min(ymax,C5_mb(E,s.T)))])}
   if(s.Ea<Emax)out+=P('M'+fmt(pl.X(ea))+' '+fmt(pl.Y(0))+' L'+tail.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L')+' L'+fmt(pl.X(Emax))+' '+fmt(pl.Y(0))+'Z',C.coral,0,C.coralp);
   out+=C5_poly(range(121).map(i=>{const E=.01+i*Emax/120;return [pl.X(E),pl.Y(Math.min(ymax,C5_mb(E,298)))]}),C.muted,1.6,'stroke-dasharray="5 4"');
   out+=C5_poly(range(121).map(i=>{const E=.01+i*Emax/120;return [pl.X(E),pl.Y(Math.min(ymax,C5_mb(E,s.T)))]}),C.blue,3);
-  if(s.Ea<=Emax){out+=L(pl.X(ea),pl.Y(0),pl.X(ea),pl.Y(ymax),C.coral,2.4,'stroke-dasharray="6 4"')+TF(pl.X(ea)+(ea>24?-6:6),74,'Ea = '+s.Ea,13,C.coral,ea>24?'end':'start')}
+  if(s.Ea<=Emax){const far=ea/Emax>.6;out+=L(pl.X(ea),pl.Y(0),pl.X(ea),pl.Y(ymax),C.coral,2.4,'stroke-dasharray="6 4"')+TF(pl.X(ea)+(far?-6:6),74,'Ea = '+s.Ea,13,C.coral,far?'end':'start')}
   else out+=TF(544,74,'Ea = '+s.Ea+' → off the scale',13,C.coral,'end');
-  out+=TF(546,96,'solid: your temperature',12,C.blue,'end')+TF(546,112,'dashed: 25 °C',12,C.muted,'end');
+  out+=TF(220,120,'solid: your temperature',12,C.blue,'start')+TF(220,136,'dashed: 25 °C',12,C.muted,'start');
   const f=C5_above(s.Ea,s.T),f0=C5_above(s.Ea,298),ratio=f/f0;
   out+=R(70,306,230,52,'#fff',C.grid,8)+TF(185,326,'can react (above Ea)',12,C.muted)+TBF(185,348,f>.01?(f*100).toFixed(1)+'%':'1 in '+C5_sci(1/f,2),15,C.coral);
   out+=R(320,306,230,52,'#fff',C.grid,8)+TF(435,326,'compared with 25 °C',12,C.muted)+TBF(435,348,(ratio>=100?C5_sci(ratio,2):ratio.toFixed(ratio<10?2:1))+'×',15,C.blue);
@@ -167,7 +167,7 @@ SCENE({id:'equilibrium',name:'Pushing an equilibrium',tag:'Le Chatelier’s prin
  }});
 
 /* Dynamic equilibrium: forward and reverse rates meet. kf illustrative, kr = kf / Kc. */
-function C5_dyn(start,t){const K=C5_Kno2(298),kf=.6,kr=kf/K;let a=start==='n2o4'?.04:0,b=start==='n2o4'?0:.08;const dt=.002,n=Math.round(t/dt);
+function C5_dyn(start,t){const K=C5_Kno2(298),kf=.08,kr=kf/K;let a=start==='n2o4'?.04:0,b=start==='n2o4'?0:.08;const dt=.002,n=Math.round(t/dt);
  for(let i=0;i<n;i++){const fw=kf*a,bw=kr*b*b;a+=(-fw+bw)*dt;b+=(2*fw-2*bw)*dt}return {a,b,fw:kf*a,bw:kr*b*b}}
 SCENE({id:'equilibrium-dynamic',name:'Equilibrium is not standing still',tag:'Forward and reverse rates meet',
  definition:'At equilibrium the forward and reverse reactions keep running at equal rates, so concentrations stop changing even though molecules keep reacting. The same equilibrium mixture is reached whichever side you start from.',

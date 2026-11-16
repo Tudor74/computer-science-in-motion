@@ -214,9 +214,9 @@ SCENE({id:'avogadro-number',name:'The mole',tag:'Same volume, same count, differ
   const rB=14+Math.cbrt(V)*9;
   C2_GASK.forEach((k,i)=>{const g=C2_GAS[k],x=72+i*114,y=118,hi=k===s.g;
    out+=Ci(x,y,rB,g.c,hi?C.ink:C.line,`stroke-width="${hi?3:1.5}"`)+L(x,y+rB,x,y+rB+18,C.line,1.5)+TB(x,y+5,C2_f(k),15,C.ink);
-   const m=s.n*g.M,bh=Math.max(1,m*.55);out+=R(x-22,330-bh,44,bh,hi?C.coral:'#e3a698','none',4)+TF(x,322-bh,C2_n(m,m<10?1:0)+' g',13,C.ink)+TF(x,348,g.n,13,C.muted);});
+   const m=s.n*g.M,bh=Math.max(1,m*.5);out+=R(x-22,330-bh,44,bh,hi?C.coral:'#e3a698','none',4)+TF(x,322-bh,C2_n(m,m<10?1:0)+' g',13,C.ink)+TF(x,348,g.n,13,C.muted);});
   out+=L(30,330,570,330,C.line,1.5);
-  out+=R(130,196,340,52,C.pale,'none',10)+TB(300,218,C2_sci(s.n*C2_NA,3)+' molecules in each',15,C.ink)+TF(300,238,`molar volume ${C2_n(Vm,2)} L/mol at ${s.cond==='stp'?'0 °C':'25 °C'}`,13,C.muted);
+  out+=R(130,196,340,48,C.pale,'none',10)+TB(300,218,C2_sci(s.n*C2_NA,3)+' molecules in each',15,C.ink)+TF(300,238,`molar volume ${C2_n(Vm,2)} L/mol at ${s.cond==='stp'?'0 °C':'25 °C'}`,13,C.muted);
   const g=C2_GAS[s.g];
   return {svg:out,phase:`Each balloon holds ${C2_sci(s.n*C2_NA,3)} molecules in ${C2_n(V,1)} L. ${fmt(s.n)} mol of ${g.n.toLowerCase()} weighs ${C2_n(s.n*g.M,2)} g (molar mass ${C2_n(g.M,3)} g/mol). Same count, same volume, different mass.`};
  }});
@@ -322,7 +322,7 @@ SCENE({id:'ideal-gas',name:'The ideal gas law',tag:'pV = nRT ties the gas laws t
   out+=R(260,70,310,150,'#fff',C.grid,10);
   out+=TM(415,104,`V = nRT ÷ p`,17,C.ink)+TF(415,132,`= ${fmt(s.n)} × 8.314 × ${s.T} ÷ ${s.p}`,13,C.muted)+TB(415,160,`= ${C2_n(V,2)} L`,17,C.blue)+TF(415,196,`molar volume here: ${C2_n(C2_R*s.T/s.p,2)} L/mol`,13,C.muted);
   out+=R(260,236,310,58,C.pale,'none',10)+TF(415,270,law,13,C.ink);
-  out+=TF(415,324,`T = ${s.T} K = ${s.T-273} °C`+(V>80?' · volume beyond the cylinder drawn':''),13,C.muted);
+  out+=TF(415,324,`T = ${s.T} K = ${s.T-273} °C`+(V>80?' · too big to draw to scale':''),13,C.muted);
   return {svg:out,phase:`${fmt(s.n)} mol at ${s.T} K (${s.T-273} °C) and ${s.p} kPa fills ${C2_n(V,2)} L. ${law}. Real gases follow this closely at ordinary conditions.`};
  }});
 
