@@ -87,7 +87,7 @@ SCENE({id:'sequencing-shotgun',name:'Shotgun sequencing',tag:'Shred, read, reass
   ctg.forEach((c,i)=>{out+=R(36+c[0]*11,274,(c[1]-c[0]+1)*11-2,10,i%2?C.purple:C.blue,'none',3)});
   const c=s.n*s.len/G,gap=cov.filter(v=>!v).length/G,eGap=Math.exp(-c),eCtg=s.n*Math.exp(-c*(1-B8_OV/s.len));
   out+=counter(36,298,'Coverage c = NL/G',c.toFixed(1)+'×',C.ink,128)+counter(172,298,'Unread bases',Math.round(gap*100)+'%',C.coral,128)+counter(308,298,'Predicted: e^−c',Math.round(eGap*100)+'%',C.muted,128)+counter(444,298,'Contigs / predicted',`${ctg.length} / ${eCtg.toFixed(1)}`,C.blue,128);
-  out+=TF(300,362,'Predictions are averages for a long genome (Lander & Waterman 1988);',13,C.muted)+TF(300,378,'one draw varies, and reads cannot overhang the ends, so ends are read less.',13,C.muted);
+  out+=TF(300,358,'Predictions are averages for a long genome (Lander & Waterman 1988);',13,C.muted)+TF(300,375,'one draw varies, and reads cannot overhang the ends, so ends are read less.',13,C.muted);
   return {svg:out,phase:`${s.n} reads of ${s.len} bases give coverage ${c.toFixed(1)}×. With random starts some bases are still never read (about e^−c of them on average), so the genome comes back in ${ctg.length} piece${ctg.length===1?'':'s'}. Real projects aim for 8× or more, and repeats longer than a read remain hard to place.`};
  }});
 
