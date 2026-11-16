@@ -32,19 +32,12 @@
    handler returns 'stop'); both are cancelled when the scene or mode changes.
    Use rng()/shuffled()/nextSeed() for trial order, never Math.random.
 
- MUSIC ADDITIONS
+ SOUND (from Music In Motion)
    Sound comes from AUDIO (below): only on the learner's action, gentle volumes, stopped on scene/mode change.
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: in every scene the learner changes the thing the diagram is about, and hears it.
-   Sound and number: string lengths and ratios, heard as octaves and fifths. Notation: notes placed on a
-   staff and sung back. Harmony: keys pressed into intervals and chords, a counterpoint line checked rule by
-   rule, a third heard in five tunings. Form: keys changed, motifs varied, sections reordered. Timbre:
-   harmonics, envelopes and formants built up and heard. Rhythm: step sequencers for metre, clave, tala and
-   Euclidean patterns. Electric: tape cut and looped, oscillators and filters patched, sample rate lowered
-   until it aliases. Mind: the learner is the participant (matching, rating, tapping) and their data is drawn
-   next to the published finding, with a labelled simulated listener in Watch mode.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

@@ -1,22 +1,21 @@
-# Music In Motion
+# Mind In Motion
 
-A single-file, offline HTML page that tells the story of music and its science in historical order: ratios on a string, notation, harmony, keys and form, the science of timbre, rhythm around the world, recording and electronic sound, and what the mind does with it all. Try it plays real sound through the browser's own synthesiser, and in the last era you take part in classic listening experiments.
+A single-file, offline HTML page that tells the story of the scientific study of the mind in historical order: measuring sensation, learning, the mind as information, memory, the brain at work, judgement and reasoning, minds among others, and today's models of mind. In Try it you are the participant in classic experiments, and your own results are drawn beside the published findings. Studies that failed to replicate are labelled as such.
 
-This is the `music` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`) and Physics (`physics`), and is part of the [In Motion](https://in-motion.puter.site) family.
+This is the `mind` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository. It shares its engine with CS (`main`), HCI (`hci`), Physics (`physics`) and Music (`music`), and is part of the [In Motion](https://in-motion.puter.site) family.
 
-- Open `index.html` in any modern browser. It needs no network, no samples and no libraries.
-- Sound plays only when you press something, and the **Sound on/off** switch mutes everything. Every scene also reads well with the sound off.
+- Open `index.html` in any modern browser. It needs no network, and no data you produce leaves the page.
 
 ## Route
 
-1. **Sound and number** (antiquity): pitch and frequency, the monochord, the harmonic series, consonant ratios, Pythagorean tuning, pentatonic scales
-2. **Writing music down** (500–1600): neumes and the staff, solmisation, note values, modes, canon and round, polyphony
-3. **Harmony** (1600–1750): intervals, triads and chords, cadences, counterpoint, temperament, the circle of fifths
-4. **Keys, form and the orchestra** (1750–1900): major and minor, modulation, motif, sonata form, theme and variation, orchestration
-5. **The science of timbre**: Fourier and timbre, envelopes, resonant instruments, the ear, loudness, voice and formants
-6. **Rhythm around the world**: beat and metre, syncopation, polyrhythm, Euclidean rhythms, swing and groove, rhythmic cycles
-7. **Recording and electronic sound** (1877–): the phonograph, microphones and speakers, tape music, synthesis, digital audio, MIDI and sequencing
-8. **Music and the mind**: the missing fundamental, consonance and roughness, expectation, music and emotion, keeping the beat, auditory illusions
+1. **Measuring the mind** (1830–1900): Weber's law, Fechner's scaling, reaction time, mental chronometry, localisation, the neuron doctrine
+2. **Learning and behaviour** (1885–1950): the forgetting curve, classical conditioning, the law of effect, schedules of reinforcement, cognitive maps, Gestalt grouping
+3. **The mind as information** (1948–1975): channel capacity, chunking, selective attention, signal detection, mental rotation, visual search
+4. **Memory**: working memory, serial position, encoding and context, reconstructive memory, the spacing effect, the testing effect
+5. **The brain at work**: the action potential, Hebbian synapses, receptive fields, the split brain, brain imaging, plasticity
+6. **Judgement and reasoning**: anchoring, availability and representativeness, loss aversion, base rates, the selection task, dual-process theories
+7. **Minds among others**: conservation, theory of mind, conformity, obedience, cognitive dissonance, the replication crisis
+8. **Models of mind**: the perceptron, prediction error, Bayesian perception, predictive processing, embodied cognition, consciousness
 
 ## Source layout
 
