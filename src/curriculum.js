@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// The study of the mind in historical order: from measuring sensation with a stopwatch, through learning,
-// information, memory, the brain, reasoning and social life, to today's models of a predicting brain.
+// Ted Nelson's ideas in the order he had them: from Bush's memex and a student's index cards, through
+// hypertext, Computer Lib and Xanadu, to the web he criticised and the tools that took up his ideas.
 // Lessons, sources and connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'measure',name:'1 · Measuring the mind',years:'1830–1900',why:'Sensation, reaction time and the first maps of the brain turned questions about the mind into measurements.'},
- {id:'learning',name:'2 · Learning and behaviour',years:'1885–1950',why:'Forgetting curves, conditioning and rewards: what animals and people learn, measured from the outside.'},
- {id:'information',name:'3 · The mind as information',years:'1948–1975',why:'Bits, limited channels, attention and detection: the cognitive revolution treated thinking as processing.'},
- {id:'memory',name:'4 · Memory',years:'1932–today',why:'Working memory, the serial-position curve, context, reconstruction, spacing and retrieval practice.'},
- {id:'brain',name:'5 · The brain at work',years:'1890–today',why:'Spikes, synapses, receptive fields, divided hemispheres, imaging and a brain that rewires itself.'},
- {id:'reasoning',name:'6 · Judgement and reasoning',years:'1966–today',why:'Heuristics and biases, losses and gains, base rates, logic puzzles, two kinds of thinking and insight.'},
- {id:'social',name:'7 · Minds among others',years:'1951–today',why:'Development, theory of mind, conformity, obedience, dissonance and the crisis that taught psychology to replicate.'},
- {id:'models',name:'8 · Models of mind',years:'1958–today',why:'Artificial neurons, prediction errors, Bayesian perception, bodies in the loop and theories of consciousness.'}
+ {id:'roots',name:'1 · Before hypertext',years:'1945–1960',why:'Bush’s memex, associative trails and a student who found that ideas do not come in a line.'},
+ {id:'hypertext',name:'2 · Naming hypertext',years:'1960–1965',why:'Project Xanadu begins, and a 1965 paper names hypertext, hypermedia and a file structure built for change.'},
+ {id:'systems',name:'3 · The first systems',years:'1967–1974',why:'HES and FRESS at Brown, Engelbart’s demo, and ideas like stretchtext that are still unusual today.'},
+ {id:'computerlib',name:'4 · Computer Lib',years:'1974',why:'“You can and must understand computers now”: a self-published manifesto for personal, playful computing.'},
+ {id:'xanadu',name:'5 · Xanadu’s design',years:'1981–1992',why:'Transclusion, two-way links, permanent addresses and a royalty for every quotation.'},
+ {id:'web',name:'6 · The web arrives',years:'1989–2000',why:'A simpler hypertext won. What one-way links, broken links and lost versions cost, measured.'},
+ {id:'later',name:'7 · Later structures',years:'1995–2014',why:'ZigZag’s many dimensions, Xanadu Space and OpenXanadu’s side-by-side documents.'},
+ {id:'legacy',name:'8 · Reading and legacy',years:'Research',why:'What studies say about reading hypertext, and where his ideas live on: backlinks, versions, annotation, content addresses.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- measure:{w:40,h:24,tile:'<path d="M0 18H40M4 18V12M12 18V14M20 18V8M28 18V14M36 18V12" stroke="currentColor" stroke-width="1"/>'},
- learning:{w:48,h:32,tile:'<path d="M2 6Q10 26 24 26T46 28" fill="none" stroke="currentColor" stroke-width="1"/>'},
- information:{w:40,h:24,tile:'<path d="M0 12H8V4H16V20H24V12H40" fill="none" stroke="currentColor" stroke-width="1"/>'},
- memory:{w:44,h:28,tile:'<rect x="4" y="6" width="10" height="16" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="18" y="6" width="10" height="16" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="32" y="6" width="10" height="16" fill="currentColor" opacity=".35"/>'},
- brain:{w:48,h:32,tile:'<path d="M0 22H14L18 6L22 28L26 22H48" fill="none" stroke="currentColor" stroke-width="1"/>'},
- reasoning:{w:40,h:40,tile:'<path d="M20 4L36 20L20 36L4 20Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- social:{w:48,h:32,tile:'<circle cx="10" cy="16" r="4" fill="currentColor"/><circle cx="24" cy="16" r="4" fill="none" stroke="currentColor"/><circle cx="38" cy="16" r="4" fill="currentColor"/>'},
- models:{w:44,h:36,tile:'<circle cx="6" cy="8" r="2.5" fill="currentColor"/><circle cx="6" cy="28" r="2.5" fill="currentColor"/><circle cx="38" cy="18" r="2.5" fill="currentColor"/><path d="M6 8L38 18M6 28L38 18" stroke="currentColor" stroke-width=".8"/>'}
+ roots:{w:44,h:32,tile:'<rect x="4" y="6" width="14" height="20" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="24" y="6" width="14" height="20" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M18 16H24" stroke="currentColor"/>'},
+ hypertext:{w:48,h:32,tile:'<path d="M4 8H20M4 14H16M4 20H20M28 12H44M28 18H40" stroke="currentColor" stroke-width=".9"/><path d="M20 8Q26 4 28 12" fill="none" stroke="currentColor" stroke-width=".8"/>'},
+ systems:{w:40,h:32,tile:'<rect x="6" y="4" width="28" height="20" rx="2" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M14 28H26" stroke="currentColor"/>'},
+ computerlib:{w:40,h:40,tile:'<circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M20 8V32M8 20H32" stroke="currentColor" stroke-width=".6"/>'},
+ xanadu:{w:48,h:36,tile:'<rect x="2" y="6" width="16" height="24" fill="none" stroke="currentColor" stroke-width=".9"/><rect x="30" y="6" width="16" height="24" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M18 14L30 12M18 22L30 24" stroke="currentColor" stroke-width=".8"/>'},
+ web:{w:40,h:40,tile:'<path d="M20 4L36 20L20 36L4 20Z" fill="none" stroke="currentColor" stroke-width=".8"/><path d="M4 20H36M20 4V36" stroke="currentColor" stroke-width=".5"/>'},
+ later:{w:40,h:40,tile:'<path d="M6 6H34M6 20H34M6 34H34M6 6V34M20 6V34M34 6V34" stroke="currentColor" stroke-width=".6"/>'},
+ legacy:{w:48,h:28,tile:'<circle cx="8" cy="14" r="3" fill="currentColor"/><circle cx="24" cy="14" r="3" fill="none" stroke="currentColor"/><circle cx="40" cy="14" r="3" fill="currentColor"/><path d="M11 14H21M27 14H37" stroke="currentColor" stroke-width=".8"/>'}
 };

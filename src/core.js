@@ -37,15 +37,7 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: wherever it is short, safe and honest, the learner is the participant, and their own
-   data is drawn beside the published result (Watch mode shows a labelled simulated participant instead).
-   Measuring: line-length staircases, magnitude estimates, reaction and Donders times. Learning: nonsense
-   syllables, a puzzle box, a lever on a schedule. Information: absolute judgement, digit span, Stroop,
-   yes/no detection (d′), mental rotation, visual search. Memory: word length, free recall, levels of
-   processing, false memories, retrieval practice. Brain: stimulate a neuron, map a receptive field, damage
-   a callosum. Reasoning: anchors, bets, base rates, card tasks. Social: studies that must not be re-run
-   (Milgram, Asch's deception, Stanford) are reconstructions with their critiques. Models: train a perceptron,
-   reach with a prior, name a masked digit. Replication status is stated wherever it matters.
+ INTERACTION DESIGN NOTE: for each lesson, what the learner changes and why. (Filled in per era.)
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
