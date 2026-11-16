@@ -99,7 +99,7 @@ SCENE({id:'neumes-staff-clefs',name:'Clefs',tag:'A letter that names one line',
  draw(s,f,X){
   const c=M2_CLEFS[s.clef],yb=230,sp=16,base=c.step-2*(c.line-1);let out=heading(c.name);
   out+=M2_lines(60,540,yb,sp);out+=M2_clef(90,yb-(c.line-1)*sp,c.letter);
-  out+=arrow(118,yb-(c.line-1)*sp,140,yb-(c.line-1)*sp,C.purple,2,7)+TF(146,yb-(c.line-1)*sp-10,`this line is ${M2_name(c.step)}`,13,C.purple,'start');
+  out+=arrow(118,yb-(c.line-1)*sp,140,yb-(c.line-1)*sp,C.purple,2,7)+TF(60,yb-4*sp-18,`The clef’s line is ${M2_name(c.step)}`,13,C.purple,'start');
   M2_CLEF_OFFS.forEach((off,i)=>{const st=base+off,x=230+i*55;out+=hit(X,'note',i,`Note ${i+1}: ${M2_name(st)}`,G(R(x-14,M2_y(st,yb,sp,base)-14,28,28,'transparent','none',6)+M2_note(x,st,yb,sp,1,{base})));
    out+=TB(x,yb+56,M2_name(st),15,C.blue)+TF(x,yb+74,Math.round(midiHz(M2_m(st)))+' Hz',13,C.muted)});
   out+=T(300,350,'Same heads, same lines: the clef alone decides the pitches',14,C.muted);
@@ -211,7 +211,7 @@ SCENE({id:'note-values',name:'Note values',tag:'How long each note lasts',
  draw(s,f,X){
   let out=heading('Each value is half the one above');const x0=190,w=360,ph=s.ph==null?-1:s.ph;
   M2_VALUES.forEach(([nm,len,us],r)=>{const y=80+r*56,on=r===s.row;out+=R(20,y-24,560,48,on?C.pale:'transparent','none',8);
-   out+=TB(30,y+2,nm,15,on?C.blue:C.ink,'start')+TF(30,y+19,`${len===4?'4 beats':len+(len===1?' beat':' of a beat').replace('0.5 of a beat','½ beat').replace('0.25 of a beat','¼ beat').replace('2 of a beat','2 beats')}`,13,C.muted,'start');
+   out+=TB(30,y+2,nm,15,on?C.blue:C.ink,'start')+TF(30,y+19,({4:'4 beats',2:'2 beats',1:'1 beat',.5:'½ beat',.25:'¼ beat'})[len],13,C.muted,'start');
    const n=4/len;for(let i=0;i<n;i++){const x=x0+w*(i+.5)/n,lit=on&&ph>=i*len&&ph<(i+1)*len;out+=M2_note(x,4,y+12,10,len,{base:4,lines:1,col:lit?C.coral:C.ink})}});
   for(let b=0;b<=4;b++)out+=L(x0+w*b/4,56,x0+w*b/4,340,C.grid,1,'stroke-dasharray="3 5"');
   if(ph>=0)out+=L(x0+w*ph/4,56,x0+w*ph/4,340,C.coral,2);
@@ -256,11 +256,11 @@ SCENE({id:'note-values-mensural',name:'Mensural notation',tag:'Shapes that measu
  on:{modus(s,v){s.modus=Number(v)},tempus(s,v){s.tempus=Number(v)},play(s,a,ctx){const n=s.modus*s.tempus,ev=[{m:48,t:0,d:n*.98}];for(let b=0;b<s.modus;b++)ev.push({m:55,t:b*s.tempus,d:s.tempus*.9});for(let k=0;k<n;k++)ev.push({m:67,t:k,d:.8});M2_play(s,ctx,ev,.4,{type:'sine'});return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
  draw(s,f,X){
   const n=s.modus*s.tempus,ph=s.ph==null?-1:s.ph;let out=heading(`One long = ${s.modus} breves = ${n} semibreves`);
-  const x0=70,w=460,unit=w/n;const longShape=(x,y,col)=>R(x-12,y-9,24,18,col,'none',1)+L(x+11,y,x+11,y+26,col,2.4),breve=(x,y,col)=>R(x-11,y-8,22,16,col,'none',1),semi=(x,y,col)=>`<polygon points="${fmt(x)},${fmt(y-10)} ${fmt(x+8)},${fmt(y)} ${fmt(x)},${fmt(y+10)} ${fmt(x-8)},${fmt(y)}" fill="${col}"/>`;
-  out+=longShape(300,82,ph>=0?C.coral:C.ink)+TF(330,86,'long (longa)',13,C.muted,'start');
-  for(let b=0;b<s.modus;b++){const cx=x0+(b+.5)*s.tempus*unit,on=ph>=b*s.tempus&&ph<(b+1)*s.tempus;out+=L(300,96,cx,150,C.grid,1.5)+breve(cx,160,on?C.coral:C.ink);
+  const x0=190,w=380,unit=w/n;const longShape=(x,y,col)=>R(x-12,y-9,24,18,col,'none',1)+L(x+11,y,x+11,y+26,col,2.4),breve=(x,y,col)=>R(x-11,y-8,22,16,col,'none',1),semi=(x,y,col)=>`<polygon points="${fmt(x)},${fmt(y-10)} ${fmt(x+8)},${fmt(y)} ${fmt(x)},${fmt(y+10)} ${fmt(x-8)},${fmt(y)}" fill="${col}"/>`;
+  out+=longShape(380,82,ph>=0?C.coral:C.ink)+TF(20,86,'long (longa)',13,C.muted,'start');
+  for(let b=0;b<s.modus;b++){const cx=x0+(b+.5)*s.tempus*unit,on=ph>=b*s.tempus&&ph<(b+1)*s.tempus;out+=L(380,96,cx,150,C.grid,1.5)+breve(cx,160,on?C.coral:C.ink);
    for(let k=0;k<s.tempus;k++){const i=b*s.tempus+k,sx=x0+(i+.5)*unit,on2=ph>=i&&ph<i+1;out+=L(cx,170,sx,232,C.grid,1.2)+semi(sx,244,on2?C.coral:C.ink)}}
-  out+=TF(x0,170,'breve (brevis)',13,C.muted,'start')+TF(x0,276,'semibreve (semibrevis)',13,C.muted,'start');
+  out+=TF(20,164,'breve (brevis)',13,C.muted,'start')+TF(20,248,'semibreve (semibrevis)',13,C.muted,'start');
   out+=R(140,296,320,40,s.modus===3&&s.tempus===3?C.purplep:C.pale,'none',8)+TB(300,322,`${s.modus===3?'perfect':'imperfect'} long · ${s.tempus===3?'perfect':'imperfect'} breve`,15,C.ink);
   return {svg:out,phase:'Franco’s rule was that the shape tells you the kind of note, and the surrounding notes tell you whether it splits in three or two. Triple division was the default, called perfect.'};
  }});
@@ -324,7 +324,7 @@ SCENE({id:'modes-maqam',name:'Maqam',tag:'Not just another mode',
  ui:[{choose:[['ionian','Ionian (major)'],['rast','Maqam Rast']],label:'Scale',get:s=>s.which,act:'which'},{b:'Play',act:'play'}],
  on:{which(s,v){s.which=v},play(s,a,ctx){const sc=s.which==='rast'?M2_RAST:M2_IONIAN;M2_play(s,ctx,sc.map((q,i)=>({m:60+q,t:i,d:1})),.45,{type:'sine'});return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
  draw(s,f,X){
-  let out=heading('Ionian against maqam Rast, both on C');const x0=60,w=480,xq=q=>x0+w*q/12,ph=s.ph==null?-1:s.ph;
+  let out=heading('Ionian against maqam Rast, both on C');const x0=100,w=440,xq=q=>x0+w*q/12,ph=s.ph==null?-1:s.ph;
   for(let q=0;q<=24;q++){const x=xq(q/2),major=q%2===0;out+=L(x,170,x,major?200:188,major?C.ink:C.line,major?1.6:1)}
   out+=L(x0,185,x0+w,185,C.line,2);
   const names=['C','D','E','F','G','A','B','C'],rnames=['C','D','E½♭','F','G','A','B½♭','C'];
@@ -352,7 +352,7 @@ SCENE({id:'canon-round',name:'Canon and round',tag:'One tune, staggered entries'
  on:{n(s,v){s.n=v},play(s,a,ctx){M2_play(s,ctx,M2_voices(s.n).flat(),.3);return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
  draw(s,f,X){
   const total=32+8*(s.n-1),ph=s.ph==null?null:s.ph;let out=heading(`${s.n} voice${s.n>1?'s':''}, each entering two bars later`);
-  range(s.n).forEach(v=>{out+=M2_roll(80,56+v*72,500,62,[{ev:M2_voices(4)[v],col:M2_VCOL[v]}],52,69,56,ph,{bars:4})+TF(72,92+v*72,'voice '+(v+1),13,M2_VCOL[v],'end','font-weight="700"')});
+  range(s.n).forEach(v=>{out+=M2_roll(120,56+v*72,460,62,[{ev:M2_voices(4)[v],col:M2_VCOL[v]}],52,69,56,ph,{bars:4})+TF(78,92+v*72,'voice '+(v+1),13,M2_VCOL[v],'end','font-weight="700"')});
   out+=T(300,366,`The round lasts ${total} beats with ${s.n} voice${s.n>1?'s':''}`,13,C.muted);
   return {svg:out,phase:s.n===1?'One voice is just a melody. Add voices to hear it fold over itself.':'Every voice sings the same tune. Because each two-bar section fits the same chord, any overlap still sounds consonant.'};
  }});

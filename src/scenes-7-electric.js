@@ -398,7 +398,7 @@ SCENE({id:'digital-audio-compression',name:'Data rates and compression',tag:'Bit
   [.25,.5,1,2,4].forEach(k=>out+=TF(fx(k),base+16,k+' kHz',12,C.muted));
   const loud=1,mask=k=>Math.max(0,1-Math.abs(Math.log2(k/loud))*(k<loud?2.2:1.1))*.75;
   let d='';for(let i=0;i<=120;i++){const k=.25*Math.pow(2,4*i/120);d+=(i?'L':'M')+fmt(fx(k))+' '+fmt(base-h*mask(k))}out+=P(d+`L${x0+w} ${base}L${x0} ${base}Z`,C.coral,1.5,C.coralp,'opacity=".8"');
-  out+=L(fx(loud),base,fx(loud),base-h,C.dark,5)+TF(fx(loud),base-h-8,'loud tone',13,C.dark);
+  out+=L(fx(loud),base,fx(loud),base-h,C.dark,5)+TF(fx(loud)-8,base-h+6,'loud tone',13,C.dark,'end');
   const qa=.35,hidden=qa<mask(s.q);out+=L(fx(s.q),base,fx(s.q),base-h*qa,hidden?C.muted:C.blue,5)+TF(fx(s.q),base-h*qa-10,hidden?'masked: can be dropped':'audible: must be kept',13,hidden?C.muted:C.blue);
   out+=TF(300,192,'Red area: quiet sounds hidden by the loud tone (illustrative shape)',13,C.muted);
   return {svg:out,phase:`Masking spreads further towards higher frequencies than lower ones. A perceptual coder spends bits only on what stays above the masking curve, which is how ${s.kbps} kbit/s can sound close to CD${s.kbps<96?', although at rates this low artefacts become easy to hear':''}.`};
