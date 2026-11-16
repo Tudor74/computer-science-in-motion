@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}.chemistry{--accent:#4f7a1c}.senses{--accent:#9a3f5c}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}.chemistry{--accent:#4f7a1c}.senses{--accent:#9a3f5c}.tripitaka{--accent:#8a5a14}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -362,6 +362,20 @@ footer p{margin:0 0 4px}
    </div>
   </li>
 
+  <li class="course tripitaka">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="Three baskets labelled Vinaya, Sutta and Abhidhamma, and a palm-leaf manuscript, lighting in turn">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <g class="step" style="animation-delay:0.0s"><path d="M86 62H154L146 118H94Z" fill="#f4e6c8" stroke="#8a5a14" stroke-width="2.5"/><path d="M89 80H151M92 98H148" stroke="#8a5a14" stroke-width="1.2"/></g><text x="120" y="140" text-anchor="middle" font-size="14" fill="#546873">Vinaya</text><g class="step" style="animation-delay:0.5s"><path d="M206 62H274L266 118H214Z" fill="#f4e6c8" stroke="#8a5a14" stroke-width="2.5"/><path d="M209 80H271M212 98H268" stroke="#8a5a14" stroke-width="1.2"/></g><text x="240" y="140" text-anchor="middle" font-size="14" fill="#546873">Sutta</text><g class="step" style="animation-delay:1.0s"><path d="M326 62H394L386 118H334Z" fill="#f4e6c8" stroke="#8a5a14" stroke-width="2.5"/><path d="M329 80H391M332 98H388" stroke="#8a5a14" stroke-width="1.2"/></g><text x="360" y="140" text-anchor="middle" font-size="14" fill="#546873">Abhidhamma</text><g class="step" style="animation-delay:1.5s"><rect x="420" y="74" width="140" height="30" rx="4" fill="#f4e6c8" stroke="#8a5a14" stroke-width="2.5"/><circle cx="455" cy="89" r="3" fill="#8a5a14"/><circle cx="525" cy="89" r="3" fill="#8a5a14"/><path d="M430 82H550M430 96H550" stroke="#8a5a14" stroke-width="1" stroke-dasharray="3 3"/></g><text x="490" y="140" text-anchor="middle" font-size="14" fill="#546873">palm leaf</text><text x="300" y="196" text-anchor="middle" font-size="14" fill="#546873">Three baskets of texts: recited, then written, translated and printed</text>
+   </svg>
+   <div class="body">
+    <h3>Tripitaka In Motion</h3>
+    <p class="tag">How the Buddhist canon was remembered, written, translated and printed</p>
+    <p class="desc">A history of a body of texts, not religious instruction: spoken teaching, the three baskets, the councils and Ashoka, palm leaf and birch bark, translation into Chinese and Tibetan, woodblock printing, and today’s digital canons. In Try it you see how group recitation catches slips, sort texts into baskets, date a scroll, and carve and print a block. Every scene says whether it shows a traditional account, an established finding or a debate, and each tradition is described in its own terms.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>32 lessons</li><li>96 scenes</li><li>Tradition and evidence, labelled</li></ul>
+    <div class="links"><a class="open" href="https://tripitaka-in-motion.puter.site/">Open Tripitaka <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
   <li class="course thinkers">
    <svg class="motif" viewBox="0 0 600 220" preserveAspectRatio="xMidYMid meet" role="img" aria-label="People as points on a map, with ideas travelling between them along routes">
     <rect width="600" height="220" fill="#f3f7fa"/>
@@ -387,7 +401,7 @@ footer p{margin:0 0 4px}
     <div class="links"><a class="open" href="https://awais-rashid-in-motion.puter.site/">Open Awais Rashid <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
-  <li class="course future wide">
+  <li class="course future">
    <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A measured trend line continuing as a dashed, clearly labelled prediction to 2040"><rect width="600" height="220" fill="#f3f7fa"/><line x1="60" y1="180" x2="560" y2="180" stroke="#c7d8e3" stroke-width="2"/><line x1="340" y1="40" x2="340" y2="180" stroke="#c7d8e3" stroke-width="2" stroke-dasharray="4 5"/><path d="M60 170 C140 166 220 156 340 128" fill="none" stroke="#192c37" stroke-width="3.5"/><path d="M340 128 C420 108 480 80 550 50" fill="none" stroke="#c45238" stroke-width="3.5" stroke-dasharray="9 7"/><circle cx="340" cy="128" r="6" fill="#192c37"/><text x="200" y="205" text-anchor="middle" font-size="14" fill="#546873">sourced data</text><text x="460" y="205" text-anchor="middle" font-size="14" fill="#c45238">prediction for 2040</text></svg>
    <div class="body">
     <h3>The Future In Motion</h3>
@@ -409,7 +423,7 @@ footer p{margin:0 0 4px}
   <li><b>One page each</b><span>Each course is a single web page that runs in your browser, with nothing to install and no account to make.</span></li>
  </ul>
 
- <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Chemistry shows what matter is made of and how it changes, Biology follows life from cells to genomes, Abiogenesis asks how it might have started, Computer Science shows how machines use it, HCI shows how people meet those machines, Economics shows how people trade, choose and cooperate, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Senses shows how the eye, ear, nose and skin feed the brain, Mind makes you the participant in the experiments that shaped psychology, Language traces how we came to understand speech and writing, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Ted Nelson In Motion follows one thinker’s hypertext ideas from the memex to the web, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
+ <p class="order"><b>Where to start?</b> Each course stands on its own. If you want an order, Mathematics gives the language, Physics uses it to describe the world, Chemistry shows what matter is made of and how it changes, Biology follows life from cells to genomes, Abiogenesis asks how it might have started, Computer Science shows how machines use it, HCI shows how people meet those machines, Economics shows how people trade, choose and cooperate, and Therapies turns to how people help one another. Music follows sound from ratios on a string to the listening mind, Senses shows how the eye, ear, nose and skin feed the brain, Mind makes you the participant in the experiments that shaped psychology, Language traces how we came to understand speech and writing, and Electronic Music shows how sound itself is made. Philosophy and Thinkers run alongside all of them, with the people behind the ideas, Ted Nelson In Motion follows one thinker’s hypertext ideas from the memex to the web, Tripitaka In Motion follows one body of texts from recitation to digital canons, Awais Rashid In Motion follows one researcher’s work paper by paper, and The Future looks ahead to 2040.</p>
 </main>
 
 <footer>
