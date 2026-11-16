@@ -363,7 +363,7 @@ SCENE({id:'the-ear-path',name:'From air to nerve',tag:'Outer, middle and inner e
 const M5_erb=f=>24.7*(4.37*f/1000+1),M5_cam=f=>21.4*Math.log10(4.37*f/1000+1);
 SCENE({id:'the-ear-critical-bands',name:'Critical bands',tag:'Close tones share a place',
  definition:'Each place on the basilar membrane responds to a band of frequencies, a critical band. Two tones inside one band disturb the same place: they beat, sound rough or mask each other. Further apart, they are heard as two clean tones.',
- example:'Around 1000 Hz a critical band is roughly 130 Hz wide (one ERB). A 1000 Hz and a 1040 Hz tone sound rough together; 1000 and 1500 Hz sound smooth.',
+ example:'Around 1000 Hz the auditory filter is about 130 Hz wide measured as an equivalent rectangular bandwidth (ERB); the older critical-bandwidth measure gives about 160 Hz. The two are related but distinct ways of sizing the same filter. A 1000 Hz and a 1040 Hz tone sound rough together; 1000 and 1500 Hz sound smooth.',
  desc:'Two excitation bumps on a scale of critical-band numbers, with the band around the first tone shaded and a verdict on how they sound together.',
  research:'Fletcher (1940). Auditory patterns. Reviews of Modern Physics 12. · Glasberg & Moore (1990). Derivation of auditory filter shapes from notched-noise data. Hearing Research 47.',
  dur:10,hint:'Slide the second tone away from the first and press Play both to hear beating turn into roughness and then into two clean tones.',
