@@ -22,8 +22,8 @@ function X8_loopOn(spec,extra={}){
 function X8_restart(s,ctx,spec){if(s.playing){s.token=(s.token||0)+1;s.pos=-1;ctx.every(spec.ms(s),'tick',s.token)}}
 const X8_pos=(s,X,N,rate)=>X.try?(s.playing?s.pos:-1):Math.floor(X.p*rate)%N;
 function X8_wrap(t,n){const out=[];let cur='';for(const w of String(t).split(' ')){if(cur&&(cur+' '+w).length>n){out.push(cur);cur=w}else cur=cur?cur+' '+w:w}if(cur)out.push(cur);return out}
-const X8_text=(x,y,t,n=42,col=C.ink,lh=19)=>X8_wrap(t,n).map((l,i)=>TF(x,y+i*lh,l,13,col,'start')).join('');
-function X8_card(y,h,title,sub,body,col=C.blue){return R(40,y,520,h,'#fff',C.grid,10)+R(40,y,8,h,col,'none',4)+TBF(62,y+26,title,15,col,'start')+(sub?TF(62,y+46,sub,12,C.muted,'start'):'')+X8_text(62,y+(sub?70:52),body)}
+const X8_text=(x,y,t,n=52,col=C.ink,lh=21)=>X8_wrap(t,n).map((l,i)=>T(x,y+i*lh,l,13,col,'start')).join('');
+function X8_card(y,h,title,sub,body,col=C.blue){return R(40,y,520,h,'#fff',C.grid,10)+R(40,y,8,h,col,'none',4)+TB(62,y+26,title,15,col,'start')+(sub?T(62,y+46,sub,12,C.muted,'start'):'')+X8_text(62,y+(sub?70:52),body)}
 
 /* ---------- global-scenes ---------- */
 const X8_CITIES=[
@@ -50,7 +50,7 @@ SCENE({id:'global-scenes',name:'Scenes around the world',tag:'One sound, many ci
   for(const lon of [-120,-60,0,60,120])out+=L(px(lon),y0+4,px(lon),y0+h-4,C.grid,1);
   out+=L(x0+4,py(0),x0+w-4,py(0),C.grid,1.4)+TF(x0+8,py(0)-5,'equator',12,C.muted,'start');
   X8_CITIES.forEach(q=>{const on=q[0]===s.c;out+=hit(X,'c',q[0],q[1],Ci(px(q[2]),py(q[3]),on?9:6,on?C.coral:C.blue,'#fff'))});
-  out+=X8_card(196,170,c[1],c[4],c[5],C.coral);
+  out+=TF(px(c[2])+(c[2]>100?-14:14),py(c[3])+4,c[1],12,C.ink,c[2]>100?'end':'start')+X8_card(196,170,c[1],c[4],c[5],C.coral);
   return {svg:out,phase:c[0]==='durban'?'Scenes also grow sideways. Gqom and amapiano in South Africa, like footwork in Chicago, share machines and clubs with techno but follow their own rhythmic logic.':'A global scene does not mean one sound. Sound systems, licensing laws, empty buildings and local music all shape what techno becomes in a place.'};
  }});
 
@@ -105,7 +105,7 @@ SCENE({id:'global-scenes-neighbours',name:'Techno’s neighbours',tag:'Same mach
    for(let i=0;i<16;i++){const on=hits.includes(i);out+=R(x0+i*cw+1.5,y,cw-3,36,on?col:i%4===0?'#e6edf2':'#fff',i===pos?C.amber:on?'none':C.grid,5)}});
   for(let b=0;b<4;b++)out+=TF(x0+b*4*cw+cw/2,242,String(b+1),12,C.muted);
   out+=TF(x0+16*cw,242,'beats',12,C.muted,'end');
-  out+=R(60,258,480,52,'#fff',C.grid,10)+X8_text(76,280,st.note,40);
+  out+=R(60,258,480,52,'#fff',C.grid,10)+X8_text(76,280,st.note,48);
   const four=s.st!=='gqom';
   out+=T(300,350,four?'A kick on every beat':'The kick avoids beats 2 and 4',15,four?C.blue:C.coral);
   return {svg:out,phase:s.st==='techno'?'The four-on-the-floor kick is techno’s most stable feature. Everything else is placed against it.':s.st==='gqom'?'Gqom removes the steady kick, so the body has to supply the pulse. That absence is its signature, and it is why gqom is a neighbour of techno, not a sub-genre.':'Amapiano’s log drum is a bass and a drum at once: a low, pitched thud that plays a syncopated line. The feel is relaxed, built on shakers and space.'};
@@ -307,7 +307,7 @@ SCENE({id:'groove-science',name:'Why some rhythms make you move',tag:'You are th
   out+=Ci(fx(lv),y0+10,4,C.amber)+TF(x0,y0+26,'regular',12,C.muted,'start')+TF(x0+w,y0+26,'irregular',12,C.muted,'end')+TF(x0+w/2,y0-h-14,'want to move',12,C.muted);
   out+=L(100,196,124,196,C.green,2.2,'stroke-dasharray="5 4"')+TF(130,200,'published shape',12,C.muted,'start')+Ci(260,196,6,C.coral,'#fff')+TF(272,200,s.sim?'simulated listener':'your ratings',12,C.muted,'start');
   out+=counter(90,222,'rated',n+' of 5',C.blue,110)+counter(215,222,'this pattern',s.rate[lv]?String(s.rate[lv]):'not yet',C.coral,120)+counter(350,222,'off-beat score',String(X8_sync(p)),C.purple,130);
-  out+=R(60,284,480,50,'#fff',C.grid,10)+X8_text(76,305,n>=5?'Does your highest rating sit in the middle? Five ratings from one person can easily miss it.':'Rate all five to see your own curve beside the published shape.',40);
+  out+=R(60,284,480,50,'#fff',C.grid,10)+X8_text(76,305,n>=5?'Does your highest rating sit in the middle? Five ratings from one person can easily miss it.':'Rate all five to see your own curve beside the published shape.',48);
   out+=T(300,362,'Techno’s four-on-the-floor sits at the regular end.',14,C.muted);
   return {svg:out,phase:s.sim?'The simulated listener prefers the middle pattern. Real listeners vary: musicians and dancers tend to tolerate more syncopation.':'One explanation is prediction: a little syncopation leaves gaps where the body “fills in” the beat, which feels good. With too much, the beat cannot be predicted at all. Techno keeps the kick regular and puts its syncopation in the hats, bass and filter.'};
  }});
