@@ -74,6 +74,7 @@ const D1_WF=[
  {n:'Saltiness',k:.2,u:'g/l',min:1,max:50}];
 const D1_wfVal=(d,pos)=>d.min*Math.pow(d.max/d.min,pos/100);
 const D1_round=v=>v>=100?Math.round(v):v>=10?Math.round(v*10)/10:Math.round(v*100)/100;
+const D1_u=(v,u)=>{const r=D1_round(v);return r+' '+(r===1&&u.endsWith('s')?u.slice(0,-1):u)};
 SCENE({id:'weber-law-fractions',name:'Weber fractions across the senses',tag:'Some senses are finer than others',
  definition:'Each sense has its own Weber fraction. A small fraction means fine discrimination: you notice a tiny proportional change. A large one means you need a big change before you notice.',
  example:'Trained listeners notice a 0.3% change in the pitch of a 1 kHz tone (about 3 Hz), but you may need about 20% more salt before soup tastes saltier.',
@@ -88,12 +89,12 @@ SCENE({id:'weber-law-fractions',name:'Weber fractions across the senses',tag:'So
   const d=D1_WF[s.i],v=D1_wfVal(d,s.pos),j=v*(1+d.k),w=280*s.pos/100+20;
   let out=heading(d.n+': Weber fraction about '+(d.k*100)+'%');
   out+=TF(30,78,'standard',13,C.muted,'start')+R(30,86,w,26,C.pale,C.blue,4)+TF(30,140,'just noticeably more',13,C.muted,'start')+R(30,148,w,26,C.pale,C.blue,4)+R(30+w,148,Math.max(2,w*d.k),26,C.coral,'none',2);
-  out+=TBF(30,212,`${D1_round(v)} ${d.u}`,20,C.ink,'start')+TF(30,236,'needs about',13,C.muted,'start')+TBF(30,264,`${D1_round(j)} ${d.u}`,20,C.coral,'start');
-  out+=TF(30,290,`a step of ${D1_round(j-v)} ${d.u} (${d.k*100}% of the standard)`,13,C.muted,'start');
+  out+=TBF(30,212,`${D1_u(v,d.u)}`,20,C.ink,'start')+TF(30,236,'needs about',13,C.muted,'start')+TBF(30,264,`${D1_u(j,d.u)}`,20,C.coral,'start');
+  out+=TF(30,290,`a step of ${D1_u(j-v,d.u)} (${d.k*100}% of the standard)`,13,C.muted,'start');
   out+=TBF(380,66,'Weber fraction k',14,C.ink,'start');
   D1_WF.forEach((e,i)=>{const y=86+i*42,sel=i===s.i,inner=R(374,y-4,212,38,sel?C.pale:'#fff',sel?C.blue:C.grid,6)+TF(382,y+12,e.n,13,C.ink,'start')+R(382,y+18,Math.max(2,e.k/.2*150),9,sel?C.blue:C.line,'none',2)+TF(382+Math.max(2,e.k/.2*150)+6,y+27,(e.k*100)+'%',13,C.muted,'start');out+=hit(X,'i',i,`${e.n}, ${e.k*100}%`,inner)});
   out+=TF(300,366,'Approximate values; they depend on method and range.',13,C.muted);
-  return {svg:out,phase:`At ${D1_round(v)} ${d.u} the step you can just notice is about ${D1_round(j-v)} ${d.u}. Double the standard and the step doubles too: the fraction, ${d.k*100}%, is what stays put.`};
+  return {svg:out,phase:`At ${D1_u(v,d.u)} the step you can just notice is about ${D1_u(j-v,d.u)}. Double the standard and the step doubles too: the fraction, ${d.k*100}%, is what stays put.`};
  }});
 
 // Weber fraction against level: rises near threshold; for pure tones it slowly falls (the near miss).

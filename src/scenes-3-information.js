@@ -120,7 +120,7 @@ SCENE({id:'channel-capacity-hick',name:'Choice time and information',tag:'Hick a
   const pl=D3_plot(370,60,200,190,[0,3.2],[0,.8],[[0,'0'],[1,'1'],[2,'2'],[3,'3']],[[0,'0'],[.4,'0.4'],[.8,'0.8 s']],'information H (bits)',null);out+=pl.svg;
   out+=L(pl.X(0),pl.Y(a),pl.X(3.2),pl.Y(a+b*3.2),C.green,2.5);
   [1,2,4,8].forEach(m=>out+=Ci(pl.X(Math.log2(m)),pl.Y(a+b*Math.log2(m)),4,'#fff',C.green));
-  out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+(H>2.2?-12:12),pl.Y(rt)-10,D3_ms(rt),13,C.coral,H>2.2?'end':'start');
+  out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+(H>2.2?-12:12),pl.Y(rt)+(H>2.2?-10:24),D3_ms(rt),13,C.coral,H>2.2?'end':'start');
   out+=TF(300,356,'RT ≈ a + b·H, with a = 0.2 s and b = 0.15 s per bit (illustrative)',13,C.muted);
   return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up exactly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
  }});

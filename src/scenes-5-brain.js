@@ -203,7 +203,7 @@ SCENE({id:'hebbian-synapse-stdp',name:'Spike timing',tag:'Before strengthens, af
   const pp=[],pm=[];for(let k=1;k<=80;k++){pp.push([pl.X(k),pl.Y(D5_stdp(k))]);pm.push([pl.X(-k),pl.Y(D5_stdp(-k))])}out+=D5_poly(pp,C.green,2.4)+D5_poly(pm,C.coral,2.4);
   out+=Ci(pl.X(dt),pl.Y(dw),7,C.ink,'#fff');
   out+=TF(pl.X(46),pl.Y(62),'input first: stronger',13,C.green)+TF(pl.X(-46),pl.Y(-27),'input after: weaker',13,C.coral);
-  out+=T(300,360,dt===0?'Simultaneous: no clear change in this simple model.':`${dt>0?'Input first':'Output first'} by ${Math.abs(dt)} ms → ${dw>0?'+':''}${dw.toFixed(0)}% strength`,15,dw>0?C.green:dw<0?C.coral:C.ink);
+  out+=T(300,360,dt===0?'Simultaneous: no clear change in this simple model.':`${dt>0?'Input first':'Output first'} by ${Math.abs(dt)} ms → ${dw>0?'+':'−'}${Math.abs(dw).toFixed(0)}% strength`,15,dw>0?C.green:dw<0?C.coral:C.ink);
   return {svg:out,phase:Math.abs(dt)>60?'Spikes this far apart barely change the synapse: the learning window is only a few tens of milliseconds wide.':dt>0?'The input fired just before the cell, so it may have helped cause the spike, and it is strengthened. This makes Hebb’s rule causal rather than just “together”.':dt<0?'The input arrived after the cell had already fired, so it could not have caused it, and it is weakened.':'With no gap the outcome depends on details this sketch leaves out.'};
  }});
 
@@ -513,7 +513,7 @@ SCENE({id:'brain-imaging-salmon',name:'The dead salmon',tag:'Many tests, many fa
    const shade=Math.round(clamp(150+v.z*22,90,215));out+=R(x0+v.c*cell,y0+v.r*cell,cell-1,cell-1,on?C.coral:`rgb(${shade},${shade+8},${shade+14})`,'none',2)});
   out+=Ci(x0+5*cell,y0+7*cell,5,'#fff',C.ink);
   const N=vox.length;out+=TF(40,316,`${N} voxels · threshold p < ${s.p} · ${s.corr==='none'?'no correction':s.corr==='bonf'?'Bonferroni':'false discovery rate'}`,13,C.muted,'start');
-  out+=T(300,344,`“Active” voxels: ${nSig}${s.real==='on'?` (${nTrue} real, ${nFalse} false alarms)`:' — all false alarms'}`,15,nFalse?C.coral:C.green);
+  out+=T(300,344,`“Active” voxels: ${nSig}${s.real==='on'?` (${nTrue} real, ${nFalse} false alarms)`:nSig?' — all false alarms':' — none'}`,15,nFalse?C.coral:C.green);
   out+=TF(300,368,s.corr==='none'?`Expected by chance alone: about ${fmt((N*p).toFixed(1))}`:'Corrected: false alarms are now rare',13,C.muted);
   return {svg:out,phase:s.corr==='none'?`Testing ${N} voxels at p < ${s.p} makes about ${Math.round(N*p)} false alarms likely even in a dead fish. Real studies test around 100,000 voxels.`:s.real==='on'?`The correction removes chance hits but keeps most of the true effect, because real signals are strong. Bonferroni is strict; the false discovery rate keeps the share of false hits low and is less conservative.`:'With a correction the noise rarely passes. A later study (Eklund et al. 2016) found some widely used cluster corrections were themselves too lenient.'};
  }});
@@ -605,7 +605,7 @@ SCENE({id:'plasticity-critical-period',name:'Critical periods',tag:'A window tha
   return {svg:out,phase:`Hubel and Wiesel found the kitten’s sensitive period starts around the fourth week, peaks at about four to six weeks and fades by about three months. In children, an untreated lazy eye or cataract during early years can permanently weaken vision in that eye (amblyopia), which is why it is treated early. Histogram and curve are illustrative.`};
  }});
 
-const D5_TAXI=(()=>{const r=D5_rng(2000),pts=[];for(let i=0;i<16;i++){const yrs=1.5+r()*40;pts.push([yrs,100+.55*yrs+6*D5_gauss(r)])}return pts})();
+const D5_TAXI=(()=>{const r=D5_rng(2000),pts=[];for(let i=0;i<16;i++){const yrs=1.5+r()*40;pts.push([yrs,100+.55*yrs+16*D5_gauss(r)])}return pts})();
 SCENE({id:'plasticity-taxi',name:'Taxi drivers and brain training',tag:'What practice changes, and what it does not',
  definition:'Long, intense practice of a real skill can change brain structure, but evidence that short commercial brain-training games improve general abilities is weak: gains mostly stay with the trained task.',
  example:'London taxi drivers, who learn thousands of streets, have a larger rear hippocampus the longer they have driven. By contrast, in an online study of 11,430 people, six weeks of brain-training games improved the games but not untrained tests.',
@@ -620,8 +620,8 @@ SCENE({id:'plasticity-taxi',name:'Taxi drivers and brain training',tag:'What pra
   let out='',phase='';
   if(s.v==='cross'){out=heading('More years of driving, larger rear hippocampus');
    const pts=D5_TAXI.slice(0,s.n),r=D5_corr(pts.map(p=>p[0]),pts.map(p=>p[1]));
-   const pl=D5_plot(80,60,330,230,[0,44],[90,140],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 years']],yt:[[100,'100'],[120,'120'],[140,'140']],xl:'years as a taxi driver',yl:'rear hippocampus (relative size)'});out+=pl.svg;
-   pts.forEach(([x,y])=>out+=Ci(pl.X(x),pl.Y(clamp(y,90,140)),5.5,C.blue,'#fff'));
+   const pl=D5_plot(80,60,330,230,[0,44],[60,160],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 years']],yt:[[80,'80'],[110,'110'],[140,'140']],xl:'years as a taxi driver',yl:'rear hippocampus (relative size)'});out+=pl.svg;
+   pts.forEach(([x,y])=>out+=Ci(pl.X(x),pl.Y(clamp(y,60,160)),5.5,C.blue,'#fff'));
    if(pts.length>2){const mx=D5_mean(pts.map(p=>p[0])),my=D5_mean(pts.map(p=>p[1]));let sxy=0,sxx=0;pts.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2});const b=sxy/sxx;out+=L(pl.X(0),pl.Y(my-b*mx),pl.X(44),pl.Y(my+b*(44-mx)),C.coral,2,'stroke-dasharray="6 5"')}
    out+=counter(436,70,'drivers',String(pts.length),C.ink,140)+counter(436,130,'correlation r',isNaN(r)?'—':r.toFixed(2),C.coral,140);
    ['Simulated points','matching the','reported positive','link. Correlation','cannot say which','came first.'].forEach((l,i)=>out+=TF(436,206+i*20,l,13,C.muted,'start'));
