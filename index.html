@@ -5228,9 +5228,9 @@ function MA_lex(src){
 }
 SCENE({id:'ma-lexer',name:'Lexical analysis',tag:'Splitting text into tokens',
  definition:'The first step of compiling: scanning the source text character by character and grouping the characters into tokens such as names, numbers and operators, while throwing away spaces.',
- example:'“total = price * 12” becomes five tokens: the name total, the symbol =, the name price, the operator * and the number 12. A character the language does not know, such as #, is reported as an error.',
+ example:'“total = price * 12” becomes five tokens: the name total, the symbol =, the name price, the operator * and the number 12. A character this toy language does not know, such as #, is reported as an error. Which characters are valid depends on the language: in Python, # starts a comment.',
  desc:'The source text in character cells with a bracket marking the token being read, and below it the tokens found so far as coloured chips labelled name, number, operator or symbol.',
- dur:12,hint:'Type a line of code. Spaces disappear, letters and digits group together, and unknown symbols such as # or $ are flagged.',
+ dur:12,hint:'Type a line of code. Spaces disappear, letters and digits group together, and symbols this toy language does not know, such as # or $, are flagged.',
  init:()=>({src:'total = price * 12'}),
  trace(s){const toks=MA_lex(s.src).slice(0,12);const fr=[{n:0,toks,say:'The lexer starts at the first character. It does not yet know what any of the text means.'}];toks.forEach((t,i)=>fr.push({n:i+1,toks,say:t.k==='error'?`“${t.text}” does not belong to any kind of token: a lexical error, reported before parsing even starts.`:`Read “${t.text}”: ${t.k==='name'?'letters (and digits) make a name':t.k==='number'?'digits make a number':t.k==='operator'?'an arithmetic operator':t.k==='assign'?'the assignment symbol':'a bracket'}.`}));fr.push({n:toks.length,toks,done:true,say:`${toks.length} tokens. ${toks.some(t=>t.k==='error')?'Fix the flagged character before the parser can run.':'These tokens go to the parser, which checks how they fit together.'}`});return fr},
  ui:[{text:'Code',label:'Code',get:s=>s.src,act:'src',max:24},{choose:[['total = price * 12','total = price * 12'],['area=(w+2)*h','area=(w+2)*h'],['x = 3 # 4','x = 3 # 4']],label:'Examples',get:s=>s.src,act:'src'}],
