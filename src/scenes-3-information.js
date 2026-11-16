@@ -542,7 +542,7 @@ SCENE({id:'visual-search',name:'Finding the odd one out',tag:'Be the participant
    const col=c==='feat'?C.green:C.coral,ext=pr?'':'stroke-dasharray="5 4"';out+=D3_poly(pts.map(q=>[pl.X(q[0]),pl.Y(clamp(q[1],.3,1.9))]),col,2,ext);pts.forEach(q=>out+=Ci(pl.X(q[0]),pl.Y(clamp(q[1],.3,1.9)),4,col,'#fff'));
    const fit=pts.length>=2?D3_fit(pts):null;if(fit)slopes.push([c,pr,fit.b])}));
   out+=TF(200,366,'number of items',13,C.muted);
-  out+=R(350,268,236,102,'#fff',C.grid,8)+TF(468,288,s.sim?'simulated (Treisman & Gelade slopes)':`trial ${Math.min(s.i+1,24)} of 24 · errors ${s.errors}`,13,C.muted);
+  out+=R(350,268,236,102,'#fff',C.grid,8)+TF(468,288,s.sim?'simulated participant':`trial ${Math.min(s.i+1,24)} of 24 · errors ${s.errors}`,13,C.muted);
   slopes.slice(0,4).forEach(([c,pr,b],i)=>out+=TF(362,312+i*17,`${c==='feat'?'feature':'conjunction'}, ${pr?'present':'absent'}: ${Math.round(b*1000)} ms/item`,13,c==='feat'?C.green:C.coral,'start'));
   if(!slopes.length)out+=TF(468,326,'green: feature · orange: conjunction',13,C.muted)+TF(468,346,'solid: present · dashed: absent',13,C.muted);
   return {svg:out,phase:'A flat line means the target was found in parallel, without checking items one by one. A rising line means each extra item adds time, and absent trials rise faster because every item must be checked before saying no.'};
@@ -552,6 +552,7 @@ const D3_FIT_ITEMS=[[80,96,'tri','or'],[160,82,'cir','or'],[236,108,'tri','bl'],
 const D3_FIT_FEAT=[[80,96,'tri','bl'],[160,82,'cir','bl'],[236,108,'tri','bl'],[96,168,'cir','bl'],[184,158,'tri','or'],[262,178,'cir','bl']];
 const D3_fitShape=(x,y,sh,col,r=16)=>sh==='tri'?`<polygon points="${fmt(x)},${fmt(y-r)} ${fmt(x+r)},${fmt(y+r*.8)} ${fmt(x-r)},${fmt(y+r*.8)}" fill="${col}"/>`:Ci(x,y,r*.9,col);
 const D3_COLS={or:'#c45238',bl:C.blue};
+const D3_FIT_DIV=[[120,150,'cir','bl'],[230,150,'tri','or']];
 SCENE({id:'visual-search-binding',name:'Feature integration',tag:'Attention as glue',
  definition:'Anne Treisman’s feature-integration theory says simple features such as colour and shape are registered in separate maps, all at once. Knowing which colour goes with which shape needs attention to visit each location in turn and bind the features together.',
  example:'Find the orange triangle among blue triangles and orange circles: neither “orange” nor “triangle” alone picks it out, so attention must step from item to item. When attention is busy elsewhere, people report illusory conjunctions, such as a blue triangle that was never there.',
@@ -563,17 +564,17 @@ SCENE({id:'visual-search-binding',name:'Feature integration',tag:'Attention as g
  ui:[{choose:[['feat','Feature search'],['conj','Conjunction search'],['divert','Attention elsewhere']],label:'Condition',get:s=>s.mode,act:'mode'},{b:'Next item',act:'next'}],
  on:{mode(s,v){s.mode=v;s.spot=0},next(s){if(s.mode==='conj')s.spot=Math.min(4,s.spot+1)}},
  draw(s){
-  const items=s.mode==='feat'?D3_FIT_FEAT:D3_FIT_ITEMS,tgt=4;let out=heading(s.mode==='feat'?'Feature search: the orange item pops out of the colour map':s.mode==='conj'?'Conjunction search: the spotlight binds one location at a time':'Attention elsewhere: features float free');
+  const items=s.mode==='feat'?D3_FIT_FEAT:s.mode==='divert'?D3_FIT_DIV:D3_FIT_ITEMS,tgt=4;let out=heading(s.mode==='feat'?'Feature search: the orange item pops out of the colour map':s.mode==='conj'?'Conjunction search: the spotlight binds one location at a time':'Attention elsewhere: features float free');
   out+=R(30,48,290,170,'#fff',C.grid,10);
-  if(s.mode==='divert'){out+=TF(175,90,'(eyes on a pair of digits; display flashes briefly)',13,C.muted);[[110,150,'tri','bl'],[175,140,'cir','or'],[240,150,'tri','or']].forEach(([x,y,sh,c])=>out+=D3_fitShape(x,y,sh,D3_COLS[c]))}
-  else items.forEach(([x,y,sh,c],i)=>out+=D3_fitShape(x,y,sh,D3_COLS[c]));
+  if(s.mode==='divert')out+=TF(175,80,'brief flash; report the digits first',13,C.muted)+TBF(60,156,'7',22,C.ink)+TBF(290,156,'3',22,C.ink);
+  items.forEach(([x,y,sh,c],i)=>out+=D3_fitShape(x,y,sh,D3_COLS[c]));
   const maps=[[340,'colour map: orange',(it)=>it[3]==='or'],[466,'shape map: triangle',(it)=>it[2]==='tri']];
   maps.forEach(([mx,lab,test])=>{out+=R(mx,48,116,86,'#f6f9fb',C.grid,8)+TF(mx+58,150,lab,13,C.muted);items.forEach(it=>{if(test(it))out+=Ci(mx+8+(it[0]-30)*.34,48+6+(it[1]-48)*.42,6,C.ink)})});
   out+=R(400,170,120,86,'#f6f9fb',C.grid,8)+TF(460,272,'master map (where)',13,C.muted);items.forEach(it=>out+=Ci(400+8+(it[0]-30)*.34,170+6+(it[1]-48)*.42,4,C.line));
   if(s.mode==='conj'){const order=[0,1,2,3,4],k=order[s.spot],it=items[k];out+=Ci(it[0],it[1],28,'none',C.amber,'stroke-width="3"')+Ci(400+8+(it[0]-30)*.34,170+6+(it[1]-48)*.42,10,'none',C.amber,'stroke-width="3"');
    out+=TF(175,240,k===tgt?'Bound: orange + triangle = target found':`Item ${s.spot+1}: ${it[3]==='or'?'orange':'blue'} ${it[2]==='tri'?'triangle':'circle'}, not it`,14,k===tgt?C.green:C.ink)}
   if(s.mode==='feat')out+=TF(175,240,'One orange blob in the colour map: found at once',14,C.green);
-  if(s.mode==='divert')out+=TF(175,240,'Reported: “a blue circle, an orange triangle…”',14,C.coral);
+  if(s.mode==='divert')out+=TF(175,240,'Reported: “a blue triangle, an orange circle”',14,C.coral);
   out+=R(30,290,540,74,'#f6f9fb','none',8);
   const lines=s.mode==='feat'?['The colour map alone has a single orange item, so it can be found','without attention visiting each location in turn.']:s.mode==='conj'?['Both maps have several marks, so neither finds the target.','Attention checks location after location: time grows with the number of items.']:['With attention busy, colours and shapes were reported in wrong pairings','(Treisman & Schmidt 1982): features were seen, but not bound.'];
   lines.forEach((l,i)=>out+=TF(300,318+i*24,l,13,C.ink));
