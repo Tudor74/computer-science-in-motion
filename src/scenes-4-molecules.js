@@ -62,7 +62,7 @@ SCENE({id:'double-helix',name:'Chargaff’s rules',tag:'A matches T, G matches C
    if(org.single)out+=L(416,y+13,520,y+13,C.grid,1.5,'stroke-dasharray="3 5"');
    else{const c=B4_COMP[b];out+=L(416,y+13,522,y+13,C.line,2)+B4_base(522,y,c)}}
   out+=L(386,66,386,338,C.ink,3)+(org.single?'':L(550,66,550,338,C.ink,3));
-  return {svg:out,phase:org.single?'φX174 carries its DNA as a single strand, so nothing pairs A with T: here A and T differ by a third. Chargaff’s rule is a fingerprint of the double strand.':ok?'A ≈ T and G ≈ C, although A+T and G+C differ between species. Watson and Crick’s pairing explains exactly this: every A on one strand faces a T on the other.':'Your setting breaks pairing.'};
+  return {svg:out,phase:org.single?'φX174 carries its DNA as a single strand, so nothing pairs A with T: here A and T differ by a third. Chargaff’s rule is a fingerprint of the double strand.':ok?'A ≈ T and G ≈ C, although A+T and G+C differ between species. The pairing proposed by Watson and Crick explains exactly this: every A on one strand faces a T on the other.':'Your setting breaks pairing.'};
  }});
 
 /* ---- Photo 51: what the X-ray pattern says about a helix ---- */
@@ -93,7 +93,7 @@ SCENE({id:'double-helix-photo51',name:'Reading Photo 51',tag:'A helix makes an X
    for(const sg of [-1,1])out+=Ci(dx+x,dy+sg*k2*d,rr,'#e8eef2')+Ci(dx-x,dy+sg*k2*d,rr,'#e8eef2')}
   const mer=s.n*d;if(mer<=half)out+=Ci(dx,dy-mer,7,'#ffd24a')+Ci(dx,dy+mer,7,'#ffd24a');
   out+=Ci(dx,dy,10,'#33454f');
-  out+=TF(450,74,'schematic X-ray pattern',13,'#b9c8d1');
+  out+=TF(450,47,'schematic X-ray pattern',13,C.muted)+TF(150,47,'helix, side view',13,C.muted);
   const rise=s.P/s.n,match=s.P===34&&s.n===10;
   out+=TF(150,362,`strand angle ${Math.round(90-phi*180/Math.PI)}° from the axis`,13,C.muted);
   out+=TF(450,362,mer<=half?`gold spot on layer ${s.n}: rise ${rise.toFixed(2)} Å`:`layer ${s.n} is off the film`,13,match?C.green:C.ink);
@@ -128,12 +128,13 @@ SCENE({id:'double-helix-structure',name:'The double helix',tag:'Two antiparallel
   return {svg:out,phase:'Flattened, DNA is a ladder: two backbones with base pairs as rungs. The arrows show the strands run in opposite directions. Switch to 3D to see the twist.'};
  },
  three(s,f,X,project){
-  const n=s.n,h=n*.34,off=2.4,tw=2*Math.PI/10.5,P=project([-1.3,1.3,-1.3,1.3,0,h]);
-  const pt=(i,ph)=>[Math.cos(i*tw+ph),Math.sin(i*tw+ph),i*.34];let out='';const items=[];
+  const n=Math.min(s.n,21),h=n*.34,off=2.4,tw=2*Math.PI/10.5,P=project([-1.6,1.6,-1.6,1.6,-.2,h+.2]);
+  const pt=(i,ph)=>[Math.cos(i*tw+ph),Math.sin(i*tw+ph),i*.34];const items=[];
   for(let i=0;i<n;i++){const a=pt(i,0),b=pt(i,off),m=a.map((v,k)=>(v+b[k])/2),bs=B4_SEQ[i%B4_SEQ.length];
-   items.push({at:m,svg:P=>line3(a,m,P,B4_COL[bs],4)+line3(m,b,P,B4_COL[B4_COMP[bs]],4)})}
-  const back=ph=>range(n*4).map(j=>P(pt(j/4,ph)));
-  out+=B4_poly(back(0),C.blue,3.5)+B4_poly(back(off),C.coral,3.5)+sortedItems(items,P);
+   items.push({at:a.map((v,k)=>(v*3+m[k])/4),svg:P=>line3(a,m,P,B4_COL[bs],5)});items.push({at:b.map((v,k)=>(v*3+m[k])/4),svg:P=>line3(m,b,P,B4_COL[B4_COMP[bs]],5)})}
+  for(const [ph,col] of [[0,C.blue],[off,C.coral]])for(let j=0;j<(n-1)*3;j++){const a=pt(j/3,ph),b=pt((j+1)/3,ph);items.push({at:a.map((v,k)=>(v+b[k])/2),svg:P=>line3(a,b,P,col,7)})}
+  let out=sortedItems(items,P);
+  if(s.n>21)out+=TF(300,372,`showing 21 of ${s.n} pairs (two turns)`,13,C.muted);
   return {svg:out,title:'The double helix',caption:'Blue and coral are the two backbones, running in opposite directions. Base pairs (green A–T, amber–blue G–C) stack up the middle. The uneven gaps between the backbones are the major and minor grooves.'};
  }});
 
@@ -156,7 +157,7 @@ SCENE({id:'replication',name:'Copying DNA',tag:'Unzip and fill in',
    if(i<s.k){out+=B4_base(x,70,b,28,28)+B4_base(x,104,c,28,28,{dash:true,fill:'#fff'})+B4_base(x,250,b,28,28,{dash:true,fill:'#fff'})+B4_base(x,284,c,28,28)}
    else out+=B4_base(x,160,b,28,28)+B4_base(x,194,c,28,28)}
   out+=TF(76,90,'old',13,C.muted,'end')+TF(76,124,'new',13,C.muted,'end')+TF(76,270,'new',13,C.muted,'end')+TF(76,304,'old',13,C.muted,'end');
-  if(s.k<12){const fx=x0+s.k*w-4;out+=Ci(fx,192,13,C.purple)+TF(fx,197,'H',13,'#fff')+TF(fx+18,236,'helicase opens the strands here',13,C.purple,'start')}
+  if(s.k<12){const fx=x0+s.k*w-15;out+=Ci(fx,192,13,C.purple)+TF(fx,197,'H',13,'#fff')+TF(fx+18,236,'helicase opens the strands here',13,C.purple,'start')}
   out+=TF(300,350,`${s.k} of 12 pairs copied`,15,s.k===12?C.green:C.ink);
   return {svg:out,phase:s.k===12?'Two identical molecules, each with one old strand (solid) and one new strand (dashed): semi-conservative copying.':'Each base on an old strand picks up its partner: A with T, G with C. The sequence of the new strand is fixed by the old one.'};
  }});
@@ -182,15 +183,15 @@ SCENE({id:'replication-meselson',name:'The Meselson–Stahl experiment',tag:'Wei
  on:{model(s,v){s.model=v},g(s,v){s.g=Number(v)}},
  draw(s){
   let out=heading('Meselson and Stahl: which model fits?',26);
-  const cols=[[150,'prediction'],[440,'observed (1958)']],X=(c,r)=>c-90+(r-1.706)/(1.728-1.706)*180;
-  cols.forEach(([c,l])=>{out+=TBF(c,58,l,14,c===150?C.blue:C.green)});
+  const cols=[[165,'prediction'],[455,'observed (1958)']],X=(c,r)=>c-90+(r-1.706)/(1.728-1.706)*180;
+  cols.forEach(([c,l],ci)=>{out+=TBF(c,58,l,14,ci?C.green:C.blue)});
   let all=true;
-  for(let g=0;g<=4;g++){const y=78+g*52,shown=g<=s.g;out+=TF(28,y+24,`gen ${g}`,13,shown?C.ink:C.grid,'start');
+  for(let g=0;g<=4;g++){const y=78+g*52,shown=g<=s.g;out+=TF(20,y+24,`gen ${g}`,13,shown?C.ink:C.grid,'start');
    cols.forEach(([c],ci)=>{out+=R(c-95,y,190,38,ci?'#f3f8f4':'#f4f8fb',C.grid,6);
     if(!shown)return;const bs=B4_bands(ci?'semi':s.model,g);
     bs.forEach(b=>{const x=X(c,b.rho);out+=R(x-3-5*b.f,y+4,6+10*b.f,30,ci?C.green:C.blue,'none',3,`opacity="${(.25+.75*b.f).toFixed(2)}"`)})});
-   if(shown){const a=B4_bands(s.model,g),b=B4_bands('semi',g),m=a.length===b.length&&a.every((q,i)=>Math.abs(q.rho-b[i].rho)<1e-6&&Math.abs(q.f-b[i].f)<1e-6);all=all&&m;out+=TBF(295,y+25,m?'✓':'✗',18,m?C.green:C.coral)}}
-  [150,440].forEach(c=>{out+=TF(X(c,B4_DEN.L),352,'light',13,C.muted)+TF(X(c,(B4_DEN.L+B4_DEN.H)/2),370,'hybrid',13,C.muted)+TF(X(c,B4_DEN.H),352,'heavy',13,C.muted)});
+   if(shown){const a=B4_bands(s.model,g),b=B4_bands('semi',g),m=a.length===b.length&&a.every((q,i)=>Math.abs(q.rho-b[i].rho)<1e-6&&Math.abs(q.f-b[i].f)<1e-6);all=all&&m;out+=TBF(310,y+25,m?'✓':'✗',18,m?C.green:C.coral)}}
+  [165,455].forEach(c=>{out+=TF(X(c,B4_DEN.L),352,'light',13,C.muted)+TF(X(c,(B4_DEN.L+B4_DEN.H)/2),370,'hybrid',13,C.muted)+TF(X(c,B4_DEN.H),352,'heavy',13,C.muted)});
   const name=B4_MODELS.find(m=>m[0]===s.model)[1];
   return {svg:out,phase:s.model==='semi'?'Semi-conservative copying matches every generation: one hybrid band, then hybrid and light, with light growing each time.':s.model==='cons'?'Conservative copying would keep a fully heavy band forever. The observed first generation has no heavy band at all: this model fails at generation 1.':`${name} copying predicts a single band drifting towards light. It matches generation 1 but fails at generation 2, where two separate bands appear.`};
  }});
@@ -249,13 +250,13 @@ SCENE({id:'transcription-translation',name:'From gene to protein',tag:'Transcrib
  draw(s){
   let out=heading('From gene to protein',26);
   const w=24,x0=300-21*w/2,tk=Math.min(21,s.k),c=Math.max(0,s.k-21);
-  out+=TF(x0,50,'DNA coding strand 5′→3′',13,C.muted,'start')+TF(x0,124,'template strand (read by the polymerase)',13,C.muted,'start');
-  for(let i=0;i<21;i++){const b=B4_GENE[i],x=x0+i*w;out+=B4_base(x+1,56,b,22,24,{size:13})+B4_base(x+1,90,B4_COMP[b],22,24,{size:13})}
-  if(s.k<=21){const px=x0+tk*w;out+=R(px-6,48,32,74,'none',C.purple,8,'stroke-width="3"')+TF(px+10,142,'RNA polymerase',13,C.purple)}
-  out+=TF(x0,170,'mRNA',13,C.muted,'start');
-  for(let i=0;i<tk;i++){const b=B4_GENE[i]==='T'?'U':B4_GENE[i];out+=B4_base(x0+i*w+1,176,b,22,24,{size:13})}
-  for(let j=0;j<7;j++)if(3*j+3<=tk)out+=L(x0+j*3*w+3,204,x0+(j+1)*3*w-3,204,C.line,2);
-  if(s.k>21){const cc=Math.min(c,7);out+=R(x0+(cc-1)*3*w-4,168,3*w+8,42,'none',C.green,10,'stroke-width="3"');out+=TF(x0+(cc-1)*3*w+1.5*w,226,'ribosome',13,C.green)}
+  out+=TF(x0,52,'DNA coding strand 5′→3′',13,C.muted,'start')+TF(x0,134,'template strand, read by the polymerase',13,C.muted,'start');
+  for(let i=0;i<21;i++){const b=B4_GENE[i],x=x0+i*w;out+=B4_base(x+1,62,b,22,24,{size:13})+B4_base(x+1,90,B4_COMP[b],22,24,{size:13})}
+  if(s.k<=21){const px=x0+tk*w;out+=R(px-4,58,30,60,'none',C.purple,8,'stroke-width="3"')+TF(Math.min(px-4,x0+21*w-110),152,'RNA polymerase',13,C.purple,'start')}
+  out+=TF(x0,174,'mRNA',13,C.muted,'start');
+  for(let i=0;i<tk;i++){const b=B4_GENE[i]==='T'?'U':B4_GENE[i];out+=B4_base(x0+i*w+1,180,b,22,24,{size:13})}
+  for(let j=0;j<7;j++)if(3*j+3<=tk)out+=L(x0+j*3*w+3,208,x0+(j+1)*3*w-3,208,C.line,2);
+  if(s.k>21){const cc=Math.min(c,7);out+=R(x0+(cc-1)*3*w-4,172,3*w+8,42,'none',C.green,10,'stroke-width="3"');out+=TF(x0+(cc-1)*3*w+1.5*w,230,'ribosome',13,C.green)}
   out+=TF(x0,256,'protein',13,C.muted,'start');
   for(let j=0;j<Math.min(c,7);j++){const a=B4_aa(B4_GENE.slice(3*j,3*j+3)),x=x0+j*3*w+1.5*w;
    if(a==='*')out+=TBF(x,292,'stop',14,C.coral);else{out+=Ci(x,288,22,C.greenp,C.green)+TF(x,293,B4_N3[a],13,C.ink);if(j>0)out+=L(x-3*w+22,288,x-22,288,C.green,3)}}
@@ -290,7 +291,7 @@ SCENE({id:'transcription-translation-trna',name:'Matching the tRNA',tag:'Adaptor
   // chain
   const done=Math.min(s.c,7);let cx=x0+(rc-1)*cw+cw/2;
   for(let j=done-1;j>=0;j--){const a=B4_aa(B4_GENE.slice(3*j,3*j+3)),y=110-(done-1-j)*0,x=cx-(done-1-j)*44;if(a==='*')continue;out+=Ci(x,92,17,C.greenp,C.green)+TF(x,97,B4_N3[a],13,C.ink);if(j<done-1)out+=L(x+17,92,x+27,92,C.green,3)}
-  out+=TF(560,62,'chain',13,C.green,'end');
+  out+=TF(x0+(rc-1)*cw+cw/2,66,'growing chain',13,C.green);
   if(s.c<7){const opts=B4_opts(s.c,s.seed);
    out+=TF(300,252,s.sim?'A simulated reader picks the matching tRNA.':'Which tRNA pairs with the codon in the A site?',14,C.ink);
    opts.forEach((o,i)=>{const x=60+i*124;out+=B4_btn(X,'pick',i,`tRNA with anticodon ${o.anti} carrying ${B4_N3[o.aa]}`,x,266,112,62,'',{});
@@ -359,7 +360,7 @@ SCENE({id:'genetic-code',name:'The genetic code',tag:'64 codons, 20 amino acids'
   for(let r=0;r<4;r++){out+=TBF(tx-14,ty+r*ch+ch/2+5,B4_B[r],15,B4_COL[B4_B[r]]);
    for(let c=0;c<4;c++){const x=tx+c*cw,y=ty+r*ch,here=r===s.c[0]&&c===s.c[1];out+=R(x+2,y+2,cw-4,ch-4,here?C.amberp:'#fff',here?C.amber:C.grid,6);
     for(let t=0;t<4;t++){const aa=B4_CODE[r*16+c*4+t],on=here&&t===s.c[2];out+=TMF(x+14+t*16,y+ch/2+6,aa,15,on?C.coral:aa==='*'?C.coral:C.ink,'middle',on?'font-weight="800" text-decoration="underline"':'')}}}
-  out+=TF(tx-26,ty+2*ch,'1st',13,C.muted,'end');
+  out+=TF(tx-14,ty-10,'1st',13,C.muted);
   out+=TF(tx+2*cw,ty+4*ch+20,'within a cell: third base U, C, A, G from left to right',13,C.muted);
   return {svg:out,phase:a==='*'?`${cod} is one of three stop codons (UAA, UAG, UGA).`:`${cod} means ${B4_N3[a]}. Look along its cell: codons that differ only in the third base often mean the same amino acid.`};
  }});
@@ -386,7 +387,8 @@ SCENE({id:'genetic-code-frames',name:'Reading frames',tag:'Read in threes, from 
   let good=0;const pr=Math.min(s.pos-1,seq.length);
   trip.forEach((w,i)=>{const row=i<7?0:1,col=i%7,x=40+col*74,y=142+row*48,ok=orig.includes(w)&&(w===orig[i]||w===orig[i-Math.round(net/3)]);if(ok)good++;
    out+=R(x,y,66,34,ok?C.greenp:C.coralp,ok?C.green:C.coral,6,'stroke-width="1.5"')+TMF(x+33,y+23,w,17,C.ink,'middle','font-weight="700"')});
-  out+=TF(300,262,`position ${s.pos} ▲`,13,C.purple);
+  {const q=Math.min(s.pos-1,Math.max(0,seq.length-1)),ti=Math.floor(q/3),o=q%3,row=ti<7?0:1;out+=TF(40+(ti%7)*74+33+(o-1)*11,142+row*48+50,'▲',13,C.purple)}
+  out+=TF(560,262,`position ${s.pos}`,13,C.purple,'end');
   out+=R(40,280,520,72,'#fff',C.grid,8);
   const nm=net===0?'0':net>0?'+'+net:String(net),inF=net%3===0;
   out+=TBF(300,306,`net change ${nm} letter${Math.abs(net)===1?'':'s'}: ${inF?'back in frame':'frame shifted'}`,16,inF?C.green:C.coral);
@@ -440,7 +442,7 @@ SCENE({id:'gene-regulation',name:'The lac operon',tag:'A gene with a switch',
   seg.forEach(([n,a,b,f])=>{out+=R(a,y,b-a,30,f,C.line,0)+TF((a+b)/2,y+20,n,13,C.ink)});
   out+=L(30,y,570,y,C.ink,2)+L(30,y+30,570,y+30,C.ink,2);
   const rep=!s.lac,cap=!s.glu,level=s.lac?(cap?1:.2):.02;
-  if(rep)out+=P(`M181 ${y-2} Q211 ${y-50} 241 ${y-2} Z`,C.coral,2,C.coralp)+TF(211,y-18,'repressor',13,C.coral);
+  if(rep)out+=P(`M181 ${y-2} Q211 ${y-50} 241 ${y-2} Z`,C.coral,2,C.coralp)+TF(211,y-40,'repressor',13,C.coral);
   else out+=P('M150 92 Q180 52 210 92 Z',C.coral,2,C.coralp)+Ci(180,80,7,C.purple)+TF(180,112,'repressor',13,C.coral)+TF(222,70,'+ allolactose',13,C.purple,'start');
   if(cap)out+=Ci(68,y-20,18,C.amberp,C.amber)+TF(68,y-15,'CAP',13,C.amber);
   if(!rep)out+=R(102,y-50,70,46,C.purplep,C.purple,20,'stroke-width="2"')+TF(137,y-22,'RNA pol',13,C.purple);
@@ -470,7 +472,7 @@ SCENE({id:'gene-regulation-diauxie',name:'Two growth spurts',tag:'Monod’s diau
   const f=B4_diaux(s.g),tm=12,pl=B4_plot(70,56,470,200,[0,tm],[Math.log10(.02),Math.log10(1.2)],{xt:[[0,'0'],[4,'4 h'],[8,'8 h'],[12,'12 h']],yt:[[Math.log10(.02),'0.02'],[Math.log10(.1),'0.1'],[Math.log10(1),'1']],yl:'cell density (log scale)',xl:'time'});out+=pl.svg;
   out+=B4_poly(range(241).map(i=>{const t=i/240*tm;return [pl.X(t),pl.Y(Math.log10(f(t).N))]}),C.blue,3);
   out+=B4_poly(range(241).map(i=>{const t=i/240*tm;return [pl.X(t),pl.Y(Math.log10(.02)+f(t).e*(Math.log10(1.2)-Math.log10(.02))*.9)]}),C.green,2,'stroke-dasharray="6 4"');
-  out+=TF(540,74,'cells',13,C.blue,'end')+TF(540,92,'lactose enzyme (dashed)',13,C.green,'end');
+  out+=TF(530,232,'blue: cells',13,C.blue,'end')+TF(530,250,'green dashed: lactose enzyme',13,C.green,'end');
   out+=R(70,302,470*s.g,22,C.amber,'none',4)+R(70+470*s.g,302,470*(1-s.g),22,C.purple,'none',4,'opacity=".75"');
   if(s.g>.12)out+=TF(70+235*s.g,318,'glucose',13,'#fff');if(s.g<.88)out+=TF(70+470*s.g+235*(1-s.g),318,'lactose',13,'#fff');
   out+=TF(305,350,s.g===0||s.g===1?'One sugar: one growth phase, no pause':'Two phases with a pause between them while the lac genes switch on',14,C.ink);
@@ -478,7 +480,7 @@ SCENE({id:'gene-regulation-diauxie',name:'Two growth spurts',tag:'Monod’s diau
  }});
 
 /* ---- bistable switch ---- */
-const B4_SW={c:9,n:2,b:.02};
+const B4_SW={c:15,n:4,b:.01};
 const B4_h=z=>B4_SW.b+(1-B4_SW.b)*z**B4_SW.n/(1+z**B4_SW.n);
 const B4_relax=(I,x,c=B4_SW.c)=>{for(let i=0;i<300;i++)x=B4_h(I*(1+c*x));return x};
 function B4_roots(I){const r=[];let prev=B4_h(I*1)-0;for(let i=1;i<=400;i++){const x=i/400,g=B4_h(I*(1+B4_SW.c*x))-x,x0=(i-1)/400,g0=B4_h(I*(1+B4_SW.c*x0))-x0;if(g0===0||g0*g<0){const xr=x0+(x-x0)*g0/(g0-g);r.push({x:xr,stable:g<g0})}}return r}
@@ -490,23 +492,23 @@ SCENE({id:'gene-regulation-switch',name:'All or none',tag:'A switch with memory'
  research:'Novick, A. & Weiner, M. (1957). Enzyme induction as an all-or-none phenomenon. PNAS 43, 553–566. Ozbudak, E. M. et al. (2004). Multistability in the lactose utilization network of E. coli. Nature 427, 737–740. The model is a simple positive-feedback sketch.',
  dur:14,hint:'Raise the inducer slowly to the top, then lower it again. The cells switch off at a lower level than they switched on.',
  init:()=>({I:0,path:[0]}),
- watch(p){const I=p<.5?p*2*.6:(1-p)*2*.6,path=[];const n=Math.round(p*60);for(let k=0;k<=n;k++){const q=k/60;path.push(q<.5?q*2*.6:(1-q)*2*.6)}return {I,path}},
- ui:[{range:'I',label:'Inducer',min:0,max:.6,step:.01,get:s=>s.I,act:'I'},{b:'Reset cells',act:'reset'}],
+ watch(p){const I=p<.5?p*2*.4:(1-p)*2*.4,path=[];const n=Math.round(p*60);for(let k=0;k<=n;k++){const q=k/60;path.push(q<.5?q*2*.4:(1-q)*2*.4)}return {I,path}},
+ ui:[{range:'I',label:'Inducer',min:0,max:.4,step:.01,get:s=>s.I,act:'I'},{b:'Reset cells',act:'reset'}],
  on:{I(s,v){const I=Number(v),last=s.path[s.path.length-1],n=Math.max(1,Math.ceil(Math.abs(I-last)/.01));for(let k=1;k<=n;k++)s.path.push(last+(I-last)*k/n);if(s.path.length>400)s.path=s.path.slice(-400);s.I=I},reset(s){s.I=0;s.path=[0]}},
  draw(s){
   let out=heading('All or none: a switch with memory',26);
-  const pl=B4_plot(70,54,300,240,[0,.6],[0,1],{xt:[[0,'0'],[.3,'0.3'],[.6,'0.6']],yt:[[0,'off'],[1,'on']],xl:'inducer level',yl:'gene expression'});out+=pl.svg;
-  const st=[],un=[];for(let i=0;i<=120;i++){const I=i/120*.6;B4_roots(I).forEach(r=>(r.stable?st:un).push([pl.X(I),pl.Y(r.x)]))}
+  const pl=B4_plot(70,54,300,240,[0,.4],[0,1],{xt:[[0,'0'],[.2,'0.2'],[.4,'0.4']],yt:[[0,'off'],[1,'on']],xl:'inducer level',yl:'gene expression'});out+=pl.svg;
+  const st=[],un=[];for(let i=0;i<=160;i++){const I=i/160*.4;B4_roots(I).forEach(r=>(r.stable?st:un).push([pl.X(I),pl.Y(r.x)]))}
   st.forEach(p=>{out+=Ci(p[0],p[1],1.6,C.blue)});un.forEach(p=>{out+=Ci(p[0],p[1],1.2,C.coral)});
   let x=B4_SW.b;s.path.forEach(I=>{x=B4_relax(I,x)});
   out+=Ci(pl.X(s.I),pl.Y(x),8,C.amber,'#fff');
-  out+=TF(76,74,'blue: stable states',13,C.blue,'start')+TF(76,92,'coral: unstable',13,C.coral,'start');
+  out+=TF(480,238,'blue: stable states',13,C.blue)+TF(480,256,'coral: unstable',13,C.coral);
   const xs=B4_cells(s.path),on=xs.filter(v=>v>.5).length;
   out+=TF(480,56,'24 cells',13,C.muted);
   xs.forEach((v,i)=>{const cx=410+(i%6)*28,cy=74+Math.floor(i/6)*28;out+=Ci(cx,cy,11,v>.5?C.green:'#fff',v>.5?C.green:C.line)});
   out+=TBF(480,206,`${on} on, ${24-on} off`,15,C.ink);
   const up=s.path.length>1&&s.path[s.path.length-1]>=s.path[s.path.length-2];
-  out+=TF(300,340,`inducer ${s.I.toFixed(2)} · this cell is ${x>.5?'ON':'off'} · inducer ${up?'rising':'falling'}`,14,C.ink);
+  out+=TF(300,366,`inducer ${s.I.toFixed(2)} · this cell is ${x>.5?'ON':'off'} · inducer ${up?'rising':'falling'}`,14,C.ink);
   return {svg:out,phase:on>0&&on<24?'A mixed culture: each cell is either fully on or off, as Novick and Weiner found. Cells differ slightly, so they flip at slightly different levels.':'Between the two switching points there are two stable states. Which one a cell sits in depends on its history: that is the memory.'};
  }});
 
@@ -526,18 +528,18 @@ SCENE({id:'mutation',name:'Kinds of mutation',tag:'One letter, many outcomes',
  on:{pos(s,v){s.pos=Number(v)},base(s,v){s.base=v},kind(s,v){s.kind=v},sickle(s){s.pos=17;s.base='T';s.kind='sub'}},
  draw(s){
   let out=heading('Kinds of mutation: the β-globin gene',26);
-  const m=B4_mut(s),k=B4_class(B4_HBB,m,s.kind),w=22,x0=300-24*w/2;
+  const m=B4_mut(s),same=s.kind==='sub'&&B4_HBB[s.pos-1]===s.base,k=same?'unchanged':B4_class(B4_HBB,m,s.kind),w=22,x0=300-24*w/2;
   const row=(seq,y,lab,hl)=>{let o=TF(x0,y-8,lab,13,C.muted,'start');for(let i=0;i<Math.min(seq.length,25);i++)o+=B4_base(x0+i*w,y,seq[i],20,24,{size:13,stroke:hl===i?C.purple:undefined});
    for(let j=0;j*3+3<=Math.min(seq.length,24);j++)o+=L(x0+j*3*w+2,y+30,x0+(j+1)*3*w-4,y+30,C.line,2);return o};
   const prot=(seq,y)=>{let o='';const pr=B4_translate(seq);pr.forEach((a,j)=>{if(j>=8)return;const x=x0+j*3*w+1.5*w-2,ref=B4_aa(B4_HBB.slice(3*j,3*j+3)),diff=a!==ref;o+=a==='*'?TBF(x,y+5,'stop',14,C.coral):Ci(x,y,20,diff?C.coralp:C.greenp,diff?C.coral:C.green)+TF(x,y+5,B4_N3[a],13,C.ink)});return o};
   out+=row(B4_HBB,64,'normal DNA (codons 1–8)',-1)+prot(B4_HBB,124);
   out+=row(m,186,'mutated DNA',s.pos-1)+prot(m,246);
   out+=TF(x0+(s.pos-1)*w+10,222,'▲',13,C.purple);
-  const col={silent:C.green,missense:C.blue,nonsense:C.coral,frameshift:C.purple}[k];
+  const col={silent:C.green,missense:C.blue,nonsense:C.coral,frameshift:C.purple,unchanged:C.muted}[k];
   out+=R(120,290,360,40,'#fff',col,10,'stroke-width="2"')+TBF(300,316,k[0].toUpperCase()+k.slice(1),18,col);
   const sickle=s.kind==='sub'&&s.pos===17&&s.base==='T';
-  out+=TF(300,354,sickle?'Glu → Val at position 6: the sickle-cell change (Ingram 1957)':{silent:'Same protein: the code has more than one codon for this amino acid',missense:'One amino acid changed; the effect depends on where',nonsense:'A stop codon: the protein is cut short',frameshift:'Every codon after the change is read differently'}[k],14,C.ink);
-  return {svg:out,phase:`${k[0].toUpperCase()+k.slice(1)} mutation. Red circles mark amino acids that differ from normal β-globin.`};
+  out+=TF(300,354,sickle?'Glu → Val at position 6: the sickle-cell change (Ingram 1957)':{unchanged:'That base is already there: choose a different one',silent:'Same protein: the code has more than one codon for this amino acid',missense:'One amino acid changed; the effect depends on where',nonsense:'A stop codon: the protein is cut short',frameshift:'Every codon after the change is read differently'}[k],14,C.ink);
+  return {svg:out,phase:same?'No change yet: pick a base different from the one in the normal gene.':`${k[0].toUpperCase()+k.slice(1)} mutation. Coral circles mark amino acids that differ from normal β-globin.`};
  }});
 
 /* ---- Luria–Delbrück fluctuation test ---- */

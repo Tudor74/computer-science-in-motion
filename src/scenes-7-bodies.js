@@ -24,6 +24,7 @@ function B7_btn(X,act,arg,label,x,y,w,h,text,o={}){
 }
 // Wrap a sentence into lines of at most n characters.
 function B7_wrap(s,n){const out=[];let line='';for(const w of String(s).split(' ')){if((line+' '+w).trim().length>n&&line){out.push(line);line=w}else line=(line+' '+w).trim()}if(line)out.push(line);return out}
+function B7_stat(x,y,label,value,col,w=148){return R(x,y,w,46,'#fff',C.grid,8)+TF(x+w/2,y+17,label,13,C.muted)+TBF(x+w/2,y+37,value,14,col)}
 const B7_lines=(x,y,lines,size=14,col=C.ink,anchor='start',gap=19)=>lines.map((t,i)=>TF(x,y+i*gap,t,size,col,anchor)).join('');
 
 /* ================================================================ immune-system */
@@ -57,9 +58,9 @@ SCENE({id:'immune-system',name:'Clonal selection',tag:'The right cell is already
  draw(s){
   const ag=s.ag,day=s.day;let out=heading('Clonal selection: the antigen picks the clone',26);
   // Antigen on the left
-  out+=R(18,46,132,112,C.coralp,'none',10)+TF(84,66,'antigen',13,C.muted);
-  out+=Ci(84,108,26,'#fff',C.coral,'stroke-width="2"');range(6).forEach(i=>{const a=i*Math.PI/3;out+=B7_mark(84+36*Math.cos(a),108+36*Math.sin(a),ag,6.5)});
-  out+=TF(84,150,['Triangle virus','','Diamond bacterium','','Bar toxin','','','Star parasite'][ag],13,C.ink);
+  out+=R(18,46,140,140,C.coralp,'none',10)+TF(88,66,'antigen',13,C.muted);
+  out+=Ci(88,112,24,'#fff',C.coral,'stroke-width="2"');range(6).forEach(i=>{const a=i*Math.PI/3;out+=B7_mark(88+34*Math.cos(a),112+34*Math.sin(a),ag,6.5)});
+  out+=TF(88,174,['Triangle virus','','Diamond bacterium','','Bar toxin','','','Star parasite'][ag],13,C.ink);
   // Clones: receptor glyphs on cells
   const pl=B7_plot(200,58,370,212,[0,8],[1,2000],{log:true,yt:[[1,'1'],[10,'10'],[100,'100'],[1000,'1000']],yl:'cells in each clone (log scale)'});out+=pl.svg;
   range(8).forEach(k=>{const n=k===ag?B7_clone(day):1,x=pl.X(k+.5),y=pl.Y(n),hl=k===ag;
@@ -86,12 +87,12 @@ SCENE({id:'immune-system-memory',name:'Immune memory',tag:'Faster and stronger t
  ui:[{range:'d2',label:'Second exposure on day',min:25,max:70,step:1,get:s=>s.d2,act:'d2',show:v=>'day '+v},{choose:[[1,'Same antigen'],[0,'Different antigen']],label:'Second antigen',get:s=>s.same,act:'same'}],
  on:{d2(s,v){s.d2=Number(v)},same(s,v){s.same=Number(v)}},
  draw(s){
-  const g=s.grow===undefined?1:s.grow,T=100*g,base=.01;let out=heading('First and second responses',26);
+  const g=s.grow===undefined?1:s.grow,Tm=100*g,base=.01;let out=heading('First and second responses',26);
   const pl=B7_plot(80,56,470,236,[0,100],[.01,30],{log:true,xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60'],[80,'80'],[100,'100']],yt:[[.01,'0.01'],[.1,'0.1'],[1,'1'],[10,'10']],xl:'days',yl:'antibody level (relative, log scale)'});out+=pl.svg;
   const first=t=>B7_resp(t,0,14,1,12),second=t=>s.same?B7_resp(t,s.d2,6,12,30):B7_resp(t,s.d2,14,1,12);
-  const pts=range(401).map(i=>i*.25).filter(t=>t<=T).map(t=>[pl.X(t),pl.Y(Math.max(base,first(t)+second(t)))]);
+  const pts=range(401).map(i=>i*.25).filter(t=>t<=Tm).map(t=>[pl.X(t),pl.Y(Math.max(base,first(t)+second(t)))]);
   out+=B7_poly(pts,C.blue,3);
-  [[0,'1st'],[s.d2,'2nd']].forEach(([d,l],i)=>{if(d<=T)out+=arrow(pl.X(d),pl.Y(30)-2,pl.X(d),pl.Y(30)+20,i?(s.same?C.green:C.coral):C.ink,2.2,7)+TF(pl.X(d)+6,pl.Y(30)+16,l,13,C.ink,'start')});
+  [[0,'1st'],[s.d2,'2nd']].forEach(([d,l],i)=>{if(d<=Tm)out+=arrow(pl.X(d),pl.Y(30)-2,pl.X(d),pl.Y(30)+20,i?(s.same?C.green:C.coral):C.ink,2.2,7)+TF(pl.X(d)+6,pl.Y(30)+16,l,13,C.ink,'start')});
   const pk2=s.same?12:1,lag2=s.same?6:14;
   out+=T(300,350,s.same?`Same antigen: peak after about ${lag2} days, about ${pk2}× the first peak.`:'Different antigen: no memory, so a slow first-time response.',15,s.same?C.green:C.coral);
   out+=TF(300,374,'Shapes are illustrative; real sizes vary with the antigen and the person.',13,C.muted);
@@ -151,13 +152,13 @@ SCENE({id:'epidemics-sir',name:'The SIR model',tag:'Susceptible, infected, recov
  ui:[{range:'r0',label:'R0 (basic reproduction number)',min:.5,max:6,step:.1,get:s=>s.r0,act:'r0',show:v=>Number(v).toFixed(1)},{range:'d',label:'Infectious period',min:3,max:14,step:1,get:s=>s.d,act:'d',show:v=>v+' days'},{range:'t',label:'Show up to day',min:10,max:200,step:5,get:s=>s.t,act:'t',show:v=>'day '+v}],
  on:{r0(s,v){s.r0=Number(v)},d(s,v){s.d=Number(v)},t(s,v){s.t=Number(v)}},
  draw(s){
-  const run=B7_sir(s.r0,s.d),T=s.t;let out=heading(`SIR epidemic: R0 = ${s.r0.toFixed(1)}, infectious for ${s.d} days`,26);
+  const run=B7_sir(s.r0,s.d),Tm=s.t;let out=heading(`SIR epidemic: R0 = ${s.r0.toFixed(1)}, infectious for ${s.d} days`,26);
   const pl=B7_plot(70,52,350,240,[0,200],[0,1],{xt:[[0,'0'],[50,'50'],[100,'100'],[150,'150'],[200,'200']],yt:[[0,'0%'],[.25,'25%'],[.5,'50%'],[.75,'75%'],[1,'100%']],xl:'days',yl:'share of the population'});out+=pl.svg;
-  const vis=run.filter(r=>r.t<=T);
+  const vis=run.filter(r=>r.t<=Tm);
   if(s.r0>1)out+=L(pl.X(0),pl.Y(1/s.r0),pl.X(200),pl.Y(1/s.r0),C.muted,1.5,'stroke-dasharray="6 5"')+TF(pl.X(200)-4,pl.Y(1/s.r0)-6,'1/R0',13,C.muted,'end');
   [['S',C.blue],['I',C.coral],['R',C.green]].forEach(([k,col])=>out+=B7_poly(vis.map(r=>[pl.X(r.t),pl.Y(r[k])]),col,3));
   let pk=run[0];run.forEach(r=>{if(r.I>pk.I)pk=r});
-  if(pk.t<=T&&s.r0>1)out+=Ci(pl.X(pk.t),pl.Y(pk.I),5.5,C.coral)+L(pl.X(pk.t),pl.Y(pk.I),pl.X(pk.t),pl.Y(0),C.coral,1,'stroke-dasharray="3 3"');
+  if(pk.t<=Tm&&s.r0>1)out+=Ci(pl.X(pk.t),pl.Y(pk.I),5.5,C.coral)+L(pl.X(pk.t),pl.Y(pk.I),pl.X(pk.t),pl.Y(0),C.coral,1,'stroke-dasharray="3 3"');
   const fin=run[run.length-1].R,eq=B7_final(s.r0);
   out+=TF(440,74,'susceptible',14,C.blue,'start')+TF(440,96,'infected',14,C.coral,'start')+TF(440,118,'recovered',14,C.green,'start');
   out+=counter(440,140,'peak infected',s.r0>1?B7_pct(pk.I,1):'none',C.coral,130);
@@ -180,20 +181,18 @@ SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contact
  on:{cut(s,v){s.cut=Number(v)},start(s,v){s.start=Number(v)},len(s,v){s.len=Number(v)}},
  draw(s){
   const base=B7_sir(2.5,7,240),run=B7_sir(2.5,7,240,[s.cut/100,s.start,s.len>=200?999:s.len]),cap=.06;let out=heading('Flattening the curve (R0 = 2.5, illustrative capacity)',26);
-  const pl=B7_plot(70,52,370,236,[0,240],[0,.2],{xt:[[0,'0'],[60,'60'],[120,'120'],[180,'180'],[240,'240']],yt:[[0,'0%'],[.05,'5%'],[.1,'10%'],[.15,'15%'],[.2,'20%']],xl:'days',yl:'share infected at once'});out+=pl.svg;
+  const pl=B7_plot(70,52,350,236,[0,240],[0,.25],{xt:[[0,'0'],[60,'60'],[120,'120'],[180,'180'],[240,'240']],yt:[[0,'0%'],[.05,'5%'],[.1,'10%'],[.15,'15%'],[.2,'20%'],[.25,'25%']],xl:'days',yl:'share infected at once'});out+=pl.svg;
   const e=s.len>=200?240:Math.min(240,s.start+s.len);out+=R(pl.X(s.start),52,pl.X(e)-pl.X(s.start),236,C.greenp,'none',0,'opacity=".7"')+TF((pl.X(s.start)+pl.X(e))/2,68,`contacts −${s.cut}%`,13,C.green);
   out+=L(pl.X(0),pl.Y(cap),pl.X(240),pl.Y(cap),C.amber,2,'stroke-dasharray="8 5"')+TF(pl.X(240)-4,pl.Y(cap)-6,'capacity',13,C.amber,'end');
-  out+=B7_poly(base.map(r=>[pl.X(r.t),pl.Y(Math.min(.2,r.I))]),C.muted,2,'stroke-dasharray="6 5"');
-  out+=B7_poly(run.map(r=>[pl.X(r.t),pl.Y(Math.min(.2,r.I))]),C.coral,3.2);
+  out+=B7_poly(base.map(r=>[pl.X(r.t),pl.Y(r.I)]),C.muted,2,'stroke-dasharray="6 5"');
+  out+=B7_poly(run.map(r=>[pl.X(r.t),pl.Y(r.I)]),C.coral,3.2);
   const pk=a=>a.reduce((m,r)=>r.I>m.I?r:m,a[0]),over=a=>a.filter(r=>r.I>cap).length*.5,fin=a=>a[a.length-1].R;
   const b=pk(base),m=pk(run);
-  out+=TF(458,70,'without measures',13,C.muted,'start')+TF(458,88,'(dashed)',13,C.muted,'start');
-  out+=counter(458,102,'peak',`${B7_pct(m.I,1)} (was ${B7_pct(b.I,1)})`,C.coral,128);
-  out+=counter(458,156,'days over capacity',`${Math.round(over(run))} (was ${Math.round(over(base))})`,C.amber,128);
-  out+=counter(458,210,'ever infected',`${B7_pct(fin(run))} (was ${B7_pct(fin(base))})`,C.green,128);
+  out+=TF(440,70,'grey dashed:',13,C.muted,'start')+TF(440,88,'without measures',13,C.muted,'start');
+  out+=B7_stat(440,102,'peak',`${B7_pct(m.I,1)} · was ${B7_pct(b.I,1)}`,C.coral)+B7_stat(440,156,'days over capacity',`${Math.round(over(run))} · was ${Math.round(over(base))}`,C.amber)+B7_stat(440,210,'ever infected',`${B7_pct(fin(run))} · was ${B7_pct(fin(base))}`,C.green);
   const second=run.some((r,i)=>i>2&&r.t>e&&r.I>run[i-1].I&&r.I>.005);
   out+=T(300,342,second?'A second wave: the measures ended while most people were still susceptible.':s.cut?'Lower and later: the same model, with fewer contacts.':'No measures: the dashed and solid curves coincide.',14,second?C.coral:C.ink);
-  out+=TF(300,366,'Well-mixed SIR model; real epidemics also change with seasons, behaviour, testing and treatment.',13,C.muted);
+  out+=TF(300,366,'Well-mixed SIR model; real epidemics also depend on behaviour and season.',13,C.muted);
   return {svg:out,phase:'Cutting contacts lowers the effective reproduction number. A long enough cut keeps the peak under capacity; lifting it early leaves enough susceptible people for infections to grow again, which is what many cities saw in 1918.'};
  }});
 
@@ -201,15 +200,17 @@ SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contact
 function B7_reedFrost(R0,seed,N=100){const r=B7_rng(seed),p=R0/(N-1);let S=N-1,I=1,tot=1;const gens=[1];
  for(let g=0;g<40&&I>0;g++){const q=1-Math.pow(1-p,I);let n=0;for(let k=0;k<S;k++)if(r()<q)n++;S-=n;I=n;tot+=n;if(n)gens.push(n)}
  return {tot,gens}}
+// Chance that one case's chain dies out (Poisson offspring, one generation infectious): q = exp(−R0(1−q)).
+function B7_extinct(R0){if(R0<=1)return 1;let q=.5;for(let i=0;i<500;i++)q=Math.exp(-R0*(1-q));return q}
 SCENE({id:'epidemics-sir-chance',name:'Outbreaks and chance',tag:'Why some sparks go out',
  definition:'When cases are few, chance matters: a first case may recover before infecting anyone. Even with R0 above 1, many introductions fizzle out, and the rest grow into large outbreaks. Final sizes split into two groups.',
- example:'With R0 = 2 in a group of 100, about half of single introductions die out after a handful of cases; the others infect about 80 people. The chance of a small outbreak is close to 1/R0.',
+ example:'With R0 = 2 in a group of 100, about one introduction in five dies out after a handful of cases; the others infect about 80 people. When cases stay infectious for a fixed time, the chance of fizzling out solves q = e^(−R0(1−q)); when infectious times vary widely it is larger, up to 1/R0.',
  desc:'A Reed–Frost chain-binomial model of a closed group of 100 people. Each run starts with one case. Bars show the cases in each generation of the last run, and a histogram collects the final sizes of all runs.',
- research:'The Reed–Frost model (Reed & Frost, lectures 1928; published by Abbey 1952). Whittle, P. (1955). The outcome of a stochastic epidemic: a note on Bailey’s paper. Biometrika 42, 116–122: the chance of a minor outbreak is about 1/R0.',
+ research:'The Reed–Frost model (Reed & Frost, lectures 1928; published by Abbey 1952). Branching-process theory gives the chance of a minor outbreak; Whittle, P. (1955), Biometrika 42, 116–122, showed it is about 1/R0 when infectious periods are exponentially distributed.',
  dur:10,hint:'Set R0, then press Run 20 outbreaks a few times. Count the runs that die out early against those that take off.',
  init:()=>({r0:2,runs:[],seed:1}),
  watch(p){const n=Math.floor(p*60);return {r0:2,runs:range(n).map(i=>B7_reedFrost(2,1000+i).tot),last:n?B7_reedFrost(2,1000+n-1):null,seed:1}},
- ui:[{range:'r0',label:'R0',min:.5,max:4,step:.1,get:s=>s.r0,act:'r0',show:v=>Number(v).toFixed(1)},{b:'Run one outbreak',act:'one'},{b:'Run 20 outbreaks',act:'twenty'},{b:'Clear the runs',act:'clear'}],
+ ui:[{range:'r0',label:'R0',min:.5,max:4,step:.1,get:s=>s.r0,act:'r0',show:v=>Number(v).toFixed(1)},{b:'Run one outbreak',act:'one'},{b:'Run 20 outbreaks',act:'twenty'},{b:'Clear and reseed',act:'clear'}],
  on:{r0(s,v){s.r0=Number(v);s.runs=[];s.last=null},
   one(s){const res=B7_reedFrost(s.r0,s.seed*7919+s.runs.length);s.runs.push(res.tot);s.last=res;return 'keep'},
   twenty(s){for(let i=0;i<20;i++){const res=B7_reedFrost(s.r0,s.seed*7919+s.runs.length);s.runs.push(res.tot);s.last=res}return 'keep'},
@@ -226,7 +227,7 @@ SCENE({id:'epidemics-sir-chance',name:'Outbreaks and chance',tag:'Why some spark
   bins.forEach((n,i)=>{if(n)out+=R(hp.X(i)+2,hp.Y(n),hp.X(1)-hp.X(0)-4,hp.Y(0)-hp.Y(n),i<2?C.blue:C.green,'none',2)});
   const small=s.runs.filter(v=>v<=20).length,n=s.runs.length;
   out+=T(300,330,n?`${n} runs: ${small} died out with 20 or fewer cases (${B7_pct(small/n)}).`:'No runs yet.',15,C.ink);
-  out+=T(300,356,s.r0>1?`Whittle’s estimate for a minor outbreak: 1/R0 = ${B7_pct(1/s.r0)}. Large outbreaks reach about ${Math.round(100*B7_final(s.r0))}.`:'With R0 at or below 1 almost every run stays small.',14,C.muted);
+  out+=T(300,356,s.r0>1?`Theory for this model: ${B7_pct(B7_extinct(s.r0))} die out early; large outbreaks reach about ${Math.round(100*B7_final(s.r0))}.`:'With R0 at or below 1 almost every run stays small.',14,C.muted);
   return {svg:out,phase:'Each case infects a random number of others. Early on, a run of bad luck for the virus ends the chain; once there are many cases, chance averages out and the outbreak follows the deterministic curve. That is why public health teams chase the first cases so hard.'};
  }});
 
@@ -247,15 +248,15 @@ SCENE({id:'vaccines-herd',name:'Herd immunity',tag:'Protecting those who cannot 
  draw(s){
   const d=B7_DIS[s.dz],R0=d.r0,v=s.v/100,e=s.e/100,z=B7_herdSize(R0,v,e),thr=(1-1/R0)/e;let out=heading(`${d.n}: R0 ≈ ${R0} (${d.note})`,26);
   const order=shuffled(range(400),77),nv=Math.round(400*v),vac=new Set(order.slice(0,nv)),others=order.slice(nv),ni=Math.round(400*z),inf=new Set(shuffled(others,13).slice(0,ni));
-  range(400).forEach(i=>{const x=30+(i%20)*12.5,y=50+Math.floor(i/20)*12.5;out+=R(x,y,10.5,10.5,vac.has(i)?C.green:inf.has(i)?C.coral:'#fff',vac.has(i)||inf.has(i)?'none':C.line,2)});
-  out+=TF(30,318,'green vaccinated · coral infected · white escaped',13,C.muted,'start');
+  range(400).forEach(i=>{const x=30+(i%20)*11,y=54+Math.floor(i/20)*11;out+=R(x,y,9.2,9.2,vac.has(i)?C.green:inf.has(i)?C.coral:'#fff',vac.has(i)||inf.has(i)?'none':C.line,2)});
+  out+=TF(30,290,'green: vaccinated · coral: infected',13,C.muted,'start')+TF(30,308,'white: escaped infection',13,C.muted,'start');
   const pl=B7_plot(320,60,250,170,[0,1],[0,1],{xt:[[0,'0%'],[.5,'50%'],[1,'100%']],yt:[[0,'0%'],[.5,'50%'],[1,'100%']],xl:'share vaccinated',yl:'share infected in the end'});out+=pl.svg;
   out+=B7_poly(range(101).map(i=>[pl.X(i/100),pl.Y(B7_herdSize(R0,i/100,e))]),C.coral,2.6);
   if(thr<=1)out+=L(pl.X(thr),60,pl.X(thr),230,C.green,2,'stroke-dasharray="6 4"')+TF(pl.X(thr)-4,76,'threshold',13,C.green,'end');
   out+=Ci(pl.X(v),pl.Y(z),6.5,C.ink);
   out+=counter(320,270,'infected',`${ni} of 400`,C.coral,120)+counter(450,270,'threshold',thr<=1?B7_pct(thr):'unreachable',C.green,120);
-  out+=T(300,350,thr>1?'With this vaccine, even 100% coverage cannot stop spread: effectiveness is too low for this R0.':v>=thr?'Above the threshold: an introduced case cannot start a large outbreak.':'Below the threshold: outbreaks can still spread among the unprotected.',14,v>=thr&&thr<=1?C.green:C.coral);
-  out+=TF(300,372,'Well-mixed model; clusters of unvaccinated people can sustain outbreaks even when average coverage is high.',13,C.muted);
+  out+=T(300,346,thr>1?'Even 100% coverage cannot stop spread with a vaccine this weak.':v>=thr?'Above the threshold: one case cannot start a large outbreak.':'Below the threshold: outbreaks can still spread.',14,v>=thr&&thr<=1?C.green:C.coral);
+  out+=TF(300,370,'Well-mixed model: clusters of unvaccinated people can still have outbreaks.',13,C.muted);
   return {svg:out,phase:`For ${d.n.toLowerCase()} the threshold is 1 − 1/${R0} = ${B7_pct(1-1/R0)} with a perfect vaccine${e<1?`, or ${thr<=1?B7_pct(thr):'more than 100%'} at ${s.e}% effectiveness`:''}. Below it, infections still spread, but each vaccinated person also shrinks the outbreak among others.`};
  }});
 
@@ -390,16 +391,16 @@ SCENE({id:'morphogenesis-flag',name:'The French flag',tag:'Positional informatio
  on:{src(s,v){s.src=Number(v)},lam(s,v){s.lam=Number(v)}},
  draw(s){
   const T1=.5,T2=.15,lam=s.lam/100,c=x=>s.src*Math.exp(-x/lam);let out=heading('Wolpert’s French flag',26);
-  const x0=70,W=460,xp=u=>x0+u*W,y0=60,H=170,yp=v=>y0+H-v/2.5*H;
+  const x0=70,W=460,xp=u=>x0+u*W,y0=60,H=170,lo=Math.log10(.03),hi=Math.log10(3),yp=v=>y0+H-(Math.log10(clamp(v,.03,3))-lo)/(hi-lo)*H;
   out+=R(x0,y0,W,H,'#fff',C.grid,4);
   [[T1,'blue threshold'],[T2,'red threshold']].forEach(([t,l])=>out+=L(x0,yp(t),x0+W,yp(t),C.muted,1.5,'stroke-dasharray="6 4"')+TF(x0+W-4,yp(t)-5,l,13,C.muted,'end'));
-  out+=B7_poly(range(101).map(i=>[xp(i/100),yp(Math.min(2.5,c(i/100)))]),C.purple,3);
-  out+=TF(x0,y0-8,'morphogen level',13,C.muted,'start')+TF(x0-6,yp(0)+4,'0',13,C.muted,'end');
-  out+=R(x0-46,y0+H-40,40,40,C.purplep,'none',6)+TF(x0-26,y0+H+16,'source',13,C.purple);
+  out+=B7_poly(range(101).map(i=>[xp(i/100),yp(c(i/100))]),C.purple,3);
+  out+=TF(x0,y0-8,'morphogen level (log scale)',13,C.muted,'start');[[.03,'0.03'],[.1,'0.1'],[.3,'0.3'],[1,'1'],[3,'3']].forEach(([v,l])=>out+=TF(x0-6,yp(v)+4,l,13,C.muted,'end'));
+  out+=R(x0-6,y0+H+26,6,40,C.purple,'none',2)+TF(x0-10,y0+H+50,'source',13,C.purple,'end');
   range(30).forEach(i=>{const u=(i+.5)/30,l=c(u),col=l>=T1?C.blue:l>=T2?'#ffffff':C.coral;out+=R(x0+i*W/30+1,256,W/30-2,40,col,C.line,3)});
   const b1=lam*Math.log(s.src/T1),b2=lam*Math.log(s.src/T2);
   [b1,b2].forEach(b=>{if(b>0&&b<1)out+=L(xp(b),y0,xp(b),300,C.ink,1.5,'stroke-dasharray="3 3"')});
-  out+=TF(x0,318,'cells',13,C.muted,'start');
+  out+=TF(x0,316,'cells: blue, white or red by the level they read',13,C.muted,'start');
   const f=v=>v<=0?'none':v>=1?'off the end':B7_pct(v);
   out+=T(300,342,`Blue–white boundary at ${f(b1)} of the tissue; white–red at ${f(b2)}.`,15,C.ink);
   out+=TF(300,366,`Doubling the source moves both boundaries by the same distance, ${B7_pct(lam*Math.log(2))} here.`,13,C.muted);
@@ -420,28 +421,27 @@ SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern i
  on:{hox(s,v){s.hox=Number(v)},w(s,v){s.w=Number(v)}},
  draw(s){
   const lamb=1*(.55+.45*s.hox),Wd=5*s.w/100,n=Math.max(1,Math.round(Wd/lamb));let out=heading('Digits as Turing stripes',26);
-  const cx=300,cy=300,R0=60,R1=60+150*Math.min(1.2,s.w/100),span=Math.PI*(.42+.38*s.w/140);
+  const cx=230,cy=270,R0=56,R1=60+120*Math.min(1.2,s.w/100),span=Math.PI*(.25+.2*s.w/140);
   out+=P(`M${fmt(cx+R1*Math.cos(-Math.PI/2-span))} ${fmt(cy+R1*Math.sin(-Math.PI/2-span))} A${fmt(R1)} ${fmt(R1)} 0 0 1 ${fmt(cx+R1*Math.cos(-Math.PI/2+span))} ${fmt(cy+R1*Math.sin(-Math.PI/2+span))} L${cx+40} ${cy+40} L${cx-40} ${cy+40} Z`,C.line,2,'#fdf3ea');
   range(n).forEach(i=>{const a=-Math.PI/2-span+(i+.5)/n*2*span,w=Math.min(18,.6*R1*2*span/n);
    out+=L(cx+R0*Math.cos(a),cy+R0*Math.sin(a),cx+(R1-14)*Math.cos(a),cy+(R1-14)*Math.sin(a),C.coral,w);});
   out+=L(cx-40,cy+40,cx+40,cy+40,C.line,2);
-  out+=counter(30,60,'digits',String(n),C.coral,110)+counter(30,114,'stripe spacing',`${(lamb*20).toFixed(0)} units`,C.purple,110);
-  out+=TF(30,186,'bud width',13,C.muted,'start')+TF(30,204,`${(Wd*20).toFixed(0)} units`,14,C.ink,'start');
+  out+=counter(462,60,'digits',String(n),C.coral,118)+counter(462,114,'stripe spacing',`${(lamb*20).toFixed(0)} units`,C.purple,118)+counter(462,168,'bud width',`${(Wd*20).toFixed(0)} units`,C.ink,118);
   out+=T(300,366,'digits ≈ bud width ÷ stripe spacing (simplified; real limbs also prune and fuse digits)',14,C.muted);
-  return {svg:out,phase:`With ${B7_HOX.find(h=>h[0]===s.hox)[1].toLowerCase()} Hox dose the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly in mice lacking Hox genes; Raspopovic and colleagues identified the signals that make the stripes.`};
+  return {svg:out,phase:`With ${({1:'the full Hox dose',.75:'three quarters of the Hox dose',.5:'half the Hox dose',.25:'a quarter of the Hox dose'})[s.hox]} the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly in mice lacking Hox genes; Raspopovic and colleagues identified the signals that make the stripes.`};
  }});
 
 /* ================================================================ circulation-heart */
 SCENE({id:'circulation-heart',name:'Harvey’s calculation',tag:'Blood must go round',
  definition:'Harvey’s argument for circulation was a calculation: the heart pumps out far more blood in an hour than the body contains or could make from food, so the same blood must return to the heart again and again.',
- example:'Harvey assumed a cautious 1 drachm (about 4 g) per beat and 1,000 beats in half an hour: about 4 kg of blood, more than the whole body holds. A modern resting heart pumps about 70 mL per beat at 70 beats a minute: about 5 litres every minute.',
+ example:'Harvey supposed half an ounce (about 14 g) per beat and 1,000 beats in half an hour: about 14 kg of blood, several times what the body holds. Even his smallest guess, 1 drachm (about 4 g), gives about 8 kg in an hour. A modern resting heart pumps about 70 mL a beat at 70 beats a minute: about 5 litres every minute.',
  desc:'Sliders for blood per beat and heart rate, with bars comparing the blood pumped in half an hour against the blood in the body (about 5 litres) and a day’s food and drink (about 3 kg). Presets give Harvey’s cautious figures and a modern resting heart.',
  research:'Harvey, W. (1628). Exercitatio Anatomica de Motu Cordis et Sanguinis in Animalibus, chapter 9. Modern resting values (stroke volume about 70 mL, cardiac output about 5 L/min) from standard physiology texts.',
- dur:10,hint:'Start from Harvey’s numbers, then try the modern ones. Even the most cautious guess beats the body’s whole blood supply within an hour.',
- init:()=>({sv:3.9,bpm:33}),
- watch(p){return p<.5?{sv:3.9,bpm:33,grow:Math.min(1,p/.35)}:{sv:70,bpm:70,grow:Math.min(1,(p-.5)/.3)}},
- ui:[{range:'sv',label:'Blood per beat',min:1,max:100,step:.1,get:s=>s.sv,act:'sv',show:v=>Number(v).toFixed(1)+' mL'},{range:'bpm',label:'Heart rate',min:20,max:180,step:1,get:s=>s.bpm,act:'bpm',show:v=>v+' per minute'},{b:'Harvey’s figures',act:'harvey'},{b:'Modern resting heart',act:'modern'}],
- on:{sv(s,v){s.sv=Number(v)},bpm(s,v){s.bpm=Number(v)},harvey(s){s.sv=3.9;s.bpm=33},modern(s){s.sv=70;s.bpm=70}},
+ dur:10,hint:'Start from Harvey’s figures, then try the modern ones. Even his smallest guess outruns the body’s whole blood supply within an hour.',
+ init:()=>({sv:14,bpm:33}),
+ watch(p){return p<.5?{sv:14,bpm:33,grow:Math.min(1,p/.35)}:{sv:70,bpm:70,grow:Math.min(1,(p-.5)/.3)}},
+ ui:[{range:'sv',label:'Blood per beat',min:1,max:100,step:.1,get:s=>s.sv,act:'sv',show:v=>Number(v).toFixed(1)+' mL'},{range:'bpm',label:'Heart rate',min:20,max:180,step:1,get:s=>s.bpm,act:'bpm',show:v=>v+' per minute'},{b:'Harvey: half an ounce',act:'harvey'},{b:'Harvey: 1 drachm',act:'smallest'},{b:'Modern resting heart',act:'modern'}],
+ on:{sv(s,v){s.sv=Number(v)},bpm(s,v){s.bpm=Number(v)},harvey(s){s.sv=14;s.bpm=33},smallest(s){s.sv=3.9;s.bpm=33},modern(s){s.sv=70;s.bpm=70}},
  draw(s){
   const g=s.grow===undefined?1:s.grow,half=s.sv*s.bpm*30/1000,shown=half*g;let out=heading('Harvey’s calculation (1628)',26);
   const mx=Math.max(10,half),lx=v=>200+Math.log10(1+v)/Math.log10(1+Math.max(200,mx))*340;
@@ -449,8 +449,8 @@ SCENE({id:'circulation-heart',name:'Harvey’s calculation',tag:'Blood must go r
   rows.forEach(([l,v,c],i)=>{const y=70+i*58;out+=TF(30,y+22,l,14,C.ink,'start')+R(200,y,lx(v)-200,32,c,'none',5)+TF(lx(v)+8,y+22,`${v<10?v.toFixed(1):Math.round(v)} ${i===2?'kg':'L'}`,14,C.ink,'start')});
   out+=TF(200,262,'bar length on a logarithmic scale',13,C.muted,'start');
   out+=counter(30,282,'beats in half an hour',String(s.bpm*30),C.blue,160)+counter(210,282,'per beat',`${s.sv.toFixed(1)} mL`,C.blue,120)+counter(350,282,'in a day',`${Math.round(half*48).toLocaleString('en-GB')} L`,C.coral,190);
-  out+=T(300,360,half>5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:'Too little pumped to make Harvey’s point: raise the beat or the rate.',14,C.ink);
-  return {svg:out,phase:'Harvey deliberately chose numbers too small to be disputed and still found the heart pumping more blood than the body holds. The liver could not make so much from food, and the limbs could not absorb it: the same blood must go round. 1 drachm is about 3.9 g, so 1,000 beats move about 3.9 kg.'};
+  out+=T(300,360,half>=5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:`About ${(half/5*2).toFixed(1)} times the body’s blood in an hour: still more than it holds.`,14,C.ink);
+  return {svg:out,phase:'Harvey deliberately chose numbers too small to be disputed and still found the heart pumping more blood than the body holds. The liver could not make so much from food, and the limbs could not absorb it: the same blood must go round. Half an ounce is about 14 g and 1 drachm about 3.9 g.'};
  }});
 
 const B7_MODELS={galen:{n:'Galen (2nd century)',t:'Blood is made from food in the liver and consumed by the body. Some seeps through invisible pores in the septum to the left side.'},nafis:{n:'Ibn al-Nafis (c. 1242)',t:'The septum has no pores: blood from the right ventricle must pass through the lungs to reach the left. The pulmonary circuit, unknown in Europe for three centuries.'},harvey:{n:'Harvey (1628)',t:'One closed loop: heart, arteries, body, veins, heart, and a second loop through the lungs. Valves in the veins allow flow only towards the heart.'},malpighi:{n:'Malpighi (1661)',t:'Under the microscope, a frog’s lung shows capillaries joining the smallest arteries to the smallest veins: the missing link in Harvey’s loop.'}};
@@ -465,26 +465,28 @@ SCENE({id:'circulation-heart-pulmonary',name:'Two circuits',tag:'Galen, Ibn al-N
  ui:[{choose:Object.keys(B7_MODELS).map(k=>[k,B7_MODELS[k].n]),label:'Model',get:s=>s.m,act:'m'}],
  on:{m(s,v){s.m=v}},
  draw(s,f,X){
-  const m=s.m,M=B7_MODELS[m],p=X&&X.p!==undefined?X.p:0;let out=heading(M.n,26);
+  const m=s.m,M=B7_MODELS[m];let out=heading(M.n,26);
   out+=`<ellipse cx="300" cy="78" rx="120" ry="30" fill="${C.pale}" stroke="${C.line}" stroke-width="2"/>`+TF(300,83,'lungs',14,C.blue);
-  out+=`<ellipse cx="300" cy="300" rx="190" ry="28" fill="${C.coralp}" stroke="${C.line}" stroke-width="2"/>`+TF(300,305,'body',14,C.coral);
+  out+=`<ellipse cx="300" cy="303" rx="190" ry="22" fill="${C.coralp}" stroke="${C.line}" stroke-width="2"/>`+TF(300,308,'body',14,C.coral);
   out+=R(230,140,70,50,'#e6eef8',C.line,8)+R(300,140,70,50,'#fbe9e3',C.line,8)+R(230,190,70,64,'#e6eef8',C.line,8)+R(300,190,70,64,'#fbe9e3',C.line,8);
   out+=TF(265,170,'RA',13,C.blue)+TF(335,170,'LA',13,C.coral)+TF(265,227,'RV',13,C.blue)+TF(335,227,'LV',13,C.coral);
   out+=L(300,190,300,254,m==='galen'?C.amber:C.ink,m==='galen'?3:4,m==='galen'?'stroke-dasharray="3 4"':'');
   if(m==='galen'){out+=arrow(278,224,322,224,C.amber,2.2,7)+TF(300,272,'pores?',13,C.amber);
    out+=R(450,170,80,40,C.amberp,'none',8)+TF(490,195,'liver',14,C.amber)+curveArrow(450,190,370,215,-20,C.amber,2.2)+curveArrow(470,210,420,288,20,C.amber,2.2);
    out+=curveArrow(335,140,335,108,0,C.muted,2)+TF(360,124,'air?',13,C.muted,'start')}
-  else{out+=curveArrow(260,190,250,104,-30,C.blue,2.6)+curveArrow(350,104,340,140,-30,C.coral,2.6);
-   if(m!=='nafis'){out+=curveArrow(350,254,420,290,-25,C.coral,2.6)+curveArrow(180,290,250,254,-25,C.blue,2.6)}
+  else{out+=curveArrow(232,224,206,100,-30,C.blue,2.6)+curveArrow(350,104,340,140,-30,C.coral,2.6);
+   if(m!=='nafis'){out+=curveArrow(350,254,420,290,-25,C.coral,2.6)+curveArrow(170,292,228,166,-30,C.blue,2.6)}
    else{out+=curveArrow(350,254,420,290,-25,C.coral,2.2)+TF(470,262,'to the body',13,C.muted,'start')}
    if(m==='malpighi'){range(5).forEach(i=>out+=P(`M${410-i*6} ${288+i} q-30 ${-8+i*4} -60 0`,C.purple,1.4));out+=TF(470,340,'capillaries',13,C.purple,'start')}
-   if(m!=='galen'&&p>0){range(6).forEach(i=>{const u=(p*3+i/6)%1,a=Math.PI*2*u,x=300+170*Math.cos(a),y=190+110*Math.sin(a);out+=Ci(x,y,3.5,u<.5?C.coral:C.blue,'none','opacity=".55"')})}}
-  out+=R(30,330,540,44,C.pale,'none',8)+B7_lines(42,348,B7_wrap(M.t,86),13,C.ink,'start',17);
+   }
+  out+=R(30,332,540,44,C.pale,'none',8)+B7_lines(42,350,B7_wrap(M.t,84),13,C.ink,'start',17);
   return {svg:out,phase:'Ibn al-Nafis reasoned from anatomy that the septum is solid; his work was largely unknown in Europe, where Servetus (1553) and Colombo (1559) described the lung circuit again. Harvey closed both loops in 1628, and Malpighi found the capillaries that join them.'};
  }});
 
 // A synthetic ECG: P, QRS and T waves as sums of Gaussians, repeated at the heart rate.
-function B7_ecg(t,rr){const u=((t%rr)+rr)%rr,g=(c,w,a)=>a*Math.exp(-((u-c)**2)/(2*w*w));return g(.16,.025,.15)+g(.31,.008,-.12)+g(.34,.012,1.1)+g(.37,.009,-.25)+g(.36+.33*Math.sqrt(rr),.045,.3)}
+const B7_ecgT=rr=>{const cp=.08+.08*rr,cq=cp+.14+.04*rr;return {cp,cq,ct:cq+.06+.2*Math.sqrt(rr)}};
+function B7_beat(u,rr){const {cp,cq,ct}=B7_ecgT(rr),g=(c,w,a)=>a*Math.exp(-((u-c)**2)/(2*w*w));return g(cp,.025,.15)+g(cq-.03,.008,-.12)+g(cq,.012,1.1)+g(cq+.03,.009,-.25)+g(ct,.045,.3)}
+function B7_ecg(t,rr){const k=Math.floor(t/rr);let v=0;for(let j=k-2;j<=k+1;j++)v+=B7_beat(t-j*rr,rr);return v}
 SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading an ECG',
  definition:'An electrocardiogram (ECG) records the tiny voltages on the skin made by the heart’s electrical activity. The P wave marks the atria contracting, the QRS complex the ventricles contracting, and the T wave the ventricles recovering.',
  example:'At 60 beats a minute, the peaks of the QRS complexes are 1 second apart: five large squares on standard ECG paper running at 25 mm per second.',
@@ -493,9 +495,9 @@ SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading 
  dur:10,hint:'Change the heart rate and move the cursor across one beat. Press Hear eight beats to listen at that rate.',
  init:()=>({bpm:72,cur:.34}),
  watch(p){return {bpm:72,cur:(p*8)%1*60/72}},
- ui:[{range:'bpm',label:'Heart rate',min:40,max:180,step:1,get:s=>s.bpm,act:'bpm',show:v=>v+' per minute'},{range:'cur',label:'Cursor',min:0,max:1.5,step:.01,get:s=>s.cur,act:'cur',show:v=>Number(v).toFixed(2)+' s'},{b:'Hear eight beats',act:'hear'}],
+ ui:[{range:'bpm',label:'Heart rate',min:40,max:160,step:1,get:s=>s.bpm,act:'bpm',show:v=>v+' per minute'},{range:'cur',label:'Cursor',min:0,max:1.5,step:.01,get:s=>s.cur,act:'cur',show:v=>Number(v).toFixed(2)+' s'},{b:'Hear eight beats',act:'hear'}],
  on:{bpm(s,v){s.bpm=Number(v);return 'keep'},cur(s,v){s.cur=Number(v);return 'keep'},
-  hear(s){const rr=60/s.bpm;AUDIO.seq(range(8).flatMap(i=>[{hz:72,at:i*rr,dur:.12},{hz:96,at:i*rr+.3*Math.sqrt(rr),dur:.1}]),{type:'triangle',gain:.3,attack:.005,release:.06});return 'keep'}},
+  hear(s){const rr=60/s.bpm;AUDIO.seq(range(8).flatMap(i=>[{hz:72,at:i*rr,dur:.12},{hz:96,at:i*rr+.28*Math.sqrt(rr),dur:.1}]),{type:'triangle',gain:.3,attack:.005,release:.06});return 'keep'}},
  draw(s){
   const rr=60/s.bpm,x0=40,y0=60,W=520,H=170,xp=t=>x0+t/4*W,yp=v=>y0+H*.65-v*H*.5;let out=heading(`ECG at ${s.bpm} beats per minute`,26);
   out+=R(x0,y0,W,H,'#fff6f4',C.coralp,2);
@@ -503,8 +505,8 @@ SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading 
   for(let v=0;v<=H;v+=H/20)out+=L(x0,y0+v,x0+W,y0+v,Math.round(v/(H/20))%5===0?'#efb7a6':'#f8ded5',Math.round(v/(H/20))%5===0?1.1:.6);
   out+=B7_poly(range(801).map(i=>{const t=i*.005;return [xp(t),yp(B7_ecg(t,rr))]}),C.ink,1.8);
   const cur=clamp(s.cur,0,4),u=((cur%rr)+rr)%rr;out+=L(xp(cur),y0,xp(cur),y0+H,C.blue,2);
-  const tT=.36+.33*Math.sqrt(rr),phase=u<.22?'atria':u<.42?'ventricles':u<tT+.12?'recover':'rest';
-  out+=TF(xp(.16),y0+H-8,'P',13,C.muted)+TF(xp(.34)+8,y0+14,'QRS',13,C.muted,'start')+TF(xp(tT),y0+H-8,'T',13,C.muted);
+  const {cp,cq,ct}=B7_ecgT(rr),phase=u<cp-.06?'rest':u<cp+.07?'atria':u<cq+.1?'ventricles':u<ct+.1?'recover':'rest';
+  out+=TF(xp(cp),y0+H-8,'P',13,C.muted)+TF(xp(cq)+8,y0+14,'QRS',13,C.muted,'start')+TF(xp(ct),y0+H-8,'T',13,C.muted);
   out+=TF(x0,y0+H+18,'0 s',13,C.muted,'start')+TF(x0+W,y0+H+18,'4 s',13,C.muted,'end');
   const hx=120,hy=270,on=k=>phase===k;
   out+=R(hx-50,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx+2,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx-50,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8)+R(hx+2,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8);
@@ -558,7 +560,7 @@ SCENE({id:'microbiome-cdiff',name:'A transplant that works',tag:'Faecal microbio
    out+=TF(30,y+14,a.n,14,C.ink,'start');
    range(a.N).forEach(i=>{const q=pts[i],x=30+i*20;out+=Ci(x+8,y+36,8,q?(q.ok?a.c:C.coral):'#fff',q?'none':C.line)});
    const share=pts.length?ok/pts.length:0;out+=R(380,y+24,170*share,22,a.c,'none',4)+R(380,y+24,170,22,'none',C.line,4);
-   out+=TF(380+170*a.k/a.N,y+20,'▼',13,C.ink)+TF(560,y+40,pts.length?`${ok}/${pts.length}`:'—',13,C.ink,'end');
+   out+=TF(380+170*a.k/a.N,y+20,'▼',13,C.ink)+TF(560,y+40,pts.length?`${ok}/${pts.length}`:'',13,C.ink,'end');
    out+=TF(380,y+64,`published: ${a.k}/${a.N} (${B7_pct(a.k/a.N)})`,13,C.muted,'start')});
   out+=TF(30,322,'filled: cured after one treatment · coral: infection came back',13,C.muted,'start');
   out+=T(300,354,s.k<42?`${s.k} of 42 patients treated so far.`:'All 42 treated: donor microbes cured most patients after one infusion.',15,C.ink);
@@ -581,19 +583,19 @@ SCENE({id:'microbiome-hype',name:'Microbiome claims',tag:'Strong, promising or h
  dur:12,hint:'Pick a verdict for each claim. Hanage’s five questions help: can we detect real differences, do they show causation, what mechanism, how much is in mice, and could it be otherwise?',
  init:()=>({i:0,ans:[]}),
  watch(p){const n=Math.min(6,Math.floor(p*7));return {i:Math.min(5,n),ans:B7_CLAIMS.slice(0,n).map(c=>c.a),sim:true}},
- ui:[{b:'Strong',act:'ans',arg:'strong'},{b:'Promising',act:'ans',arg:'mixed'},{b:'Weak',act:'ans',arg:'weak'},{b:'Wrong',act:'ans',arg:'wrong'},{b:'Start again',act:'again'}],
- on:{ans(s,v){if(s.ans.length>=6)return 'keep';s.ans.push(v);s.i=Math.min(5,s.ans.length);return 'keep'},again(s){s.i=0;s.ans=[];return 'keep'}},
+ ui:[{b:'Strong',act:'ans',arg:'strong'},{b:'Promising',act:'ans',arg:'mixed'},{b:'Weak',act:'ans',arg:'weak'},{b:'Wrong',act:'ans',arg:'wrong'}],
+ on:{ans(s,v){if(s.ans.length>=6)return 'keep';s.ans.push(v);s.i=Math.min(5,s.ans.length);return 'keep'}},
  draw(s){
   let out=heading('Microbiome claims: how strong is the evidence?',26);
   const done=s.ans.length;
-  B7_CLAIMS.forEach((c,i)=>{const y=46+i*48,ev=B7_EV[c.a],a=s.ans[i],cur=i===done;
-   out+=R(20,y,560,42,i<done?ev[2]:cur?'#fff':C.pale,cur?C.blue:'none',8,cur?'stroke-width="2"':'');
-   out+=TF(32,y+18,c.t,13.5,C.ink,'start');
-   if(i<done){out+=TF(32,y+35,`${ev[0]}${a===c.a?' ✓':` (you said ${B7_EV[a][0].toLowerCase()})`}`,13,ev[1],'start')}
-   else if(cur)out+=TF(32,y+35,'Your verdict?',13,C.blue,'start')});
+  B7_CLAIMS.forEach((c,i)=>{const y=42+i*44,ev=B7_EV[c.a],a=s.ans[i],cur=i===done;
+   out+=R(20,y,560,40,i<done?ev[2]:cur?'#fff':C.pale,cur?C.blue:'none',8,cur?'stroke-width="2"':'');
+   out+=TF(32,y+17,c.t,13.5,C.ink,'start');
+   if(i<done){out+=TF(32,y+33,`${ev[0]}${a===c.a?' ✓':` (you said ${B7_EV[a][0].toLowerCase()})`}`,13,ev[1],'start')}
+   else if(cur)out+=TF(32,y+33,'Your verdict?',13,C.blue,'start')});
   const right=s.ans.filter((a,i)=>a===B7_CLAIMS[i].a).length;
   const last=done?B7_CLAIMS[done-1]:null;
-  out+=T(300,344,last?last.w:'Choose Strong, Promising, Weak or Wrong for the first claim.',13.5,C.ink);
-  out+=T(300,370,`${s.sim?'Simulated reader':'You'}: ${right} of ${done} matched the evidence.`,14,C.muted);
+  out+=B7_lines(300,322,B7_wrap(last?last.w:'Choose Strong, Promising, Weak or Wrong for the first claim.',84),13.5,C.ink,'middle',17);
+  out+=T(300,374,`${s.sim?'Simulated reader':'You'}: ${right} of ${done} matched the evidence.`,14,C.muted);
   return {svg:out,phase:'The microbiome matters, and one treatment works well. Many headline claims rest on mice or correlations. Hanage’s advice: ask whether the differences are real, whether they show cause, what the mechanism is, and how much depends on mice.'};
  }});

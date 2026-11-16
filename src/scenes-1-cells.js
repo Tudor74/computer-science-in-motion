@@ -59,7 +59,7 @@ SCENE({id:'microscopes',name:'Microscopes',tag:'Magnifying is not the same as re
  }});
 
 const B1_OBJ=[
- {n:'Hen’s egg',k:'egg',m:5e-2},{n:'Ant',k:'ant',m:3e-3},{n:'Human egg cell',k:'human egg',m:1.2e-4},{n:'Width of a hair',k:'hair',m:7e-5},
+ {n:'Hen’s egg',k:'egg',m:5e-2},{n:'Ant',k:'ant',m:3e-3},{n:'Human egg cell',k:'human egg',m:1.2e-4},{n:'Width of a hair',k:'hair',m:7e-5,dx:16},
  {n:'Red blood cell',k:'red cell',m:7.5e-6},{n:'E. coli bacterium',k:'E. coli',m:2e-6},{n:'Influenza virus',k:'flu virus',m:1e-7},{n:'Ribosome',k:'ribosome',m:2.5e-8},{n:'DNA helix (width)',k:'DNA',m:2e-9}];
 const B1_TOOLS=[{n:'eye',lim:1e-4,col:C.green},{n:'light microscope',lim:2e-7,col:C.blue},{n:'electron microscope',lim:1e-10,col:C.purple}];
 SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
@@ -79,7 +79,7 @@ SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
   labs.forEach((t,i)=>{const x=60+60*i;out+=L(x,144,x,156,C.ink,2)+TF(x,174,t,13,C.muted)});
   B1_TOOLS.forEach((t,i)=>{const y=196+i*30,x2=Math.min(540,xl(t.lim));out+=R(60,y,x2-60,20,t.col,'none',5,'opacity=".18"')+L(x2,y,x2,y+20,t.col,3)+TF(x2-6,y+15,t.n+(t.lim<1e-9?' (below 1 nm)':''),13,t.col,'end')});
   B1_OBJ.forEach((o,i)=>{const x=xl(o.m),on=i===s.sel,y=i%2?112:86;
-   out+=L(x,y+8,x,146,on?C.coral:C.line,on?2.5:1.5)+hit(X,'pick',i,o.n,Ci(x,y,on?9:7,on?C.coral:C.blue)+TF(x,y-13,o.k,13,on?C.coral:C.ink))});
+   out+=L(x,y+8,x,146,on?C.coral:C.line,on?2.5:1.5)+hit(X,'pick',i,o.n,Ci(x,y,on?9:7,on?C.coral:C.blue)+TF(x+(o.dx||0),y-13,o.k,13,on?C.coral:C.ink,o.dx?'start':'middle'))});
   const o=B1_OBJ[s.sel],sees=B1_TOOLS.filter(t=>o.m>=t.lim).map(t=>t.n);
   const sz=o.m>=1e-3?B1_n(o.m*1000,o.m>=1e-2?0:1)+' mm':o.m>=1e-6?B1_n(o.m*1e6,o.m>=1e-5?0:1)+' µm':B1_n(o.m*1e9,0)+' nm';
   out+=B1_card(60,292,480,`${o.n}: about ${sz}`,[`Can be resolved by: ${sees.join(', ')}.`,sees.length===1?'Only an electron microscope (or X-ray methods) shows it.':sees.length===3?'Visible without any instrument.':'Too small for the unaided eye.']);
@@ -288,11 +288,11 @@ SCENE({id:'surface-volume-shapes',name:'Shapes that cheat',tag:'Flattening adds 
   out+=R(cx-r*sc,cy-h*sc/2,2*r*sc,h*sc,'#efb3a6','none',0)+`<ellipse cx="${cx}" cy="${cy+h*sc/2}" rx="${r*sc}" ry="${r*sc*.25}" fill="#efb3a6" stroke="${C.coral}" stroke-width="2"/>`+`<ellipse cx="${cx}" cy="${cy-h*sc/2}" rx="${r*sc}" ry="${r*sc*.25}" fill="#f6d2cb" stroke="${C.coral}" stroke-width="2"/>`;
   out+=L(cx-r*sc,cy-h*sc/2,cx-r*sc,cy+h*sc/2,C.coral,2)+L(cx+r*sc,cy-h*sc/2,cx+r*sc,cy+h*sc/2,C.coral,2);
   out+=TF(cx,336,`radius ${B1_n(r,1)} µm · height ${B1_n(h,2)} µm`,13,C.muted);
-  const A=B1_axes(340,70,210,200,[0,3],[0,200],{yt:[0,50,100,150,200],yl:'surface (µm²)'});out+=A.svg;
+  const A=B1_axes(340,70,210,200,[0,3],[0,300],{yt:[0,100,200,300]});out+=A.svg+TF(340,60,'surface (µm²)',13,C.muted,'start');
   const bars=[['sphere',Ss,C.muted],['your shape',S,C.coral],['red cell',135,C.green]];
-  bars.forEach(([n,v,c],i)=>{const x=A.X(i+.5);out+=R(x-24,A.Y(Math.min(v,200)),48,A.Y(0)-A.Y(Math.min(v,200)),c,'none',4)+TBF(x,A.Y(Math.min(v,200))-6,B1_n(v,0),14,c)+TF(x,288,n,13,C.ink)});
+  bars.forEach(([n,v,c],i)=>{const x=A.X(i+.5);out+=R(x-24,A.Y(v),48,A.Y(0)-A.Y(v),c,'none',4)+TBF(x,A.Y(v)-6,B1_n(v,0),14,c)+TF(x,288,n,13,C.ink)});
   out+=TBF(300,356,`${B1_n((S/Ss-1)*100,0)}% more surface than a sphere of the same volume`,15,S>Ss*1.02?C.green:C.ink);
-  return {svg:out,phase:h>2*r?'A tall column: more surface than a sphere, but awkward to move through narrow capillaries.':S>Ss*1.3?`A thin disc: ${B1_n(S,0)} µm² of surface, close to a real red blood cell’s 135 µm². Every point inside is near the membrane.`:'Close to a compact shape: little surface for the volume it holds.'};
+  return {svg:out,phase:h>2*r?'A tall column: more surface than a sphere, but awkward to move through narrow capillaries.':S>Ss*1.15?`A flat disc: ${B1_n(S,0)} µm² of surface${Math.abs(S-135)<20?', close to a real red blood cell’s 135 µm²':S>155?', more than a real red blood cell (135 µm²), which must stay thick enough to bend through capillaries':''}. Every point inside is near the membrane.`:'Close to a compact shape: little surface for the volume it holds.'};
  }});
 
 /* ---------- Lesson: diffusion-osmosis ---------- */
@@ -314,7 +314,7 @@ SCENE({id:'diffusion-osmosis',name:'Diffusion',tag:'Random steps, steady spreadi
   msd/=B1_WALK.length;out+=Ci(cx,cy,3,C.coral);
   const rr=Math.sqrt(msd)*sc;if(rr>4)out+=Ci(cx,cy,Math.min(rr,130),'none',C.coral,'stroke-dasharray="5 4"');
   const A=B1_axes(340,70,210,200,[0,300],[0,420],{xt:[0,150,300],yt:[0,100,200,300,400],xl:'time (steps)',yl:'mean squared distance'});out+=A.svg;
-  out+=L(A.X(0),A.Y(0),A.X(300),A.Y(300),C.blue,2,'stroke-dasharray="5 4"')+L(A.X(0),A.Y(0),A.X(300),A.Y(300*.45*.45),C.purple,2,'stroke-dasharray="5 4"');
+  out+=L(A.X(0),A.Y(0),A.X(300),A.Y(300),C.blue,2,'stroke-dasharray="5 4"')+L(A.X(0),A.Y(0),A.X(300),A.Y(300*.45*.45),C.purple,2,'stroke-dasharray="5 4"')+TF(A.X(296),A.Y(300)+18,'small',13,C.blue,'end')+TF(A.X(296),A.Y(61)-8,'large',13,C.purple,'end');
   const pts=range(Math.floor(s.t/10)+1).map(i=>i*10).map(t=>{let m=0;B1_WALK.forEach(tr=>{const [x,y]=tr[t];m+=(x*x+y*y)*st*st});return [A.X(t),A.Y(Math.min(420,m/B1_WALK.length))]});
   out+=P(B1_path(pts),s.big==='big'?C.purple:C.blue,3);
   out+=TBF(300,364,`after ${s.t} steps: mean squared distance ${B1_n(msd,0)} (expected ${B1_n(s.t*st*st,0)})`,14,C.ink);
@@ -367,14 +367,14 @@ SCENE({id:'diffusion-osmosis-cells',name:'Cells in salt water',tag:'Swell, hold 
   // Plant cell.
   const px=440,py=190,wall=72;out+=TBF(px,66,'Plant cell',14,C.ink);
   out+=R(px-wall,py-wall,wall*2,wall*2,'#e6f1d8',C.green,6,'stroke-width="5"');
-  const shrink=c>.95?clamp((c-.95)/1,0,1):0,m=wall-5-shrink*34;
+  const shrink=c>.95?clamp((c-.95)/.6,0,1):0,m=wall-5-shrink*34;
   out+=R(px-m,py-m*(1-shrink*.25),m*2,m*2*(1-shrink*.25),'#bfe0a4',C.green,m>40?10:18)+Ci(px,py,Math.max(14,m*.42),'#d8ecc5',C.green);
   out+=TF(px,py+wall+22,shrink>.15?'plasmolysed: membrane pulls from wall':'turgid: pressed firmly against the wall',13,C.green);
   out+=TF(rx,ry+92,burst?'':c>.95?'shrunken and spiky (crenated)':vol>1.15?'swollen towards a sphere':'normal dimpled disc',13,C.coral);
   // Scale bar of concentration.
   const sx=v=>80+440*v/2;out+=L(80,330,520,330,C.line,6);out+=R(sx(.45),324,sx(.9)-sx(.45),12,C.coralp,'none',3)+L(sx(.9),320,sx(.9),340,C.green,3)+TF(sx(.9),356,'0.9% (isotonic)',13,C.green)+TF(sx(.45),316,'bursting begins',13,C.coral,'end');
   out+=Ci(sx(c),330,8,C.ink);
-  return {svg:out,phase:burst?`At ${B1_n(c,2)}% salt so much water rushes in that red cells burst. The plant cell survives: its wall pushes back.`:c>.95?`At ${B1_n(c,2)}% salt water leaves the cells. The red cell shrivels; the plant cell’s membrane pulls away from its wall.`:`Near 0.9% salt, water enters and leaves the cells equally.`};
+  return {svg:out,phase:burst?`At ${B1_n(c,2)}% salt so much water rushes in that red cells burst. The plant cell survives: its wall pushes back.`:c>.95?`At ${B1_n(c,2)}% salt water leaves the cells. The red cell shrivels; ${shrink>.15?'the plant cell’s membrane pulls away from its wall (plasmolysis)':'the plant cell loses pressure but its contents still fill the wall'}.`:c<.85?`At ${B1_n(c,2)}% salt more water enters the cells than leaves. The red cell swells; the plant cell presses harder against its wall.`:`Near 0.9% salt, water enters and leaves the cells equally.`};
  }});
 
 /* ---------- Lesson: cell-division ---------- */
@@ -394,18 +394,18 @@ SCENE({id:'cell-division',name:'Mitosis',tag:'One cell becomes two identical cel
   const ph=clamp(s.ph,0,5),st=Math.min(5,Math.round(ph)),cx=300,cy=190;let out=heading(B1_PH[st]);
   const pinch=smooth((ph-4)/1),sep=smooth((ph-2.5)/1.2),line=smooth((ph-1.3)/.9),cond=smooth((ph-.4)/.9);
   // Membrane: ellipse that pinches in two.
-  const w=150+60*sep;if(pinch<.02)out+=`<ellipse cx="${cx}" cy="${cy}" rx="${w}" ry="110" fill="#f5f9fc" stroke="${C.blue}" stroke-width="2.5"/>`;
-  else{const g=pinch*100;out+=`<ellipse cx="${cx-w/2-g*.2}" cy="${cy}" rx="${w/2+20-g*.15}" ry="${110-g*.05}" fill="#f5f9fc" stroke="${C.blue}" stroke-width="2.5"/><ellipse cx="${cx+w/2+g*.2}" cy="${cy}" rx="${w/2+20-g*.15}" ry="${110-g*.05}" fill="#f5f9fc" stroke="${C.blue}" stroke-width="2.5"/>`}
+  const w=150+60*sep,Dd=w/2+pinch*20;if(pinch<.02)out+=`<ellipse cx="${cx}" cy="${cy}" rx="${w}" ry="110" fill="#f5f9fc" stroke="${C.blue}" stroke-width="2.5"/>`;
+  else{const g=pinch*100;[-1,1].forEach(k=>{out+=`<ellipse cx="${cx+k*Dd}" cy="${cy}" rx="${w/2+20-g*.15}" ry="${110-g*.05}" fill="#f5f9fc" stroke="${C.blue}" stroke-width="2.5"/>`})}
   // Nuclear envelope: present in interphase, dissolves in prophase, reforms in telophase.
   const envA=1-smooth((ph-.6)/.6),envB=smooth((ph-3.6)/.5);
   if(envA>.05)out+=Ci(cx,cy,72,'none',C.purple,`stroke-dasharray="${envA>.9?'0':'6 6'}" opacity="${envA}"`);
-  if(envB>.05)[-1,1].forEach(k=>{out+=Ci(cx+k*(w*.55+pinch*20),cy,48,'none',C.purple,`opacity="${envB}"`)});
+  if(envB>.05)[-1,1].forEach(k=>{out+=Ci(cx+k*Dd,cy,48,'none',C.purple,`opacity="${envB}"`)});
   // Spindle.
   if(ph>1.2&&ph<4.2){const op=Math.min(smooth((ph-1.2)/.5),1-smooth((ph-3.8)/.4));[-1,1].forEach(k=>{const px=cx+k*(w-16);out+=Ci(px,cy,5,C.green,'none',`opacity="${op}"`);for(let j=0;j<4;j++)out+=L(px,cy,cx+k*(18+60*sep),cy-54+j*36,C.green,1,`opacity="${op*.6}"`)})}
   // Chromosomes.
   B1_CHR.forEach((ch,i)=>{const show=s.track==='no'||i===0,col=show?ch.c:'#d5dde3';
    const loose=[[cx-38,cy-30],[cx+24,cy-36],[cx-20,cy+30],[cx+34,cy+20]][i],mid=[cx,cy-54+i*36];
-   const x0=lerp(loose[0],mid[0],line),y0=lerp(loose[1],mid[1],line),len=ch.l*(1-.35*cond),off=(18+60*sep)+pinch*30;
+   const x0=lerp(loose[0],mid[0],line),y0=lerp(loose[1],mid[1],line),len=ch.l*(1-.35*cond),off=lerp(18+60*sep,Dd,smooth((ph-3.4)/1));
    if(ph<.4){out+=P(`M${x0-len/2} ${y0}q${len/4} -14 ${len/2} 0t${len/2} 0`,col,3)}
    else if(sep<.02){out+=L(x0-5,y0-len/2,x0-5,y0+len/2,col,7)+L(x0+5,y0-len/2,x0+5,y0+len/2,col,7)+Ci(x0,y0,4,C.ink)}
    else [-1,1].forEach(k=>{const xx=x0+k*off,ry=k>0?0:0;out+=L(xx,y0-len/2+ry,xx,y0+len/2,col,7)})});
@@ -434,7 +434,7 @@ SCENE({id:'cell-division-growth',name:'Doubling',tag:'Exponential growth, and it
   out+=P(B1_path(range(Math.round(s.h*10)+1).map(i=>i/10).map(t=>[A.X(t),yv(N(t))])),C.blue,3.5)+Ci(A.X(s.h),yv(n),7,C.coral);
   const gens=s.h*60/s.dt;
   out+=TBF(300,328,`${B1_n(gens,1)} doublings → ${B1_sci(n)} cells`,16,C.coral);
-  out+=TF(300,354,s.food==='yes'?'limited food: lag-free growth, then a plateau near 1 billion (stationary phase)':lg?'on a log axis, steady doubling is a straight line':'on a linear axis almost nothing seems to happen, then everything does',13,C.muted);
+  out+=TF(300,354,s.food==='yes'?'limited food: steady doubling, then a plateau near 1 billion (stationary phase)':lg?'on a log axis, steady doubling is a straight line':'on a linear axis almost nothing seems to happen, then everything does',13,C.muted);
   return {svg:out,phase:s.food==='yes'&&n>K*.5?'The food is running out: growth slows and stops. Real cultures show a lag, an exponential phase, a stationary phase and then decline.':`Every ${s.dt} minutes the population doubles. After ${B1_n(s.h,1)} hours that is ${B1_n(gens,1)} doublings.`};
  }});
 
@@ -481,7 +481,7 @@ SCENE({id:'cell-division-hayflick',name:'The Hayflick limit',tag:'Normal cells c
    o+=TF(60,y+58,stopped?`stopped after ${lim} doublings (senescence)`:`${div} doublings so far, still dividing`,14,stopped?C.coral:C.ink,'start');return o};
   out+=row(70,'Normal human cells',tel,nn,stop,C.blue)+row(170,'Cells with telomerase (e.g. most cancers, HeLa)',10,s.n,false,C.purple);
   const A=B1_axes(80,272,440,60,[0,80],[0,10],{xt:[0,20,40,60,80]});out+=A.svg;
-  out+=L(A.X(lim),272,A.X(lim),332,C.coral,2,'stroke-dasharray="4 3"')+TF(A.X(lim)+5,288,'Hayflick limit ≈ 50',13,C.coral,'start')+P(B1_path(range(nn+1).map(k=>[A.X(k),A.Y(10-k*.11)])),C.blue,2.5)+L(A.X(0),A.Y(10),A.X(s.n),A.Y(10),C.purple,2.5)+Ci(A.X(nn),A.Y(tel),6,C.blue)+TF(84,286,'telomere length',13,C.muted,'start');
+  out+=L(A.X(lim),272,A.X(lim),332,C.coral,2,'stroke-dasharray="4 3"')+TF(A.X(lim)+5,288,'Hayflick limit ≈ 50',13,C.coral,'start')+P(B1_path(range(nn+1).map(k=>[A.X(k),A.Y(10-k*.11)])),C.blue,2.5)+L(A.X(0),A.Y(10),A.X(s.n),A.Y(10),C.purple,2.5)+Ci(A.X(nn),A.Y(tel),6,C.blue)+TF(300,326,'telomere length (normal cells: blue)',13,C.muted);
   out+=TF(300,366,'telomere lengths illustrative: they lose roughly 50–200 bases per division',13,C.muted);
   return {svg:out,phase:stop?'The normal cells have stopped: their shortest telomeres have triggered senescence. The telomerase cells keep their caps and keep going.':`Each division trims the telomeres of the normal cells a little. Cells with telomerase rebuild them.`};
  }});
@@ -510,7 +510,7 @@ SCENE({id:'germ-theory',name:'Germ theory',tag:'Pasteur’s swan-neck flasks',
    else{const trapped=i<Math.min(14,s.d);if(trapped)out+=Ci(fx+40+(i%5)*6,136+(i%3)*4,2.8,C.muted);else out+=Ci(x0-ph*60,90+ph*30,2.8,C.muted)}}
   if(s.fl==='tilt'&&s.d>=6)out+=P(`M${fx+30} 140Q${fx+46} 130 ${fx+58} 140`,C.amber,6,'none','opacity=".8"')+TF(fx+60,186,'broth washed the bend',13,C.amber,'start');
   if(cloud>0)for(let i=0;i<Math.round(cloud*26);i++){const a=i*2.4,rr=(i*13%60);out+=Ci(fx+Math.cos(a)*rr,fy+Math.sin(a)*rr*.8,2.2,'#8a6a2b')}
-  out+=TF(fx,fy+br+22,cloud>.5?'cloudy: microbes growing':'clear',14,cloud>.5?C.amber:C.green);
+  out+=TF(fx,fy+br+22,cloud>.5?'cloudy: microbes growing':cloud>0?'starting to cloud':'clear',14,cloud>0?C.amber:C.green);
   out+=B1_card(400,190,170,'Day '+s.d,[grows&&s.d>=start?'microbes have reached':'no microbes in the',grows&&s.d>=start?'the broth':'broth yet',''],cloud>.5?C.amber:C.green);
   return {svg:out,phase:s.fl==='swan'?'Air reaches the broth, but dust and microbes stick in the wet bend. The broth stays clear: nothing arises from the broth by itself.':s.fl==='open'?'Dust and microbes fall straight in, and the broth clouds within days.':s.d<6?'Clear so far: the swan neck is still trapping the dust.':'After tilting, broth has washed through the dusty bend and carried microbes in. It clouds within days.'};
  }});
@@ -527,11 +527,11 @@ SCENE({id:'germ-theory-semmelweis',name:'Semmelweis and handwashing',tag:'Data b
  ui:[{choose:[['both','Two clinics, 1841–46'],['after','Before and after']],label:'View',get:s=>s.view,act:'view'}],
  on:{view(s,v){s.view=v}},
  draw(s){
-  const both=s.view==='both',yrs=both?6:9,A=B1_axes(80,60,450,220,[1840.4,1840.6+yrs],[0,17],{xt:range(yrs).map(i=>[1841+i,String(1841+i)]),yt:[0,5,10,15],xl:'year',yl:'mothers who died (%)'});let out=heading(both?'Doctors’ clinic against midwives’ clinic':'Doctors’ clinic, before and after handwashing');
+  const both=s.view==='both',yrs=both?6:9,A=B1_axes(80,60,450,220,[1840.4,1840.6+yrs],[0,19],{xt:range(yrs).map(i=>[1841+i,String(1841+i)]),yt:[0,5,10,15],xl:'year',yl:'mothers who died (%)'});let out=heading(both?'Doctors’ clinic against midwives’ clinic':'Doctors’ clinic, before and after handwashing');
   out+=A.svg;const bw=both?22:30;
   B1_SEMM.first.slice(0,yrs).forEach(([y,v])=>{const x=A.X(y)-(both?bw:bw/2);out+=R(x,A.Y(v),bw,A.Y(0)-A.Y(v),y>=1847?C.green:C.coral,'none',3)+TF(x+bw/2,A.Y(v)-5,B1_n(v,1),13,y>=1847?C.green:C.coral)});
   if(both)B1_SEMM.second.forEach(([y,v])=>{const x=A.X(y);out+=R(x,A.Y(v),bw,A.Y(0)-A.Y(v),C.blue,'none',3)});
-  if(!both){const x=A.X(1846.85);out+=L(x,60,x,280,C.green,2,'stroke-dasharray="5 4"')+TF(x+6,78,'handwashing from May 1847',13,C.green,'start')}
+  if(!both){const x=A.X(1846.5);out+=L(x,60,x,280,C.green,2,'stroke-dasharray="5 4"')+TF(x+6,78,'handwashing from May 1847',13,C.green,'start')}
   out+=R(100,320,14,14,C.coral,'none',3)+TF(120,332,'doctors’ clinic',13,C.ink,'start')+(both?R(250,320,14,14,C.blue,'none',3)+TF(270,332,'midwives’ clinic',13,C.ink,'start'):R(250,320,14,14,C.green,'none',3)+TF(270,332,'doctors’ clinic, with handwashing',13,C.ink,'start'));
   out+=TF(300,362,'1847 includes four months before handwashing began',13,C.muted);
   return {svg:out,phase:both?'Every year the doctors’ clinic was deadlier, often by two or three times. The obvious difference: doctors came straight from the autopsy room.':'After handwashing, the doctors’ clinic fell to the midwives’ level. Semmelweis had the right remedy without the right theory, and was ignored for years.'};
@@ -548,7 +548,7 @@ SCENE({id:'germ-theory-koch',name:'Koch’s postulates',tag:'How to prove a micr
  example:'Anthrax fits perfectly, which is how Koch proved its cause in 1876. Cholera does not, because healthy carriers exist; leprosy does not, because its bacterium cannot be cultured. Today molecular versions of the postulates test for a microbe’s genes instead.',
  desc:'Koch’s four postulates as a checklist, with ticks and crosses for four diseases. Pressing a postulate explains it; choosing a disease shows which steps hold and why.',
  research:['Koch, R. (1876). Die Ätiologie der Milzbrand-Krankheit. Cohns Beiträge zur Biologie der Pflanzen 2.','Koch, R. (1882). Die Ätiologie der Tuberkulose.','Loeffler, F. (1884): first formal statement of the postulates.','Falkow, S. (1988). Molecular Koch’s postulates applied to microbial pathogenicity. Reviews of Infectious Diseases 10.'],
- dur:12,hint:'Choose a disease and read down the checklist. Press a postulate for its meaning.',
+ dur:12,hint:'Choose a disease and read down the checklist. The card beneath explains why a step fails.',
  init:()=>({dis:'anthrax',sel:0}),
  watch(p){const k=Object.keys(B1_DIS);return {dis:k[Math.min(3,Math.floor(p*4))],sel:Math.floor((p*16)%4)}},
  ui:[{choose:Object.keys(B1_DIS).map(k=>[k,B1_DIS[k].n.split(' (')[0]]),label:'Disease',get:s=>s.dis,act:'dis'}],
