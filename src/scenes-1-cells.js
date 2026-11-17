@@ -62,7 +62,7 @@ const B1_OBJ=[
  {n:'Hen’s egg',k:'egg',m:5e-2},{n:'Ant',k:'ant',m:3e-3},{n:'Human egg cell',k:'human egg',m:1.2e-4},{n:'Width of a hair',k:'hair',m:7e-5,dx:16},
  {n:'Red blood cell',k:'red cell',m:7.5e-6},{n:'E. coli bacterium',k:'E. coli',m:2e-6},{n:'Influenza virus',k:'flu virus',m:1e-7},{n:'Ribosome',k:'ribosome',m:2.5e-8},{n:'DNA helix (width)',k:'DNA',m:2e-9}];
 const B1_TOOLS=[{n:'eye',lim:1e-4,col:C.green},{n:'light microscope',lim:2e-7,col:C.blue},{n:'electron microscope',lim:1e-10,col:C.purple}];
-SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
+SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Eight powers of ten',
  definition:'Living things span more than seven powers of ten, from eggs you can hold to molecules a few nanometres wide. Each kind of instrument opens a band of that range: the eye down to about 0.1 mm, light microscopes to about 0.2 µm, electron microscopes to below a nanometre.',
  example:'A red blood cell (7.5 µm) needs a light microscope. A flu virus (about 100 nm) is below the light limit and was first seen with the electron microscope, built by Ernst Ruska and Max Knoll from 1931.',
  desc:'A logarithmic ruler from 10 cm down to 1 nm, with objects placed at their size and the three instruments’ ranges shaded beneath. Pressing an object shows which instruments can resolve it.',
@@ -82,7 +82,7 @@ SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
    out+=L(x,y+8,x,146,on?C.coral:C.line,on?2.5:1.5)+hit(X,'pick',i,o.n,Ci(x,y,on?9:7,on?C.coral:C.blue)+TF(x+(o.dx||0),y-13,o.k,13,on?C.coral:C.ink,o.dx?'start':'middle'))});
   const o=B1_OBJ[s.sel],sees=B1_TOOLS.filter(t=>o.m>=t.lim).map(t=>t.n);
   const sz=o.m>=1e-3?B1_n(o.m*1000,o.m>=1e-2?0:1)+' mm':o.m>=1e-6?B1_n(o.m*1e6,o.m>=1e-5?0:1)+' µm':B1_n(o.m*1e9,0)+' nm';
-  out+=B1_card(60,292,480,`${o.n}: about ${sz}`,[`Can be resolved by: ${sees.join(', ')}.`,sees.length===1?'Only an electron microscope (or X-ray methods) shows it.':sees.length===3?'Visible without any instrument.':'Too small for the unaided eye.']);
+  out+=B1_card(60,292,480,`${o.n}: about ${sz}`,[`Can be resolved by: ${sees.join(', ')}.`,sees.length===1?'Only an electron microscope (or X-ray methods) shows it.':sees.length===3?'Visible without any instrument.':o.m>=5e-5?'The eye can see it is there, but not its detail.':'Too small for the unaided eye.']);
   return {svg:out,phase:`${o.n}, about ${sz}. Each tick on the ruler is ten times smaller than the one before, so the distance from an egg to a DNA helix is seven tenfold steps.`};
  }});
 
@@ -113,7 +113,7 @@ SCENE({id:'microscopes-cork',name:'Hooke counts the cells',tag:'Rerun the arithm
 /* ---------- Lesson: cell-theory ---------- */
 const B1_EVENTS=[
  {y:1665,who:'Hooke',t:'names “cells” in cork',l:['Empty walls of dead plant cells, seen at about 50×.','He did not know they had once been alive.']},
- {y:1676,who:'Leeuwenhoek',t:'sees living “animalcules”',l:['Protists and bacteria in pond water and on teeth.','The first view of single-celled life.']},
+ {y:1676,who:'Leeuwenhoek',t:'sees living “animalcules”',l:['Protists and bacteria in rain water and pepper water.','The first view of single-celled life.']},
  {y:1831,who:'Brown',t:'describes the nucleus',l:['Robert Brown sees a dark body in orchid cells','and names it the nucleus.']},
  {y:1838,who:'Schleiden',t:'all plants are made of cells',l:['But he wrongly thought new cells crystallise','out of fluid inside old ones.']},
  {y:1839,who:'Schwann',t:'animals too are made of cells',l:['Cartilage, nerve and muscle share one plan:','the cell is the unit of all life.']},
@@ -441,9 +441,9 @@ SCENE({id:'cell-division-growth',name:'Doubling',tag:'Exponential growth, and it
 const B1_CYC=[{n:'G1',h:11,c:'#7fb3da'},{n:'S',h:8,c:C.purple},{n:'G2',h:4,c:'#6fb8a6'},{n:'M',h:1,c:C.coral}];
 SCENE({id:'cell-division-checkpoints',name:'The cell cycle',tag:'Checkpoints that stop a damaged cell',
  definition:'A dividing cell runs through a cycle: growth (G1), copying its DNA (S), more growth (G2) and mitosis (M). At checkpoints it checks for damage and stops if something is wrong. Cancer cells have usually lost these brakes.',
- example:'A typical human cell in culture takes about 24 hours: roughly 11 h in G1, 8 h in S, 4 h in G2 and 1 h in M. If its DNA is damaged, the protein p53 halts it at the G1 checkpoint until the damage is repaired. Most human cancers carry a broken p53.',
+ example:'A typical human cell in culture takes about 24 hours: roughly 11 h in G1, 8 h in S, 4 h in G2 and 1 h in M. If its DNA is damaged, the protein p53 halts it at the G1 checkpoint until the damage is repaired. About half of human cancers carry a broken p53.',
  desc:'A clock of the cell cycle with its four phases and three checkpoints, and a cell moving round it. Damage can be added, and the checkpoint switched off, to see a damaged cell either stop or carry on dividing.',
- research:['Hartwell, L. H. & Weinert, T. A. (1989). Checkpoints: controls that ensure the order of cell cycle events. Science 246.','Nurse, P. (1975); Hunt, T. (1983): cyclins. Nobel Prize 2001 (Hartwell, Hunt, Nurse).','Lane, D. P. (1992). p53, guardian of the genome. Nature 358.'],
+ research:['Hartwell, L. H. & Weinert, T. A. (1989). Checkpoints: controls that ensure the order of cell cycle events. Science 246.','Nurse, P. (1975): cell-cycle control genes in fission yeast; Evans, T., Hunt, T. et al. (1983): cyclins. Nobel Prize 2001 (Hartwell, Hunt, Nurse).','Lane, D. P. (1992). p53, guardian of the genome. Nature 358.'],
  dur:12,hint:'Move the cell through the cycle. Then add DNA damage, and compare a working checkpoint with a broken one.',
  init:()=>({t:8,dmg:'no',chk:'on'}),
  watch(p){return p<.4?{t:+B1_n(p/.4*24,1),dmg:'no',chk:'on'}:p<.7?{t:+B1_n((p-.4)/.3*24,1),dmg:'yes',chk:'on'}:{t:+B1_n((p-.7)/.3*24,1),dmg:'yes',chk:'off'}},

@@ -261,12 +261,12 @@ SCENE({id:'competition-niches',name:'Two species, one resource',tag:'Competitive
   starts.forEach((st,i)=>{const sol=B6_comp(a12,a21,st[0],st[1]);out+=B6_poly(sol.map(o=>[pl.X(Math.min(110,o.y[0])),pl.Y(Math.min(110,o.y[1]))]),C.purple,1.8);out+=Ci(pl.X(st[0]),pl.Y(st[1]),3.5,C.purple);const e=sol[sol.length-1].y;out+=Ci(pl.X(Math.min(110,e[0])),pl.Y(Math.min(110,e[1])),5,C.ink,'#fff')});
   const ends=starts.map(st=>B6_comp(a12,a21,st[0],st[1]).slice(-1)[0].y);
   const win=e=>e[0]>1&&e[1]>1?'both':e[0]>1?'1':e[1]>1?'2':'none';const kinds=[...new Set(ends.map(win))];
-  const neutral=a12===1&&a21===1;const verdict=neutral?'A knife-edge tie':kinds.length>1?'It depends on the start':kinds[0]==='both'?'Both species coexist':kinds[0]==='1'?'Species 1 wins':'Species 2 wins';
+  const neutral=a12===1&&a21===1;const vk=neutral?'tie':(a12<1&&a21<1)?'both':(a12>1&&a21>1)?'depends':(a12<=1&&a21>=1)?'1':'2';const split=kinds.length>1;const verdict=neutral?'A knife-edge tie':vk==='depends'?'It depends on the start':vk==='both'?'Both species coexist':vk==='1'?'Species 1 wins':'Species 2 wins';
   out+=TF(70,358,'dashed: where species 1 (blue) or 2 (coral) stops growing',13,C.muted,'start');
   main=B6_comp(a12,a21,12,10);const tp=B6_plot(370,78,210,150,[0,60],[0,110],{xt:[[0,'0'],[60,'60']],yt:[[0,'0'],[100,'100']],xl:'time (from 12 and 10)',xlDy:31,yl:'numbers'});
   out+=tp.svg+B6_poly(main.map(o=>[tp.X(o.t),tp.Y(Math.min(110,o.y[0]))]),C.blue,2.4)+B6_poly(main.map(o=>[tp.X(o.t),tp.Y(Math.min(110,o.y[1]))]),C.coral,2.4);
-  out+=R(370,268,210,48,kinds.length>1?C.amberp:kinds[0]==='both'?C.greenp:C.coralp,'none',10)+TBF(475,298,verdict,16,C.ink);
-  const say=neutral?'With both coefficients exactly 1 the two dashed lines coincide: each species harms its rival exactly as much as itself, so the runs stop wherever they meet the line. Any small difference breaks the tie.':kinds.length>1?'Each species harms the other more than itself, so whichever starts ahead wins: the runs split between the two corners.':kinds[0]==='both'?`Each species limits itself more than its rival (both coefficients below 1), so the runs meet where the two dashed lines cross and both persist.`:`One species harms its rival more than the rival harms it, so every run ends with only species ${kinds[0]} left: competitive exclusion.`;
+  out+=R(370,268,210,48,vk==='depends'?C.amberp:vk==='both'||neutral?C.greenp:C.coralp,'none',10)+TBF(475,298,verdict,16,C.ink);
+  const say=neutral?'With both coefficients exactly 1 the two dashed lines coincide: each species harms its rival exactly as much as itself, so the runs stop wherever they meet the line. Any small difference breaks the tie.':vk==='depends'?'Each species harms the other more than itself, so whichever starts far enough ahead wins'+(split?': the runs split between the two corners.':'; from these four starts the same species happens to win.'):vk==='both'?`Each species limits itself more than its rival (both coefficients below 1), so the runs meet where the two dashed lines cross and both persist.`:`One species harms its rival more than the rival harms it, so every run ends with only species ${vk} left: competitive exclusion.`+(a12===1||a21===1?' With a coefficient of exactly 1 the loser declines very slowly.':'');
   return {svg:out,phase:say+' Gause’s principle: two species cannot share exactly the same limiting resource for ever.'};
  }});
 
@@ -398,7 +398,7 @@ SCENE({id:'food-webs-cascade',name:'Trophic cascades',tag:'Effects that skip a l
    out+=box(40,70,160,44,'wolves (1995)',C.pale,C.ink,15)+box(40,150,160,44,'elk',C.amberp,C.ink,15)+box(40,230,160,44,'willow, aspen',C.greenp,C.ink,15);
    out+=arrow(120,114,120,148,C.coral,2.4)+arrow(120,194,120,228,C.coral,2.4);
    out+=R(230,70,340,92,C.greenp,'none',10)+TBF(244,94,'Evidence for',14,C.green,'start')+TF(244,116,'Willows taller in some places after wolves',13,C.ink,'start')+TF(244,136,'returned (Ripple & Beschta 2012).',13,C.ink,'start');
-   out+=R(230,182,340,112,C.coralp,'none',10)+TBF(244,206,'Evidence against',14,C.coral,'start')+TF(244,228,'Aspen in fenced and unfenced plots',13,C.ink,'start')+TF(244,248,'barely differed (Kauffman et al. 2010);',13,C.ink,'start')+TF(244,268,'drought, hunting and beavers also changed.',13,C.ink,'start');
+   out+=R(230,182,340,112,C.coralp,'none',10)+TBF(244,206,'Evidence against',14,C.coral,'start')+TF(244,228,'Aspen fared no better where wolf risk was',13,C.ink,'start')+TF(244,248,'high than low (Kauffman et al. 2010);',13,C.ink,'start')+TF(244,268,'drought, hunting and beavers also changed.',13,C.ink,'start');
    return {svg:out,phase:'The Yellowstone story is popular but contested: wolves probably matter, yet elk numbers also fell through human hunting and drought, and plants respond slowly. The sea otter cascade is much better established.'};
   }
   const on=s.c==='otters',lv=[['sea otters',on?1:.05,C.purple],['sea urchins',on?.2:1,C.coral],['kelp',on?1:.1,C.green]];
@@ -510,7 +510,7 @@ SCENE({id:'island-biogeography-species-area',name:'More area, more species',tag:
  }});
 
 /* ================================================================ nutrient-cycles */
-// Carbon stocks (GtC) and gross fluxes (GtC per year), rounded from IPCC AR6 WG1 Figure 5.12.
+// Carbon stocks (GtC) and gross fluxes (GtC per year), rounded from IPCC assessment reports (stocks and ocean fluxes as in AR6 WG1 Figure 5.12).
 const B6_CPOOL={atm:{n:'atmosphere',v:875,x:230,y:56,w:140},veg:{n:'plants',v:450,x:40,y:170,w:120},soil:{n:'soils',v:1700,x:40,y:290,w:120},surf:{n:'surface ocean',v:900,x:440,y:170,w:130},deep:{n:'deep ocean',v:37100,x:440,y:290,w:130},foss:{n:'fossil fuels',v:930,x:240,y:178,w:120}};
 const B6_CFLUX=[['veg','atm',120,'plant and soil breathing'],['atm','veg',123,'photosynthesis'],['veg','soil',60,'litter'],['atm','surf',80,'dissolving'],['surf','atm',78,'outgassing'],['surf','deep',90,'mixing and sinking'],['deep','surf',88,'upwelling'],['foss','atm',9.5,'burning']];
 SCENE({id:'nutrient-cycles',name:'The carbon cycle',tag:'Stocks and flows',
@@ -533,11 +533,11 @@ SCENE({id:'nutrient-cycles',name:'The carbon cycle',tag:'Stocks and flows',
   out+=R(190,262,220,92,'#fff',C.grid,8);list.slice(0,4).forEach((t,i)=>out+=TF(300,284+i*20,t,13,C.ink));
   const rise=s.em*.45/2.12;
   out+=TF(300,372,`${s.em} emitted → about ${rise.toFixed(1)} ppm more CO₂ in the air each year`,14,C.coral);
-  return {svg:out,phase:`Natural flows are huge but nearly balanced. Of ${s.em} billion tonnes from fossil fuels, oceans and land take up a little over half, and about 45% stays in the atmosphere: 1 ppm of CO₂ is 2.12 billion tonnes of carbon, so the air gains about ${rise.toFixed(1)} ppm a year. Values are rounded from IPCC AR6.`};
+  return {svg:out,phase:`Natural flows are huge but nearly balanced. Of ${s.em} billion tonnes from fossil fuels, oceans and land take up a little over half, and about 45% stays in the atmosphere: 1 ppm of CO₂ is 2.12 billion tonnes of carbon, so the air gains about ${rise.toFixed(1)} ppm a year. Values are rounded from IPCC reports.`};
  }});
 
 // Mauna Loa annual mean CO2 (ppm), NOAA Global Monitoring Laboratory, rounded.
-const B6_KEELING=[[1959,316.0],[1965,320.0],[1970,325.7],[1975,331.1],[1980,338.8],[1985,346.1],[1990,354.4],[1995,360.8],[2000,369.7],[2005,379.8],[2010,389.9],[2015,401.0],[2020,414.2],[2023,421.1]];
+const B6_KEELING=[[1959,316.0],[1965,320.0],[1970,325.7],[1975,331.1],[1980,338.8],[1985,346.1],[1990,354.4],[1995,360.8],[2000,369.7],[2005,379.8],[2010,389.9],[2013,396.7],[2015,401.0],[2020,414.2],[2023,421.1]];
 const B6_keelAt=y=>{for(let i=0;i+1<B6_KEELING.length;i++){const [a,va]=B6_KEELING[i],[b,vb]=B6_KEELING[i+1];if(y<=b)return va+(vb-va)*(y-a)/(b-a)}return B6_KEELING[B6_KEELING.length-1][1]};
 SCENE({id:'nutrient-cycles-keeling',name:'The Keeling curve',tag:'A planet breathing',
  definition:'Since 1958 carbon dioxide has been measured continuously at Mauna Loa in Hawaii. The record rises every year and wiggles every season, as northern plants take in carbon in summer and release it in winter.',

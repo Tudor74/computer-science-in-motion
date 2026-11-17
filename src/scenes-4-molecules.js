@@ -135,7 +135,7 @@ SCENE({id:'double-helix-structure',name:'The double helix',tag:'Two antiparallel
   for(const [ph,col] of [[0,C.blue],[off,C.coral]])for(let j=0;j<(n-1)*3;j++){const a=pt(j/3,ph),b=pt((j+1)/3,ph);items.push({at:a.map((v,k)=>(v+b[k])/2),svg:P=>line3(a,b,P,col,7)})}
   let out=sortedItems(items,P);
   if(s.n>21)out+=TF(300,372,`showing 21 of ${s.n} pairs (two turns)`,13,C.muted);
-  return {svg:out,title:'The double helix',caption:'Blue and coral are the two backbones, running in opposite directions. Base pairs (green A–T, amber–blue G–C) stack up the middle. The uneven gaps between the backbones are the major and minor grooves.'};
+  return {svg:out,title:'The double helix',caption:'Blue and coral are the two backbones, running in opposite directions. Base pairs (green–coral A–T, amber–blue G–C) stack up the middle. The uneven gaps between the backbones are the major and minor grooves.'};
  }});
 
 /* ================================================================ replication */
@@ -197,7 +197,7 @@ SCENE({id:'replication-meselson',name:'The Meselson–Stahl experiment',tag:'Wei
  }});
 
 /* ---- replication fork ---- */
-const B4_ORGF={ecoli:{n:'E. coli',G:4.6e6,v:1000,frag:70,fr:'1,000–2,000'},human:{n:'Human cell',G:3.1e9,v:33,frag:24,fr:'100–200'}};
+const B4_ORGF={ecoli:{n:'E. coli',G:4.6e6,v:1000,frag:70,fr:'1,000–2,000'},human:{n:'Human cell',G:6.2e9,v:33,frag:24,fr:'100–200'}};
 function B4_dur(sec){return sec<120?Math.round(sec)+' s':sec<7200?Math.round(sec/60)+' min':sec<172800?(sec/3600).toFixed(1)+' h':sec<6e7?Math.round(sec/86400)+' days':(sec/3.15e7).toFixed(1)+' years'}
 SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in pieces',
  definition:'DNA polymerase can only add to the 3′ end of a growing strand. At a replication fork one new strand (the leading strand) is made continuously towards the fork; the other (the lagging strand) is made backwards in short Okazaki fragments, each started by a short RNA primer and later joined up.',
@@ -232,7 +232,7 @@ SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in piec
   out+=TF(300,286,`${o.n}: ${(o.G/1e6).toLocaleString('en-GB')} million bases · fork speed ≈ ${o.v.toLocaleString('en-GB')} bases/s · fragments ${o.fr} bases`,13,C.ink);
   out+=TBF(300,318,`${O.toLocaleString('en-GB')} origin${O>1?'s':''} × 2 forks → about ${B4_dur(sec)}`,17,C.ink);
   out+=TF(300,346,s.org==='ecoli'?'E. coli starts from a single origin (oriC); about 40 minutes is what is observed.':'Real S phase lasts about 8 hours: origins fire in a timed order, not all at once.',13,C.muted);
-  return {svg:out,phase:s.org==='human'&&O<100?'From one origin, copying a human genome at this speed would take far longer than a cell lives. Many origins make it possible.':'The top new strand grows smoothly towards the fork. The bottom one must be made in pieces that run the other way, each started by a primer (coral) and later sealed.'};
+  return {svg:out,phase:s.org==='human'&&O<100?'From one origin, copying a human genome at this speed would take more than a year, far longer than the hours a dividing cell has. Many origins make it possible.':'The top new strand grows smoothly towards the fork. The bottom one must be made in pieces that run the other way, each started by a primer (coral) and later sealed.'};
  }});
 
 /* ================================================================ transcription-translation */
@@ -278,7 +278,7 @@ SCENE({id:'transcription-translation-trna',name:'Matching the tRNA',tag:'Adaptor
  init:()=>({c:1,seed:4,msg:'',miss:0}),
  watch(p){return {c:Math.min(7,1+Math.floor(p*7)),seed:4,msg:'',miss:0,sim:true}},
  ui:[{b:'Start again',act:'again'}],
- on:{pick(s,v){if(s.c>=7)return;const o=B4_opts(s.c,s.seed)[Number(v)],want=B4_GENE.slice(3*s.c,3*s.c+3).replace(/T/g,'U');
+ on:{pick(s,v){if(s.c>=6)return;const o=B4_opts(s.c,s.seed)[Number(v)],want=B4_GENE.slice(3*s.c,3*s.c+3).replace(/T/g,'U');
    if(o.cod===want){s.c++;s.msg=s.c>=7?'':`Accepted: ${B4_N3[o.aa]} added.`}else{s.miss++;s.msg=`Rejected: anticodon ${o.anti} does not pair with ${want}.`}},
   again(s){s.c=1;s.seed=nextSeed();s.msg='';s.miss=0}},
  draw(s,f,X){
@@ -292,11 +292,11 @@ SCENE({id:'transcription-translation-trna',name:'Matching the tRNA',tag:'Adaptor
   const done=Math.min(s.c,7);let cx=x0+(rc-1)*cw+cw/2;
   for(let j=done-1;j>=0;j--){const a=B4_aa(B4_GENE.slice(3*j,3*j+3)),y=110-(done-1-j)*0,x=cx-(done-1-j)*44;if(a==='*')continue;out+=Ci(x,92,17,C.greenp,C.green)+TF(x,97,B4_N3[a],13,C.ink);if(j<done-1)out+=L(x+17,92,x+27,92,C.green,3)}
   out+=TF(x0+(rc-1)*cw+cw/2,66,'growing chain',13,C.green);
-  if(s.c<7){const opts=B4_opts(s.c,s.seed);
+  if(s.c<6){const opts=B4_opts(s.c,s.seed);
    out+=TF(300,252,s.sim?'A simulated reader picks the matching tRNA.':'Which tRNA pairs with the codon in the A site?',14,C.ink);
    opts.forEach((o,i)=>{const x=60+i*124;out+=B4_btn(X,'pick',i,`tRNA with anticodon ${o.anti} carrying ${B4_N3[o.aa]}`,x,266,112,62,'',{});
     out+=TMF(x+56,290,o.anti,16,C.ink,'middle','font-weight="700"')+TF(x+56,314,B4_N3[o.aa],13,C.muted)})}
-  else out+=TBF(300,290,'Stop codon reached: the chain is released',16,C.green);
+  else out+=TBF(300,286,'Stop codon UAA: no tRNA pairs with it.',16,C.green)+TF(300,310,'A release factor protein binds instead and the chain is released.',14,C.ink);
   out+=TF(300,354,s.msg||`codon ${Math.min(s.c+1,7)} of 7 · rejected so far: ${s.miss}`,14,s.msg.startsWith('Rejected')?C.coral:C.muted);
   return {svg:out,phase:'Each tRNA’s anticodon is written 5′→3′; reverse it and it pairs base for base with the codon (A–U, G–C). Only that tRNA delivers its amino acid.'};
  }});

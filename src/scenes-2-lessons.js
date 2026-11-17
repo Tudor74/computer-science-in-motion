@@ -35,7 +35,7 @@ SOURCE('b2-sulloway',{title:'Sulloway, F. J. (1982). Darwin and his finches: the
 SOURCE('b2-weiner',{title:'Weiner, J. (1994). The Beak of the Finch: A Story of Evolution in Our Time. Knopf.'});
 
 LESSON({id:'deep-time',name:'Deep time',short:'Deep time',stage:'evolution',year:'1788–1956',level:'Introduction',
- why:'Evolution needs vast time; geologists showed the Earth is billions of years old before biologists could explain how life changes.',
+ why:'Evolution needs vast time; geologists showed the Earth is immensely old before biologists could explain how life changes, and radioactivity later put its age in billions of years.',
  prior:['microscopes'],references:['b2-hutton','b2-lyell','b2-holmes','b2-patterson'],
  ids:['deep-time','deep-time-strata','deep-time-dating']});
 LESSON({id:'natural-selection',name:'Natural selection',short:'Selection',stage:'evolution',year:'1858–1859',level:'Introduction',

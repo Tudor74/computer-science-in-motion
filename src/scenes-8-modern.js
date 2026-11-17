@@ -65,7 +65,7 @@ function B8_reads(n,len,seed){const r=B8_rng(seed),G=B8_GENOME.length,out=[];for
 function B8_assemble(starts,len){const ctg=[];for(const st of starts){const en=st+len-1,c=ctg[ctg.length-1];if(c&&c[1]-st+1>=B8_OV)c[1]=Math.max(c[1],en);else ctg.push([st,en])}return ctg}
 SCENE({id:'sequencing-shotgun',name:'Shotgun sequencing',tag:'Shred, read, reassemble',
  definition:'Shotgun sequencing breaks many copies of a genome into random pieces, reads each short piece, and rebuilds the genome by finding where the reads overlap.',
- example:'Reading enough random pieces to cover each base about eight times usually leaves only a few gaps, which is roughly how the first bacterial genome was assembled in 1995.',
+ example:'Reading enough random pieces to cover each base several times over usually leaves only a few gaps, which is roughly how the first bacterial genome was assembled in 1995.',
  desc:'A 48-base genome, random reads stacked above it, the coverage of each base, and the contigs that can be assembled from overlaps of at least three bases, with the gap and contig counts predicted by Lander and Waterman.',
  research:'Lander & Waterman (1988). Genomic mapping by fingerprinting random clones: a mathematical analysis. Genomics 2, 231–239. Fleischmann et al. (1995). Whole-genome random sequencing and assembly of Haemophilus influenzae Rd. Science 269, 496–512.',
  dur:12,hint:'Add reads or make them longer and watch the gaps close. New random reads draws a fresh set from the same genome.',
@@ -125,7 +125,7 @@ SCENE({id:'sequencing-cost',name:'The cost of a genome',tag:'Faster than Moore�
 /* ---------------------------------------------------------------- phylogenetic trees */
 const B8_TAXA=['Human','Chimp','Gorilla','Mouse','Chicken'],B8_SHORT=['Hu','Ch','Go','Mo','Ck'];
 // A toy alignment (not real sequences): the differences are chosen to give the familiar tree.
-const B8_ALN=['ACGTACGTACGT','ACGTACGTACGA','ACGTACCTACGA','ATGTTCCTACGA','GTGATCCAATCA'];
+const B8_ALN=['ACGTACGTACGT','ACGTACGTACGA','ACGTACCTATGA','ATGTTCCTACGA','GTGATCCAATCA'];
 const B8_D=B8_ALN.map(a=>B8_ALN.map(b=>[...a].filter((c,i)=>c!==b[i]).length));
 function B8_upgma(steps){let cl=B8_TAXA.map((n,i)=>({m:[i],h:0,kids:null}));const joins=[];
  for(let k=0;k<steps&&cl.length>1;k++){let best=null;
@@ -243,7 +243,7 @@ SCENE({id:'phylogenetic-trees-domains',name:'Three domains of life',tag:'Woese�
 
 /* ---- endosymbiosis ---- */
 const B8_EV=[
- ['Two membranes','The inner membrane is the bacterium’s own; the outer one came from the host.'],
+ ['Two membranes','Like their bacterial ancestors, they have two membranes; the outer still has bacterial-type pores.'],
  ['Their own DNA','A small, circular chromosome, like a bacterium’s, separate from the nucleus.'],
  ['Bacterial ribosomes','Their ribosomes resemble bacteria’s (70S) and are hit by some antibiotics.'],
  ['They divide by splitting','New ones form only by fission of old ones, as bacteria divide.'],
@@ -252,7 +252,7 @@ SCENE({id:'phylogenetic-trees-endosymbiosis',name:'Endosymbiosis',tag:'Cells ins
  definition:'Endosymbiosis is the idea, championed by Lynn Margulis, that mitochondria and chloroplasts began as free-living bacteria engulfed by another cell and kept as partners.',
  example:'Your mitochondria still carry their own small circular DNA, a relic of their bacterial ancestors about two billion years ago.',
  desc:'Four steps from a host cell to a cell with mitochondria, and later chloroplasts, beside five lines of evidence that can be opened one at a time.',
- research:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14, 255–274. Mereschkowsky (1905) proposed a symbiotic origin for chloroplasts. Gray (2012). Mitochondrial evolution. Cold Spring Harbor Perspectives in Biology 4, a011403.',
+ research:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14. Mereschkowsky (1905) proposed a symbiotic origin for chloroplasts. Gray (2012). Mitochondrial evolution. Cold Spring Harbor Perspectives in Biology 4, a011403.',
  dur:12,hint:'Step through the story with the slider. Press each piece of evidence to read it.',
  init:()=>({step:3,open:4}),
  watch(p){return {step:Math.min(4,Math.floor(p*5)),open:Math.min(4,Math.floor(p*5))}},
@@ -506,7 +506,7 @@ SCENE({id:'antibiotic-resistance',name:'Antibiotic resistance',tag:'The mutant s
   B8_DOSES.forEach(v=>{out+=L(dx(v),326,dx(v),334,C.ink,1.2)+TF(dx(v),368,String(v),13,C.muted)});
   out+=P(`M${fmt(dx(dose))} 312 l-7 -9 h14 z`,C.blue,1,C.blue);
   const enriched=tot>0&&share>1e-7*1.5;
-  return {svg:out,phase:dose<1&&!enriched?'At this very low dose the susceptible cells still grow faster than the resistant ones, which pay a cost for resistance, so resistance does not spread.':dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
+  return {svg:out,phase:dose<1&&!enriched?'At this very low dose the susceptible cells still grow faster than the resistant ones, which pay a cost for resistance, so resistance does not spread.':dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<=8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
  }});
 
 /* ---- the MEGA-plate ---- */
@@ -547,7 +547,7 @@ const B8_HIST=[
  {n:'Colistin',a:1959,b:2015,aL:'introduced 1959',bL:'mcr-1 2015',d:'A last-resort drug: a transferable resistance gene, mcr-1, was found in China in 2015 (Liu et al. 2016).'},
  {n:'Artemisinin',a:1972,b:2008,aL:'Tu Youyou 1972',bL:'partial 2008',d:'Tu Youyou’s malaria drug (Nobel Prize 2015). Partial resistance was reported in western Cambodia in 2008–9 (Dondorp et al. 2009).'}];
 SCENE({id:'antibiotic-resistance-history',name:'Every drug, then resistance',tag:'From penicillin to colistin',
- definition:'For every antibiotic so far, resistance has been reported soon after it came into wide use, sometimes within a year. Use did not invent it: resistance genes are often far older, some recovered from 30,000-year-old permafrost. Clinical use selects them and spreads them. Fleming warned of this in his 1945 Nobel lecture.',
+ definition:'For every antibiotic in wide use so far, resistance has eventually been reported: sometimes within a year, sometimes only after decades. Use did not invent it: resistance genes are often far older, some recovered from 30,000-year-old permafrost. Clinical use selects them and spreads them. Fleming warned of this in his 1945 Nobel lecture.',
  example:'Methicillin was introduced in 1960; resistant Staphylococcus aureus (MRSA) was reported in 1961.',
  desc:'A timeline for five drugs, each with the year it came into use (blue) and the year resistance was reported (coral). Press a drug for details.',
  research:'Fleming (1945). Penicillin. Nobel lecture. Abraham & Chain (1940). Nature 146, 837. Jevons (1961). BMJ 1, 124–125. D’Costa, V. M. et al. (2011). Antibiotic resistance is ancient. Nature 477, 457–461. Liu et al. (2016). Lancet Infectious Diseases 16, 161–168. Dondorp et al. (2009). NEJM 361, 455–467. Murray et al. (2022). Global burden of bacterial antimicrobial resistance in 2019. Lancet 399, 629–655.',

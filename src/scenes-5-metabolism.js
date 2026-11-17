@@ -253,7 +253,7 @@ SCENE({id:'membranes-pumps-cycle',name:'The sodium–potassium pump',tag:'Skou, 
  ui:[{b:'Next step',act:'next'},{b:'Run ten cycles',act:'ten'},{b:'Reset counters',act:'reset'}],
  on:{next(s){s.step++;if(s.step>5){s.step=0;s.cycles++}return 'keep'},ten(s){s.cycles+=10;return 'keep'},reset(s){s.step=0;s.cycles=0;return 'keep'}},
  draw(s){
-  const st=s.step,openOut=st>=2&&st<=4,na=s.cycles*3+(st>=3?3:0),k=s.cycles*2,atp=s.cycles+(st>=2?1:0);
+  const st=s.step,openOut=st>=2&&st<=4,na=s.cycles*3+(st>=2?3:0),k=s.cycles*2+(st>=5?2:0),atp=s.cycles+(st>=1?1:0);
   let out=heading('One turn of the sodium–potassium pump',26);
   out+=TF(40,64,'outside the cell',13,C.muted,'start')+TF(40,300,'inside the cell',13,C.muted,'start');
   out+=R(20,160,380,60,'#f3dfa8','none',4);
@@ -305,7 +305,7 @@ SCENE({id:'photosynthesis',name:'Where does a tree’s mass come from?',tag:'Van
    let x=300;seg.forEach(([n,f,c])=>{out+=R(x,208,Math.max(2,f*280),26,c,'none',2);x+=f*280});
    seg.forEach(([n,f,c],i)=>out+=R(300,250+i*22,12,12,c,'none',2)+TF(318,261+i*22,`${n}: ${f<.01?'under 1%':'about '+Math.round(f*100)+'%'}`,13,C.ink,'start'));
   }
-  return {svg:out,phase:s.guess?'About half of fresh wood is water. Nearly all the dry matter is carbon and oxygen fixed from carbon dioxide in the air; water supplies the hydrogen, and the soil only a little mineral. The shares here are illustrative for wood. Van Helmont was right that soil was not the source, but nobody yet knew that air contained a gas plants could use.':'Van Helmont’s careful weighing ruled out the soil. His answer, water, was half right: he could not know about carbon dioxide, which was not identified until the 1750s.'};
+  return {svg:out,phase:s.guess?'About half of fresh wood is water. Nearly all the dry matter is carbon and oxygen fixed from carbon dioxide in the air; water supplies the hydrogen, and the soil only a little mineral. The shares here are illustrative for wood. Van Helmont was right that soil was not the source, but nobody yet knew that air contained a gas plants could use.':'Van Helmont’s careful weighing ruled out the soil. His answer, water, was half right: nobody yet knew that plants take in carbon dioxide from the air; the gas was not characterised until the 1750s.'};
  }});
 
 // Priestley (1771) and Ingenhousz (1779): plants restore air, but only in the light.
@@ -651,7 +651,7 @@ SCENE({id:'scaling-laws-heartbeats',name:'A billion heartbeats?',tag:'Heart rate
  }});
 
 // Why ¾? Surface and volume, and the competing explanations.
-const B5_THEORIES={rubner:{n:'Rubner’s surface law (1883)',e:'⅔',t:'Heat is lost through the skin, which grows as mass to the ⅔ power, so a warm-blooded animal’s heat production should too. Fits some data well, including White & Seymour’s basal rates.'},kleiber:{n:'Kleiber’s ¾ (1932)',e:'¾',t:'An empirical fit across animals from mice to steers. It became a textbook rule, more from its tidy number than from a theory.'},wbe:{n:'West, Brown & Enquist (1997)',e:'¾',t:'Derived ¾ from branching, space-filling supply networks such as blood vessels. Influential, but its mathematics and assumptions have been strongly criticised (Kozłowski & Konarzewski 2004).'},glazier:{n:'Glazier (2005)',e:'⅔ to 1',t:'The exponent is not universal: it varies with activity level, lifestyle and group, from about ⅔ to 1. Many biologists now favour this view.'}};
+const B5_THEORIES={rubner:{n:'Rubner’s surface law (1883)',e:'⅔',t:'Heat is lost through the skin, which grows as mass to the ⅔ power, so a warm-blooded animal’s heat production should too. Fits some data well, including White & Seymour’s basal rates.'},kleiber:{n:'Kleiber’s ¾ (1932)',e:'¾',t:'An empirical fit across animals from doves and rats to steers. It became a textbook rule, more from its tidy number than from a theory.'},wbe:{n:'West, Brown & Enquist (1997)',e:'¾',t:'Derived ¾ from branching, space-filling supply networks such as blood vessels. Influential, but its mathematics and assumptions have been strongly criticised (Kozłowski & Konarzewski 2004).'},glazier:{n:'Glazier (2005)',e:'⅔ to 1',t:'The exponent is not universal: it varies with activity level, lifestyle and group, from about ⅔ to 1. Many biologists now favour this view.'}};
 SCENE({id:'scaling-laws-surface',name:'Why not ⅔?',tag:'Surface, volume and theories',
  definition:'When a body grows, its surface grows as size squared but its volume as size cubed, so surface per unit volume falls. Larger animals have relatively less skin to lose heat through.',
  example:'A cube twice as wide has 4 times the surface but 8 times the volume, so half the surface per unit volume.',

@@ -628,7 +628,7 @@ const B1_OBJ=[
  {n:'Hen’s egg',k:'egg',m:5e-2},{n:'Ant',k:'ant',m:3e-3},{n:'Human egg cell',k:'human egg',m:1.2e-4},{n:'Width of a hair',k:'hair',m:7e-5,dx:16},
  {n:'Red blood cell',k:'red cell',m:7.5e-6},{n:'E. coli bacterium',k:'E. coli',m:2e-6},{n:'Influenza virus',k:'flu virus',m:1e-7},{n:'Ribosome',k:'ribosome',m:2.5e-8},{n:'DNA helix (width)',k:'DNA',m:2e-9}];
 const B1_TOOLS=[{n:'eye',lim:1e-4,col:C.green},{n:'light microscope',lim:2e-7,col:C.blue},{n:'electron microscope',lim:1e-10,col:C.purple}];
-SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
+SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Eight powers of ten',
  definition:'Living things span more than seven powers of ten, from eggs you can hold to molecules a few nanometres wide. Each kind of instrument opens a band of that range: the eye down to about 0.1 mm, light microscopes to about 0.2 µm, electron microscopes to below a nanometre.',
  example:'A red blood cell (7.5 µm) needs a light microscope. A flu virus (about 100 nm) is below the light limit and was first seen with the electron microscope, built by Ernst Ruska and Max Knoll from 1931.',
  desc:'A logarithmic ruler from 10 cm down to 1 nm, with objects placed at their size and the three instruments’ ranges shaded beneath. Pressing an object shows which instruments can resolve it.',
@@ -648,7 +648,7 @@ SCENE({id:'microscopes-scale',name:'The scale of life',tag:'Ten powers of ten',
    out+=L(x,y+8,x,146,on?C.coral:C.line,on?2.5:1.5)+hit(X,'pick',i,o.n,Ci(x,y,on?9:7,on?C.coral:C.blue)+TF(x+(o.dx||0),y-13,o.k,13,on?C.coral:C.ink,o.dx?'start':'middle'))});
   const o=B1_OBJ[s.sel],sees=B1_TOOLS.filter(t=>o.m>=t.lim).map(t=>t.n);
   const sz=o.m>=1e-3?B1_n(o.m*1000,o.m>=1e-2?0:1)+' mm':o.m>=1e-6?B1_n(o.m*1e6,o.m>=1e-5?0:1)+' µm':B1_n(o.m*1e9,0)+' nm';
-  out+=B1_card(60,292,480,`${o.n}: about ${sz}`,[`Can be resolved by: ${sees.join(', ')}.`,sees.length===1?'Only an electron microscope (or X-ray methods) shows it.':sees.length===3?'Visible without any instrument.':'Too small for the unaided eye.']);
+  out+=B1_card(60,292,480,`${o.n}: about ${sz}`,[`Can be resolved by: ${sees.join(', ')}.`,sees.length===1?'Only an electron microscope (or X-ray methods) shows it.':sees.length===3?'Visible without any instrument.':o.m>=5e-5?'The eye can see it is there, but not its detail.':'Too small for the unaided eye.']);
   return {svg:out,phase:`${o.n}, about ${sz}. Each tick on the ruler is ten times smaller than the one before, so the distance from an egg to a DNA helix is seven tenfold steps.`};
  }});
 
@@ -679,7 +679,7 @@ SCENE({id:'microscopes-cork',name:'Hooke counts the cells',tag:'Rerun the arithm
 /* ---------- Lesson: cell-theory ---------- */
 const B1_EVENTS=[
  {y:1665,who:'Hooke',t:'names “cells” in cork',l:['Empty walls of dead plant cells, seen at about 50×.','He did not know they had once been alive.']},
- {y:1676,who:'Leeuwenhoek',t:'sees living “animalcules”',l:['Protists and bacteria in pond water and on teeth.','The first view of single-celled life.']},
+ {y:1676,who:'Leeuwenhoek',t:'sees living “animalcules”',l:['Protists and bacteria in rain water and pepper water.','The first view of single-celled life.']},
  {y:1831,who:'Brown',t:'describes the nucleus',l:['Robert Brown sees a dark body in orchid cells','and names it the nucleus.']},
  {y:1838,who:'Schleiden',t:'all plants are made of cells',l:['But he wrongly thought new cells crystallise','out of fluid inside old ones.']},
  {y:1839,who:'Schwann',t:'animals too are made of cells',l:['Cartilage, nerve and muscle share one plan:','the cell is the unit of all life.']},
@@ -1007,9 +1007,9 @@ SCENE({id:'cell-division-growth',name:'Doubling',tag:'Exponential growth, and it
 const B1_CYC=[{n:'G1',h:11,c:'#7fb3da'},{n:'S',h:8,c:C.purple},{n:'G2',h:4,c:'#6fb8a6'},{n:'M',h:1,c:C.coral}];
 SCENE({id:'cell-division-checkpoints',name:'The cell cycle',tag:'Checkpoints that stop a damaged cell',
  definition:'A dividing cell runs through a cycle: growth (G1), copying its DNA (S), more growth (G2) and mitosis (M). At checkpoints it checks for damage and stops if something is wrong. Cancer cells have usually lost these brakes.',
- example:'A typical human cell in culture takes about 24 hours: roughly 11 h in G1, 8 h in S, 4 h in G2 and 1 h in M. If its DNA is damaged, the protein p53 halts it at the G1 checkpoint until the damage is repaired. Most human cancers carry a broken p53.',
+ example:'A typical human cell in culture takes about 24 hours: roughly 11 h in G1, 8 h in S, 4 h in G2 and 1 h in M. If its DNA is damaged, the protein p53 halts it at the G1 checkpoint until the damage is repaired. About half of human cancers carry a broken p53.',
  desc:'A clock of the cell cycle with its four phases and three checkpoints, and a cell moving round it. Damage can be added, and the checkpoint switched off, to see a damaged cell either stop or carry on dividing.',
- research:['Hartwell, L. H. & Weinert, T. A. (1989). Checkpoints: controls that ensure the order of cell cycle events. Science 246.','Nurse, P. (1975); Hunt, T. (1983): cyclins. Nobel Prize 2001 (Hartwell, Hunt, Nurse).','Lane, D. P. (1992). p53, guardian of the genome. Nature 358.'],
+ research:['Hartwell, L. H. & Weinert, T. A. (1989). Checkpoints: controls that ensure the order of cell cycle events. Science 246.','Nurse, P. (1975): cell-cycle control genes in fission yeast; Evans, T., Hunt, T. et al. (1983): cyclins. Nobel Prize 2001 (Hartwell, Hunt, Nurse).','Lane, D. P. (1992). p53, guardian of the genome. Nature 358.'],
  dur:12,hint:'Move the cell through the cycle. Then add DNA damage, and compare a working checkpoint with a broken one.',
  init:()=>({t:8,dmg:'no',chk:'on'}),
  watch(p){return p<.4?{t:+B1_n(p/.4*24,1),dmg:'no',chk:'on'}:p<.7?{t:+B1_n((p-.4)/.3*24,1),dmg:'yes',chk:'on'}:{t:+B1_n((p-.7)/.3*24,1),dmg:'yes',chk:'off'}},
@@ -1432,7 +1432,7 @@ SCENE({id:'natural-selection-moths',name:'The peppered moth',tag:'Selection you 
   d.pts.forEach(([y,p])=>{out+=Ci(A.X(y),A.Y(p),8,C.coral,'#fff')+TF(A.X(y)+(y===d.pts[0][0]?12:-12),A.Y(p)+(p>.5?22:-12),`${y}: ${Math.round(p*100)}%`,13,C.coral,y===d.pts[0][0]?'start':'end')});
   const [ye,pe]=d.pts[1],err=Math.abs(model(ye)-pe);
   out+=TBF(300,334,`model in ${ye}: ${Math.round(model(ye)*100)}% · recorded: ${Math.round(pe*100)}% · ${err<.04?'a good fit':'adjust the advantage'}`,14,err<.04?C.green:C.ink);
-  out+=TF(300,354,'Simplified: a two-type logistic model, one generation a year.',13,C.muted)+TF(300,372,'Haldane (1924), modelling a dominant allele, estimated about 30% for the rise.',13,C.muted);
+  out+=TF(300,354,'Simplified: a two-type logistic model, one generation a year.',13,C.muted)+TF(300,372,'Haldane (1924), modelling a dominant allele, also found a large advantage.',13,C.muted);
   return {svg:out,phase:s.ph==='rise'?`A yearly advantage of about ${Math.round(d.best*100)}% in this simple model carries dark moths from 1% to 98% in 47 years. Kettlewell’s 1950s release experiments blamed bird predation; his methods were criticised, but a large repeat by Majerus (Cook et al. 2012) confirmed it. The dark form came from a single mutation, a jumping gene inserted into the cortex gene around 1819 (van’t Hof et al. 2016).`:`After the Clean Air Act of 1956, pale bark returned and the dark form fell at about ${Math.round(d.best*100)}% a year in this model. The same fall happened in Michigan, in parallel (Grant et al. 1996).`};
  }});
 
@@ -1500,10 +1500,10 @@ SCENE({id:'artificial-selection-illinois',name:'A century of selection',tag:'The
   return {svg:out,phase:s.model==='many'?`In ${s.yr} the high line is near ${B2_m(hi(s.yr),1)}% oil. Laurie et al. (2004) mapped about 50 regions of the genome that each contributed a small effect: the long response suits many genes of small effect.`:'A trait controlled by a handful of genes would run out of variation within a few decades. The real experiment did not, which is evidence for many genes and continuing mutation.'};
  }});
 
-const B2_FOX=[[0,0],[10,18],[20,35],[40,75]];
+const B2_FOX=[[0,0],[10,18],[20,35],[33,75]];
 SCENE({id:'artificial-selection-foxes',name:'Tame foxes',tag:'Belyaev’s experiment, from 1959',
  definition:'In Novosibirsk, Dmitry Belyaev and Lyudmila Trut bred silver foxes for one thing only: how calmly they approached people. Within a few dozen generations most foxes were eager for human contact.',
- example:'Trut reported that 18% of pups were in the tamest (“elite”) class by the 10th generation, 35% by the 20th, and 70–80% after about 40 generations.',
+ example:'Trut reported that 18% of pups were in the tamest (“elite”) class by the 10th generation, 35% by the 20th, and 70–80% after 40 years, about 30–35 generations.',
  desc:'A graph of the share of elite tame foxes against generation, with the reported points, beside two panels: traits said to have changed along with tameness, and later caveats about the experiment.',
  research:'Belyaev, D. K. (1979). Destabilizing selection as a factor in domestication. Journal of Heredity 70, 301–308; Trut, L. N. (1999). Early canid domestication: the farm-fox experiment. American Scientist 87, 160–169; Lord, K. A. et al. (2020). The history of farm foxes undermines the animal domestication syndrome. Trends in Ecology & Evolution 35, 125–136.',
  dur:10,hint:'Slide through the generations, then switch between what was reported and what later work questioned.',
@@ -1552,7 +1552,7 @@ SCENE({id:'sexual-selection',name:'Sexual selection',tag:'Andersson’s widowbir
 SCENE({id:'sexual-selection-runaway',name:'Runaway selection',tag:'Fisher’s feedback loop',
  definition:'Fisher’s runaway process: if females prefer a trait, and the genes for the preference and for the trait end up together in the same offspring, then the trait and the preference can amplify each other until the cost to survival stops them.',
  example:'Daughters of choosy mothers inherit the preference; sons inherit their father’s long tail. Because they travel together, every generation that favours long tails also increases the preference for them.',
- desc:'A toy model of a male trait and a female preference over 40 generations. Two sliders set how strongly the two are linked in offspring and how costly the trait is. A time graph shows both values, and a second graph plots preference against trait, spiralling outward when the loop runs away and settling when the cost wins.',
+ desc:'A toy model of a male trait and a female preference over 40 generations. Two sliders set how strongly the two are linked in offspring and how costly the trait is. A time graph shows both values, and a second graph plots preference against trait: the point moves along a straight line, climbing off the scale when the loop runs away and stopping when the cost wins.',
  research:'Fisher, R. A. (1930). The Genetical Theory of Natural Selection; Lande, R. (1981). Models of speciation by sexual selection on polygenic traits. PNAS 78, 3721–3725; Zahavi, A. (1975). Mate selection: a selection for a handicap. Journal of Theoretical Biology 53, 205–214. This is a toy model, not a fitted one.',
  dur:10,hint:'Raise the link between trait and preference above the cost and the loop runs away. Clear runaway is hard to demonstrate in the wild; costly signals of good genes (Zahavi’s handicap) are a rival explanation.',
  init:()=>({c:.8,cost:.16}),
@@ -1586,7 +1586,7 @@ SCENE({id:'sexual-selection-bateman',name:'Who competes, who chooses',tag:'Batem
   const A=B2_axes(70,62,330,220,[0,5],[0,45],{xt:[0,1,2,3,4,5],yt:[0,10,20,30,40],xl:'number of mates',yl:'offspring'});out+=A.svg;
   const r=rng(s.sp==='typical'?5:9);
   for(const [sl,col,base] of [[mS,C.blue,4],[fS,C.coral,8]])for(let i=0;i<22;i++){const m=Math.floor(r()*6),y=clamp((m?base:0)+sl*m+B2_gauss(r)*3,0,44);out+=Ci(A.X(m)+(r()-.5)*14,A.Y(y),4,col,'none','opacity=".55"')}
-  out+=L(A.X(0),A.Y(0),A.X(5),A.Y(4+mS*5),C.blue,3)+L(A.X(0),A.Y(0),A.X(5),A.Y(8+fS*5),C.coral,3);
+  out+=L(A.X(1),A.Y(4+mS),A.X(5),A.Y(4+mS*5),C.blue,3)+L(A.X(1),A.Y(8+fS),A.X(5),A.Y(8+fS*5),C.coral,3);
   out+=L(A.X(s.m),A.Y(0),A.X(s.m),A.Y(45),C.ink,1.5,'stroke-dasharray="4 3"');
   const mo=s.m?4+mS*s.m:0,fo=s.m?8+fS*s.m:0;
   out+=counter(430,70,'males, expected',B2_m(mo,0)+' offspring',C.blue,140)+counter(430,130,'females, expected',B2_m(fo,0)+' offspring',C.coral,140);
@@ -1672,8 +1672,8 @@ SCENE({id:'speciation-barriers',name:'Barriers between species',tag:'Before and 
    const words=b.split(' ');words.forEach((w,j)=>{out+=TF(x+35,y+32+j*17-(words.length-1)*8,w,13,pass?C.green:stop?C.coral:C.muted)});
    out+=TBF(x+35,y+92,pass?'✓':stop?'✗':'–',18,pass?C.green:stop?C.coral:C.muted);
    if(i<6)out+=arrow(x+70,y+35,x+78,y+35,C.line,1.5,5)});
-  out+=L(34+3*78+74,74,34+3*78+74,190,C.purple,2,'stroke-dasharray="5 4"');
-  out+=TF(34+2*78,70,'prezygotic',13,C.purple,'middle')+TF(34+5*78,70,'postzygotic',13,C.purple,'middle');
+  out+=L(34+4*78+74,74,34+4*78+74,190,C.purple,2,'stroke-dasharray="5 4"');
+  out+=TF(34+2*78+35,70,'prezygotic',13,C.purple,'middle')+TF(34+5*78+74,70,'postzygotic',13,C.purple,'middle');
   const lines=[];let cur='';for(const w of c.why.split(' ')){if((cur+' '+w).length>62){lines.push(cur);cur=w}else cur=cur?cur+' '+w:w}lines.push(cur);
   out+=R(40,214,520,58+lines.length*20,'#fff',C.grid,8);lines.forEach((l,i)=>{out+=TF(56,240+i*20,l,14,C.ink,'start')});
   out+=TBF(56,248+lines.length*20,`A ${c.kind} barrier`,15,C.coral,'start');
@@ -1752,8 +1752,8 @@ SCENE({id:'finches-beaks-competition',name:'When a competitor arrives',tag:'Char
   out+=P(B2_path(range(61).map(i=>{const d=8+i*.05;return [A.X(d),A.Y(surv(d))]})),yes?C.purple:C.coral,3.5);
   out+=yes?arrow(A.X(10.8),A.Y(.72),A.X(10.2),A.Y(.72),C.purple,3,10)+TF(A.X(10.95),A.Y(.72)-14,'average beak gets smaller',13,C.purple,'end'):arrow(A.X(9.0),A.Y(.6),A.X(9.5),A.Y(.6),C.coral,3,10)+TF(A.X(9.25),A.Y(.6)-14,'average beak gets deeper',13,C.coral);
   out+=R(400,60,170,220,'#fff',C.grid,8)+B2_title(414,84,'Seeds left to eat',C.ink);
-  const seeds=[['small, soft',6,'#b38b4a',true],['large, hard (caltrop)',12,'#6b4f2a',!yes]];
-  seeds.forEach(([n,r,c,ok],i)=>{const y=126+i*70;out+=Ci(430,y,r,c)+TF(452,y+5,n,13,C.ink,'start')+TF(452,y+23,ok?'available':'eaten by large finches',13,ok?C.green:C.coral,'start')});
+  const seeds=[['small, soft',6,'#b38b4a',yes,yes?'the main food left':'soon ran out'],['large, hard (caltrop)',12,'#6b4f2a',!yes,yes?'eaten by large finches':'left for deep beaks']];
+  seeds.forEach(([n,r,c,ok,st],i)=>{const y=126+i*70;out+=Ci(430,y,r,c)+TF(452,y+5,n,13,C.ink,'start')+TF(452,y+23,st,13,ok?C.green:C.coral,'start')});
   out+=TF(414,262,yes?'Large finches since 1982':'Large finches absent',13,C.muted,'start');
   return {svg:out,phase:yes?'With large ground finches taking the large seeds, medium ground finches with smaller beaks, better at small seeds, survived best. The average beak shrank, making the two species more different.':'Without a competitor, the large hard seeds were left for medium ground finches with deep enough beaks, and deeper beaks were favoured.'};
  }});
@@ -1795,7 +1795,7 @@ SOURCE('b2-sulloway',{title:'Sulloway, F. J. (1982). Darwin and his finches: the
 SOURCE('b2-weiner',{title:'Weiner, J. (1994). The Beak of the Finch: A Story of Evolution in Our Time. Knopf.'});
 
 LESSON({id:'deep-time',name:'Deep time',short:'Deep time',stage:'evolution',year:'1788–1956',level:'Introduction',
- why:'Evolution needs vast time; geologists showed the Earth is billions of years old before biologists could explain how life changes.',
+ why:'Evolution needs vast time; geologists showed the Earth is immensely old before biologists could explain how life changes, and radioactivity later put its age in billions of years.',
  prior:['microscopes'],references:['b2-hutton','b2-lyell','b2-holmes','b2-patterson'],
  ids:['deep-time','deep-time-strata','deep-time-dating']});
 LESSON({id:'natural-selection',name:'Natural selection',short:'Selection',stage:'evolution',year:'1858–1859',level:'Introduction',
@@ -1971,7 +1971,7 @@ SCENE({id:'mendel-crosses-seven',name:'Seven traits, one ratio',tag:'Mendel’s 
   const m=B3_MEN7[s.sel],n=m.a+m.b,ea=n*.75,eb=n*.25,chi=B3_chi([m.a,m.b],[ea,eb]),p=B3_chiP(chi,1);
   out+=R(20,300,560,74,C.pale,'none',10);
   out+=TBF(34,322,`${m.t}: ${B3_n(m.a)} ${m.d} to ${B3_n(m.b)} ${m.r} = ${(m.a/m.b).toFixed(2)} : 1`,14,C.ink,'start');
-  out+=TF(34,343,`Expected for 3 : 1 with ${B3_n(n)} plants: ${B3_n(ea)} and ${B3_n(eb)}.`,13,C.ink,'start');
+  out+=TF(34,343,`Expected for 3 : 1 with ${B3_n(n)} ${s.sel<2?'seeds':'plants'}: ${B3_n(ea)} and ${B3_n(eb)}.`,13,C.ink,'start');
   out+=TF(34,363,`Chi-square ${chi.toFixed(2)} (1 degree of freedom), p = ${p.toFixed(2)}: ${p>.05?'a good fit to 3 : 1':'a poor fit'}.`,13,C.ink,'start');
   return {svg:out,phase:'All seven ratios sit close to 3 : 1. In 1936 Fisher calculated that, over all Mendel’s experiments, results this close to expectation would arise by chance only rarely, and suspected they had been tidied. Historians still debate why: unconscious bias, an assistant, or selective reporting. Nobody doubts the ratios themselves, which have been reproduced countless times.'};
  }});
@@ -2056,7 +2056,7 @@ SCENE({id:'punnett-squares-testcross',name:'The test-cross',tag:'Is the purple p
  definition:'A test-cross mates an individual showing the dominant form with one showing the recessive form. Any recessive-looking offspring proves the first parent carried the hidden allele.',
  example:'A purple plant from an Aa × Aa cross is AA with probability 1/3. After five purple offspring from a test-cross, that rises to 94%; one white offspring makes Aa certain.',
  desc:'A purple plant of unknown genotype crossed with a white plant, a row of offspring you grow one at a time, and a chart of the probability that the purple parent is AA after each all-purple offspring.',
- research:'Mendel (1866) used back-crosses to the recessive parent to confirm the 1 : 2 : 1 genotypes. The updating rule is Bayes’ theorem with prior 1/3 from the 1 : 2 : 1 ratio.',
+ research:'Mendel (1866) found the 1 : 2 : 1 genotypes by self-fertilising second-generation plants; his back-crosses of hybrids to the parental forms confirmed that a hybrid makes its kinds of gamete in equal numbers. The updating rule is Bayes’ theorem with prior 1/3 from the 1 : 2 : 1 ratio.',
  dur:12,hint:'Grow offspring and watch the probability change. Reveal shows the hidden genotype; New plant picks another.',
  init:()=>({seed:B3_TCW+1,k:0,rev:false}),
  watch(p){const k=Math.min(8,Math.floor(p*9));return {seed:B3_TCW,k,rev:p>.9}},
@@ -2075,7 +2075,7 @@ SCENE({id:'punnett-squares-testcross',name:'The test-cross',tag:'Is the purple p
   const nP=white<0?s.k:white,cur=white<0?B3_post(Math.min(10,s.k)):0;
   if(white<0)out+=Ci(pl.X(Math.min(10,s.k)),pl.Y(cur),6,C.coral,'#fff');
   out+=R(380,200,200,130,C.pale,'none',10);
-  out+=B3_lines(394,224,white<0?[`${s.k} offspring, all purple.`,`P(parent is AA) = ${(cur*100).toFixed(1)}%`,`P(parent is Aa) = ${((1-cur)*100).toFixed(1)}%`,'Each purple offspring halves','the chance of Aa.']:[`A white offspring appeared`,`(number ${white+1}).`,'Only an Aa parent can give a','white plant: the parent is Aa,',`whatever came before.`],13,C.ink);
+  out+=B3_lines(394,224,white<0?[`${s.k} offspring, all purple.`,`P(parent is AA) = ${(cur*100).toFixed(1)}%`,`P(parent is Aa) = ${((1-cur)*100).toFixed(1)}%`,'Each purple offspring halves','the odds of Aa against AA.']:[`A white offspring appeared`,`(number ${white+1}).`,'Only an Aa parent can give a','white plant: the parent is Aa,',`whatever came before.`],13,C.ink);
   out+=TF(300,372,s.rev?`The hidden parent was ${h}.`:'Start: 1 in 3 purple plants from Aa × Aa are AA.',14,s.rev?C.blue:C.muted);
   return {svg:out,phase:'Before any offspring the purple plant is AA one time in three. An AA parent always gives purple; an Aa parent gives purple half the time. So every purple offspring makes AA more likely, but never certain, while a single white offspring settles it.'};
  }});
@@ -2206,10 +2206,10 @@ SCENE({id:'chromosomes-linkage-map',name:'The first genetic map',tag:'Sturtevant
   out+=B3_lines(34,220,[`${a.n} and`,`${b.n}`],14,C.ink);
   out+=TBF(34,272,`distance: ${d.toFixed(1)} map units`,14,C.ink,'start');
   out+=TBF(34,296,`recombination: ${B3_pct(r)}`,14,C.coral,'start');
-  out+=B3_lines(34,322,[`about ${B3_n(r*1000)} in 1,000 test-cross offspring`,d>20?'double crossovers hide some swaps':'close genes: % ≈ distance'],13,C.muted);
+  out+=B3_lines(34,322,[`about ${B3_n(r*1000)} in 1,000 test-cross offspring`,d>20?'by Haldane’s curve; real flies give more':'close genes: % ≈ distance'],13,C.muted);
   const pl=B3_plot(350,206,210,120,[0,60],[0,.5],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60']],yt:[[0,'0'],[.25,'25%'],[.5,'50%']],xl:'map distance',yl:'recombination'});
   out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(50),pl.Y(.5),C.muted,1.5,'stroke-dasharray="4 4"')+B3_poly(range(61).map(x=>[pl.X(x),pl.Y(B3_hald(x))]),C.blue,2.5)+Ci(pl.X(Math.min(60,d)),pl.Y(r),6,C.coral,'#fff');
-  return {svg:out,phase:'Sturtevant, an undergraduate in Morgan’s fly room, realised that recombination percentages add up along a line, and drew the first genetic map in one night. Over long distances two crossovers can cancel out, so recombination flattens at 50% and far-apart genes look closer than they are.'};
+  return {svg:out,phase:'Sturtevant, an undergraduate in Morgan’s fly room, realised that recombination percentages add up along a line, and drew the first genetic map in one night. Over long distances two crossovers can cancel out, so recombination flattens at 50% and far-apart genes look closer than they are. The curve here is Haldane’s idealised rule, which assumes crossovers fall independently. In real flies one crossover discourages another nearby, so counts sit nearer the straight line: Sturtevant found about 30% for white and vermilion, where the curve gives 22%.'};
  }});
 
 /* ================================================================ hardy-weinberg */
@@ -2329,7 +2329,7 @@ SCENE({id:'genetic-drift-buri',name:'Buri’s 107 fly bottles',tag:'Drift you ca
  definition:'In 1956 Peter Buri kept 107 lines of fruit flies, each started with half its copies of one eye-colour allele and kept at 16 flies per generation. Over 19 generations the lines spread out until most had lost or fixed the allele.',
  example:'After about ten generations every frequency from 0 to 100% was about equally common; by generation 19 the distribution was U-shaped.',
  desc:'A simulated version of Buri’s design: a histogram of 107 lines by number of copies of the allele (out of 32), for a generation you choose, and the fall in heterozygosity against the theory for 16 flies and for the smaller effective size Buri estimated.',
- research:'Buri, P. (1956). Gene frequency in small populations of mutant Drosophila. Evolution 10, 367–402. Heterozygosity fell faster than expected for 16 flies, as if the effective population size were about 11 (Hartl & Clark, Principles of Population Genetics).',
+ research:'Buri, P. (1956). Gene frequency in small populations of mutant Drosophila. Evolution 10, 367–402. Heterozygosity fell faster than expected for 16 flies, as if the effective population size were about 11; see also Hartl & Clark, Principles of Population Genetics.',
  dur:12,hint:'Move through the generations. Bars at the two ends are lines that have lost or fixed the allele.',
  init:()=>({gen:10,seed:9}),
  watch(p){return {gen:Math.min(19,Math.round(19*p)),seed:9}},
@@ -2460,7 +2460,7 @@ SCENE({id:'quantitative-traits-heritability',name:'What heritability does not me
   out+=R(20,342,560,32,C.pale,'none',8);
   out+=TF(300,363,`Heritability within each pot: ${Math.round(h2*100)}% · difference between pots: ${s.poor?'all due to soil':'none (same soil)'}`,14,C.ink);
   out+=TF(300,52,'dashed line = pot average height',13,C.muted);
-  return {svg:out,phase:`${s.within==='even'?'With even conditions every difference inside a pot comes from the seeds, so heritability is 100%.':'Uneven light and water add environmental differences, so heritability falls to about 50%, though the seeds are identical.'} ${s.poor?'The gap between the pots is caused entirely by soil, however high heritability is within them.':''} Heritability belongs to a population in its environment, not to a trait or a person. The idea grew up alongside eugenics, which Galton named and Fisher supported; modern genetics rejects its conclusions.`};
+  return {svg:out,phase:`${s.within==='even'?'With even conditions every difference inside a pot comes from the seeds, so heritability is 100%.':'Uneven light and water add environmental differences, so heritability falls to about 50%, though the seeds are the same as before.'} ${s.poor?'The gap between the pots is caused entirely by soil, however high heritability is within them.':''} Heritability belongs to a population in its environment, not to a trait or a person. The idea grew up alongside eugenics, which Galton named and Fisher supported; modern genetics rejects its conclusions.`};
  }});
 
 /* Biology era 3 · Heredity: lessons, sources and connections. */
@@ -2770,7 +2770,7 @@ SCENE({id:'double-helix-structure',name:'The double helix',tag:'Two antiparallel
   for(const [ph,col] of [[0,C.blue],[off,C.coral]])for(let j=0;j<(n-1)*3;j++){const a=pt(j/3,ph),b=pt((j+1)/3,ph);items.push({at:a.map((v,k)=>(v+b[k])/2),svg:P=>line3(a,b,P,col,7)})}
   let out=sortedItems(items,P);
   if(s.n>21)out+=TF(300,372,`showing 21 of ${s.n} pairs (two turns)`,13,C.muted);
-  return {svg:out,title:'The double helix',caption:'Blue and coral are the two backbones, running in opposite directions. Base pairs (green A–T, amber–blue G–C) stack up the middle. The uneven gaps between the backbones are the major and minor grooves.'};
+  return {svg:out,title:'The double helix',caption:'Blue and coral are the two backbones, running in opposite directions. Base pairs (green–coral A–T, amber–blue G–C) stack up the middle. The uneven gaps between the backbones are the major and minor grooves.'};
  }});
 
 /* ================================================================ replication */
@@ -2832,7 +2832,7 @@ SCENE({id:'replication-meselson',name:'The Meselson–Stahl experiment',tag:'Wei
  }});
 
 /* ---- replication fork ---- */
-const B4_ORGF={ecoli:{n:'E. coli',G:4.6e6,v:1000,frag:70,fr:'1,000–2,000'},human:{n:'Human cell',G:3.1e9,v:33,frag:24,fr:'100–200'}};
+const B4_ORGF={ecoli:{n:'E. coli',G:4.6e6,v:1000,frag:70,fr:'1,000–2,000'},human:{n:'Human cell',G:6.2e9,v:33,frag:24,fr:'100–200'}};
 function B4_dur(sec){return sec<120?Math.round(sec)+' s':sec<7200?Math.round(sec/60)+' min':sec<172800?(sec/3600).toFixed(1)+' h':sec<6e7?Math.round(sec/86400)+' days':(sec/3.15e7).toFixed(1)+' years'}
 SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in pieces',
  definition:'DNA polymerase can only add to the 3′ end of a growing strand. At a replication fork one new strand (the leading strand) is made continuously towards the fork; the other (the lagging strand) is made backwards in short Okazaki fragments, each started by a short RNA primer and later joined up.',
@@ -2867,7 +2867,7 @@ SCENE({id:'replication-fork',name:'The replication fork',tag:'One strand in piec
   out+=TF(300,286,`${o.n}: ${(o.G/1e6).toLocaleString('en-GB')} million bases · fork speed ≈ ${o.v.toLocaleString('en-GB')} bases/s · fragments ${o.fr} bases`,13,C.ink);
   out+=TBF(300,318,`${O.toLocaleString('en-GB')} origin${O>1?'s':''} × 2 forks → about ${B4_dur(sec)}`,17,C.ink);
   out+=TF(300,346,s.org==='ecoli'?'E. coli starts from a single origin (oriC); about 40 minutes is what is observed.':'Real S phase lasts about 8 hours: origins fire in a timed order, not all at once.',13,C.muted);
-  return {svg:out,phase:s.org==='human'&&O<100?'From one origin, copying a human genome at this speed would take far longer than a cell lives. Many origins make it possible.':'The top new strand grows smoothly towards the fork. The bottom one must be made in pieces that run the other way, each started by a primer (coral) and later sealed.'};
+  return {svg:out,phase:s.org==='human'&&O<100?'From one origin, copying a human genome at this speed would take more than a year, far longer than the hours a dividing cell has. Many origins make it possible.':'The top new strand grows smoothly towards the fork. The bottom one must be made in pieces that run the other way, each started by a primer (coral) and later sealed.'};
  }});
 
 /* ================================================================ transcription-translation */
@@ -2913,7 +2913,7 @@ SCENE({id:'transcription-translation-trna',name:'Matching the tRNA',tag:'Adaptor
  init:()=>({c:1,seed:4,msg:'',miss:0}),
  watch(p){return {c:Math.min(7,1+Math.floor(p*7)),seed:4,msg:'',miss:0,sim:true}},
  ui:[{b:'Start again',act:'again'}],
- on:{pick(s,v){if(s.c>=7)return;const o=B4_opts(s.c,s.seed)[Number(v)],want=B4_GENE.slice(3*s.c,3*s.c+3).replace(/T/g,'U');
+ on:{pick(s,v){if(s.c>=6)return;const o=B4_opts(s.c,s.seed)[Number(v)],want=B4_GENE.slice(3*s.c,3*s.c+3).replace(/T/g,'U');
    if(o.cod===want){s.c++;s.msg=s.c>=7?'':`Accepted: ${B4_N3[o.aa]} added.`}else{s.miss++;s.msg=`Rejected: anticodon ${o.anti} does not pair with ${want}.`}},
   again(s){s.c=1;s.seed=nextSeed();s.msg='';s.miss=0}},
  draw(s,f,X){
@@ -2927,11 +2927,11 @@ SCENE({id:'transcription-translation-trna',name:'Matching the tRNA',tag:'Adaptor
   const done=Math.min(s.c,7);let cx=x0+(rc-1)*cw+cw/2;
   for(let j=done-1;j>=0;j--){const a=B4_aa(B4_GENE.slice(3*j,3*j+3)),y=110-(done-1-j)*0,x=cx-(done-1-j)*44;if(a==='*')continue;out+=Ci(x,92,17,C.greenp,C.green)+TF(x,97,B4_N3[a],13,C.ink);if(j<done-1)out+=L(x+17,92,x+27,92,C.green,3)}
   out+=TF(x0+(rc-1)*cw+cw/2,66,'growing chain',13,C.green);
-  if(s.c<7){const opts=B4_opts(s.c,s.seed);
+  if(s.c<6){const opts=B4_opts(s.c,s.seed);
    out+=TF(300,252,s.sim?'A simulated reader picks the matching tRNA.':'Which tRNA pairs with the codon in the A site?',14,C.ink);
    opts.forEach((o,i)=>{const x=60+i*124;out+=B4_btn(X,'pick',i,`tRNA with anticodon ${o.anti} carrying ${B4_N3[o.aa]}`,x,266,112,62,'',{});
     out+=TMF(x+56,290,o.anti,16,C.ink,'middle','font-weight="700"')+TF(x+56,314,B4_N3[o.aa],13,C.muted)})}
-  else out+=TBF(300,290,'Stop codon reached: the chain is released',16,C.green);
+  else out+=TBF(300,286,'Stop codon UAA: no tRNA pairs with it.',16,C.green)+TF(300,310,'A release factor protein binds instead and the chain is released.',14,C.ink);
   out+=TF(300,354,s.msg||`codon ${Math.min(s.c+1,7)} of 7 · rejected so far: ${s.miss}`,14,s.msg.startsWith('Rejected')?C.coral:C.muted);
   return {svg:out,phase:'Each tRNA’s anticodon is written 5′→3′; reverse it and it pairs base for base with the codon (A–U, G–C). Only that tRNA delivers its amino acid.'};
  }});
@@ -3259,14 +3259,14 @@ WORD(
  {key:'fluctuation-test',title:'Fluctuation test',aliases:['fluctuation test','jackpot','jackpots'],linkContext:'mutation-luria-delbruck',scene:'mutation-luria-delbruck',here:'Comparing mutant counts across many parallel cultures: a huge spread shows mutations arose at random before selection.',contrast:'Exposure-caused mutation would give counts close to a Poisson spread.',example:'Luria and Delbrück’s 1943 test with virus-resistant bacteria.'},
  {key:'transposon',title:'Transposon',aliases:['transposon','transposons','jumping gene','jumping genes','transposable element'],linkContext:'mutation-transposons',scene:'mutation-transposons',here:'A stretch of DNA that can move to a new place in the genome, sometimes disrupting a gene.',contrast:'Not a virus, though some are related to retroviruses.',example:'Transposon-derived sequence makes up about 45% of the human genome.'},
  {key:'person-franklin',title:'Rosalind Franklin',aliases:['Rosalind Franklin'],linkContext:'double-helix-photo51',scene:'double-helix-photo51',here:'British chemist (1920–1958) whose X-ray work at King’s College London, with Raymond Gosling, gave key measurements of DNA’s structure.',contrast:'Her data, shared without her knowledge, informed Watson and Crick’s model; she died before the 1962 Nobel Prize.',example:'Photo 51 (1952) and her 1953 Nature paper.'},
- {key:'person-watson-crick',title:'James Watson and Francis Crick',aliases:['Watson and Crick','Watson','Crick'],linkContext:'double-helix-structure',scene:'double-helix-structure',here:'Watson (born 1928) and Crick (1916–2004) built the double-helix model in Cambridge in 1953; Crick went on to shape ideas about the genetic code.',contrast:'They did no X-ray experiments themselves; the model rested on Franklin’s, Wilkins’s and Chargaff’s data.',example:'Nobel Prize 1962, with Maurice Wilkins.'},
+ {key:'person-watson-crick',title:'James Watson and Francis Crick',aliases:['Watson and Crick','Watson','Crick'],linkContext:'double-helix-structure',scene:'double-helix-structure',here:'Watson (1928–2025) and Crick (1916–2004) built the double-helix model in Cambridge in 1953; Crick went on to shape ideas about the genetic code.',contrast:'They did no X-ray experiments themselves; the model rested on Franklin’s, Wilkins’s and Chargaff’s data.',example:'Nobel Prize 1962, with Maurice Wilkins.'},
  {key:'person-chargaff',title:'Erwin Chargaff',aliases:['Erwin Chargaff','Chargaff'],linkContext:'double-helix',scene:'double-helix',here:'Austrian-American biochemist (1905–2002) who showed that A equals T and G equals C in DNA.',contrast:'He did not himself propose base pairing.',example:'Chargaff’s rules, 1950.'},
  {key:'person-meselson-stahl',title:'Matthew Meselson and Franklin Stahl',aliases:['Meselson and Stahl','Meselson','Stahl'],linkContext:'replication-meselson',scene:'replication-meselson',here:'American molecular biologists who in 1958 showed by weighing DNA in a density gradient that it is copied semi-conservatively.',contrast:'Their method, density-gradient centrifugation, was new.',example:'Often called the most beautiful experiment in biology.'},
  {key:'person-okazaki',title:'Reiji and Tsuneko Okazaki',aliases:['Okazaki','Reiji Okazaki','Tsuneko Okazaki'],linkContext:'replication-fork',scene:'replication-fork',here:'Japanese molecular biologists who showed in 1968 that one strand of DNA is made in short pieces, now called Okazaki fragments.',contrast:'Tsuneko Okazaki continued the work after Reiji’s early death in 1975.',example:'Okazaki fragments.'},
  {key:'person-nirenberg',title:'Marshall Nirenberg',aliases:['Nirenberg','Matthaei','Heinrich Matthaei'],linkContext:'genetic-code',scene:'genetic-code',here:'American biochemist (1927–2010) who, with Heinrich Matthaei, cracked the first codon in 1961 using synthetic RNA.',contrast:'The rest of the code was decoded by several labs, including Khorana’s.',example:'Poly-U gives polyphenylalanine.'},
  {key:'person-jacob-monod',title:'François Jacob and Jacques Monod',aliases:['Jacob and Monod','Monod','Jacob'],linkContext:'gene-regulation',scene:'gene-regulation',here:'French biologists who worked out the lac operon, the first model of how genes are switched on and off (1961).',contrast:'Monod’s earlier diauxie work posed the question.',example:'Nobel Prize 1965, with André Lwoff.'},
  {key:'person-luria-delbruck',title:'Salvador Luria and Max Delbrück',aliases:['Luria and Delbrück','Luria','Delbrück'],linkContext:'mutation-luria-delbruck',scene:'mutation-luria-delbruck',here:'Microbiologist and physicist who showed in 1943 that bacterial mutations arise at random, not in response to need.',contrast:'Their argument was statistical: it rested on the spread of counts, not the average.',example:'Nobel Prize 1969, with Alfred Hershey.'},
- {key:'person-lederberg',title:'Esther Lederberg',aliases:['Esther Lederberg','Lederberg','Lederbergs'],linkContext:'mutation-luria-delbruck',scene:'mutation-luria-delbruck',here:'American microbiologist (1922–2006) who discovered bacteriophage lambda and, with Joshua Lederberg, invented replica plating.',contrast:'Joshua Lederberg alone received the 1958 Nobel Prize for work they did together.',example:'Replica plating, 1952.'},
+ {key:'person-lederberg',title:'Esther Lederberg',aliases:['Esther Lederberg','Lederberg','Lederbergs'],linkContext:'mutation-luria-delbruck',scene:'mutation-luria-delbruck',here:'American microbiologist (1922–2006) who discovered bacteriophage lambda and, with Joshua Lederberg, invented replica plating.',contrast:'Joshua Lederberg shared the 1958 Nobel Prize with Beadle and Tatum; Esther, who contributed to much of his work, was not included.',example:'Replica plating, 1952.'},
  {key:'person-mcclintock',title:'Barbara McClintock',aliases:['Barbara McClintock','McClintock'],linkContext:'mutation-transposons',scene:'mutation-transposons',here:'American geneticist (1902–1992) who discovered transposons in maize.',contrast:'Her work was long sidelined; she received an unshared Nobel Prize in 1983.',example:'The Ac/Ds elements behind spotted kernels.'},
  {key:'person-ingram',title:'Vernon Ingram',aliases:['Vernon Ingram','Ingram'],linkContext:'mutation',scene:'mutation',here:'German-born British-American biochemist (1924–2006) who showed in 1957 that sickle-cell haemoglobin differs by one amino acid.',contrast:'Pauling’s group had shown in 1949 that the protein was different; Ingram found exactly where.',example:'Glutamic acid → valine at position 6.'}
 );
@@ -3597,7 +3597,7 @@ SCENE({id:'membranes-pumps-cycle',name:'The sodium–potassium pump',tag:'Skou, 
  ui:[{b:'Next step',act:'next'},{b:'Run ten cycles',act:'ten'},{b:'Reset counters',act:'reset'}],
  on:{next(s){s.step++;if(s.step>5){s.step=0;s.cycles++}return 'keep'},ten(s){s.cycles+=10;return 'keep'},reset(s){s.step=0;s.cycles=0;return 'keep'}},
  draw(s){
-  const st=s.step,openOut=st>=2&&st<=4,na=s.cycles*3+(st>=3?3:0),k=s.cycles*2,atp=s.cycles+(st>=2?1:0);
+  const st=s.step,openOut=st>=2&&st<=4,na=s.cycles*3+(st>=2?3:0),k=s.cycles*2+(st>=5?2:0),atp=s.cycles+(st>=1?1:0);
   let out=heading('One turn of the sodium–potassium pump',26);
   out+=TF(40,64,'outside the cell',13,C.muted,'start')+TF(40,300,'inside the cell',13,C.muted,'start');
   out+=R(20,160,380,60,'#f3dfa8','none',4);
@@ -3649,7 +3649,7 @@ SCENE({id:'photosynthesis',name:'Where does a tree’s mass come from?',tag:'Van
    let x=300;seg.forEach(([n,f,c])=>{out+=R(x,208,Math.max(2,f*280),26,c,'none',2);x+=f*280});
    seg.forEach(([n,f,c],i)=>out+=R(300,250+i*22,12,12,c,'none',2)+TF(318,261+i*22,`${n}: ${f<.01?'under 1%':'about '+Math.round(f*100)+'%'}`,13,C.ink,'start'));
   }
-  return {svg:out,phase:s.guess?'About half of fresh wood is water. Nearly all the dry matter is carbon and oxygen fixed from carbon dioxide in the air; water supplies the hydrogen, and the soil only a little mineral. The shares here are illustrative for wood. Van Helmont was right that soil was not the source, but nobody yet knew that air contained a gas plants could use.':'Van Helmont’s careful weighing ruled out the soil. His answer, water, was half right: he could not know about carbon dioxide, which was not identified until the 1750s.'};
+  return {svg:out,phase:s.guess?'About half of fresh wood is water. Nearly all the dry matter is carbon and oxygen fixed from carbon dioxide in the air; water supplies the hydrogen, and the soil only a little mineral. The shares here are illustrative for wood. Van Helmont was right that soil was not the source, but nobody yet knew that air contained a gas plants could use.':'Van Helmont’s careful weighing ruled out the soil. His answer, water, was half right: nobody yet knew that plants take in carbon dioxide from the air; the gas was not characterised until the 1750s.'};
  }});
 
 // Priestley (1771) and Ingenhousz (1779): plants restore air, but only in the light.
@@ -3995,7 +3995,7 @@ SCENE({id:'scaling-laws-heartbeats',name:'A billion heartbeats?',tag:'Heart rate
  }});
 
 // Why ¾? Surface and volume, and the competing explanations.
-const B5_THEORIES={rubner:{n:'Rubner’s surface law (1883)',e:'⅔',t:'Heat is lost through the skin, which grows as mass to the ⅔ power, so a warm-blooded animal’s heat production should too. Fits some data well, including White & Seymour’s basal rates.'},kleiber:{n:'Kleiber’s ¾ (1932)',e:'¾',t:'An empirical fit across animals from mice to steers. It became a textbook rule, more from its tidy number than from a theory.'},wbe:{n:'West, Brown & Enquist (1997)',e:'¾',t:'Derived ¾ from branching, space-filling supply networks such as blood vessels. Influential, but its mathematics and assumptions have been strongly criticised (Kozłowski & Konarzewski 2004).'},glazier:{n:'Glazier (2005)',e:'⅔ to 1',t:'The exponent is not universal: it varies with activity level, lifestyle and group, from about ⅔ to 1. Many biologists now favour this view.'}};
+const B5_THEORIES={rubner:{n:'Rubner’s surface law (1883)',e:'⅔',t:'Heat is lost through the skin, which grows as mass to the ⅔ power, so a warm-blooded animal’s heat production should too. Fits some data well, including White & Seymour’s basal rates.'},kleiber:{n:'Kleiber’s ¾ (1932)',e:'¾',t:'An empirical fit across animals from doves and rats to steers. It became a textbook rule, more from its tidy number than from a theory.'},wbe:{n:'West, Brown & Enquist (1997)',e:'¾',t:'Derived ¾ from branching, space-filling supply networks such as blood vessels. Influential, but its mathematics and assumptions have been strongly criticised (Kozłowski & Konarzewski 2004).'},glazier:{n:'Glazier (2005)',e:'⅔ to 1',t:'The exponent is not universal: it varies with activity level, lifestyle and group, from about ⅔ to 1. Many biologists now favour this view.'}};
 SCENE({id:'scaling-laws-surface',name:'Why not ⅔?',tag:'Surface, volume and theories',
  definition:'When a body grows, its surface grows as size squared but its volume as size cubed, so surface per unit volume falls. Larger animals have relatively less skin to lose heat through.',
  example:'A cube twice as wide has 4 times the surface but 8 times the volume, so half the surface per unit volume.',
@@ -4058,7 +4058,7 @@ WORD(
  {key:'person-skou',title:'Jens Christian Skou',aliases:['Jens Skou','Skou'],linkContext:'membranes-pumps',scene:'membranes-pumps-cycle',here:'Danish physiologist (1918–2018) who discovered the sodium–potassium pump as an ATP-splitting enzyme in crab nerves, for which he shared the 1997 Nobel Prize in Chemistry.',contrast:'Found the pump by studying an enzyme, not by measuring ion flows.',example:'Skou (1957).'},
  {key:'person-priestley',title:'Joseph Priestley',aliases:['Joseph Priestley','Priestley'],linkContext:'photosynthesis',scene:'photosynthesis-priestley',here:'English clergyman and chemist (1733–1804) who showed that a plant could restore air “injured” by a candle or an animal, and who isolated oxygen in 1774.',contrast:'Interpreted oxygen through the old phlogiston theory, which Lavoisier overturned.',example:'Priestley’s mint and candle, 1771.'},
  {key:'person-ingenhousz',title:'Jan Ingenhousz',aliases:['Jan Ingenhousz','Ingenhousz'],linkContext:'photosynthesis',scene:'photosynthesis-priestley',here:'Dutch physician (1730–1799) who showed in 1779 that plants restore air only in light and only through their green parts.',contrast:'Turned Priestley’s erratic observation into a reliable result.',example:'Ingenhousz (1779).'},
- {key:'person-van-helmont',title:'Jan Baptist van Helmont',aliases:['van Helmont','Helmont'],linkContext:'photosynthesis',scene:'photosynthesis',here:'Flemish chemist and physician (1580–1644) whose five-year willow experiment showed that a tree’s mass does not come from the soil.',contrast:'Concluded wrongly that it came from water alone; carbon dioxide was not yet known.',example:'The 169 lb willow.'},
+ {key:'person-van-helmont',title:'Jan Baptist van Helmont',aliases:['van Helmont','Helmont'],linkContext:'photosynthesis',scene:'photosynthesis',here:'Flemish chemist and physician (1580–1644) whose five-year willow experiment showed that a tree’s mass does not come from the soil.',contrast:'Concluded wrongly that it came from water alone; that plants take carbon dioxide from the air was not yet known.',example:'The 169 lb willow.'},
  {key:'person-engelmann',title:'Theodor Engelmann',aliases:['Theodor Engelmann','Engelmann'],linkContext:'photosynthesis',scene:'photosynthesis-engelmann',here:'German physiologist (1843–1909) who in 1882 used oxygen-seeking bacteria to show which colours of light drive photosynthesis.',contrast:'Used living cells as a detector long before electronic oxygen meters.',example:'Engelmann (1882).'},
  {key:'person-kamen',title:'Martin Kamen and Samuel Ruben',aliases:['Martin Kamen','Kamen','Samuel Ruben','Ruben'],linkContext:'photosynthesis',scene:'photosynthesis-oxygen',here:'American chemists who used isotope tracers to study photosynthesis; together they also discovered carbon-14 in 1940.',contrast:'Ruben died in a laboratory accident in 1943, aged 29.',example:'Ruben, Randall, Kamen and Hyde (1941).'},
  {key:'person-lavoisier',title:'Antoine Lavoisier',aliases:['Antoine Lavoisier','Lavoisier'],linkContext:'respiration-atp',scene:'respiration-atp',here:'French chemist (1743–1794) who explained combustion with oxygen and, with Pierre-Simon Laplace, showed that respiration is a slow combustion.',contrast:'Worked closely with Marie-Anne Paulze Lavoisier, who recorded and illustrated the experiments.',example:'The ice calorimeter, 1783.'},
@@ -4332,12 +4332,12 @@ SCENE({id:'competition-niches',name:'Two species, one resource',tag:'Competitive
   starts.forEach((st,i)=>{const sol=B6_comp(a12,a21,st[0],st[1]);out+=B6_poly(sol.map(o=>[pl.X(Math.min(110,o.y[0])),pl.Y(Math.min(110,o.y[1]))]),C.purple,1.8);out+=Ci(pl.X(st[0]),pl.Y(st[1]),3.5,C.purple);const e=sol[sol.length-1].y;out+=Ci(pl.X(Math.min(110,e[0])),pl.Y(Math.min(110,e[1])),5,C.ink,'#fff')});
   const ends=starts.map(st=>B6_comp(a12,a21,st[0],st[1]).slice(-1)[0].y);
   const win=e=>e[0]>1&&e[1]>1?'both':e[0]>1?'1':e[1]>1?'2':'none';const kinds=[...new Set(ends.map(win))];
-  const neutral=a12===1&&a21===1;const verdict=neutral?'A knife-edge tie':kinds.length>1?'It depends on the start':kinds[0]==='both'?'Both species coexist':kinds[0]==='1'?'Species 1 wins':'Species 2 wins';
+  const neutral=a12===1&&a21===1;const vk=neutral?'tie':(a12<1&&a21<1)?'both':(a12>1&&a21>1)?'depends':(a12<=1&&a21>=1)?'1':'2';const split=kinds.length>1;const verdict=neutral?'A knife-edge tie':vk==='depends'?'It depends on the start':vk==='both'?'Both species coexist':vk==='1'?'Species 1 wins':'Species 2 wins';
   out+=TF(70,358,'dashed: where species 1 (blue) or 2 (coral) stops growing',13,C.muted,'start');
   main=B6_comp(a12,a21,12,10);const tp=B6_plot(370,78,210,150,[0,60],[0,110],{xt:[[0,'0'],[60,'60']],yt:[[0,'0'],[100,'100']],xl:'time (from 12 and 10)',xlDy:31,yl:'numbers'});
   out+=tp.svg+B6_poly(main.map(o=>[tp.X(o.t),tp.Y(Math.min(110,o.y[0]))]),C.blue,2.4)+B6_poly(main.map(o=>[tp.X(o.t),tp.Y(Math.min(110,o.y[1]))]),C.coral,2.4);
-  out+=R(370,268,210,48,kinds.length>1?C.amberp:kinds[0]==='both'?C.greenp:C.coralp,'none',10)+TBF(475,298,verdict,16,C.ink);
-  const say=neutral?'With both coefficients exactly 1 the two dashed lines coincide: each species harms its rival exactly as much as itself, so the runs stop wherever they meet the line. Any small difference breaks the tie.':kinds.length>1?'Each species harms the other more than itself, so whichever starts ahead wins: the runs split between the two corners.':kinds[0]==='both'?`Each species limits itself more than its rival (both coefficients below 1), so the runs meet where the two dashed lines cross and both persist.`:`One species harms its rival more than the rival harms it, so every run ends with only species ${kinds[0]} left: competitive exclusion.`;
+  out+=R(370,268,210,48,vk==='depends'?C.amberp:vk==='both'||neutral?C.greenp:C.coralp,'none',10)+TBF(475,298,verdict,16,C.ink);
+  const say=neutral?'With both coefficients exactly 1 the two dashed lines coincide: each species harms its rival exactly as much as itself, so the runs stop wherever they meet the line. Any small difference breaks the tie.':vk==='depends'?'Each species harms the other more than itself, so whichever starts far enough ahead wins'+(split?': the runs split between the two corners.':'; from these four starts the same species happens to win.'):vk==='both'?`Each species limits itself more than its rival (both coefficients below 1), so the runs meet where the two dashed lines cross and both persist.`:`One species harms its rival more than the rival harms it, so every run ends with only species ${vk} left: competitive exclusion.`+(a12===1||a21===1?' With a coefficient of exactly 1 the loser declines very slowly.':'');
   return {svg:out,phase:say+' Gause’s principle: two species cannot share exactly the same limiting resource for ever.'};
  }});
 
@@ -4469,7 +4469,7 @@ SCENE({id:'food-webs-cascade',name:'Trophic cascades',tag:'Effects that skip a l
    out+=box(40,70,160,44,'wolves (1995)',C.pale,C.ink,15)+box(40,150,160,44,'elk',C.amberp,C.ink,15)+box(40,230,160,44,'willow, aspen',C.greenp,C.ink,15);
    out+=arrow(120,114,120,148,C.coral,2.4)+arrow(120,194,120,228,C.coral,2.4);
    out+=R(230,70,340,92,C.greenp,'none',10)+TBF(244,94,'Evidence for',14,C.green,'start')+TF(244,116,'Willows taller in some places after wolves',13,C.ink,'start')+TF(244,136,'returned (Ripple & Beschta 2012).',13,C.ink,'start');
-   out+=R(230,182,340,112,C.coralp,'none',10)+TBF(244,206,'Evidence against',14,C.coral,'start')+TF(244,228,'Aspen in fenced and unfenced plots',13,C.ink,'start')+TF(244,248,'barely differed (Kauffman et al. 2010);',13,C.ink,'start')+TF(244,268,'drought, hunting and beavers also changed.',13,C.ink,'start');
+   out+=R(230,182,340,112,C.coralp,'none',10)+TBF(244,206,'Evidence against',14,C.coral,'start')+TF(244,228,'Aspen fared no better where wolf risk was',13,C.ink,'start')+TF(244,248,'high than low (Kauffman et al. 2010);',13,C.ink,'start')+TF(244,268,'drought, hunting and beavers also changed.',13,C.ink,'start');
    return {svg:out,phase:'The Yellowstone story is popular but contested: wolves probably matter, yet elk numbers also fell through human hunting and drought, and plants respond slowly. The sea otter cascade is much better established.'};
   }
   const on=s.c==='otters',lv=[['sea otters',on?1:.05,C.purple],['sea urchins',on?.2:1,C.coral],['kelp',on?1:.1,C.green]];
@@ -4581,7 +4581,7 @@ SCENE({id:'island-biogeography-species-area',name:'More area, more species',tag:
  }});
 
 /* ================================================================ nutrient-cycles */
-// Carbon stocks (GtC) and gross fluxes (GtC per year), rounded from IPCC AR6 WG1 Figure 5.12.
+// Carbon stocks (GtC) and gross fluxes (GtC per year), rounded from IPCC assessment reports (stocks and ocean fluxes as in AR6 WG1 Figure 5.12).
 const B6_CPOOL={atm:{n:'atmosphere',v:875,x:230,y:56,w:140},veg:{n:'plants',v:450,x:40,y:170,w:120},soil:{n:'soils',v:1700,x:40,y:290,w:120},surf:{n:'surface ocean',v:900,x:440,y:170,w:130},deep:{n:'deep ocean',v:37100,x:440,y:290,w:130},foss:{n:'fossil fuels',v:930,x:240,y:178,w:120}};
 const B6_CFLUX=[['veg','atm',120,'plant and soil breathing'],['atm','veg',123,'photosynthesis'],['veg','soil',60,'litter'],['atm','surf',80,'dissolving'],['surf','atm',78,'outgassing'],['surf','deep',90,'mixing and sinking'],['deep','surf',88,'upwelling'],['foss','atm',9.5,'burning']];
 SCENE({id:'nutrient-cycles',name:'The carbon cycle',tag:'Stocks and flows',
@@ -4604,11 +4604,11 @@ SCENE({id:'nutrient-cycles',name:'The carbon cycle',tag:'Stocks and flows',
   out+=R(190,262,220,92,'#fff',C.grid,8);list.slice(0,4).forEach((t,i)=>out+=TF(300,284+i*20,t,13,C.ink));
   const rise=s.em*.45/2.12;
   out+=TF(300,372,`${s.em} emitted → about ${rise.toFixed(1)} ppm more CO₂ in the air each year`,14,C.coral);
-  return {svg:out,phase:`Natural flows are huge but nearly balanced. Of ${s.em} billion tonnes from fossil fuels, oceans and land take up a little over half, and about 45% stays in the atmosphere: 1 ppm of CO₂ is 2.12 billion tonnes of carbon, so the air gains about ${rise.toFixed(1)} ppm a year. Values are rounded from IPCC AR6.`};
+  return {svg:out,phase:`Natural flows are huge but nearly balanced. Of ${s.em} billion tonnes from fossil fuels, oceans and land take up a little over half, and about 45% stays in the atmosphere: 1 ppm of CO₂ is 2.12 billion tonnes of carbon, so the air gains about ${rise.toFixed(1)} ppm a year. Values are rounded from IPCC reports.`};
  }});
 
 // Mauna Loa annual mean CO2 (ppm), NOAA Global Monitoring Laboratory, rounded.
-const B6_KEELING=[[1959,316.0],[1965,320.0],[1970,325.7],[1975,331.1],[1980,338.8],[1985,346.1],[1990,354.4],[1995,360.8],[2000,369.7],[2005,379.8],[2010,389.9],[2015,401.0],[2020,414.2],[2023,421.1]];
+const B6_KEELING=[[1959,316.0],[1965,320.0],[1970,325.7],[1975,331.1],[1980,338.8],[1985,346.1],[1990,354.4],[1995,360.8],[2000,369.7],[2005,379.8],[2010,389.9],[2013,396.7],[2015,401.0],[2020,414.2],[2023,421.1]];
 const B6_keelAt=y=>{for(let i=0;i+1<B6_KEELING.length;i++){const [a,va]=B6_KEELING[i],[b,vb]=B6_KEELING[i+1];if(y<=b)return va+(vb-va)*(y-a)/(b-a)}return B6_KEELING[B6_KEELING.length-1][1]};
 SCENE({id:'nutrient-cycles-keeling',name:'The Keeling curve',tag:'A planet breathing',
  definition:'Since 1958 carbon dioxide has been measured continuously at Mauna Loa in Hawaii. The record rises every year and wiggles every season, as northern plants take in carbon in summer and release it in winter.',
@@ -4768,11 +4768,11 @@ WORD(
  {key:'person-gause',title:'Georgy Gause',aliases:['Georgy Gause','Gause'],linkContext:'competition-niches-gause',here:'Russian biologist (1910–1986) who tested predator–prey and competition models with protozoa and wrote The Struggle for Existence (1934).',contrast:'He later turned to antibiotics, discovering gramicidin S.',example:'Paramecium aurelia excluded P. caudatum in his cultures.'},
  {key:'person-connell',title:'Joseph Connell',aliases:['Joseph Connell','Connell'],linkContext:'competition-niches-barnacles',here:'American ecologist (1923–2020) whose barnacle removal experiments in Scotland showed competition setting where species live.',contrast:'He also proposed the intermediate disturbance hypothesis.',example:'Removing Balanus let Chthamalus survive lower on the shore.'},
  {key:'person-hutchinson',title:'G. Evelyn Hutchinson',aliases:['G. Evelyn Hutchinson','Hutchinson'],linkContext:'competition-niches-barnacles',here:'British-born American ecologist (1903–1991) at Yale who defined the niche as a multidimensional space of conditions and trained a generation of ecologists.',contrast:'Often called the father of modern ecology; Lindeman and MacArthur worked with him.',example:'“Homage to Santa Rosalia” (1959) asked why there are so many kinds of animals.'},
- {key:'person-lindeman',title:'Raymond Lindeman',aliases:['Raymond Lindeman','Lindeman'],linkContext:'food-webs',here:'American ecologist (1915–1942) who described ecosystems as flows of energy between trophic levels, from his study of a Minnesota lake.',contrast:'He died at 27; his paper was published after his death, having first been rejected.',example:'The trophic-dynamic aspect of ecology (1942).'},
+ {key:'person-lindeman',title:'Raymond Lindeman',aliases:['Raymond Lindeman','Lindeman'],linkContext:'food-webs',here:'American ecologist (1915–1942) who described ecosystems as flows of energy between trophic levels, from his study of a Minnesota lake.',contrast:'He died at 26; his paper was published after his death, having first been rejected.',example:'The trophic-dynamic aspect of ecology (1942).'},
  {key:'person-paine',title:'Robert Paine',aliases:['Robert Paine','Paine'],linkContext:'food-webs-keystone',here:'American ecologist (1933–2016) who removed starfish from rocky shores in Washington and coined the term keystone species.',contrast:'His experiments made deliberate removal a standard method in ecology.',example:'Species in his plot fell from 15 to 8 after the starfish went.'},
  {key:'person-carson',title:'Rachel Carson',aliases:['Rachel Carson','Carson'],linkContext:'food-webs-biomagnification',here:'American marine biologist and writer (1907–1964) whose book Silent Spring (1962) documented the harm done by persistent pesticides such as DDT.',contrast:'She did not call for banning all pesticides, but for their careful use.',example:'Silent Spring helped lead to DDT being banned for farm use in the United States in 1972.'},
  {key:'person-macarthur',title:'Robert MacArthur',aliases:['Robert MacArthur','MacArthur'],linkContext:'island-biogeography',here:'Canadian-born American ecologist (1930–1972) who brought mathematical models into ecology, including the island equilibrium theory with E. O. Wilson.',contrast:'He also showed how warblers divide a spruce tree between them.',example:'The Theory of Island Biogeography (1967).'},
- {key:'person-wilson-eo',title:'E. O. Wilson',aliases:['E. O. Wilson','Edward O. Wilson'],linkContext:'island-biogeography',here:'American biologist (1929–2021), an expert on ants, who developed island biogeography with MacArthur and tested it with Simberloff.',contrast:'His later sociobiology was controversial; his conservation writing was widely influential.',example:'He coined the word “biophilia”.'},
+ {key:'person-wilson-eo',title:'E. O. Wilson',aliases:['E. O. Wilson','Edward O. Wilson'],linkContext:'island-biogeography',here:'American biologist (1929–2021), an expert on ants, who developed island biogeography with MacArthur and tested it with Simberloff.',contrast:'His later sociobiology was controversial; his conservation writing was widely influential.',example:'He popularised the word “biophilia” in his 1984 book of that name.'},
  {key:'person-simberloff',title:'Daniel Simberloff',aliases:['Daniel Simberloff','Simberloff'],linkContext:'island-biogeography-mangrove',here:'American ecologist (born 1942) who, as Wilson’s student, fumigated mangrove islets to test island biogeography, and later became a leading expert on invasive species.',contrast:'He also argued against applying the theory too simply to reserve design.',example:'The empty-islands experiment of 1966–1969.'},
  {key:'person-keeling',title:'Charles David Keeling',aliases:['Charles David Keeling','Keeling'],linkContext:'nutrient-cycles-keeling',here:'American scientist (1928–2005) who built precise instruments for carbon dioxide and began the Mauna Loa record in 1958.',contrast:'Before him, many expected CO₂ to vary too much from place to place to show a trend.',example:'The Keeling curve, continued by his son Ralph Keeling.'}
 );
@@ -4925,7 +4925,7 @@ SCENE({id:'epidemics-sir',name:'The SIR model',tag:'Susceptible, infected, recov
  example:'With R0 = 2.5 and an infectious period of 9 days, infections rise, peak when only 1 in 2.5 people (40%) are still susceptible, then fall. In the end about 89% have been infected, more than the 60% needed for herd immunity, because the epidemic overshoots.',
  desc:'Three curves for the fractions susceptible (blue), infected (coral) and recovered (green) over 200 days, with sliders for R0 and the infectious period. The dashed line marks 1/R0: infections peak when the susceptible curve crosses it.',
  research:'Kermack, W. O. & McKendrick, A. G. (1927). A contribution to the mathematical theory of epidemics. Proceedings of the Royal Society A 115, 700–721. Final size from z = 1 − e^(−R0 z).',
- dur:12,hint:'Change R0 and the infectious period. A longer infectious period with the same R0 gives a slower, flatter epidemic with the same final size.',
+ dur:12,hint:'Change R0 and the infectious period. A longer infectious period with the same R0 gives a slower epidemic, stretched out in time, with the same peak height and the same final size.',
  init:()=>({r0:2.5,d:9,t:200}),
  watch(p){return {r0:p<.7?2.5:1.6,d:9,t:Math.min(200,p<.7?p/.6*200:200)}},
  ui:[{range:'r0',label:'R0 (basic reproduction number)',min:.5,max:6,step:.1,get:s=>s.r0,act:'r0',show:v=>Number(v).toFixed(1)},{range:'d',label:'Infectious period',min:3,max:14,step:1,get:s=>s.d,act:'d',show:v=>v+' days'},{range:'t',label:'Show up to day',min:10,max:200,step:5,get:s=>s.t,act:'t',show:v=>'day '+v}],
@@ -4950,12 +4950,12 @@ SCENE({id:'epidemics-sir',name:'The SIR model',tag:'Susceptible, infected, recov
 
 SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contacts, for how long?',
  definition:'Cutting contacts lowers the transmission rate, so the epidemic peaks lower and later. If the measures stop while many people are still susceptible, infections can rise again.',
- example:'With R0 = 2.5, halving contacts from day 30 for 60 days keeps the peak below the capacity line, but when contacts return a second wave follows, because most people are still susceptible.',
+ example:'With R0 = 2.5, halving contacts from day 10 for 60 days holds infections well below the capacity line while the measures last, but when contacts return a large second wave follows, because most people are still susceptible.',
  desc:'An SIR epidemic with R0 = 2.5 and a 7-day infectious period, without measures (dashed) and with contacts cut by your chosen amount, from your chosen day, for your chosen length. A horizontal line marks an illustrative hospital capacity.',
  research:'Kermack & McKendrick (1927). Hatchett, Mecher & Lipsitch (2007). Public health interventions and epidemic intensity during the 1918 influenza pandemic. PNAS 104, 7582–7587: cities that intervened earlier had lower peaks. Ferguson et al. (2020), Imperial College Report 9. Capacity line illustrative.',
  dur:12,hint:'Change how much contacts are cut, when and for how long. Look at the peak, the days over capacity and whether a second wave appears.',
- init:()=>({cut:50,start:30,len:60}),
- watch(p){return {cut:Math.round(Math.min(1,p/.6)*50),start:30,len:p<.75?200:60}},
+ init:()=>({cut:50,start:10,len:60}),
+ watch(p){return {cut:Math.round(Math.min(1,p/.6)*50),start:10,len:p<.75?200:60}},
  ui:[{range:'cut',label:'Contacts cut by',min:0,max:80,step:5,get:s=>s.cut,act:'cut',show:v=>v+'%'},{range:'start',label:'Starting on day',min:5,max:90,step:5,get:s=>s.start,act:'start',show:v=>'day '+v},{range:'len',label:'Lasting',min:20,max:200,step:10,get:s=>s.len,act:'len',show:v=>v>=200?'to the end':v+' days'}],
  on:{cut(s,v){s.cut=Number(v)},start(s,v){s.start=Number(v)},len(s,v){s.len=Number(v)}},
  draw(s){
@@ -4970,9 +4970,9 @@ SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contact
   out+=TF(440,70,'grey dashed:',13,C.muted,'start')+TF(440,88,'without measures',13,C.muted,'start');
   out+=B7_stat(440,102,'peak',`${B7_pct(m.I,1)} · was ${B7_pct(b.I,1)}`,C.coral)+B7_stat(440,156,'days over capacity',`${Math.round(over(run))} · was ${Math.round(over(base))}`,C.amber)+B7_stat(440,210,'ever infected',`${B7_pct(fin(run))} · was ${B7_pct(fin(base))}`,C.green);
   const second=run.some((r,i)=>i>2&&r.t>e&&r.I>run[i-1].I&&r.I>.005);
-  out+=T(300,342,second?'A second wave: the measures ended while most people were still susceptible.':s.cut?'Lower and later: the same model, with fewer contacts.':'No measures: the dashed and solid curves coincide.',14,second?C.coral:C.ink);
+  out+=T(300,342,second?'A second wave: the measures ended while most people were still susceptible.':s.cut?(m.t>b.t&&m.I<b.I?'Lower and later: the same model, with fewer contacts.':m.I<b.I-.0005?'Lower but no later: the cut began close to the peak.':'Too late to lower the peak: it had already passed.'):'No measures: the dashed and solid curves coincide.',14,second?C.coral:C.ink);
   out+=TF(300,366,'Well-mixed SIR model; real epidemics also depend on behaviour and season.',13,C.muted);
-  return {svg:out,phase:'Cutting contacts lowers the effective reproduction number. A long enough cut keeps the peak under capacity; lifting it early leaves enough susceptible people for infections to grow again, which is what many cities saw in 1918.'};
+  return {svg:out,phase:'Cutting contacts lowers the effective reproduction number. An early, long enough cut keeps the peak under capacity; lifting it early leaves enough susceptible people for infections to grow again, which is what many cities saw in 1918.'};
  }});
 
 // Reed–Frost chain binomial: 100 people, one first case, generations of infection.
@@ -5074,7 +5074,7 @@ const B7_STUDIES=[
  {n:'Wakefield et al. 1998',k:12,c:C.coral,t:'12 children, no control group. Retracted by The Lancet in 2010 after findings of misrepresented data; the lead author was struck off the UK medical register.'},
  {n:'Madsen et al. 2002',k:537303,c:C.green,t:'All children born in Denmark 1991–1998: no higher risk of autism in vaccinated than unvaccinated children (NEJM).'},
  {n:'Taylor et al. 2014',k:1256407,c:C.green,t:'Meta-analysis of cohort and case–control studies covering over 1.25 million children: no link between vaccines and autism (Vaccine).'},
- {n:'Hviid et al. 2019',k:657461,c:C.green,t:'Danish children born 1999–2010: hazard ratio 0.93 (95% CI 0.85–1.01), no increased risk, including in children with autistic siblings (Annals of Internal Medicine).'}];
+ {n:'Hviid et al. 2019',k:657461,c:C.green,t:'Danish children born 1999–2010: hazard ratio 0.93 (95% CI 0.85–1.02), no increased risk, including in children with autistic siblings (Annals of Internal Medicine).'}];
 SCENE({id:'vaccines-herd-evidence',name:'A retracted scare',tag:'MMR and autism',
  definition:'A retracted paper is one withdrawn by the journal because its findings cannot be trusted. The 1998 paper that suggested a link between the MMR vaccine and autism was retracted, and large later studies found no link.',
  example:'The 1998 study described 12 children. Studies since have followed over a million children and found no difference in autism rates between vaccinated and unvaccinated children.',
@@ -5190,7 +5190,7 @@ SCENE({id:'morphogenesis-flag',name:'The French flag',tag:'Positional informatio
 const B7_HOX=[[1,'All Hox copies'],[.75,'Three quarters'],[.5,'Half'],[.25,'A quarter']];
 SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern in the hand',
  definition:'Digits form as evenly spaced stripes of cartilage across the growing limb bud. Experiments suggest these stripes come from a Turing-type network of signals, whose wavelength is tuned by Hox genes.',
- example:'Mice with progressively fewer distal Hox gene copies grow more, thinner digits: the stripes come closer together, while the limb stays about the same width.',
+ example:'Mice that lack Gli3, given progressively fewer distal Hox gene copies, grow more, thinner digits: the stripes come closer together, while the limb stays about the same width.',
  desc:'A limb bud with a stripe pattern across it. The number of digits is the bud width divided by the stripe wavelength. Change the bud width and the Hox dose, which shortens the wavelength, and count the digits.',
  research:'Sheth, R. et al. (2012). Hox genes regulate digit patterning by controlling the wavelength of a Turing-type mechanism. Science 338, 1476–1480. Raspopovic, J. et al. (2014). Digit patterning is controlled by a Bmp–Sox9–Wnt Turing network modulated by morphogen gradients. Science 345, 566–570. Model simplified.',
  dur:10,hint:'Lower the Hox dose and the stripes squeeze together; widen the bud and more fit in.',
@@ -5207,7 +5207,7 @@ SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern i
   out+=L(cx-40,cy+40,cx+40,cy+40,C.line,2);
   out+=counter(462,60,'digits',String(n),C.coral,118)+counter(462,114,'stripe spacing',`${(lamb*20).toFixed(0)} units`,C.purple,118)+counter(462,168,'bud width',`${(Wd*20).toFixed(0)} units`,C.ink,118);
   out+=T(300,366,'digits ≈ bud width ÷ stripe spacing (simplified; real limbs also prune and fuse digits)',14,C.muted);
-  return {svg:out,phase:`With ${({1:'the full Hox dose',.75:'three quarters of the Hox dose',.5:'half the Hox dose',.25:'a quarter of the Hox dose'})[s.hox]} the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly in mice lacking Hox genes; Raspopovic and colleagues identified the signals that make the stripes.`};
+  return {svg:out,phase:`With ${({1:'the full Hox dose',.75:'three quarters of the Hox dose',.5:'half the Hox dose',.25:'a quarter of the Hox dose'})[s.hox]} the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly when they removed distal Hox genes step by step from mice lacking Gli3; Raspopovic and colleagues identified the signals that make the stripes.`};
  }});
 
 /* ================================================================ circulation-heart */
@@ -5228,7 +5228,7 @@ SCENE({id:'circulation-heart',name:'Harvey’s calculation',tag:'Blood must go r
   rows.forEach(([l,v,c],i)=>{const y=70+i*58;out+=TF(30,y+22,l,14,C.ink,'start')+R(200,y,lx(v)-200,32,c,'none',5)+TF(lx(v)+8,y+22,`${v<10?v.toFixed(1):Math.round(v)} ${i===2?'kg':'L'}`,14,C.ink,'start')});
   out+=TF(200,262,'bar length on a logarithmic scale',13,C.muted,'start');
   out+=counter(30,282,'beats in half an hour',String(s.bpm*30),C.blue,160)+counter(210,282,'per beat',`${s.sv.toFixed(1)} mL`,C.blue,120)+counter(350,282,'in a day',`${Math.round(half*48).toLocaleString('en-GB')} L`,C.coral,190);
-  out+=T(300,360,half>=5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:`About ${(half/5*2).toFixed(1)} times the body’s blood in an hour: still more than it holds.`,14,C.ink);
+  out+=T(300,360,half>=5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:(half>2.5?`About ${(half/5*2).toFixed(1)} times the body’s blood in an hour: still more than it holds.`:`Only ${(half*2).toFixed(1)} L an hour, no more than the body holds. Harvey’s smallest guess gave about 8 L.`),14,C.ink);
   return {svg:out,phase:'Harvey deliberately chose numbers too small to be disputed and still found the heart pumping more blood than the body holds. The liver could not make so much from food, and the limbs could not absorb it: the same blood must go round. Half an ounce is about 14 g and 1 drachm about 3.9 g.'};
  }});
 
@@ -5463,7 +5463,7 @@ WORD(
  {key:'reaction-diffusion',title:'Reaction–diffusion',aliases:['reaction–diffusion','reaction-diffusion','Turing pattern','Turing patterns'],linkContext:'morphogenesis',scene:'morphogenesis',here:'A system of chemicals that react with each other and spread at different speeds. Under the right conditions it turns a nearly uniform start into stable spots or stripes.',contrast:'Not a blueprint: the pattern’s spacing is set by the rates, its exact layout by chance.',example:'Turing’s 1952 proposal for how animal coat patterns could form.'},
  {key:'morphogen',title:'Morphogen',aliases:['morphogen','morphogens','morphogen gradient'],linkContext:'morphogenesis-flag',scene:'morphogenesis-flag',here:'A substance whose concentration varies across a tissue and tells cells their position, so they take on different fates at different levels.',contrast:'In Wolpert’s model a morphogen informs; in a Turing system the chemicals create the pattern themselves.',example:'Bicoid protein, highest at the head end of a fly egg.'},
  {key:'positional-information',title:'Positional information',aliases:['positional information','French flag model'],linkContext:'morphogenesis-flag',scene:'morphogenesis-flag',here:'The idea that cells learn where they are from a signal such as a morphogen gradient, then interpret that position by their own rules.',contrast:'Different from self-organisation: the coordinates come from outside the responding cells.',example:'Wolpert’s French flag: blue, white and red regions from two thresholds on one gradient.'},
- {key:'hox-genes',title:'Hox genes',aliases:['Hox genes','Hox gene','Hox'],linkContext:'morphogenesis-digits',scene:'morphogenesis-digits',here:'A family of genes that set the identity of body regions along the head-to-tail axis and in the limbs.',contrast:'Hox genes do not draw the digits themselves; in the limb they tune the spacing of the pattern.',example:'Mice with fewer distal Hox copies grow extra, thinner digits.'},
+ {key:'hox-genes',title:'Hox genes',aliases:['Hox genes','Hox gene','Hox'],linkContext:'morphogenesis-digits',scene:'morphogenesis-digits',here:'A family of genes that set the identity of body regions along the head-to-tail axis and in the limbs.',contrast:'Hox genes do not draw the digits themselves; in the limb they tune the spacing of the pattern.',example:'Mice lacking Gli3 grow more, thinner digits as distal Hox copies are removed.'},
  {key:'circulation',title:'Circulation of the blood',aliases:['circulation','circulation of the blood','circulatory system'],linkContext:'circulation-heart',scene:'circulation-heart',here:'The continuous flow of the same blood round the body in a loop, pumped by the heart and returned through the veins.',contrast:'Not Galen’s view, in which blood was made in the liver and consumed by the body.',example:'Harvey showed in 1628 that the heart pumps more blood in an hour than the body holds.'},
  {key:'pulmonary-circulation',title:'Pulmonary circulation',aliases:['pulmonary circulation','pulmonary circuit','lung circuit'],linkContext:'circulation-heart-pulmonary',scene:'circulation-heart-pulmonary',here:'The loop that carries blood from the right side of the heart through the lungs, where it picks up oxygen, and back to the left side.',contrast:'The systemic circulation is the other loop, from the left side round the body.',example:'Described by Ibn al-Nafis in the 13th century.'},
  {key:'capillary',title:'Capillary',aliases:['capillary','capillaries'],linkContext:'circulation-heart-pulmonary',scene:'circulation-heart-pulmonary',here:'The tiniest blood vessels, one cell thick, joining the smallest arteries to the smallest veins and letting substances pass to and from tissues.',contrast:'Harvey inferred that arteries and veins must connect; Malpighi saw the connections.',example:'Capillaries in a frog’s lung, seen by Malpighi in 1661.'},
@@ -5498,7 +5498,7 @@ SOURCE('b8-baum-2005',{title:'Baum, D. A., Smith, S. D. & Donovan, S. S. S. (200
 SOURCE('b8-woese-1977',{title:'Woese, C. R. & Fox, G. E. (1977). Phylogenetic structure of the prokaryotic domain: the primary kingdoms. PNAS 74, 5088–5090.',url:'https://doi.org/10.1073/pnas.74.11.5088'});
 SOURCE('b8-woese-1990',{title:'Woese, C. R., Kandler, O. & Wheelis, M. L. (1990). Towards a natural system of organisms: proposal for the domains Archaea, Bacteria, and Eucarya. PNAS 87, 4576–4579.',url:'https://doi.org/10.1073/pnas.87.12.4576'});
 SOURCE('b8-eme-2017',{title:'Eme, L., Spang, A., Lombard, J., Stairs, C. W. & Ettema, T. J. G. (2017). Archaea and the origin of eukaryotes. Nature Reviews Microbiology 15, 711–723.'});
-SOURCE('b8-margulis-1967',{title:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14, 255–274.'});
+SOURCE('b8-margulis-1967',{title:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14.'});
 SOURCE('b8-jinek-2012',{title:'Jinek, M., Chylinski, K., Fonfara, I., Hauer, M., Doudna, J. A. & Charpentier, E. (2012). A programmable dual-RNA–guided DNA endonuclease in adaptive bacterial immunity. Science 337, 816–821.',url:'https://doi.org/10.1126/science.1225829'});
 SOURCE('b8-barrangou-2007',{title:'Barrangou, R. et al. (2007). CRISPR provides acquired resistance against viruses in prokaryotes. Science 315, 1709–1712.'});
 SOURCE('b8-mojica-2005',{title:'Mojica, F. J. M. et al. (2005). Intervening sequences of regularly spaced prokaryotic repeats derive from foreign genetic elements. Journal of Molecular Evolution 60, 174–182.'});
@@ -5626,7 +5626,7 @@ function B8_reads(n,len,seed){const r=B8_rng(seed),G=B8_GENOME.length,out=[];for
 function B8_assemble(starts,len){const ctg=[];for(const st of starts){const en=st+len-1,c=ctg[ctg.length-1];if(c&&c[1]-st+1>=B8_OV)c[1]=Math.max(c[1],en);else ctg.push([st,en])}return ctg}
 SCENE({id:'sequencing-shotgun',name:'Shotgun sequencing',tag:'Shred, read, reassemble',
  definition:'Shotgun sequencing breaks many copies of a genome into random pieces, reads each short piece, and rebuilds the genome by finding where the reads overlap.',
- example:'Reading enough random pieces to cover each base about eight times usually leaves only a few gaps, which is roughly how the first bacterial genome was assembled in 1995.',
+ example:'Reading enough random pieces to cover each base several times over usually leaves only a few gaps, which is roughly how the first bacterial genome was assembled in 1995.',
  desc:'A 48-base genome, random reads stacked above it, the coverage of each base, and the contigs that can be assembled from overlaps of at least three bases, with the gap and contig counts predicted by Lander and Waterman.',
  research:'Lander & Waterman (1988). Genomic mapping by fingerprinting random clones: a mathematical analysis. Genomics 2, 231–239. Fleischmann et al. (1995). Whole-genome random sequencing and assembly of Haemophilus influenzae Rd. Science 269, 496–512.',
  dur:12,hint:'Add reads or make them longer and watch the gaps close. New random reads draws a fresh set from the same genome.',
@@ -5686,7 +5686,7 @@ SCENE({id:'sequencing-cost',name:'The cost of a genome',tag:'Faster than Moore�
 /* ---------------------------------------------------------------- phylogenetic trees */
 const B8_TAXA=['Human','Chimp','Gorilla','Mouse','Chicken'],B8_SHORT=['Hu','Ch','Go','Mo','Ck'];
 // A toy alignment (not real sequences): the differences are chosen to give the familiar tree.
-const B8_ALN=['ACGTACGTACGT','ACGTACGTACGA','ACGTACCTACGA','ATGTTCCTACGA','GTGATCCAATCA'];
+const B8_ALN=['ACGTACGTACGT','ACGTACGTACGA','ACGTACCTATGA','ATGTTCCTACGA','GTGATCCAATCA'];
 const B8_D=B8_ALN.map(a=>B8_ALN.map(b=>[...a].filter((c,i)=>c!==b[i]).length));
 function B8_upgma(steps){let cl=B8_TAXA.map((n,i)=>({m:[i],h:0,kids:null}));const joins=[];
  for(let k=0;k<steps&&cl.length>1;k++){let best=null;
@@ -5804,7 +5804,7 @@ SCENE({id:'phylogenetic-trees-domains',name:'Three domains of life',tag:'Woese�
 
 /* ---- endosymbiosis ---- */
 const B8_EV=[
- ['Two membranes','The inner membrane is the bacterium’s own; the outer one came from the host.'],
+ ['Two membranes','Like their bacterial ancestors, they have two membranes; the outer still has bacterial-type pores.'],
  ['Their own DNA','A small, circular chromosome, like a bacterium’s, separate from the nucleus.'],
  ['Bacterial ribosomes','Their ribosomes resemble bacteria’s (70S) and are hit by some antibiotics.'],
  ['They divide by splitting','New ones form only by fission of old ones, as bacteria divide.'],
@@ -5813,7 +5813,7 @@ SCENE({id:'phylogenetic-trees-endosymbiosis',name:'Endosymbiosis',tag:'Cells ins
  definition:'Endosymbiosis is the idea, championed by Lynn Margulis, that mitochondria and chloroplasts began as free-living bacteria engulfed by another cell and kept as partners.',
  example:'Your mitochondria still carry their own small circular DNA, a relic of their bacterial ancestors about two billion years ago.',
  desc:'Four steps from a host cell to a cell with mitochondria, and later chloroplasts, beside five lines of evidence that can be opened one at a time.',
- research:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14, 255–274. Mereschkowsky (1905) proposed a symbiotic origin for chloroplasts. Gray (2012). Mitochondrial evolution. Cold Spring Harbor Perspectives in Biology 4, a011403.',
+ research:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14. Mereschkowsky (1905) proposed a symbiotic origin for chloroplasts. Gray (2012). Mitochondrial evolution. Cold Spring Harbor Perspectives in Biology 4, a011403.',
  dur:12,hint:'Step through the story with the slider. Press each piece of evidence to read it.',
  init:()=>({step:3,open:4}),
  watch(p){return {step:Math.min(4,Math.floor(p*5)),open:Math.min(4,Math.floor(p*5))}},
@@ -6067,7 +6067,7 @@ SCENE({id:'antibiotic-resistance',name:'Antibiotic resistance',tag:'The mutant s
   B8_DOSES.forEach(v=>{out+=L(dx(v),326,dx(v),334,C.ink,1.2)+TF(dx(v),368,String(v),13,C.muted)});
   out+=P(`M${fmt(dx(dose))} 312 l-7 -9 h14 z`,C.blue,1,C.blue);
   const enriched=tot>0&&share>1e-7*1.5;
-  return {svg:out,phase:dose<1&&!enriched?'At this very low dose the susceptible cells still grow faster than the resistant ones, which pay a cost for resistance, so resistance does not spread.':dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
+  return {svg:out,phase:dose<1&&!enriched?'At this very low dose the susceptible cells still grow faster than the resistant ones, which pay a cost for resistance, so resistance does not spread.':dose<1?'Below the MIC the drug only slows the susceptible cells, yet the resistant ones are slowed less, so even low doses can enrich resistance (Gullberg et al. 2011).':dose<=8?'Inside the window the drug kills the susceptible majority but cannot stop the rare resistant mutants, which then inherit the empty space.':'Above the resistant strain’s MIC both are killed. How long a course should run is debated: shorter courses are often as effective (Llewelyn et al. 2017).'};
  }});
 
 /* ---- the MEGA-plate ---- */
@@ -6108,7 +6108,7 @@ const B8_HIST=[
  {n:'Colistin',a:1959,b:2015,aL:'introduced 1959',bL:'mcr-1 2015',d:'A last-resort drug: a transferable resistance gene, mcr-1, was found in China in 2015 (Liu et al. 2016).'},
  {n:'Artemisinin',a:1972,b:2008,aL:'Tu Youyou 1972',bL:'partial 2008',d:'Tu Youyou’s malaria drug (Nobel Prize 2015). Partial resistance was reported in western Cambodia in 2008–9 (Dondorp et al. 2009).'}];
 SCENE({id:'antibiotic-resistance-history',name:'Every drug, then resistance',tag:'From penicillin to colistin',
- definition:'For every antibiotic so far, resistance has been reported soon after it came into wide use, sometimes within a year. Use did not invent it: resistance genes are often far older, some recovered from 30,000-year-old permafrost. Clinical use selects them and spreads them. Fleming warned of this in his 1945 Nobel lecture.',
+ definition:'For every antibiotic in wide use so far, resistance has eventually been reported: sometimes within a year, sometimes only after decades. Use did not invent it: resistance genes are often far older, some recovered from 30,000-year-old permafrost. Clinical use selects them and spreads them. Fleming warned of this in his 1945 Nobel lecture.',
  example:'Methicillin was introduced in 1960; resistant Staphylococcus aureus (MRSA) was reported in 1961.',
  desc:'A timeline for five drugs, each with the year it came into use (blue) and the year resistance was reported (coral). Press a drug for details.',
  research:'Fleming (1945). Penicillin. Nobel lecture. Abraham & Chain (1940). Nature 146, 837. Jevons (1961). BMJ 1, 124–125. D’Costa, V. M. et al. (2011). Antibiotic resistance is ancient. Nature 477, 457–461. Liu et al. (2016). Lancet Infectious Diseases 16, 161–168. Dondorp et al. (2009). NEJM 361, 455–467. Murray et al. (2022). Global burden of bacterial antimicrobial resistance in 2019. Lancet 399, 629–655.',
@@ -6230,7 +6230,7 @@ SCENE({id:'origins-of-life-vents',name:'Where did life begin?',tag:'Deep-sea ven
 
 /* Biology era 8 · Reading and writing life: word meanings. */
 WORD(
- {key:'sanger-sequencing',title:'Sanger sequencing',aliases:['Sanger sequencing','Sanger’s method','chain-termination sequencing'],linkContext:'sequencing',scene:'sequencing',here:'Reading DNA by copying it with a few chain-stopping bases mixed in, then sorting the copies by length so that each length reveals one base.',contrast:'Not shotgun or short-read sequencing, which read millions of fragments in parallel; Sanger reads one fragment of up to about 1,000 bases very accurately.',example:'The copies ending in G are 1, 5 and 9 bases long, so positions 1, 5 and 9 are G.'},
+ {key:'sanger-sequencing',title:'Sanger sequencing',aliases:['Sanger sequencing','Sanger’s method','chain-termination sequencing'],linkContext:'sequencing',scene:'sequencing',here:'Reading DNA by copying it with a few chain-stopping bases mixed in, then sorting the copies by length so that each length reveals one base.',contrast:'Not massively parallel short-read sequencing, which reads millions of fragments at once; Sanger reads one fragment of up to about 1,000 bases very accurately.',example:'The copies ending in G are 1, 5 and 9 bases long, so positions 1, 5 and 9 are G.'},
  {key:'dideoxy-nucleotide',title:'Chain-stopping base',aliases:['chain-stopping base','chain-stopping bases','dideoxy','ddNTP','dideoxynucleotide'],linkContext:'sequencing',scene:'sequencing',here:'A DNA building block missing the chemical hook (a 3′ hydroxyl group) that the next base attaches to, so a growing copy stops wherever one is added.',contrast:'An ordinary base lets the chain keep growing.',example:'Adding a little ddG makes copies that end at every G.'},
  {key:'gel-electrophoresis',title:'Gel electrophoresis',aliases:['gel electrophoresis','electrophoresis'],linkContext:'sequencing',scene:'sequencing',here:'Separating DNA pieces by size by pulling them through a gel with an electric field: short pieces move further than long ones.',contrast:'Sorts by length, not by sequence.',example:'Reading bands from the bottom of a gel up gives the order of the bases.'},
  {key:'shotgun-sequencing',title:'Shotgun sequencing',aliases:['shotgun sequencing'],linkContext:'sequencing-shotgun',scene:'sequencing-shotgun',here:'Breaking a genome into random pieces, reading each piece, and reassembling the genome from the overlaps between reads.',contrast:'Not reading the genome in order from one end; assembly is a puzzle solved by computer.',example:'The first free-living organism’s genome, Haemophilus influenzae, was assembled this way in 1995.'},
@@ -6238,7 +6238,7 @@ WORD(
  {key:'contig',title:'Contig',aliases:['contig','contigs'],linkContext:'sequencing-shotgun',scene:'sequencing-shotgun',here:'A continuous stretch of sequence assembled from overlapping reads.',contrast:'A genome assembly may come back as many contigs separated by gaps.',example:'Too few reads leave a 48-base genome in five or six contigs.'},
  {key:'next-generation-sequencing',title:'Massively parallel sequencing',aliases:['massively parallel sequencing','next-generation sequencing','short-read sequencing'],linkContext:'sequencing-cost',scene:'sequencing-cost',here:'Sequencing millions of short DNA fragments at the same time on a slide or chip, which made genomes thousands of times cheaper from about 2008.',contrast:'Reads are shorter and individually less accurate than Sanger reads, but there are vastly more of them.',example:'The cost of a human genome fell from millions of dollars to thousands in a few years.'},
  {key:'phylogenetic-tree',title:'Phylogenetic tree',aliases:['phylogenetic tree','phylogenetic trees','phylogeny','evolutionary tree'],linkContext:'phylogenetic-trees',scene:'phylogenetic-trees',here:'A branching diagram of descent: branch points are common ancestors and the tips are living (or sampled) species.',contrast:'Not a ladder of progress: every tip has evolved for the same length of time.',example:'Human and chimpanzee meet at a more recent branch point than either does with a gorilla.'},
- {key:'upgma',title:'UPGMA',aliases:['UPGMA'],linkContext:'phylogenetic-trees',scene:'phylogenetic-trees',here:'A simple tree-building method: repeatedly join the two closest groups, using average distances between their members.',contrast:'Assumes all lineages change at the same rate; maximum-likelihood and Bayesian methods do not.',example:'Join Human and Chimp (1 difference), then add Gorilla at the average distance 1.5.'},
+ {key:'upgma',title:'UPGMA',aliases:['UPGMA'],linkContext:'phylogenetic-trees',scene:'phylogenetic-trees',here:'A simple tree-building method: repeatedly join the two closest groups, using average distances between their members.',contrast:'Assumes all lineages change at the same rate; maximum-likelihood and Bayesian methods do not.',example:'Join Human and Chimp (1 difference), then add Gorilla at the average distance 2.5.'},
  {key:'common-ancestor',title:'Most recent common ancestor',aliases:['most recent common ancestor','common ancestor','common ancestors'],linkContext:'phylogenetic-trees-rotate',scene:'phylogenetic-trees-rotate',here:'The branch point on a tree where the lines of two species last meet. The more recent it is, the more closely related they are.',contrast:'Relatedness is read from branch points, not from how close two names sit at the tips.',example:'Frog and human share a more recent common ancestor than frog and fish.'},
  {key:'molecular-clock',title:'Molecular clock',aliases:['molecular clock'],linkContext:'phylogenetic-trees',scene:'phylogenetic-trees',here:'The idea that differences between sequences build up at a roughly steady rate, so they can estimate how long ago lineages split.',contrast:'The rate varies between genes and lineages, so clocks need calibrating with fossils.',example:'Zuckerkandl and Pauling proposed it from haemoglobin differences in 1965.'},
  {key:'three-domains',title:'Three domains',aliases:['three domains','domain of life','domains of life'],linkContext:'phylogenetic-trees-domains',scene:'phylogenetic-trees-domains',here:'Woese’s division of life into Bacteria, Archaea and Eukarya, based on ribosomal RNA.',contrast:'Replaced grouping by appearance (five kingdoms); newer data suggest eukaryotes arose from within the Archaea.',example:'Methanogens look like bacteria but belong to the Archaea.'},
@@ -6257,7 +6257,7 @@ WORD(
  {key:'ltee',title:'Long-term evolution experiment',aliases:['long-term evolution experiment','LTEE'],linkContext:'evolution-in-the-lab',scene:'evolution-in-the-lab',here:'Richard Lenski’s experiment, begun in 1988, following twelve E. coli populations for tens of thousands of generations with a frozen record every 500.',contrast:'Not a simulation: real bacteria, transferred by hand every day.',example:'Passed 75,000 generations around 2020.'},
  {key:'relative-fitness',title:'Relative fitness',aliases:['relative fitness','fitness relative to the ancestor','competitive fitness'],linkContext:'evolution-in-the-lab',scene:'evolution-in-the-lab',here:'How fast an evolved strain grows against its ancestor when the two compete in the same flask; 1 means equal.',contrast:'Measured by competition, not by size or strength.',example:'Evolved E. coli at about 1.7 outgrow their ancestor 70% faster.'},
  {key:'historical-contingency',title:'Historical contingency',aliases:['historical contingency','replaying the tape'],linkContext:'evolution-in-the-lab-citrate',scene:'evolution-in-the-lab-citrate',here:'The dependence of what evolves on the particular chance events that came before.',contrast:'Parallel evolution is the opposite pattern: the same change again and again.',example:'Citrate use re-evolved only in replays from Ara−3 samples frozen after about 20,000 generations.'},
- {key:'potentiation',title:'Potentiation',aliases:['potentiation','potentiating mutations','potentiating mutation'],linkContext:'evolution-in-the-lab-citrate',scene:'evolution-in-the-lab-citrate',here:'Earlier mutations that do not produce a new trait themselves but make it possible for a later mutation to.',contrast:'Actualisation is the step that produces the trait; refinement improves it.',example:'Ara−3 was potentiated for citrate use before generation 20,000.'},
+ {key:'potentiation',title:'Potentiation',aliases:['potentiation','potentiating mutations','potentiating mutation'],linkContext:'evolution-in-the-lab-citrate',scene:'evolution-in-the-lab-citrate',here:'Earlier mutations that do not produce a new trait themselves but make it possible for a later mutation to.',contrast:'Actualisation is the step that produces the trait; refinement improves it.',example:'Ara−3 had become potentiated for citrate use by about generation 20,000.'},
  {key:'parallel-evolution',title:'Parallel evolution',aliases:['parallel evolution','parallel changes'],linkContext:'evolution-in-the-lab-parallel',scene:'evolution-in-the-lab-parallel',here:'The same trait evolving independently in separate populations that start alike and face the same conditions.',contrast:'Suggests strong, predictable selection, unlike one-off innovations.',example:'All twelve LTEE populations evolved larger cells.'},
  {key:'mutator',title:'Mutator',aliases:['mutator','mutators','hypermutable'],linkContext:'evolution-in-the-lab-parallel',scene:'evolution-in-the-lab-parallel',here:'A strain whose DNA repair or proofreading is broken, so its mutation rate is many times higher.',contrast:'Usually harmful in the long run, but can spread by hitchhiking with the good mutations it produces.',example:'Six of the twelve LTEE populations became mutators by 50,000 generations.'},
  {key:'antibiotic-resistance-term',title:'Antibiotic resistance',aliases:['antibiotic resistance','antimicrobial resistance','drug resistance','AMR'],linkContext:'antibiotic-resistance',scene:'antibiotic-resistance',here:'The ability of bacteria to survive a drug that would normally kill them or stop their growth, spread by natural selection.',contrast:'It is the bacteria that become resistant, not the patient.',example:'MRSA is Staphylococcus aureus resistant to methicillin.'},

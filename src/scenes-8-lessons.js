@@ -10,7 +10,7 @@ SOURCE('b8-baum-2005',{title:'Baum, D. A., Smith, S. D. & Donovan, S. S. S. (200
 SOURCE('b8-woese-1977',{title:'Woese, C. R. & Fox, G. E. (1977). Phylogenetic structure of the prokaryotic domain: the primary kingdoms. PNAS 74, 5088–5090.',url:'https://doi.org/10.1073/pnas.74.11.5088'});
 SOURCE('b8-woese-1990',{title:'Woese, C. R., Kandler, O. & Wheelis, M. L. (1990). Towards a natural system of organisms: proposal for the domains Archaea, Bacteria, and Eucarya. PNAS 87, 4576–4579.',url:'https://doi.org/10.1073/pnas.87.12.4576'});
 SOURCE('b8-eme-2017',{title:'Eme, L., Spang, A., Lombard, J., Stairs, C. W. & Ettema, T. J. G. (2017). Archaea and the origin of eukaryotes. Nature Reviews Microbiology 15, 711–723.'});
-SOURCE('b8-margulis-1967',{title:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14, 255–274.'});
+SOURCE('b8-margulis-1967',{title:'Sagan (Margulis), L. (1967). On the origin of mitosing cells. Journal of Theoretical Biology 14.'});
 SOURCE('b8-jinek-2012',{title:'Jinek, M., Chylinski, K., Fonfara, I., Hauer, M., Doudna, J. A. & Charpentier, E. (2012). A programmable dual-RNA–guided DNA endonuclease in adaptive bacterial immunity. Science 337, 816–821.',url:'https://doi.org/10.1126/science.1225829'});
 SOURCE('b8-barrangou-2007',{title:'Barrangou, R. et al. (2007). CRISPR provides acquired resistance against viruses in prokaryotes. Science 315, 1709–1712.'});
 SOURCE('b8-mojica-2005',{title:'Mojica, F. J. M. et al. (2005). Intervening sequences of regularly spaced prokaryotic repeats derive from foreign genetic elements. Journal of Molecular Evolution 60, 174–182.'});

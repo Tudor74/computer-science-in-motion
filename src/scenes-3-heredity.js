@@ -108,7 +108,7 @@ SCENE({id:'mendel-crosses-seven',name:'Seven traits, one ratio',tag:'Mendel’s 
   const m=B3_MEN7[s.sel],n=m.a+m.b,ea=n*.75,eb=n*.25,chi=B3_chi([m.a,m.b],[ea,eb]),p=B3_chiP(chi,1);
   out+=R(20,300,560,74,C.pale,'none',10);
   out+=TBF(34,322,`${m.t}: ${B3_n(m.a)} ${m.d} to ${B3_n(m.b)} ${m.r} = ${(m.a/m.b).toFixed(2)} : 1`,14,C.ink,'start');
-  out+=TF(34,343,`Expected for 3 : 1 with ${B3_n(n)} plants: ${B3_n(ea)} and ${B3_n(eb)}.`,13,C.ink,'start');
+  out+=TF(34,343,`Expected for 3 : 1 with ${B3_n(n)} ${s.sel<2?'seeds':'plants'}: ${B3_n(ea)} and ${B3_n(eb)}.`,13,C.ink,'start');
   out+=TF(34,363,`Chi-square ${chi.toFixed(2)} (1 degree of freedom), p = ${p.toFixed(2)}: ${p>.05?'a good fit to 3 : 1':'a poor fit'}.`,13,C.ink,'start');
   return {svg:out,phase:'All seven ratios sit close to 3 : 1. In 1936 Fisher calculated that, over all Mendel’s experiments, results this close to expectation would arise by chance only rarely, and suspected they had been tidied. Historians still debate why: unconscious bias, an assistant, or selective reporting. Nobody doubts the ratios themselves, which have been reproduced countless times.'};
  }});
@@ -193,7 +193,7 @@ SCENE({id:'punnett-squares-testcross',name:'The test-cross',tag:'Is the purple p
  definition:'A test-cross mates an individual showing the dominant form with one showing the recessive form. Any recessive-looking offspring proves the first parent carried the hidden allele.',
  example:'A purple plant from an Aa × Aa cross is AA with probability 1/3. After five purple offspring from a test-cross, that rises to 94%; one white offspring makes Aa certain.',
  desc:'A purple plant of unknown genotype crossed with a white plant, a row of offspring you grow one at a time, and a chart of the probability that the purple parent is AA after each all-purple offspring.',
- research:'Mendel (1866) used back-crosses to the recessive parent to confirm the 1 : 2 : 1 genotypes. The updating rule is Bayes’ theorem with prior 1/3 from the 1 : 2 : 1 ratio.',
+ research:'Mendel (1866) found the 1 : 2 : 1 genotypes by self-fertilising second-generation plants; his back-crosses of hybrids to the parental forms confirmed that a hybrid makes its kinds of gamete in equal numbers. The updating rule is Bayes’ theorem with prior 1/3 from the 1 : 2 : 1 ratio.',
  dur:12,hint:'Grow offspring and watch the probability change. Reveal shows the hidden genotype; New plant picks another.',
  init:()=>({seed:B3_TCW+1,k:0,rev:false}),
  watch(p){const k=Math.min(8,Math.floor(p*9));return {seed:B3_TCW,k,rev:p>.9}},
@@ -212,7 +212,7 @@ SCENE({id:'punnett-squares-testcross',name:'The test-cross',tag:'Is the purple p
   const nP=white<0?s.k:white,cur=white<0?B3_post(Math.min(10,s.k)):0;
   if(white<0)out+=Ci(pl.X(Math.min(10,s.k)),pl.Y(cur),6,C.coral,'#fff');
   out+=R(380,200,200,130,C.pale,'none',10);
-  out+=B3_lines(394,224,white<0?[`${s.k} offspring, all purple.`,`P(parent is AA) = ${(cur*100).toFixed(1)}%`,`P(parent is Aa) = ${((1-cur)*100).toFixed(1)}%`,'Each purple offspring halves','the chance of Aa.']:[`A white offspring appeared`,`(number ${white+1}).`,'Only an Aa parent can give a','white plant: the parent is Aa,',`whatever came before.`],13,C.ink);
+  out+=B3_lines(394,224,white<0?[`${s.k} offspring, all purple.`,`P(parent is AA) = ${(cur*100).toFixed(1)}%`,`P(parent is Aa) = ${((1-cur)*100).toFixed(1)}%`,'Each purple offspring halves','the odds of Aa against AA.']:[`A white offspring appeared`,`(number ${white+1}).`,'Only an Aa parent can give a','white plant: the parent is Aa,',`whatever came before.`],13,C.ink);
   out+=TF(300,372,s.rev?`The hidden parent was ${h}.`:'Start: 1 in 3 purple plants from Aa × Aa are AA.',14,s.rev?C.blue:C.muted);
   return {svg:out,phase:'Before any offspring the purple plant is AA one time in three. An AA parent always gives purple; an Aa parent gives purple half the time. So every purple offspring makes AA more likely, but never certain, while a single white offspring settles it.'};
  }});
@@ -343,10 +343,10 @@ SCENE({id:'chromosomes-linkage-map',name:'The first genetic map',tag:'Sturtevant
   out+=B3_lines(34,220,[`${a.n} and`,`${b.n}`],14,C.ink);
   out+=TBF(34,272,`distance: ${d.toFixed(1)} map units`,14,C.ink,'start');
   out+=TBF(34,296,`recombination: ${B3_pct(r)}`,14,C.coral,'start');
-  out+=B3_lines(34,322,[`about ${B3_n(r*1000)} in 1,000 test-cross offspring`,d>20?'double crossovers hide some swaps':'close genes: % ≈ distance'],13,C.muted);
+  out+=B3_lines(34,322,[`about ${B3_n(r*1000)} in 1,000 test-cross offspring`,d>20?'by Haldane’s curve; real flies give more':'close genes: % ≈ distance'],13,C.muted);
   const pl=B3_plot(350,206,210,120,[0,60],[0,.5],{xt:[[0,'0'],[20,'20'],[40,'40'],[60,'60']],yt:[[0,'0'],[.25,'25%'],[.5,'50%']],xl:'map distance',yl:'recombination'});
   out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(50),pl.Y(.5),C.muted,1.5,'stroke-dasharray="4 4"')+B3_poly(range(61).map(x=>[pl.X(x),pl.Y(B3_hald(x))]),C.blue,2.5)+Ci(pl.X(Math.min(60,d)),pl.Y(r),6,C.coral,'#fff');
-  return {svg:out,phase:'Sturtevant, an undergraduate in Morgan’s fly room, realised that recombination percentages add up along a line, and drew the first genetic map in one night. Over long distances two crossovers can cancel out, so recombination flattens at 50% and far-apart genes look closer than they are.'};
+  return {svg:out,phase:'Sturtevant, an undergraduate in Morgan’s fly room, realised that recombination percentages add up along a line, and drew the first genetic map in one night. Over long distances two crossovers can cancel out, so recombination flattens at 50% and far-apart genes look closer than they are. The curve here is Haldane’s idealised rule, which assumes crossovers fall independently. In real flies one crossover discourages another nearby, so counts sit nearer the straight line: Sturtevant found about 30% for white and vermilion, where the curve gives 22%.'};
  }});
 
 /* ================================================================ hardy-weinberg */
@@ -466,7 +466,7 @@ SCENE({id:'genetic-drift-buri',name:'Buri’s 107 fly bottles',tag:'Drift you ca
  definition:'In 1956 Peter Buri kept 107 lines of fruit flies, each started with half its copies of one eye-colour allele and kept at 16 flies per generation. Over 19 generations the lines spread out until most had lost or fixed the allele.',
  example:'After about ten generations every frequency from 0 to 100% was about equally common; by generation 19 the distribution was U-shaped.',
  desc:'A simulated version of Buri’s design: a histogram of 107 lines by number of copies of the allele (out of 32), for a generation you choose, and the fall in heterozygosity against the theory for 16 flies and for the smaller effective size Buri estimated.',
- research:'Buri, P. (1956). Gene frequency in small populations of mutant Drosophila. Evolution 10, 367–402. Heterozygosity fell faster than expected for 16 flies, as if the effective population size were about 11 (Hartl & Clark, Principles of Population Genetics).',
+ research:'Buri, P. (1956). Gene frequency in small populations of mutant Drosophila. Evolution 10, 367–402. Heterozygosity fell faster than expected for 16 flies, as if the effective population size were about 11; see also Hartl & Clark, Principles of Population Genetics.',
  dur:12,hint:'Move through the generations. Bars at the two ends are lines that have lost or fixed the allele.',
  init:()=>({gen:10,seed:9}),
  watch(p){return {gen:Math.min(19,Math.round(19*p)),seed:9}},
@@ -597,5 +597,5 @@ SCENE({id:'quantitative-traits-heritability',name:'What heritability does not me
   out+=R(20,342,560,32,C.pale,'none',8);
   out+=TF(300,363,`Heritability within each pot: ${Math.round(h2*100)}% · difference between pots: ${s.poor?'all due to soil':'none (same soil)'}`,14,C.ink);
   out+=TF(300,52,'dashed line = pot average height',13,C.muted);
-  return {svg:out,phase:`${s.within==='even'?'With even conditions every difference inside a pot comes from the seeds, so heritability is 100%.':'Uneven light and water add environmental differences, so heritability falls to about 50%, though the seeds are identical.'} ${s.poor?'The gap between the pots is caused entirely by soil, however high heritability is within them.':''} Heritability belongs to a population in its environment, not to a trait or a person. The idea grew up alongside eugenics, which Galton named and Fisher supported; modern genetics rejects its conclusions.`};
+  return {svg:out,phase:`${s.within==='even'?'With even conditions every difference inside a pot comes from the seeds, so heritability is 100%.':'Uneven light and water add environmental differences, so heritability falls to about 50%, though the seeds are the same as before.'} ${s.poor?'The gap between the pots is caused entirely by soil, however high heritability is within them.':''} Heritability belongs to a population in its environment, not to a trait or a person. The idea grew up alongside eugenics, which Galton named and Fisher supported; modern genetics rejects its conclusions.`};
  }});

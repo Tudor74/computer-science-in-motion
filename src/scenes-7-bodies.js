@@ -146,7 +146,7 @@ SCENE({id:'epidemics-sir',name:'The SIR model',tag:'Susceptible, infected, recov
  example:'With R0 = 2.5 and an infectious period of 9 days, infections rise, peak when only 1 in 2.5 people (40%) are still susceptible, then fall. In the end about 89% have been infected, more than the 60% needed for herd immunity, because the epidemic overshoots.',
  desc:'Three curves for the fractions susceptible (blue), infected (coral) and recovered (green) over 200 days, with sliders for R0 and the infectious period. The dashed line marks 1/R0: infections peak when the susceptible curve crosses it.',
  research:'Kermack, W. O. & McKendrick, A. G. (1927). A contribution to the mathematical theory of epidemics. Proceedings of the Royal Society A 115, 700–721. Final size from z = 1 − e^(−R0 z).',
- dur:12,hint:'Change R0 and the infectious period. A longer infectious period with the same R0 gives a slower, flatter epidemic with the same final size.',
+ dur:12,hint:'Change R0 and the infectious period. A longer infectious period with the same R0 gives a slower epidemic, stretched out in time, with the same peak height and the same final size.',
  init:()=>({r0:2.5,d:9,t:200}),
  watch(p){return {r0:p<.7?2.5:1.6,d:9,t:Math.min(200,p<.7?p/.6*200:200)}},
  ui:[{range:'r0',label:'R0 (basic reproduction number)',min:.5,max:6,step:.1,get:s=>s.r0,act:'r0',show:v=>Number(v).toFixed(1)},{range:'d',label:'Infectious period',min:3,max:14,step:1,get:s=>s.d,act:'d',show:v=>v+' days'},{range:'t',label:'Show up to day',min:10,max:200,step:5,get:s=>s.t,act:'t',show:v=>'day '+v}],
@@ -171,12 +171,12 @@ SCENE({id:'epidemics-sir',name:'The SIR model',tag:'Susceptible, infected, recov
 
 SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contacts, for how long?',
  definition:'Cutting contacts lowers the transmission rate, so the epidemic peaks lower and later. If the measures stop while many people are still susceptible, infections can rise again.',
- example:'With R0 = 2.5, halving contacts from day 30 for 60 days keeps the peak below the capacity line, but when contacts return a second wave follows, because most people are still susceptible.',
+ example:'With R0 = 2.5, halving contacts from day 10 for 60 days holds infections well below the capacity line while the measures last, but when contacts return a large second wave follows, because most people are still susceptible.',
  desc:'An SIR epidemic with R0 = 2.5 and a 7-day infectious period, without measures (dashed) and with contacts cut by your chosen amount, from your chosen day, for your chosen length. A horizontal line marks an illustrative hospital capacity.',
  research:'Kermack & McKendrick (1927). Hatchett, Mecher & Lipsitch (2007). Public health interventions and epidemic intensity during the 1918 influenza pandemic. PNAS 104, 7582–7587: cities that intervened earlier had lower peaks. Ferguson et al. (2020), Imperial College Report 9. Capacity line illustrative.',
  dur:12,hint:'Change how much contacts are cut, when and for how long. Look at the peak, the days over capacity and whether a second wave appears.',
- init:()=>({cut:50,start:30,len:60}),
- watch(p){return {cut:Math.round(Math.min(1,p/.6)*50),start:30,len:p<.75?200:60}},
+ init:()=>({cut:50,start:10,len:60}),
+ watch(p){return {cut:Math.round(Math.min(1,p/.6)*50),start:10,len:p<.75?200:60}},
  ui:[{range:'cut',label:'Contacts cut by',min:0,max:80,step:5,get:s=>s.cut,act:'cut',show:v=>v+'%'},{range:'start',label:'Starting on day',min:5,max:90,step:5,get:s=>s.start,act:'start',show:v=>'day '+v},{range:'len',label:'Lasting',min:20,max:200,step:10,get:s=>s.len,act:'len',show:v=>v>=200?'to the end':v+' days'}],
  on:{cut(s,v){s.cut=Number(v)},start(s,v){s.start=Number(v)},len(s,v){s.len=Number(v)}},
  draw(s){
@@ -191,9 +191,9 @@ SCENE({id:'epidemics-sir-flatten',name:'Flattening the curve',tag:'Fewer contact
   out+=TF(440,70,'grey dashed:',13,C.muted,'start')+TF(440,88,'without measures',13,C.muted,'start');
   out+=B7_stat(440,102,'peak',`${B7_pct(m.I,1)} · was ${B7_pct(b.I,1)}`,C.coral)+B7_stat(440,156,'days over capacity',`${Math.round(over(run))} · was ${Math.round(over(base))}`,C.amber)+B7_stat(440,210,'ever infected',`${B7_pct(fin(run))} · was ${B7_pct(fin(base))}`,C.green);
   const second=run.some((r,i)=>i>2&&r.t>e&&r.I>run[i-1].I&&r.I>.005);
-  out+=T(300,342,second?'A second wave: the measures ended while most people were still susceptible.':s.cut?'Lower and later: the same model, with fewer contacts.':'No measures: the dashed and solid curves coincide.',14,second?C.coral:C.ink);
+  out+=T(300,342,second?'A second wave: the measures ended while most people were still susceptible.':s.cut?(m.t>b.t&&m.I<b.I?'Lower and later: the same model, with fewer contacts.':m.I<b.I-.0005?'Lower but no later: the cut began close to the peak.':'Too late to lower the peak: it had already passed.'):'No measures: the dashed and solid curves coincide.',14,second?C.coral:C.ink);
   out+=TF(300,366,'Well-mixed SIR model; real epidemics also depend on behaviour and season.',13,C.muted);
-  return {svg:out,phase:'Cutting contacts lowers the effective reproduction number. A long enough cut keeps the peak under capacity; lifting it early leaves enough susceptible people for infections to grow again, which is what many cities saw in 1918.'};
+  return {svg:out,phase:'Cutting contacts lowers the effective reproduction number. An early, long enough cut keeps the peak under capacity; lifting it early leaves enough susceptible people for infections to grow again, which is what many cities saw in 1918.'};
  }});
 
 // Reed–Frost chain binomial: 100 people, one first case, generations of infection.
@@ -295,7 +295,7 @@ const B7_STUDIES=[
  {n:'Wakefield et al. 1998',k:12,c:C.coral,t:'12 children, no control group. Retracted by The Lancet in 2010 after findings of misrepresented data; the lead author was struck off the UK medical register.'},
  {n:'Madsen et al. 2002',k:537303,c:C.green,t:'All children born in Denmark 1991–1998: no higher risk of autism in vaccinated than unvaccinated children (NEJM).'},
  {n:'Taylor et al. 2014',k:1256407,c:C.green,t:'Meta-analysis of cohort and case–control studies covering over 1.25 million children: no link between vaccines and autism (Vaccine).'},
- {n:'Hviid et al. 2019',k:657461,c:C.green,t:'Danish children born 1999–2010: hazard ratio 0.93 (95% CI 0.85–1.01), no increased risk, including in children with autistic siblings (Annals of Internal Medicine).'}];
+ {n:'Hviid et al. 2019',k:657461,c:C.green,t:'Danish children born 1999–2010: hazard ratio 0.93 (95% CI 0.85–1.02), no increased risk, including in children with autistic siblings (Annals of Internal Medicine).'}];
 SCENE({id:'vaccines-herd-evidence',name:'A retracted scare',tag:'MMR and autism',
  definition:'A retracted paper is one withdrawn by the journal because its findings cannot be trusted. The 1998 paper that suggested a link between the MMR vaccine and autism was retracted, and large later studies found no link.',
  example:'The 1998 study described 12 children. Studies since have followed over a million children and found no difference in autism rates between vaccinated and unvaccinated children.',
@@ -411,7 +411,7 @@ SCENE({id:'morphogenesis-flag',name:'The French flag',tag:'Positional informatio
 const B7_HOX=[[1,'All Hox copies'],[.75,'Three quarters'],[.5,'Half'],[.25,'A quarter']];
 SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern in the hand',
  definition:'Digits form as evenly spaced stripes of cartilage across the growing limb bud. Experiments suggest these stripes come from a Turing-type network of signals, whose wavelength is tuned by Hox genes.',
- example:'Mice with progressively fewer distal Hox gene copies grow more, thinner digits: the stripes come closer together, while the limb stays about the same width.',
+ example:'Mice that lack Gli3, given progressively fewer distal Hox gene copies, grow more, thinner digits: the stripes come closer together, while the limb stays about the same width.',
  desc:'A limb bud with a stripe pattern across it. The number of digits is the bud width divided by the stripe wavelength. Change the bud width and the Hox dose, which shortens the wavelength, and count the digits.',
  research:'Sheth, R. et al. (2012). Hox genes regulate digit patterning by controlling the wavelength of a Turing-type mechanism. Science 338, 1476–1480. Raspopovic, J. et al. (2014). Digit patterning is controlled by a Bmp–Sox9–Wnt Turing network modulated by morphogen gradients. Science 345, 566–570. Model simplified.',
  dur:10,hint:'Lower the Hox dose and the stripes squeeze together; widen the bud and more fit in.',
@@ -428,7 +428,7 @@ SCENE({id:'morphogenesis-digits',name:'Counting fingers',tag:'A Turing pattern i
   out+=L(cx-40,cy+40,cx+40,cy+40,C.line,2);
   out+=counter(462,60,'digits',String(n),C.coral,118)+counter(462,114,'stripe spacing',`${(lamb*20).toFixed(0)} units`,C.purple,118)+counter(462,168,'bud width',`${(Wd*20).toFixed(0)} units`,C.ink,118);
   out+=T(300,366,'digits ≈ bud width ÷ stripe spacing (simplified; real limbs also prune and fuse digits)',14,C.muted);
-  return {svg:out,phase:`With ${({1:'the full Hox dose',.75:'three quarters of the Hox dose',.5:'half the Hox dose',.25:'a quarter of the Hox dose'})[s.hox]} the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly in mice lacking Hox genes; Raspopovic and colleagues identified the signals that make the stripes.`};
+  return {svg:out,phase:`With ${({1:'the full Hox dose',.75:'three quarters of the Hox dose',.5:'half the Hox dose',.25:'a quarter of the Hox dose'})[s.hox]} the stripe spacing is ${(lamb*20).toFixed(0)} units, so about ${n} digits fit across this bud. Sheth and colleagues saw this kind of polydactyly when they removed distal Hox genes step by step from mice lacking Gli3; Raspopovic and colleagues identified the signals that make the stripes.`};
  }});
 
 /* ================================================================ circulation-heart */
@@ -449,7 +449,7 @@ SCENE({id:'circulation-heart',name:'Harvey’s calculation',tag:'Blood must go r
   rows.forEach(([l,v,c],i)=>{const y=70+i*58;out+=TF(30,y+22,l,14,C.ink,'start')+R(200,y,lx(v)-200,32,c,'none',5)+TF(lx(v)+8,y+22,`${v<10?v.toFixed(1):Math.round(v)} ${i===2?'kg':'L'}`,14,C.ink,'start')});
   out+=TF(200,262,'bar length on a logarithmic scale',13,C.muted,'start');
   out+=counter(30,282,'beats in half an hour',String(s.bpm*30),C.blue,160)+counter(210,282,'per beat',`${s.sv.toFixed(1)} mL`,C.blue,120)+counter(350,282,'in a day',`${Math.round(half*48).toLocaleString('en-GB')} L`,C.coral,190);
-  out+=T(300,360,half>=5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:`About ${(half/5*2).toFixed(1)} times the body’s blood in an hour: still more than it holds.`,14,C.ink);
+  out+=T(300,360,half>=5?`In half an hour the heart moves ${(half/5).toFixed(half/5<10?1:0)} times the blood in the body: it must circulate.`:(half>2.5?`About ${(half/5*2).toFixed(1)} times the body’s blood in an hour: still more than it holds.`:`Only ${(half*2).toFixed(1)} L an hour, no more than the body holds. Harvey’s smallest guess gave about 8 L.`),14,C.ink);
   return {svg:out,phase:'Harvey deliberately chose numbers too small to be disputed and still found the heart pumping more blood than the body holds. The liver could not make so much from food, and the limbs could not absorb it: the same blood must go round. Half an ounce is about 14 g and 1 drachm about 3.9 g.'};
  }});
 

@@ -210,7 +210,7 @@ SCENE({id:'natural-selection-moths',name:'The peppered moth',tag:'Selection you 
   d.pts.forEach(([y,p])=>{out+=Ci(A.X(y),A.Y(p),8,C.coral,'#fff')+TF(A.X(y)+(y===d.pts[0][0]?12:-12),A.Y(p)+(p>.5?22:-12),`${y}: ${Math.round(p*100)}%`,13,C.coral,y===d.pts[0][0]?'start':'end')});
   const [ye,pe]=d.pts[1],err=Math.abs(model(ye)-pe);
   out+=TBF(300,334,`model in ${ye}: ${Math.round(model(ye)*100)}% · recorded: ${Math.round(pe*100)}% · ${err<.04?'a good fit':'adjust the advantage'}`,14,err<.04?C.green:C.ink);
-  out+=TF(300,354,'Simplified: a two-type logistic model, one generation a year.',13,C.muted)+TF(300,372,'Haldane (1924), modelling a dominant allele, estimated about 30% for the rise.',13,C.muted);
+  out+=TF(300,354,'Simplified: a two-type logistic model, one generation a year.',13,C.muted)+TF(300,372,'Haldane (1924), modelling a dominant allele, also found a large advantage.',13,C.muted);
   return {svg:out,phase:s.ph==='rise'?`A yearly advantage of about ${Math.round(d.best*100)}% in this simple model carries dark moths from 1% to 98% in 47 years. Kettlewell’s 1950s release experiments blamed bird predation; his methods were criticised, but a large repeat by Majerus (Cook et al. 2012) confirmed it. The dark form came from a single mutation, a jumping gene inserted into the cortex gene around 1819 (van’t Hof et al. 2016).`:`After the Clean Air Act of 1956, pale bark returned and the dark form fell at about ${Math.round(d.best*100)}% a year in this model. The same fall happened in Michigan, in parallel (Grant et al. 1996).`};
  }});
 
@@ -278,10 +278,10 @@ SCENE({id:'artificial-selection-illinois',name:'A century of selection',tag:'The
   return {svg:out,phase:s.model==='many'?`In ${s.yr} the high line is near ${B2_m(hi(s.yr),1)}% oil. Laurie et al. (2004) mapped about 50 regions of the genome that each contributed a small effect: the long response suits many genes of small effect.`:'A trait controlled by a handful of genes would run out of variation within a few decades. The real experiment did not, which is evidence for many genes and continuing mutation.'};
  }});
 
-const B2_FOX=[[0,0],[10,18],[20,35],[40,75]];
+const B2_FOX=[[0,0],[10,18],[20,35],[33,75]];
 SCENE({id:'artificial-selection-foxes',name:'Tame foxes',tag:'Belyaev’s experiment, from 1959',
  definition:'In Novosibirsk, Dmitry Belyaev and Lyudmila Trut bred silver foxes for one thing only: how calmly they approached people. Within a few dozen generations most foxes were eager for human contact.',
- example:'Trut reported that 18% of pups were in the tamest (“elite”) class by the 10th generation, 35% by the 20th, and 70–80% after about 40 generations.',
+ example:'Trut reported that 18% of pups were in the tamest (“elite”) class by the 10th generation, 35% by the 20th, and 70–80% after 40 years, about 30–35 generations.',
  desc:'A graph of the share of elite tame foxes against generation, with the reported points, beside two panels: traits said to have changed along with tameness, and later caveats about the experiment.',
  research:'Belyaev, D. K. (1979). Destabilizing selection as a factor in domestication. Journal of Heredity 70, 301–308; Trut, L. N. (1999). Early canid domestication: the farm-fox experiment. American Scientist 87, 160–169; Lord, K. A. et al. (2020). The history of farm foxes undermines the animal domestication syndrome. Trends in Ecology & Evolution 35, 125–136.',
  dur:10,hint:'Slide through the generations, then switch between what was reported and what later work questioned.',
@@ -330,7 +330,7 @@ SCENE({id:'sexual-selection',name:'Sexual selection',tag:'Andersson’s widowbir
 SCENE({id:'sexual-selection-runaway',name:'Runaway selection',tag:'Fisher’s feedback loop',
  definition:'Fisher’s runaway process: if females prefer a trait, and the genes for the preference and for the trait end up together in the same offspring, then the trait and the preference can amplify each other until the cost to survival stops them.',
  example:'Daughters of choosy mothers inherit the preference; sons inherit their father’s long tail. Because they travel together, every generation that favours long tails also increases the preference for them.',
- desc:'A toy model of a male trait and a female preference over 40 generations. Two sliders set how strongly the two are linked in offspring and how costly the trait is. A time graph shows both values, and a second graph plots preference against trait, spiralling outward when the loop runs away and settling when the cost wins.',
+ desc:'A toy model of a male trait and a female preference over 40 generations. Two sliders set how strongly the two are linked in offspring and how costly the trait is. A time graph shows both values, and a second graph plots preference against trait: the point moves along a straight line, climbing off the scale when the loop runs away and stopping when the cost wins.',
  research:'Fisher, R. A. (1930). The Genetical Theory of Natural Selection; Lande, R. (1981). Models of speciation by sexual selection on polygenic traits. PNAS 78, 3721–3725; Zahavi, A. (1975). Mate selection: a selection for a handicap. Journal of Theoretical Biology 53, 205–214. This is a toy model, not a fitted one.',
  dur:10,hint:'Raise the link between trait and preference above the cost and the loop runs away. Clear runaway is hard to demonstrate in the wild; costly signals of good genes (Zahavi’s handicap) are a rival explanation.',
  init:()=>({c:.8,cost:.16}),
@@ -364,7 +364,7 @@ SCENE({id:'sexual-selection-bateman',name:'Who competes, who chooses',tag:'Batem
   const A=B2_axes(70,62,330,220,[0,5],[0,45],{xt:[0,1,2,3,4,5],yt:[0,10,20,30,40],xl:'number of mates',yl:'offspring'});out+=A.svg;
   const r=rng(s.sp==='typical'?5:9);
   for(const [sl,col,base] of [[mS,C.blue,4],[fS,C.coral,8]])for(let i=0;i<22;i++){const m=Math.floor(r()*6),y=clamp((m?base:0)+sl*m+B2_gauss(r)*3,0,44);out+=Ci(A.X(m)+(r()-.5)*14,A.Y(y),4,col,'none','opacity=".55"')}
-  out+=L(A.X(0),A.Y(0),A.X(5),A.Y(4+mS*5),C.blue,3)+L(A.X(0),A.Y(0),A.X(5),A.Y(8+fS*5),C.coral,3);
+  out+=L(A.X(1),A.Y(4+mS),A.X(5),A.Y(4+mS*5),C.blue,3)+L(A.X(1),A.Y(8+fS),A.X(5),A.Y(8+fS*5),C.coral,3);
   out+=L(A.X(s.m),A.Y(0),A.X(s.m),A.Y(45),C.ink,1.5,'stroke-dasharray="4 3"');
   const mo=s.m?4+mS*s.m:0,fo=s.m?8+fS*s.m:0;
   out+=counter(430,70,'males, expected',B2_m(mo,0)+' offspring',C.blue,140)+counter(430,130,'females, expected',B2_m(fo,0)+' offspring',C.coral,140);
@@ -450,8 +450,8 @@ SCENE({id:'speciation-barriers',name:'Barriers between species',tag:'Before and 
    const words=b.split(' ');words.forEach((w,j)=>{out+=TF(x+35,y+32+j*17-(words.length-1)*8,w,13,pass?C.green:stop?C.coral:C.muted)});
    out+=TBF(x+35,y+92,pass?'✓':stop?'✗':'–',18,pass?C.green:stop?C.coral:C.muted);
    if(i<6)out+=arrow(x+70,y+35,x+78,y+35,C.line,1.5,5)});
-  out+=L(34+3*78+74,74,34+3*78+74,190,C.purple,2,'stroke-dasharray="5 4"');
-  out+=TF(34+2*78,70,'prezygotic',13,C.purple,'middle')+TF(34+5*78,70,'postzygotic',13,C.purple,'middle');
+  out+=L(34+4*78+74,74,34+4*78+74,190,C.purple,2,'stroke-dasharray="5 4"');
+  out+=TF(34+2*78+35,70,'prezygotic',13,C.purple,'middle')+TF(34+5*78+74,70,'postzygotic',13,C.purple,'middle');
   const lines=[];let cur='';for(const w of c.why.split(' ')){if((cur+' '+w).length>62){lines.push(cur);cur=w}else cur=cur?cur+' '+w:w}lines.push(cur);
   out+=R(40,214,520,58+lines.length*20,'#fff',C.grid,8);lines.forEach((l,i)=>{out+=TF(56,240+i*20,l,14,C.ink,'start')});
   out+=TBF(56,248+lines.length*20,`A ${c.kind} barrier`,15,C.coral,'start');
@@ -530,8 +530,8 @@ SCENE({id:'finches-beaks-competition',name:'When a competitor arrives',tag:'Char
   out+=P(B2_path(range(61).map(i=>{const d=8+i*.05;return [A.X(d),A.Y(surv(d))]})),yes?C.purple:C.coral,3.5);
   out+=yes?arrow(A.X(10.8),A.Y(.72),A.X(10.2),A.Y(.72),C.purple,3,10)+TF(A.X(10.95),A.Y(.72)-14,'average beak gets smaller',13,C.purple,'end'):arrow(A.X(9.0),A.Y(.6),A.X(9.5),A.Y(.6),C.coral,3,10)+TF(A.X(9.25),A.Y(.6)-14,'average beak gets deeper',13,C.coral);
   out+=R(400,60,170,220,'#fff',C.grid,8)+B2_title(414,84,'Seeds left to eat',C.ink);
-  const seeds=[['small, soft',6,'#b38b4a',true],['large, hard (caltrop)',12,'#6b4f2a',!yes]];
-  seeds.forEach(([n,r,c,ok],i)=>{const y=126+i*70;out+=Ci(430,y,r,c)+TF(452,y+5,n,13,C.ink,'start')+TF(452,y+23,ok?'available':'eaten by large finches',13,ok?C.green:C.coral,'start')});
+  const seeds=[['small, soft',6,'#b38b4a',yes,yes?'the main food left':'soon ran out'],['large, hard (caltrop)',12,'#6b4f2a',!yes,yes?'eaten by large finches':'left for deep beaks']];
+  seeds.forEach(([n,r,c,ok,st],i)=>{const y=126+i*70;out+=Ci(430,y,r,c)+TF(452,y+5,n,13,C.ink,'start')+TF(452,y+23,st,13,ok?C.green:C.coral,'start')});
   out+=TF(414,262,yes?'Large finches since 1982':'Large finches absent',13,C.muted,'start');
   return {svg:out,phase:yes?'With large ground finches taking the large seeds, medium ground finches with smaller beaks, better at small seeds, survived best. The average beak shrank, making the two species more different.':'Without a competitor, the large hard seeds were left for medium ground finches with deep enough beaks, and deeper beaks were favoured.'};
  }});
