@@ -410,7 +410,7 @@ SCENE({id:'predictive-processing-oddball',name:'The oddball',tag:'Mismatch and s
   out+=R(x0,base+56,14,14,'#fff',C.line,3)+TF(x0+20,base+68,'common tone 1000 Hz',13,C.muted,'start')+R(x0+200,base+56,14,14,C.coral,'none',3)+TF(x0+220,base+68,'odd tone 1200 Hz',13,C.muted,'start');
   const avg=t=>{const v=su.filter((_,i)=>seq[i]===t&&i<shown);return v.length?D8_mean(v):NaN};const a0=avg(0),a1=avg(1);
   out+=T(300,354,`average surprise: common ${isFinite(a0)?a0.toFixed(2):'—'} bits · odd ${isFinite(a1)?a1.toFixed(2):'—'} bits`,15,C.ink);
-  return {svg:out,phase:s.prob>=.5?'When both tones are equally common, neither is surprising: about 1 bit each, and the mismatch response largely vanishes.':'Each odd tone is surprising because the model has learned to expect the common one. In the brain the mismatch negativity tracks this kind of surprise.'};
+  return {svg:out,phase:s.prob>=.5?'When the odd tone is about as common as the other, it is far less surprising than when it is rare, and the mismatch response largely vanishes.':'Each odd tone is surprising because the model has learned to expect the common one. In the brain the mismatch negativity tracks this kind of surprise.'};
  }});
 
 // Active inference toy: reduce the error by changing the belief or by moving the arm.
@@ -512,7 +512,7 @@ SCENE({id:'embodied-cognition-offloading',name:'Thinking with your hands',tag:'E
 // Embodiment claims and what happened when they were tested again.
 const D8_CLAIMS=[
  {c:'Pen in the teeth makes cartoons funnier',o:'Strack, Martin & Stepper 1988',f:'17 labs found no pen effect (2016); posed smiles had small effects (2022)',st:'mixed'},
- {c:'Holding a warm cup makes people seem warmer',o:'Williams & Bargh 2008',f:'Larger replications found no effect (Lynott et al. 2014)',st:'failed'},
+ {c:'Holding a warm cup makes people seem warmer',o:'Williams & Bargh 2008',f:'No effect in larger replications (Lynott et al. 2014; Chabris et al. 2019)',st:'failed'},
  {c:'Power poses raise testosterone',o:'Carney, Cuddy & Yap 2010',f:'No hormone change in a larger study (Ranehill et al. 2015)',st:'failed'},
  {c:'Hills look steeper with a heavy backpack',o:'Bhalla & Proffitt 1999',f:'Shrank when people could not guess the aim (Durgin et al. 2009)',st:'contested'},
  {c:'Fielders run to keep the ball rising steadily',o:'Chapman 1968; McBeath et al. 1995',f:'Supported in field and VR tests; debate over which optical cue',st:'supported'},
@@ -522,7 +522,7 @@ SCENE({id:'embodied-cognition-replication',name:'Bodies, minds and replication',
  definition:'Embodied cognition includes strong, well-tested ideas about action and perception, and also some eye-catching claims that the body primes judgements. Several of the second kind failed when large, preregistered replications tested them.',
  example:'“Power posing raises testosterone” spread widely after 2010, but a larger study found no hormone change and its first author later said she no longer believed the effect.',
  desc:'Six cards, each with an embodiment claim and its original study; pressing a card reveals what later replications found, colour-coded supported, mixed, contested or failed.',
- research:'Wagenmakers et al. (2016). Registered replication report: Strack, Martin & Stepper (1988). Perspectives on Psychological Science 11; Coles et al. (2022). Many Smiles. Nature Human Behaviour 6; Lynott et al. (2014) Social Psychology 45; Ranehill et al. (2015) Psychological Science 26; Durgin et al. (2009) Psychonomic Bulletin & Review 16.',
+ research:'Wagenmakers et al. (2016). Registered replication report: Strack, Martin & Stepper (1988). Perspectives on Psychological Science 11; Coles et al. (2022). Many Smiles. Nature Human Behaviour 6; Lynott et al. (2014) Social Psychology 45; Chabris et al. (2019) Social Psychology 50; Ranehill et al. (2015) Psychological Science 26; Durgin et al. (2009) Psychonomic Bulletin & Review 16.',
  dur:12,hint:'Press each card to reveal what happened when the claim was tested again.',
  init:()=>({open:[]}),
  watch(p){return {open:range(Math.min(6,Math.floor(p*7)))}},

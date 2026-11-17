@@ -122,7 +122,7 @@ SCENE({id:'channel-capacity-hick',name:'Choice time and information',tag:'Hick a
   [1,2,4,8].forEach(m=>out+=Ci(pl.X(Math.log2(m)),pl.Y(a+b*Math.log2(m)),4,'#fff',C.green));
   out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+(H>2.2?-12:12),pl.Y(rt)+(H>2.2?-10:24),D3_ms(rt),13,C.coral,H>2.2?'end':'start');
   out+=TF(300,356,'RT ≈ a + b·H, with a = 0.2 s and b = 0.15 s per bit (illustrative)',13,C.muted);
-  return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up exactly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
+  return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up roughly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
  }});
 
 /* ======================= Lesson: chunking ======================= */
@@ -256,7 +256,7 @@ const D3_EV=[
  {id:'lang',l:'Language',what:'English → German',v:'Usually missed',col:C.coral,lines:['Listeners could not say what language the ignored','speech was in, or whether it changed.']},
  {id:'rev',l:'Backwards',what:'speech is played backwards',v:'Usually missed',col:C.coral,lines:['Reversed speech keeps the voice but loses the words;','most listeners noticed nothing odd.']},
  {id:'rep',l:'Repeated words',what:'words repeated 35 times',v:'Not remembered',col:C.coral,lines:['Moray (1959): words heard 35 times in the ignored','ear were recognised no better than new words.']},
- {id:'name',l:'Own name',what:'the listener’s own name',v:'About a third notice',col:C.amber,lines:['Moray (1959); Wood & Cowan (1995) replicated about 1 in 3,','more often in people with lower working-memory span.']}];
+ {id:'name',l:'Own name',what:'the listener’s own name',v:'About a third notice',col:C.amber,lines:['Moray (1959); Wood & Cowan (1995) replicated about 1 in 3.','Lower-span listeners notice more often (Conway et al. 2001).']}];
 SCENE({id:'selective-attention-cocktail',name:'The cocktail party',tag:'Shadowing one ear',
  definition:'In dichotic listening a different message goes to each ear and the listener repeats one of them aloud (shadowing). Colin Cherry (1953) found that almost nothing of the meaning of the other message was reported, though its physical qualities were.',
  example:'Ask someone who shadowed the left ear what was said on the right: they can tell you it was a voice, perhaps a woman’s, but not what it said or even which language.',
@@ -353,7 +353,7 @@ SCENE({id:'signal-detection',name:'Yes or no?',tag:'Be the participant',
   if(ok)out+=Ci(Xp(st.F),Yp(st.H),8,s.sim?C.blue:C.coral,'#fff');
   out+=R(260,292,326,74,'#fff',C.grid,8);
   out+=ok?TF(423,320,`hits ${st.h}/${st.nS} · false alarms ${st.fa}/${st.nN}`,13,C.ink)+TBF(423,348,`d′ = ${st.d.toFixed(2)} · c = ${st.c.toFixed(2)}`,15,s.sim?C.blue:C.coral):TF(423,336,'Scores appear after a few trials of each kind',13,C.muted);
-  return {svg:out,phase:ok?`${s.sim?'The simulated observer':'You'} said yes to ${Math.round(st.H*100)}% of patch trials and ${Math.round(st.F*100)}% of empty ones. d′ ${st.d.toFixed(1)} measures sensitivity; c ${st.c>.15?'above 0: cautious':st.c<-.15?'below 0: liberal':'near 0: neutral'} about saying yes.`:'Every answer is a hit, a miss, a false alarm or a correct rejection. Hits alone cannot tell good eyes from a habit of saying yes.'};
+  return {svg:out,phase:ok?`${s.sim?'The simulated observer':'You'} said yes to ${Math.round(100*st.h/st.nS)}% of patch trials and ${Math.round(100*st.fa/st.nN)}% of empty ones. d′ ${st.d.toFixed(1)} measures sensitivity; c ${st.c>.15?'above 0: cautious':st.c<-.15?'below 0: liberal':'near 0: neutral'} about saying yes.`:'Every answer is a hit, a miss, a false alarm or a correct rejection. Hits alone cannot tell good eyes from a habit of saying yes.'};
  }});
 function D3_sdShow(s,ctx){s.phase='show';s.tok++;ctx.later(500,'mask',s.tok)}
 
@@ -548,7 +548,7 @@ SCENE({id:'visual-search',name:'Finding the odd one out',tag:'Be the participant
   return {svg:out,phase:'A flat line means the target was found in parallel, without checking items one by one. A rising line means each extra item adds time, and absent trials rise faster because every item must be checked before saying no.'};
  }});
 
-const D3_FIT_ITEMS=[[80,96,'tri','or'],[160,82,'cir','or'],[236,108,'tri','bl'],[96,168,'cir','bl'],[184,158,'tri','or'],[262,178,'cir','or']];
+const D3_FIT_ITEMS=[[80,96,'tri','bl'],[160,82,'cir','or'],[236,108,'tri','bl'],[96,168,'cir','or'],[184,158,'tri','or'],[262,178,'cir','or']];
 const D3_FIT_FEAT=[[80,96,'tri','bl'],[160,82,'cir','bl'],[236,108,'tri','bl'],[96,168,'cir','bl'],[184,158,'tri','or'],[262,178,'cir','bl']];
 const D3_fitShape=(x,y,sh,col,r=16)=>sh==='tri'?`<polygon points="${fmt(x)},${fmt(y-r)} ${fmt(x+r)},${fmt(y+r*.8)} ${fmt(x-r)},${fmt(y+r*.8)}" fill="${col}"/>`:Ci(x,y,r*.9,col);
 const D3_COLS={or:'#c45238',bl:C.blue};

@@ -774,7 +774,7 @@ SCENE({id:'fechner-scaling',name:'Fechner’s law',tag:'Count the just-noticeabl
   return {svg:out,phase:`Each step is one JND high but ${Math.round(s.k*100)}% wider than the last. Stack them and the staircase follows a logarithm: Fechner’s law.`};
  }});
 
-const D1_STEV=[['Brightness',.33],['Loudness',.67],['Line length',1],['Heaviness',1.45],['Electric shock',3.5]];
+const D1_STEV=[['Brightness',.33],['Loudness (pressure)',.67],['Line length',1],['Heaviness',1.45],['Electric shock',3.5]];
 SCENE({id:'fechner-scaling-stevens',name:'Stevens’ power law',tag:'Ask people for numbers',
  definition:'S. S. Stevens asked people to give numbers to how strong things felt. The results followed power functions, ψ = k · Iⁿ, with an exponent n that differs by sense: below 1 the sensation grows slower than the stimulus, above 1 faster.',
  example:'Doubling a light’s intensity makes it look only about 1.26 times as bright (2^0.33), but doubling the current of an electric shock makes it feel about 11 times as strong (2^3.5).',
@@ -883,7 +883,7 @@ SCENE({id:'reaction-time-nerve',name:'The speed of a nerve',tag:'Helmholtz times
 function D1_exg(x,mu,sg,tau){return Math.exp((mu-x)/tau+sg*sg/(2*tau*tau))*D1_Phi((x-mu)/sg-sg/tau)/tau}
 SCENE({id:'reaction-time-distribution',name:'The shape of reaction times',tag:'Slow tails, not bell curves',
  definition:'Reaction times are skewed: most are close together, but a long tail of slow responses stretches to the right. An ex-Gaussian, a bell curve (μ, σ) plus an exponential tail (τ), describes them well.',
- example:'With μ = 350, σ = 40 and τ = 100 ms, the median is about 420 ms but the mean is 450 ms: a few slow trials pull the mean right. That is why reaction-time studies often report medians or fit the whole shape.',
+ example:'With μ = 350, σ = 40 and τ = 100 ms, the median is about 425 ms but the mean is 450 ms: a few slow trials pull the mean right. That is why reaction-time studies often report medians or fit the whole shape.',
  research:'Ratcliff, R. (1979). Group reaction time distributions and an analysis of distribution statistics. Psychological Bulletin 86(3), 446–461. Luce, R. D. (1986). Response Times. Whelan, R. (2008). Effective analysis of reaction time data. The Psychological Record 58, 475–482.',
  desc:'An ex-Gaussian curve of reaction times with markers for the mode, median and mean, which separate as the exponential tail grows.',
  dur:10,hint:'Grow the tail (τ) and watch the mean move away from the median and mode.',
@@ -893,7 +893,7 @@ SCENE({id:'reaction-time-distribution',name:'The shape of reaction times',tag:'S
  on:{mu(s,v){s.mu=Number(v)},sg(s,v){s.sg=Number(v)},tau(s,v){s.tau=Number(v)}},
  draw(s,f,X){
   const xs=range(241).map(i=>i*5),ys=xs.map(x=>D1_exg(x,s.mu,s.sg,s.tau)),ymax=Math.max(...ys)*1.15;
-  let cum=0,tot=sum(ys),med=0;for(let i=0;i<xs.length;i++){cum+=ys[i];if(cum>=tot/2){med=xs[i];break}}
+  let med=0;{const zs=range(Math.ceil(s.mu+5*s.sg+12*s.tau)+1).map(x=>D1_exg(x,s.mu,s.sg,s.tau)),tot=sum(zs);let cum=0;for(let i=0;i<zs.length;i++){cum+=zs[i];if(cum>=tot/2){med=i;break}}}
   const mode=xs[ys.indexOf(Math.max(...ys))],mean=s.mu+s.tau;
   let out=heading('Reaction times have a long right tail');
   const pl=D1_plot(50,70,500,220,0,1200,0,ymax,'reaction time (ms)','',[0,200,400,600,800,1000,1200],[]);out+=pl.svg;
@@ -909,7 +909,7 @@ SCENE({id:'mental-chronometry',name:'Donders’ subtraction method',tag:'Be the 
  definition:'F. C. Donders compared three tasks. The a-task needs only detection; the c-task adds identifying the signal; the b-task adds choosing between responses. Subtracting their times should give the duration of each added mental stage.',
  example:'If a = 220 ms, c = 290 ms and b = 350 ms, then identifying took about 70 ms (c − a) and choosing the response about 60 ms (b − c).',
  research:'Donders, F. C. (1868). Over de snelheid van psychische processen. Translated by W. G. Koster (1969): On the speed of mental processes. Acta Psychologica 30, 412–431. The three-task pattern a < c < b replicates; the clean subtraction is debated (see next scene).',
- desc:'A signal light with Left and Right keys, and a bar chart of your mean times for the a, c and b tasks with the two differences marked.',
+ desc:'A signal light with Left and Right keys, and a bar chart of your median times for the a, c and b tasks with the two differences marked.',
  dur:13,hint:'Choose a task, press Start and respond to the light as the task asks. Do about five trials of each, then read off the differences. Your times stay on this page.',
  init:()=>({task:'a',phase:'idle',stim:'red',t0:0,rts:{a:[],b:[],c:[]},err:0,seed:31,tid:0,msg:''}),
  watch(p){const n=Math.floor(p*15),ts=['a','c','b'],task=ts[Math.min(2,Math.floor(p*3))],k=Math.floor(p*45)%3;return {task,phase:k===1?'go':'idle',stim:Math.floor(p*45)%2?'red':'green',rts:{a:D1_simRT(7,Math.min(5,n),210,40,20),c:D1_simRT(8,Math.max(0,Math.min(5,n-5)),280,50,25),b:D1_simRT(9,Math.max(0,n-10),340,50,30)},err:0,msg:'Simulated participant',sim:true}},
@@ -929,7 +929,7 @@ SCENE({id:'mental-chronometry',name:'Donders’ subtraction method',tag:'Be the 
   out+=hit(X,'resp','left','Left key',R(60,200,100,56,'#f4f7f9',C.line,10)+TBF(110,234,'Left',15,C.ink))+hit(X,'resp','right','Right key',R(180,200,100,56,'#f4f7f9',C.line,10)+TBF(230,234,'Right',15,C.ink));
   if(s.msg)out+=TBF(170,292,s.msg,15,/Too|Wrong/.test(s.msg)?C.coral:s.sim?C.purple:C.ink);
   out+=TF(170,318,`errors: ${s.err}`,13,C.muted);
-  const pl=D1_plot(380,60,200,240,0,3,0,500,'','mean time (ms)',[],[0,100,200,300,400,500]);out+=pl.svg;
+  const pl=D1_plot(380,60,200,240,0,3,0,500,'','median time (ms)',[],[0,100,200,300,400,500]);out+=pl.svg;
   const ms={};['a','c','b'].forEach((t,i)=>{const d=s.rts[t];ms[t]=d.length?D1_median(d):null;const x=pl.px(i+.5);out+=TF(x,326,t+'-task',13,C.muted)+TF(x,344,`n = ${d.length}`,13,C.muted);if(ms[t]!==null){out+=R(x-22,pl.py(ms[t]),44,pl.py(0)-pl.py(ms[t]),t===s.task?C.blue:C.line,'none',4)+TF(x,pl.py(ms[t])-6,Math.round(ms[t]),13,C.ink)}});
   const diffs=(ms.a!==null&&ms.c!==null?`identify ≈ c − a = ${Math.round(ms.c-ms.a)} ms`:'')+(ms.b!==null&&ms.c!==null?` · choose ≈ b − c = ${Math.round(ms.b-ms.c)} ms`:'');
   if(diffs)out+=TF(300,370,diffs.replace(/^ · /,''),14,C.green);
@@ -997,7 +997,7 @@ SCENE({id:'mental-chronometry-sternberg',name:'Scanning short-term memory',tag:'
 // A schematic left hemisphere seen from the side, front to the left.
 const D1_BRAIN='M30 205 C20 150 55 100 115 82 C170 66 250 66 305 88 C360 110 390 160 382 205 C376 238 352 252 325 250 C312 268 280 276 255 266 C220 262 200 262 182 268 C150 280 110 276 90 262 C60 252 36 236 30 205Z';
 function D1_brain(){return P('M262 262 C268 290 274 310 280 336 L300 336 C296 310 292 288 290 262Z',C.line,2,'#efe4dc')+`<ellipse cx="322" cy="262" rx="42" ry="22" fill="#efe4dc" stroke="${C.line}" stroke-width="2"/>`+P(D1_BRAIN,'#b79c8e',2.5,'#f6ece6')+P('M95 205 C150 190 210 185 262 200',C.line,2)+P('M220 72 C212 120 195 160 182 196',C.line,2)}
-const D1_GALL=[[80,130,'Firmness'],[140,100,'Benevolence'],[60,190,'Language'],[250,110,'Self-esteem'],[300,180,'Combativeness'],[200,150,'Wit']];
+const D1_GALL=[[200,96,'Firmness'],[134,108,'Benevolence'],[60,190,'Language'],[262,118,'Self-esteem'],[300,180,'Combativeness'],[80,130,'Wit']];
 SCENE({id:'localisation',name:'Where in the brain?',tag:'From skull bumps to lesions',
  definition:'Is the mind spread through the whole brain or made of parts in particular places? Franz Gall’s phrenology mapped faculties to bumps on the skull without real tests. Pierre Flourens, removing parts of animals’ brains, argued the cortex worked as a whole. Paul Broca’s patients showed that one function, producing speech, depends on a particular region.',
  example:'Broca’s patient Louis Victor Leborgne could say little but “tan”, yet understood speech. After his death in 1861 Broca found damage in the left frontal lobe, now called Broca’s area.',
@@ -1068,7 +1068,7 @@ SCENE({id:'localisation-homunculus',name:'The motor map',tag:'The body laid out 
    if(sel){const am=(b0+b1)/2;out+=L(cx+r1*Math.cos(am),cy+r1*Math.sin(am),cx+(r1+22)*Math.cos(am),cy+(r1+22)*Math.sin(am),C.coral,2)+TBF(cx+(r1+28)*Math.cos(am),cy+(r1+28)*Math.sin(am)+5,n,14,C.coral,'start')}});
   out+=TF(cx+r1+4,cy+20,'side of the head',13,C.muted,'start');
   const [n,w]=D1_HOM[s.i];
-  out+=R(436,70,152,150,'#fff',C.grid,10)+TBF(448,96,n,15,C.ink,'start')+TF(448,122,'share of the strip',13,C.muted,'start')+TBF(448,150,`${Math.round(w/tot*100)}%`,22,C.coral,'start')+D1_para(448,178,w>=5?'A large share: fine control.':'A small share: coarse control.',18,13,C.ink,18);
+  out+=R(436,70,152,150,'#fff',C.grid,10)+TBF(448,96,n,15,C.ink,'start')+TF(448,122,'share of the strip',13,C.muted,'start')+TBF(448,150,`${Math.round(w/tot*100)}%`,22,C.coral,'start')+D1_para(448,178,[8,9,10,11,12,13,17,18,19,20,21].includes(s.i)?'A large share for its size: fine control.':'A small share for its size: coarse control.',18,13,C.ink,18);
   return {svg:out,phase:`${n}: about ${Math.round(w/tot*100)}% of the strip (illustrative). Area follows how finely a part is controlled, not how big it is.`};
  }});
 
@@ -1104,7 +1104,7 @@ SCENE({id:'neuron-doctrine-polarity',name:'Signals flow one way',tag:'Cajal’s 
  desc:'Three neurons in a row, each with dendrites on the left, a cell body and an axon to the right that ends against the next cell’s dendrites; a pulse travels through them step by step.',
  dur:12,hint:'Choose a circuit and step the signal through it. Notice where each neuron receives and where it sends.',
  init:()=>({circ:'reflex'}),
- trace(s){const pts=D1_polPts(),C0=D1_CIRC[s.circ],fr=[];pts.forEach((p,i)=>{const cell=C0.cells[Math.floor(i/3)],part=['dendrites','cell body','axon terminal'][i%3];fr.push({i,label:i===0?`${C0.start}: the ${cell}’s dendrites receive it`:`${cell}: ${part}`})});fr.push({i:pts.length-1,label:C0.end,done:true});return fr},
+ trace(s){const pts=D1_polPts(),C0=D1_CIRC[s.circ],fr=[];pts.forEach((p,i)=>{const cell=C0.cells[Math.floor(i/3)],part=['dendrites','cell body','axon terminal'][i%3];fr.push({i,label:i===0?`${C0.start}: the ${cell}’s receiving end picks it up`:`${cell}: ${part}`})});fr.push({i:pts.length-1,label:C0.end,done:true});return fr},
  ui:[{choose:[['reflex','Reflex arc'],['retina','Retina']],label:'Circuit',get:s=>s.circ,act:'circ'}],
  on:{circ(s,v){s.circ=v}},
  draw(s,f,X){
@@ -1324,7 +1324,7 @@ SCENE({id:'forgetting-curve-pairs',name:'Paired associates',tag:'Calkins’s met
    range(6).forEach((c,i)=>{const y=80+i*38,a=s.ans[c],good=a===c;if(c===sets.twice){if(good)ok1++}else if(good)okS++;
     out+=R(80,y,34,28,D2_COLS[c][1],'none',5)+TF(124,y+19,D2_COLS[c][0],14,C.ink,'start')+TBF(250,y+19,String(sets.nums[c]),15,C.ink)+TBF(350,y+19,a===null?'–':String(sets.nums[a]),15,good?C.green:C.coral)+TF(390,y+19,good?'✓':'✗',14,good?C.green:C.coral,'start')+(c===sets.twice?TF(420,y+19,'shown twice',13,C.amber,'start'):'')});
    out+=T(300,328,`Shown twice: ${ok1?'recalled':'missed'} · shown once: ${okS} of 5 recalled`,15,C.ink)}
-  return {svg:out,phase:(s.sim?'Simulated participant. ':'')+(s.stage==='done'?'One pair cannot prove a rule, but across many people and lists Calkins found repeated pairs were recalled much more often. Paired associates became a standard method of memory research.':'Calkins worked at Harvard but was refused the PhD she had earned because she was a woman; she later became the first woman president of the American Psychological Association.')};
+  return {svg:out,phase:(s.sim?'Simulated participant. ':'')+(s.stage==='done'?'One pair cannot prove a rule, but across many people and lists Calkins found repeated pairs were recalled much more often. Paired associates became a standard method of memory research.':'Calkins studied at Harvard but was refused the PhD she had earned because she was a woman; she later became the first woman president of the American Psychological Association.')};
  }});
 
 /* =========================== classical-conditioning =========================== */
@@ -1604,7 +1604,7 @@ SCENE({id:'cognitive-maps',name:'Latent learning',tag:'Learning without reward',
   Object.keys(D2_TH).forEach(k=>{const on=k===s.g,v=D2_TH[k].slice(0,s.day);out+=D2_poly(v.map((e,i)=>[pl.X(i+1),pl.Y(e)]),cols[k],on?3:1.6);if(on)v.forEach((e,i)=>out+=Ci(pl.X(i+1),pl.Y(e),3.5,cols[k]))});
   out+=R(466,70,112,150,'#f6f9fb','none',8);Object.keys(D2_THN).forEach((k,i)=>out+=R(476,86+i*44,14,4,cols[k],'none',1)+TF(496,92+i*44,D2_THN[k].split(' ')[0],13,C.ink,'start')+TF(496,109+i*44,D2_THN[k].split(' ').slice(1).join(' '),13,C.muted,'start'));
   out+=T(300,362,`Day ${s.day}: ${D2_THN[s.g]} averages ${D2_TH[s.g][s.day-1]} errors`,15,C.ink);
-  return {svg:out,phase:s.day>=12&&s.g==='HNRR'?'One day after food appeared, the late-rewarded rats were as good as rats rewarded all along. They must have learned the maze while exploring; the reward changed performance, not learning.':'Without food the rats’ errors fall only a little. Watch what happens after food is added on day 11.'};
+  return {svg:out,phase:s.day>=12&&s.g==='HNRR'?'Within two days of food appearing, the late-rewarded rats were as good as rats rewarded all along. They must have learned the maze while exploring; the reward changed performance, not learning.':'Without food the rats’ errors fall only a little. Watch what happens after food is added on day 11.'};
  }});
 
 const D2_SUN=range(18).map(i=>{const a=(180-(i+.5)*10)*Math.PI/180;return {i,a}});
@@ -1957,7 +1957,7 @@ SCENE({id:'channel-capacity-hick',name:'Choice time and information',tag:'Hick a
   [1,2,4,8].forEach(m=>out+=Ci(pl.X(Math.log2(m)),pl.Y(a+b*Math.log2(m)),4,'#fff',C.green));
   out+=Ci(pl.X(H),pl.Y(rt),8,C.coral,'#fff')+TF(pl.X(H)+(H>2.2?-12:12),pl.Y(rt)+(H>2.2?-10:24),D3_ms(rt),13,C.coral,H>2.2?'end':'start');
   out+=TF(300,356,'RT ≈ a + b·H, with a = 0.2 s and b = 0.15 s per bit (illustrative)',13,C.muted);
-  return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up exactly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
+  return {svg:out,phase:s.k>0?`The ${s.n} lights are not equally likely, so a signal carries only ${H.toFixed(2)} bits on average. Hyman’s participants sped up roughly as the reduced information predicts.`:`With ${s.n} equally likely lights each signal carries log₂ ${s.n} = ${Math.log2(s.n)} bits. Hick added 1 to the count (log₂(n + 1)) to include the chance that no light comes on.`};
  }});
 
 /* ======================= Lesson: chunking ======================= */
@@ -2091,7 +2091,7 @@ const D3_EV=[
  {id:'lang',l:'Language',what:'English → German',v:'Usually missed',col:C.coral,lines:['Listeners could not say what language the ignored','speech was in, or whether it changed.']},
  {id:'rev',l:'Backwards',what:'speech is played backwards',v:'Usually missed',col:C.coral,lines:['Reversed speech keeps the voice but loses the words;','most listeners noticed nothing odd.']},
  {id:'rep',l:'Repeated words',what:'words repeated 35 times',v:'Not remembered',col:C.coral,lines:['Moray (1959): words heard 35 times in the ignored','ear were recognised no better than new words.']},
- {id:'name',l:'Own name',what:'the listener’s own name',v:'About a third notice',col:C.amber,lines:['Moray (1959); Wood & Cowan (1995) replicated about 1 in 3,','more often in people with lower working-memory span.']}];
+ {id:'name',l:'Own name',what:'the listener’s own name',v:'About a third notice',col:C.amber,lines:['Moray (1959); Wood & Cowan (1995) replicated about 1 in 3.','Lower-span listeners notice more often (Conway et al. 2001).']}];
 SCENE({id:'selective-attention-cocktail',name:'The cocktail party',tag:'Shadowing one ear',
  definition:'In dichotic listening a different message goes to each ear and the listener repeats one of them aloud (shadowing). Colin Cherry (1953) found that almost nothing of the meaning of the other message was reported, though its physical qualities were.',
  example:'Ask someone who shadowed the left ear what was said on the right: they can tell you it was a voice, perhaps a woman’s, but not what it said or even which language.',
@@ -2188,7 +2188,7 @@ SCENE({id:'signal-detection',name:'Yes or no?',tag:'Be the participant',
   if(ok)out+=Ci(Xp(st.F),Yp(st.H),8,s.sim?C.blue:C.coral,'#fff');
   out+=R(260,292,326,74,'#fff',C.grid,8);
   out+=ok?TF(423,320,`hits ${st.h}/${st.nS} · false alarms ${st.fa}/${st.nN}`,13,C.ink)+TBF(423,348,`d′ = ${st.d.toFixed(2)} · c = ${st.c.toFixed(2)}`,15,s.sim?C.blue:C.coral):TF(423,336,'Scores appear after a few trials of each kind',13,C.muted);
-  return {svg:out,phase:ok?`${s.sim?'The simulated observer':'You'} said yes to ${Math.round(st.H*100)}% of patch trials and ${Math.round(st.F*100)}% of empty ones. d′ ${st.d.toFixed(1)} measures sensitivity; c ${st.c>.15?'above 0: cautious':st.c<-.15?'below 0: liberal':'near 0: neutral'} about saying yes.`:'Every answer is a hit, a miss, a false alarm or a correct rejection. Hits alone cannot tell good eyes from a habit of saying yes.'};
+  return {svg:out,phase:ok?`${s.sim?'The simulated observer':'You'} said yes to ${Math.round(100*st.h/st.nS)}% of patch trials and ${Math.round(100*st.fa/st.nN)}% of empty ones. d′ ${st.d.toFixed(1)} measures sensitivity; c ${st.c>.15?'above 0: cautious':st.c<-.15?'below 0: liberal':'near 0: neutral'} about saying yes.`:'Every answer is a hit, a miss, a false alarm or a correct rejection. Hits alone cannot tell good eyes from a habit of saying yes.'};
  }});
 function D3_sdShow(s,ctx){s.phase='show';s.tok++;ctx.later(500,'mask',s.tok)}
 
@@ -2383,7 +2383,7 @@ SCENE({id:'visual-search',name:'Finding the odd one out',tag:'Be the participant
   return {svg:out,phase:'A flat line means the target was found in parallel, without checking items one by one. A rising line means each extra item adds time, and absent trials rise faster because every item must be checked before saying no.'};
  }});
 
-const D3_FIT_ITEMS=[[80,96,'tri','or'],[160,82,'cir','or'],[236,108,'tri','bl'],[96,168,'cir','bl'],[184,158,'tri','or'],[262,178,'cir','or']];
+const D3_FIT_ITEMS=[[80,96,'tri','bl'],[160,82,'cir','or'],[236,108,'tri','bl'],[96,168,'cir','or'],[184,158,'tri','or'],[262,178,'cir','or']];
 const D3_FIT_FEAT=[[80,96,'tri','bl'],[160,82,'cir','bl'],[236,108,'tri','bl'],[96,168,'cir','bl'],[184,158,'tri','or'],[262,178,'cir','bl']];
 const D3_fitShape=(x,y,sh,col,r=16)=>sh==='tri'?`<polygon points="${fmt(x)},${fmt(y-r)} ${fmt(x+r)},${fmt(y+r*.8)} ${fmt(x-r)},${fmt(y+r*.8)}" fill="${col}"/>`:Ci(x,y,r*.9,col);
 const D3_COLS={or:'#c45238',bl:C.blue};
@@ -2885,7 +2885,7 @@ SCENE({id:'encoding-context',name:'Context and recall',tag:'Learn here, remember
    out+=R(x0,pl.Y(val),w,pl.Y(0)-pl.Y(val),t==='L'?C.amber:C.blue,'none',3);if(sel)out+=R(x0-3,pl.Y(val)-3,w+6,pl.Y(0)-pl.Y(val)+6,'none',C.ink,4);out+=TBF(x0+w/2,pl.Y(val)-6,String(val),13,C.ink)});
    out+=TF(pl.X(g+1),274,lab,13,C.ink)});
   out+=Ci(372,298,6,C.amber)+TF(382,303,'tested on land',13,C.muted,'start')+Ci(482,298,6,C.blue)+TF(492,303,'underwater',13,C.muted,'start');
-  out+=T(300,334,'Godden and Baddeley (1975): matching places helped by about 40%.',14,C.ink);
+  out+=T(300,334,'Godden and Baddeley (1975): matching places raised recall by about 45%.',14,C.ink);
   out+=TF(300,358,'But Murre’s 2021 replication found no reliable difference.',13,C.coral);
   return {svg:out,phase:same?'Learning and testing in the same place gave the best recall in the original study: the setting was stored with the words and helped bring them back.':'Moving between beach and water cost the divers several words in 1975. A careful 2021 replication did not find the effect, so context effects may be weaker and less general than textbooks suggest.'};
  }});
@@ -3191,7 +3191,7 @@ SCENE({id:'testing-effect-practice',name:'Retrieval practice',tag:'You are the p
  definition:'Retrieval practice means studying by trying to recall answers rather than by looking at them again. Even a short quiz with feedback makes the tested items much more durable than the same time spent restudying.',
  example:'Learn eight Swahili words. Restudy four of them and quiz yourself on the other four, then take a final test on all eight.',
  desc:'Eight Swahili–English pairs: you study them all, restudy four and are quizzed on four, then answer a final multiple-choice test; bars compare your final scores for restudied and quizzed words with the published one-week result.',
- research:'Karpicke & Roediger (2008). The critical importance of retrieval for learning. Science 319, 966–968: a week later, about 80% of words that kept being tested were recalled, against about 35% of words that were only restudied. Your test here comes after a minute, when the gap is usually small.',
+ research:'Karpicke & Roediger (2008). The critical importance of retrieval for learning. Science 319, 966–968: a week later, about 80% of words that kept being tested were recalled, against about 35% of words that were dropped from testing once recalled, even when they were still restudied. Your test here comes after a minute, when the gap is usually small.',
  dur:13,hint:'Press Start, study the eight pairs, then press Next through practice (answer the quizzed ones) and take the final test. Your answers stay on this page.',
  init:()=>({seed:1,ph:'ready',i:0,fb:null,res:[]}),
  watch(p){const tested=D4_swTested({seed:1});if(p<.3)return {seed:1,ph:'study',i:0,fb:null,res:[],sim:true};if(p<.6)return {seed:1,ph:'practice',i:Math.min(7,Math.floor((p-.3)/.3*8)),fb:null,res:[],sim:true};
@@ -3217,7 +3217,7 @@ SCENE({id:'testing-effect-practice',name:'Retrieval practice',tag:'You are the p
    out+=TF(170,56,s.sim?'Simulated participant (final test)':'You: final test, a minute later',13,C.muted)+TF(450,56,'Published: one week later (approx.)',13,C.muted);
    out+=L(60,260,280,260,C.line,1.5)+L(340,260,560,260,C.line,1.5);
    out+=D4_vbar(84,260,70,(a||0)*170,C.purple,D4_pct(a),'restudied')+D4_vbar(184,260,70,(b||0)*170,C.green,D4_pct(b),'quizzed');
-   out+=D4_vbar(364,260,70,.35*170,C.purple,'≈35%','restudied')+D4_vbar(464,260,70,.8*170,C.green,'≈80%','tested')}
+   out+=D4_vbar(364,260,70,.35*170,C.purple,'≈35%','not retested')+D4_vbar(464,260,70,.8*170,C.green,'≈80%','retested')}
   out+=T(300,322,s.ph==='done'?'After a minute both may look alike; the gap opens over days.':'Quizzing yourself feels harder than rereading. That effort is the point.',14,C.ink);
   out+=TF(300,348,'Karpicke & Roediger (2008) used forty Swahili–English pairs.',13,C.muted);
   return {svg:out,phase:s.ph==='done'?'Retrieval strengthens the route back to a memory. Rereading strengthens the feeling that you know it, which is not the same thing.':s.ph==='practice'?'Some words you only see again; others you must pull from memory first.':'Study the pairs.'};
@@ -3459,7 +3459,7 @@ SCENE({id:'hebbian-synapse',name:'Hebb’s rule',tag:'Fire together, wire togeth
 function D5_ltpRun(ev){let L=0,ptp=0,tm=0;const pts=[],tets=[];ev.forEach((e,i)=>{if(e==='tet'){L=L<1?80:L+30*(1-L/160);ptp=60;tets.push(tm);return}const r=D5_rng(i*7+3);pts.push([tm,100+L+ptp+4*D5_gauss(r)]);tm+=2;L*=.996;ptp*=.7});return {pts,tets,tm}}
 SCENE({id:'hebbian-synapse-ltp',name:'Long-term potentiation',tag:'A synapse that remembers',
  definition:'Long-term potentiation (LTP) is a lasting increase in the strength of a synapse after a brief burst of high-frequency activity: the first physical evidence for Hebb’s idea.',
- example:'In the rabbit hippocampus a one-second 100 Hz burst left the response to a single test pulse larger for hours. The hippocampus matters for memory: patient H.M. lost it and could no longer form new memories.',
+ example:'In the rabbit hippocampus brief trains of rapid stimulation (up to 100 Hz for a few seconds) left the response to a single test pulse larger for hours. The hippocampus matters for memory: patient H.M. lost it and could no longer form new memories.',
  desc:'Response size to single test pulses over time, as a percentage of baseline, with each high-frequency burst marked; after a burst the responses jump and stay high.',
  research:'Bliss & Lømo (1973). Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit following stimulation of the perforant path. Journal of Physiology 232, 331–356. Scoville & Milner (1957) on H.M.',
  dur:12,hint:'Give ten test pulses for a baseline, then a burst, then more test pulses. Simulated responses with small random noise.',
@@ -3518,7 +3518,7 @@ const D5_rfRate=cv=>clamp(8+160*(cv.c-D5_K*cv.s),0,200);
 const D5_spotCurve=r=>D5_rfRate({c:1-Math.exp(-r*r/(2*D5_SC*D5_SC)),s:1-Math.exp(-r*r/(2*D5_SS*D5_SS))});
 SCENE({id:'receptive-fields',name:'Receptive field',tag:'On in the centre, off around it',
  definition:'A neuron’s receptive field is the patch of the world that changes its firing. Many retinal cells have a centre–surround field: light in the centre excites them and light in the ring around it suppresses them.',
- example:'A small spot on the centre makes an on-centre cell fire fast; flooding the whole field with light barely changes its rate. The cell reports contrast, not brightness.',
+ example:'A small spot on the centre makes an on-centre cell fire fast; flooding the whole field with light gives only a weak response. The cell reports contrast, not brightness.',
  desc:'A receptive field drawn as an excitatory centre and an inhibitory surround, with a spot, ring or whole-field light on it, beside the firing rate and the response against spot size.',
  research:'Kuffler (1953). Discharge patterns and functional organization of mammalian retina. Journal of Neurophysiology 16, 37–68. Model: difference of Gaussians (Rodieck 1965).',
  dur:12,hint:'Change the light’s size and position, and try a ring and the whole field. Press Hear one second to hear the cell.',
@@ -3540,7 +3540,7 @@ SCENE({id:'receptive-fields',name:'Receptive field',tag:'On in the centre, off a
   const pl=D5_plot(350,206,220,104,[0,90],[0,140],{xt:[[0,'0'],[45,'45'],[90,'90']],yt:[[0,'0'],[100,'100']],xl:'centred spot size',xlDy:31,yl:'rate for a centred spot'});out+=pl.svg;
   const pts=[];for(let r=0;r<=90;r+=2)pts.push([pl.X(r),pl.Y(D5_spotCurve(r))]);out+=D5_poly(pts,C.blue,2.2);
   if(s.stim==='spot'&&s.x===0)out+=Ci(pl.X(s.r),pl.Y(D5_spotCurve(s.r)),6,C.coral,'#fff');
-  return {svg:out,phase:s.stim==='full'?`Light everywhere excites the centre and suppresses the surround almost equally, so the cell fires only ${Math.round(rate)} spikes a second. Uniform light carries little news.`:s.stim==='ring'?`Light on the surround alone suppresses the cell (${Math.round(rate)} spikes/s). Darkness in the centre with light around it is what an off-centre cell would like.`:Math.abs(s.x)>60?'The spot is outside the field, so the cell carries on at its slow background rate.':`A spot of size ${s.r} gives ${Math.round(rate)} spikes/s. The best response comes from a spot that just fills the centre (about 28 units); bigger spots spill onto the surround and the rate falls.`};
+  return {svg:out,phase:s.stim==='full'?`Light everywhere excites the cell through its centre and suppresses it through its surround almost equally, so the cell fires only ${Math.round(rate)} spikes a second. Uniform light carries little news.`:s.stim==='ring'?`Light on the surround alone suppresses the cell (${Math.round(rate)} spikes/s). Darkness in the centre with light around it is what an off-centre cell would like.`:Math.abs(s.x)-s.r>D5_SS*2?'The spot is outside the field, so the cell carries on at its slow background rate.':rate<7.5?'The spot falls mainly on the surround, so the cell is suppressed below its background rate.':`A spot of size ${s.r} gives ${Math.round(rate)} spikes/s. The best response comes from a spot that just fills the centre (about 28 units); bigger spots spill onto the surround and the rate falls.`};
  },
  three(s,f,X,project){
   const N=24,span=100,u=v=>v/25,Pj=project([[-4,-4,-1],[4,4,-1],[-4,4,2.8],[4,-4,2.8]]);
@@ -3772,13 +3772,13 @@ SCENE({id:'brain-imaging',name:'The slow BOLD signal',tag:'Blood follows activit
  on:{tog(s,t){t=Number(t);const i=s.ev.indexOf(t);if(i>=0)s.ev.splice(i,1);else s.ev.push(t);return 'keep'},one(s){s.ev=[4];return 'keep'},close(s){s.ev=[4,6,8,10];return 'keep'},far(s){s.ev=[4,20];return 'keep'},clear(s){s.ev=[];return 'keep'}},
  draw(s,f,X){
   let out=heading('Neural activity is fast; the blood response is slow');
-  const pl=D5_plot(70,130,490,170,[0,40],[-.4,2.4],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 s']],yt:[[0,'0'],[1,'1'],[2,'2']],yl:'predicted BOLD signal'});
+  const pl=D5_plot(70,130,490,170,[0,40],[-.4,3.2],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 s']],yt:[[0,'0'],[1,'1'],[2,'2'],[3,'3']],yl:'predicted BOLD signal'});
   out+=TF(70,62,'Brief neural events (press a slot):',13,C.muted,'start');
   for(let t=0;t<=38;t+=2){const x=pl.X(t),on=s.ev.includes(t);out+=hit(X,'tog',t,`Event at ${t} s: ${on?'on':'off'}`,R(x-9,72,18,34,on?C.coral:'#fff',on?C.coral:C.grid,4))}
   out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(40),pl.Y(0),C.line,1);
   const ev=s.ev.slice().sort((a,b)=>a-b);
   ev.forEach(t0=>{const pts=[];for(let k=0;k<=200;k++){const t=k/5;pts.push([pl.X(t),pl.Y(D5_hrf(t-t0))])}out+=D5_poly(pts,'#a8c6da',1.4,'stroke-dasharray="4 3"')});
-  const tot=[];let mx=0,tm=0;for(let k=0;k<=200;k++){const t=k/5,v=sum(ev.map(t0=>D5_hrf(t-t0)));if(v>mx){mx=v;tm=t}tot.push([pl.X(t),pl.Y(clamp(v,-.4,2.4))])}
+  const tot=[];let mx=0,tm=0;for(let k=0;k<=200;k++){const t=k/5,v=sum(ev.map(t0=>D5_hrf(t-t0)));if(v>mx){mx=v;tm=t}tot.push([pl.X(t),pl.Y(clamp(v,-.4,3.2))])}
   if(ev.length)out+=D5_poly(tot,C.blue,2.8);
   if(ev.length===1)out+=L(pl.X(ev[0]),pl.Y(1.15),pl.X(tm),pl.Y(1.15),C.amber,2)+TBF((pl.X(ev[0])+pl.X(tm))/2,pl.Y(1.15)-8,`peak ${fmt(tm-ev[0])} s later`,13,C.amber);
   out+=T(300,360,!ev.length?'No events: a flat line.':ev.length===1?'One brief event: a slow rise, a peak near 5 s, a dip, then rest.':`Peak height ${fmt(mx.toFixed(2))}× a single response.`,15,C.ink);
@@ -3848,7 +3848,7 @@ SCENE({id:'brain-imaging-methods',name:'Choosing a method',tag:'Where and when, 
 /* =========================== plasticity =========================== */
 const D5_MAPS={
  normal:{n:'Normal hand',w:[1,1,1,1,1],lost:-1,say:'Each finger has its own territory in the somatosensory cortex, in order from thumb to little finger.'},
- amp:{n:'Finger 3 removed',w:[1,1.5,0,1.5,1],lost:2,say:'After a middle finger was amputated in owl monkeys, its silent territory was taken over by fingers 2 and 4 within weeks (Merzenich et al. 1984).'},
+ amp:{n:'Finger 3 removed',w:[1,1.5,0,1.5,1],lost:2,say:'After a middle finger was amputated in owl monkeys, its silent territory was taken over by fingers 2 and 4 within a few months (Merzenich et al. 1984).'},
  train:{n:'Finger 2 trained',w:[.85,1.8,.8,.8,.75],lost:-1,say:'Monkeys trained to touch a spinning disc with their fingertips developed larger maps for the trained skin (Jenkins et al. 1990). Violinists show a similar enlargement for the left-hand fingers (Elbert et al. 1995).'},
  fuse:{n:'Fingers 3 and 4 joined',w:[1,1,1.5,0,1],lost:-1,fuse:true,say:'When two fingers were sewn together, their separate maps merged into one, because they were always touched together (Allard et al. 1991). Maps follow the patterns of use.'}};
 const D5_DIG=['thumb','2','3','4','5'];
@@ -4007,10 +4007,10 @@ WORD(
  {key:'refractory-period',title:'Refractory period',aliases:['refractory period','refractory'],linkContext:'action-potential-ions',scene:'action-potential-ions',here:'The brief time after a spike during which a neuron cannot fire again, or needs a much stronger push to do so.',contrast:'Not tiredness: it lasts only a millisecond or two and comes from channel inactivation.',example:'It caps firing rates at a few hundred spikes a second.'},
  {key:'rate-coding',title:'Rate coding',aliases:['rate coding','rate code','firing rate','firing rates'],linkContext:'action-potential-rate',scene:'action-potential-rate',here:'Signalling the strength of a stimulus by how many spikes a neuron fires per second.',contrast:'One of several codes: the precise timing of spikes can also carry information.',example:'A heavier weight made a stretch receptor fire more often.'},
  {key:'hebbian-learning',title:'Hebbian learning',aliases:['Hebbian learning','Hebb’s rule','Hebbian'],linkContext:'hebbian-synapse',scene:'hebbian-synapse',here:'The principle that a connection strengthens when the cell sending a signal repeatedly helps to fire the cell receiving it.',contrast:'Hebb stated it as a hypothesis in 1949; the cellular evidence (LTP) came in 1973.',example:'Pairing a weak input with a strong one makes the weak one effective on its own.'},
- {key:'ltp',title:'Long-term potentiation (LTP)',aliases:['long-term potentiation','LTP'],linkContext:'hebbian-synapse-ltp',scene:'hebbian-synapse-ltp',here:'A lasting increase in synaptic strength after brief, intense activity, widely studied as a cellular basis of learning and memory.',contrast:'Its partner, long-term depression (LTD), weakens synapses; both are needed.',example:'A one-second 100 Hz burst enlarged responses for hours.'},
+ {key:'ltp',title:'Long-term potentiation (LTP)',aliases:['long-term potentiation','LTP'],linkContext:'hebbian-synapse-ltp',scene:'hebbian-synapse-ltp',here:'A lasting increase in synaptic strength after brief, intense activity, widely studied as a cellular basis of learning and memory.',contrast:'Its partner, long-term depression (LTD), weakens synapses; both are needed.',example:'A few seconds of rapid stimulation enlarged responses for hours.'},
  {key:'stdp',title:'Spike-timing-dependent plasticity',aliases:['spike-timing-dependent plasticity','STDP'],linkContext:'hebbian-synapse-stdp',scene:'hebbian-synapse-stdp',here:'A learning rule in which the order of input and output spikes, within tens of milliseconds, decides whether a synapse strengthens or weakens.',contrast:'A causal version of Hebb’s rule: firing together is not enough; the input must come first.',example:'Input 10 ms before output: stronger. 10 ms after: weaker.'},
  {key:'receptive-field',title:'Receptive field',aliases:['receptive field','receptive fields'],linkContext:'receptive-fields',scene:'receptive-fields',here:'The region of the sensory world, such as a patch of the retina, in which a stimulus changes a particular neuron’s firing.',contrast:'A property of one cell, not of the whole visual system.',example:'An on-centre cell fires for a small spot of light in its centre.'},
- {key:'centre-surround',title:'Centre–surround',aliases:['centre–surround','centre-surround','on-centre','off-centre'],linkContext:'receptive-fields',scene:'receptive-fields',here:'A receptive field with opposite effects in a central disc and the ring around it.',contrast:'It makes cells respond to contrast and edges rather than to overall brightness.',example:'Uniform light barely changes the cell’s rate.'},
+ {key:'centre-surround',title:'Centre–surround',aliases:['centre–surround','centre-surround','on-centre','off-centre'],linkContext:'receptive-fields',scene:'receptive-fields',here:'A receptive field with opposite effects in a central disc and the ring around it.',contrast:'It makes cells respond to contrast and edges rather than to overall brightness.',example:'Uniform light gives only a weak response.'},
  {key:'orientation-selectivity',title:'Orientation selectivity',aliases:['orientation selectivity','orientation tuning','orientation-selective','simple cell','simple cells','complex cell','complex cells'],linkContext:'receptive-fields-orientation',scene:'receptive-fields-orientation',here:'The preference of many visual cortex cells for edges or bars at one angle. Simple cells also care about exact position; complex cells respond to the angle anywhere in their field.',contrast:'Retinal cells have round fields and no preferred angle; orientation first appears in the cortex.',example:'A cell preferring 60° barely responds to a bar at 150°.'},
  {key:'grandmother-cell',title:'Grandmother cell',aliases:['grandmother cell','grandmother cells','concept cells','concept cell'],linkContext:'receptive-fields-hierarchy',scene:'receptive-fields-hierarchy',here:'A tongue-in-cheek name for a hypothetical neuron that responds to one person or object alone.',contrast:'Recordings find sparse “concept cells” that respond to a few related things, so each concept is shared among many cells.',example:'Cells that fired for several images of one actress, and sometimes a co-star.'},
  {key:'corpus-callosum',title:'Corpus callosum',aliases:['corpus callosum','callosum'],linkContext:'split-brain',scene:'split-brain',here:'The thick band of about 200 million nerve fibres that joins the two cerebral hemispheres.',contrast:'Cutting it (to treat severe epilepsy) separates the hemispheres’ cortex but leaves lower connections intact.',example:'With it cut, a word seen by the right hemisphere cannot be spoken.'},
@@ -4828,7 +4828,7 @@ function D7_childSays(age,w){
  if(age<=5)return {t:taller?'The tall one has more!':'The low one has less!',ok:false,why:'Centres on one dimension, the height of the water, and ignores the width.'};
  if(age===6)return {t:taller?'The tall one… or the same? The tall one.':'Maybe less… or the same?',ok:false,why:'Transitional: notices the width as well as the height, but cannot yet reconcile them.'};
  const k=age%3;
- return {t:['It’s the same: you only poured it.','The same: it’s taller but thinner.','The same: pour it back and you’ll see.'][k],ok:true,why:['Identity','Compensation','Reversibility'][k]+': one of the three reasons Piaget heard from children who conserve.'};
+ return {t:['It’s the same: you only poured it.',taller?'The same: it’s taller but thinner.':'The same: it’s lower but wider.','The same: pour it back and you’ll see.'][k],ok:true,why:['Identity','Compensation','Reversibility'][k]+': one of the three reasons Piaget heard from children who conserve.'};
 }
 SCENE({id:'conservation',name:'Conservation of liquid',tag:'Taller is not more',
  definition:'Conservation is understanding that an amount stays the same when only its appearance changes, as when water is poured into a glass of a different shape.',
@@ -4912,7 +4912,7 @@ SCENE({id:'conservation-attachment',name:'The Strange Situation',tag:'Separation
 const D7_DOLL=[['“Give me the doll you like to play with best”',67,32],['“Give me the doll that is a nice doll”',59,38],['“Give me the doll that looks bad”',17,59],['“Give me the doll that is a nice colour”',60,38]];
 SCENE({id:'conservation-dolls',name:'The doll studies',tag:'Children and race',
  definition:'Kenneth and Mamie Phipps Clark asked Black children aged 3 to 7 to choose between a white doll and a brown doll in answer to simple questions, to study how segregation shaped their sense of self.',
- example:'In 1947, about two-thirds of the 253 children chose the white doll as the one they would like to play with best, and most chose the brown doll as the one that “looks bad”.',
+ example:'In the Clarks’ study (published 1947), about two-thirds of the 253 children chose the white doll as the one they would like to play with best, and most chose the brown doll as the one that “looks bad”.',
  desc:'Paired bars for four of the Clarks’ questions, showing the share of children who chose the white or the brown doll.',
  research:['Clark & Clark (1947). Racial identification and preference in Negro children. In Newcomb & Hartley (eds), Readings in Social Psychology. Holt.','Cited in Brown v. Board of Education (1954), footnote 11. Hraba & Grant (1970) found most Black children in Lincoln, Nebraska, preferred the Black doll.'],
  dur:10,hint:'Choose a question to highlight it. Read the note on what the method can and cannot show.',
@@ -5086,7 +5086,7 @@ SCENE({id:'conformity-size',name:'Size of the majority',tag:'Three is enough; on
   const px=x0+6*70+10;out+=R(px,y0+h-5.5/40*h,bw,5.5/40*h,partner?C.green:C.line,'none',3)+TBF(px+bw/2,y0+h-5.5/40*h-6,'5.5%',13,partner?C.green:C.muted)+TF(px+bw/2,y0+h+18,'+ ally',13,C.muted);
   out+=TF(x0+210,y0+h+38,'size of the wrong majority',13,C.muted);
   out+=T(300,370,partner?'One ally restores confidence: conforming answers fall to about 5%':`About ${val}% of answers on critical trials went with the majority`,15,C.ink);
-  return {svg:out,phase:partner?'Unanimity matters more than numbers. Even a partner who gave a different wrong answer reduced yielding in later studies.':'Beyond three or four people, adding more confederates added little.'};
+  return {svg:out,phase:partner?'Unanimity matters more than numbers. Even a dissenter who gave a different wrong answer reduced yielding, in Asch’s own variations and in later studies.':'Beyond three or four people, adding more confederates added little.'};
  }});
 
 SCENE({id:'conformity-culture',name:'Time, culture and the textbook story',tag:'A child of its time?',
@@ -5154,7 +5154,7 @@ SCENE({id:'obedience',name:'Milgram’s shock board',tag:'Reconstructed, not re-
 
 const D7_VAR=[['Learner in another room (baseline)',65,'The 1963 set-up: the learner is heard only pounding on the wall.'],['Learner’s voice heard',62.5,'Protests and screams are heard through the wall.'],['Learner in the same room',40,'Seeing the learner’s suffering lowers obedience.'],['Teacher must hold his hand on plate',30,'Physical contact lowers it further.'],['Orders given by telephone',20.5,'An absent authority loses much of its pull.'],['Run-down office, Bridgeport',47.5,'Away from Yale’s prestige, obedience falls a little.'],['Two peers refuse to go on',10,'Seeing others defy the experimenter frees people to stop.'],['An ordinary man gives the orders',20,'Without a scientist’s authority, few continue.'],['Women as teachers',65,'The same rate as men, though women reported more stress.']];
 SCENE({id:'obedience-variations',name:'Milgram’s variations',tag:'Obedience depends on the situation',
- definition:'Milgram ran many versions of the procedure, changing one feature at a time, and found that the proportion going to 450 volts ranged from about 10% to 65%.',
+ definition:'Milgram ran many versions of the procedure, changing one feature at a time, and found that the proportion going to 450 volts ranged from 0% to over 90% (about 10% to 65% in the nine shown here).',
  example:'Moving the learner into the same room cut full obedience from 65% to 40%; when two other “teachers” refused, only 10% continued.',
  desc:'Horizontal bars for the percentage of participants who went to 450 volts in nine versions, with the average over all versions marked.',
  research:['Milgram (1974). Obedience to Authority: An Experimental View. Harper & Row.','Haslam, Loughnan & Perry (2014). Meta-Milgram: an empirical synthesis of the obedience experiments. PLoS ONE 9(4), e93927 (mean across conditions about 44%).'],
@@ -5190,12 +5190,12 @@ SCENE({id:'obedience-critiques',name:'What the archives showed',tag:'Second look
    D7_PRODS.forEach((p,i)=>{const y=50+i*44;out+=R(40+i*20,y,400,34,i===3?C.coralp:C.pale,'none',6)+TF(54+i*20,y+22,`${i+1}. ${p}`,14,C.ink,'start')});
    out+=TF(500,236,'only prod 4 is an order:',13,C.coral,'end')+TF(500,254,'no one obeyed it (2011)',13,C.coral,'end');
    out+=TBF(40,272,'Continued past 150 volts',14,C.ink,'start');
-   out+=TF(40,296,'Milgram 1963 (voice condition)',13,C.ink,'start')+D7_hbar(280,284,220,16,82.5,C.amber,'82.5%');
+   out+=TF(40,296,'Milgram 1974 (voice condition)',13,C.ink,'start')+D7_hbar(280,284,220,16,82.5,C.amber,'82.5%');
    out+=TF(40,322,'Burger 2009 (stopped at 150 V)',13,C.ink,'start')+D7_hbar(280,310,220,16,70,C.coral,'70%');
    out+=TF(40,358,'People went on when persuaded the research was worthwhile, not when simply ordered.',13,C.muted,'start');
   }else if(s.lens==='belief'){
    out+=heading('Did participants believe the shocks were real?',24);
-   const b=[['Fully believed',56,C.coral],['Believed, with some doubts',24,C.amber],['Had real doubts',11,C.blue],['Thought probably not',6,C.purple],['Sure there were none',3,C.muted]];
+   const b=[['Fully believed',56,C.coral],['Believed, with some doubts',24,C.amber],['Was not sure either way',6,C.blue],['Doubted: thought probably not',11,C.purple],['Sure there were none',3,C.muted]];
    let x=40;b.forEach(([l,v,c])=>{out+=R(x,60,v*5.2,34,c,'none',0)+(v>=6?TBF(x+v*2.6,82,v+'%',13,'#fff'):'');x+=v*5.2});
    b.forEach(([l,v,c],i)=>out+=R(40,118+i*24,14,14,c,'none',3)+TF(62,130+i*24,`${l} (${v}%)`,13,C.ink,'start'));
    out+=TF(40,262,'Milgram’s follow-up questionnaire (1974), rounded',13,C.muted,'start');
@@ -5242,7 +5242,7 @@ SCENE({id:'cognitive-dissonance-compliance',name:'One dollar or twenty',tag:'Ins
  definition:'In the induced-compliance paradigm, people are led to say something they do not believe. Dissonance theory predicts that the smaller the reward, the more they change their belief to match what they said.',
  example:'Students who were paid $1 to tell the next person a boring task was fun later rated it as more enjoyable than students paid $20.',
  desc:'A board of pegs being turned, beside bars for how enjoyable the task was rated in each condition on a scale from −5 to +5.',
- research:['Festinger & Carlsmith (1959). Cognitive consequences of forced compliance. Journal of Abnormal and Social Psychology 58, 203–210.','Bem (1967) offered self-perception as an alternative explanation. Vaidis et al. (2024), a large multilab replication of an induced-compliance paradigm, found no reliable attitude change.'],
+ research:['Festinger & Carlsmith (1959). Cognitive consequences of forced compliance. Journal of Abnormal and Social Psychology 58, 203–210.','Bem (1967) offered self-perception as an alternative explanation. Vaidis et al. (2024), a large multilab replication of an induced-compliance paradigm, found that arguing against one’s own view shifted attitudes, but no more under high choice than low choice, contrary to the dissonance prediction.'],
  dur:10,hint:'Choose a condition. The ratings are the published means from 1959; read the replication note.',
  init:()=>({c:'1'}),
  watch(p){return {c:['control','1','20'][Math.min(2,Math.floor(p*3))],turn:p}},
@@ -5256,7 +5256,7 @@ SCENE({id:'cognitive-dissonance-compliance',name:'One dollar or twenty',tag:'Ins
   const x0=240,zx=x0+170,sc=30;
   out+=L(zx,48,zx,232,C.ink,1.5)+TF(zx,250,'0',13,C.muted)+TF(zx-150,250,'−5',13,C.muted)+TF(zx+150,250,'+5',13,C.muted);
   D7_FC.forEach(([k,l,v],i)=>{const y=60+i*60,on=k===s.c,w=v*sc,col=on?(v>0?C.green:C.coral):C.line;out+=TF(x0,y,l,13,on?C.ink:C.muted,'start')+R(Math.min(zx,zx+w),y+8,Math.abs(w)||2,22,col,'none',3)+TBF(v>=0?zx+w+6:zx+w-6,y+24,(v>0?'+':v<0?'−':'')+fmt(Math.abs(v)),13,on?C.ink:C.muted,v>=0?'start':'end')});
-  out+=R(30,272,540,74,'#fff4ec','none',8)+D7_para(42,292,'Replication status: a 2024 multilab test of a modern version of this paradigm did not find the predicted attitude change. The classic result may be smaller, or narrower, than textbooks suggest.',88,13,C.ink,'start',18);
+  out+=R(30,272,540,74,'#fff4ec','none',8)+D7_para(42,292,'Replication status: a 2024 multilab test of a modern version of this paradigm did not find the predicted effect of free choice, though arguing against one’s own view did shift attitudes. The classic result may be smaller, or narrower, than textbooks suggest.',88,13,C.ink,'start',18);
   const v=D7_FC.find(c=>c[0]===s.c)[2];
   return {svg:out,phase:s.c==='1'?'$1 is not enough to justify the lie, so — the theory says — students resolved the dissonance by deciding the task was not so bad.':s.c==='20'?'$20 (a lot in 1959) justified the lie, so there was little dissonance and little change.':`The control group rated the task ${fmt(v)}: dull, as intended.`};
  }});
@@ -5487,7 +5487,7 @@ SOURCE('d8-weiskrantz',{title:'Weiskrantz, Warrington, Sanders & Marshall (1974)
 SOURCE('d8-overgaard',{title:'Overgaard (2011). Visual experience and blindsight: a methodological review. Experimental Brain Research 209, 473–479.'});
 
 LESSON({id:'perceptron',name:'The perceptron',short:'Perceptron',stage:'models',year:'1943–1986',level:'Core',
- why:'The first learning machine modelled on neurons showed that simple units can learn from mistakes, and its limits showed why brains and computers need hidden layers.',
+ why:'One of the first learning machines modelled on neurons showed that simple units can learn from mistakes, and its limits showed why brains and computers need hidden layers.',
  prior:['hebbian-synapse','action-potential'],references:['d8-mcculloch-pitts','d8-rosenblatt','d8-minsky-papert','d8-widrow-hoff','d8-rumelhart','d8-olazaran'],
  ids:['perceptron','perceptron-xor','perceptron-error']});
 LESSON({id:'prediction-error',name:'Prediction error',short:'Prediction err',stage:'models',year:'1969–1997',level:'Core',
@@ -5927,7 +5927,7 @@ SCENE({id:'predictive-processing-oddball',name:'The oddball',tag:'Mismatch and s
   out+=R(x0,base+56,14,14,'#fff',C.line,3)+TF(x0+20,base+68,'common tone 1000 Hz',13,C.muted,'start')+R(x0+200,base+56,14,14,C.coral,'none',3)+TF(x0+220,base+68,'odd tone 1200 Hz',13,C.muted,'start');
   const avg=t=>{const v=su.filter((_,i)=>seq[i]===t&&i<shown);return v.length?D8_mean(v):NaN};const a0=avg(0),a1=avg(1);
   out+=T(300,354,`average surprise: common ${isFinite(a0)?a0.toFixed(2):'—'} bits · odd ${isFinite(a1)?a1.toFixed(2):'—'} bits`,15,C.ink);
-  return {svg:out,phase:s.prob>=.5?'When both tones are equally common, neither is surprising: about 1 bit each, and the mismatch response largely vanishes.':'Each odd tone is surprising because the model has learned to expect the common one. In the brain the mismatch negativity tracks this kind of surprise.'};
+  return {svg:out,phase:s.prob>=.5?'When the odd tone is about as common as the other, it is far less surprising than when it is rare, and the mismatch response largely vanishes.':'Each odd tone is surprising because the model has learned to expect the common one. In the brain the mismatch negativity tracks this kind of surprise.'};
  }});
 
 // Active inference toy: reduce the error by changing the belief or by moving the arm.
@@ -6029,7 +6029,7 @@ SCENE({id:'embodied-cognition-offloading',name:'Thinking with your hands',tag:'E
 // Embodiment claims and what happened when they were tested again.
 const D8_CLAIMS=[
  {c:'Pen in the teeth makes cartoons funnier',o:'Strack, Martin & Stepper 1988',f:'17 labs found no pen effect (2016); posed smiles had small effects (2022)',st:'mixed'},
- {c:'Holding a warm cup makes people seem warmer',o:'Williams & Bargh 2008',f:'Larger replications found no effect (Lynott et al. 2014)',st:'failed'},
+ {c:'Holding a warm cup makes people seem warmer',o:'Williams & Bargh 2008',f:'No effect in larger replications (Lynott et al. 2014; Chabris et al. 2019)',st:'failed'},
  {c:'Power poses raise testosterone',o:'Carney, Cuddy & Yap 2010',f:'No hormone change in a larger study (Ranehill et al. 2015)',st:'failed'},
  {c:'Hills look steeper with a heavy backpack',o:'Bhalla & Proffitt 1999',f:'Shrank when people could not guess the aim (Durgin et al. 2009)',st:'contested'},
  {c:'Fielders run to keep the ball rising steadily',o:'Chapman 1968; McBeath et al. 1995',f:'Supported in field and VR tests; debate over which optical cue',st:'supported'},
@@ -6039,7 +6039,7 @@ SCENE({id:'embodied-cognition-replication',name:'Bodies, minds and replication',
  definition:'Embodied cognition includes strong, well-tested ideas about action and perception, and also some eye-catching claims that the body primes judgements. Several of the second kind failed when large, preregistered replications tested them.',
  example:'“Power posing raises testosterone” spread widely after 2010, but a larger study found no hormone change and its first author later said she no longer believed the effect.',
  desc:'Six cards, each with an embodiment claim and its original study; pressing a card reveals what later replications found, colour-coded supported, mixed, contested or failed.',
- research:'Wagenmakers et al. (2016). Registered replication report: Strack, Martin & Stepper (1988). Perspectives on Psychological Science 11; Coles et al. (2022). Many Smiles. Nature Human Behaviour 6; Lynott et al. (2014) Social Psychology 45; Ranehill et al. (2015) Psychological Science 26; Durgin et al. (2009) Psychonomic Bulletin & Review 16.',
+ research:'Wagenmakers et al. (2016). Registered replication report: Strack, Martin & Stepper (1988). Perspectives on Psychological Science 11; Coles et al. (2022). Many Smiles. Nature Human Behaviour 6; Lynott et al. (2014) Social Psychology 45; Chabris et al. (2019) Social Psychology 50; Ranehill et al. (2015) Psychological Science 26; Durgin et al. (2009) Psychonomic Bulletin & Review 16.',
  dur:12,hint:'Press each card to reveal what happened when the claim was tested again.',
  init:()=>({open:[]}),
  watch(p){return {open:range(Math.min(6,Math.floor(p*7)))}},

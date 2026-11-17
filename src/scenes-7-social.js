@@ -29,7 +29,7 @@ function D7_childSays(age,w){
  if(age<=5)return {t:taller?'The tall one has more!':'The low one has less!',ok:false,why:'Centres on one dimension, the height of the water, and ignores the width.'};
  if(age===6)return {t:taller?'The tall one… or the same? The tall one.':'Maybe less… or the same?',ok:false,why:'Transitional: notices the width as well as the height, but cannot yet reconcile them.'};
  const k=age%3;
- return {t:['It’s the same: you only poured it.','The same: it’s taller but thinner.','The same: pour it back and you’ll see.'][k],ok:true,why:['Identity','Compensation','Reversibility'][k]+': one of the three reasons Piaget heard from children who conserve.'};
+ return {t:['It’s the same: you only poured it.',taller?'The same: it’s taller but thinner.':'The same: it’s lower but wider.','The same: pour it back and you’ll see.'][k],ok:true,why:['Identity','Compensation','Reversibility'][k]+': one of the three reasons Piaget heard from children who conserve.'};
 }
 SCENE({id:'conservation',name:'Conservation of liquid',tag:'Taller is not more',
  definition:'Conservation is understanding that an amount stays the same when only its appearance changes, as when water is poured into a glass of a different shape.',
@@ -113,7 +113,7 @@ SCENE({id:'conservation-attachment',name:'The Strange Situation',tag:'Separation
 const D7_DOLL=[['“Give me the doll you like to play with best”',67,32],['“Give me the doll that is a nice doll”',59,38],['“Give me the doll that looks bad”',17,59],['“Give me the doll that is a nice colour”',60,38]];
 SCENE({id:'conservation-dolls',name:'The doll studies',tag:'Children and race',
  definition:'Kenneth and Mamie Phipps Clark asked Black children aged 3 to 7 to choose between a white doll and a brown doll in answer to simple questions, to study how segregation shaped their sense of self.',
- example:'In 1947, about two-thirds of the 253 children chose the white doll as the one they would like to play with best, and most chose the brown doll as the one that “looks bad”.',
+ example:'In the Clarks’ study (published 1947), about two-thirds of the 253 children chose the white doll as the one they would like to play with best, and most chose the brown doll as the one that “looks bad”.',
  desc:'Paired bars for four of the Clarks’ questions, showing the share of children who chose the white or the brown doll.',
  research:['Clark & Clark (1947). Racial identification and preference in Negro children. In Newcomb & Hartley (eds), Readings in Social Psychology. Holt.','Cited in Brown v. Board of Education (1954), footnote 11. Hraba & Grant (1970) found most Black children in Lincoln, Nebraska, preferred the Black doll.'],
  dur:10,hint:'Choose a question to highlight it. Read the note on what the method can and cannot show.',
@@ -287,7 +287,7 @@ SCENE({id:'conformity-size',name:'Size of the majority',tag:'Three is enough; on
   const px=x0+6*70+10;out+=R(px,y0+h-5.5/40*h,bw,5.5/40*h,partner?C.green:C.line,'none',3)+TBF(px+bw/2,y0+h-5.5/40*h-6,'5.5%',13,partner?C.green:C.muted)+TF(px+bw/2,y0+h+18,'+ ally',13,C.muted);
   out+=TF(x0+210,y0+h+38,'size of the wrong majority',13,C.muted);
   out+=T(300,370,partner?'One ally restores confidence: conforming answers fall to about 5%':`About ${val}% of answers on critical trials went with the majority`,15,C.ink);
-  return {svg:out,phase:partner?'Unanimity matters more than numbers. Even a partner who gave a different wrong answer reduced yielding in later studies.':'Beyond three or four people, adding more confederates added little.'};
+  return {svg:out,phase:partner?'Unanimity matters more than numbers. Even a dissenter who gave a different wrong answer reduced yielding, in Asch’s own variations and in later studies.':'Beyond three or four people, adding more confederates added little.'};
  }});
 
 SCENE({id:'conformity-culture',name:'Time, culture and the textbook story',tag:'A child of its time?',
@@ -355,7 +355,7 @@ SCENE({id:'obedience',name:'Milgram’s shock board',tag:'Reconstructed, not re-
 
 const D7_VAR=[['Learner in another room (baseline)',65,'The 1963 set-up: the learner is heard only pounding on the wall.'],['Learner’s voice heard',62.5,'Protests and screams are heard through the wall.'],['Learner in the same room',40,'Seeing the learner’s suffering lowers obedience.'],['Teacher must hold his hand on plate',30,'Physical contact lowers it further.'],['Orders given by telephone',20.5,'An absent authority loses much of its pull.'],['Run-down office, Bridgeport',47.5,'Away from Yale’s prestige, obedience falls a little.'],['Two peers refuse to go on',10,'Seeing others defy the experimenter frees people to stop.'],['An ordinary man gives the orders',20,'Without a scientist’s authority, few continue.'],['Women as teachers',65,'The same rate as men, though women reported more stress.']];
 SCENE({id:'obedience-variations',name:'Milgram’s variations',tag:'Obedience depends on the situation',
- definition:'Milgram ran many versions of the procedure, changing one feature at a time, and found that the proportion going to 450 volts ranged from about 10% to 65%.',
+ definition:'Milgram ran many versions of the procedure, changing one feature at a time, and found that the proportion going to 450 volts ranged from 0% to over 90% (about 10% to 65% in the nine shown here).',
  example:'Moving the learner into the same room cut full obedience from 65% to 40%; when two other “teachers” refused, only 10% continued.',
  desc:'Horizontal bars for the percentage of participants who went to 450 volts in nine versions, with the average over all versions marked.',
  research:['Milgram (1974). Obedience to Authority: An Experimental View. Harper & Row.','Haslam, Loughnan & Perry (2014). Meta-Milgram: an empirical synthesis of the obedience experiments. PLoS ONE 9(4), e93927 (mean across conditions about 44%).'],
@@ -391,12 +391,12 @@ SCENE({id:'obedience-critiques',name:'What the archives showed',tag:'Second look
    D7_PRODS.forEach((p,i)=>{const y=50+i*44;out+=R(40+i*20,y,400,34,i===3?C.coralp:C.pale,'none',6)+TF(54+i*20,y+22,`${i+1}. ${p}`,14,C.ink,'start')});
    out+=TF(500,236,'only prod 4 is an order:',13,C.coral,'end')+TF(500,254,'no one obeyed it (2011)',13,C.coral,'end');
    out+=TBF(40,272,'Continued past 150 volts',14,C.ink,'start');
-   out+=TF(40,296,'Milgram 1963 (voice condition)',13,C.ink,'start')+D7_hbar(280,284,220,16,82.5,C.amber,'82.5%');
+   out+=TF(40,296,'Milgram 1974 (voice condition)',13,C.ink,'start')+D7_hbar(280,284,220,16,82.5,C.amber,'82.5%');
    out+=TF(40,322,'Burger 2009 (stopped at 150 V)',13,C.ink,'start')+D7_hbar(280,310,220,16,70,C.coral,'70%');
    out+=TF(40,358,'People went on when persuaded the research was worthwhile, not when simply ordered.',13,C.muted,'start');
   }else if(s.lens==='belief'){
    out+=heading('Did participants believe the shocks were real?',24);
-   const b=[['Fully believed',56,C.coral],['Believed, with some doubts',24,C.amber],['Had real doubts',11,C.blue],['Thought probably not',6,C.purple],['Sure there were none',3,C.muted]];
+   const b=[['Fully believed',56,C.coral],['Believed, with some doubts',24,C.amber],['Was not sure either way',6,C.blue],['Doubted: thought probably not',11,C.purple],['Sure there were none',3,C.muted]];
    let x=40;b.forEach(([l,v,c])=>{out+=R(x,60,v*5.2,34,c,'none',0)+(v>=6?TBF(x+v*2.6,82,v+'%',13,'#fff'):'');x+=v*5.2});
    b.forEach(([l,v,c],i)=>out+=R(40,118+i*24,14,14,c,'none',3)+TF(62,130+i*24,`${l} (${v}%)`,13,C.ink,'start'));
    out+=TF(40,262,'Milgram’s follow-up questionnaire (1974), rounded',13,C.muted,'start');
@@ -443,7 +443,7 @@ SCENE({id:'cognitive-dissonance-compliance',name:'One dollar or twenty',tag:'Ins
  definition:'In the induced-compliance paradigm, people are led to say something they do not believe. Dissonance theory predicts that the smaller the reward, the more they change their belief to match what they said.',
  example:'Students who were paid $1 to tell the next person a boring task was fun later rated it as more enjoyable than students paid $20.',
  desc:'A board of pegs being turned, beside bars for how enjoyable the task was rated in each condition on a scale from −5 to +5.',
- research:['Festinger & Carlsmith (1959). Cognitive consequences of forced compliance. Journal of Abnormal and Social Psychology 58, 203–210.','Bem (1967) offered self-perception as an alternative explanation. Vaidis et al. (2024), a large multilab replication of an induced-compliance paradigm, found no reliable attitude change.'],
+ research:['Festinger & Carlsmith (1959). Cognitive consequences of forced compliance. Journal of Abnormal and Social Psychology 58, 203–210.','Bem (1967) offered self-perception as an alternative explanation. Vaidis et al. (2024), a large multilab replication of an induced-compliance paradigm, found that arguing against one’s own view shifted attitudes, but no more under high choice than low choice, contrary to the dissonance prediction.'],
  dur:10,hint:'Choose a condition. The ratings are the published means from 1959; read the replication note.',
  init:()=>({c:'1'}),
  watch(p){return {c:['control','1','20'][Math.min(2,Math.floor(p*3))],turn:p}},
@@ -457,7 +457,7 @@ SCENE({id:'cognitive-dissonance-compliance',name:'One dollar or twenty',tag:'Ins
   const x0=240,zx=x0+170,sc=30;
   out+=L(zx,48,zx,232,C.ink,1.5)+TF(zx,250,'0',13,C.muted)+TF(zx-150,250,'−5',13,C.muted)+TF(zx+150,250,'+5',13,C.muted);
   D7_FC.forEach(([k,l,v],i)=>{const y=60+i*60,on=k===s.c,w=v*sc,col=on?(v>0?C.green:C.coral):C.line;out+=TF(x0,y,l,13,on?C.ink:C.muted,'start')+R(Math.min(zx,zx+w),y+8,Math.abs(w)||2,22,col,'none',3)+TBF(v>=0?zx+w+6:zx+w-6,y+24,(v>0?'+':v<0?'−':'')+fmt(Math.abs(v)),13,on?C.ink:C.muted,v>=0?'start':'end')});
-  out+=R(30,272,540,74,'#fff4ec','none',8)+D7_para(42,292,'Replication status: a 2024 multilab test of a modern version of this paradigm did not find the predicted attitude change. The classic result may be smaller, or narrower, than textbooks suggest.',88,13,C.ink,'start',18);
+  out+=R(30,272,540,74,'#fff4ec','none',8)+D7_para(42,292,'Replication status: a 2024 multilab test of a modern version of this paradigm did not find the predicted effect of free choice, though arguing against one’s own view did shift attitudes. The classic result may be smaller, or narrower, than textbooks suggest.',88,13,C.ink,'start',18);
   const v=D7_FC.find(c=>c[0]===s.c)[2];
   return {svg:out,phase:s.c==='1'?'$1 is not enough to justify the lie, so — the theory says — students resolved the dissonance by deciding the task was not so bad.':s.c==='20'?'$20 (a lot in 1959) justified the lie, so there was little dissonance and little change.':`The control group rated the task ${fmt(v)}: dull, as intended.`};
  }});

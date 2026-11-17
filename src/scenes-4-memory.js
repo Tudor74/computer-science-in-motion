@@ -270,7 +270,7 @@ SCENE({id:'encoding-context',name:'Context and recall',tag:'Learn here, remember
    out+=R(x0,pl.Y(val),w,pl.Y(0)-pl.Y(val),t==='L'?C.amber:C.blue,'none',3);if(sel)out+=R(x0-3,pl.Y(val)-3,w+6,pl.Y(0)-pl.Y(val)+6,'none',C.ink,4);out+=TBF(x0+w/2,pl.Y(val)-6,String(val),13,C.ink)});
    out+=TF(pl.X(g+1),274,lab,13,C.ink)});
   out+=Ci(372,298,6,C.amber)+TF(382,303,'tested on land',13,C.muted,'start')+Ci(482,298,6,C.blue)+TF(492,303,'underwater',13,C.muted,'start');
-  out+=T(300,334,'Godden and Baddeley (1975): matching places helped by about 40%.',14,C.ink);
+  out+=T(300,334,'Godden and Baddeley (1975): matching places raised recall by about 45%.',14,C.ink);
   out+=TF(300,358,'But Murre’s 2021 replication found no reliable difference.',13,C.coral);
   return {svg:out,phase:same?'Learning and testing in the same place gave the best recall in the original study: the setting was stored with the words and helped bring them back.':'Moving between beach and water cost the divers several words in 1975. A careful 2021 replication did not find the effect, so context effects may be weaker and less general than textbooks suggest.'};
  }});
@@ -576,7 +576,7 @@ SCENE({id:'testing-effect-practice',name:'Retrieval practice',tag:'You are the p
  definition:'Retrieval practice means studying by trying to recall answers rather than by looking at them again. Even a short quiz with feedback makes the tested items much more durable than the same time spent restudying.',
  example:'Learn eight Swahili words. Restudy four of them and quiz yourself on the other four, then take a final test on all eight.',
  desc:'Eight Swahili–English pairs: you study them all, restudy four and are quizzed on four, then answer a final multiple-choice test; bars compare your final scores for restudied and quizzed words with the published one-week result.',
- research:'Karpicke & Roediger (2008). The critical importance of retrieval for learning. Science 319, 966–968: a week later, about 80% of words that kept being tested were recalled, against about 35% of words that were only restudied. Your test here comes after a minute, when the gap is usually small.',
+ research:'Karpicke & Roediger (2008). The critical importance of retrieval for learning. Science 319, 966–968: a week later, about 80% of words that kept being tested were recalled, against about 35% of words that were dropped from testing once recalled, even when they were still restudied. Your test here comes after a minute, when the gap is usually small.',
  dur:13,hint:'Press Start, study the eight pairs, then press Next through practice (answer the quizzed ones) and take the final test. Your answers stay on this page.',
  init:()=>({seed:1,ph:'ready',i:0,fb:null,res:[]}),
  watch(p){const tested=D4_swTested({seed:1});if(p<.3)return {seed:1,ph:'study',i:0,fb:null,res:[],sim:true};if(p<.6)return {seed:1,ph:'practice',i:Math.min(7,Math.floor((p-.3)/.3*8)),fb:null,res:[],sim:true};
@@ -602,7 +602,7 @@ SCENE({id:'testing-effect-practice',name:'Retrieval practice',tag:'You are the p
    out+=TF(170,56,s.sim?'Simulated participant (final test)':'You: final test, a minute later',13,C.muted)+TF(450,56,'Published: one week later (approx.)',13,C.muted);
    out+=L(60,260,280,260,C.line,1.5)+L(340,260,560,260,C.line,1.5);
    out+=D4_vbar(84,260,70,(a||0)*170,C.purple,D4_pct(a),'restudied')+D4_vbar(184,260,70,(b||0)*170,C.green,D4_pct(b),'quizzed');
-   out+=D4_vbar(364,260,70,.35*170,C.purple,'≈35%','restudied')+D4_vbar(464,260,70,.8*170,C.green,'≈80%','tested')}
+   out+=D4_vbar(364,260,70,.35*170,C.purple,'≈35%','not retested')+D4_vbar(464,260,70,.8*170,C.green,'≈80%','retested')}
   out+=T(300,322,s.ph==='done'?'After a minute both may look alike; the gap opens over days.':'Quizzing yourself feels harder than rereading. That effort is the point.',14,C.ink);
   out+=TF(300,348,'Karpicke & Roediger (2008) used forty Swahili–English pairs.',13,C.muted);
   return {svg:out,phase:s.ph==='done'?'Retrieval strengthens the route back to a memory. Rereading strengthens the feeling that you know it, which is not the same thing.':s.ph==='practice'?'Some words you only see again; others you must pull from memory first.':'Study the pairs.'};

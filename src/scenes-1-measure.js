@@ -144,7 +144,7 @@ SCENE({id:'fechner-scaling',name:'Fechner’s law',tag:'Count the just-noticeabl
   return {svg:out,phase:`Each step is one JND high but ${Math.round(s.k*100)}% wider than the last. Stack them and the staircase follows a logarithm: Fechner’s law.`};
  }});
 
-const D1_STEV=[['Brightness',.33],['Loudness',.67],['Line length',1],['Heaviness',1.45],['Electric shock',3.5]];
+const D1_STEV=[['Brightness',.33],['Loudness (pressure)',.67],['Line length',1],['Heaviness',1.45],['Electric shock',3.5]];
 SCENE({id:'fechner-scaling-stevens',name:'Stevens’ power law',tag:'Ask people for numbers',
  definition:'S. S. Stevens asked people to give numbers to how strong things felt. The results followed power functions, ψ = k · Iⁿ, with an exponent n that differs by sense: below 1 the sensation grows slower than the stimulus, above 1 faster.',
  example:'Doubling a light’s intensity makes it look only about 1.26 times as bright (2^0.33), but doubling the current of an electric shock makes it feel about 11 times as strong (2^3.5).',
@@ -253,7 +253,7 @@ SCENE({id:'reaction-time-nerve',name:'The speed of a nerve',tag:'Helmholtz times
 function D1_exg(x,mu,sg,tau){return Math.exp((mu-x)/tau+sg*sg/(2*tau*tau))*D1_Phi((x-mu)/sg-sg/tau)/tau}
 SCENE({id:'reaction-time-distribution',name:'The shape of reaction times',tag:'Slow tails, not bell curves',
  definition:'Reaction times are skewed: most are close together, but a long tail of slow responses stretches to the right. An ex-Gaussian, a bell curve (μ, σ) plus an exponential tail (τ), describes them well.',
- example:'With μ = 350, σ = 40 and τ = 100 ms, the median is about 420 ms but the mean is 450 ms: a few slow trials pull the mean right. That is why reaction-time studies often report medians or fit the whole shape.',
+ example:'With μ = 350, σ = 40 and τ = 100 ms, the median is about 425 ms but the mean is 450 ms: a few slow trials pull the mean right. That is why reaction-time studies often report medians or fit the whole shape.',
  research:'Ratcliff, R. (1979). Group reaction time distributions and an analysis of distribution statistics. Psychological Bulletin 86(3), 446–461. Luce, R. D. (1986). Response Times. Whelan, R. (2008). Effective analysis of reaction time data. The Psychological Record 58, 475–482.',
  desc:'An ex-Gaussian curve of reaction times with markers for the mode, median and mean, which separate as the exponential tail grows.',
  dur:10,hint:'Grow the tail (τ) and watch the mean move away from the median and mode.',
@@ -263,7 +263,7 @@ SCENE({id:'reaction-time-distribution',name:'The shape of reaction times',tag:'S
  on:{mu(s,v){s.mu=Number(v)},sg(s,v){s.sg=Number(v)},tau(s,v){s.tau=Number(v)}},
  draw(s,f,X){
   const xs=range(241).map(i=>i*5),ys=xs.map(x=>D1_exg(x,s.mu,s.sg,s.tau)),ymax=Math.max(...ys)*1.15;
-  let cum=0,tot=sum(ys),med=0;for(let i=0;i<xs.length;i++){cum+=ys[i];if(cum>=tot/2){med=xs[i];break}}
+  let med=0;{const zs=range(Math.ceil(s.mu+5*s.sg+12*s.tau)+1).map(x=>D1_exg(x,s.mu,s.sg,s.tau)),tot=sum(zs);let cum=0;for(let i=0;i<zs.length;i++){cum+=zs[i];if(cum>=tot/2){med=i;break}}}
   const mode=xs[ys.indexOf(Math.max(...ys))],mean=s.mu+s.tau;
   let out=heading('Reaction times have a long right tail');
   const pl=D1_plot(50,70,500,220,0,1200,0,ymax,'reaction time (ms)','',[0,200,400,600,800,1000,1200],[]);out+=pl.svg;
@@ -279,7 +279,7 @@ SCENE({id:'mental-chronometry',name:'Donders’ subtraction method',tag:'Be the 
  definition:'F. C. Donders compared three tasks. The a-task needs only detection; the c-task adds identifying the signal; the b-task adds choosing between responses. Subtracting their times should give the duration of each added mental stage.',
  example:'If a = 220 ms, c = 290 ms and b = 350 ms, then identifying took about 70 ms (c − a) and choosing the response about 60 ms (b − c).',
  research:'Donders, F. C. (1868). Over de snelheid van psychische processen. Translated by W. G. Koster (1969): On the speed of mental processes. Acta Psychologica 30, 412–431. The three-task pattern a < c < b replicates; the clean subtraction is debated (see next scene).',
- desc:'A signal light with Left and Right keys, and a bar chart of your mean times for the a, c and b tasks with the two differences marked.',
+ desc:'A signal light with Left and Right keys, and a bar chart of your median times for the a, c and b tasks with the two differences marked.',
  dur:13,hint:'Choose a task, press Start and respond to the light as the task asks. Do about five trials of each, then read off the differences. Your times stay on this page.',
  init:()=>({task:'a',phase:'idle',stim:'red',t0:0,rts:{a:[],b:[],c:[]},err:0,seed:31,tid:0,msg:''}),
  watch(p){const n=Math.floor(p*15),ts=['a','c','b'],task=ts[Math.min(2,Math.floor(p*3))],k=Math.floor(p*45)%3;return {task,phase:k===1?'go':'idle',stim:Math.floor(p*45)%2?'red':'green',rts:{a:D1_simRT(7,Math.min(5,n),210,40,20),c:D1_simRT(8,Math.max(0,Math.min(5,n-5)),280,50,25),b:D1_simRT(9,Math.max(0,n-10),340,50,30)},err:0,msg:'Simulated participant',sim:true}},
@@ -299,7 +299,7 @@ SCENE({id:'mental-chronometry',name:'Donders’ subtraction method',tag:'Be the 
   out+=hit(X,'resp','left','Left key',R(60,200,100,56,'#f4f7f9',C.line,10)+TBF(110,234,'Left',15,C.ink))+hit(X,'resp','right','Right key',R(180,200,100,56,'#f4f7f9',C.line,10)+TBF(230,234,'Right',15,C.ink));
   if(s.msg)out+=TBF(170,292,s.msg,15,/Too|Wrong/.test(s.msg)?C.coral:s.sim?C.purple:C.ink);
   out+=TF(170,318,`errors: ${s.err}`,13,C.muted);
-  const pl=D1_plot(380,60,200,240,0,3,0,500,'','mean time (ms)',[],[0,100,200,300,400,500]);out+=pl.svg;
+  const pl=D1_plot(380,60,200,240,0,3,0,500,'','median time (ms)',[],[0,100,200,300,400,500]);out+=pl.svg;
   const ms={};['a','c','b'].forEach((t,i)=>{const d=s.rts[t];ms[t]=d.length?D1_median(d):null;const x=pl.px(i+.5);out+=TF(x,326,t+'-task',13,C.muted)+TF(x,344,`n = ${d.length}`,13,C.muted);if(ms[t]!==null){out+=R(x-22,pl.py(ms[t]),44,pl.py(0)-pl.py(ms[t]),t===s.task?C.blue:C.line,'none',4)+TF(x,pl.py(ms[t])-6,Math.round(ms[t]),13,C.ink)}});
   const diffs=(ms.a!==null&&ms.c!==null?`identify ≈ c − a = ${Math.round(ms.c-ms.a)} ms`:'')+(ms.b!==null&&ms.c!==null?` · choose ≈ b − c = ${Math.round(ms.b-ms.c)} ms`:'');
   if(diffs)out+=TF(300,370,diffs.replace(/^ · /,''),14,C.green);
@@ -367,7 +367,7 @@ SCENE({id:'mental-chronometry-sternberg',name:'Scanning short-term memory',tag:'
 // A schematic left hemisphere seen from the side, front to the left.
 const D1_BRAIN='M30 205 C20 150 55 100 115 82 C170 66 250 66 305 88 C360 110 390 160 382 205 C376 238 352 252 325 250 C312 268 280 276 255 266 C220 262 200 262 182 268 C150 280 110 276 90 262 C60 252 36 236 30 205Z';
 function D1_brain(){return P('M262 262 C268 290 274 310 280 336 L300 336 C296 310 292 288 290 262Z',C.line,2,'#efe4dc')+`<ellipse cx="322" cy="262" rx="42" ry="22" fill="#efe4dc" stroke="${C.line}" stroke-width="2"/>`+P(D1_BRAIN,'#b79c8e',2.5,'#f6ece6')+P('M95 205 C150 190 210 185 262 200',C.line,2)+P('M220 72 C212 120 195 160 182 196',C.line,2)}
-const D1_GALL=[[80,130,'Firmness'],[140,100,'Benevolence'],[60,190,'Language'],[250,110,'Self-esteem'],[300,180,'Combativeness'],[200,150,'Wit']];
+const D1_GALL=[[200,96,'Firmness'],[134,108,'Benevolence'],[60,190,'Language'],[262,118,'Self-esteem'],[300,180,'Combativeness'],[80,130,'Wit']];
 SCENE({id:'localisation',name:'Where in the brain?',tag:'From skull bumps to lesions',
  definition:'Is the mind spread through the whole brain or made of parts in particular places? Franz Gall’s phrenology mapped faculties to bumps on the skull without real tests. Pierre Flourens, removing parts of animals’ brains, argued the cortex worked as a whole. Paul Broca’s patients showed that one function, producing speech, depends on a particular region.',
  example:'Broca’s patient Louis Victor Leborgne could say little but “tan”, yet understood speech. After his death in 1861 Broca found damage in the left frontal lobe, now called Broca’s area.',
@@ -438,7 +438,7 @@ SCENE({id:'localisation-homunculus',name:'The motor map',tag:'The body laid out 
    if(sel){const am=(b0+b1)/2;out+=L(cx+r1*Math.cos(am),cy+r1*Math.sin(am),cx+(r1+22)*Math.cos(am),cy+(r1+22)*Math.sin(am),C.coral,2)+TBF(cx+(r1+28)*Math.cos(am),cy+(r1+28)*Math.sin(am)+5,n,14,C.coral,'start')}});
   out+=TF(cx+r1+4,cy+20,'side of the head',13,C.muted,'start');
   const [n,w]=D1_HOM[s.i];
-  out+=R(436,70,152,150,'#fff',C.grid,10)+TBF(448,96,n,15,C.ink,'start')+TF(448,122,'share of the strip',13,C.muted,'start')+TBF(448,150,`${Math.round(w/tot*100)}%`,22,C.coral,'start')+D1_para(448,178,w>=5?'A large share: fine control.':'A small share: coarse control.',18,13,C.ink,18);
+  out+=R(436,70,152,150,'#fff',C.grid,10)+TBF(448,96,n,15,C.ink,'start')+TF(448,122,'share of the strip',13,C.muted,'start')+TBF(448,150,`${Math.round(w/tot*100)}%`,22,C.coral,'start')+D1_para(448,178,[8,9,10,11,12,13,17,18,19,20,21].includes(s.i)?'A large share for its size: fine control.':'A small share for its size: coarse control.',18,13,C.ink,18);
   return {svg:out,phase:`${n}: about ${Math.round(w/tot*100)}% of the strip (illustrative). Area follows how finely a part is controlled, not how big it is.`};
  }});
 
@@ -474,7 +474,7 @@ SCENE({id:'neuron-doctrine-polarity',name:'Signals flow one way',tag:'Cajal’s 
  desc:'Three neurons in a row, each with dendrites on the left, a cell body and an axon to the right that ends against the next cell’s dendrites; a pulse travels through them step by step.',
  dur:12,hint:'Choose a circuit and step the signal through it. Notice where each neuron receives and where it sends.',
  init:()=>({circ:'reflex'}),
- trace(s){const pts=D1_polPts(),C0=D1_CIRC[s.circ],fr=[];pts.forEach((p,i)=>{const cell=C0.cells[Math.floor(i/3)],part=['dendrites','cell body','axon terminal'][i%3];fr.push({i,label:i===0?`${C0.start}: the ${cell}’s dendrites receive it`:`${cell}: ${part}`})});fr.push({i:pts.length-1,label:C0.end,done:true});return fr},
+ trace(s){const pts=D1_polPts(),C0=D1_CIRC[s.circ],fr=[];pts.forEach((p,i)=>{const cell=C0.cells[Math.floor(i/3)],part=['dendrites','cell body','axon terminal'][i%3];fr.push({i,label:i===0?`${C0.start}: the ${cell}’s receiving end picks it up`:`${cell}: ${part}`})});fr.push({i:pts.length-1,label:C0.end,done:true});return fr},
  ui:[{choose:[['reflex','Reflex arc'],['retina','Retina']],label:'Circuit',get:s=>s.circ,act:'circ'}],
  on:{circ(s,v){s.circ=v}},
  draw(s,f,X){

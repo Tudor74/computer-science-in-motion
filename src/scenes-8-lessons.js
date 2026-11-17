@@ -44,7 +44,7 @@ SOURCE('d8-weiskrantz',{title:'Weiskrantz, Warrington, Sanders & Marshall (1974)
 SOURCE('d8-overgaard',{title:'Overgaard (2011). Visual experience and blindsight: a methodological review. Experimental Brain Research 209, 473–479.'});
 
 LESSON({id:'perceptron',name:'The perceptron',short:'Perceptron',stage:'models',year:'1943–1986',level:'Core',
- why:'The first learning machine modelled on neurons showed that simple units can learn from mistakes, and its limits showed why brains and computers need hidden layers.',
+ why:'One of the first learning machines modelled on neurons showed that simple units can learn from mistakes, and its limits showed why brains and computers need hidden layers.',
  prior:['hebbian-synapse','action-potential'],references:['d8-mcculloch-pitts','d8-rosenblatt','d8-minsky-papert','d8-widrow-hoff','d8-rumelhart','d8-olazaran'],
  ids:['perceptron','perceptron-xor','perceptron-error']});
 LESSON({id:'prediction-error',name:'Prediction error',short:'Prediction err',stage:'models',year:'1969–1997',level:'Core',

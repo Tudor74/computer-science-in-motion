@@ -161,7 +161,7 @@ SCENE({id:'hebbian-synapse',name:'Hebb’s rule',tag:'Fire together, wire togeth
 function D5_ltpRun(ev){let L=0,ptp=0,tm=0;const pts=[],tets=[];ev.forEach((e,i)=>{if(e==='tet'){L=L<1?80:L+30*(1-L/160);ptp=60;tets.push(tm);return}const r=D5_rng(i*7+3);pts.push([tm,100+L+ptp+4*D5_gauss(r)]);tm+=2;L*=.996;ptp*=.7});return {pts,tets,tm}}
 SCENE({id:'hebbian-synapse-ltp',name:'Long-term potentiation',tag:'A synapse that remembers',
  definition:'Long-term potentiation (LTP) is a lasting increase in the strength of a synapse after a brief burst of high-frequency activity: the first physical evidence for Hebb’s idea.',
- example:'In the rabbit hippocampus a one-second 100 Hz burst left the response to a single test pulse larger for hours. The hippocampus matters for memory: patient H.M. lost it and could no longer form new memories.',
+ example:'In the rabbit hippocampus brief trains of rapid stimulation (up to 100 Hz for a few seconds) left the response to a single test pulse larger for hours. The hippocampus matters for memory: patient H.M. lost it and could no longer form new memories.',
  desc:'Response size to single test pulses over time, as a percentage of baseline, with each high-frequency burst marked; after a burst the responses jump and stay high.',
  research:'Bliss & Lømo (1973). Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit following stimulation of the perforant path. Journal of Physiology 232, 331–356. Scoville & Milner (1957) on H.M.',
  dur:12,hint:'Give ten test pulses for a baseline, then a burst, then more test pulses. Simulated responses with small random noise.',
@@ -220,7 +220,7 @@ const D5_rfRate=cv=>clamp(8+160*(cv.c-D5_K*cv.s),0,200);
 const D5_spotCurve=r=>D5_rfRate({c:1-Math.exp(-r*r/(2*D5_SC*D5_SC)),s:1-Math.exp(-r*r/(2*D5_SS*D5_SS))});
 SCENE({id:'receptive-fields',name:'Receptive field',tag:'On in the centre, off around it',
  definition:'A neuron’s receptive field is the patch of the world that changes its firing. Many retinal cells have a centre–surround field: light in the centre excites them and light in the ring around it suppresses them.',
- example:'A small spot on the centre makes an on-centre cell fire fast; flooding the whole field with light barely changes its rate. The cell reports contrast, not brightness.',
+ example:'A small spot on the centre makes an on-centre cell fire fast; flooding the whole field with light gives only a weak response. The cell reports contrast, not brightness.',
  desc:'A receptive field drawn as an excitatory centre and an inhibitory surround, with a spot, ring or whole-field light on it, beside the firing rate and the response against spot size.',
  research:'Kuffler (1953). Discharge patterns and functional organization of mammalian retina. Journal of Neurophysiology 16, 37–68. Model: difference of Gaussians (Rodieck 1965).',
  dur:12,hint:'Change the light’s size and position, and try a ring and the whole field. Press Hear one second to hear the cell.',
@@ -242,7 +242,7 @@ SCENE({id:'receptive-fields',name:'Receptive field',tag:'On in the centre, off a
   const pl=D5_plot(350,206,220,104,[0,90],[0,140],{xt:[[0,'0'],[45,'45'],[90,'90']],yt:[[0,'0'],[100,'100']],xl:'centred spot size',xlDy:31,yl:'rate for a centred spot'});out+=pl.svg;
   const pts=[];for(let r=0;r<=90;r+=2)pts.push([pl.X(r),pl.Y(D5_spotCurve(r))]);out+=D5_poly(pts,C.blue,2.2);
   if(s.stim==='spot'&&s.x===0)out+=Ci(pl.X(s.r),pl.Y(D5_spotCurve(s.r)),6,C.coral,'#fff');
-  return {svg:out,phase:s.stim==='full'?`Light everywhere excites the centre and suppresses the surround almost equally, so the cell fires only ${Math.round(rate)} spikes a second. Uniform light carries little news.`:s.stim==='ring'?`Light on the surround alone suppresses the cell (${Math.round(rate)} spikes/s). Darkness in the centre with light around it is what an off-centre cell would like.`:Math.abs(s.x)>60?'The spot is outside the field, so the cell carries on at its slow background rate.':`A spot of size ${s.r} gives ${Math.round(rate)} spikes/s. The best response comes from a spot that just fills the centre (about 28 units); bigger spots spill onto the surround and the rate falls.`};
+  return {svg:out,phase:s.stim==='full'?`Light everywhere excites the cell through its centre and suppresses it through its surround almost equally, so the cell fires only ${Math.round(rate)} spikes a second. Uniform light carries little news.`:s.stim==='ring'?`Light on the surround alone suppresses the cell (${Math.round(rate)} spikes/s). Darkness in the centre with light around it is what an off-centre cell would like.`:Math.abs(s.x)-s.r>D5_SS*2?'The spot is outside the field, so the cell carries on at its slow background rate.':rate<7.5?'The spot falls mainly on the surround, so the cell is suppressed below its background rate.':`A spot of size ${s.r} gives ${Math.round(rate)} spikes/s. The best response comes from a spot that just fills the centre (about 28 units); bigger spots spill onto the surround and the rate falls.`};
  },
  three(s,f,X,project){
   const N=24,span=100,u=v=>v/25,Pj=project([[-4,-4,-1],[4,4,-1],[-4,4,2.8],[4,-4,2.8]]);
@@ -474,13 +474,13 @@ SCENE({id:'brain-imaging',name:'The slow BOLD signal',tag:'Blood follows activit
  on:{tog(s,t){t=Number(t);const i=s.ev.indexOf(t);if(i>=0)s.ev.splice(i,1);else s.ev.push(t);return 'keep'},one(s){s.ev=[4];return 'keep'},close(s){s.ev=[4,6,8,10];return 'keep'},far(s){s.ev=[4,20];return 'keep'},clear(s){s.ev=[];return 'keep'}},
  draw(s,f,X){
   let out=heading('Neural activity is fast; the blood response is slow');
-  const pl=D5_plot(70,130,490,170,[0,40],[-.4,2.4],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 s']],yt:[[0,'0'],[1,'1'],[2,'2']],yl:'predicted BOLD signal'});
+  const pl=D5_plot(70,130,490,170,[0,40],[-.4,3.2],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40 s']],yt:[[0,'0'],[1,'1'],[2,'2'],[3,'3']],yl:'predicted BOLD signal'});
   out+=TF(70,62,'Brief neural events (press a slot):',13,C.muted,'start');
   for(let t=0;t<=38;t+=2){const x=pl.X(t),on=s.ev.includes(t);out+=hit(X,'tog',t,`Event at ${t} s: ${on?'on':'off'}`,R(x-9,72,18,34,on?C.coral:'#fff',on?C.coral:C.grid,4))}
   out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(40),pl.Y(0),C.line,1);
   const ev=s.ev.slice().sort((a,b)=>a-b);
   ev.forEach(t0=>{const pts=[];for(let k=0;k<=200;k++){const t=k/5;pts.push([pl.X(t),pl.Y(D5_hrf(t-t0))])}out+=D5_poly(pts,'#a8c6da',1.4,'stroke-dasharray="4 3"')});
-  const tot=[];let mx=0,tm=0;for(let k=0;k<=200;k++){const t=k/5,v=sum(ev.map(t0=>D5_hrf(t-t0)));if(v>mx){mx=v;tm=t}tot.push([pl.X(t),pl.Y(clamp(v,-.4,2.4))])}
+  const tot=[];let mx=0,tm=0;for(let k=0;k<=200;k++){const t=k/5,v=sum(ev.map(t0=>D5_hrf(t-t0)));if(v>mx){mx=v;tm=t}tot.push([pl.X(t),pl.Y(clamp(v,-.4,3.2))])}
   if(ev.length)out+=D5_poly(tot,C.blue,2.8);
   if(ev.length===1)out+=L(pl.X(ev[0]),pl.Y(1.15),pl.X(tm),pl.Y(1.15),C.amber,2)+TBF((pl.X(ev[0])+pl.X(tm))/2,pl.Y(1.15)-8,`peak ${fmt(tm-ev[0])} s later`,13,C.amber);
   out+=T(300,360,!ev.length?'No events: a flat line.':ev.length===1?'One brief event: a slow rise, a peak near 5 s, a dip, then rest.':`Peak height ${fmt(mx.toFixed(2))}× a single response.`,15,C.ink);
@@ -550,7 +550,7 @@ SCENE({id:'brain-imaging-methods',name:'Choosing a method',tag:'Where and when, 
 /* =========================== plasticity =========================== */
 const D5_MAPS={
  normal:{n:'Normal hand',w:[1,1,1,1,1],lost:-1,say:'Each finger has its own territory in the somatosensory cortex, in order from thumb to little finger.'},
- amp:{n:'Finger 3 removed',w:[1,1.5,0,1.5,1],lost:2,say:'After a middle finger was amputated in owl monkeys, its silent territory was taken over by fingers 2 and 4 within weeks (Merzenich et al. 1984).'},
+ amp:{n:'Finger 3 removed',w:[1,1.5,0,1.5,1],lost:2,say:'After a middle finger was amputated in owl monkeys, its silent territory was taken over by fingers 2 and 4 within a few months (Merzenich et al. 1984).'},
  train:{n:'Finger 2 trained',w:[.85,1.8,.8,.8,.75],lost:-1,say:'Monkeys trained to touch a spinning disc with their fingertips developed larger maps for the trained skin (Jenkins et al. 1990). Violinists show a similar enlargement for the left-hand fingers (Elbert et al. 1995).'},
  fuse:{n:'Fingers 3 and 4 joined',w:[1,1,1.5,0,1],lost:-1,fuse:true,say:'When two fingers were sewn together, their separate maps merged into one, because they were always touched together (Allard et al. 1991). Maps follow the patterns of use.'}};
 const D5_DIG=['thumb','2','3','4','5'];

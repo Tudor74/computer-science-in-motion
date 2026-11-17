@@ -140,7 +140,7 @@ SCENE({id:'forgetting-curve-pairs',name:'Paired associates',tag:'Calkins’s met
    range(6).forEach((c,i)=>{const y=80+i*38,a=s.ans[c],good=a===c;if(c===sets.twice){if(good)ok1++}else if(good)okS++;
     out+=R(80,y,34,28,D2_COLS[c][1],'none',5)+TF(124,y+19,D2_COLS[c][0],14,C.ink,'start')+TBF(250,y+19,String(sets.nums[c]),15,C.ink)+TBF(350,y+19,a===null?'–':String(sets.nums[a]),15,good?C.green:C.coral)+TF(390,y+19,good?'✓':'✗',14,good?C.green:C.coral,'start')+(c===sets.twice?TF(420,y+19,'shown twice',13,C.amber,'start'):'')});
    out+=T(300,328,`Shown twice: ${ok1?'recalled':'missed'} · shown once: ${okS} of 5 recalled`,15,C.ink)}
-  return {svg:out,phase:(s.sim?'Simulated participant. ':'')+(s.stage==='done'?'One pair cannot prove a rule, but across many people and lists Calkins found repeated pairs were recalled much more often. Paired associates became a standard method of memory research.':'Calkins worked at Harvard but was refused the PhD she had earned because she was a woman; she later became the first woman president of the American Psychological Association.')};
+  return {svg:out,phase:(s.sim?'Simulated participant. ':'')+(s.stage==='done'?'One pair cannot prove a rule, but across many people and lists Calkins found repeated pairs were recalled much more often. Paired associates became a standard method of memory research.':'Calkins studied at Harvard but was refused the PhD she had earned because she was a woman; she later became the first woman president of the American Psychological Association.')};
  }});
 
 /* =========================== classical-conditioning =========================== */
@@ -420,7 +420,7 @@ SCENE({id:'cognitive-maps',name:'Latent learning',tag:'Learning without reward',
   Object.keys(D2_TH).forEach(k=>{const on=k===s.g,v=D2_TH[k].slice(0,s.day);out+=D2_poly(v.map((e,i)=>[pl.X(i+1),pl.Y(e)]),cols[k],on?3:1.6);if(on)v.forEach((e,i)=>out+=Ci(pl.X(i+1),pl.Y(e),3.5,cols[k]))});
   out+=R(466,70,112,150,'#f6f9fb','none',8);Object.keys(D2_THN).forEach((k,i)=>out+=R(476,86+i*44,14,4,cols[k],'none',1)+TF(496,92+i*44,D2_THN[k].split(' ')[0],13,C.ink,'start')+TF(496,109+i*44,D2_THN[k].split(' ').slice(1).join(' '),13,C.muted,'start'));
   out+=T(300,362,`Day ${s.day}: ${D2_THN[s.g]} averages ${D2_TH[s.g][s.day-1]} errors`,15,C.ink);
-  return {svg:out,phase:s.day>=12&&s.g==='HNRR'?'One day after food appeared, the late-rewarded rats were as good as rats rewarded all along. They must have learned the maze while exploring; the reward changed performance, not learning.':'Without food the rats’ errors fall only a little. Watch what happens after food is added on day 11.'};
+  return {svg:out,phase:s.day>=12&&s.g==='HNRR'?'Within two days of food appearing, the late-rewarded rats were as good as rats rewarded all along. They must have learned the maze while exploring; the reward changed performance, not learning.':'Without food the rats’ errors fall only a little. Watch what happens after food is added on day 11.'};
  }});
 
 const D2_SUN=range(18).map(i=>{const a=(180-(i+.5)*10)*Math.PI/180;return {i,a}});
