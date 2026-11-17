@@ -1503,7 +1503,7 @@ SCENE({id:'algorithm',name:'Algorithm',tag:'A recipe precise enough for a machin
 
 SCENE({id:'variable',name:'Variable',tag:'A named box for a value',
  definition:'A name that refers to a stored value. Assigning a new value replaces the old one.',
- example:'After x = 3 and then y = x, y holds its own copy of 3. Changing x later to 5 does not change y.',
+ example:'After x = 3 and then y = x, changing x to 5 does not change y: assignment makes x name a new value. (With a list, y = x makes both names share the same list, so changing the list shows through both.)',
  desc:'A four-line program beside two labelled memory boxes, x and y; as each line runs, values are written, copied and replaced.',
  dur:10,hint:'Choose the starting value of x, then step through the four lines. Watch y keep its copy.',
  init:()=>({x0:3}),
@@ -2615,7 +2615,7 @@ function OR_drawBin(lay,style,r=17){
 
 /* ---- Arrays ---- */
 SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line',
- definition:'A table of rows and columns. Memory is a single line, so the grid is stored row after row (row-major order), and a[r][c] lives at index r × columns + c.',
+ definition:'A table of rows and columns. Memory is a single line, so the grid is laid out either row after row (row-major order: C, and NumPy by default) or column after column (column-major: Fortran, MATLAB). In row-major order, counting from 0, a[r][c] lives at index r × columns + c.',
  example:'In a 3 × 4 grid, a[1][2] is stored at 1 × 4 + 2 = 6. Images, spreadsheets and game boards are all stored like this.',
  desc:'A lettered grid above the single strip of memory that holds it; each row has its own colour, and the chosen cell and its place in the strip are highlighted with the index formula.',
  dur:11,hint:'Press any cell to see where it lives in memory. Switch to column-major order, or change the grid size, and watch the colours interleave.',
@@ -2637,12 +2637,12 @@ SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line
   const sy=262,w=Math.min(40,540/n),sx=300-n*w/2;out+=TF(sx,sy-10,'memory: one long line',13,C.muted,'start');
   for(let k=0;k<n;k++){const [r,c]=at(k),on=k===sel;out+=R(sx+k*w+1,sy,w-2,34,on?C.coral:OR_BANDS[r],on?C.coral:k<walk?C.blue:'none',4)+TMF(sx+k*w+w/2,sy+22,OR_LET[r*cols+c],13,on?'#fff':C.ink)+TMF(sx+k*w+w/2,sy+50,k,13,on?C.coral:C.muted)}
   out+=T(300,350,row?'Each row is one solid block of colour in memory.':'Rows are interleaved: neighbours in a row are now '+rows+' places apart.',14,C.muted);
-  return {svg:out,phase:`a[${s.r}][${s.c}] is item ${sel} of ${n} in memory. In ${row?'row':'column'}-major order, stepping along a row moves ${row?'1 place':rows+' places'} in memory${row?', so reading a row is fast':''}. Most languages, including C and Python’s NumPy by default, use row-major order.`};
+  return {svg:out,phase:`a[${s.r}][${s.c}] is item ${sel} of ${n} in memory. In ${row?'row':'column'}-major order, stepping along a row moves ${row?'1 place':rows+' places'} in memory${row?', so reading a row is fast':''}. C, and Python’s NumPy by default, use row-major order; Fortran and MATLAB use column-major.`};
  }});
 
 const OR_LAYER=[C.pale,C.greenp,C.purplep];
 SCENE({id:'array-3d',name:'Three-dimensional array',tag:'Layers of grids',
- definition:'An array with three indices, a[layer][row][column], like a stack of grids. It is still one line in memory: index = layer × (rows × columns) + row × columns + column.',
+ definition:'An array with three indices, a[layer][row][column], like a stack of grids. It is still one line in memory: in row-major order, counting from 0, index = layer × (rows × columns) + row × columns + column.',
  example:'In a 3 × 3 × 3 block, a[1][2][0] is at 1 × 9 + 2 × 3 + 0 = 15. Medical scans and block-building games store volumes like this.',
  desc:'Three 3 × 3 layers side by side above the 27-cell memory strip, with the chosen cell, its layer and its single memory index highlighted; the 3D view stacks the layers into a cube.',
  dur:12,hint:'Press a cell in any layer, or use the sliders. Switch to 3D to see the layers stacked into a cube.',
@@ -3402,7 +3402,7 @@ SCENE({id:'bfs',name:'Breadth-first search',tag:'Explore in rings',shared:'graph
  draw(s,f,X){return {svg:SS_graphDraw(s,f,X,'bfs'),phase:f.say+(f.done?` Depth-first from ${s.start} would visit ${SS_order(SS_dfs(s.start))}.`:'')}}});
 SCENE({id:'dfs',name:'Depth-first search',tag:'Go deep, then backtrack',shared:'graph-search',
  definition:'Explore a graph by following one path as far as it goes, then backing up to the most recent node with unexplored neighbours, using a stack.',
- example:'Solving a maze by keeping one hand on the wall: go as far as you can, then retrace your steps to the last junction.',
+ example:'Exploring a maze with chalk: go as far as you can, marking where you have been, then retrace your steps to the last junction with an unexplored way. (Keeping one hand on the wall is a different, more limited rule.)',
  desc:'The same eight-node graph explored depth first; a stack shows the current path, which grows and then pops as the search backtracks.',
  dur:12,hint:'Press any node to start from it, then Step or Run. The caption names the breadth-first order for the same start.',
  init:()=>({start:'A'}),on:{start(s,id){s.start=id}},
@@ -3885,7 +3885,7 @@ SCENE({id:'bfs-levels',name:'Degrees of separation',tag:'BFS layers on a social 
 /* ---------- Depth-first search lesson ---------- */
 SCENE({id:'dfs-maze',name:'Solving a maze by backtracking',tag:'Depth-first search on a grid',shared:'grid-maze',
  definition:'Depth-first search walks one corridor as far as it can, and on reaching a dead end backs up to the last junction with an unexplored way. The stack holds the current path.',
- example:'This is the “keep one hand on the wall… or retrace your steps” way of escaping a maze. It always finds a way out if there is one, but not necessarily the shortest.',
+ example:'Unlike keeping one hand on the wall, which can miss an exit inside a loop of walls, depth-first search marks where it has been, so in a finite maze it always finds a way out if there is one, though not necessarily the shortest.',
  desc:'The same grid maze; a path grows from S, dead ends turn grey as the search backs up, and the final stack is the route found.',
  dur:16,hint:'Edit walls (shared with the breadth-first and A* mazes), then Step or Run. Compare the path length with breadth-first search.',
  init:SS_mazeInit,ui:SS_mazeUI,on:SS_mazeOn,
@@ -5068,7 +5068,7 @@ function MA_locTrace(s){
 }
 SCENE({id:'ma-locality',name:'Locality',tag:'Use what is nearby',
  definition:'Programs tend to reuse data they used recently (temporal locality) and data stored next to it (spatial locality). Caches fetch whole lines of neighbouring cells to take advantage of this.',
- example:'Adding up a table row by row is much faster than column by column, even though it does the same additions, because each row is stored as one run of neighbouring memory cells.',
+ example:'Adding up a row-major table row by row is much faster than column by column, even though it does the same additions, because each row is stored as one run of neighbouring memory cells. For a column-major table it is the other way round.',
  desc:'A 6 × 6 table on the left and the same cells laid out as one strip of memory below; cells turn green for hits and coral for misses as the table is read row by row or column by column.',
  dur:15,hint:'Choose the order and the cache-line size, then run. Compare the misses for rows and columns.',
  init:()=>({order:'row',line:3}),
@@ -7131,7 +7131,7 @@ function TH_lightRun(events){let st='G',wait=false;const log=[];
 const TH_LIGHT_DEMO=['timer','button','timer','timer','timer','button','timer','timer'];
 SCENE({id:'fa-traffic-light',name:'State machine in practice',tag:'A pedestrian crossing',
  definition:'Many everyday controllers are finite state machines: a few states, and events that move between them. The current state is all the controller needs to remember.',
- example:'A UK pelican crossing cycles green → amber → red (walk) → red and amber → green. Pressing the button only matters when the lights are green; the timer moves everything else on.',
+ example:'A UK puffin crossing, the modern pedestrian crossing, cycles green → amber → red (walk) → red and amber → green; the older pelican crossing used flashing amber instead of red and amber. Pressing the button only matters when the lights are green; the timer moves everything else on.',
  desc:'A traffic light and pedestrian signal beside the controller’s state diagram; the latest event and its arrow are highlighted, with a short log of events.',
  dur:12,hint:'Press the button and fire the timer in any order. Some events change the state, some are only remembered, and some are ignored.',
  init:()=>({events:[]}),
@@ -7190,7 +7190,7 @@ function TH_counterRun(k,n,m){const steps=[];let c=0,dead=false;
  return {steps,accept:!dead&&c===0}}
 SCENE({id:'regex-limits',name:'What patterns cannot do',tag:'No finite machine counts forever',
  definition:'A finite automaton, and so a regular expression, cannot check that a string is aⁿbⁿ (n a’s followed by exactly n b’s) for every n: it would need unlimited memory.',
- example:'With k states, after reading k a’s two different counts must share a state. The machine then treats aᵏ and aᵏ⁻¹ alike, so it is fooled by one of them. Balanced brackets fail for the same reason.',
+ example:'With k states, the k + 1 prefixes a⁰ … aᵏ cannot all end in different states, so two counts i < j share one. Then aⁱbⁱ and aʲbⁱ end in the same state: the machine accepts both or rejects both, and one verdict is wrong. Balanced brackets fail for the same reason.',
  desc:'A string of a’s and b’s with the counting machine’s state under each letter, a row of counting states, and the machine’s verdict compared with the truth.',
  dur:13,hint:'Give the machine more or fewer states, then choose how many a’s and b’s. Find an input where the machine’s answer is wrong.',
  init:()=>({k:4,n:5,m:3}),

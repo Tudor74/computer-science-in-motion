@@ -60,7 +60,7 @@ SCENE({id:'algorithm',name:'Algorithm',tag:'A recipe precise enough for a machin
 
 SCENE({id:'variable',name:'Variable',tag:'A named box for a value',
  definition:'A name that refers to a stored value. Assigning a new value replaces the old one.',
- example:'After x = 3 and then y = x, y holds its own copy of 3. Changing x later to 5 does not change y.',
+ example:'After x = 3 and then y = x, changing x to 5 does not change y: assignment makes x name a new value. (With a list, y = x makes both names share the same list, so changing the list shows through both.)',
  desc:'A four-line program beside two labelled memory boxes, x and y; as each line runs, values are written, copied and replaced.',
  dur:10,hint:'Choose the starting value of x, then step through the four lines. Watch y keep its copy.',
  init:()=>({x0:3}),

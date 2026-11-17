@@ -328,7 +328,7 @@ function TH_lightRun(events){let st='G',wait=false;const log=[];
 const TH_LIGHT_DEMO=['timer','button','timer','timer','timer','button','timer','timer'];
 SCENE({id:'fa-traffic-light',name:'State machine in practice',tag:'A pedestrian crossing',
  definition:'Many everyday controllers are finite state machines: a few states, and events that move between them. The current state is all the controller needs to remember.',
- example:'A UK pelican crossing cycles green → amber → red (walk) → red and amber → green. Pressing the button only matters when the lights are green; the timer moves everything else on.',
+ example:'A UK puffin crossing, the modern pedestrian crossing, cycles green → amber → red (walk) → red and amber → green; the older pelican crossing used flashing amber instead of red and amber. Pressing the button only matters when the lights are green; the timer moves everything else on.',
  desc:'A traffic light and pedestrian signal beside the controller’s state diagram; the latest event and its arrow are highlighted, with a short log of events.',
  dur:12,hint:'Press the button and fire the timer in any order. Some events change the state, some are only remembered, and some are ignored.',
  init:()=>({events:[]}),
@@ -387,7 +387,7 @@ function TH_counterRun(k,n,m){const steps=[];let c=0,dead=false;
  return {steps,accept:!dead&&c===0}}
 SCENE({id:'regex-limits',name:'What patterns cannot do',tag:'No finite machine counts forever',
  definition:'A finite automaton, and so a regular expression, cannot check that a string is aⁿbⁿ (n a’s followed by exactly n b’s) for every n: it would need unlimited memory.',
- example:'With k states, after reading k a’s two different counts must share a state. The machine then treats aᵏ and aᵏ⁻¹ alike, so it is fooled by one of them. Balanced brackets fail for the same reason.',
+ example:'With k states, the k + 1 prefixes a⁰ … aᵏ cannot all end in different states, so two counts i < j share one. Then aⁱbⁱ and aʲbⁱ end in the same state: the machine accepts both or rejects both, and one verdict is wrong. Balanced brackets fail for the same reason.',
  desc:'A string of a’s and b’s with the counting machine’s state under each letter, a row of counting states, and the machine’s verdict compared with the truth.',
  dur:13,hint:'Give the machine more or fewer states, then choose how many a’s and b’s. Find an input where the machine’s answer is wrong.',
  init:()=>({k:4,n:5,m:3}),

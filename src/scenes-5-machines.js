@@ -517,7 +517,7 @@ function MA_locTrace(s){
 }
 SCENE({id:'ma-locality',name:'Locality',tag:'Use what is nearby',
  definition:'Programs tend to reuse data they used recently (temporal locality) and data stored next to it (spatial locality). Caches fetch whole lines of neighbouring cells to take advantage of this.',
- example:'Adding up a table row by row is much faster than column by column, even though it does the same additions, because each row is stored as one run of neighbouring memory cells.',
+ example:'Adding up a row-major table row by row is much faster than column by column, even though it does the same additions, because each row is stored as one run of neighbouring memory cells. For a column-major table it is the other way round.',
  desc:'A 6 × 6 table on the left and the same cells laid out as one strip of memory below; cells turn green for hits and coral for misses as the table is read row by row or column by column.',
  dur:15,hint:'Choose the order and the cache-line size, then run. Compare the misses for rows and columns.',
  init:()=>({order:'row',line:3}),

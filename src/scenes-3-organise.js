@@ -276,7 +276,7 @@ function OR_drawBin(lay,style,r=17){
 
 /* ---- Arrays ---- */
 SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line',
- definition:'A table of rows and columns. Memory is a single line, so the grid is stored row after row (row-major order), and a[r][c] lives at index r × columns + c.',
+ definition:'A table of rows and columns. Memory is a single line, so the grid is laid out either row after row (row-major order: C, and NumPy by default) or column after column (column-major: Fortran, MATLAB). In row-major order, counting from 0, a[r][c] lives at index r × columns + c.',
  example:'In a 3 × 4 grid, a[1][2] is stored at 1 × 4 + 2 = 6. Images, spreadsheets and game boards are all stored like this.',
  desc:'A lettered grid above the single strip of memory that holds it; each row has its own colour, and the chosen cell and its place in the strip are highlighted with the index formula.',
  dur:11,hint:'Press any cell to see where it lives in memory. Switch to column-major order, or change the grid size, and watch the colours interleave.',
@@ -298,12 +298,12 @@ SCENE({id:'array-2d',name:'Two-dimensional array',tag:'A grid stored as one line
   const sy=262,w=Math.min(40,540/n),sx=300-n*w/2;out+=TF(sx,sy-10,'memory: one long line',13,C.muted,'start');
   for(let k=0;k<n;k++){const [r,c]=at(k),on=k===sel;out+=R(sx+k*w+1,sy,w-2,34,on?C.coral:OR_BANDS[r],on?C.coral:k<walk?C.blue:'none',4)+TMF(sx+k*w+w/2,sy+22,OR_LET[r*cols+c],13,on?'#fff':C.ink)+TMF(sx+k*w+w/2,sy+50,k,13,on?C.coral:C.muted)}
   out+=T(300,350,row?'Each row is one solid block of colour in memory.':'Rows are interleaved: neighbours in a row are now '+rows+' places apart.',14,C.muted);
-  return {svg:out,phase:`a[${s.r}][${s.c}] is item ${sel} of ${n} in memory. In ${row?'row':'column'}-major order, stepping along a row moves ${row?'1 place':rows+' places'} in memory${row?', so reading a row is fast':''}. Most languages, including C and Python’s NumPy by default, use row-major order.`};
+  return {svg:out,phase:`a[${s.r}][${s.c}] is item ${sel} of ${n} in memory. In ${row?'row':'column'}-major order, stepping along a row moves ${row?'1 place':rows+' places'} in memory${row?', so reading a row is fast':''}. C, and Python’s NumPy by default, use row-major order; Fortran and MATLAB use column-major.`};
  }});
 
 const OR_LAYER=[C.pale,C.greenp,C.purplep];
 SCENE({id:'array-3d',name:'Three-dimensional array',tag:'Layers of grids',
- definition:'An array with three indices, a[layer][row][column], like a stack of grids. It is still one line in memory: index = layer × (rows × columns) + row × columns + column.',
+ definition:'An array with three indices, a[layer][row][column], like a stack of grids. It is still one line in memory: in row-major order, counting from 0, index = layer × (rows × columns) + row × columns + column.',
  example:'In a 3 × 3 × 3 block, a[1][2][0] is at 1 × 9 + 2 × 3 + 0 = 15. Medical scans and block-building games store volumes like this.',
  desc:'Three 3 × 3 layers side by side above the 27-cell memory strip, with the chosen cell, its layer and its single memory index highlighted; the 3D view stacks the layers into a cube.',
  dur:12,hint:'Press a cell in any layer, or use the sliders. Switch to 3D to see the layers stacked into a cube.',

@@ -115,7 +115,7 @@ SCENE({id:'bfs',name:'Breadth-first search',tag:'Explore in rings',shared:'graph
  draw(s,f,X){return {svg:SS_graphDraw(s,f,X,'bfs'),phase:f.say+(f.done?` Depth-first from ${s.start} would visit ${SS_order(SS_dfs(s.start))}.`:'')}}});
 SCENE({id:'dfs',name:'Depth-first search',tag:'Go deep, then backtrack',shared:'graph-search',
  definition:'Explore a graph by following one path as far as it goes, then backing up to the most recent node with unexplored neighbours, using a stack.',
- example:'Solving a maze by keeping one hand on the wall: go as far as you can, then retrace your steps to the last junction.',
+ example:'Exploring a maze with chalk: go as far as you can, marking where you have been, then retrace your steps to the last junction with an unexplored way. (Keeping one hand on the wall is a different, more limited rule.)',
  desc:'The same eight-node graph explored depth first; a stack shows the current path, which grows and then pops as the search backtracks.',
  dur:12,hint:'Press any node to start from it, then Step or Run. The caption names the breadth-first order for the same start.',
  init:()=>({start:'A'}),on:{start(s,id){s.start=id}},
@@ -598,7 +598,7 @@ SCENE({id:'bfs-levels',name:'Degrees of separation',tag:'BFS layers on a social 
 /* ---------- Depth-first search lesson ---------- */
 SCENE({id:'dfs-maze',name:'Solving a maze by backtracking',tag:'Depth-first search on a grid',shared:'grid-maze',
  definition:'Depth-first search walks one corridor as far as it can, and on reaching a dead end backs up to the last junction with an unexplored way. The stack holds the current path.',
- example:'This is the “keep one hand on the wall… or retrace your steps” way of escaping a maze. It always finds a way out if there is one, but not necessarily the shortest.',
+ example:'Unlike keeping one hand on the wall, which can miss an exit inside a loop of walls, depth-first search marks where it has been, so in a finite maze it always finds a way out if there is one, though not necessarily the shortest.',
  desc:'The same grid maze; a path grows from S, dead ends turn grey as the search backs up, and the final stack is the route found.',
  dur:16,hint:'Edit walls (shared with the breadth-first and A* mazes), then Step or Run. Compare the path length with breadth-first search.',
  init:SS_mazeInit,ui:SS_mazeUI,on:SS_mazeOn,
