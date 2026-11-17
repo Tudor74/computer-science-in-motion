@@ -72,7 +72,7 @@ SCENE({id:'electric-charge',name:'Electric charge',tag:'Rubbing moves electrons'
   out+=TF(300,372,'Each sign stands for about 1 nC (some 6 billion electrons).',13,C.muted);
   const tot=s.cap+s.leaves;
   const say=s.rod===0&&s.cloth===0&&tot===0?'Everything starts neutral: equal positive and negative charge. Rubbing only moves electrons from one material to the other.'
-   :tot!==0?`The electroscope now holds ${tot>0?'+':''}${tot} nC of the same sign as the rod, so its leaves repel each other and spread. Rod + cloth + electroscope still add up to zero.`
+   :tot!==0?`The electroscope now holds ${tot>0?'+':''}${tot} nC of the same sign as the rod, so its leaves repel each other and spread.${s.rod+s.cloth+tot===0?' Rod + cloth + electroscope still add up to zero.':''}`
    :`${m.rod} and ${m.cloth.toLowerCase()} carry equal and opposite charge (${s.rod>0?'+':''}${s.rod} and ${s.cloth>0?'+':''}${s.cloth} nC): electrons moved ${m.sign>0?'from the glass to the silk':'onto the '+m.rod.toLowerCase()}.`;
   return {svg:out,phase:say};
  }});
@@ -149,7 +149,7 @@ SCENE({id:'electric-field',name:'Electric field',tag:'Faraday’s lines of force
   const mx=300,my=215-80;let ex=0,ey=0;for(const c of ch){const dx=(mx-c.x)/P6_PX,dy=(my-c.y)/P6_PX,r=Math.hypot(dx,dy);ex+=P6_K*c.q*1e-9*dx/r**3;ey+=P6_K*c.q*1e-9*dy/r**3}
   out+=Ci(mx,my,5,C.amber)+TF(mx+10,my-8,`E = ${P6_sci(Math.hypot(ex,ey),1)} N/C here`,13,C.amber,'start');
   const say=s.conf==='single'?'Lines spread out evenly from a single charge: their density falls as 1/r², just like the force.'
-   :s.conf==='like'||s.q2>0?'Like charges: the lines bend away from each other and none join the two charges. Midway the fields cancel.'
+   :s.conf==='like'||s.q2>0?'Like charges: the lines bend away from each other and none join the two charges. '+(s.conf==='like'||s.q2===2?'Midway the fields cancel.':'The fields cancel at a point between them, nearer the smaller charge.')
    :s.q2===0?'With the second charge at zero there is only one charge and its lines leave evenly in all directions.'
    :`Unlike charges: lines leave the +2 nC charge and ${Math.abs(s.q2)>=2?'all':'some'} end on the ${s.q2} nC charge${Math.abs(s.q2)<2?'; the rest go out to infinity':''}. More lines means more charge.`;
   return {svg:out,phase:say};
@@ -218,7 +218,7 @@ function P6_loopPoint(u,x0,y0,x1,y1){const w=x1-x0,h=y1-y0,per=2*(w+h);let d=((u
 function P6_bulb(x,y,Pw,label){const t=clamp(Pw/3,0,1);return (t>0?Ci(x,y,26+12*t,'#ffd84a','none',`opacity="${(.25+.45*t).toFixed(2)}"`):'')+Ci(x,y,18,P6_mix('#eef2f4','#ffd84a',t),C.dark)+P(`M${x-7} ${y+4} Q${x} ${y-10} ${x+7} ${y+4}`,P6_mix('#9aa8b0','#c47a00',t),2)+(label?TF(x,y+38,label,13,C.muted):'')}
 SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a current',
  definition:'A closed loop of conductors through which charge flows. A source such as a battery gives each coulomb energy (its voltage); the current is the charge passing a point each second, in amperes.',
- example:'Volta stacked pairs of zinc and copper discs separated by brine-soaked card: each pair adds roughly 0.8 V. Close the switch and a current flows at once all round the loop, even though each electron drifts only millimetres a second.',
+ example:'Volta stacked pairs of zinc and copper discs separated by brine-soaked card: each pair adds roughly 0.8 V. Close the switch and a current flows at once all round the loop, even though each electron drifts only a fraction of a millimetre a second.',
  desc:'A voltaic pile, switch, ammeter and bulb in one loop; dots move round the loop when the switch is closed, faster for a larger current.',
  dur:10,hint:'Add or remove pairs of discs and open or close the switch. The bulb only lights when the loop is complete.',
  research:'Volta (1800), On the electricity excited by the mere contact of conducting substances of different kinds, Phil. Trans. R. Soc.',
@@ -235,7 +235,7 @@ SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a curren
   out+=R(x1-4,150,8,60,'#fff','none',0);
   out+=s.closed?L(x1,150,x1,210,C.dark,4):L(x1,150,x1+26,192,C.dark,4);out+=Ci(x1,150,5,C.dark)+Ci(x1,210,5,C.dark)+TF(x1+18,140,s.closed?'closed':'open',13,C.muted,'start');
   if(I>0){const ph=X.try?0:(s.ph||0),sp=I*0.25;for(let k=0;k<22;k++){const [x,y]=P6_loopPoint(k/22+ph*sp,x0,y0,x1,y1);out+=Ci(x,y,3.5,C.blue)}
-   out+=arrow(210,y0-14,250,y0-14,C.coral,2,7)+TF(230,y0-22,'conventional current',13,C.coral)}
+   out+=arrow(250,y0-14,210,y0-14,C.coral,2,7)+TF(230,y0-22,'conventional current',13,C.coral)}
   out+=P6_bulb(300,y0,Pw,'');out+=R(270,y1-18,60,36,'#fff',C.dark,8)+TF(300,y1+5,(I*1000).toFixed(0)+' mA',13,C.ink)+TF(300,y1+34,'ammeter',13,C.muted);
   out+=counter(470,24,'power in bulb',Pw.toFixed(2)+' W',C.amber,116);
   return {svg:out,phase:!s.closed?'With the switch open the loop is broken: no current flows anywhere, however many discs you stack.':`${s.pairs} pairs give about ${V.toFixed(1)} V across a 10 Ω bulb (model), so I = V/R = ${(I*1000).toFixed(0)} mA. Blue dots are electrons, which drift the opposite way to the conventional current arrow.`};
@@ -328,7 +328,7 @@ SCENE({id:'magnetism-oersted',name:'Ørsted’s discovery',tag:'Rerun Ørsted: a
   const A=P6_axes(330,70,240,220,{x0:-5,x1:5,y0:-90,y1:90,xt:[-5,0,5],yt:[-90,-45,0,45,90],xl:'current I (A, + = northwards)',yl:'deflection (°, + = west)'});out+=A.svg;
   const pts=[];for(let I=-5;I<=5;I+=.1)pts.push([A.X(I),A.Y(Math.atan(I/2)*180/Math.PI)]);out+=P(P6_path(pts),C.blue,1.6,'none','stroke-dasharray="5 4"');
   s.log.forEach(m=>out+=Ci(A.X(m.I),A.Y(m.th),5,C.coral,'#fff'));out+=Ci(A.X(s.I),A.Y(th*180/Math.PI),8,'none',C.amber);
-  return {svg:out,phase:`${Math.abs(s.I)} A at 2 cm makes ${(Bw*1e6).toFixed(1)} µT; with Earth’s ~20 µT the needle settles at ${(th*180/Math.PI).toFixed(0)}° ${s.I>0?'west':s.I<0?'east':'(no deflection)'}. tan(deflection) = B_wire / B_Earth, so it approaches but never reaches 90°.`};
+  return {svg:out,phase:`${Math.abs(s.I)} A at 2 cm makes ${(Math.abs(Bw)*1e6).toFixed(1)} µT; with Earth’s ~20 µT the needle settles at ${Math.abs(th*180/Math.PI).toFixed(0)}° ${s.I>0?'west':s.I<0?'east':'(no deflection)'}. tan(deflection) = B_wire / B_Earth, so it approaches but never reaches 90°.`};
  }});
 
 SCENE({id:'magnetism-wire-coil',name:'Field of a wire and a coil',tag:'Circles and solenoids',
@@ -425,7 +425,7 @@ SCENE({id:'induction-generator',name:'Generator',tag:'Spinning a coil makes AC',
   const Aa=.01,peak=s.N*s.B*Aa*2*Math.PI*s.f,ph=s.t*Math.PI*2;let out=heading('A turning coil: flux rises and falls, voltage alternates');
   out+=R(50,90,50,200,C.coral,'none',6)+R(250,90,50,200,'#6f8796','none',6)+TBF(75,195,'N',16,'#fff')+TBF(275,195,'S',16,'#fff');
   for(let k=0;k<4;k++)out+=arrow(104,130+k*40,246,130+k*40,'#c2ccd2',1.2,6);
-  const hx=70*Math.cos(ph),hy=70*Math.sin(ph);out+=L(175-hx,190-hy,175+hx,190+hy,C.amber,6)+Ci(175-hx,190-hy,8,C.amber,'#fff')+Ci(175+hx,190+hy,8,C.amber,'#fff')+Ci(175,190,4,C.dark);
+  const hx=70*Math.sin(ph),hy=70*Math.cos(ph);out+=L(175-hx,190-hy,175+hx,190+hy,C.amber,6)+Ci(175-hx,190-hy,8,C.amber,'#fff')+Ci(175+hx,190+hy,8,C.amber,'#fff')+Ci(175,190,4,C.dark);
   out+=TF(175,320,'coil seen end-on (shown slowed down)',13,C.muted);
   const A=P6_axes(340,80,230,200,{x0:0,x1:2,y0:-1.15*peak,y1:1.15*peak,xt:[0,1,2],yt:[-+peak.toFixed(1),0,+peak.toFixed(1)],xl:'turns of the coil',yl:'EMF (V)'});out+=A.svg;
   const pts=[];for(let u=0;u<=2;u+=.02)pts.push([A.X(u),A.Y(peak*Math.sin(u*2*Math.PI))]);out+=P(P6_path(pts),C.blue,2)+Ci(A.X(s.t),A.Y(peak*Math.sin(ph)),6,C.coral,'#fff');
@@ -477,8 +477,8 @@ SCENE({id:'electromagnetic-waves',name:'Electromagnetic wave',tag:'Fields that k
  },
  three(s,f,X,project){
   const Pj=project([[0,-1.2,-1.2],[4,1.2,1.2]]);let out=line3([0,0,0],[4.2,0,0],Pj,C.dark,2);
-  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>Pj([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>Pj([x,v*.9,0]))),C.coral,2.4);
-  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],Pj,C.blue,1)+line3([x,0,0],[x,v*.9,0],Pj,C.coral,1)}
+  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>Pj([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>Pj([x,-v*.9,0]))),C.coral,2.4);
+  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],Pj,C.blue,1)+line3([x,0,0],[x,-v*.9,0],Pj,C.coral,1)}
   return {svg:out,title:'Electromagnetic wave in 3D',caption:'Blue: electric field in the vertical plane. Coral: magnetic field in the horizontal plane. Both travel along the axis.'};
  }});
 
@@ -525,7 +525,7 @@ SCENE({id:'electromagnetic-waves-hertz',name:'Hertz’s experiment',tag:'Rerun H
   return {svg:out,phase:est?`Quiet spots are half a wavelength apart. Your marks give ${est}. Hertz did this with metre-scale waves and found speeds close to the speed of light.`:`The reflected wave meets the outgoing one and forms nodes every ${(lam/2).toFixed(2)} m, starting at the metal sheet. Find them with the receiver.`};
  }});
 
-const P6_BANDS=[[3,-3,'Radio','#8fb7d9','broadcast, Wi-Fi at the short end'],[-3,-3.52,'Microwave','#9fc9a8','ovens, radar, phone links'],[-3.52,-6.12,'Infrared','#e7b28f','warm objects, remote controls'],[-6.12,-6.42,'Visible','#fff','the narrow band our eyes see'],[-6.42,-8,'Ultraviolet','#c1a6e2','sunburn, sterilising lamps'],[-8,-11,'X-ray','#b0b8bf','medical images'],[-11,-12.5,'Gamma','#8d959b','radioactive decay, cosmic sources']];
+const P6_BANDS=[[3,0,'Radio','#8fb7d9','broadcast radio and television'],[0,-3,'Microwave','#9fc9a8','ovens, radar, Wi-Fi, phone links'],[-3,-6.12,'Infrared','#e7b28f','warm objects, remote controls'],[-6.12,-6.42,'Visible','#fff','the narrow band our eyes see'],[-6.42,-8,'Ultraviolet','#c1a6e2','sunburn, sterilising lamps'],[-8,-11,'X-ray','#b0b8bf','medical images'],[-11,-12.5,'Gamma','#8d959b','radioactive decay, cosmic sources']];
 function P6_rgbOfNm(nm){let r=0,g=0,b=0;if(nm<440){r=(440-nm)/60;b=1}else if(nm<490){g=(nm-440)/50;b=1}else if(nm<510){g=1;b=(510-nm)/20}else if(nm<580){r=(nm-510)/70;g=1}else if(nm<645){r=1;g=(645-nm)/65}else r=1;const f=nm<420?.3+.7*(nm-380)/40:nm>700?.3+.7*(750-nm)/50:1;return '#'+[r,g,b].map(v=>Math.round(255*clamp(v*f,0,1)).toString(16).padStart(2,'0')).join('')}
 SCENE({id:'electromagnetic-waves-spectrum',name:'Electromagnetic spectrum',tag:'One kind of wave, many names',
  definition:'The whole range of electromagnetic waves, ordered by wavelength from kilometre-long radio waves to gamma rays smaller than an atomic nucleus. Shorter wavelength means higher frequency and more energy per photon.',

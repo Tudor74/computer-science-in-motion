@@ -77,7 +77,7 @@ SCENE({id:'newton-laws-pairs',name:'Action and reaction',tag:'Newton’s third l
  definition:'When one object pushes on another, the second pushes back on the first with a force equal in size and opposite in direction. The two forces act on different objects.',
  example:'Two skaters push apart. Each feels the same size of force, but the lighter skater ends up moving faster, because the same force gives a smaller mass more acceleration.',
  desc:'Two skaters on ice push against each other for half a second and glide apart; equal and opposite force arrows act on each, and their momenta add to zero.',
- dur:9,research:'Newton (1687). Principia, Law III; tested with colliding pendulums by Wren, Wallis and Huygens (1668).',
+ dur:9,research:'Newton (1687). Principia, Law III; in the Scholium he cites the collision rules of Wren, Wallis and Huygens (1668–69) and tests the law himself with colliding pendulums.',
  hint:'Make one skater much heavier and Run: the forces stay equal, but the speeds do not.',
  init:()=>({m1:50,m2:80,F:150}),
  ui:[{range:'m1',label:'Skater A',min:40,max:100,step:5,get:s=>s.m1,act:'m1',show:v=>v+' kg'},{range:'m2',label:'Skater B',min:40,max:100,step:5,get:s=>s.m2,act:'m2',show:v=>v+' kg'},{range:'F',label:'Push',min:50,max:200,step:10,get:s=>s.F,act:'F',show:v=>v+' N'}],
@@ -301,7 +301,7 @@ SCENE({id:'gravitation-cavendish',name:'Weighing the Earth',tag:'Cavendish’s t
   line('deflection θ = '+P2_n(meas*1000,3)+' mrad',C.coral,true);line('G = 2π² L r² θ / (M T²)');line('= '+Gm.toExponential(3)+' N·m²/kg²',C.blue,true);
   line('Earth’s mass = g R² / G');line('= '+ME.toExponential(2)+' kg',C.blue,true);line('mean density = '+P2_n(rho/1000,2)+' g/cm³',C.purple,true);
   line(s.err?'(true value 5.51 g/cm³)':'Cavendish found 5.48',C.muted);
-  return {svg:o,phase:s.err?`A ${Math.abs(s.err)}% ${s.err>0?'over':'under'}-reading of a deflection this small shifts G, and so the Earth’s density, by the same ${Math.abs(s.err)}%: Cavendish had to shield the room and watch through a telescope.`:`The attraction between the balls twists the fibre by ${P2_n(th*1000,3)} milliradians. Timing the swing gives the fibre’s stiffness, and the twist then gives G = ${Gm.toExponential(3)}. With g and the Earth’s radius that weighs the Earth: ${ME.toExponential(2)} kg.`};
+  return {svg:o,phase:s.err?`A ${Math.abs(s.err)}% ${s.err>0?'over':'under'}-reading of a deflection this small shifts G by the same ${Math.abs(s.err)}% and the Earth’s density the opposite way by ${P2_n(Math.abs(1/(1+s.err/100)-1)*100,1)}% (density goes as 1/G): Cavendish had to shield the room and watch through a telescope.`:`The attraction between the balls twists the fibre by ${P2_n(th*1000,3)} milliradians. Timing the swing gives the fibre’s stiffness, and the twist then gives G = ${Gm.toExponential(3)}. With g and the Earth’s radius that weighs the Earth: ${ME.toExponential(2)} kg.`};
  }});
 
 const P2_BODIES=[['Moon',1.62],['Mercury',3.70],['Mars',3.71],['Venus',8.87],['Earth',9.81],['Saturn',10.44],['Jupiter',24.79]];
@@ -327,9 +327,9 @@ const P2_MU=3.986e14,P2_RE=6.371e6,P2_orbitCache=new Map();
 function P2_cannon(v){ // velocity Verlet, dt = 10 s, from 200 km altitude, horizontal launch (km/s)
  const key=v.toFixed(2);if(P2_orbitCache.has(key))return P2_orbitCache.get(key);
  let x=P2_RE+2e5,y=0,vx=0,vy=v*1000,dt=10;const pts=[[x,y]];let ax=-P2_MU*x/Math.pow(Math.hypot(x,y),3),ay=-P2_MU*y/Math.pow(Math.hypot(x,y),3),outcome='orbit',ang=0,last=Math.atan2(y,x);
- for(let i=0;i<6000;i++){x+=vx*dt+.5*ax*dt*dt;y+=vy*dt+.5*ay*dt*dt;const r=Math.hypot(x,y),nax=-P2_MU*x/(r*r*r),nay=-P2_MU*y/(r*r*r);vx+=.5*(ax+nax)*dt;vy+=.5*(ay+nay)*dt;ax=nax;ay=nay;
+ for(let i=0;i<8000;i++){x+=vx*dt+.5*ax*dt*dt;y+=vy*dt+.5*ay*dt*dt;const r=Math.hypot(x,y),nax=-P2_MU*x/(r*r*r),nay=-P2_MU*y/(r*r*r);vx+=.5*(ax+nax)*dt;vy+=.5*(ay+nay)*dt;ax=nax;ay=nay;
   const a=Math.atan2(y,x);let d=a-last;if(d<-Math.PI)d+=2*Math.PI;if(d>Math.PI)d-=2*Math.PI;ang+=d;last=a;
-  if(i%3===0)pts.push([x,y]);if(r<P2_RE){outcome='falls';pts.push([x,y]);break}if(r>12*P2_RE){outcome='escapes';break}if(ang>=2*Math.PI){outcome='orbit';pts.push([x,y]);break}}
+  if(i%3===0)pts.push([x,y]);if(r<P2_RE){outcome='falls';pts.push([x,y]);break}if(r>12*P2_RE){outcome=v*1000<Math.sqrt(2*P2_MU/(P2_RE+2e5))?'long':'escapes';break}if(ang>=2*Math.PI){outcome='orbit';pts.push([x,y]);break}}
  const res={pts,outcome};P2_orbitCache.set(key,res);return res;
 }
 const P2_vesc=Math.sqrt(2*P2_MU/(P2_RE+2e5))/1000,P2_vcirc=Math.sqrt(P2_MU/(P2_RE+2e5))/1000;
@@ -344,14 +344,14 @@ SCENE({id:'kepler-orbits',name:'Newton’s cannon',tag:'Falling all the way roun
  ui:[{range:'v',label:'Launch speed',min:4,max:12,step:.1,get:s=>s.v,act:'v',show:v=>v.toFixed(1)+' km/s'}],
  on:{v(s,v){s.v=v}},
  draw(s,f,X){
-  const res=P2_cannon(s.v),sc=38/P2_RE,cx=300,cy=196;let o=heading(res.outcome==='falls'?'It falls back to Earth':res.outcome==='escapes'?'It escapes':'It falls all the way round');
+  const res=P2_cannon(s.v),sc=38/P2_RE,cx=300,cy=196;let o=heading(res.outcome==='falls'?'It falls back to Earth':res.outcome==='escapes'?'It escapes':res.outcome==='long'?'It swings far out, but comes back':'It falls all the way round');
   o+=Ci(cx,cy,38,'#8fb8d8',C.blue)+L(cx+38,cy,cx+43,cy,C.ink,4);
   const n=X.try?res.pts.length:Math.max(2,Math.round(res.pts.length*clamp(s.u===undefined?1:s.u,0,1)));const pts=res.pts.slice(0,n).map(([x,y])=>[cx+x*sc,cy-y*sc]);
   o+=`<polyline points="${P2_poly(pts)}" fill="none" stroke="${C.coral}" stroke-width="2.5"/>`;const e=pts[pts.length-1];if(e)o+=Ci(e[0],e[1],5,C.coral);
   o+=TF(20,60,'circular ≈ '+P2_n(P2_vcirc,1)+' km/s',13,C.green,'start')+TF(20,80,'escape ≈ '+P2_n(P2_vesc,1)+' km/s',13,C.purple,'start');
-  o+=TF(580,60,s.v.toFixed(1)+' km/s',16,C.coral,'end','font-weight="700"')+TF(580,80,res.outcome==='falls'?'crashes':res.outcome==='escapes'?'escapes':'closed orbit',13,C.ink,'end');
+  o+=TF(580,60,s.v.toFixed(1)+' km/s',16,C.coral,'end','font-weight="700"')+TF(580,80,res.outcome==='falls'?'crashes':res.outcome==='escapes'?'escapes':res.outcome==='long'?'long ellipse':'closed orbit',13,C.ink,'end');
   o+=TF(300,360,'Launch 200 km up · no air drag · Earth to scale',13,C.muted);
-  return {svg:o,phase:res.outcome==='falls'?`At ${s.v.toFixed(1)} km/s the ball falls faster than the Earth curves away beneath it, so it lands.`:res.outcome==='escapes'?`Above about ${P2_n(P2_vesc,1)} km/s the ball has more kinetic energy than gravity can ever take back: it leaves for good.`:`Between about ${P2_n(P2_vcirc,1)} and ${P2_n(P2_vesc,1)} km/s the ball is still falling, but the Earth curves away as fast as it falls: it goes round on an ellipse${Math.abs(s.v-P2_vcirc)<.15?' (here almost a circle)':''}.`};
+  return {svg:o,phase:res.outcome==='falls'?`At ${s.v.toFixed(1)} km/s the ball falls faster than the Earth curves away beneath it, so it lands.`:res.outcome==='escapes'?`Above about ${P2_n(P2_vesc,1)} km/s the ball has more kinetic energy than gravity can ever take back: it leaves for good.`:res.outcome==='long'?`At ${s.v.toFixed(1)} km/s the ball is still just under the escape speed of ${P2_n(P2_vesc,2)} km/s: it leaves this view on a very long ellipse and will in the end fall back round.`:`Between about ${P2_n(P2_vcirc,1)} and ${P2_n(P2_vesc,1)} km/s the ball is still falling, but the Earth curves away as fast as it falls: it goes round on an ellipse${Math.abs(s.v-P2_vcirc)<.15?' (here almost a circle)':''}.`};
  },
  three(s,f,X,project){
   const res=P2_cannon(s.v),P=project([[-3.2,-3.2,-1.2],[3.2,3.2,1.2]]);let o='';

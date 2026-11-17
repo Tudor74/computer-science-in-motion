@@ -181,7 +181,7 @@ SCENE({id:'temperature-heat-rumford',name:'Heat is motion: Rumford’s cannon',t
  ui:[{choose:[['observed','What Rumford saw'],['caloric','Caloric prediction']],label:'Curve',get:s=>s.view,act:'view'}],
  on:{view(s,v){s.view=v;return 'keep'}},
  trace(){return [
-  {k:0,say:'Munich arsenal, 1798: a brass cannon barrel sits in a box of cold water. A deliberately blunt steel borer is pressed against it.'},
+  {k:0,say:'Munich arsenal, late 1790s: a brass cannon barrel sits in a box of cold water. A deliberately blunt steel borer is pressed against it.'},
   {k:1,say:'Horses turn the barrel. The blunt borer grinds rather than cuts, and the water slowly warms.'},
   {k:2,say:'The caloric theory says heat is a fluid squeezed out of the metal, so the supply should run out as the metal is ground.'},
   {k:3,say:'Instead the heat kept coming. After about two and a half hours the water boiled, to the astonishment of the onlookers.'},
@@ -294,7 +294,7 @@ const P7_WALK=new Map();
 function P7_walk(seed,steps,sig){const key=seed+':'+steps+':'+sig;if(P7_WALK.has(key))return P7_WALK.get(key);const r=rng(seed),pts=[[0,0]];for(let i=1;i<=steps;i++){const p=pts[i-1];pts.push([p[0]+sig*P7_gauss(r),p[1]+sig*P7_gauss(r)])}if(P7_WALK.size>200)P7_WALK.delete(P7_WALK.keys().next().value);P7_WALK.set(key,pts);return pts}
 SCENE({id:'brownian-motion',name:'Brownian motion',tag:'Seeing the invisible jostling',
  definition:'Tiny particles suspended in water jiggle about at random. In 1827 Robert Brown saw it in grains from pollen; in 1905 Einstein explained it as the visible result of countless collisions with invisible, moving water molecules.',
- example:'A grain one thousandth of a millimetre across is hit by water molecules trillions of times a second. The hits almost cancel, and the small imbalance each instant drives an erratic, never-ending dance.',
+ example:'A grain one thousandth of a millimetre across is hit by water molecules an enormous number of times every second. The hits almost cancel, and the small imbalance each instant drives an erratic, never-ending dance.',
  research:'Brown, R. (1828). A brief account of microscopical observations… on the particles contained in the pollen of plants. Einstein, A. (1905). Annalen der Physik 17.',
  desc:'A large grain wandering along an erratic track; switching on the molecules reveals the small fast particles whose uneven collisions push it about.',
  dur:12,hint:'Show the molecules to see what Brown could not, and start a new grain. The track never settles and never repeats.',
@@ -572,7 +572,7 @@ SCENE({id:'heat-engines-heat-pump',name:'Heat pumps and refrigerators',tag:'Runn
   out+=L(280,240,340,240,C.coral,w(real))+`<polygon points="340,${240-w(real)/2-6} 356,240 340,${240+w(real)/2+6}" fill="${C.coral}"/>`+TF(300,276,real.toFixed(1)+' units of heat in',13,C.coral,'start');
   out+=R(30,70,200,120,'#fff',C.grid,10)+TB(130,94,'Coefficient of performance',13,C.ink)+TF(130,122,'ideal: '+cop.toFixed(1),15,C.green)+TF(130,148,'typical real: ≈ '+real.toFixed(1),15,C.coral)+TF(130,172,'(illustrative estimate)',13,C.muted);
   out+=TF(300,350,'A resistance heater gives exactly 1 unit of heat per unit of electricity.',13,C.muted);
-  return {svg:out,phase:`To heat to ${s.tin} °C from ${s.tout} °C the ideal COP is ${Th.toFixed(0)}/(${Th.toFixed(0)} − ${Tc.toFixed(0)}) = ${cop.toFixed(1)}. Real machines reach roughly half of that, still several times better than burning the electricity in a heater.`};
+  return {svg:out,phase:`To heat to ${s.tin} °C from ${s.tout} °C the ideal COP is ${Th.toFixed(0)}/(${Th.toFixed(0)} − ${Tc.toFixed(0)}) = ${cop.toFixed(1)}. Real machines manage far less, about ${real.toFixed(1)} here, because of losses and the temperature gaps their heat exchangers need. That is still several times better than burning the electricity in a heater.`};
  }});
 
 /* ======================= Lesson: Changes of phase ======================= */

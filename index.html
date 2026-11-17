@@ -891,7 +891,7 @@ SCENE({id:'free-fall',name:'Free fall',tag:'Hammer and feather',
 
 SCENE({id:'free-fall-measure',name:'Measure g yourself',tag:'Time a drop',
  definition:'You can estimate g from a drop: time how long an object takes to fall a known height h, then g = 2h ÷ t². Human reaction time makes short drops very inaccurate.',
- example:'From 5 m the true fall takes 1.01 s. Press 0.2 s late and you measure 1.21 s, giving g ≈ 6.8 m/s²: an error of 30%. From 45 m the same delay costs only about 13%.',
+ example:'From 5 m the true fall takes 1.01 s. Press 0.2 s late and you measure 1.21 s, giving g ≈ 6.8 m/s²: an error of 30%. From 45 m the same delay costs only about 12%.',
  desc:'A ball falls from a tower of chosen height in real time; you press Stop when it lands, and a table compares your time and your value of g with the true ones.',
  research:'g = 2h/t² from Galileo’s law of fall (1638). Human simple reaction times are typically 0.2–0.25 s (Donders 1868; Hick 1952), which is why Galileo slowed falls on ramps instead.',
  dur:12,hint:'Pick a height, press Drop, then press Stop the moment the ball lands. Repeat, and try a taller drop to shrink your error.',
@@ -982,7 +982,7 @@ SCENE({id:'projectiles-range',name:'The best launch angle',tag:'Why 45°, and wh
   const A=P1_axes(80,236,470,90,[0,90],[0,maxR*1.05],{xt:[0,15,30,45,60,75,90],xl:'launch angle (degrees)'});out+=A.svg;
   out+=P(P1_path(curve.map(([d,r])=>[A.X(d),A.Y(r)])),C.blue,2.5)+L(A.X(best[0]),236,A.X(best[0]),326,C.green,2,'stroke-dasharray="4 3"')+Ci(A.X(s.deg),A.Y(a.R),5,C.ink);
   out+=TF(A.X(best[0])+6,276,`best ${best[0]}°`,13,C.green,'start')+TF(84,250,'range',13,C.muted,'start');
-  return {svg:out,phase:s.c===0?`No air: ${s.deg}° and ${90-s.deg}° land at the same point, and the best angle is 45° (${P1_m(maxR)} m). The steeper throw just spends longer in the air.`:`With drag the best angle drops to about ${best[0]}°, and the steep throw lands short of its shallow partner: high, slow flights lose more to the air. (Drag model illustrative.)`};
+  return {svg:out,phase:s.c===0?`No air: ${s.deg}° and ${90-s.deg}° land at the same point, and the best angle is 45° (${P1_m(maxR)} m). The steeper throw just spends longer in the air.`:`${best[0]<45?`With drag the best angle drops to about ${best[0]}°`:'With drag this light and a throw this slow the best angle is only just below 45°'}, and the steep throw lands short of its shallow partner: high, slow flights lose more to the air. (Drag model illustrative.)`};
  }});
 
 SCENE({id:'projectiles-monkey',name:'The monkey and the hunter',tag:'Gravity treats both alike',
@@ -1054,7 +1054,7 @@ SCENE({id:'relative-motion-river',name:'Crossing a river',tag:'Adding velocities
   const tip=[O[0]+s.vb*Math.cos(r)*k,O[1]-s.vb*Math.sin(r)*k];if(s.vc>0)out+=arrow(...tip,tip[0]+s.vc*k,tip[1],'#5aa0c8',3,8);out+=arrow(...O,O[0]+vx*k,O[1]-vy*k,C.blue,3,8);
   out+=TF(500,282,'boat + current',13,C.muted)+TF(500,298,'= ground',13,C.muted);
   out+=TBF(300,358,`crossing time ${P1_m(T)} s · lands ${Math.abs(drift)<.5?'straight across':P1_m(Math.abs(drift))+' m '+(drift>0?'downstream':'upstream')} · ground speed ${P1_m(Math.hypot(vx,vy),2)} m/s`,14,C.ink);
-  return {svg:out,phase:Math.abs(drift)<.5?'Pointing partly upstream cancels the current: the boat goes straight across, but more slowly, because only part of its speed carries it over.':'The current adds its own arrow to the boat’s: the boat crabs downstream. The crossing time depends only on the across-the-river part of the boat’s velocity.'};
+  return {svg:out,phase:s.vc===0?(Math.abs(drift)<.5?'No current: the boat goes straight across at its full speed.':'No current: the boat simply goes where it points. The crossing time depends only on the across-the-river part of the boat’s velocity.'):Math.abs(drift)<.5?'Pointing partly upstream cancels the current: the boat goes straight across, but more slowly, because only part of its speed carries it over.':drift<0?'Pointed this far upstream, the boat more than cancels the current and lands upstream. The crossing time depends only on the across-the-river part of the boat’s velocity.':'The current adds its own arrow to the boat’s: the boat crabs downstream. The crossing time depends only on the across-the-river part of the boat’s velocity.'};
  }});
 
 SCENE({id:'relative-motion-addition',name:'Adding speeds',tag:'Walking on a moving walkway',
@@ -1092,7 +1092,7 @@ WORD(
  {key:'distance',title:'Distance',aliases:['distance','distances'],linkContext:'position-speed',here:'The length of the path travelled, always positive.',contrast:'Displacement only counts the start and end points.',example:'Out 8 m and back 8 m: distance 16 m.'},
  {key:'acceleration',title:'Acceleration',aliases:['acceleration','accelerates','accelerating','accelerated'],linkContext:'acceleration',scene:'acceleration',here:'The rate of change of velocity, in m/s²: speeding up, slowing down or changing direction.',contrast:'Zero velocity does not mean zero acceleration (think of a ball at the top of its flight).',example:'From rest to 20 m/s in 4 s is an average acceleration of 5 m/s².'},
  {key:'deceleration',title:'Deceleration',aliases:['deceleration','decelerating'],linkContext:'acceleration',here:'Acceleration that reduces speed: an acceleration pointing against the motion.',contrast:'Physicists usually just say negative acceleration, which also covers speeding up backwards.',example:'Braking at 6.5 m/s².'},
- {key:'stopping-distance',title:'Stopping distance',aliases:['stopping distance','stopping distances','braking distance','thinking distance'],linkContext:'acceleration',scene:'acceleration-braking',here:'Thinking distance (speed × reaction time) plus braking distance (speed² ÷ 2 × deceleration).',contrast:'Doubling speed doubles the thinking part but quadruples the braking part.',example:'About 25 m from 50 km/h on a dry road.'},
+ {key:'stopping-distance',title:'Stopping distance',aliases:['stopping distance','stopping distances','braking distance','thinking distance'],linkContext:'acceleration',scene:'acceleration-braking',here:'Thinking distance (speed × reaction time) plus braking distance (speed² ÷ twice the deceleration).',contrast:'Doubling speed doubles the thinking part but quadruples the braking part.',example:'About 25 m from 50 km/h on a dry road.'},
  {key:'inclined-plane',title:'Inclined plane',aliases:['inclined plane','ramp','ramps'],linkContext:'galileo-ramp',scene:'galileo-ramp',here:'A sloping surface. Only the part of gravity along the slope, g sin θ, accelerates an object down it.',contrast:'A ramp does not change the law of fall; it slows it down so it can be measured.',example:'Galileo’s ramps were a few degrees steep.'},
  {key:'water-clock',title:'Water clock',aliases:['water clock'],linkContext:'galileo-ramp',here:'A timer that measures an interval by the amount of water that flows out of a vessel; Galileo weighed the water.',contrast:'Not a pendulum clock: accurate pendulum clocks came later (Huygens, 1656).',example:'More water collected means a longer interval.'},
  {key:'free-fall',title:'Free fall',aliases:['free fall','falling freely'],linkContext:'free-fall',scene:'free-fall',here:'Motion under gravity alone, with no air resistance or other forces.',contrast:'A skydiver soon stops being in free fall once drag balances weight.',example:'A hammer on the Moon is in free fall.'},
@@ -1194,7 +1194,7 @@ SCENE({id:'newton-laws-pairs',name:'Action and reaction',tag:'Newton’s third l
  definition:'When one object pushes on another, the second pushes back on the first with a force equal in size and opposite in direction. The two forces act on different objects.',
  example:'Two skaters push apart. Each feels the same size of force, but the lighter skater ends up moving faster, because the same force gives a smaller mass more acceleration.',
  desc:'Two skaters on ice push against each other for half a second and glide apart; equal and opposite force arrows act on each, and their momenta add to zero.',
- dur:9,research:'Newton (1687). Principia, Law III; tested with colliding pendulums by Wren, Wallis and Huygens (1668).',
+ dur:9,research:'Newton (1687). Principia, Law III; in the Scholium he cites the collision rules of Wren, Wallis and Huygens (1668–69) and tests the law himself with colliding pendulums.',
  hint:'Make one skater much heavier and Run: the forces stay equal, but the speeds do not.',
  init:()=>({m1:50,m2:80,F:150}),
  ui:[{range:'m1',label:'Skater A',min:40,max:100,step:5,get:s=>s.m1,act:'m1',show:v=>v+' kg'},{range:'m2',label:'Skater B',min:40,max:100,step:5,get:s=>s.m2,act:'m2',show:v=>v+' kg'},{range:'F',label:'Push',min:50,max:200,step:10,get:s=>s.F,act:'F',show:v=>v+' N'}],
@@ -1418,7 +1418,7 @@ SCENE({id:'gravitation-cavendish',name:'Weighing the Earth',tag:'Cavendish’s t
   line('deflection θ = '+P2_n(meas*1000,3)+' mrad',C.coral,true);line('G = 2π² L r² θ / (M T²)');line('= '+Gm.toExponential(3)+' N·m²/kg²',C.blue,true);
   line('Earth’s mass = g R² / G');line('= '+ME.toExponential(2)+' kg',C.blue,true);line('mean density = '+P2_n(rho/1000,2)+' g/cm³',C.purple,true);
   line(s.err?'(true value 5.51 g/cm³)':'Cavendish found 5.48',C.muted);
-  return {svg:o,phase:s.err?`A ${Math.abs(s.err)}% ${s.err>0?'over':'under'}-reading of a deflection this small shifts G, and so the Earth’s density, by the same ${Math.abs(s.err)}%: Cavendish had to shield the room and watch through a telescope.`:`The attraction between the balls twists the fibre by ${P2_n(th*1000,3)} milliradians. Timing the swing gives the fibre’s stiffness, and the twist then gives G = ${Gm.toExponential(3)}. With g and the Earth’s radius that weighs the Earth: ${ME.toExponential(2)} kg.`};
+  return {svg:o,phase:s.err?`A ${Math.abs(s.err)}% ${s.err>0?'over':'under'}-reading of a deflection this small shifts G by the same ${Math.abs(s.err)}% and the Earth’s density the opposite way by ${P2_n(Math.abs(1/(1+s.err/100)-1)*100,1)}% (density goes as 1/G): Cavendish had to shield the room and watch through a telescope.`:`The attraction between the balls twists the fibre by ${P2_n(th*1000,3)} milliradians. Timing the swing gives the fibre’s stiffness, and the twist then gives G = ${Gm.toExponential(3)}. With g and the Earth’s radius that weighs the Earth: ${ME.toExponential(2)} kg.`};
  }});
 
 const P2_BODIES=[['Moon',1.62],['Mercury',3.70],['Mars',3.71],['Venus',8.87],['Earth',9.81],['Saturn',10.44],['Jupiter',24.79]];
@@ -1444,9 +1444,9 @@ const P2_MU=3.986e14,P2_RE=6.371e6,P2_orbitCache=new Map();
 function P2_cannon(v){ // velocity Verlet, dt = 10 s, from 200 km altitude, horizontal launch (km/s)
  const key=v.toFixed(2);if(P2_orbitCache.has(key))return P2_orbitCache.get(key);
  let x=P2_RE+2e5,y=0,vx=0,vy=v*1000,dt=10;const pts=[[x,y]];let ax=-P2_MU*x/Math.pow(Math.hypot(x,y),3),ay=-P2_MU*y/Math.pow(Math.hypot(x,y),3),outcome='orbit',ang=0,last=Math.atan2(y,x);
- for(let i=0;i<6000;i++){x+=vx*dt+.5*ax*dt*dt;y+=vy*dt+.5*ay*dt*dt;const r=Math.hypot(x,y),nax=-P2_MU*x/(r*r*r),nay=-P2_MU*y/(r*r*r);vx+=.5*(ax+nax)*dt;vy+=.5*(ay+nay)*dt;ax=nax;ay=nay;
+ for(let i=0;i<8000;i++){x+=vx*dt+.5*ax*dt*dt;y+=vy*dt+.5*ay*dt*dt;const r=Math.hypot(x,y),nax=-P2_MU*x/(r*r*r),nay=-P2_MU*y/(r*r*r);vx+=.5*(ax+nax)*dt;vy+=.5*(ay+nay)*dt;ax=nax;ay=nay;
   const a=Math.atan2(y,x);let d=a-last;if(d<-Math.PI)d+=2*Math.PI;if(d>Math.PI)d-=2*Math.PI;ang+=d;last=a;
-  if(i%3===0)pts.push([x,y]);if(r<P2_RE){outcome='falls';pts.push([x,y]);break}if(r>12*P2_RE){outcome='escapes';break}if(ang>=2*Math.PI){outcome='orbit';pts.push([x,y]);break}}
+  if(i%3===0)pts.push([x,y]);if(r<P2_RE){outcome='falls';pts.push([x,y]);break}if(r>12*P2_RE){outcome=v*1000<Math.sqrt(2*P2_MU/(P2_RE+2e5))?'long':'escapes';break}if(ang>=2*Math.PI){outcome='orbit';pts.push([x,y]);break}}
  const res={pts,outcome};P2_orbitCache.set(key,res);return res;
 }
 const P2_vesc=Math.sqrt(2*P2_MU/(P2_RE+2e5))/1000,P2_vcirc=Math.sqrt(P2_MU/(P2_RE+2e5))/1000;
@@ -1461,14 +1461,14 @@ SCENE({id:'kepler-orbits',name:'Newton’s cannon',tag:'Falling all the way roun
  ui:[{range:'v',label:'Launch speed',min:4,max:12,step:.1,get:s=>s.v,act:'v',show:v=>v.toFixed(1)+' km/s'}],
  on:{v(s,v){s.v=v}},
  draw(s,f,X){
-  const res=P2_cannon(s.v),sc=38/P2_RE,cx=300,cy=196;let o=heading(res.outcome==='falls'?'It falls back to Earth':res.outcome==='escapes'?'It escapes':'It falls all the way round');
+  const res=P2_cannon(s.v),sc=38/P2_RE,cx=300,cy=196;let o=heading(res.outcome==='falls'?'It falls back to Earth':res.outcome==='escapes'?'It escapes':res.outcome==='long'?'It swings far out, but comes back':'It falls all the way round');
   o+=Ci(cx,cy,38,'#8fb8d8',C.blue)+L(cx+38,cy,cx+43,cy,C.ink,4);
   const n=X.try?res.pts.length:Math.max(2,Math.round(res.pts.length*clamp(s.u===undefined?1:s.u,0,1)));const pts=res.pts.slice(0,n).map(([x,y])=>[cx+x*sc,cy-y*sc]);
   o+=`<polyline points="${P2_poly(pts)}" fill="none" stroke="${C.coral}" stroke-width="2.5"/>`;const e=pts[pts.length-1];if(e)o+=Ci(e[0],e[1],5,C.coral);
   o+=TF(20,60,'circular ≈ '+P2_n(P2_vcirc,1)+' km/s',13,C.green,'start')+TF(20,80,'escape ≈ '+P2_n(P2_vesc,1)+' km/s',13,C.purple,'start');
-  o+=TF(580,60,s.v.toFixed(1)+' km/s',16,C.coral,'end','font-weight="700"')+TF(580,80,res.outcome==='falls'?'crashes':res.outcome==='escapes'?'escapes':'closed orbit',13,C.ink,'end');
+  o+=TF(580,60,s.v.toFixed(1)+' km/s',16,C.coral,'end','font-weight="700"')+TF(580,80,res.outcome==='falls'?'crashes':res.outcome==='escapes'?'escapes':res.outcome==='long'?'long ellipse':'closed orbit',13,C.ink,'end');
   o+=TF(300,360,'Launch 200 km up · no air drag · Earth to scale',13,C.muted);
-  return {svg:o,phase:res.outcome==='falls'?`At ${s.v.toFixed(1)} km/s the ball falls faster than the Earth curves away beneath it, so it lands.`:res.outcome==='escapes'?`Above about ${P2_n(P2_vesc,1)} km/s the ball has more kinetic energy than gravity can ever take back: it leaves for good.`:`Between about ${P2_n(P2_vcirc,1)} and ${P2_n(P2_vesc,1)} km/s the ball is still falling, but the Earth curves away as fast as it falls: it goes round on an ellipse${Math.abs(s.v-P2_vcirc)<.15?' (here almost a circle)':''}.`};
+  return {svg:o,phase:res.outcome==='falls'?`At ${s.v.toFixed(1)} km/s the ball falls faster than the Earth curves away beneath it, so it lands.`:res.outcome==='escapes'?`Above about ${P2_n(P2_vesc,1)} km/s the ball has more kinetic energy than gravity can ever take back: it leaves for good.`:res.outcome==='long'?`At ${s.v.toFixed(1)} km/s the ball is still just under the escape speed of ${P2_n(P2_vesc,2)} km/s: it leaves this view on a very long ellipse and will in the end fall back round.`:`Between about ${P2_n(P2_vcirc,1)} and ${P2_n(P2_vesc,1)} km/s the ball is still falling, but the Earth curves away as fast as it falls: it goes round on an ellipse${Math.abs(s.v-P2_vcirc)<.15?' (here almost a circle)':''}.`};
  },
  three(s,f,X,project){
   const res=P2_cannon(s.v),P=project([[-3.2,-3.2,-1.2],[3.2,3.2,1.2]]);let o='';
@@ -1814,7 +1814,7 @@ SCENE({id:'energy-conservation-joule',name:'Joule’s paddle wheel',tag:'Falling
  on:{drop(s,a,ctx){if(s.ph<1)return;s.ph=0;s.run=(s.run||0)+1;ctx.every(33,'fall',s.run)},fall(s,tok){if(Number(tok)!==s.run)return 'stop';s.ph=Math.min(1,s.ph+.05);if(s.ph>=1){s.n++;return 'stop'}},
   drop10(s){s.n+=10;s.ph=1},m(s,v){s.m=v},leak(s,v){s.leak=v},clear(s){s.n=0;s.ph=1;s.run=(s.run||0)+1}},
  draw(s){
-  const c=4186,drops=s.n+(s.ph<1?s.ph:0),E=drops*s.m*P3_G*s.h,heat=E*(1-s.leak/100),dT=heat/(s.M*c),cal=s.M*1000*dT,Jcal=cal>0?E/cal:NaN;
+  const c=4184,drops=s.n+(s.ph<1?s.ph:0),E=drops*s.m*P3_G*s.h,heat=E*(1-s.leak/100),dT=heat/(s.M*c),cal=s.M*1000*dT,Jcal=cal>0?E/cal:NaN;
   let o=heading('Mechanical work → heat: Joule’s paddle wheel');
   const tx=210,ty=190,tw=180,th=120,ang=drops*2.6;
   o+=R(tx-tw/2-8,ty-8,tw+16,th+16,'#d9c7a7','none',10)+R(tx-tw/2,ty,tw,th,'#cfe5f3','none',6)+TF(tx,ty+th+30,`${s.M} kg of water`,13,C.muted);
@@ -1826,7 +1826,7 @@ SCENE({id:'energy-conservation-joule',name:'Joule’s paddle wheel',tag:'Falling
   // Thermometer
   const thx=430,frac=clamp(dT/0.6,0,1);o+=R(thx-9,70,18,220,'#fff',C.line,9)+Ci(thx,300,16,C.coral)+R(thx-5,290-210*frac,10,210*frac+6,C.coral,'none',5);
   o+=TF(thx,330,`+${P3_n(dT,3)} °C`,14,C.coral);
-  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TBF(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TBF(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TBF(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.19',13,C.muted);
+  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TBF(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TBF(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TBF(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.18',13,C.muted);
   return {svg:o,phase:drops?`${P3_n(E,0)} J of falling work became ${P3_n(cal,1)} calories of heat in the water, giving ${P3_n(Jcal,2)} J per calorie.${s.leak?' Heat that leaks away before it is measured makes the answer too high, which is why Joule insulated the tank.':''}`:'Each fall of the weights turns the paddles, and the churned water warms very slightly. Count the falls, measure the temperature, and compare.'};
  }});
 
@@ -1859,7 +1859,7 @@ SCENE({id:'energy-conservation-sankey',name:'Where the energy goes',tag:'Every j
  }});
 
 /* ---------- Momentum ---------- */
-const P3_THINGS={truck:['Lorry at walking pace',3000,1.5],car:['Car at 30 mph',1200,13.4],player:['Sprinting footballer',80,8],ball:['Cricket ball',.16,40],bullet:['Rifle bullet',.008,400]};
+const P3_THINGS={truck:['Lorry at walking pace',3000,1.5],car:['Car at 30 mph',1200,13.4],player:['Sprinting footballer',80,8],ball:['Cricket ball',.16,40],bullet:['Pistol bullet',.008,400]};
 SCENE({id:'momentum',name:'Momentum',tag:'Mass in motion',
  definition:'Momentum is mass times velocity, p = m v, measured in kg·m/s. It has a direction, and it is what a force must change to start or stop something.',
  example:'A 3,000 kg lorry rolling at walking pace has 4,500 kg·m/s of momentum, hundreds of times more than a fast cricket ball, but the ball can carry more kinetic energy per kilogram.',
@@ -2020,7 +2020,7 @@ SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'k balls in, k balls 
   const A=.6,cyc=(s.t%2)/2,q=Math.floor(cyc*4),u=cyc*4-q;let thL=0,thR=0;
   if(q===0)thL=-A*Math.cos(Math.PI/2*u);else if(q===1)thR=A*Math.sin(Math.PI/2*u);else if(q===2)thR=A*Math.cos(Math.PI/2*u);else thL=-A*Math.sin(Math.PI/2*u);
   let o=heading(`${s.k} in, ${s.k} out`);const top=60,len=150,r=17;o+=L(110,top,310,top,C.ink,4);
-  for(let i=0;i<5;i++){const px=140+i*34+.5,th=i<s.k?thL:i>=5-s.k?thR:0,bx=px+len*Math.sin(th),by=top+len*Math.cos(th);o+=L(px,top,bx,by,C.muted,1.4)+Ci(bx,by,r,i<s.k?C.blue:i>=5-s.k?C.coral:'#b9c9d3')}
+  for(let i=0;i<5;i++){const px=140+i*34+.5,th=(i<s.k?thL:0)+(i>=5-s.k?thR:0),bx=px+len*Math.sin(th),by=top+len*Math.cos(th);o+=L(px,top,bx,by,C.muted,1.4)+Ci(bx,by,r,i<s.k?C.blue:i>=5-s.k?C.coral:'#b9c9d3')}
   const rows=[[`${s.k} balls at v`,true,true],[`1 ball at ${s.k}v`,true,s.k===1],[`${s.k} balls at v ÷ 2`,false,false]];
   o+=TF(470,80,'possible outcomes',13,C.muted)+TF(510,104,'momentum',13,C.muted)+TF(570,104,'energy',13,C.muted);
   rows.forEach(([lab,pOk,eOk],i)=>{const y=134+i*40,ok=pOk&&eOk;o+=R(340,y-20,250,32,ok?C.greenp:'#fff',ok?C.green:C.grid,6)+TF(350,y,lab,13,C.ink,'start')+TBF(510,y,pOk?'✓':'✗',15,pOk?C.green:C.coral)+TBF(570,y,eOk?'✓':'✗',15,eOk?C.green:C.coral)});
@@ -2617,10 +2617,10 @@ SCENE({id:'standing-waves-pipes',name:'Open and closed pipes',tag:'Air columns r
 /* ---------- Lesson: sound ---------- */
 SCENE({id:'sound',name:'Sound',tag:'A pressure wave in air',
  definition:'Sound is a longitudinal wave: air molecules oscillate back and forth along the direction of travel, making alternating compressions (high pressure) and rarefactions (low pressure).',
- example:'Robert Boyle showed in 1660 that a ringing bell in a jar fades as the air is pumped out: sound needs a medium. The pressure peaks sit where the displacement crosses zero.',
+ example:'Robert Boyle showed in 1660 that a sound made inside a jar fades as the air is pumped out: sound needs a medium. The pressure peaks sit where the displacement crosses zero.',
  desc:'Columns of air particles displaced back and forth, above two graphs: particle displacement and pressure, which peaks a quarter-wavelength away from the displacement peak.',
  dur:10,hint:'Press Play and change the wavelength. Compare the two graphs: the pressure peak is where neighbouring particles crowd together, a quarter-wave from the biggest displacement.',
- research:'Boyle (1660). New Experiments Physico-Mechanicall, Touching the Spring of the Air: a bell in an evacuated receiver cannot be heard.',
+ research:'Boyle (1660). New Experiments Physico-Mechanicall, Touching the Spring of the Air: a sound made in an evacuated receiver cannot be heard.',
  init:()=>({t:0,lam:220,run:false}),
  ui:[P4_PLAY,{range:'lam',label:'Wavelength',min:120,max:320,step:10,get:s=>s.lam,act:'lam',show:v=>v+' px'}],
  on:P4_on({lam(s,v){s.lam=v}}),
@@ -2753,7 +2753,7 @@ SCENE({id:'resonance',name:'Resonance',tag:'Driving at the natural frequency',
  on:P4_on({r(s,v){s.r=v},z(s,v){s.z=v}}),
  draw(s,f,X){
   const r=s.r,z=s.z,t=X.try?(s.t||0):s.t,A=P4_amp(r,z),ph=Math.atan2(2*z*r,1-r*r),w=2*Math.PI*.5*r,drv=8*Math.sin(w*t),xm=Math.min(1,A/P4_amp(1,.03))*90*Math.sin(w*t-ph);
-  let out=heading('Amplitude peaks at the natural frequency');
+  let out=heading('Amplitude peaks near the natural frequency');
   out+=R(40,66,90,14,C.dark,'none',4)+L(85+drv,80,85+drv,96,C.dark,3)+TF(85,60,'driver',13,C.muted);
   let coil='M'+fmt(85+drv)+' 96';for(let i=1;i<=12;i++)coil+=`L${fmt(85+drv+(i%2?-12:12))} ${fmt(96+i*(110+xm)/13)}`;out+=P(coil,C.blue,2);
   out+=R(60,206+xm,50,40,C.coral,'none',6)+TF(85,300,'mass',13,C.muted);
@@ -2762,7 +2762,7 @@ SCENE({id:'resonance',name:'Resonance',tag:'Driving at the natural frequency',
   out+=L(gx(1),70,gx(1),310,C.grid,1.2,'stroke-dasharray="4 4"')+TF(gx(1),330,'f₀',13,C.muted);
   for(const k of [0,.5,1.5,2,2.5])out+=TF(gx(k),330,k.toFixed(1),13,C.muted);out+=TF(380,352,'driving frequency ÷ natural frequency',13,C.muted)+TF(206,82,'amplitude',13,C.muted,'start');
   out+=Ci(gx(r),gy(A),7,C.coral)+TBF(gx(r)+10,gy(A)-8,'× '+A.toFixed(1),14,C.coral,'start');
-  return {svg:out,phase:`Driving at ${r.toFixed(2)} × f₀ with damping ζ = ${z.toFixed(2)}: amplitude ${A.toFixed(1)} × the static stretch, lagging the driver by ${(ph*180/Math.PI).toFixed(0)}°. At resonance the lag is 90° and the peak is about 1/(2ζ) = ${(1/(2*z)).toFixed(1)}.`};
+  return {svg:out,phase:`Driving at ${r.toFixed(2)} × f₀ with damping ζ = ${z.toFixed(2)}: amplitude ${A.toFixed(1)} × the static stretch, lagging the driver by ${(ph*180/Math.PI).toFixed(0)}°. Driven exactly at f₀ the lag is 90° and the amplitude is 1/(2ζ) = ${(1/(2*z)).toFixed(1)}, close to the peak when damping is light.`};
  }});
 
 SCENE({id:'resonance-swing',name:'Pushing a swing',tag:'Small pushes, timed right',
@@ -2785,7 +2785,7 @@ SCENE({id:'resonance-swing',name:'Pushing a swing',tag:'Small pushes, timed righ
   out+=P(`M${px-len*Math.sin(th)} ${py+len*Math.cos(th)}A${len} ${len} 0 0 0 ${px+len*Math.sin(th)} ${py+len*Math.cos(th)}`,C.line,1.5,'none','stroke-dasharray="4 4"');
   const bx=310,by=300;out+=L(bx,by,590,by,C.ink,1.5);amps.forEach((am,i)=>{const h=Math.min(220,am*80),on=i<s.k;out+=R(bx+6+i*17,by-h,13,h,on?C.blue:'#e6edf1','none',3)});
   out+=TF(450,322,'amplitude after each push',13,C.muted)+TF(300,352,'Ideal swing: no friction, equal small pushes. Bars after the slider’s count are greyed.',13,C.muted);
-  const msg={in:'Each push lands as the swing starts forward, so every push adds energy: the amplitude grows steadily.',half:'Each push meets the swing coming back, so it cancels what the last added: nothing builds up.',other:'Pushing every other swing still keeps in step, so it grows, but at half the rate.',fast:'Pushing 10% too often drifts out of step: the swing grows, then the pushes start fighting it.'}[s.timing];
+  const msg={in:'Each push lands as the swing starts forward, so every push adds energy: the amplitude grows steadily.',half:'The first push meets the swing coming back and stops it. After that the pushes are in step with the motion they make, so it builds again, one push behind.',other:'Pushing every other swing still keeps in step: each push adds as much, but the swing takes twice as long to build.',fast:'Pushing 10% too often drifts out of step: the swing grows, then the pushes start fighting it.'}[s.timing];
   return {svg:out,phase:msg};
  }});
 
@@ -3325,7 +3325,7 @@ SCENE({id:'diffraction-polarisation-polarisers',name:'Polarisation',tag:'Malus�
   out+=beam(440,560,I3)+filt(440,s.th,s.th+'°',I3);
   const gx=70,gy=350,gw=200,gh=56;let d='';for(let a=0;a<=90;a+=3)d+=(a?'L':'M')+fmt(gx+a/90*gw)+' '+fmt(gy-c2(a)*gh);out+=P(d,C.blue,2)+L(gx,gy,gx+gw,gy,C.line,1)+Ci(gx+s.th/90*gw,gy-c2(s.th)*gh,5,s.middle?'none':C.coral,C.coral)+TF(gx+gw/2,gy+16,'cos² θ: two filters only',13,C.muted);
   out+=TF(450,320,s.middle?`½ × cos²${s.mid}° × cos²${s.th-s.mid}° = ${(I3*100).toFixed(1)}%`:`½ × cos²${s.th}° = ${(I3*100).toFixed(1)}%`,14,C.ink);
-  return {svg:out,phase:s.middle&&s.th===90?`With the 45° filter between crossed filters, ${(I3*100).toFixed(1)}% gets through, though the two outer filters alone pass nothing. The middle filter turns the vibration direction part-way, so the last filter has something to pass.`:`The first filter halves unpolarised light and leaves it vibrating vertically. The last filter at ${s.th}° passes cos²${s.th}° of that. Ideal filters assumed.`};
+  return {svg:out,phase:s.middle&&s.th===90&&s.mid>0&&s.mid<90?`With the ${s.mid}° filter between crossed filters, ${(I3*100).toFixed(1)}% gets through, though the two outer filters alone pass nothing. The middle filter turns the vibration direction part-way, so the last filter has something to pass.`:(s.middle?`The first filter halves unpolarised light. The middle filter at ${s.mid}° passes cos²${s.mid}° of that, and the last filter at ${s.th}° passes cos²${Math.abs(s.th-s.mid)}° of what is left: ${(I3*100).toFixed(1)}% in all. Ideal filters assumed.`:`The first filter halves unpolarised light and leaves it vibrating vertically. The last filter at ${s.th}° passes cos²${s.th}° of that. Ideal filters assumed.`)};
  },
  three(s,f,X,project){
   const P=project([[0,-1.4,-1.4],[10,1.4,1.4]]),c=a=>Math.cos(P5_rad(a)),angs=[0].concat(s.middle?[s.mid]:[],[s.th]),xs=s.middle?[2.5,5,7.5]:[3,7];
@@ -3390,7 +3390,7 @@ SCENE({id:'speed-of-light-fizeau',name:'Fizeau’s toothed wheel',tag:'Timing li
   for(const v of [0,10,20,30])out+=TF(gx+v/30*gw,gy+15,v,13,C.muted);out+=Ci(gx+s.f/30*gw,gy-T*gh,6,C.coral);
   if(s.rec){const cc=4*N*Lm*s.rec.f;out+=TF(30,236,`recorded ${s.rec.f.toFixed(2)} turns/s`,13,C.ink,'start')+TF(30,260,'c = 4 × N × L × f',13,C.ink,'start')+TF(30,282,`= 4 × 720 × 8633 m × ${s.rec.f.toFixed(2)}`,13,C.ink,'start')+TBF(30,308,`= ${Math.round(cc/1000).toLocaleString('en-GB')} km/s`,15,Math.abs(cc-c)/c<.03?C.green:C.coral,'start')+TF(30,332,Math.abs(cc-c)/c<.03?'close to 299,792 km/s':'not at the darkest point yet',13,C.muted,'start')}
   else out+=TF(30,236,'Find the first dark point,',13,C.muted,'start')+TF(30,256,'then press Record.',13,C.muted,'start')+TF(30,292,`round trip: ${(tau*1e6).toFixed(1)} μs`,13,C.ink,'start');
-  return {svg:out,phase:`Light takes ${(tau*1e6).toFixed(1)} microseconds for the 17 km round trip. At ${s.f.toFixed(2)} turns per second the wheel turns ${(frac).toFixed(2)} of a tooth-and-gap in that time, so ${Math.round(T*100)}% of the light gets back through. Darkness at half a tooth means the light met a tooth.`};
+  return {svg:out,phase:`Light takes ${(tau*1e6).toFixed(1)} microseconds for the 17 km round trip. At ${s.f.toFixed(2)} turns per second the wheel turns ${(frac).toFixed(2)} of a tooth-and-gap in that time, so ${Math.round(T*100)}% of the light gets back through. Darkness at half a tooth-and-gap means the returning light met a tooth.`};
  }});
 
 SCENE({id:'speed-of-light-water',name:'Slower in water',tag:'The deciding race',
@@ -3415,7 +3415,7 @@ SCENE({id:'speed-of-light-water',name:'Slower in water',tag:'The deciding race',
   out+=R(60,262,480,92,finished?(s.pred==='particle'?C.coralp:C.greenp):'#fff',finished?(s.pred==='particle'?C.coral:C.green):C.grid,10);
   if(finished)out+=TBF(300,290,`Water is slower: ${tw.toFixed(1)} ns against ${ta.toFixed(1)} ns (c ÷ 1.33)`,15,C.ink)+TF(300,316,s.pred==='wave'?'Your prediction matches the wave theory and the experiment.':s.pred==='particle'?'The particle theory’s prediction fails: light does not speed up in water.':'This is what Foucault found in 1850.',14,C.ink)+TF(300,338,'Speeds drawn to scale; real pulses are far too fast to watch.',13,C.muted);
   else out+=TF(300,300,s.pred?'Running…':'Choose a prediction to start the race.',15,C.muted);
-  return {svg:out,phase:finished?'Refraction towards the normal happens because light slows in water. Foucault’s result in 1850 was a decisive blow against Newton’s particles; a century later photons brought particles back in a new form.':'Both theories explain why light bends towards the normal in water, but for opposite reasons. One says the light speeds up, the other that it slows down.'};
+  return {svg:out,phase:finished?'Refraction towards the normal happens because light slows in water. Foucault’s result in 1850 was a decisive blow against Newton’s particles; about half a century later photons brought particles back in a new form.':'Both theories explain why light bends towards the normal in water, but for opposite reasons. One says the light speeds up, the other that it slows down.'};
  }});
 
 /* Era 5 word meanings: light, and the people who measured it. */
@@ -3531,7 +3531,7 @@ SCENE({id:'electric-charge',name:'Electric charge',tag:'Rubbing moves electrons'
   out+=TF(300,372,'Each sign stands for about 1 nC (some 6 billion electrons).',13,C.muted);
   const tot=s.cap+s.leaves;
   const say=s.rod===0&&s.cloth===0&&tot===0?'Everything starts neutral: equal positive and negative charge. Rubbing only moves electrons from one material to the other.'
-   :tot!==0?`The electroscope now holds ${tot>0?'+':''}${tot} nC of the same sign as the rod, so its leaves repel each other and spread. Rod + cloth + electroscope still add up to zero.`
+   :tot!==0?`The electroscope now holds ${tot>0?'+':''}${tot} nC of the same sign as the rod, so its leaves repel each other and spread.${s.rod+s.cloth+tot===0?' Rod + cloth + electroscope still add up to zero.':''}`
    :`${m.rod} and ${m.cloth.toLowerCase()} carry equal and opposite charge (${s.rod>0?'+':''}${s.rod} and ${s.cloth>0?'+':''}${s.cloth} nC): electrons moved ${m.sign>0?'from the glass to the silk':'onto the '+m.rod.toLowerCase()}.`;
   return {svg:out,phase:say};
  }});
@@ -3608,7 +3608,7 @@ SCENE({id:'electric-field',name:'Electric field',tag:'Faraday’s lines of force
   const mx=300,my=215-80;let ex=0,ey=0;for(const c of ch){const dx=(mx-c.x)/P6_PX,dy=(my-c.y)/P6_PX,r=Math.hypot(dx,dy);ex+=P6_K*c.q*1e-9*dx/r**3;ey+=P6_K*c.q*1e-9*dy/r**3}
   out+=Ci(mx,my,5,C.amber)+TF(mx+10,my-8,`E = ${P6_sci(Math.hypot(ex,ey),1)} N/C here`,13,C.amber,'start');
   const say=s.conf==='single'?'Lines spread out evenly from a single charge: their density falls as 1/r², just like the force.'
-   :s.conf==='like'||s.q2>0?'Like charges: the lines bend away from each other and none join the two charges. Midway the fields cancel.'
+   :s.conf==='like'||s.q2>0?'Like charges: the lines bend away from each other and none join the two charges. '+(s.conf==='like'||s.q2===2?'Midway the fields cancel.':'The fields cancel at a point between them, nearer the smaller charge.')
    :s.q2===0?'With the second charge at zero there is only one charge and its lines leave evenly in all directions.'
    :`Unlike charges: lines leave the +2 nC charge and ${Math.abs(s.q2)>=2?'all':'some'} end on the ${s.q2} nC charge${Math.abs(s.q2)<2?'; the rest go out to infinity':''}. More lines means more charge.`;
   return {svg:out,phase:say};
@@ -3677,7 +3677,7 @@ function P6_loopPoint(u,x0,y0,x1,y1){const w=x1-x0,h=y1-y0,per=2*(w+h);let d=((u
 function P6_bulb(x,y,Pw,label){const t=clamp(Pw/3,0,1);return (t>0?Ci(x,y,26+12*t,'#ffd84a','none',`opacity="${(.25+.45*t).toFixed(2)}"`):'')+Ci(x,y,18,P6_mix('#eef2f4','#ffd84a',t),C.dark)+P(`M${x-7} ${y+4} Q${x} ${y-10} ${x+7} ${y+4}`,P6_mix('#9aa8b0','#c47a00',t),2)+(label?TF(x,y+38,label,13,C.muted):'')}
 SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a current',
  definition:'A closed loop of conductors through which charge flows. A source such as a battery gives each coulomb energy (its voltage); the current is the charge passing a point each second, in amperes.',
- example:'Volta stacked pairs of zinc and copper discs separated by brine-soaked card: each pair adds roughly 0.8 V. Close the switch and a current flows at once all round the loop, even though each electron drifts only millimetres a second.',
+ example:'Volta stacked pairs of zinc and copper discs separated by brine-soaked card: each pair adds roughly 0.8 V. Close the switch and a current flows at once all round the loop, even though each electron drifts only a fraction of a millimetre a second.',
  desc:'A voltaic pile, switch, ammeter and bulb in one loop; dots move round the loop when the switch is closed, faster for a larger current.',
  dur:10,hint:'Add or remove pairs of discs and open or close the switch. The bulb only lights when the loop is complete.',
  research:'Volta (1800), On the electricity excited by the mere contact of conducting substances of different kinds, Phil. Trans. R. Soc.',
@@ -3694,7 +3694,7 @@ SCENE({id:'circuits',name:'Electric circuit',tag:'Volta’s pile drives a curren
   out+=R(x1-4,150,8,60,'#fff','none',0);
   out+=s.closed?L(x1,150,x1,210,C.dark,4):L(x1,150,x1+26,192,C.dark,4);out+=Ci(x1,150,5,C.dark)+Ci(x1,210,5,C.dark)+TF(x1+18,140,s.closed?'closed':'open',13,C.muted,'start');
   if(I>0){const ph=X.try?0:(s.ph||0),sp=I*0.25;for(let k=0;k<22;k++){const [x,y]=P6_loopPoint(k/22+ph*sp,x0,y0,x1,y1);out+=Ci(x,y,3.5,C.blue)}
-   out+=arrow(210,y0-14,250,y0-14,C.coral,2,7)+TF(230,y0-22,'conventional current',13,C.coral)}
+   out+=arrow(250,y0-14,210,y0-14,C.coral,2,7)+TF(230,y0-22,'conventional current',13,C.coral)}
   out+=P6_bulb(300,y0,Pw,'');out+=R(270,y1-18,60,36,'#fff',C.dark,8)+TF(300,y1+5,(I*1000).toFixed(0)+' mA',13,C.ink)+TF(300,y1+34,'ammeter',13,C.muted);
   out+=counter(470,24,'power in bulb',Pw.toFixed(2)+' W',C.amber,116);
   return {svg:out,phase:!s.closed?'With the switch open the loop is broken: no current flows anywhere, however many discs you stack.':`${s.pairs} pairs give about ${V.toFixed(1)} V across a 10 Ω bulb (model), so I = V/R = ${(I*1000).toFixed(0)} mA. Blue dots are electrons, which drift the opposite way to the conventional current arrow.`};
@@ -3787,7 +3787,7 @@ SCENE({id:'magnetism-oersted',name:'Ørsted’s discovery',tag:'Rerun Ørsted: a
   const A=P6_axes(330,70,240,220,{x0:-5,x1:5,y0:-90,y1:90,xt:[-5,0,5],yt:[-90,-45,0,45,90],xl:'current I (A, + = northwards)',yl:'deflection (°, + = west)'});out+=A.svg;
   const pts=[];for(let I=-5;I<=5;I+=.1)pts.push([A.X(I),A.Y(Math.atan(I/2)*180/Math.PI)]);out+=P(P6_path(pts),C.blue,1.6,'none','stroke-dasharray="5 4"');
   s.log.forEach(m=>out+=Ci(A.X(m.I),A.Y(m.th),5,C.coral,'#fff'));out+=Ci(A.X(s.I),A.Y(th*180/Math.PI),8,'none',C.amber);
-  return {svg:out,phase:`${Math.abs(s.I)} A at 2 cm makes ${(Bw*1e6).toFixed(1)} µT; with Earth’s ~20 µT the needle settles at ${(th*180/Math.PI).toFixed(0)}° ${s.I>0?'west':s.I<0?'east':'(no deflection)'}. tan(deflection) = B_wire / B_Earth, so it approaches but never reaches 90°.`};
+  return {svg:out,phase:`${Math.abs(s.I)} A at 2 cm makes ${(Math.abs(Bw)*1e6).toFixed(1)} µT; with Earth’s ~20 µT the needle settles at ${Math.abs(th*180/Math.PI).toFixed(0)}° ${s.I>0?'west':s.I<0?'east':'(no deflection)'}. tan(deflection) = B_wire / B_Earth, so it approaches but never reaches 90°.`};
  }});
 
 SCENE({id:'magnetism-wire-coil',name:'Field of a wire and a coil',tag:'Circles and solenoids',
@@ -3884,7 +3884,7 @@ SCENE({id:'induction-generator',name:'Generator',tag:'Spinning a coil makes AC',
   const Aa=.01,peak=s.N*s.B*Aa*2*Math.PI*s.f,ph=s.t*Math.PI*2;let out=heading('A turning coil: flux rises and falls, voltage alternates');
   out+=R(50,90,50,200,C.coral,'none',6)+R(250,90,50,200,'#6f8796','none',6)+TBF(75,195,'N',16,'#fff')+TBF(275,195,'S',16,'#fff');
   for(let k=0;k<4;k++)out+=arrow(104,130+k*40,246,130+k*40,'#c2ccd2',1.2,6);
-  const hx=70*Math.cos(ph),hy=70*Math.sin(ph);out+=L(175-hx,190-hy,175+hx,190+hy,C.amber,6)+Ci(175-hx,190-hy,8,C.amber,'#fff')+Ci(175+hx,190+hy,8,C.amber,'#fff')+Ci(175,190,4,C.dark);
+  const hx=70*Math.sin(ph),hy=70*Math.cos(ph);out+=L(175-hx,190-hy,175+hx,190+hy,C.amber,6)+Ci(175-hx,190-hy,8,C.amber,'#fff')+Ci(175+hx,190+hy,8,C.amber,'#fff')+Ci(175,190,4,C.dark);
   out+=TF(175,320,'coil seen end-on (shown slowed down)',13,C.muted);
   const A=P6_axes(340,80,230,200,{x0:0,x1:2,y0:-1.15*peak,y1:1.15*peak,xt:[0,1,2],yt:[-+peak.toFixed(1),0,+peak.toFixed(1)],xl:'turns of the coil',yl:'EMF (V)'});out+=A.svg;
   const pts=[];for(let u=0;u<=2;u+=.02)pts.push([A.X(u),A.Y(peak*Math.sin(u*2*Math.PI))]);out+=P(P6_path(pts),C.blue,2)+Ci(A.X(s.t),A.Y(peak*Math.sin(ph)),6,C.coral,'#fff');
@@ -3936,8 +3936,8 @@ SCENE({id:'electromagnetic-waves',name:'Electromagnetic wave',tag:'Fields that k
  },
  three(s,f,X,project){
   const Pj=project([[0,-1.2,-1.2],[4,1.2,1.2]]);let out=line3([0,0,0],[4.2,0,0],Pj,C.dark,2);
-  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>Pj([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>Pj([x,v*.9,0]))),C.coral,2.4);
-  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],Pj,C.blue,1)+line3([x,0,0],[x,v*.9,0],Pj,C.coral,1)}
+  const E=P6_wavePts(s.lam,s.t,v=>v);out+=P(P6_path(E.map(([x,v])=>Pj([x,0,v]))),C.blue,2.4)+P(P6_path(E.map(([x,v])=>Pj([x,-v*.9,0]))),C.coral,2.4);
+  for(let k=0;k<=16;k++){const x=k/4,v=Math.sin(2*Math.PI*(x/s.lam-s.t));out+=line3([x,0,0],[x,0,v],Pj,C.blue,1)+line3([x,0,0],[x,-v*.9,0],Pj,C.coral,1)}
   return {svg:out,title:'Electromagnetic wave in 3D',caption:'Blue: electric field in the vertical plane. Coral: magnetic field in the horizontal plane. Both travel along the axis.'};
  }});
 
@@ -3984,7 +3984,7 @@ SCENE({id:'electromagnetic-waves-hertz',name:'Hertz’s experiment',tag:'Rerun H
   return {svg:out,phase:est?`Quiet spots are half a wavelength apart. Your marks give ${est}. Hertz did this with metre-scale waves and found speeds close to the speed of light.`:`The reflected wave meets the outgoing one and forms nodes every ${(lam/2).toFixed(2)} m, starting at the metal sheet. Find them with the receiver.`};
  }});
 
-const P6_BANDS=[[3,-3,'Radio','#8fb7d9','broadcast, Wi-Fi at the short end'],[-3,-3.52,'Microwave','#9fc9a8','ovens, radar, phone links'],[-3.52,-6.12,'Infrared','#e7b28f','warm objects, remote controls'],[-6.12,-6.42,'Visible','#fff','the narrow band our eyes see'],[-6.42,-8,'Ultraviolet','#c1a6e2','sunburn, sterilising lamps'],[-8,-11,'X-ray','#b0b8bf','medical images'],[-11,-12.5,'Gamma','#8d959b','radioactive decay, cosmic sources']];
+const P6_BANDS=[[3,0,'Radio','#8fb7d9','broadcast radio and television'],[0,-3,'Microwave','#9fc9a8','ovens, radar, Wi-Fi, phone links'],[-3,-6.12,'Infrared','#e7b28f','warm objects, remote controls'],[-6.12,-6.42,'Visible','#fff','the narrow band our eyes see'],[-6.42,-8,'Ultraviolet','#c1a6e2','sunburn, sterilising lamps'],[-8,-11,'X-ray','#b0b8bf','medical images'],[-11,-12.5,'Gamma','#8d959b','radioactive decay, cosmic sources']];
 function P6_rgbOfNm(nm){let r=0,g=0,b=0;if(nm<440){r=(440-nm)/60;b=1}else if(nm<490){g=(nm-440)/50;b=1}else if(nm<510){g=1;b=(510-nm)/20}else if(nm<580){r=(nm-510)/70;g=1}else if(nm<645){r=1;g=(645-nm)/65}else r=1;const f=nm<420?.3+.7*(nm-380)/40:nm>700?.3+.7*(750-nm)/50:1;return '#'+[r,g,b].map(v=>Math.round(255*clamp(v*f,0,1)).toString(16).padStart(2,'0')).join('')}
 SCENE({id:'electromagnetic-waves-spectrum',name:'Electromagnetic spectrum',tag:'One kind of wave, many names',
  definition:'The whole range of electromagnetic waves, ordered by wavelength from kilometre-long radio waves to gamma rays smaller than an atomic nucleus. Shorter wavelength means higher frequency and more energy per photon.',
@@ -4287,7 +4287,7 @@ SCENE({id:'temperature-heat-rumford',name:'Heat is motion: Rumford’s cannon',t
  ui:[{choose:[['observed','What Rumford saw'],['caloric','Caloric prediction']],label:'Curve',get:s=>s.view,act:'view'}],
  on:{view(s,v){s.view=v;return 'keep'}},
  trace(){return [
-  {k:0,say:'Munich arsenal, 1798: a brass cannon barrel sits in a box of cold water. A deliberately blunt steel borer is pressed against it.'},
+  {k:0,say:'Munich arsenal, late 1790s: a brass cannon barrel sits in a box of cold water. A deliberately blunt steel borer is pressed against it.'},
   {k:1,say:'Horses turn the barrel. The blunt borer grinds rather than cuts, and the water slowly warms.'},
   {k:2,say:'The caloric theory says heat is a fluid squeezed out of the metal, so the supply should run out as the metal is ground.'},
   {k:3,say:'Instead the heat kept coming. After about two and a half hours the water boiled, to the astonishment of the onlookers.'},
@@ -4400,7 +4400,7 @@ const P7_WALK=new Map();
 function P7_walk(seed,steps,sig){const key=seed+':'+steps+':'+sig;if(P7_WALK.has(key))return P7_WALK.get(key);const r=rng(seed),pts=[[0,0]];for(let i=1;i<=steps;i++){const p=pts[i-1];pts.push([p[0]+sig*P7_gauss(r),p[1]+sig*P7_gauss(r)])}if(P7_WALK.size>200)P7_WALK.delete(P7_WALK.keys().next().value);P7_WALK.set(key,pts);return pts}
 SCENE({id:'brownian-motion',name:'Brownian motion',tag:'Seeing the invisible jostling',
  definition:'Tiny particles suspended in water jiggle about at random. In 1827 Robert Brown saw it in grains from pollen; in 1905 Einstein explained it as the visible result of countless collisions with invisible, moving water molecules.',
- example:'A grain one thousandth of a millimetre across is hit by water molecules trillions of times a second. The hits almost cancel, and the small imbalance each instant drives an erratic, never-ending dance.',
+ example:'A grain one thousandth of a millimetre across is hit by water molecules an enormous number of times every second. The hits almost cancel, and the small imbalance each instant drives an erratic, never-ending dance.',
  research:'Brown, R. (1828). A brief account of microscopical observations… on the particles contained in the pollen of plants. Einstein, A. (1905). Annalen der Physik 17.',
  desc:'A large grain wandering along an erratic track; switching on the molecules reveals the small fast particles whose uneven collisions push it about.',
  dur:12,hint:'Show the molecules to see what Brown could not, and start a new grain. The track never settles and never repeats.',
@@ -4678,7 +4678,7 @@ SCENE({id:'heat-engines-heat-pump',name:'Heat pumps and refrigerators',tag:'Runn
   out+=L(280,240,340,240,C.coral,w(real))+`<polygon points="340,${240-w(real)/2-6} 356,240 340,${240+w(real)/2+6}" fill="${C.coral}"/>`+TF(300,276,real.toFixed(1)+' units of heat in',13,C.coral,'start');
   out+=R(30,70,200,120,'#fff',C.grid,10)+TB(130,94,'Coefficient of performance',13,C.ink)+TF(130,122,'ideal: '+cop.toFixed(1),15,C.green)+TF(130,148,'typical real: ≈ '+real.toFixed(1),15,C.coral)+TF(130,172,'(illustrative estimate)',13,C.muted);
   out+=TF(300,350,'A resistance heater gives exactly 1 unit of heat per unit of electricity.',13,C.muted);
-  return {svg:out,phase:`To heat to ${s.tin} °C from ${s.tout} °C the ideal COP is ${Th.toFixed(0)}/(${Th.toFixed(0)} − ${Tc.toFixed(0)}) = ${cop.toFixed(1)}. Real machines reach roughly half of that, still several times better than burning the electricity in a heater.`};
+  return {svg:out,phase:`To heat to ${s.tin} °C from ${s.tout} °C the ideal COP is ${Th.toFixed(0)}/(${Th.toFixed(0)} − ${Tc.toFixed(0)}) = ${cop.toFixed(1)}. Real machines manage far less, about ${real.toFixed(1)} here, because of losses and the temperature gaps their heat exchangers need. That is still several times better than burning the electricity in a heater.`};
  }});
 
 /* ======================= Lesson: Changes of phase ======================= */
@@ -5284,9 +5284,9 @@ const P8_balmer=n=>364.56*n*n/(n*n-4); // nm (Balmer 1885; air wavelengths)
 SCENE({id:'atomic-spectra',name:'Hydrogen’s line spectrum',tag:'Balmer’s formula',
  research:['Ångström (1868). Measurements of the hydrogen lines.','Balmer (1885). Note on the spectral lines of hydrogen.'],
  definition:'Glowing hydrogen gives off light at only a few sharp wavelengths, not a continuous rainbow. In 1885 Johann Balmer found a simple formula that fits them all: λ = 364.56 nm × n²/(n² − 4) for n = 3, 4, 5, ….',
- example:'n = 3 gives 656.3 nm (red), n = 4 gives 486.1 nm (blue-green), n = 5 gives 434.0 nm and n = 6 gives 410.2 nm (violet). Higher n crowd towards 364.6 nm, in the ultraviolet. Balmer had no explanation; Bohr provided one in 1913.',
+ example:'n = 3 gives 656.2 nm (red), n = 4 gives 486.1 nm (blue-green), n = 5 gives 434.0 nm and n = 6 gives 410.1 nm (violet), each within 0.1 nm of the measured line. Higher n crowd towards 364.6 nm, in the ultraviolet. Balmer had no explanation; Bohr provided one in 1913.',
  desc:'A dark spectrum strip from 360 to 700 nm with hydrogen’s bright lines appearing one by one, the chosen line highlighted with its Balmer calculation.',
- dur:10,hint:'Change n to see which line the formula picks out, including ones in the ultraviolet.',
+ dur:10,hint:'Change n to see which line the formula picks out, as the lines crowd towards the ultraviolet limit at 364.6 nm.',
  init:()=>({n:3}),
  watch(p){return {n:3+Math.min(6,Math.floor(p*7)),upto:3+Math.min(6,Math.floor(p*7))}},
  ui:[{range:'n',label:'n',min:3,max:9,step:1,get:s=>s.n,act:'n'}],
@@ -5330,7 +5330,7 @@ const P8_FRAUN=[['K',393.4],['H',396.8],['h',410.2],['g',422.7],['G',430.8],['F'
 SCENE({id:'atomic-spectra-fraunhofer',name:'Reading starlight',tag:'Dark lines name the elements',
  research:['Fraunhofer (1814). Dark lines in the solar spectrum.','Kirchhoff & Bunsen (1860). Chemical analysis by spectral observations.','Janssen & Lockyer (1868). A new yellow line in light from the Sun’s edge, later named helium.'],
  definition:'Each element absorbs and emits light at the same characteristic wavelengths. Hot gas glows at those lines; cooler gas in front of a hot source removes them, leaving dark lines. Matching the lines tells us what distant stars are made of.',
- example:'The Sun’s spectrum is crossed by dark lines that Fraunhofer labelled in 1814. Kirchhoff and Bunsen showed in 1859–60 that the D lines are sodium and the C and F lines are hydrogen. Helium was first identified from a yellow line at 587.6 nm in light from the Sun’s edge during the 1868 eclipse, before it was found on Earth.',
+ example:'The Sun’s spectrum is crossed by dark lines that Fraunhofer labelled in 1814. Kirchhoff and Bunsen showed in 1859–60 that the D lines are sodium; the C and F lines were soon matched to hydrogen. Helium was first identified from a yellow line at 587.6 nm in light from the Sun’s edge during the 1868 eclipse, before it was found on Earth.',
  desc:'Three strips: an element’s bright emission lines, the same element absorbing from a rainbow, and the Sun’s spectrum with Fraunhofer’s lettered dark lines, with the element’s lines marked for comparison.',
  dur:12,hint:'Pick an element and see whether its fingerprint matches dark lines in the Sun.',
  init:()=>({el:'Na'}),

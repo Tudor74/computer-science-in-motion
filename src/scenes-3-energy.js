@@ -146,7 +146,7 @@ SCENE({id:'energy-conservation-joule',name:'Joule’s paddle wheel',tag:'Falling
  on:{drop(s,a,ctx){if(s.ph<1)return;s.ph=0;s.run=(s.run||0)+1;ctx.every(33,'fall',s.run)},fall(s,tok){if(Number(tok)!==s.run)return 'stop';s.ph=Math.min(1,s.ph+.05);if(s.ph>=1){s.n++;return 'stop'}},
   drop10(s){s.n+=10;s.ph=1},m(s,v){s.m=v},leak(s,v){s.leak=v},clear(s){s.n=0;s.ph=1;s.run=(s.run||0)+1}},
  draw(s){
-  const c=4186,drops=s.n+(s.ph<1?s.ph:0),E=drops*s.m*P3_G*s.h,heat=E*(1-s.leak/100),dT=heat/(s.M*c),cal=s.M*1000*dT,Jcal=cal>0?E/cal:NaN;
+  const c=4184,drops=s.n+(s.ph<1?s.ph:0),E=drops*s.m*P3_G*s.h,heat=E*(1-s.leak/100),dT=heat/(s.M*c),cal=s.M*1000*dT,Jcal=cal>0?E/cal:NaN;
   let o=heading('Mechanical work → heat: Joule’s paddle wheel');
   const tx=210,ty=190,tw=180,th=120,ang=drops*2.6;
   o+=R(tx-tw/2-8,ty-8,tw+16,th+16,'#d9c7a7','none',10)+R(tx-tw/2,ty,tw,th,'#cfe5f3','none',6)+TF(tx,ty+th+30,`${s.M} kg of water`,13,C.muted);
@@ -158,7 +158,7 @@ SCENE({id:'energy-conservation-joule',name:'Joule’s paddle wheel',tag:'Falling
   // Thermometer
   const thx=430,frac=clamp(dT/0.6,0,1);o+=R(thx-9,70,18,220,'#fff',C.line,9)+Ci(thx,300,16,C.coral)+R(thx-5,290-210*frac,10,210*frac+6,C.coral,'none',5);
   o+=TF(thx,330,`+${P3_n(dT,3)} °C`,14,C.coral);
-  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TBF(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TBF(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TBF(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.19',13,C.muted);
+  o+=R(460,80,128,182,'#fff',C.grid,8)+TF(524,102,'drops',13,C.muted)+TBF(524,124,P3_n(drops,0),17,C.ink)+TF(524,150,'work done',13,C.muted)+TBF(524,170,`${P3_n(E,0)} J`,15,C.ink)+TF(524,196,'J per calorie',13,C.muted)+TBF(524,220,isFinite(Jcal)?P3_n(Jcal,2):'—',17,s.leak?C.coral:C.green)+TF(524,246,'true value 4.18',13,C.muted);
   return {svg:o,phase:drops?`${P3_n(E,0)} J of falling work became ${P3_n(cal,1)} calories of heat in the water, giving ${P3_n(Jcal,2)} J per calorie.${s.leak?' Heat that leaks away before it is measured makes the answer too high, which is why Joule insulated the tank.':''}`:'Each fall of the weights turns the paddles, and the churned water warms very slightly. Count the falls, measure the temperature, and compare.'};
  }});
 
@@ -191,7 +191,7 @@ SCENE({id:'energy-conservation-sankey',name:'Where the energy goes',tag:'Every j
  }});
 
 /* ---------- Momentum ---------- */
-const P3_THINGS={truck:['Lorry at walking pace',3000,1.5],car:['Car at 30 mph',1200,13.4],player:['Sprinting footballer',80,8],ball:['Cricket ball',.16,40],bullet:['Rifle bullet',.008,400]};
+const P3_THINGS={truck:['Lorry at walking pace',3000,1.5],car:['Car at 30 mph',1200,13.4],player:['Sprinting footballer',80,8],ball:['Cricket ball',.16,40],bullet:['Pistol bullet',.008,400]};
 SCENE({id:'momentum',name:'Momentum',tag:'Mass in motion',
  definition:'Momentum is mass times velocity, p = m v, measured in kg·m/s. It has a direction, and it is what a force must change to start or stop something.',
  example:'A 3,000 kg lorry rolling at walking pace has 4,500 kg·m/s of momentum, hundreds of times more than a fast cricket ball, but the ball can carry more kinetic energy per kilogram.',
@@ -352,7 +352,7 @@ SCENE({id:'collisions-cradle',name:'Newton’s cradle',tag:'k balls in, k balls 
   const A=.6,cyc=(s.t%2)/2,q=Math.floor(cyc*4),u=cyc*4-q;let thL=0,thR=0;
   if(q===0)thL=-A*Math.cos(Math.PI/2*u);else if(q===1)thR=A*Math.sin(Math.PI/2*u);else if(q===2)thR=A*Math.cos(Math.PI/2*u);else thL=-A*Math.sin(Math.PI/2*u);
   let o=heading(`${s.k} in, ${s.k} out`);const top=60,len=150,r=17;o+=L(110,top,310,top,C.ink,4);
-  for(let i=0;i<5;i++){const px=140+i*34+.5,th=i<s.k?thL:i>=5-s.k?thR:0,bx=px+len*Math.sin(th),by=top+len*Math.cos(th);o+=L(px,top,bx,by,C.muted,1.4)+Ci(bx,by,r,i<s.k?C.blue:i>=5-s.k?C.coral:'#b9c9d3')}
+  for(let i=0;i<5;i++){const px=140+i*34+.5,th=(i<s.k?thL:0)+(i>=5-s.k?thR:0),bx=px+len*Math.sin(th),by=top+len*Math.cos(th);o+=L(px,top,bx,by,C.muted,1.4)+Ci(bx,by,r,i<s.k?C.blue:i>=5-s.k?C.coral:'#b9c9d3')}
   const rows=[[`${s.k} balls at v`,true,true],[`1 ball at ${s.k}v`,true,s.k===1],[`${s.k} balls at v ÷ 2`,false,false]];
   o+=TF(470,80,'possible outcomes',13,C.muted)+TF(510,104,'momentum',13,C.muted)+TF(570,104,'energy',13,C.muted);
   rows.forEach(([lab,pOk,eOk],i)=>{const y=134+i*40,ok=pOk&&eOk;o+=R(340,y-20,250,32,ok?C.greenp:'#fff',ok?C.green:C.grid,6)+TF(350,y,lab,13,C.ink,'start')+TBF(510,y,pOk?'✓':'✗',15,pOk?C.green:C.coral)+TBF(570,y,eOk?'✓':'✗',15,eOk?C.green:C.coral)});

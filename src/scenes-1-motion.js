@@ -268,7 +268,7 @@ SCENE({id:'free-fall',name:'Free fall',tag:'Hammer and feather',
 
 SCENE({id:'free-fall-measure',name:'Measure g yourself',tag:'Time a drop',
  definition:'You can estimate g from a drop: time how long an object takes to fall a known height h, then g = 2h ÷ t². Human reaction time makes short drops very inaccurate.',
- example:'From 5 m the true fall takes 1.01 s. Press 0.2 s late and you measure 1.21 s, giving g ≈ 6.8 m/s²: an error of 30%. From 45 m the same delay costs only about 13%.',
+ example:'From 5 m the true fall takes 1.01 s. Press 0.2 s late and you measure 1.21 s, giving g ≈ 6.8 m/s²: an error of 30%. From 45 m the same delay costs only about 12%.',
  desc:'A ball falls from a tower of chosen height in real time; you press Stop when it lands, and a table compares your time and your value of g with the true ones.',
  research:'g = 2h/t² from Galileo’s law of fall (1638). Human simple reaction times are typically 0.2–0.25 s (Donders 1868; Hick 1952), which is why Galileo slowed falls on ramps instead.',
  dur:12,hint:'Pick a height, press Drop, then press Stop the moment the ball lands. Repeat, and try a taller drop to shrink your error.',
@@ -359,7 +359,7 @@ SCENE({id:'projectiles-range',name:'The best launch angle',tag:'Why 45°, and wh
   const A=P1_axes(80,236,470,90,[0,90],[0,maxR*1.05],{xt:[0,15,30,45,60,75,90],xl:'launch angle (degrees)'});out+=A.svg;
   out+=P(P1_path(curve.map(([d,r])=>[A.X(d),A.Y(r)])),C.blue,2.5)+L(A.X(best[0]),236,A.X(best[0]),326,C.green,2,'stroke-dasharray="4 3"')+Ci(A.X(s.deg),A.Y(a.R),5,C.ink);
   out+=TF(A.X(best[0])+6,276,`best ${best[0]}°`,13,C.green,'start')+TF(84,250,'range',13,C.muted,'start');
-  return {svg:out,phase:s.c===0?`No air: ${s.deg}° and ${90-s.deg}° land at the same point, and the best angle is 45° (${P1_m(maxR)} m). The steeper throw just spends longer in the air.`:`With drag the best angle drops to about ${best[0]}°, and the steep throw lands short of its shallow partner: high, slow flights lose more to the air. (Drag model illustrative.)`};
+  return {svg:out,phase:s.c===0?`No air: ${s.deg}° and ${90-s.deg}° land at the same point, and the best angle is 45° (${P1_m(maxR)} m). The steeper throw just spends longer in the air.`:`${best[0]<45?`With drag the best angle drops to about ${best[0]}°`:'With drag this light and a throw this slow the best angle is only just below 45°'}, and the steep throw lands short of its shallow partner: high, slow flights lose more to the air. (Drag model illustrative.)`};
  }});
 
 SCENE({id:'projectiles-monkey',name:'The monkey and the hunter',tag:'Gravity treats both alike',
@@ -431,7 +431,7 @@ SCENE({id:'relative-motion-river',name:'Crossing a river',tag:'Adding velocities
   const tip=[O[0]+s.vb*Math.cos(r)*k,O[1]-s.vb*Math.sin(r)*k];if(s.vc>0)out+=arrow(...tip,tip[0]+s.vc*k,tip[1],'#5aa0c8',3,8);out+=arrow(...O,O[0]+vx*k,O[1]-vy*k,C.blue,3,8);
   out+=TF(500,282,'boat + current',13,C.muted)+TF(500,298,'= ground',13,C.muted);
   out+=TBF(300,358,`crossing time ${P1_m(T)} s · lands ${Math.abs(drift)<.5?'straight across':P1_m(Math.abs(drift))+' m '+(drift>0?'downstream':'upstream')} · ground speed ${P1_m(Math.hypot(vx,vy),2)} m/s`,14,C.ink);
-  return {svg:out,phase:Math.abs(drift)<.5?'Pointing partly upstream cancels the current: the boat goes straight across, but more slowly, because only part of its speed carries it over.':'The current adds its own arrow to the boat’s: the boat crabs downstream. The crossing time depends only on the across-the-river part of the boat’s velocity.'};
+  return {svg:out,phase:s.vc===0?(Math.abs(drift)<.5?'No current: the boat goes straight across at its full speed.':'No current: the boat simply goes where it points. The crossing time depends only on the across-the-river part of the boat’s velocity.'):Math.abs(drift)<.5?'Pointing partly upstream cancels the current: the boat goes straight across, but more slowly, because only part of its speed carries it over.':drift<0?'Pointed this far upstream, the boat more than cancels the current and lands upstream. The crossing time depends only on the across-the-river part of the boat’s velocity.':'The current adds its own arrow to the boat’s: the boat crabs downstream. The crossing time depends only on the across-the-river part of the boat’s velocity.'};
  }});
 
 SCENE({id:'relative-motion-addition',name:'Adding speeds',tag:'Walking on a moving walkway',

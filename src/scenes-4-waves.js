@@ -245,10 +245,10 @@ SCENE({id:'standing-waves-pipes',name:'Open and closed pipes',tag:'Air columns r
 /* ---------- Lesson: sound ---------- */
 SCENE({id:'sound',name:'Sound',tag:'A pressure wave in air',
  definition:'Sound is a longitudinal wave: air molecules oscillate back and forth along the direction of travel, making alternating compressions (high pressure) and rarefactions (low pressure).',
- example:'Robert Boyle showed in 1660 that a ringing bell in a jar fades as the air is pumped out: sound needs a medium. The pressure peaks sit where the displacement crosses zero.',
+ example:'Robert Boyle showed in 1660 that a sound made inside a jar fades as the air is pumped out: sound needs a medium. The pressure peaks sit where the displacement crosses zero.',
  desc:'Columns of air particles displaced back and forth, above two graphs: particle displacement and pressure, which peaks a quarter-wavelength away from the displacement peak.',
  dur:10,hint:'Press Play and change the wavelength. Compare the two graphs: the pressure peak is where neighbouring particles crowd together, a quarter-wave from the biggest displacement.',
- research:'Boyle (1660). New Experiments Physico-Mechanicall, Touching the Spring of the Air: a bell in an evacuated receiver cannot be heard.',
+ research:'Boyle (1660). New Experiments Physico-Mechanicall, Touching the Spring of the Air: a sound made in an evacuated receiver cannot be heard.',
  init:()=>({t:0,lam:220,run:false}),
  ui:[P4_PLAY,{range:'lam',label:'Wavelength',min:120,max:320,step:10,get:s=>s.lam,act:'lam',show:v=>v+' px'}],
  on:P4_on({lam(s,v){s.lam=v}}),
@@ -381,7 +381,7 @@ SCENE({id:'resonance',name:'Resonance',tag:'Driving at the natural frequency',
  on:P4_on({r(s,v){s.r=v},z(s,v){s.z=v}}),
  draw(s,f,X){
   const r=s.r,z=s.z,t=X.try?(s.t||0):s.t,A=P4_amp(r,z),ph=Math.atan2(2*z*r,1-r*r),w=2*Math.PI*.5*r,drv=8*Math.sin(w*t),xm=Math.min(1,A/P4_amp(1,.03))*90*Math.sin(w*t-ph);
-  let out=heading('Amplitude peaks at the natural frequency');
+  let out=heading('Amplitude peaks near the natural frequency');
   out+=R(40,66,90,14,C.dark,'none',4)+L(85+drv,80,85+drv,96,C.dark,3)+TF(85,60,'driver',13,C.muted);
   let coil='M'+fmt(85+drv)+' 96';for(let i=1;i<=12;i++)coil+=`L${fmt(85+drv+(i%2?-12:12))} ${fmt(96+i*(110+xm)/13)}`;out+=P(coil,C.blue,2);
   out+=R(60,206+xm,50,40,C.coral,'none',6)+TF(85,300,'mass',13,C.muted);
@@ -390,7 +390,7 @@ SCENE({id:'resonance',name:'Resonance',tag:'Driving at the natural frequency',
   out+=L(gx(1),70,gx(1),310,C.grid,1.2,'stroke-dasharray="4 4"')+TF(gx(1),330,'f₀',13,C.muted);
   for(const k of [0,.5,1.5,2,2.5])out+=TF(gx(k),330,k.toFixed(1),13,C.muted);out+=TF(380,352,'driving frequency ÷ natural frequency',13,C.muted)+TF(206,82,'amplitude',13,C.muted,'start');
   out+=Ci(gx(r),gy(A),7,C.coral)+TBF(gx(r)+10,gy(A)-8,'× '+A.toFixed(1),14,C.coral,'start');
-  return {svg:out,phase:`Driving at ${r.toFixed(2)} × f₀ with damping ζ = ${z.toFixed(2)}: amplitude ${A.toFixed(1)} × the static stretch, lagging the driver by ${(ph*180/Math.PI).toFixed(0)}°. At resonance the lag is 90° and the peak is about 1/(2ζ) = ${(1/(2*z)).toFixed(1)}.`};
+  return {svg:out,phase:`Driving at ${r.toFixed(2)} × f₀ with damping ζ = ${z.toFixed(2)}: amplitude ${A.toFixed(1)} × the static stretch, lagging the driver by ${(ph*180/Math.PI).toFixed(0)}°. Driven exactly at f₀ the lag is 90° and the amplitude is 1/(2ζ) = ${(1/(2*z)).toFixed(1)}, close to the peak when damping is light.`};
  }});
 
 SCENE({id:'resonance-swing',name:'Pushing a swing',tag:'Small pushes, timed right',
@@ -413,7 +413,7 @@ SCENE({id:'resonance-swing',name:'Pushing a swing',tag:'Small pushes, timed righ
   out+=P(`M${px-len*Math.sin(th)} ${py+len*Math.cos(th)}A${len} ${len} 0 0 0 ${px+len*Math.sin(th)} ${py+len*Math.cos(th)}`,C.line,1.5,'none','stroke-dasharray="4 4"');
   const bx=310,by=300;out+=L(bx,by,590,by,C.ink,1.5);amps.forEach((am,i)=>{const h=Math.min(220,am*80),on=i<s.k;out+=R(bx+6+i*17,by-h,13,h,on?C.blue:'#e6edf1','none',3)});
   out+=TF(450,322,'amplitude after each push',13,C.muted)+TF(300,352,'Ideal swing: no friction, equal small pushes. Bars after the slider’s count are greyed.',13,C.muted);
-  const msg={in:'Each push lands as the swing starts forward, so every push adds energy: the amplitude grows steadily.',half:'Each push meets the swing coming back, so it cancels what the last added: nothing builds up.',other:'Pushing every other swing still keeps in step, so it grows, but at half the rate.',fast:'Pushing 10% too often drifts out of step: the swing grows, then the pushes start fighting it.'}[s.timing];
+  const msg={in:'Each push lands as the swing starts forward, so every push adds energy: the amplitude grows steadily.',half:'The first push meets the swing coming back and stops it. After that the pushes are in step with the motion they make, so it builds again, one push behind.',other:'Pushing every other swing still keeps in step: each push adds as much, but the swing takes twice as long to build.',fast:'Pushing 10% too often drifts out of step: the swing grows, then the pushes start fighting it.'}[s.timing];
   return {svg:out,phase:msg};
  }});
 
