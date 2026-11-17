@@ -118,7 +118,7 @@ SCENE({id:'acid-house-summer-spread',name:'How big the parties grew',tag:'Hundre
 const X5_spl=(n,d)=>100+20*Math.log10(n)-20*Math.log10(d);
 SCENE({id:'free-parties',name:'The sound system',tag:'Stack the boxes, feel the bass',
  definition:'A free party is built around a sound system: a mobile rig of amplifiers and loudspeaker stacks, brought to a field or warehouse and run by a collective that charges no entry. Groups such as Spiral Tribe and DiY toured Britain with theirs.',
- example:'Doubling the number of bass speakers, placed close together, adds up to 6 decibels. Doubling your distance from the stack takes about 6 decibels away again.',
+ example:'Doubling the number of bass speakers, placed close together and playing in step, adds up to 6 decibels (about 3 if their sound does not add in step). Doubling your distance from the stack takes about 6 decibels away again.',
  desc:'A stack of bass speakers whose size can be doubled, a listener who can be moved away, and a curve of sound level against distance with a line at 85 decibels.',
  research:['Henriques, J. (2011). Sonic Bodies: Reggae Sound Systems, Performance Techniques, and Ways of Knowing. Continuum (the Jamaican sound-system tradition these rigs descend from).','Collin, M. (1997). Altered State. Serpent’s Tail.','UK Control of Noise at Work Regulations 2005: 85 dB(A) daily exposure is the upper action value.'],
  dur:11,hint:'Change the stack and the distance. Real rigs are loud enough to damage hearing: at any event, stand back and wear earplugs.',
@@ -266,7 +266,7 @@ const X5_STY=[
 const X5_stySpec={N:16,ms:s=>15000/X5_STY[s.i].bpm,step(s,i){const q=X5_STY[s.i];if(q.k[i])X5_S.kick();if(q.s[i])X5_S.snare();if(q.h[i])X5_S.hat();if(q.b[i]){if(q.b[i]<40)X5_S.sub(0,q.b[i]);else X5_S.acid(q.b[i],0,{cutoff:900,res:4,env:800})}}};
 SCENE({id:'after-rave',name:'After rave: the styles split',tag:'One scene becomes many tempos',
  definition:'Around 1991–1993 the single British rave scene divided into separate styles with their own clubs, labels and tempos. Some kept the steady four-on-the-floor kick of house and techno; others built on sped-up breakbeats.',
- example:'By the mid-1990s house ran at about 125 beats per minute, techno at about 135, and jungle at about 165: too far apart to mix in one DJ set.',
+ example:'By the mid-1990s house ran at about 125 beats per minute, techno at about 135, and jungle at about 165: far enough apart that most DJs, clubs and crowds specialised, though skilled DJs could still move between them.',
  desc:'Six styles placed on a tempo scale from 110 to 190 beats per minute. Choosing one shows its one-bar drum pattern on a grid and plays it.',
  research:['Reynolds, S. (1998). Energy Flash. Picador.','Belle-Fortune, B. (2004). All Crews: Journeys Through Jungle / Drum & Bass Culture. Vision.','Butler, M. J. (2006). Unlocking the Groove. Indiana University Press.','Tempo ranges are typical values and approximate.'],
  dur:12,hint:'Choose a style and press Play. The patterns are original examples in each style; tempos are typical, not fixed.',

@@ -2224,7 +2224,7 @@ SCENE({id:'acid-house-summer-spread',name:'How big the parties grew',tag:'Hundre
 const X5_spl=(n,d)=>100+20*Math.log10(n)-20*Math.log10(d);
 SCENE({id:'free-parties',name:'The sound system',tag:'Stack the boxes, feel the bass',
  definition:'A free party is built around a sound system: a mobile rig of amplifiers and loudspeaker stacks, brought to a field or warehouse and run by a collective that charges no entry. Groups such as Spiral Tribe and DiY toured Britain with theirs.',
- example:'Doubling the number of bass speakers, placed close together, adds up to 6 decibels. Doubling your distance from the stack takes about 6 decibels away again.',
+ example:'Doubling the number of bass speakers, placed close together and playing in step, adds up to 6 decibels (about 3 if their sound does not add in step). Doubling your distance from the stack takes about 6 decibels away again.',
  desc:'A stack of bass speakers whose size can be doubled, a listener who can be moved away, and a curve of sound level against distance with a line at 85 decibels.',
  research:['Henriques, J. (2011). Sonic Bodies: Reggae Sound Systems, Performance Techniques, and Ways of Knowing. Continuum (the Jamaican sound-system tradition these rigs descend from).','Collin, M. (1997). Altered State. Serpent’s Tail.','UK Control of Noise at Work Regulations 2005: 85 dB(A) daily exposure is the upper action value.'],
  dur:11,hint:'Change the stack and the distance. Real rigs are loud enough to damage hearing: at any event, stand back and wear earplugs.',
@@ -2372,7 +2372,7 @@ const X5_STY=[
 const X5_stySpec={N:16,ms:s=>15000/X5_STY[s.i].bpm,step(s,i){const q=X5_STY[s.i];if(q.k[i])X5_S.kick();if(q.s[i])X5_S.snare();if(q.h[i])X5_S.hat();if(q.b[i]){if(q.b[i]<40)X5_S.sub(0,q.b[i]);else X5_S.acid(q.b[i],0,{cutoff:900,res:4,env:800})}}};
 SCENE({id:'after-rave',name:'After rave: the styles split',tag:'One scene becomes many tempos',
  definition:'Around 1991–1993 the single British rave scene divided into separate styles with their own clubs, labels and tempos. Some kept the steady four-on-the-floor kick of house and techno; others built on sped-up breakbeats.',
- example:'By the mid-1990s house ran at about 125 beats per minute, techno at about 135, and jungle at about 165: too far apart to mix in one DJ set.',
+ example:'By the mid-1990s house ran at about 125 beats per minute, techno at about 135, and jungle at about 165: far enough apart that most DJs, clubs and crowds specialised, though skilled DJs could still move between them.',
  desc:'Six styles placed on a tempo scale from 110 to 190 beats per minute. Choosing one shows its one-bar drum pattern on a grid and plays it.',
  research:['Reynolds, S. (1998). Energy Flash. Picador.','Belle-Fortune, B. (2004). All Crews: Journeys Through Jungle / Drum & Bass Culture. Vision.','Butler, M. J. (2006). Unlocking the Groove. Indiana University Press.','Tempo ranges are typical values and approximate.'],
  dur:12,hint:'Choose a style and press Play. The patterns are original examples in each style; tempos are typical, not fixed.',
@@ -2538,7 +2538,7 @@ function X6_cards(o){
 const X6_RANGES=[['Dub techno',115,128,C.green],['Minimal',122,130,C.blue],['Detroit techno',125,135,C.purple],['Acid techno',125,145,C.amber],['Hard techno',140,160,C.coral],['Gabber',160,200,C.dark]];
 const X6_TKSPEC={N:16,ms:s=>15000/s.bpm,step(s,i){if(i%4===0)AUDIO.kick({from:170,to:50,decay:Math.min(.3,48/s.bpm),gain:.26});if(i%4===2)X6_ohat()}};
 SCENE({id:'tempo-and-kick',name:'Tempo by style',tag:'The same beat, faster or slower',
- definition:'Techno styles share a kick drum on every beat and differ first of all in tempo, counted in beats per minute (BPM). Dub techno and minimal sit near 120–130, Detroit techno around 125–135, hard techno from about 140, and gabber from about 160.',
+ definition:'Most dancefloor techno styles share a kick drum on every beat (broken-beat and experimental techno do not) and differ first of all in tempo, counted in beats per minute (BPM). Dub techno and minimal sit near 120–130, Detroit techno around 125–135, hard techno from about 140, and gabber from about 160.',
  example:'At 120 BPM a beat lasts half a second. At 180 BPM it lasts a third of a second: the same bar goes by in two-thirds of the time.',
  desc:'Six horizontal bands showing typical tempo ranges for six styles on a scale from 110 to 200 beats per minute, with a movable tempo line and readouts for the length of a beat and a sixteenth-note step.',
  research:['Butler, M. J. (2006). Unlocking the Groove. Indiana University Press (tempo and metre in techno).','Reynolds, S. (1998). Energy Flash. Picador.','Ranges are typical values gathered from these accounts and are approximate; real tracks stray outside them.'],
@@ -3662,8 +3662,8 @@ SCENE({id:'groove-science-bass',name:'Bass and the body',tag:'Low frequencies mo
 
 const X8_RANGES=[['House',118,128,C.green],['Techno',125,140,C.blue],['Hard techno',140,160,C.coral]];
 SCENE({id:'groove-science-tempo',name:'Tap your tempo',tag:'Where 120–130 comes from',
- definition:'People asked to tap at a comfortable speed, and large collections of dance music, both cluster around 120 to 130 beats per minute, roughly two per second. Techno sits on and just above that range.',
- example:'Tap steadily at whatever speed feels natural for dancing. Many people land within a few BPM of 125.',
+ definition:'Large collections of dance music cluster around 120 to 130 beats per minute, roughly two per second, and some tapping studies find a preferred tempo near there too, though comfortable tapping speeds vary widely between people and tasks. Techno sits on and just above that range.',
+ example:'Tap steadily at whatever speed feels natural for dancing. Some land near 120–130 BPM; many tap slower or faster.',
  desc:'A tempo axis from 80 to 180 BPM with a shaded band for the most common tempo, bars for typical house, techno and hard-techno ranges, and a marker for the tempo you tap.',
  research:'Moelants, D. (2002). Preferred tempo reconsidered. Proceedings of ICMPC 7 (a peak near 120–130 BPM in tapping and in music collections). · van Noorden, L. & Moelants, D. (1999). Resonance in the perception of musical pulse. Journal of New Music Research 28(1). · Genre ranges are typical values, approximate. Links to Mind In Motion and Music In Motion on entrainment.',
  dur:10,hint:'Press Tap at least four times at a speed that feels right for dancing. Timing is taken from your presses and stays on this page. Watch shows a simulated tapper.',

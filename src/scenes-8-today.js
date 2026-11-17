@@ -338,8 +338,8 @@ SCENE({id:'groove-science-bass',name:'Bass and the body',tag:'Low frequencies mo
 
 const X8_RANGES=[['House',118,128,C.green],['Techno',125,140,C.blue],['Hard techno',140,160,C.coral]];
 SCENE({id:'groove-science-tempo',name:'Tap your tempo',tag:'Where 120–130 comes from',
- definition:'People asked to tap at a comfortable speed, and large collections of dance music, both cluster around 120 to 130 beats per minute, roughly two per second. Techno sits on and just above that range.',
- example:'Tap steadily at whatever speed feels natural for dancing. Many people land within a few BPM of 125.',
+ definition:'Large collections of dance music cluster around 120 to 130 beats per minute, roughly two per second, and some tapping studies find a preferred tempo near there too, though comfortable tapping speeds vary widely between people and tasks. Techno sits on and just above that range.',
+ example:'Tap steadily at whatever speed feels natural for dancing. Some land near 120–130 BPM; many tap slower or faster.',
  desc:'A tempo axis from 80 to 180 BPM with a shaded band for the most common tempo, bars for typical house, techno and hard-techno ranges, and a marker for the tempo you tap.',
  research:'Moelants, D. (2002). Preferred tempo reconsidered. Proceedings of ICMPC 7 (a peak near 120–130 BPM in tapping and in music collections). · van Noorden, L. & Moelants, D. (1999). Resonance in the perception of musical pulse. Journal of New Music Research 28(1). · Genre ranges are typical values, approximate. Links to Mind In Motion and Music In Motion on entrainment.',
  dur:10,hint:'Press Tap at least four times at a speed that feels right for dancing. Timing is taken from your presses and stays on this page. Watch shows a simulated tapper.',

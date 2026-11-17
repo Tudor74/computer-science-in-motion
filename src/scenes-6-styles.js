@@ -44,7 +44,7 @@ function X6_cards(o){
 const X6_RANGES=[['Dub techno',115,128,C.green],['Minimal',122,130,C.blue],['Detroit techno',125,135,C.purple],['Acid techno',125,145,C.amber],['Hard techno',140,160,C.coral],['Gabber',160,200,C.dark]];
 const X6_TKSPEC={N:16,ms:s=>15000/s.bpm,step(s,i){if(i%4===0)AUDIO.kick({from:170,to:50,decay:Math.min(.3,48/s.bpm),gain:.26});if(i%4===2)X6_ohat()}};
 SCENE({id:'tempo-and-kick',name:'Tempo by style',tag:'The same beat, faster or slower',
- definition:'Techno styles share a kick drum on every beat and differ first of all in tempo, counted in beats per minute (BPM). Dub techno and minimal sit near 120–130, Detroit techno around 125–135, hard techno from about 140, and gabber from about 160.',
+ definition:'Most dancefloor techno styles share a kick drum on every beat (broken-beat and experimental techno do not) and differ first of all in tempo, counted in beats per minute (BPM). Dub techno and minimal sit near 120–130, Detroit techno around 125–135, hard techno from about 140, and gabber from about 160.',
  example:'At 120 BPM a beat lasts half a second. At 180 BPM it lasts a third of a second: the same bar goes by in two-thirds of the time.',
  desc:'Six horizontal bands showing typical tempo ranges for six styles on a scale from 110 to 200 beats per minute, with a movable tempo line and readouts for the length of a beat and a sixteenth-note step.',
  research:['Butler, M. J. (2006). Unlocking the Groove. Indiana University Press (tempo and metre in techno).','Reynolds, S. (1998). Energy Flash. Picador.','Ranges are typical values gathered from these accounts and are approximate; real tracks stray outside them.'],
