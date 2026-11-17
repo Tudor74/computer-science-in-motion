@@ -29,7 +29,7 @@ function NW_plan(s){
 }
 SCENE({id:'packet',name:'Packet',tag:'Messages travel in pieces',
  definition:'A small, numbered piece of a larger message. Each packet travels through the network on its own and the pieces are put back together at the end.',
- example:'A video call is sent as thousands of packets a second. Two packets from the same message can take different routes and arrive in a different order.',
+ example:'A video call is sent as hundreds of packets a second. Two packets from the same message can take different routes and arrive in a different order.',
  desc:'A message is cut into numbered packets that cross a mesh of routers by different paths, arrive out of order and are reassembled by number.',
  dur:12,hint:'Type a message (up to 12 characters). Press the small marker on any link to break it and watch the packets take other routes.',
  init:()=>({msg:'Hello world!',cut:[]}),
@@ -382,7 +382,7 @@ SCENE({id:'encapsulation',name:'Protocol layers and encapsulation',tag:'Envelope
   const total=sum(segs.map(g=>g.w));let x=300-total/2;const sel=s.sel===null?f.a:s.sel;
   segs.forEach(g=>{const Ly=NW_LAYERS[g.i],on=g.i===sel,inner=R(x,272,g.w-3,38,g.data?C.purplep:Ly.col,on?C.ink:'none',6)+(g.data?TMF(x+g.w/2-1.5,296,g.label,13,C.ink,'middle','xml:space="preserve"'):TBF(x+g.w/2-1.5,296,g.label,13,'#fff'));
    out+=hit(X,'sel',g.i,`${Ly.name} layer: ${Ly.fields}`,inner);x+=g.w});
-  const Lsel=NW_LAYERS[clamp(sel,0,3)];out+=TF(300,336,Lsel.fields,13,C.ink)+TF(300,360,`${f.d} layer${f.d>1?'s':''} of wrapping · ${f.d>1?(f.d-1)*20+(f.d===4?18:0):0} bytes of headers around ${msg.length} bytes of data`,13,C.muted);
+  const Lsel=NW_LAYERS[clamp(sel,0,3)];out+=TF(300,336,Lsel.fields,13,C.ink)+TF(300,360,`${f.d} layer${f.d>1?'s':''} of wrapping · ${f.d>1?Math.min(f.d-1,2)*20+(f.d===4?18:0):0} bytes of headers around ${msg.length} bytes of data`,13,C.muted);
   return {svg:out,phase:f.say};
  },
  three(s,f,X,project){
@@ -614,7 +614,7 @@ function NW_sw(w){
 }
 SCENE({id:'sliding-window',name:'Sliding window',tag:'Keep several segments in flight',
  definition:'TCP lets the sender have several unacknowledged segments on the way at once, up to a window size. As acknowledgements return, the window slides forward. The receiver can shrink the window to stop being flooded (flow control).',
- example:'Waiting for each acknowledgement before sending the next segment wastes a whole round trip per segment. With a window of 4, four segments share each round trip, so the transfer takes about a quarter of the time.',
+ example:'Waiting for each acknowledgement before sending the next segment wastes a whole round trip per segment. With a window of 4, four segments share each round trip, so a long transfer takes about a quarter of the time (here, 12 segments take 15 ticks instead of 48).',
  desc:'A strip of twelve numbered segments with a bracket marking the window; segments travel to the receiver and acknowledgements come back, and the window slides right as they arrive.',
  dur:14,hint:'Choose a window size, then Run. Compare the finishing times for different windows in the chart.',
  init:()=>({w:3}),
@@ -851,7 +851,7 @@ const NW_KEYB=(()=>{const r=rng(2468);return range(8).map(()=>Math.floor(r()*256
 const NW_A8=t=>Array.from(t.toUpperCase()).slice(0,6).map(c=>c.charCodeAt(0)&255);
 SCENE({id:'one-time-pad',name:'One-time pad',tag:'Perfect secrecy, once',
  definition:'Combine each bit of the message with a truly random key bit using XOR. If the key is as long as the message, kept secret and never reused, the ciphertext reveals nothing at all about the message.',
- example:'H (01001000) XOR key 10110101 gives 11111101. XOR with the same key again gives H back. But reuse the key for a second message and C1 XOR C2 = P1 XOR P2: the key cancels out and the messages start to leak.',
+ example:'H (01001000) XOR key 00110001 gives 01111001. XOR with the same key again gives H back. But reuse the key for a second message and C1 XOR C2 = P1 XOR P2: the key cancels out and the messages start to leak.',
  desc:'Each character’s bits are XORed with key bits to make ciphertext bits; in the reuse view, two ciphertexts made with the same key are XORed together and a guessed message reveals the other.',
  dur:13,hint:'Type a message. Then switch to “Key used twice” and see an attacker recover message 2 by guessing message 1.',
  init:()=>({p1:'HELLO',p2:'MONEY',view:'enc'}),

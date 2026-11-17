@@ -35,7 +35,7 @@ SCENE({id:'array',name:'Array',tag:'Items side by side',
 function OR_addr(v){return '@'+hex((v.charCodeAt(0)*37+11)%256)+'0'}
 SCENE({id:'linked-list',name:'Linked list',tag:'Items chained by pointers',
  definition:'A list where each item (a node) stores its value and a pointer to the next node. Nodes can live anywhere in memory.',
- example:'Adding at the head needs one pointer change, however long the list. But reaching the 4th item means following 3 pointers from the head: there is no a[3] shortcut.',
+ example:'Adding at the head needs just two pointer changes, however long the list. But reaching the 4th item means following 3 pointers from the head: there is no a[3] shortcut.',
  desc:'Nodes scattered in memory, each with a value and an arrow to the next; the head pointer marks the start and the last node points to nothing.',
  dur:11,hint:'Press a node to see how many pointers you follow to reach it. Insert at the head, or after the selected node.',
  init:()=>({nodes:['A','B','C','D'],sel:null,next:4,last:''}),
@@ -114,7 +114,7 @@ SCENE({id:'queue',name:'Queue',tag:'First in, first out',
 
 SCENE({id:'hash-function',name:'Hash function',tag:'Turn a key into a number',
  definition:'A rule that turns a key (such as a word) into a number in a fixed range, quickly and always the same way for the same key.',
- example:'Add up the character codes of “cat” (99 + 97 + 116 = 312) and take the remainder after dividing by 8: bucket 0. “cot” gives bucket 2.',
+ example:'Add up the character codes of “cat” (99 + 97 + 116 = 312) and take the remainder after dividing by 8: bucket 0. “cot” (99 + 111 + 116 = 326) gives bucket 6.',
  desc:'The characters of a key with their codes, a running total, the remainder after dividing by 8, and an arrow to one of eight numbered buckets.',
  dur:10,hint:'Type a key, or pick one. Change one letter and watch the bucket jump. Try “act”, an anagram of “cat”.',
  init:()=>({key:'cat'}),
@@ -336,7 +336,7 @@ function OR_dyn(n){let cap=1,copies=0;const per=[];for(let k=1;k<=n;k++){let c=1
 SCENE({id:'dynamic-array',name:'Dynamic array',tag:'Growing by doubling',
  definition:'An array that grows as you append. When it is full it allocates a block twice the size and copies everything across; because doubling is rare, an append costs a constant amount of work on average (amortised).',
  example:'Doubling is a simple teaching model. Real lists grow by other fixed proportions (CPython’s list grows by about an eighth, through capacities 0, 4, 8, 16, 24, 32 …), which keeps the average append just as cheap. With doubling, appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
- desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes at powers of two.',
+ desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes just after each power of two.',
  dur:12,hint:'Press Append and watch the capacity double when the array is full. The chart shows rare expensive appends among many cheap ones.',
  init:()=>({n:5}),
  watch(p){return {n:Math.min(17,1+Math.floor(p*17))}},
@@ -463,7 +463,7 @@ const OR_SYM={'+':'+','-':'−','−':'−','*':'×','×':'×','x':'×','/':'÷'
 function OR_toks(text){return text.trim().split(/\s+/).filter(Boolean).slice(0,11)}
 SCENE({id:'postfix-evaluation',name:'Postfix evaluation',tag:'Arithmetic with a stack',
  definition:'In postfix (reverse Polish) notation each operator comes after its two operands, so 3 4 + means 3 + 4. A stack evaluates it in one pass: push numbers; an operator pops two, combines them and pushes the result.',
- example:'3 4 + 2 × means (3 + 4) × 2 = 14. No brackets and no precedence rules are needed, which is why calculators and the stack machines inside compilers use it.',
+ example:'3 4 + 2 × means (3 + 4) × 2 = 14. No brackets and no precedence rules are needed, which is why some calculators and the stack-based virtual machines that run Java and Python use it.',
  desc:'A row of tokens read left to right beside a vertical stack of numbers; each operator pops two numbers, shows the calculation, and pushes the answer.',
  dur:12,hint:'Type tokens separated by spaces (numbers and + − × ÷), or pick an example. Step to see the stack grow and shrink.',
  init:()=>({text:'3 4 + 2 ×'}),
@@ -593,6 +593,7 @@ SCENE({id:'heap-priority-queue',name:'Priority queue (binary heap)',tag:'Most ur
 
 /* ---- Hash functions ---- */
 const OR_HNAME={first:'Hash = first letter',sum:'Hash = sum of character codes',poly:'Hash = h × 31 + code, for each character'};
+const OR_SPREAD=['cat','cod','crab','cow','carp','clam','colt','crow','cub','calf','bat','bee','bear','boar','bull','bug','seal','swan','slug','shark','stoat','snail','swift','mole','moth','mink','mule','mouse','pig','pony','puma','dog','doe','dove','duck','deer','hen','hare','hawk','fox','frog','finch','goat','gull','gnu','lion','lynx','lark','tern','toad','tiger','trout','wolf','wren','wasp','whale','rat','ram','owl','eel'];
 SCENE({id:'hash-spread',name:'Spreading keys evenly',tag:'Good hashes avoid clusters',
  definition:'A good hash function spreads keys evenly over the buckets, so each bucket holds about n ÷ m keys. A poor one clusters keys into a few buckets, and every look-up in a crowded bucket is slow.',
  example:'Hashing animal names by their first letter puts “cat”, “cod” and “crab” together, while many buckets stay empty. Mixing every character in, as h × 31 + code does, spreads them out.',
@@ -603,7 +604,7 @@ SCENE({id:'hash-spread',name:'Spreading keys evenly',tag:'Good hashes avoid clus
  ui:[{choose:[['first','First letter'],['sum','Sum of codes'],['poly','× 31 mixing']],label:'Hash function',get:s=>s.fn,act:'fn'},{range:'m',label:'Buckets',min:4,max:16,get:s=>s.m,act:'m'},{range:'n',label:'Keys',min:8,max:60,get:s=>s.n,act:'n'}],
  on:{fn(s,v){s.fn=v},m(s,v){s.m=v},n(s,v){s.n=v}},
  draw(s){
-  const keys=OR_WORDS.slice(0,s.n),h=s.fn==='first'?OR_hfirst:s.fn==='sum'?OR_hsum:OR_hpoly,cnt=Array(s.m).fill(0),by=range(s.m).map(()=>[]);
+  const keys=OR_SPREAD.slice(0,s.n),h=s.fn==='first'?OR_hfirst:s.fn==='sum'?OR_hsum:OR_hpoly,cnt=Array(s.m).fill(0),by=range(s.m).map(()=>[]);
   keys.forEach(k=>{const b=h(k,s.m);cnt[b]++;by[b].push(k)});
   const mx=Math.max(...cnt),ideal=s.n/s.m,top=Math.max(mx,Math.ceil(ideal*2)),bx=50,bw=500/s.m,base=270,sc=170/top,imax=cnt.indexOf(mx),empty=cnt.filter(c=>!c).length;
   let out=heading(OR_HNAME[s.fn]);
@@ -620,7 +621,7 @@ const OR_gcd=(a,b)=>b?OR_gcd(b,a%b):a;
 const OR_isPrime=n=>n>1&&range(n).slice(2).every(d=>n%d);
 const OR_MCOL=[C.blue,C.coral,C.green,C.purple,C.amber,'#4d7f99','#8a6d3b','#b0457a','#3f8f5a','#6a5acd','#c07a2c','#2f6f8f','#9c4f4f','#5b6b73','#7a8f2c','#a05aa0'];
 SCENE({id:'hash-modulo',name:'Choosing the table size',tag:'Why prime sizes help',
- definition:'Most hash tables finish with “hash mod m” to pick one of m buckets. If keys share a pattern, such as all being multiples of 4, a size m that shares a factor with that pattern wastes buckets. A prime m shares no factor, so patterned keys still spread out.',
+ definition:'Most hash tables finish with “hash mod m” to pick one of m buckets. If keys share a pattern, such as all being multiples of 4, a size m that shares a factor with that pattern wastes buckets. A prime m shares no factor with the pattern (unless the pattern is a multiple of m), so patterned keys nearly always spread out.',
  example:'Keys 0, 4, 8, 12, … mod 8 only ever land in buckets 0 and 4. The same keys mod 7 use all seven buckets.',
  desc:'Sixteen evenly spaced keys along the top joined by coloured lines to the buckets they land in along the bottom, with each bucket’s count; unused buckets are dashed.',
  dur:11,hint:'Choose how far apart the keys are, then change the number of buckets. Find sizes that use every bucket.',
@@ -748,7 +749,7 @@ SCENE({id:'trie',name:'Trie (prefix tree)',tag:'Words that share a beginning sha
    out+=Ci(x.px,x.py,isRoot?8:15,isRoot?C.dark:inP?C.amberp:inS?C.greenp:'#fff',isRoot?C.dark:inP?C.amber:inS?C.green:C.blue);
    if(x.end)out+=Ci(x.px,x.py,11,'none',inS||inP?C.green:C.blue);if(!isRoot)out+=TBF(x.px,x.py+5,x.ch,14,C.ink)}
   out+=TF(580,58,s.text?(ok?`${comps.length} word${comps.length===1?'':'s'} start with “${s.text}”`:`no word starts with “${s.text}”`):`${s.words.length} words`,13,ok?C.green:C.coral,'end');
-  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===2?'':'s'}.`):'Each path from the root spells a word; double rings mark where a word ends.'};
+  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===1?'':'s'}.`):'Each path from the root spells a word; double rings mark where a word ends.'};
  }});
 
 /* ---- Binary search trees ---- */

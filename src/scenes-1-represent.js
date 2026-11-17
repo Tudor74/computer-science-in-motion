@@ -429,7 +429,7 @@ SCENES.hexadecimal.three=(s,f,X,project)=>{
  out+=sortedItems(corners.map(c=>({at:c.map(v=>v*3),svg:P=>{const q=P(c.map(v=>v*3));return Ci(q[0],q[1],9,'#'+c.map(v=>v?'FF':'00').join(''),C.ink)}})).concat([{at:pt,svg:P=>{const q=P(pt);return Ci(q[0],q[1],17,col,C.ink)+R(q[0]-38,q[1]+22,76,22,'#fff','none',6,'opacity=".85"')+TBF(q[0],q[1]+38,col,14,C.ink)}}]),P);
  const mid=P([1.5,1.5,1.5]);
  for(const [c,nm,ink] of [[[3,0,0],'red',C.coral],[[0,3,0],'green',C.green],[[0,0,3],'blue',C.blue],[[0,0,0],'black',C.ink],[[3,3,3],'white',C.muted]]){const q=P(c),dx=q[0]-mid[0],dy=q[1]-mid[1],d=Math.hypot(dx,dy)||1;out+=TF(q[0]+dx/d*30,q[1]+dy/d*24+5,nm,13,ink,'middle','font-weight="650"')}
- return {svg:out,title:'The RGB colour cube',caption:`Every 24-bit colour is a point in a cube: red, green and blue each run from 00 to FF. ${col} sits at (${s.r}, ${s.g}, ${s.b}). The corners are black, white and the six pure mixtures.`};
+ return {svg:out,title:'The RGB colour cube',caption:`Every 24-bit colour is a point in a cube: red, green and blue each run from 00 to FF. ${col} sits at (${s.r}, ${s.g}, ${s.b}). The corners are black, white, red, green, blue and their mixtures yellow, cyan and magenta.`};
 };
 SCENE({id:'hex-nibbles',name:'Hex digits and nibbles',tag:'Sixteen four-bit patterns',
  definition:'Each hexadecimal digit names one of the sixteen 4-bit patterns (a nibble), so converting between hex and binary is a lookup, digit by digit.',
@@ -537,7 +537,7 @@ SCENE({id:'code-point-map',name:'Scripts in the code space',tag:'Blocks of code 
   rows.forEach(([nm,a,b],i)=>{const y=y0+i*rh,on=placed[i].length>0;out+=R(20,y,560,rh-4,on?'#fff':'#f3f6f8',on?C.blue:'none',6)+TF(30,y+18,nm,13,on?C.ink:C.muted,'start','font-weight="650"');
    if(a>=0)out+=TMF(250,y+18,`U+${hex(a,4)}–${hex(b,4)}`,13,C.muted,'start');
    placed[i].slice(0,5).forEach((c,j)=>{const x=392+j*37;out+=R(x,y+2,34,rh-8,C.amberp,'none',5)+TF(x+17,y+19,c,15,C.ink)})});
-  out+=TF(300,y0+rows.length*rh+16,'Up to U+FFFF is the Basic Multilingual Plane; emoji live in plane 1, above U+FFFF.',13,C.muted);
+  out+=TF(300,y0+rows.length*rh+16,'Up to U+FFFF is the Basic Multilingual Plane; most emoji live in plane 1, above U+FFFF.',13,C.muted);
   return {svg:out,phase:chars.length?chars.map(c=>`${c} = U+${hex(c.codePointAt(0),4)}`).join(', ')+'. Each block keeps one script together, so related characters have nearby numbers.':'Type some characters.'};
  }});
 
@@ -563,7 +563,7 @@ SCENE({id:'mojibake',name:'Mojibake',tag:'Bytes read with the wrong table',
    else bytes.forEach((b,i)=>{const x=x0+i*w,ch=b>=0x80&&b<0xA0?'·':String.fromCharCode(b),wrong=b>127;if(wrong)bad=true;out+=R(x+2,236,w-4,34,wrong?C.coralp:'#fff',wrong?C.coral:C.grid,6)+T(x+w/2,260,ch===' '?'␣':ch,17,wrong?C.coral:C.ink)});
    const shown=s.as==='utf8'?s.text:bytes.map(b=>b>=0x80&&b<0xA0?'·':String.fromCharCode(b)).join('');
    out+=R(80,298,440,46,s.as==='utf8'||!bad?C.greenp:C.coralp,'none',10)+TB(300,328,'“'+shown+'”',19,s.as==='utf8'||!bad?C.green:C.coral)}
-  return {svg:out,phase:stage<3?'Each character becomes one to four bytes. Only the bytes are saved; the encoding is an agreement about how to read them.':s.as==='utf8'?'Read with the same table it was written in, the text comes back intact.':bad?'Latin-1 treats every byte as a separate character, so each multi-byte character falls apart into two or three odd symbols.':'Plain ASCII text reads the same in both tables, which is why the problem often hides until an accent appears.'};
+  return {svg:out,phase:stage<3?'Each character becomes one to four bytes. Only the bytes are saved; the encoding is an agreement about how to read them.':s.as==='utf8'?'Read with the same table it was written in, the text comes back intact.':bad?'Latin-1 treats every byte as a separate character, so each multi-byte character falls apart into two to four odd symbols.':'Plain ASCII text reads the same in both tables, which is why the problem often hides until an accent appears.'};
  }});
 
 /* ---- Lesson: bitmap ---- */
@@ -671,7 +671,7 @@ SCENE({id:'sixteen-functions',name:'All sixteen two-input functions',tag:'Every 
 const R1_N=(a,b)=>(a&b)?0:1;
 SCENE({id:'nand-universal',name:'NAND builds everything',tag:'One gate is enough',
  definition:'NAND is universal: NOT, AND, OR, and therefore every logic circuit, can be built from NAND gates alone.',
- example:'NOT A is NAND(A, A). A AND B is NOT(NAND(A, B)). A OR B is NAND(NOT A, NOT B). Chips are often made mostly of NAND gates for this reason.',
+ example:'NOT A is NAND(A, A). A AND B is NOT(NAND(A, B)). A OR B is NAND(NOT A, NOT B). NAND is also cheap and fast to build from transistors, so it is one of the most used gates in real chips.',
  desc:'A small circuit made only of NAND gates that behaves as the chosen gate; live wires are thick and blue and a lamp shows the output.',
  dur:12,hint:'Pick NOT, AND or OR, then flip the inputs. The NAND circuit always agrees with the gate it imitates.',
  init:()=>({target:'OR',a:1,b:0}),
@@ -711,7 +711,7 @@ SCENE({id:'multiplexer',name:'Multiplexer',tag:'A switch made of gates',
 
 SCENE({id:'sr-latch',name:'Latch: memory from gates',tag:'Two gates that remember',
  definition:'A latch is two gates wired in a loop, each feeding the other, so the circuit holds a bit after its inputs return to 0. Set makes Q = 1; Reset makes Q = 0.',
- example:'Press Set and release: Q stays 1. Press Reset and release: Q stays 0. Every register and memory cell builds on this feedback idea.',
+ example:'Press Set and release: Q stays 1. Press Reset and release: Q stays 0. Registers and static RAM cells build on this feedback idea.',
  desc:'Two cross-coupled NOR gates with Set and Reset inputs and output Q, above a timing diagram of S, R and Q over time.',
  dur:13,hint:'Add Set and Reset pulses, then step through time. Q only changes on a pulse and holds its value in between.',
  init:()=>({events:['S','R','S','S','R']}),

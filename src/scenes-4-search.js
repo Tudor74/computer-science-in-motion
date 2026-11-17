@@ -314,7 +314,7 @@ function SS_fibTree(n,memo){const known=new Set(),nodes=[];let leaf=0;
 const SS_fib=k=>{let a=0,b=1;for(let i=0;i<k;i++)[a,b]=[b,a+b];return a};
 SCENE({id:'dynamic-programming',name:'Dynamic programming',tag:'Remember answers you have already found',
  definition:'Solve a problem by breaking it into overlapping smaller problems and storing each answer the first time, so it is never recomputed.',
- example:'fib(n) = fib(n−1) + fib(n−2). Plain recursion recomputes fib(2) again and again; memoising it turns hundreds of calls into a dozen.',
+ example:'fib(n) = fib(n−1) + fib(n−2). Plain recursion recomputes fib(2) again and again; memoising it turns the 41 calls of fib(7) into 13, and the saving grows quickly with n.',
  desc:'The call tree for a Fibonacci number grows call by call; in memoised mode repeated calls become instant look-ups, and a table of stored answers fills in.',
  dur:15,hint:'Choose n and switch between plain recursion and memoised, then Step or Run. Compare the call counts.',
  init:()=>({n:6,mode:'naive'}),
@@ -390,7 +390,7 @@ SCENE({id:'linear-average-case',name:'Best, average and worst case',tag:'It depe
   out+=line(1,C.green,'best 1')+line(n,C.coral,'worst '+n)+line(avg,C.purple,'average '+fmt(avg));
   out+=TF(300,356,half?'Half the time the target is missing and costs all n checks.':'Target equally likely at each position: average (n + 1) / 2.',14,C.muted);
   out+=TF(70,base+30,'target position →',13,C.muted,'start');
-  return {svg:out,phase:`n = ${n}: best case 1, worst case ${n}, average ${fmt(avg)}. All three grow in proportion to n, so linear search is O(n) whichever case you measure.`};
+  return {svg:out,phase:`n = ${n}: best case 1, worst case ${n}, average ${fmt(avg)}. The worst and average cases grow in proportion to n, so linear search is O(n); only the lucky best case stays at 1 however long the list.`};
  }});
 
 SCENE({id:'linear-sentinel',name:'Sentinel search',tag:'One test per card instead of two',
@@ -530,7 +530,7 @@ function SS_mazeStats(s){const b=SS_mazeBFS(s),d=SS_mazeDFS(s),df=d[d.length-1];
 
 SCENE({id:'bfs-maze',name:'Shortest path through a maze',tag:'Breadth-first search on a grid',shared:'grid-maze',
  definition:'Treat each open square of a maze as a node joined to its neighbours. Breadth-first search spreads out one step at a time, so the first time it reaches the goal it has found a shortest route.',
- example:'Every square gets a number: its distance from the start. Following the numbers back down from the goal, 14, 13, 12…, traces a shortest path.',
+ example:'Every square gets a number: its distance from the start. Following the numbers back down from the goal, 15, 14, 13…, traces a shortest path.',
  desc:'A grid maze with walls; numbers spread out from S in waves showing each square’s distance, until G is reached and the shortest path is drawn.',
  dur:14,hint:'Press squares to add or remove walls, then Step or Run. The maze is shared with depth-first search and A*.',
  init:SS_mazeInit,ui:SS_mazeUI,on:SS_mazeOn,
@@ -680,9 +680,9 @@ const SS_NP={S:[80,200],A:[300,90],B:[300,310],T:[520,200]};
 function SS_negTrace(w){const E=[['S','A',2],['S','B',5],['B','A',w],['A','T',1]];const d={S:0,A:Infinity,B:Infinity,T:Infinity},settled=[],fr=[{d:{...d},settled:[],say:'Dijkstra’s rule: settle the closest unsettled node, then never change it again.'}];
  while(settled.length<4){const u=Object.keys(d).filter(k=>!settled.includes(k)).sort((a,b)=>d[a]-d[b])[0];if(d[u]===Infinity)break;settled.push(u);
   const ups=[];for(const [a,b,ww] of E)if(a===u&&!settled.includes(b)&&d[u]+ww<d[b]){d[b]=d[u]+ww;ups.push(b)}
-  fr.push({d:{...d},settled:settled.slice(),cur:u,say:`Settle ${u} at ${d[u]}.`+(ups.length?` Update ${ups.join(', ')}.`:'')+(u==='B'&&w<0?` The edge B → A (${w}) would give A ${d.B+w}, but A is already settled.`:'')})}
+  fr.push({d:{...d},settled:settled.slice(),cur:u,say:`Settle ${u} at ${d[u]}.`+(ups.length?` Update ${ups.join(', ')}.`:'')+(u==='B'&&w<0&&d.B+w<d.A?` The edge B → A (${w}) would give A ${d.B+w}, but A is already settled.`:'')})}
  const t={S:0,A:Infinity,B:Infinity,T:Infinity};for(let i=0;i<4;i++)for(const [a,b,ww] of E)if(t[a]+ww<t[b])t[b]=t[a]+ww;
- const wrong=['A','T'].filter(k=>t[k]!==d[k]);fr.push({d:{...d},settled:settled.slice(),truth:t,done:true,wrong,say:wrong.length?`Wrong answers for ${wrong.join(' and ')}: the true shortest route goes S → B → A at ${t.A}. A negative edge made a node cheaper after it was settled.`:'With no negative edge, Dijkstra’s answers match the true shortest distances.'});return fr}
+ const wrong=['A','T'].filter(k=>t[k]!==d[k]);fr.push({d:{...d},settled:settled.slice(),truth:t,done:true,wrong,say:wrong.length?`Wrong answers for ${wrong.join(' and ')}: the true shortest route goes S → B → A at ${t.A}. A negative edge made a node cheaper after it was settled.`:w<0?'This negative edge is too small to make any route cheaper, so Dijkstra is still right here, but only by luck: with a negative edge it gives no guarantee.':'With no negative edge, Dijkstra’s answers match the true shortest distances.'});return fr}
 SCENE({id:'dijkstra-negative',name:'Why negative edges break Dijkstra',tag:'Settled too soon',
  definition:'Dijkstra’s algorithm assumes that adding an edge never makes a path shorter. With a negative edge, a node it has already settled can later be reached more cheaply, and the answer is wrong.',
  example:'S → A costs 2, S → B costs 5, B → A costs −4. Dijkstra settles A at 2, but S → B → A costs only 1. The Bellman–Ford algorithm handles negative edges correctly, more slowly.',
@@ -802,7 +802,7 @@ SCENE({id:'bubble-stability',name:'Stable sorting',tag:'Equal items keep their o
 /* ---------- Insertion sort lesson ---------- */
 SCENE({id:'insertion-nearly-sorted',name:'Fast on nearly sorted data',tag:'Work grows with the disorder',
  definition:'Insertion sort makes about n + I comparisons, where I counts the pairs that are in the wrong order (inversions). On nearly sorted data I is small, so it is very fast.',
- example:'A list of 12 with two neighbours swapped has one inversion: insertion sort needs about 12 comparisons, fewer than merge sort’s 30 or so.',
+ example:'A list of 12 with two neighbours swapped has one inversion: insertion sort needs about 12 comparisons, fewer than merge sort’s 20 or so.',
  desc:'A row of bars getting more and more out of order, beside bars comparing insertion sort’s and merge sort’s comparison counts as the number of inversions grows.',
  dur:10,hint:'Slide the amount of disorder. Each step of disorder swaps two random neighbours.',
  init:()=>({k:2,seed:3}),
@@ -892,7 +892,7 @@ function SS_qsTree(a0,rule){const a=a0.slice(),segs=[];let c=0;
  return {segs,c,depth:Math.max(...segs.map(x=>x[2]))+1}}
 SCENE({id:'quick-pivot-choice',name:'Choosing the pivot',tag:'A bad pivot makes quick sort slow',
  definition:'Quick sort is fast when each pivot splits its part roughly in half. Always picking the last item is a disaster on sorted input: every split is lopsided and the work grows like n².',
- example:'On 16 sorted numbers with “last item” pivots, the recursion goes 16 levels deep and needs 120 comparisons. Picking the median of three items brings it down to about 4 levels.',
+ example:'On 16 sorted numbers with “last item” pivots, the recursion goes 16 levels deep and needs 120 comparisons. Picking the median of three items brings it down to 5 levels and 38 comparisons.',
  desc:'Rows of bars showing how each level of quick sort’s recursion splits the list; a balanced pivot gives few short rows, a bad pivot a long staircase.',
  dur:11,hint:'Choose a pivot rule and an input. Compare the depth and the comparison counts.',
  init:()=>({rule:'last',kind:'sorted'}),
@@ -906,7 +906,7 @@ SCENE({id:'quick-pivot-choice',name:'Choosing the pivot',tag:'A bad pivot makes 
   out+=TF(x0,330,'Each row: the parts still being sorted at that depth',13,C.muted,'start');
   out+=counter(440,60,'Depth',t.depth,t.depth>8?C.coral:C.green,140)+counter(440,118,'Comparisons',t.c,C.blue,140);
   out+=counter(440,176,'n log₂ n',n*4,C.muted,140)+counter(440,234,'n(n − 1)/2',n*(n-1)/2,C.muted,140);
-  return {svg:out,phase:t.depth>8?`Lopsided splits: each pivot peels off only one item, so there are ${t.depth} levels and ${t.c} comparisons, close to n²/2.`:`Balanced splits: about log₂ ${n} = 4 levels are needed. ${t.c} comparisons, close to n log₂ n.`};
+  return {svg:out,phase:t.depth>8?`Lopsided splits: each pivot peels off only one item, so there are ${t.depth} levels and ${t.c} comparisons, close to n²/2.`:`Roughly balanced splits: only ${t.depth} levels, not far from log₂ ${n} = 4. ${t.c} comparisons, close to n log₂ n.`};
  }});
 
 function SS_partTrace(a0,scheme){const a=a0.slice(),n=a.length,fr=[];let c=0,sw=0;
@@ -1168,7 +1168,7 @@ SCENE({id:'dp-knapsack',name:'The knapsack problem',tag:'Pack the most value und
   SS_ITEMS.forEach(([nm,w,v],i)=>{T_.push([]);for(let c=0;c<=C_;c++){const skip=T_[i][c],take=w<=c?T_[i][c-w]+v:-1;T_[i+1][c]=Math.max(skip,take);
    if(c>0)fr.push({T:T_.map(r=>r.slice()),cur:[i+1,c],took:take>skip,say:w>c?`${nm} (${w} kg) does not fit in ${c} kg: copy £${skip} from above.`:`Capacity ${c}: skip ${nm} → £${skip}; take it → £${v} + best for ${c-w} kg (£${T_[i][c-w]}) = £${take}. Keep £${T_[i+1][c]}.`})}});
   const pick=[];let c=C_;for(let i=SS_ITEMS.length;i>0;i--)if(T_[i][c]!==T_[i-1][c]){pick.unshift(i-1);c-=SS_ITEMS[i-1][1]}
-  fr.push({T:T_,cur:null,done:true,pick,say:`Best value £${T_[SS_ITEMS.length][C_]}: ${pick.map(i=>SS_ITEMS[i][0]).join(' + ')||'nothing fits'}. Trying every subset would mean 2⁴ = 16 checks; the table needs only ${SS_ITEMS.length} × ${C_}.`});return fr},
+  fr.push({T:T_,cur:null,done:true,pick,say:`Best value £${T_[SS_ITEMS.length][C_]}: ${pick.map(i=>SS_ITEMS[i][0]).join(' + ')||'nothing fits'}. Trying every subset would mean 2⁴ = 16 checks; the table has ${SS_ITEMS.length} × ${C_} = ${SS_ITEMS.length*C_} cells. Each extra item doubles the subsets but adds only one row to the table.`});return fr},
  draw(s,f,X){
   const C_=s.cap,cw=Math.min(38,330/(C_+1)),x0=200,y0=66,rh=34;let out=heading(`Best value within ${C_} kg`);
   for(let c=0;c<=C_;c++)out+=TF(x0+c*cw+cw/2,y0-8,c+' kg',13,C.muted);

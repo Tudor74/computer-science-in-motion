@@ -795,7 +795,7 @@ function MA_jitTrace(s){
  const fr=[{c:0,interp:0,jit:0,mode:'interpreted',say:`A function will be called ${s.calls} times. Interpreting it costs 10 units per call. The just-in-time compiler watches how often it is called.`}];let a=0,b=0,compiled=false;
  for(let c=1;c<=s.calls;c++){a+=10;let mode;if(compiled){b+=2;mode='compiled'}else if(c===s.thr){b+=10+25;compiled=true;mode='compiling'}else{b+=10;mode='interpreted'}
   fr.push({c,interp:a,jit:b,mode,say:mode==='compiling'?`Call ${c}: the function is now “hot”. It is interpreted once more and also compiled to machine code (25 units, paid once).`:mode==='compiled'?`Call ${c}: the compiled machine code runs in 2 units instead of 10.`:`Call ${c}: interpreted, 10 units.`})}
- const L=fr.at(-1);fr.push({...L,done:true,say:`After ${s.calls} calls: interpreting only cost ${L.interp} units; with the JIT ${L.jit}. ${L.jit<L.interp?'Compiling paid for itself because the function was called often.':'Compiling did not pay off: the function was not called often enough after it became hot.'}`});
+ const L=fr.at(-1);fr.push({...L,done:true,say:`After ${s.calls} calls: interpreting only cost ${L.interp} units; with the JIT ${L.jit}. ${L.jit<L.interp?'Compiling paid for itself because the function was called often.':(s.calls<s.thr?'The function never became hot, so it was never compiled and the two costs are the same.':'Compiling did not pay off: the function was not called often enough after it became hot.')}`});
  return fr;
 }
 SCENE({id:'ma-jit',name:'Just-in-time compilation',tag:'Compile only what is busy',
@@ -892,7 +892,7 @@ SCENE({id:'ma-mutex',name:'Locks and mutual exclusion',tag:'One at a time',
 
 /* ---- Scheduling lesson ---- */
 function MA_prioTrace(s){
- const jobs=[{id:'L',prio:1,len:3,arr:0,col:C.coral}];for(let a=0,k=1;a<=12;a+=2,k++)jobs.push({id:'H'+k,prio:5,len:2,arr:a,col:C.blue});
+ const jobs=[{id:'L',prio:1,len:3,arr:0,col:C.coral}];for(let a=0,k=1;a<=14;a+=2,k++)jobs.push({id:'H'+k,prio:5,len:2,arr:a,col:C.blue});
  jobs.forEach(j=>{j.left=j.len;j.wait=0});const fr=[{t:0,run:[],jobs:JSON.parse(JSON.stringify(jobs)),say:`A low-priority job L (priority 1) arrives with high-priority jobs (priority 5) arriving every 2 ticks.${s.aging?' With ageing, a waiting job gains 1 priority per tick.':''}`}];const run=[];
  for(let t=0;t<16;t++){const ready=jobs.filter(j=>j.arr<=t&&j.left>0);if(!ready.length){run.push(null);continue}
   const eff=j=>j.prio+(s.aging?j.wait:0);ready.sort((a,b)=>eff(b)-eff(a)||a.arr-b.arr);const r=ready[0];r.left--;ready.slice(1).forEach(j=>j.wait++);run.push(r.id);

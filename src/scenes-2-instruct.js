@@ -372,7 +372,7 @@ SCENE({id:'data-types',name:'Data types',tag:'The same symbols, different meanin
   out+=arrow(300,134,300,232,C.line,2.5);
   out+=R(180,236,240,68,r.err?C.coralp:C.amberp,r.err?C.coral:C.amber,10)+TM(300,272,r.v,r.err?22:26,r.err?C.coral:C.ink,'middle','font-weight="700"')+TF(300,294,r.err?'error: no sensible meaning':'result: '+r.t,13,C.muted);
   out+=T(300,344,'The type decides the meaning of the operator.',14,C.muted);
-  return {svg:out,phase:r.note+(s.ta==='str'||s.tb==='str'?' The character "3" is stored as code 51, not as the number 3.':'')};
+  return {svg:out,phase:r.note+(s.ta==='str'?' The character "3" is stored as code 51, not as the number 3.':s.tb==='str'?' The character "4" is stored as code 52, not as the number 4.':'')};
  }});
 
 const IN_SWAP={naive:['a = b','b = a'],temp:['temp = a','a = b','b = temp'],tuple:['a, b = b, a']};
@@ -589,7 +589,7 @@ SCENE({id:'off-by-one',name:'Off-by-one and infinite loops',tag:'The two classic
    out+=R(x+4,130,w-8,130,cnt?(bad?C.coral:C.blue):'#fff',want?C.blue:C.grid,4,cnt?'':'stroke-dasharray="5 4"');
    out+=`<polygon points="${fmt(x+4)},130 ${fmt(x+w/2)},112 ${fmt(x+w-4)},130" fill="${cnt?(bad?C.coral:C.blue):'#fff'}" stroke="${want?C.blue:C.grid}" stroke-width="2"/>`;
    out+=TF(x+w/2,282,v,14,want?C.ink:C.muted);if(cnt>1)out+=TBF(x+w/2,104,'×'+cnt,13,C.coral)}
-  out+=R(x0,264,slots*w,2,C.ink,'none',0)+TF(x0+slots*w/2,306,'dashed = should be printed',13,C.muted);
+  out+=R(x0,264,slots*w,2,C.ink,'none',0)+TF(x0+slots*w/2,306,'dashed = not printed',13,C.muted);
   if(f.done)out+=R(16,320,568,40,f.ok?C.greenp:C.coralp,f.ok?C.green:C.coral,10)+TBF(300,345,f.ok?'Exactly 1 to '+s.n:s.v==='forever'?'Never stops':'Off by one',15,f.ok?C.green:C.coral);
   return {svg:out,phase:f.say};
  }});

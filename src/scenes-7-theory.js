@@ -203,7 +203,7 @@ SCENE({id:'p-vs-np',name:'P versus NP',tag:'Easy to check, hard to find?',
   out+=R(150,160,300,40,ok?C.greenp:'#fff',ok?C.green:C.grid,10)+TB(300,186,ok?`✓ Checked: equals ${s.target}`:mask?`✗ ${tot} ≠ ${s.target}`:'Check: add them up',16,ok?C.green:mask?C.coral:C.muted);
   out+=counter(470,154,'subsets tried',f.mine?'—':`${f.tried} of ${(1<<n)-1}`,C.purple,118);
   if(!f.mine)out+=T(529,216,`${f.found} found so far`,13,f.found?C.green:C.muted);
-  const rows=[[6,'6','64'],[20,'20','about 1 million'],[40,'40','about 1 trillion'],[80,'80','more than atoms in a person']];
+  const rows=[[6,'6','64'],[20,'20','about 1 million'],[40,'40','about 1 trillion'],[80,'80','about a trillion trillion']];
   out+=TB(130,246,'n numbers',13,C.muted)+TB(280,246,'check an answer',13,C.green)+TB(460,246,'try every subset (2ⁿ)',13,C.coral);
   rows.forEach((r,i)=>{const y=270+i*25;out+=R(60,y-17,480,23,i%2?'#f6f9fb':'#fff','none',5)+T(130,y,r[0],15,C.ink)+T(280,y,'≈ '+r[1]+' additions',14,C.green)+T(460,y,r[2],14,C.coral)});
   return {svg:out,phase:f.mine?'Checking a proposed answer takes one addition per number, so subset sum is in NP. Nobody knows a method that always finds an answer quickly; if someone did, P would equal NP.':`Brute force is on subset ${f.tried}: ${parts.join(' + ')||'—'} = ${tot}. Each extra number doubles the work, while checking grows by only one addition.`};
@@ -320,7 +320,7 @@ SCENE({id:'fa-nondeterministic',name:'Nondeterministic automaton',tag:'Follow ev
 const TH_LIGHT_NAMES={G:'Go',A:'Amber',R:'Walk',RA:'R+A'};
 function TH_lightRun(events){let st='G',wait=false;const log=[];
  for(const ev of events){const from=st;let note;
-  if(ev==='button'){if(st==='G'||st==='RA'){note=wait?'already requested':'request remembered';wait=true}else note='ignored for now'}
+  if(ev==='button'){if(st==='G'){note=wait?'already requested':'request remembered';wait=true}else note='ignored for now'}
   else if(st==='G'){if(wait){st='A';wait=false;note='someone waiting: change'}else note='nobody waiting: stay'}
   else if(st==='A'){st='R';note='red: pedestrians cross'}else if(st==='R'){st='RA';note='crossing time over'}else{st='G';note='back to green'}
   log.push({ev,from,to:st,note})}
@@ -449,7 +449,7 @@ SCENE({id:'regex-replace',name:'Search and replace',tag:'Capture groups in pract
   out+=TF(24,222,'After',13,C.muted,'start')+row(res.out,262,false);
   if(res.first&&res.first.length>1)res.first.slice(1).forEach((g,i)=>{const x=300+(i-(res.first.length-2)/2)*170;out+=R(x-76,300,152,34,tint(TH_GCOL[i+1],.82),'none',8)+TMF(x,322,`$${i+1} = ${g}`,15,TH_GCOL[i+1],'middle','font-weight="700"')});
   else out+=TF(300,322,res.first?'This rule has no capture groups.':'No match in this text.',14,C.muted);
-  return {svg:out,phase:r.say+' Real search tools turn the pattern into an automaton first, so even long files are scanned in one pass.'};
+  return {svg:out,phase:r.say+' Many search tools, such as grep, turn the pattern into an automaton first, so even long files are scanned in one pass.'};
  }});
 
 /* ---- Turing machine lesson ---- */
@@ -611,7 +611,7 @@ SCENE({id:'halting-reduction',name:'Reduction',tag:'If you could decide X, you c
   const lines=['Step 1: take any program P and input w.','Step 2: build P′, which only reaches the last line if P halts.','Step 3: hand P′ to the imagined decider for “'+r.q+'”','Step 4: its answer is '+(halts?'yes':'no')+', because P '+(halts?'halts':'loops for ever')+'.','Step 5: so the X-decider would decide halting for any P and w.','Step 6: halting is undecidable, so no X-decider can exist.'];
   lines.slice(0,k+1).forEach((ln,i)=>out+=TF(30,206+i*22,ln,13,i===k?C.ink:C.muted,'start'));
   if(k>=5)out+=R(180,334,240,34,C.coralp,C.coral,9)+TB(300,357,'X is undecidable too',15,C.coral);
-  return {svg:out,phase:k>=5?`Any question about what programs do, like “${r.q}”, can be wired up this way, so none of them has a perfect general decider.`:`If P ${halts?'halts, P′ moves on to its last line':'loops for ever, P′ never reaches its last line'}, so the decider for X would answer ${halts?'yes':'no'}: the same answer as “does P halt on w?”.`};
+  return {svg:out,phase:k>=5?`Any non-trivial question about what programs eventually do, like “${r.q}”, can be wired up this way, so none of them has a perfect general decider.`:`If P ${halts?'halts, P′ moves on to its last line':'loops for ever, P′ never reaches its last line'}, so the decider for X would answer ${halts?'yes':'no'}: the same answer as “does P halt on w?”.`};
  }});
 
 const TH_RICE=[

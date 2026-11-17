@@ -1038,7 +1038,7 @@ SCENES.hexadecimal.three=(s,f,X,project)=>{
  out+=sortedItems(corners.map(c=>({at:c.map(v=>v*3),svg:P=>{const q=P(c.map(v=>v*3));return Ci(q[0],q[1],9,'#'+c.map(v=>v?'FF':'00').join(''),C.ink)}})).concat([{at:pt,svg:P=>{const q=P(pt);return Ci(q[0],q[1],17,col,C.ink)+R(q[0]-38,q[1]+22,76,22,'#fff','none',6,'opacity=".85"')+TBF(q[0],q[1]+38,col,14,C.ink)}}]),P);
  const mid=P([1.5,1.5,1.5]);
  for(const [c,nm,ink] of [[[3,0,0],'red',C.coral],[[0,3,0],'green',C.green],[[0,0,3],'blue',C.blue],[[0,0,0],'black',C.ink],[[3,3,3],'white',C.muted]]){const q=P(c),dx=q[0]-mid[0],dy=q[1]-mid[1],d=Math.hypot(dx,dy)||1;out+=TF(q[0]+dx/d*30,q[1]+dy/d*24+5,nm,13,ink,'middle','font-weight="650"')}
- return {svg:out,title:'The RGB colour cube',caption:`Every 24-bit colour is a point in a cube: red, green and blue each run from 00 to FF. ${col} sits at (${s.r}, ${s.g}, ${s.b}). The corners are black, white and the six pure mixtures.`};
+ return {svg:out,title:'The RGB colour cube',caption:`Every 24-bit colour is a point in a cube: red, green and blue each run from 00 to FF. ${col} sits at (${s.r}, ${s.g}, ${s.b}). The corners are black, white, red, green, blue and their mixtures yellow, cyan and magenta.`};
 };
 SCENE({id:'hex-nibbles',name:'Hex digits and nibbles',tag:'Sixteen four-bit patterns',
  definition:'Each hexadecimal digit names one of the sixteen 4-bit patterns (a nibble), so converting between hex and binary is a lookup, digit by digit.',
@@ -1146,7 +1146,7 @@ SCENE({id:'code-point-map',name:'Scripts in the code space',tag:'Blocks of code 
   rows.forEach(([nm,a,b],i)=>{const y=y0+i*rh,on=placed[i].length>0;out+=R(20,y,560,rh-4,on?'#fff':'#f3f6f8',on?C.blue:'none',6)+TF(30,y+18,nm,13,on?C.ink:C.muted,'start','font-weight="650"');
    if(a>=0)out+=TMF(250,y+18,`U+${hex(a,4)}–${hex(b,4)}`,13,C.muted,'start');
    placed[i].slice(0,5).forEach((c,j)=>{const x=392+j*37;out+=R(x,y+2,34,rh-8,C.amberp,'none',5)+TF(x+17,y+19,c,15,C.ink)})});
-  out+=TF(300,y0+rows.length*rh+16,'Up to U+FFFF is the Basic Multilingual Plane; emoji live in plane 1, above U+FFFF.',13,C.muted);
+  out+=TF(300,y0+rows.length*rh+16,'Up to U+FFFF is the Basic Multilingual Plane; most emoji live in plane 1, above U+FFFF.',13,C.muted);
   return {svg:out,phase:chars.length?chars.map(c=>`${c} = U+${hex(c.codePointAt(0),4)}`).join(', ')+'. Each block keeps one script together, so related characters have nearby numbers.':'Type some characters.'};
  }});
 
@@ -1172,7 +1172,7 @@ SCENE({id:'mojibake',name:'Mojibake',tag:'Bytes read with the wrong table',
    else bytes.forEach((b,i)=>{const x=x0+i*w,ch=b>=0x80&&b<0xA0?'·':String.fromCharCode(b),wrong=b>127;if(wrong)bad=true;out+=R(x+2,236,w-4,34,wrong?C.coralp:'#fff',wrong?C.coral:C.grid,6)+T(x+w/2,260,ch===' '?'␣':ch,17,wrong?C.coral:C.ink)});
    const shown=s.as==='utf8'?s.text:bytes.map(b=>b>=0x80&&b<0xA0?'·':String.fromCharCode(b)).join('');
    out+=R(80,298,440,46,s.as==='utf8'||!bad?C.greenp:C.coralp,'none',10)+TB(300,328,'“'+shown+'”',19,s.as==='utf8'||!bad?C.green:C.coral)}
-  return {svg:out,phase:stage<3?'Each character becomes one to four bytes. Only the bytes are saved; the encoding is an agreement about how to read them.':s.as==='utf8'?'Read with the same table it was written in, the text comes back intact.':bad?'Latin-1 treats every byte as a separate character, so each multi-byte character falls apart into two or three odd symbols.':'Plain ASCII text reads the same in both tables, which is why the problem often hides until an accent appears.'};
+  return {svg:out,phase:stage<3?'Each character becomes one to four bytes. Only the bytes are saved; the encoding is an agreement about how to read them.':s.as==='utf8'?'Read with the same table it was written in, the text comes back intact.':bad?'Latin-1 treats every byte as a separate character, so each multi-byte character falls apart into two to four odd symbols.':'Plain ASCII text reads the same in both tables, which is why the problem often hides until an accent appears.'};
  }});
 
 /* ---- Lesson: bitmap ---- */
@@ -1280,7 +1280,7 @@ SCENE({id:'sixteen-functions',name:'All sixteen two-input functions',tag:'Every 
 const R1_N=(a,b)=>(a&b)?0:1;
 SCENE({id:'nand-universal',name:'NAND builds everything',tag:'One gate is enough',
  definition:'NAND is universal: NOT, AND, OR, and therefore every logic circuit, can be built from NAND gates alone.',
- example:'NOT A is NAND(A, A). A AND B is NOT(NAND(A, B)). A OR B is NAND(NOT A, NOT B). Chips are often made mostly of NAND gates for this reason.',
+ example:'NOT A is NAND(A, A). A AND B is NOT(NAND(A, B)). A OR B is NAND(NOT A, NOT B). NAND is also cheap and fast to build from transistors, so it is one of the most used gates in real chips.',
  desc:'A small circuit made only of NAND gates that behaves as the chosen gate; live wires are thick and blue and a lamp shows the output.',
  dur:12,hint:'Pick NOT, AND or OR, then flip the inputs. The NAND circuit always agrees with the gate it imitates.',
  init:()=>({target:'OR',a:1,b:0}),
@@ -1320,7 +1320,7 @@ SCENE({id:'multiplexer',name:'Multiplexer',tag:'A switch made of gates',
 
 SCENE({id:'sr-latch',name:'Latch: memory from gates',tag:'Two gates that remember',
  definition:'A latch is two gates wired in a loop, each feeding the other, so the circuit holds a bit after its inputs return to 0. Set makes Q = 1; Reset makes Q = 0.',
- example:'Press Set and release: Q stays 1. Press Reset and release: Q stays 0. Every register and memory cell builds on this feedback idea.',
+ example:'Press Set and release: Q stays 1. Press Reset and release: Q stays 0. Registers and static RAM cells build on this feedback idea.',
  desc:'Two cross-coupled NOR gates with Set and Reset inputs and output Q, above a timing diagram of S, R and Q over time.',
  dur:13,hint:'Add Set and Reset pulses, then step through time. Q only changes on a pulse and holds its value in between.',
  init:()=>({events:['S','R','S','S','R']}),
@@ -1815,7 +1815,7 @@ SCENE({id:'data-types',name:'Data types',tag:'The same symbols, different meanin
   out+=arrow(300,134,300,232,C.line,2.5);
   out+=R(180,236,240,68,r.err?C.coralp:C.amberp,r.err?C.coral:C.amber,10)+TM(300,272,r.v,r.err?22:26,r.err?C.coral:C.ink,'middle','font-weight="700"')+TF(300,294,r.err?'error: no sensible meaning':'result: '+r.t,13,C.muted);
   out+=T(300,344,'The type decides the meaning of the operator.',14,C.muted);
-  return {svg:out,phase:r.note+(s.ta==='str'||s.tb==='str'?' The character "3" is stored as code 51, not as the number 3.':'')};
+  return {svg:out,phase:r.note+(s.ta==='str'?' The character "3" is stored as code 51, not as the number 3.':s.tb==='str'?' The character "4" is stored as code 52, not as the number 4.':'')};
  }});
 
 const IN_SWAP={naive:['a = b','b = a'],temp:['temp = a','a = b','b = temp'],tuple:['a, b = b, a']};
@@ -2032,7 +2032,7 @@ SCENE({id:'off-by-one',name:'Off-by-one and infinite loops',tag:'The two classic
    out+=R(x+4,130,w-8,130,cnt?(bad?C.coral:C.blue):'#fff',want?C.blue:C.grid,4,cnt?'':'stroke-dasharray="5 4"');
    out+=`<polygon points="${fmt(x+4)},130 ${fmt(x+w/2)},112 ${fmt(x+w-4)},130" fill="${cnt?(bad?C.coral:C.blue):'#fff'}" stroke="${want?C.blue:C.grid}" stroke-width="2"/>`;
    out+=TF(x+w/2,282,v,14,want?C.ink:C.muted);if(cnt>1)out+=TBF(x+w/2,104,'×'+cnt,13,C.coral)}
-  out+=R(x0,264,slots*w,2,C.ink,'none',0)+TF(x0+slots*w/2,306,'dashed = should be printed',13,C.muted);
+  out+=R(x0,264,slots*w,2,C.ink,'none',0)+TF(x0+slots*w/2,306,'dashed = not printed',13,C.muted);
   if(f.done)out+=R(16,320,568,40,f.ok?C.greenp:C.coralp,f.ok?C.green:C.coral,10)+TBF(300,345,f.ok?'Exactly 1 to '+s.n:s.v==='forever'?'Never stops':'Off by one',15,f.ok?C.green:C.coral);
   return {svg:out,phase:f.say};
  }});
@@ -2374,7 +2374,7 @@ SCENE({id:'array',name:'Array',tag:'Items side by side',
 function OR_addr(v){return '@'+hex((v.charCodeAt(0)*37+11)%256)+'0'}
 SCENE({id:'linked-list',name:'Linked list',tag:'Items chained by pointers',
  definition:'A list where each item (a node) stores its value and a pointer to the next node. Nodes can live anywhere in memory.',
- example:'Adding at the head needs one pointer change, however long the list. But reaching the 4th item means following 3 pointers from the head: there is no a[3] shortcut.',
+ example:'Adding at the head needs just two pointer changes, however long the list. But reaching the 4th item means following 3 pointers from the head: there is no a[3] shortcut.',
  desc:'Nodes scattered in memory, each with a value and an arrow to the next; the head pointer marks the start and the last node points to nothing.',
  dur:11,hint:'Press a node to see how many pointers you follow to reach it. Insert at the head, or after the selected node.',
  init:()=>({nodes:['A','B','C','D'],sel:null,next:4,last:''}),
@@ -2453,7 +2453,7 @@ SCENE({id:'queue',name:'Queue',tag:'First in, first out',
 
 SCENE({id:'hash-function',name:'Hash function',tag:'Turn a key into a number',
  definition:'A rule that turns a key (such as a word) into a number in a fixed range, quickly and always the same way for the same key.',
- example:'Add up the character codes of “cat” (99 + 97 + 116 = 312) and take the remainder after dividing by 8: bucket 0. “cot” gives bucket 2.',
+ example:'Add up the character codes of “cat” (99 + 97 + 116 = 312) and take the remainder after dividing by 8: bucket 0. “cot” (99 + 111 + 116 = 326) gives bucket 6.',
  desc:'The characters of a key with their codes, a running total, the remainder after dividing by 8, and an arrow to one of eight numbered buckets.',
  dur:10,hint:'Type a key, or pick one. Change one letter and watch the bucket jump. Try “act”, an anagram of “cat”.',
  init:()=>({key:'cat'}),
@@ -2675,7 +2675,7 @@ function OR_dyn(n){let cap=1,copies=0;const per=[];for(let k=1;k<=n;k++){let c=1
 SCENE({id:'dynamic-array',name:'Dynamic array',tag:'Growing by doubling',
  definition:'An array that grows as you append. When it is full it allocates a block twice the size and copies everything across; because doubling is rare, an append costs a constant amount of work on average (amortised).',
  example:'Doubling is a simple teaching model. Real lists grow by other fixed proportions (CPython’s list grows by about an eighth, through capacities 0, 4, 8, 16, 24, 32 …), which keeps the average append just as cheap. With doubling, appending 17 items to a list that starts with room for 1 copies 1 + 2 + 4 + 8 + 16 = 31 items in total: fewer than two copies per append.',
- desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes at powers of two.',
+ desc:'A row of capacity slots, an old full array copied into a new one twice the size when it overflows, and a bar chart of the work done by each append, with spikes just after each power of two.',
  dur:12,hint:'Press Append and watch the capacity double when the array is full. The chart shows rare expensive appends among many cheap ones.',
  init:()=>({n:5}),
  watch(p){return {n:Math.min(17,1+Math.floor(p*17))}},
@@ -2802,7 +2802,7 @@ const OR_SYM={'+':'+','-':'−','−':'−','*':'×','×':'×','x':'×','/':'÷'
 function OR_toks(text){return text.trim().split(/\s+/).filter(Boolean).slice(0,11)}
 SCENE({id:'postfix-evaluation',name:'Postfix evaluation',tag:'Arithmetic with a stack',
  definition:'In postfix (reverse Polish) notation each operator comes after its two operands, so 3 4 + means 3 + 4. A stack evaluates it in one pass: push numbers; an operator pops two, combines them and pushes the result.',
- example:'3 4 + 2 × means (3 + 4) × 2 = 14. No brackets and no precedence rules are needed, which is why calculators and the stack machines inside compilers use it.',
+ example:'3 4 + 2 × means (3 + 4) × 2 = 14. No brackets and no precedence rules are needed, which is why some calculators and the stack-based virtual machines that run Java and Python use it.',
  desc:'A row of tokens read left to right beside a vertical stack of numbers; each operator pops two numbers, shows the calculation, and pushes the answer.',
  dur:12,hint:'Type tokens separated by spaces (numbers and + − × ÷), or pick an example. Step to see the stack grow and shrink.',
  init:()=>({text:'3 4 + 2 ×'}),
@@ -2932,6 +2932,7 @@ SCENE({id:'heap-priority-queue',name:'Priority queue (binary heap)',tag:'Most ur
 
 /* ---- Hash functions ---- */
 const OR_HNAME={first:'Hash = first letter',sum:'Hash = sum of character codes',poly:'Hash = h × 31 + code, for each character'};
+const OR_SPREAD=['cat','cod','crab','cow','carp','clam','colt','crow','cub','calf','bat','bee','bear','boar','bull','bug','seal','swan','slug','shark','stoat','snail','swift','mole','moth','mink','mule','mouse','pig','pony','puma','dog','doe','dove','duck','deer','hen','hare','hawk','fox','frog','finch','goat','gull','gnu','lion','lynx','lark','tern','toad','tiger','trout','wolf','wren','wasp','whale','rat','ram','owl','eel'];
 SCENE({id:'hash-spread',name:'Spreading keys evenly',tag:'Good hashes avoid clusters',
  definition:'A good hash function spreads keys evenly over the buckets, so each bucket holds about n ÷ m keys. A poor one clusters keys into a few buckets, and every look-up in a crowded bucket is slow.',
  example:'Hashing animal names by their first letter puts “cat”, “cod” and “crab” together, while many buckets stay empty. Mixing every character in, as h × 31 + code does, spreads them out.',
@@ -2942,7 +2943,7 @@ SCENE({id:'hash-spread',name:'Spreading keys evenly',tag:'Good hashes avoid clus
  ui:[{choose:[['first','First letter'],['sum','Sum of codes'],['poly','× 31 mixing']],label:'Hash function',get:s=>s.fn,act:'fn'},{range:'m',label:'Buckets',min:4,max:16,get:s=>s.m,act:'m'},{range:'n',label:'Keys',min:8,max:60,get:s=>s.n,act:'n'}],
  on:{fn(s,v){s.fn=v},m(s,v){s.m=v},n(s,v){s.n=v}},
  draw(s){
-  const keys=OR_WORDS.slice(0,s.n),h=s.fn==='first'?OR_hfirst:s.fn==='sum'?OR_hsum:OR_hpoly,cnt=Array(s.m).fill(0),by=range(s.m).map(()=>[]);
+  const keys=OR_SPREAD.slice(0,s.n),h=s.fn==='first'?OR_hfirst:s.fn==='sum'?OR_hsum:OR_hpoly,cnt=Array(s.m).fill(0),by=range(s.m).map(()=>[]);
   keys.forEach(k=>{const b=h(k,s.m);cnt[b]++;by[b].push(k)});
   const mx=Math.max(...cnt),ideal=s.n/s.m,top=Math.max(mx,Math.ceil(ideal*2)),bx=50,bw=500/s.m,base=270,sc=170/top,imax=cnt.indexOf(mx),empty=cnt.filter(c=>!c).length;
   let out=heading(OR_HNAME[s.fn]);
@@ -2959,7 +2960,7 @@ const OR_gcd=(a,b)=>b?OR_gcd(b,a%b):a;
 const OR_isPrime=n=>n>1&&range(n).slice(2).every(d=>n%d);
 const OR_MCOL=[C.blue,C.coral,C.green,C.purple,C.amber,'#4d7f99','#8a6d3b','#b0457a','#3f8f5a','#6a5acd','#c07a2c','#2f6f8f','#9c4f4f','#5b6b73','#7a8f2c','#a05aa0'];
 SCENE({id:'hash-modulo',name:'Choosing the table size',tag:'Why prime sizes help',
- definition:'Most hash tables finish with “hash mod m” to pick one of m buckets. If keys share a pattern, such as all being multiples of 4, a size m that shares a factor with that pattern wastes buckets. A prime m shares no factor, so patterned keys still spread out.',
+ definition:'Most hash tables finish with “hash mod m” to pick one of m buckets. If keys share a pattern, such as all being multiples of 4, a size m that shares a factor with that pattern wastes buckets. A prime m shares no factor with the pattern (unless the pattern is a multiple of m), so patterned keys nearly always spread out.',
  example:'Keys 0, 4, 8, 12, … mod 8 only ever land in buckets 0 and 4. The same keys mod 7 use all seven buckets.',
  desc:'Sixteen evenly spaced keys along the top joined by coloured lines to the buckets they land in along the bottom, with each bucket’s count; unused buckets are dashed.',
  dur:11,hint:'Choose how far apart the keys are, then change the number of buckets. Find sizes that use every bucket.',
@@ -3087,7 +3088,7 @@ SCENE({id:'trie',name:'Trie (prefix tree)',tag:'Words that share a beginning sha
    out+=Ci(x.px,x.py,isRoot?8:15,isRoot?C.dark:inP?C.amberp:inS?C.greenp:'#fff',isRoot?C.dark:inP?C.amber:inS?C.green:C.blue);
    if(x.end)out+=Ci(x.px,x.py,11,'none',inS||inP?C.green:C.blue);if(!isRoot)out+=TBF(x.px,x.py+5,x.ch,14,C.ink)}
   out+=TF(580,58,s.text?(ok?`${comps.length} word${comps.length===1?'':'s'} start with “${s.text}”`:`no word starts with “${s.text}”`):`${s.words.length} words`,13,ok?C.green:C.coral,'end');
-  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===2?'':'s'}.`):'Each path from the root spells a word; double rings mark where a word ends.'};
+  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===1?'':'s'}.`):'Each path from the root spells a word; double rings mark where a word ends.'};
  }});
 
 /* ---- Binary search trees ---- */
@@ -3601,7 +3602,7 @@ function SS_fibTree(n,memo){const known=new Set(),nodes=[];let leaf=0;
 const SS_fib=k=>{let a=0,b=1;for(let i=0;i<k;i++)[a,b]=[b,a+b];return a};
 SCENE({id:'dynamic-programming',name:'Dynamic programming',tag:'Remember answers you have already found',
  definition:'Solve a problem by breaking it into overlapping smaller problems and storing each answer the first time, so it is never recomputed.',
- example:'fib(n) = fib(n−1) + fib(n−2). Plain recursion recomputes fib(2) again and again; memoising it turns hundreds of calls into a dozen.',
+ example:'fib(n) = fib(n−1) + fib(n−2). Plain recursion recomputes fib(2) again and again; memoising it turns the 41 calls of fib(7) into 13, and the saving grows quickly with n.',
  desc:'The call tree for a Fibonacci number grows call by call; in memoised mode repeated calls become instant look-ups, and a table of stored answers fills in.',
  dur:15,hint:'Choose n and switch between plain recursion and memoised, then Step or Run. Compare the call counts.',
  init:()=>({n:6,mode:'naive'}),
@@ -3677,7 +3678,7 @@ SCENE({id:'linear-average-case',name:'Best, average and worst case',tag:'It depe
   out+=line(1,C.green,'best 1')+line(n,C.coral,'worst '+n)+line(avg,C.purple,'average '+fmt(avg));
   out+=TF(300,356,half?'Half the time the target is missing and costs all n checks.':'Target equally likely at each position: average (n + 1) / 2.',14,C.muted);
   out+=TF(70,base+30,'target position →',13,C.muted,'start');
-  return {svg:out,phase:`n = ${n}: best case 1, worst case ${n}, average ${fmt(avg)}. All three grow in proportion to n, so linear search is O(n) whichever case you measure.`};
+  return {svg:out,phase:`n = ${n}: best case 1, worst case ${n}, average ${fmt(avg)}. The worst and average cases grow in proportion to n, so linear search is O(n); only the lucky best case stays at 1 however long the list.`};
  }});
 
 SCENE({id:'linear-sentinel',name:'Sentinel search',tag:'One test per card instead of two',
@@ -3817,7 +3818,7 @@ function SS_mazeStats(s){const b=SS_mazeBFS(s),d=SS_mazeDFS(s),df=d[d.length-1];
 
 SCENE({id:'bfs-maze',name:'Shortest path through a maze',tag:'Breadth-first search on a grid',shared:'grid-maze',
  definition:'Treat each open square of a maze as a node joined to its neighbours. Breadth-first search spreads out one step at a time, so the first time it reaches the goal it has found a shortest route.',
- example:'Every square gets a number: its distance from the start. Following the numbers back down from the goal, 14, 13, 12…, traces a shortest path.',
+ example:'Every square gets a number: its distance from the start. Following the numbers back down from the goal, 15, 14, 13…, traces a shortest path.',
  desc:'A grid maze with walls; numbers spread out from S in waves showing each square’s distance, until G is reached and the shortest path is drawn.',
  dur:14,hint:'Press squares to add or remove walls, then Step or Run. The maze is shared with depth-first search and A*.',
  init:SS_mazeInit,ui:SS_mazeUI,on:SS_mazeOn,
@@ -3967,9 +3968,9 @@ const SS_NP={S:[80,200],A:[300,90],B:[300,310],T:[520,200]};
 function SS_negTrace(w){const E=[['S','A',2],['S','B',5],['B','A',w],['A','T',1]];const d={S:0,A:Infinity,B:Infinity,T:Infinity},settled=[],fr=[{d:{...d},settled:[],say:'Dijkstra’s rule: settle the closest unsettled node, then never change it again.'}];
  while(settled.length<4){const u=Object.keys(d).filter(k=>!settled.includes(k)).sort((a,b)=>d[a]-d[b])[0];if(d[u]===Infinity)break;settled.push(u);
   const ups=[];for(const [a,b,ww] of E)if(a===u&&!settled.includes(b)&&d[u]+ww<d[b]){d[b]=d[u]+ww;ups.push(b)}
-  fr.push({d:{...d},settled:settled.slice(),cur:u,say:`Settle ${u} at ${d[u]}.`+(ups.length?` Update ${ups.join(', ')}.`:'')+(u==='B'&&w<0?` The edge B → A (${w}) would give A ${d.B+w}, but A is already settled.`:'')})}
+  fr.push({d:{...d},settled:settled.slice(),cur:u,say:`Settle ${u} at ${d[u]}.`+(ups.length?` Update ${ups.join(', ')}.`:'')+(u==='B'&&w<0&&d.B+w<d.A?` The edge B → A (${w}) would give A ${d.B+w}, but A is already settled.`:'')})}
  const t={S:0,A:Infinity,B:Infinity,T:Infinity};for(let i=0;i<4;i++)for(const [a,b,ww] of E)if(t[a]+ww<t[b])t[b]=t[a]+ww;
- const wrong=['A','T'].filter(k=>t[k]!==d[k]);fr.push({d:{...d},settled:settled.slice(),truth:t,done:true,wrong,say:wrong.length?`Wrong answers for ${wrong.join(' and ')}: the true shortest route goes S → B → A at ${t.A}. A negative edge made a node cheaper after it was settled.`:'With no negative edge, Dijkstra’s answers match the true shortest distances.'});return fr}
+ const wrong=['A','T'].filter(k=>t[k]!==d[k]);fr.push({d:{...d},settled:settled.slice(),truth:t,done:true,wrong,say:wrong.length?`Wrong answers for ${wrong.join(' and ')}: the true shortest route goes S → B → A at ${t.A}. A negative edge made a node cheaper after it was settled.`:w<0?'This negative edge is too small to make any route cheaper, so Dijkstra is still right here, but only by luck: with a negative edge it gives no guarantee.':'With no negative edge, Dijkstra’s answers match the true shortest distances.'});return fr}
 SCENE({id:'dijkstra-negative',name:'Why negative edges break Dijkstra',tag:'Settled too soon',
  definition:'Dijkstra’s algorithm assumes that adding an edge never makes a path shorter. With a negative edge, a node it has already settled can later be reached more cheaply, and the answer is wrong.',
  example:'S → A costs 2, S → B costs 5, B → A costs −4. Dijkstra settles A at 2, but S → B → A costs only 1. The Bellman–Ford algorithm handles negative edges correctly, more slowly.',
@@ -4089,7 +4090,7 @@ SCENE({id:'bubble-stability',name:'Stable sorting',tag:'Equal items keep their o
 /* ---------- Insertion sort lesson ---------- */
 SCENE({id:'insertion-nearly-sorted',name:'Fast on nearly sorted data',tag:'Work grows with the disorder',
  definition:'Insertion sort makes about n + I comparisons, where I counts the pairs that are in the wrong order (inversions). On nearly sorted data I is small, so it is very fast.',
- example:'A list of 12 with two neighbours swapped has one inversion: insertion sort needs about 12 comparisons, fewer than merge sort’s 30 or so.',
+ example:'A list of 12 with two neighbours swapped has one inversion: insertion sort needs about 12 comparisons, fewer than merge sort’s 20 or so.',
  desc:'A row of bars getting more and more out of order, beside bars comparing insertion sort’s and merge sort’s comparison counts as the number of inversions grows.',
  dur:10,hint:'Slide the amount of disorder. Each step of disorder swaps two random neighbours.',
  init:()=>({k:2,seed:3}),
@@ -4179,7 +4180,7 @@ function SS_qsTree(a0,rule){const a=a0.slice(),segs=[];let c=0;
  return {segs,c,depth:Math.max(...segs.map(x=>x[2]))+1}}
 SCENE({id:'quick-pivot-choice',name:'Choosing the pivot',tag:'A bad pivot makes quick sort slow',
  definition:'Quick sort is fast when each pivot splits its part roughly in half. Always picking the last item is a disaster on sorted input: every split is lopsided and the work grows like n².',
- example:'On 16 sorted numbers with “last item” pivots, the recursion goes 16 levels deep and needs 120 comparisons. Picking the median of three items brings it down to about 4 levels.',
+ example:'On 16 sorted numbers with “last item” pivots, the recursion goes 16 levels deep and needs 120 comparisons. Picking the median of three items brings it down to 5 levels and 38 comparisons.',
  desc:'Rows of bars showing how each level of quick sort’s recursion splits the list; a balanced pivot gives few short rows, a bad pivot a long staircase.',
  dur:11,hint:'Choose a pivot rule and an input. Compare the depth and the comparison counts.',
  init:()=>({rule:'last',kind:'sorted'}),
@@ -4193,7 +4194,7 @@ SCENE({id:'quick-pivot-choice',name:'Choosing the pivot',tag:'A bad pivot makes 
   out+=TF(x0,330,'Each row: the parts still being sorted at that depth',13,C.muted,'start');
   out+=counter(440,60,'Depth',t.depth,t.depth>8?C.coral:C.green,140)+counter(440,118,'Comparisons',t.c,C.blue,140);
   out+=counter(440,176,'n log₂ n',n*4,C.muted,140)+counter(440,234,'n(n − 1)/2',n*(n-1)/2,C.muted,140);
-  return {svg:out,phase:t.depth>8?`Lopsided splits: each pivot peels off only one item, so there are ${t.depth} levels and ${t.c} comparisons, close to n²/2.`:`Balanced splits: about log₂ ${n} = 4 levels are needed. ${t.c} comparisons, close to n log₂ n.`};
+  return {svg:out,phase:t.depth>8?`Lopsided splits: each pivot peels off only one item, so there are ${t.depth} levels and ${t.c} comparisons, close to n²/2.`:`Roughly balanced splits: only ${t.depth} levels, not far from log₂ ${n} = 4. ${t.c} comparisons, close to n log₂ n.`};
  }});
 
 function SS_partTrace(a0,scheme){const a=a0.slice(),n=a.length,fr=[];let c=0,sw=0;
@@ -4455,7 +4456,7 @@ SCENE({id:'dp-knapsack',name:'The knapsack problem',tag:'Pack the most value und
   SS_ITEMS.forEach(([nm,w,v],i)=>{T_.push([]);for(let c=0;c<=C_;c++){const skip=T_[i][c],take=w<=c?T_[i][c-w]+v:-1;T_[i+1][c]=Math.max(skip,take);
    if(c>0)fr.push({T:T_.map(r=>r.slice()),cur:[i+1,c],took:take>skip,say:w>c?`${nm} (${w} kg) does not fit in ${c} kg: copy £${skip} from above.`:`Capacity ${c}: skip ${nm} → £${skip}; take it → £${v} + best for ${c-w} kg (£${T_[i][c-w]}) = £${take}. Keep £${T_[i+1][c]}.`})}});
   const pick=[];let c=C_;for(let i=SS_ITEMS.length;i>0;i--)if(T_[i][c]!==T_[i-1][c]){pick.unshift(i-1);c-=SS_ITEMS[i-1][1]}
-  fr.push({T:T_,cur:null,done:true,pick,say:`Best value £${T_[SS_ITEMS.length][C_]}: ${pick.map(i=>SS_ITEMS[i][0]).join(' + ')||'nothing fits'}. Trying every subset would mean 2⁴ = 16 checks; the table needs only ${SS_ITEMS.length} × ${C_}.`});return fr},
+  fr.push({T:T_,cur:null,done:true,pick,say:`Best value £${T_[SS_ITEMS.length][C_]}: ${pick.map(i=>SS_ITEMS[i][0]).join(' + ')||'nothing fits'}. Trying every subset would mean 2⁴ = 16 checks; the table has ${SS_ITEMS.length} × ${C_} = ${SS_ITEMS.length*C_} cells. Each extra item doubles the subsets but adds only one row to the table.`});return fr},
  draw(s,f,X){
   const C_=s.cap,cw=Math.min(38,330/(C_+1)),x0=200,y0=66,rh=34;let out=heading(`Best value within ${C_} kg`);
   for(let c=0;c<=C_;c++)out+=TF(x0+c*cw+cw/2,y0-8,c+' kg',13,C.muted);
@@ -5346,7 +5347,7 @@ function MA_jitTrace(s){
  const fr=[{c:0,interp:0,jit:0,mode:'interpreted',say:`A function will be called ${s.calls} times. Interpreting it costs 10 units per call. The just-in-time compiler watches how often it is called.`}];let a=0,b=0,compiled=false;
  for(let c=1;c<=s.calls;c++){a+=10;let mode;if(compiled){b+=2;mode='compiled'}else if(c===s.thr){b+=10+25;compiled=true;mode='compiling'}else{b+=10;mode='interpreted'}
   fr.push({c,interp:a,jit:b,mode,say:mode==='compiling'?`Call ${c}: the function is now “hot”. It is interpreted once more and also compiled to machine code (25 units, paid once).`:mode==='compiled'?`Call ${c}: the compiled machine code runs in 2 units instead of 10.`:`Call ${c}: interpreted, 10 units.`})}
- const L=fr.at(-1);fr.push({...L,done:true,say:`After ${s.calls} calls: interpreting only cost ${L.interp} units; with the JIT ${L.jit}. ${L.jit<L.interp?'Compiling paid for itself because the function was called often.':'Compiling did not pay off: the function was not called often enough after it became hot.'}`});
+ const L=fr.at(-1);fr.push({...L,done:true,say:`After ${s.calls} calls: interpreting only cost ${L.interp} units; with the JIT ${L.jit}. ${L.jit<L.interp?'Compiling paid for itself because the function was called often.':(s.calls<s.thr?'The function never became hot, so it was never compiled and the two costs are the same.':'Compiling did not pay off: the function was not called often enough after it became hot.')}`});
  return fr;
 }
 SCENE({id:'ma-jit',name:'Just-in-time compilation',tag:'Compile only what is busy',
@@ -5443,7 +5444,7 @@ SCENE({id:'ma-mutex',name:'Locks and mutual exclusion',tag:'One at a time',
 
 /* ---- Scheduling lesson ---- */
 function MA_prioTrace(s){
- const jobs=[{id:'L',prio:1,len:3,arr:0,col:C.coral}];for(let a=0,k=1;a<=12;a+=2,k++)jobs.push({id:'H'+k,prio:5,len:2,arr:a,col:C.blue});
+ const jobs=[{id:'L',prio:1,len:3,arr:0,col:C.coral}];for(let a=0,k=1;a<=14;a+=2,k++)jobs.push({id:'H'+k,prio:5,len:2,arr:a,col:C.blue});
  jobs.forEach(j=>{j.left=j.len;j.wait=0});const fr=[{t:0,run:[],jobs:JSON.parse(JSON.stringify(jobs)),say:`A low-priority job L (priority 1) arrives with high-priority jobs (priority 5) arriving every 2 ticks.${s.aging?' With ageing, a waiting job gains 1 priority per tick.':''}`}];const run=[];
  for(let t=0;t<16;t++){const ready=jobs.filter(j=>j.arr<=t&&j.left>0);if(!ready.length){run.push(null);continue}
   const eff=j=>j.prio+(s.aging?j.wait:0);ready.sort((a,b)=>eff(b)-eff(a)||a.arr-b.arr);const r=ready[0];r.left--;ready.slice(1).forEach(j=>j.wait++);run.push(r.id);
@@ -5540,11 +5541,11 @@ WORD(
  {key:'memory-hierarchy',title:'Memory hierarchy',aliases:['memory hierarchy'],linkContext:'cpu',scene:'memory-hierarchy',here:'Layers of storage arranged from small and fast to large and slow, each keeping copies of what the slower layer holds.',contrast:'It is about speed and cost, not importance.',example:'Registers, cache, RAM, SSD, network.'},
  {key:'cache',title:'Cache',aliases:['cache','caches','cached','caching'],linkContext:'cpu',scene:'cache',here:'A small, fast store that keeps copies of recently used data so that repeated requests are quick.',contrast:'A cache only holds copies; the original stays in the slower store.',example:'Your browser caches images so a revisited page loads faster.'},
  {key:'cache-hit',title:'Cache hit',aliases:['cache hit','hit','hits'],linkContext:'cpu',here:'When requested data is already in the cache.',contrast:'A hit is the fast case; a miss is the slow one.',example:'Reading address 2 twice in a row: the second read is a hit.'},
- {key:'cache-miss',title:'Cache miss',aliases:['cache miss','miss','misses'],linkContext:'cpu',here:'When requested data is not in the cache and must be fetched from a slower level.',contrast:'Not an error: the data still arrives, only more slowly.',example:'The first read of any address is a miss.'},
+ {key:'cache-miss',title:'Cache miss',aliases:['cache miss','miss','misses'],linkContext:'cpu',here:'When requested data is not in the cache and must be fetched from a slower level.',contrast:'Not an error: the data still arrives, only more slowly.',example:'The first read of an address whose cache line has not been loaded yet is a miss.'},
  {key:'lru',title:'Least recently used (LRU)',aliases:['least recently used','LRU'],linkContext:'cpu',here:'A rule for a full cache: throw out the item that has gone unused for longest.',contrast:'Not the item used least often; only the time since last use counts.',example:'With slots holding 1, 2, 3, 7 and 7 used last, reading 4 evicts whichever of 1, 2, 3 was used longest ago.'},
  {key:'latency',title:'Latency',aliases:['latency','latencies'],linkContext:'cpu',here:'The delay between asking for something and receiving it.',contrast:'Not the same as bandwidth, which is how much arrives per second once it starts flowing.',example:'RAM latency is about 100 nanoseconds.'},
  {key:'compiler',title:'Compiler',aliases:['compiler','compilers','compiled','compile','compiling'],linkContext:'software',scene:'compiler',here:'A program that translates source code into machine instructions before the program runs.',contrast:'A compiler does not run the program; it produces something that can be run later.',example:'A C compiler turns hello.c into an executable file.'},
- {key:'interpreter',title:'Interpreter',aliases:['interpreter','interpreters','interpreted','interprets'],linkContext:'software',scene:'interpreter',here:'A program that reads source code and carries it out directly, without first producing a separate program.',contrast:'Not a person translating speech, though the idea is similar: translate as you go.',example:'Python’s interpreter runs a script line by line.'},
+ {key:'interpreter',title:'Interpreter',aliases:['interpreter','interpreters','interpreted','interprets'],linkContext:'software',scene:'interpreter',here:'A program that reads source code and carries it out directly, without first producing a separate program.',contrast:'Not a person translating speech, though the idea is similar: translate as you go.',example:'Python runs a script straight from its source file, with no separate build step.'},
  {key:'source-code',title:'Source code',aliases:['source code'],linkContext:'software',here:'A program as written by people, in a programming language.',contrast:'Not what the processor runs; it must be compiled or interpreted first.',example:'“total = price * 2” is source code.'},
  {key:'token',title:'Token',aliases:['token','tokens','lexing'],linkContext:'software',here:'One meaningful piece of source code, such as a number, a name or an operator.',contrast:'Not a password or security token; here it is a word of the program.',example:'“12+3” has three tokens: 12, +, 3.'},
  {key:'parse-tree',title:'Parse tree',aliases:['parse tree','parse trees','syntax tree','parsing','parse','parsed'],linkContext:'software',here:'A tree showing how the tokens of a program fit together, with operations above the values they combine.',contrast:'It shows structure, not the order the text was written in.',example:'In 2+3×4 the × node sits below the + node, so it is worked out first.'},
@@ -5654,7 +5655,7 @@ function NW_plan(s){
 }
 SCENE({id:'packet',name:'Packet',tag:'Messages travel in pieces',
  definition:'A small, numbered piece of a larger message. Each packet travels through the network on its own and the pieces are put back together at the end.',
- example:'A video call is sent as thousands of packets a second. Two packets from the same message can take different routes and arrive in a different order.',
+ example:'A video call is sent as hundreds of packets a second. Two packets from the same message can take different routes and arrive in a different order.',
  desc:'A message is cut into numbered packets that cross a mesh of routers by different paths, arrive out of order and are reassembled by number.',
  dur:12,hint:'Type a message (up to 12 characters). Press the small marker on any link to break it and watch the packets take other routes.',
  init:()=>({msg:'Hello world!',cut:[]}),
@@ -6007,7 +6008,7 @@ SCENE({id:'encapsulation',name:'Protocol layers and encapsulation',tag:'Envelope
   const total=sum(segs.map(g=>g.w));let x=300-total/2;const sel=s.sel===null?f.a:s.sel;
   segs.forEach(g=>{const Ly=NW_LAYERS[g.i],on=g.i===sel,inner=R(x,272,g.w-3,38,g.data?C.purplep:Ly.col,on?C.ink:'none',6)+(g.data?TMF(x+g.w/2-1.5,296,g.label,13,C.ink,'middle','xml:space="preserve"'):TBF(x+g.w/2-1.5,296,g.label,13,'#fff'));
    out+=hit(X,'sel',g.i,`${Ly.name} layer: ${Ly.fields}`,inner);x+=g.w});
-  const Lsel=NW_LAYERS[clamp(sel,0,3)];out+=TF(300,336,Lsel.fields,13,C.ink)+TF(300,360,`${f.d} layer${f.d>1?'s':''} of wrapping · ${f.d>1?(f.d-1)*20+(f.d===4?18:0):0} bytes of headers around ${msg.length} bytes of data`,13,C.muted);
+  const Lsel=NW_LAYERS[clamp(sel,0,3)];out+=TF(300,336,Lsel.fields,13,C.ink)+TF(300,360,`${f.d} layer${f.d>1?'s':''} of wrapping · ${f.d>1?Math.min(f.d-1,2)*20+(f.d===4?18:0):0} bytes of headers around ${msg.length} bytes of data`,13,C.muted);
   return {svg:out,phase:f.say};
  },
  three(s,f,X,project){
@@ -6239,7 +6240,7 @@ function NW_sw(w){
 }
 SCENE({id:'sliding-window',name:'Sliding window',tag:'Keep several segments in flight',
  definition:'TCP lets the sender have several unacknowledged segments on the way at once, up to a window size. As acknowledgements return, the window slides forward. The receiver can shrink the window to stop being flooded (flow control).',
- example:'Waiting for each acknowledgement before sending the next segment wastes a whole round trip per segment. With a window of 4, four segments share each round trip, so the transfer takes about a quarter of the time.',
+ example:'Waiting for each acknowledgement before sending the next segment wastes a whole round trip per segment. With a window of 4, four segments share each round trip, so a long transfer takes about a quarter of the time (here, 12 segments take 15 ticks instead of 48).',
  desc:'A strip of twelve numbered segments with a bracket marking the window; segments travel to the receiver and acknowledgements come back, and the window slides right as they arrive.',
  dur:14,hint:'Choose a window size, then Run. Compare the finishing times for different windows in the chart.',
  init:()=>({w:3}),
@@ -6476,7 +6477,7 @@ const NW_KEYB=(()=>{const r=rng(2468);return range(8).map(()=>Math.floor(r()*256
 const NW_A8=t=>Array.from(t.toUpperCase()).slice(0,6).map(c=>c.charCodeAt(0)&255);
 SCENE({id:'one-time-pad',name:'One-time pad',tag:'Perfect secrecy, once',
  definition:'Combine each bit of the message with a truly random key bit using XOR. If the key is as long as the message, kept secret and never reused, the ciphertext reveals nothing at all about the message.',
- example:'H (01001000) XOR key 10110101 gives 11111101. XOR with the same key again gives H back. But reuse the key for a second message and C1 XOR C2 = P1 XOR P2: the key cancels out and the messages start to leak.',
+ example:'H (01001000) XOR key 00110001 gives 01111001. XOR with the same key again gives H back. But reuse the key for a second message and C1 XOR C2 = P1 XOR P2: the key cancels out and the messages start to leak.',
  desc:'Each character’s bits are XORed with key bits to make ciphertext bits; in the reuse view, two ciphertexts made with the same key are XORed together and a guessed message reveals the other.',
  dur:13,hint:'Type a message. Then switch to “Key used twice” and see an attacker recover message 2 by guessing message 1.',
  init:()=>({p1:'HELLO',p2:'MONEY',view:'enc'}),
@@ -6763,7 +6764,7 @@ WORD(
  {key:'ttl',title:'Time to live (TTL)',aliases:['TTL','time to live'],linkContext:'ip-routing',scene:'ttl-traceroute',here:'A countdown carried by a packet or a cached answer. For packets it counts router hops; for DNS answers it counts seconds.',contrast:'Despite the name, an IP packet’s TTL counts hops, not time.',example:'A packet sent with TTL 3 is dropped by the third router.'},
  {key:'traceroute',title:'Traceroute',aliases:['traceroute'],linkContext:'ip-routing',scene:'ttl-traceroute',here:'A tool that maps the routers on a path by sending packets with TTL 1, 2, 3… and listening for each router’s “time exceeded” reply.',contrast:'It shows the path taken today; the next packet may go another way.',example:'traceroute example.com lists each hop with its round-trip time.'},
  {key:'handshake',title:'Handshake',aliases:['handshake','handshakes','three-way handshake','SYN'],linkContext:'tcp',scene:'tcp-handshake',here:'An opening exchange of messages in which two sides agree the settings they need before real data flows.',contrast:'Nothing is shaken: it is a short, fixed conversation.',example:'TCP’s SYN, SYN-ACK, ACK.'},
- {key:'sliding-window',title:'Sliding window',aliases:['sliding window','flow control','window size'],linkContext:'tcp',scene:'sliding-window',here:'A limit on how many unacknowledged segments may be in flight; it slides forward as acknowledgements arrive.',contrast:'The window is a count of data, not a time interval or a screen window.',example:'With a window of 4, segments 5–8 may be sent once 1 is acknowledged.'},
+ {key:'sliding-window',title:'Sliding window',aliases:['sliding window','flow control','window size'],linkContext:'tcp',scene:'sliding-window',here:'A limit on how many unacknowledged segments may be in flight; it slides forward as acknowledgements arrive.',contrast:'The window is a count of data, not a time interval or a screen window.',example:'With a window of 4, segments 1–4 may be in flight; once 1 is acknowledged the window slides to 2–5 and segment 5 may be sent.'},
  {key:'congestion-control',title:'Congestion control',aliases:['congestion control','congestion','slow start','congestion window'],linkContext:'tcp',scene:'congestion-control',here:'TCP’s way of guessing a safe sending rate: grow quickly at first, then gently, and halve when packets are lost.',contrast:'Flow control protects the receiver; congestion control protects the network in between.',example:'The window doubles 1, 2, 4, 8, then grows 9, 10, 11… until a loss halves it.'},
  {key:'dns-record',title:'DNS record',aliases:['DNS record','DNS records','A record','AAAA record','CNAME','MX record'],linkContext:'dns',scene:'dns-records',here:'One entry in a DNS zone: a name, a type (A, AAAA, CNAME, MX, TXT…) and a value.',contrast:'Different types answer different questions about the same name.',example:'example.co.uk MX 10 mail.example.co.uk says where its email goes.'},
  {key:'cookie',title:'Cookie',aliases:['cookie','cookies'],linkContext:'http',scene:'cookies',here:'A small value a website asks the browser to store and send back with later requests, usually a session id.',contrast:'A cookie is data, not a program; it cannot run on your computer.',example:'Set-Cookie: sid=7f3a, then Cookie: sid=7f3a on every request.'},
@@ -7006,7 +7007,7 @@ SCENE({id:'p-vs-np',name:'P versus NP',tag:'Easy to check, hard to find?',
   out+=R(150,160,300,40,ok?C.greenp:'#fff',ok?C.green:C.grid,10)+TB(300,186,ok?`✓ Checked: equals ${s.target}`:mask?`✗ ${tot} ≠ ${s.target}`:'Check: add them up',16,ok?C.green:mask?C.coral:C.muted);
   out+=counter(470,154,'subsets tried',f.mine?'—':`${f.tried} of ${(1<<n)-1}`,C.purple,118);
   if(!f.mine)out+=T(529,216,`${f.found} found so far`,13,f.found?C.green:C.muted);
-  const rows=[[6,'6','64'],[20,'20','about 1 million'],[40,'40','about 1 trillion'],[80,'80','more than atoms in a person']];
+  const rows=[[6,'6','64'],[20,'20','about 1 million'],[40,'40','about 1 trillion'],[80,'80','about a trillion trillion']];
   out+=TB(130,246,'n numbers',13,C.muted)+TB(280,246,'check an answer',13,C.green)+TB(460,246,'try every subset (2ⁿ)',13,C.coral);
   rows.forEach((r,i)=>{const y=270+i*25;out+=R(60,y-17,480,23,i%2?'#f6f9fb':'#fff','none',5)+T(130,y,r[0],15,C.ink)+T(280,y,'≈ '+r[1]+' additions',14,C.green)+T(460,y,r[2],14,C.coral)});
   return {svg:out,phase:f.mine?'Checking a proposed answer takes one addition per number, so subset sum is in NP. Nobody knows a method that always finds an answer quickly; if someone did, P would equal NP.':`Brute force is on subset ${f.tried}: ${parts.join(' + ')||'—'} = ${tot}. Each extra number doubles the work, while checking grows by only one addition.`};
@@ -7123,7 +7124,7 @@ SCENE({id:'fa-nondeterministic',name:'Nondeterministic automaton',tag:'Follow ev
 const TH_LIGHT_NAMES={G:'Go',A:'Amber',R:'Walk',RA:'R+A'};
 function TH_lightRun(events){let st='G',wait=false;const log=[];
  for(const ev of events){const from=st;let note;
-  if(ev==='button'){if(st==='G'||st==='RA'){note=wait?'already requested':'request remembered';wait=true}else note='ignored for now'}
+  if(ev==='button'){if(st==='G'){note=wait?'already requested':'request remembered';wait=true}else note='ignored for now'}
   else if(st==='G'){if(wait){st='A';wait=false;note='someone waiting: change'}else note='nobody waiting: stay'}
   else if(st==='A'){st='R';note='red: pedestrians cross'}else if(st==='R'){st='RA';note='crossing time over'}else{st='G';note='back to green'}
   log.push({ev,from,to:st,note})}
@@ -7252,7 +7253,7 @@ SCENE({id:'regex-replace',name:'Search and replace',tag:'Capture groups in pract
   out+=TF(24,222,'After',13,C.muted,'start')+row(res.out,262,false);
   if(res.first&&res.first.length>1)res.first.slice(1).forEach((g,i)=>{const x=300+(i-(res.first.length-2)/2)*170;out+=R(x-76,300,152,34,tint(TH_GCOL[i+1],.82),'none',8)+TMF(x,322,`$${i+1} = ${g}`,15,TH_GCOL[i+1],'middle','font-weight="700"')});
   else out+=TF(300,322,res.first?'This rule has no capture groups.':'No match in this text.',14,C.muted);
-  return {svg:out,phase:r.say+' Real search tools turn the pattern into an automaton first, so even long files are scanned in one pass.'};
+  return {svg:out,phase:r.say+' Many search tools, such as grep, turn the pattern into an automaton first, so even long files are scanned in one pass.'};
  }});
 
 /* ---- Turing machine lesson ---- */
@@ -7414,7 +7415,7 @@ SCENE({id:'halting-reduction',name:'Reduction',tag:'If you could decide X, you c
   const lines=['Step 1: take any program P and input w.','Step 2: build P′, which only reaches the last line if P halts.','Step 3: hand P′ to the imagined decider for “'+r.q+'”','Step 4: its answer is '+(halts?'yes':'no')+', because P '+(halts?'halts':'loops for ever')+'.','Step 5: so the X-decider would decide halting for any P and w.','Step 6: halting is undecidable, so no X-decider can exist.'];
   lines.slice(0,k+1).forEach((ln,i)=>out+=TF(30,206+i*22,ln,13,i===k?C.ink:C.muted,'start'));
   if(k>=5)out+=R(180,334,240,34,C.coralp,C.coral,9)+TB(300,357,'X is undecidable too',15,C.coral);
-  return {svg:out,phase:k>=5?`Any question about what programs do, like “${r.q}”, can be wired up this way, so none of them has a perfect general decider.`:`If P ${halts?'halts, P′ moves on to its last line':'loops for ever, P′ never reaches its last line'}, so the decider for X would answer ${halts?'yes':'no'}: the same answer as “does P halt on w?”.`};
+  return {svg:out,phase:k>=5?`Any non-trivial question about what programs eventually do, like “${r.q}”, can be wired up this way, so none of them has a perfect general decider.`:`If P ${halts?'halts, P′ moves on to its last line':'loops for ever, P′ never reaches its last line'}, so the decider for X would answer ${halts?'yes':'no'}: the same answer as “does P halt on w?”.`};
  }});
 
 const TH_RICE=[
