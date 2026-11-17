@@ -183,7 +183,7 @@ const T3_HOT=[{w:'Tyger',l:0,c:0,note:'old spelling'},{w:'burning',l:0,c:13,note
 const T3_READERS={A:C.blue,B:C.green,C:C.purple};
 const T3_DEMO=[['A',1],['B',3],['C',4],['A',2],['B',0],['C',1]];
 SCENE({id:'fress',name:'FRESS',tag:'File Retrieval and Editing System, Brown, 1968',
- definition:'FRESS, van Dam’s second system at Brown, ran on ordinary terminals as well as graphics screens. It added typed links (“jumps”) and annotations, so many readers could attach comments to one shared text.',
+ definition:'FRESS, van Dam’s second system at Brown, ran on ordinary terminals as well as graphics screens. It added two kinds of link, one-way “tags” for notes and two-way “jumps” between documents, so many readers could attach comments to one shared text.',
  example:'A class reads a poem together. Each student attaches notes to words; everyone sees everyone’s notes, and a note can itself be annotated.',
  research:['DeRose, S. J. & van Dam, A. (1999). Document structure and markup in the FRESS hypertext system. Markup Languages: Theory & Practice 1(1), 7–32.','Barnet, B. (2013). Memory Machines. Anthem Press.'],
  desc:'Four lines of Blake’s “The Tyger” with five words that can carry notes; notes appear in a margin in each reader’s colour, joined to their word by a dashed line.',
@@ -263,7 +263,7 @@ SCENE({id:'fress-poetry',name:'A class writing in the margins',tag:'FRESS in an 
 const T3_TIDE=['The Moon pulls on the sea.',
  'The Moon’s gravity pulls on the sea, raising the tides.',
  'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day.',
- 'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day. The Sun pulls too, about half as strongly: when Sun and Moon line up, the tides are biggest (spring tides).'];
+ 'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day. The Sun’s tide is about half as strong: when Sun and Moon line up, the tides are biggest (spring tides).'];
 const T3_words=t=>t.split(' ').length;
 // Lines of runs with words new at this level highlighted.
 function T3_stretchLines(level,n){const prev=level?T3_TIDE[level-1].split(' '):[],pool=prev.slice();return T3_wrap(T3_TIDE[level],n).map(line=>line.split(' ').map((w,i,a)=>{const k=pool.indexOf(w),isNew=k<0;if(!isNew)pool.splice(k,1);return [w+(i<a.length-1?' ':''),isNew&&level?C.coral:C.ink,isNew&&level]}))}

@@ -260,7 +260,7 @@ function T4_hunks(a,b){const n=a.length,m=b.length,L=range(n+1).map(()=>new Arra
 const T4_H=T4_hunks(T4_DA,T4_DB),T4_DIFFS=T4_H.filter(h=>!h.same);
 SCENE({id:'thinkertoys',name:'Thinkertoys',tag:'Tools for thinking through alternatives',
  definition:'Nelson’s “thinkertoys” are computer tools that help people think about complex alternatives: seeing versions side by side, with their differences and connections visible, and choosing among them.',
- example:'Two drafts of one sentence differ in three places. See each difference, choose which wording to keep, and the merged sentence assembles itself.',
+ example:'Two drafts of one sentence differ in four places. See each difference, choose which wording to keep, and the merged sentence assembles itself.',
  research:['Nelson, T. H. (1974). Computer Lib / Dream Machines (thinkertoys).','Hunt, J. W. & McIlroy, M. D. (1976). An algorithm for differential file comparison. Bell Laboratories Computing Science Technical Report 41.'],
  desc:'Two drafts with their differing words highlighted, one row per difference with a choice of A or B, and the merged sentence built from the choices.',
  dur:12,hint:'For each difference press A or B. The merged sentence on the right updates as you choose.',

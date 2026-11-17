@@ -200,7 +200,7 @@ SCENE({id:'hypermedia-branching',name:'Lines, trees and networks',tag:'Counting 
    for(let l=1;l<=d;l++)cols[l].forEach(p=>cols[l-1].forEach(q=>out+=L(q[0],q[1],p[0],p[1],C.line,1.2)));
    cols.forEach(cl=>cl.forEach(p=>out+=Ci(p[0],p[1],12,C.pale,C.blue)));paths=Math.pow(c,Math.max(0,d-1));pieces=cols.reduce((a,l)=>a+l.length,0)}
   out+=R(150,330,300,40,'#f3f7fa','none',8)+TF(300,355,`${paths.toLocaleString('en-GB')} path${paths===1?'':'s'} · ${pieces} pieces to write`,14,C.ink);
-  return {svg:out,phase:`${s.k==='line'?'A line':s.k==='tree'?'A tree':'A rejoining network'} with ${c} choices at ${d} branch point${d===1?'':'s'}: ${paths} distinct path${paths===1?'':'s'} for ${pieces} pieces of writing. ${s.k==='tree'?'Trees multiply the writing as fast as the paths.':s.k==='net'?'Rejoining keeps the writing small while the paths still multiply.':'The author writes everything once and every reader sees the same.'}`};
+  return {svg:out,phase:`${s.k==='line'?'A line with no choices':s.k==='tree'?`A tree with ${c} choices at each of ${d} branch point${d===1?'':'s'}`:`A rejoining network ${d} step${d===1?'':'s'} long, with ${c} choices at ${Math.max(0,d-1)} of them`}: ${paths} distinct path${paths===1?'':'s'} for ${pieces} pieces of writing. ${s.k==='tree'?'Trees multiply the writing as fast as the paths.':s.k==='net'?'Rejoining keeps the writing small while the paths still multiply.':'The author writes everything once and every reader sees the same.'}`};
  }});
 
 const T2_LATER=[

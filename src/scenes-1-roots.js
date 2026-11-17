@@ -251,7 +251,7 @@ const T1_TOPICS=['Links','Reading','Publishing'];
 SCENE({id:'index-cards',name:'Index cards',tag:'One card, one place',
  definition:'As a student, Nelson tried to organise his notes on index cards and found that each card could sit in only one place, while most ideas belonged in several. A computer, he reasoned, could let one note appear wherever it belonged.',
  example:'A card saying “quotations should keep their source” belongs under Reading and under Publishing. In a card box you must choose one, and it disappears from the other.',
- research:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights (autobiography). Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press.',
+ research:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization (autobiography). Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press.',
  desc:'Six note cards, each belonging to two of three topics. In card-box mode each card is filed under one topic and counted as missing from the other; in linked mode every card appears under all its topics.',
  dur:12,hint:'Press a card to move it to its other topic. Then switch to linked notes and see every card appear wherever it belongs.',
  init:()=>({mode:'box',file:[0,0,0,0,0,0]}),

@@ -10,7 +10,7 @@ SOURCE('t6-pew-2024',{title:'Pew Research Center (2024). When Online Content Dis
 SOURCE('t6-klein-2014',{title:'Klein, M. et al. (2014). Scholarly context not found: one in five articles suffers from reference rot. PLOS ONE 9(12), e115253.',url:'https://doi.org/10.1371/journal.pone.0115253'});
 SOURCE('t6-jones-2016',{title:'Jones, S. M. et al. (2016). Scholarly context adrift: three out of four URI references lead to changed content. PLOS ONE 11(12), e0167475.',url:'https://doi.org/10.1371/journal.pone.0167475'});
 SOURCE('t6-memento',{title:'Van de Sompel, H., Nelson, M. L. & Sanderson, R. (2013). RFC 7089: HTTP Framework for Time-Based Access to Resource States — Memento.',url:'https://www.rfc-editor.org/rfc/rfc7089'});
-SOURCE('t6-wayback',{title:'Internet Archive: the Wayback Machine (from 1996).',url:'https://web.archive.org/'});
+SOURCE('t6-wayback',{title:'Internet Archive (founded 1996): the Wayback Machine.',url:'https://web.archive.org/'});
 SOURCE('t6-embedded-1997',{title:'Nelson, T. H. (1997). Embedded markup considered harmful. World Wide Web Journal 2(4), 129–134.'});
 SOURCE('t6-coombs-1987',{title:'Coombs, J. H., Renear, A. H. & DeRose, S. J. (1987). Markup systems and the future of scholarly text processing. Communications of the ACM 30(11), 933–947.'});
 SOURCE('t6-renear-1996',{title:'Renear, A., Mylonas, E. & Durand, D. (1996). Refining our notion of what text really is: the problem of overlapping hierarchies. Research in Humanities Computing 4. Oxford University Press.'});

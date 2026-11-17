@@ -8,7 +8,7 @@ SOURCE('t1-hebb',{title:'Hebb, D. O. (1949). The Organization of Behavior. Wiley
 SOURCE('t1-computer-lib',{title:'Nelson, T. H. (1974). Computer Lib/Dream Machines. Self-published; revised edition Microsoft Press, 1987.'});
 SOURCE('t1-literary-machines',{title:'Nelson, T. H. (1981). Literary Machines. Mindful Press.'});
 SOURCE('t1-bolter',{title:'Bolter, J. D. (1991). Writing Space: The Computer, Hypertext, and the History of Writing. Lawrence Erlbaum.'});
-SOURCE('t1-possiplex',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights. Mindful Press.'});
+SOURCE('t1-possiplex',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization. Mindful Press.'});
 SOURCE('t1-luhmann',{title:'Luhmann, N. (1981). Kommunikation mit Zettelkästen: ein Erfahrungsbericht. In Baier, Kepplinger & Reumann (eds), Öffentliche Meinung und sozialer Wandel. Westdeutscher Verlag.'});
 SOURCE('t1-schmidt',{title:'Schmidt, J. F. K. (2016). Niklas Luhmann’s card index: thinking tool, communication partner, publication machine. In Cevolini (ed.), Forgetting Machines. Brill.'});
 SOURCE('t1-new-media-reader',{title:'Wardrip-Fruin, N. & Montfort, N. (eds) (2003). The New Media Reader. MIT Press (includes Bush 1945 and extracts from Nelson).'});

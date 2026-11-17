@@ -231,7 +231,7 @@ function T7_edl(picks){const spans=[];for(const [src,k] of picks){const w=T7_wor
 const T7_WATCH_PICKS=[['S2',0],['S2',1],['S2',2],['S2',3],['S2',4],['S1',2],['S1',3],['S1',4]];
 SCENE({id:'open-xanadu',name:'A document as a list of spans',tag:'OpenXanadu’s edit decision list',
  definition:'In OpenXanadu a document is not a file of text but an edit decision list (EDL): a list of spans, each naming a source and a stretch of its content. The reader’s software fetches the spans and shows them together, with their connections.',
- example:'The span “S2, start 0, length 29” brings in “Every quotation keeps a path”; a second span from S1 adds “in many directions”. The document is just those two lines.',
+ example:'The span “S2, start 0, length 28” brings in “Every quotation keeps a path”; a second span from S1 adds “in many directions”. The document is just those two lines.',
  desc:'Two source texts made of words you can press, the edit decision list your presses build, and the document assembled from it with each part coloured by its source.',
  research:['Nelson, T. H. and colleagues (2014). OpenXanadu: a working demonstration of transclusive documents built from edit decision lists over sources on the web.','Nelson, T. H. (1999). Xanalogical structure, needed now more than ever. ACM Computing Surveys 31(4es).'],
  dur:12,hint:'Press words in either source, in any order, to add them to your document. Neighbouring words from the same source merge into one span.',

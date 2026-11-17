@@ -574,7 +574,7 @@ SOURCE('t1-hebb',{title:'Hebb, D. O. (1949). The Organization of Behavior. Wiley
 SOURCE('t1-computer-lib',{title:'Nelson, T. H. (1974). Computer Lib/Dream Machines. Self-published; revised edition Microsoft Press, 1987.'});
 SOURCE('t1-literary-machines',{title:'Nelson, T. H. (1981). Literary Machines. Mindful Press.'});
 SOURCE('t1-bolter',{title:'Bolter, J. D. (1991). Writing Space: The Computer, Hypertext, and the History of Writing. Lawrence Erlbaum.'});
-SOURCE('t1-possiplex',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights. Mindful Press.'});
+SOURCE('t1-possiplex',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization. Mindful Press.'});
 SOURCE('t1-luhmann',{title:'Luhmann, N. (1981). Kommunikation mit Zettelkästen: ein Erfahrungsbericht. In Baier, Kepplinger & Reumann (eds), Öffentliche Meinung und sozialer Wandel. Westdeutscher Verlag.'});
 SOURCE('t1-schmidt',{title:'Schmidt, J. F. K. (2016). Niklas Luhmann’s card index: thinking tool, communication partner, publication machine. In Cevolini (ed.), Forgetting Machines. Brill.'});
 SOURCE('t1-new-media-reader',{title:'Wardrip-Fruin, N. & Montfort, N. (eds) (2003). The New Media Reader. MIT Press (includes Bush 1945 and extracts from Nelson).'});
@@ -856,7 +856,7 @@ const T1_TOPICS=['Links','Reading','Publishing'];
 SCENE({id:'index-cards',name:'Index cards',tag:'One card, one place',
  definition:'As a student, Nelson tried to organise his notes on index cards and found that each card could sit in only one place, while most ideas belonged in several. A computer, he reasoned, could let one note appear wherever it belonged.',
  example:'A card saying “quotations should keep their source” belongs under Reading and under Publishing. In a card box you must choose one, and it disappears from the other.',
- research:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights (autobiography). Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press.',
+ research:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization (autobiography). Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press.',
  desc:'Six note cards, each belonging to two of three topics. In card-box mode each card is filed under one topic and counted as missing from the other; in linked mode every card appears under all its topics.',
  dur:12,hint:'Press a card to move it to its other topic. Then switch to linked notes and see every card appear wherever it belongs.',
  init:()=>({mode:'box',file:[0,0,0,0,0,0]}),
@@ -1144,7 +1144,7 @@ SCENE({id:'hypermedia-branching',name:'Lines, trees and networks',tag:'Counting 
    for(let l=1;l<=d;l++)cols[l].forEach(p=>cols[l-1].forEach(q=>out+=L(q[0],q[1],p[0],p[1],C.line,1.2)));
    cols.forEach(cl=>cl.forEach(p=>out+=Ci(p[0],p[1],12,C.pale,C.blue)));paths=Math.pow(c,Math.max(0,d-1));pieces=cols.reduce((a,l)=>a+l.length,0)}
   out+=R(150,330,300,40,'#f3f7fa','none',8)+TF(300,355,`${paths.toLocaleString('en-GB')} path${paths===1?'':'s'} · ${pieces} pieces to write`,14,C.ink);
-  return {svg:out,phase:`${s.k==='line'?'A line':s.k==='tree'?'A tree':'A rejoining network'} with ${c} choices at ${d} branch point${d===1?'':'s'}: ${paths} distinct path${paths===1?'':'s'} for ${pieces} pieces of writing. ${s.k==='tree'?'Trees multiply the writing as fast as the paths.':s.k==='net'?'Rejoining keeps the writing small while the paths still multiply.':'The author writes everything once and every reader sees the same.'}`};
+  return {svg:out,phase:`${s.k==='line'?'A line with no choices':s.k==='tree'?`A tree with ${c} choices at each of ${d} branch point${d===1?'':'s'}`:`A rejoining network ${d} step${d===1?'':'s'} long, with ${c} choices at ${Math.max(0,d-1)} of them`}: ${paths} distinct path${paths===1?'':'s'} for ${pieces} pieces of writing. ${s.k==='tree'?'Trees multiply the writing as fast as the paths.':s.k==='net'?'Rejoining keeps the writing small while the paths still multiply.':'The author writes everything once and every reader sees the same.'}`};
  }});
 
 const T2_LATER=[
@@ -1308,7 +1308,7 @@ WORD(
 SOURCE('t3-carmody-1969',{title:'Carmody, S., Gross, W., Nelson, T. H., Rice, D. & van Dam, A. (1969). A hypertext editing system for the /360. In M. Faiman & J. Nievergelt (eds), Pertinent Concepts in Computer Graphics, University of Illinois Press, 291–330.'});
 SOURCE('t3-vandam-1988',{title:'van Dam, A. (1988). Hypertext ’87 keynote address. Communications of the ACM 31(7), 887–895.',url:'https://doi.org/10.1145/48511.48519'});
 SOURCE('t3-barnet-2013',{title:'Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press. Interviews with van Dam, Nelson and Engelbart.'});
-SOURCE('t3-nelson-2010',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights. Mindful Press. His autobiography.'});
+SOURCE('t3-nelson-2010',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization. Mindful Press. His autobiography.'});
 SOURCE('t3-engelbart-1962',{title:'Engelbart, D. C. (1962). Augmenting Human Intellect: A Conceptual Framework. SRI Summary Report AFOSR-3223.'});
 SOURCE('t3-engelbart-1968',{title:'Engelbart, D. C. & English, W. K. (1968). A research center for augmenting human intellect. AFIPS Fall Joint Computer Conference 33, 395–410.',url:'https://doi.org/10.1145/1476589.1476645'});
 SOURCE('t3-bardini-2000',{title:'Bardini, T. (2000). Bootstrapping: Douglas Engelbart, Coevolution, and the Origins of Personal Computing. Stanford University Press.'});
@@ -1323,7 +1323,7 @@ SOURCE('t3-hci',{title:'HCI In Motion: the mouse, Fitts’s law and the 1968 dem
 SOURCE('t3-thinkers',{title:'Thinkers In Motion: the people behind the ideas, including Engelbart and Nelson.',url:'https://thinkers-in-motion.puter.site/'});
 
 LESSON({id:'hes-brown',name:'HES at Brown',short:'HES',stage:'systems',year:'1967',level:'Introduction',
- why:'The first hypertext system people actually used: text in areas joined by branches, edited on a screen, and a disagreement about paper that shaped what came next.',
+ why:'One of the first hypertext systems people actually used: text in areas joined by branches, edited on a screen, and a disagreement about paper that shaped what came next.',
  prior:['coining-hypertext','zippered-lists'],references:['t3-carmody-1969','t3-vandam-1988','t3-barnet-2013','t3-nelson-2010'],
  ids:['hes-brown','hes-brown-print','hes-brown-goals']});
 LESSON({id:'nls-demo',name:'Engelbart’s demo',short:'NLS demo',stage:'systems',year:'1968',level:'Core',
@@ -1529,7 +1529,7 @@ const T3_HOT=[{w:'Tyger',l:0,c:0,note:'old spelling'},{w:'burning',l:0,c:13,note
 const T3_READERS={A:C.blue,B:C.green,C:C.purple};
 const T3_DEMO=[['A',1],['B',3],['C',4],['A',2],['B',0],['C',1]];
 SCENE({id:'fress',name:'FRESS',tag:'File Retrieval and Editing System, Brown, 1968',
- definition:'FRESS, van Dam’s second system at Brown, ran on ordinary terminals as well as graphics screens. It added typed links (“jumps”) and annotations, so many readers could attach comments to one shared text.',
+ definition:'FRESS, van Dam’s second system at Brown, ran on ordinary terminals as well as graphics screens. It added two kinds of link, one-way “tags” for notes and two-way “jumps” between documents, so many readers could attach comments to one shared text.',
  example:'A class reads a poem together. Each student attaches notes to words; everyone sees everyone’s notes, and a note can itself be annotated.',
  research:['DeRose, S. J. & van Dam, A. (1999). Document structure and markup in the FRESS hypertext system. Markup Languages: Theory & Practice 1(1), 7–32.','Barnet, B. (2013). Memory Machines. Anthem Press.'],
  desc:'Four lines of Blake’s “The Tyger” with five words that can carry notes; notes appear in a margin in each reader’s colour, joined to their word by a dashed line.',
@@ -1609,7 +1609,7 @@ SCENE({id:'fress-poetry',name:'A class writing in the margins',tag:'FRESS in an 
 const T3_TIDE=['The Moon pulls on the sea.',
  'The Moon’s gravity pulls on the sea, raising the tides.',
  'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day.',
- 'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day. The Sun pulls too, about half as strongly: when Sun and Moon line up, the tides are biggest (spring tides).'];
+ 'The Moon’s gravity pulls on the sea, raising two bulges of water, so most coasts get two high tides a day. The Sun’s tide is about half as strong: when Sun and Moon line up, the tides are biggest (spring tides).'];
 const T3_words=t=>t.split(' ').length;
 // Lines of runs with words new at this level highlighted.
 function T3_stretchLines(level,n){const prev=level?T3_TIDE[level-1].split(' '):[],pool=prev.slice();return T3_wrap(T3_TIDE[level],n).map(line=>line.split(' ').map((w,i,a)=>{const k=pool.indexOf(w),isNew=k<0;if(!isNew)pool.splice(k,1);return [w+(i<a.length-1?' ':''),isNew&&level?C.coral:C.ink,isNew&&level]}))}
@@ -1965,7 +1965,7 @@ function T4_hunks(a,b){const n=a.length,m=b.length,L=range(n+1).map(()=>new Arra
 const T4_H=T4_hunks(T4_DA,T4_DB),T4_DIFFS=T4_H.filter(h=>!h.same);
 SCENE({id:'thinkertoys',name:'Thinkertoys',tag:'Tools for thinking through alternatives',
  definition:'Nelson’s “thinkertoys” are computer tools that help people think about complex alternatives: seeing versions side by side, with their differences and connections visible, and choosing among them.',
- example:'Two drafts of one sentence differ in three places. See each difference, choose which wording to keep, and the merged sentence assembles itself.',
+ example:'Two drafts of one sentence differ in four places. See each difference, choose which wording to keep, and the merged sentence assembles itself.',
  research:['Nelson, T. H. (1974). Computer Lib / Dream Machines (thinkertoys).','Hunt, J. W. & McIlroy, M. D. (1976). An algorithm for differential file comparison. Bell Laboratories Computing Science Technical Report 41.'],
  desc:'Two drafts with their differing words highlighted, one row per difference with a choice of A or B, and the merged sentence built from the choices.',
  dur:12,hint:'For each difference press A or B. The merged sentence on the right updates as you choose.',
@@ -2137,7 +2137,7 @@ WORD(
  {key:'referential-integrity',title:'Referential integrity',aliases:['referential integrity','link integrity'],linkContext:'two-way-links-scale',scene:'two-way-links-scale',here:'The guarantee that every link still points at what it was made to point at.',contrast:'The web gives this up so that anyone can publish without coordination; Xanadu insisted on it.',example:'No “404 Not Found”, ever, because nothing published is removed.'},
  {key:'transcopyright',title:'Transcopyright',aliases:['transcopyright'],linkContext:'transcopyright',scene:'transcopyright',here:'Nelson’s proposed licence: by publishing in the system, authors permit anyone to transclude their work, and receive a small royalty each time a reader is delivered it.',contrast:'Not free licensing, such as Creative Commons, which drops payment; not traditional copyright, which requires asking permission.',example:'Every reading of a compound essay pays each quoted author for their characters.'},
  {key:'micropayment',title:'Micropayment',aliases:['micropayment','micropayments'],linkContext:'transcopyright-micropayments',scene:'transcopyright-micropayments',here:'A payment of a fraction of a penny, such as a per-reading royalty.',contrast:'Hard in practice: fixed processing fees and the reader’s attention cost more than the payment (Szabo 1999; Odlyzko 2003).',example:'0.1p for a page view, against card fees measured in pence.'},
- {key:'tumbler',title:'Tumbler',aliases:['tumbler','tumblers','tumbler address'],linkContext:'tumblers',scene:'tumblers',here:'Xanadu’s permanent address: numbers separated by points, in fields for server, account, document and version, and content, with zeros between the fields.',contrast:'Unlike a URL, a tumbler never needs to change, because new items are numbered under existing ones rather than by renumbering.',example:'1.2.0.5.0.3.1.0.1.40: 40 characters from document 3, version 1, of account 5 on server 1.2.'},
+ {key:'tumbler',title:'Tumbler',aliases:['tumbler','tumblers','tumbler address'],linkContext:'tumblers',scene:'tumblers',here:'Xanadu’s permanent address: numbers separated by points, in fields for server, account, document and version, and content, with zeros between the fields.',contrast:'Unlike a URL, a tumbler never needs to change, because new items are numbered under existing ones rather than by renumbering.',example:'1.2.0.5.0.3.1.0.1.40: a place in the content of document 3, version 1, of account 5 on server 1.2.'},
  {key:'append-only-store',title:'Append-only storage (Xanadu)',aliases:['append-only storage','permanent store'],linkContext:'tumblers-append',scene:'tumblers-append',here:'Storage to which new content is only ever added, never changed or removed, so every address stays valid for good.',contrast:'Editing still works: documents are arrangements of pointers, and only the arrangement changes.',example:'Deleting a sentence removes it from the current version but not from storage.'},
  {key:'enfilade',title:'Enfilade',aliases:['enfilade','enfilades'],linkContext:'tumblers-append',scene:'tumblers-append',here:'The Xanadu team’s family of tree data structures for mapping a document’s current arrangement onto permanent storage quickly, even for huge documents with many versions.',contrast:'An implementation detail, not something readers see; similar in spirit to ropes and B-trees.',example:'Finding which stored characters make up page 400 of version 37 without scanning the whole document.'},
  {key:'person-miller-mark',title:'Mark S. Miller',aliases:['Mark S. Miller','Mark Miller'],linkContext:'tumblers',here:'American computer scientist who worked on the Xanadu design in the 1980s, and later on secure distributed programming and the JavaScript standard.',contrast:'Not George A. Miller, the psychologist of “seven, plus or minus two”.',example:'One of the young programmers who turned Nelson’s ideas into data structures.'},
@@ -2369,7 +2369,7 @@ SCENE({id:'transcopyright-micropayments',name:'The trouble with tiny payments',t
 /* ---------------- Tumblers ---------------- */
 SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering',
  definition:'Xanadu gives everything a permanent address called a tumbler: a string of numbers separated by points, in fields for server, account, document (with its versions) and the bytes inside it. Zeros separate the fields, and any field can grow forever by adding more digits.',
- example:'1.2.0.5.0.3.1.0.1.40 can be read as: server 1.2, account 5, document 3 version 1, then content from position 1, here 40 characters. A new account on server 1.2 simply takes the next number; nothing else changes.',
+ example:'1.2.0.5.0.3.1.0.1.40 can be read as: server 1.2, account 5, document 3 version 1, then 1.40, a place in its content. A new account on server 1.2 simply takes the next number; nothing else changes.',
  research:'Nelson, T. H. (1981). Literary Machines, chapter 4 (tumblers). The structure is simplified here; Udanax Green, the 1980s Xanadu back end, was released as open source in 1999.',
  desc:'A tumbler address split into coloured fields, with controls that change each field, and a tree showing where the address sits among servers, accounts and documents.',
  dur:10,hint:'Change each field and watch the address and its place in the tree.',
@@ -2378,7 +2378,7 @@ SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering'
  ui:[{range:'srv',label:'Server',min:1,max:3,get:s=>s.srv,act:'srv',show:v=>'1.'+v},{range:'acc',label:'Account',min:1,max:9,get:s=>s.acc,act:'acc',show:v=>v},{range:'doc',label:'Document',min:1,max:9,get:s=>s.doc,act:'doc',show:v=>v},{range:'ver',label:'Version',min:1,max:5,get:s=>s.ver,act:'ver',show:v=>v}],
  on:{srv(s,v){s.srv=Number(v);return 'keep'},acc(s,v){s.acc=Number(v);return 'keep'},doc(s,v){s.doc=Number(v);return 'keep'},ver(s,v){s.ver=Number(v);return 'keep'}},
  draw(s){
-  const F=[['1.'+s.srv,'server',C.blue],['0',null,C.muted],[String(s.acc),'account',C.green],['0',null,C.muted],[s.doc+'.'+s.ver,'document.version',C.purple],['0',null,C.muted],[s.pos+'.'+s.len,'content span',C.amber]];
+  const F=[['1.'+s.srv,'server',C.blue],['0',null,C.muted],[String(s.acc),'account',C.green],['0',null,C.muted],[s.doc+'.'+s.ver,'document.version',C.purple],['0',null,C.muted],[s.pos+'.'+s.len,'content',C.amber]];
   let out=heading('One permanent address for any piece of content');
   let x=40;F.forEach(([v,lab,col])=>{const w=lab?Math.max(70,v.length*16+24):26;out+=R(x,60,w,46,lab?'#fff':'#f3f7fa',col,6)+TMF(x+w/2,90,v,20,col);if(lab)out+=TF(x+w/2,124,lab,13,col);x+=w+8});
   // Tree.
@@ -2388,10 +2388,10 @@ SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering'
   const px=sx[s.srv-1];
   [-76,0,76].forEach((d,i)=>{const a=s.acc-1+i,ax=px+d;if(a<1)return;t+=L(px,214,ax,246,C.line,1.5)+node(ax,250,'acct '+a,a===s.acc,C.green)});
   [-76,0,76].forEach((d,i)=>{const dd=s.doc-1+i,dx=px+d;if(dd<1)return;t+=L(px,264,dx,296,C.line,1.5)+node(dx,300,'doc '+dd+'.'+(dd===s.doc?s.ver:1),dd===s.doc,C.purple)});
-  t+=L(px,314,px,336,C.line,1.5)+node(px,350,'chars 1–40',true,C.amber);
+  t+=L(px,314,px,336,C.line,1.5)+node(px,350,'content '+s.pos+'.'+s.len,true,C.amber);
   out+=node(300,160,'docuverse',false,C.ink,90)+t;
   const addr=`1.${s.srv}.0.${s.acc}.0.${s.doc}.${s.ver}.0.${s.pos}.${s.len}`;
-  return {svg:out,phase:`Address ${addr}: server 1.${s.srv}, account ${s.acc}, document ${s.doc} version ${s.ver}, ${s.len} characters from position ${s.pos}. Whatever else is added to the docuverse, this address keeps meaning the same thing.`};
+  return {svg:out,phase:`Address ${addr}: server 1.${s.srv}, account ${s.acc}, document ${s.doc} version ${s.ver}, content ${s.pos}.${s.len}. Whatever else is added to the docuverse, this address keeps meaning the same thing.`};
  }});
 
 SCENE({id:'tumblers-insert',name:'Insert without renumbering',tag:'Why addresses can stay permanent',
@@ -2458,7 +2458,7 @@ SOURCE('t6-pew-2024',{title:'Pew Research Center (2024). When Online Content Dis
 SOURCE('t6-klein-2014',{title:'Klein, M. et al. (2014). Scholarly context not found: one in five articles suffers from reference rot. PLOS ONE 9(12), e115253.',url:'https://doi.org/10.1371/journal.pone.0115253'});
 SOURCE('t6-jones-2016',{title:'Jones, S. M. et al. (2016). Scholarly context adrift: three out of four URI references lead to changed content. PLOS ONE 11(12), e0167475.',url:'https://doi.org/10.1371/journal.pone.0167475'});
 SOURCE('t6-memento',{title:'Van de Sompel, H., Nelson, M. L. & Sanderson, R. (2013). RFC 7089: HTTP Framework for Time-Based Access to Resource States — Memento.',url:'https://www.rfc-editor.org/rfc/rfc7089'});
-SOURCE('t6-wayback',{title:'Internet Archive: the Wayback Machine (from 1996).',url:'https://web.archive.org/'});
+SOURCE('t6-wayback',{title:'Internet Archive (founded 1996): the Wayback Machine.',url:'https://web.archive.org/'});
 SOURCE('t6-embedded-1997',{title:'Nelson, T. H. (1997). Embedded markup considered harmful. World Wide Web Journal 2(4), 129–134.'});
 SOURCE('t6-coombs-1987',{title:'Coombs, J. H., Renear, A. H. & DeRose, S. J. (1987). Markup systems and the future of scholarly text processing. Communications of the ACM 30(11), 933–947.'});
 SOURCE('t6-renear-1996',{title:'Renear, A., Mylonas, E. & Durand, D. (1996). Refining our notion of what text really is: the problem of overlapping hierarchies. Research in Humanities Computing 4. Oxford University Press.'});
@@ -2594,7 +2594,7 @@ SCENE({id:'link-rot',name:'Link rot',tag:'Measured, not imagined',
  draw(s){
   let out=heading('How much of the cited web has gone?');
   T6_STUDIES.forEach((d,i)=>{const y=54+i*44;out+=TF(20,y+12,d.lab,13,C.ink,'start')+R(20,y+18,200*d.v/100,14,C.coral,'none',3)+R(20+200*d.v/100,y+18,200*(1-d.v/100),14,'#eef2f5','none',3)+TBF(226,y+30,d.v+'%',13,C.coral,'start')});
-  out+=TF(20,236,'shares of links or pages failed (see sources)',13,C.muted,'start');
+  out+=TF(20,236,'share of links, pages or (last bar) articles',13,C.muted,'start');
   // Decay model.
   const x=t=>330+t*24,y=v=>300-v*2.2;
   out+=L(330,300,570,300,C.line,1.5)+L(330,80,330,300,C.line,1.5);
@@ -2643,7 +2643,7 @@ SCENE({id:'link-rot-drift',name:'Content drift',tag:'The link works, but the pag
  on:{yr(s,v){s.yr=Number(v);s.arch=false;return 'keep'},arch(s){s.arch=!s.arch;return 'keep'}},
  draw(s){
   const L0=['Rainfall rose 12% in 2014.','Source: station records.','Method: daily gauges.','Contact the data team.'];
-  const CH=[[2,'Rainfall rose 9% in 2014.'],[0,'Source: revised records.'],[5,'Method: satellite estimates.'],[7,'Contact form removed.']];
+  const CH=[[2,'Rainfall rose 9% in 2014.'],[3,'Source: revised records.'],[5,'Method: satellite estimates.'],[7,'Contact form removed.']];
   const now=L0.slice();const changed=[false,false,false,false];
   CH.forEach(([at,t],i)=>{if(s.yr>=at){now[i]=t;changed[i]=true}});
   let out=heading('Cited version and the page today');
@@ -2792,7 +2792,7 @@ const T6_IDEAS=[
  {i:'Permanent addresses',now:'DOIs, archive copies, content hashes',sc:2},
  {i:'Reader annotation',now:'Web Annotation standard (2017); not built into browsers',sc:1},
  {i:'Micropayment royalties',now:'Largely did not happen; subscriptions instead',sc:0},
- {i:'Visible side-by-side links',now:'Rare outside demos such as OpenXanadu',sc:0}];
+ {i:'Visible side-by-side links',now:'Diff and review tools; rare in everyday reading',sc:1}];
 SCENE({id:'curse-of-xanadu-ideas',name:'Which ideas came true?',tag:'A scorecard, honestly kept',
  definition:'Many of Xanadu’s ideas reappeared later in other systems, usually in part and inside a single platform rather than across the whole web. Some, like per-reading royalties, mostly did not.',
  example:'Every Wikipedia page has “What links here”, a two-way link view, but only for links within Wikipedia.',
@@ -3066,7 +3066,7 @@ function T7_edl(picks){const spans=[];for(const [src,k] of picks){const w=T7_wor
 const T7_WATCH_PICKS=[['S2',0],['S2',1],['S2',2],['S2',3],['S2',4],['S1',2],['S1',3],['S1',4]];
 SCENE({id:'open-xanadu',name:'A document as a list of spans',tag:'OpenXanadu’s edit decision list',
  definition:'In OpenXanadu a document is not a file of text but an edit decision list (EDL): a list of spans, each naming a source and a stretch of its content. The reader’s software fetches the spans and shows them together, with their connections.',
- example:'The span “S2, start 0, length 29” brings in “Every quotation keeps a path”; a second span from S1 adds “in many directions”. The document is just those two lines.',
+ example:'The span “S2, start 0, length 28” brings in “Every quotation keeps a path”; a second span from S1 adds “in many directions”. The document is just those two lines.',
  desc:'Two source texts made of words you can press, the edit decision list your presses build, and the document assembled from it with each part coloured by its source.',
  research:['Nelson, T. H. and colleagues (2014). OpenXanadu: a working demonstration of transclusive documents built from edit decision lists over sources on the web.','Nelson, T. H. (1999). Xanalogical structure, needed now more than ever. ACM Computing Surveys 31(4es).'],
  dur:12,hint:'Press words in either source, in any order, to add them to your document. Neighbouring words from the same source merge into one span.',
@@ -3291,13 +3291,13 @@ WORD(
  {key:'transclusion-beam',title:'Transclusion beam',aliases:['beam','beams'],linkContext:'xanadu-space',scene:'xanadu-space',here:'A visible band drawn from a transcluded passage to the same content in its source document.',contrast:'A web link is a hidden jump; a beam shows both ends at once.',example:'A blue beam from Document C’s second line to Source A’s fourth.'},
  {key:'live-embed',title:'Embedding by address',aliases:['embed','embedding','embedded content'],linkContext:'xanadu-space-quote',scene:'xanadu-space-quote',here:'Showing content fetched from a web address at the moment of reading, so it shows whatever the address holds now.',contrast:'Transclusion points at fixed content, so it keeps showing what was quoted.',example:'An embedded post that disappears when the original is deleted.'},
  {key:'text-fragment',title:'Text fragment link',aliases:['text fragment','text fragments','scroll to text'],linkContext:'xanadu-space-follow',scene:'xanadu-space-follow',here:'A web link ending in #:~:text= that asks the browser to scroll to and highlight given words on the page.',contrast:'It matches words, so it fails silently if the passage is edited; a Xanadu span points at permanent content.',example:'page.html#:~:text=quoted%20passage'},
- {key:'edit-decision-list',title:'Edit decision list (EDL)',aliases:['edit decision list','EDL','EDLs'],linkContext:'open-xanadu',scene:'open-xanadu',here:'In OpenXanadu, the stored form of a document: a list of spans, each naming a source and a stretch of its content.',contrast:'A normal file holds the text itself; an EDL holds only where to find it.',example:'S2 start 0 length 29, then S1 start 14 length 18.'},
+ {key:'edit-decision-list',title:'Edit decision list (EDL)',aliases:['edit decision list','EDL','EDLs'],linkContext:'open-xanadu',scene:'open-xanadu',here:'In OpenXanadu, the stored form of a document: a list of spans, each naming a source and a stretch of its content.',contrast:'A normal file holds the text itself; an EDL holds only where to find it.',example:'S2 start 0 length 28, then S1 start 14 length 18.'},
  {key:'span',title:'Span',aliases:['span','spans'],linkContext:'open-xanadu',scene:'open-xanadu',here:'A stretch of content named by its source, its starting position and its length.',contrast:'A span stays correct only if the content it names never moves.',example:'S1, start 6, length 7 is “connect”.'},
  {key:'append-only',title:'Append-only storage',aliases:['append-only','append only'],linkContext:'open-xanadu-permanent',scene:'open-xanadu-permanent',here:'Storage that only ever adds new content and never overwrites old content, so every earlier position keeps its meaning.',contrast:'Editing in place shifts later content and breaks anything that pointed at positions.',example:'Inserting a word adds it at the end and makes a new list of spans for the new version.'},
  {key:'xanalink',title:'Xanadu link',aliases:['xanalink','xanalinks'],linkContext:'open-xanadu-links',scene:'open-xanadu-links',here:'In Xanadu’s design, a link stored as its own object, pointing at spans of content in two or more documents.',contrast:'A web link is written inside one page and points one way at a whole address.',example:'A reader’s note linking passages in documents they do not own.'},
  {key:'parallel-documents-term',title:'Parallel documents',aliases:['parallel document','parallel documents','parallel text'],linkContext:'parallel-documents',scene:'parallel-documents',here:'Related documents shown side by side with visible connections between their corresponding parts.',contrast:'Not just two windows: the correspondences are drawn, so the reader does not search for them.',example:'A text beside its translation, sentence joined to sentence.'},
  {key:'deep-versioning',title:'Deep versioning',aliases:['deep versioning','version comparison'],linkContext:'parallel-documents-versions',scene:'parallel-documents-versions',here:'Keeping every version of a document and being able to compare any two, with unchanged parts joined and changes shown.',contrast:'Saving over a file keeps only the latest version.',example:'Version 2 beside version 3: three sentences kept, one removed, one new.'},
- {key:'diff',title:'Diff',aliases:['diff','diffs'],linkContext:'parallel-documents-versions',scene:'parallel-documents-versions',here:'A comparison of two versions that lists what was kept, removed and added, usually found with a longest-common-subsequence method.',contrast:'A diff lists changes; a parallel view draws the connections between versions.',example:'The Unix diff of 1976.'},
+ {key:'diff',title:'Diff',aliases:['diff','diffs'],linkContext:'parallel-documents-versions',scene:'parallel-documents-versions',here:'A comparison of two versions that lists what was kept, removed and added, usually found with a longest-common-subsequence method.',contrast:'A diff lists changes; a parallel view draws the connections between versions.',example:'Unix diff (1974; algorithm published by Hunt and McIlroy in 1976).'},
  {key:'split-attention',title:'Split-attention effect',aliases:['split attention','split-attention'],linkContext:'parallel-documents-search',scene:'parallel-documents-search',here:'The extra mental effort of searching between and combining related pieces of information that are presented apart.',contrast:'Joining or connecting the pieces removes the search and the effort.',example:'Finding a sentence’s reworded partner with no line to follow.'}
 );
 
@@ -3501,7 +3501,7 @@ SCENE({id:'content-addressing',name:'Naming content by what it is',tag:'Location
   out+=TBF(20,196,'Content address (hash of the text)',13,C.ink,'start')+R(20,204,560,40,'#fff',C.green,8)+TMF(32,229,'fnv1a:'+h,13,C.ink,'start')+TBF(568,229,s.moved?'✓ found on server B':'✓ found',13,C.green,'end');
   out+=TBF(20,276,'The three versions and their content addresses',13,C.ink,'start');
   T8_TEXTS.forEach((x,i)=>{const y=298+i*22;out+=TMF(32,y,T8_fnv(x),13,i===s.v?C.green:C.muted,'start')+TF(130,y,'“'+x+'”',13,i===s.v?C.ink:C.muted,'start')});
-  return {svg:out,phase:`${s.moved?'The file moved: its web address now fails, but its content address still finds a copy.':'Both addresses work while the file stays put.'} One character’s change gives an unrelated hash, so a content address can never point at the wrong text.`};
+  return {svg:out,phase:`${s.moved?'The file moved: its web address now fails, but its content address still finds a copy.':'Both addresses work while the file stays put.'} One character’s change gives an unrelated hash, so, with a cryptographic hash, a content address in practice never points at the wrong text.`};
  }});
 
 // A Merkle tree over four chunks: editing one chunk changes only the hashes on its path to the root.
@@ -3719,7 +3719,7 @@ WORD(
  {key:'pagerank',title:'PageRank',aliases:['PageRank','page rank'],linkContext:'backlinks-rank',scene:'backlinks-rank',here:'A score for each page computed from the pages that link to it, where each link’s vote is weighted by the rank of the linking page and shared among its links.',contrast:'Not a simple count of backlinks: one link from a well-linked page can outweigh several from obscure ones.',example:'Brin and Page’s 1998 search engine.'},
  {key:'unlinked-mention',title:'Unlinked mention',aliases:['unlinked mention','unlinked mentions'],linkContext:'backlinks-notes',scene:'backlinks-notes',here:'A place where a note’s title appears in another note’s text without a link, offered by note tools as a possible connection.',contrast:'A backlink is an explicit link; an unlinked mention is only a matching word.',example:'The word “trails” in the Memex note.'},
  {key:'content-address',title:'Content address',aliases:['content address','content addresses','content addressing','content-addressed'],linkContext:'content-addressing',scene:'content-addressing',here:'A name for a piece of content computed from the content itself, usually with a cryptographic hash, so any copy can answer to it and any change gives a new name.',contrast:'A location address (a URL) names where a file is, and breaks when it moves.',example:'Git names every file version by its hash.'},
- {key:'hash-function',title:'Hash function',aliases:['hash function','hash','hashes','hashing'],linkContext:'content-addressing',scene:'content-addressing',here:'A function that turns any amount of data into a short fixed-length value, so that even a tiny change gives a very different value.',contrast:'Cryptographic hashes such as SHA-256 are also built so that nobody can find two inputs with the same value; the small FNV hash used here is not.',example:'Changing a full stop to an exclamation mark changes every digit.'},
+ {key:'hash-function',title:'Hash function',aliases:['hash function','hash','hashes','hashing'],linkContext:'content-addressing',scene:'content-addressing',here:'A function that turns any amount of data into a short fixed-length value, so that even a tiny change gives a very different value.',contrast:'Cryptographic hashes such as SHA-256 are also built so that nobody can find two inputs with the same value; the small FNV hash used here is not.',example:'Changing a full stop to an exclamation mark changes most of the digits.'},
  {key:'merkle-tree',title:'Merkle tree',aliases:['Merkle tree','Merkle trees','hash tree','Merkle DAG'],linkContext:'content-addressing-merkle',scene:'content-addressing-merkle',here:'A tree in which each node is named by the hash of its children’s names, so the root’s name depends on every piece of content beneath it.',contrast:'Changing one piece changes only the names on its path to the root; everything else is shared between versions.',example:'Git commits and IPFS directories.'},
  {key:'wiki-template',title:'Template (wiki)',aliases:['template','templates'],linkContext:'content-addressing-transclusion',scene:'content-addressing-transclusion',here:'A wiki page written to be included in other pages by reference; MediaWiki calls the inclusion transclusion.',contrast:'Wiki transclusion shows the template’s latest version; Xanadu’s design quotes fixed content.',example:'A fact box shown on three articles at once.'},
  {key:'intertwingularity',title:'Intertwingled',aliases:['intertwingled','intertwingularity','intertwingle'],linkContext:'deep-interconnection',scene:'deep-interconnection',here:'Nelson’s word, from Computer Lib (1974), for the way ideas and subjects cross and depend on each other so deeply that they cannot be neatly separated.',contrast:'Opposed to dividing knowledge into a strict hierarchy of separate subjects.',example:'Most of this course’s connections run between eras.'},

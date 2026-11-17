@@ -2,7 +2,7 @@
 SOURCE('t3-carmody-1969',{title:'Carmody, S., Gross, W., Nelson, T. H., Rice, D. & van Dam, A. (1969). A hypertext editing system for the /360. In M. Faiman & J. Nievergelt (eds), Pertinent Concepts in Computer Graphics, University of Illinois Press, 291–330.'});
 SOURCE('t3-vandam-1988',{title:'van Dam, A. (1988). Hypertext ’87 keynote address. Communications of the ACM 31(7), 887–895.',url:'https://doi.org/10.1145/48511.48519'});
 SOURCE('t3-barnet-2013',{title:'Barnet, B. (2013). Memory Machines: The Evolution of Hypertext. Anthem Press. Interviews with van Dam, Nelson and Engelbart.'});
-SOURCE('t3-nelson-2010',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civil Rights. Mindful Press. His autobiography.'});
+SOURCE('t3-nelson-2010',{title:'Nelson, T. H. (2010). Possiplex: Movies, Intellect, Creative Control, My Computer Life and the Fight for Civilization. Mindful Press. His autobiography.'});
 SOURCE('t3-engelbart-1962',{title:'Engelbart, D. C. (1962). Augmenting Human Intellect: A Conceptual Framework. SRI Summary Report AFOSR-3223.'});
 SOURCE('t3-engelbart-1968',{title:'Engelbart, D. C. & English, W. K. (1968). A research center for augmenting human intellect. AFIPS Fall Joint Computer Conference 33, 395–410.',url:'https://doi.org/10.1145/1476589.1476645'});
 SOURCE('t3-bardini-2000',{title:'Bardini, T. (2000). Bootstrapping: Douglas Engelbart, Coevolution, and the Origins of Personal Computing. Stanford University Press.'});
@@ -17,7 +17,7 @@ SOURCE('t3-hci',{title:'HCI In Motion: the mouse, Fitts’s law and the 1968 dem
 SOURCE('t3-thinkers',{title:'Thinkers In Motion: the people behind the ideas, including Engelbart and Nelson.',url:'https://thinkers-in-motion.puter.site/'});
 
 LESSON({id:'hes-brown',name:'HES at Brown',short:'HES',stage:'systems',year:'1967',level:'Introduction',
- why:'The first hypertext system people actually used: text in areas joined by branches, edited on a screen, and a disagreement about paper that shaped what came next.',
+ why:'One of the first hypertext systems people actually used: text in areas joined by branches, edited on a screen, and a disagreement about paper that shaped what came next.',
  prior:['coining-hypertext','zippered-lists'],references:['t3-carmody-1969','t3-vandam-1988','t3-barnet-2013','t3-nelson-2010'],
  ids:['hes-brown','hes-brown-print','hes-brown-goals']});
 LESSON({id:'nls-demo',name:'Engelbart’s demo',short:'NLS demo',stage:'systems',year:'1968',level:'Core',

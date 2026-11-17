@@ -222,7 +222,7 @@ SCENE({id:'transcopyright-micropayments',name:'The trouble with tiny payments',t
 /* ---------------- Tumblers ---------------- */
 SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering',
  definition:'Xanadu gives everything a permanent address called a tumbler: a string of numbers separated by points, in fields for server, account, document (with its versions) and the bytes inside it. Zeros separate the fields, and any field can grow forever by adding more digits.',
- example:'1.2.0.5.0.3.1.0.1.40 can be read as: server 1.2, account 5, document 3 version 1, then content from position 1, here 40 characters. A new account on server 1.2 simply takes the next number; nothing else changes.',
+ example:'1.2.0.5.0.3.1.0.1.40 can be read as: server 1.2, account 5, document 3 version 1, then 1.40, a place in its content. A new account on server 1.2 simply takes the next number; nothing else changes.',
  research:'Nelson, T. H. (1981). Literary Machines, chapter 4 (tumblers). The structure is simplified here; Udanax Green, the 1980s Xanadu back end, was released as open source in 1999.',
  desc:'A tumbler address split into coloured fields, with controls that change each field, and a tree showing where the address sits among servers, accounts and documents.',
  dur:10,hint:'Change each field and watch the address and its place in the tree.',
@@ -231,7 +231,7 @@ SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering'
  ui:[{range:'srv',label:'Server',min:1,max:3,get:s=>s.srv,act:'srv',show:v=>'1.'+v},{range:'acc',label:'Account',min:1,max:9,get:s=>s.acc,act:'acc',show:v=>v},{range:'doc',label:'Document',min:1,max:9,get:s=>s.doc,act:'doc',show:v=>v},{range:'ver',label:'Version',min:1,max:5,get:s=>s.ver,act:'ver',show:v=>v}],
  on:{srv(s,v){s.srv=Number(v);return 'keep'},acc(s,v){s.acc=Number(v);return 'keep'},doc(s,v){s.doc=Number(v);return 'keep'},ver(s,v){s.ver=Number(v);return 'keep'}},
  draw(s){
-  const F=[['1.'+s.srv,'server',C.blue],['0',null,C.muted],[String(s.acc),'account',C.green],['0',null,C.muted],[s.doc+'.'+s.ver,'document.version',C.purple],['0',null,C.muted],[s.pos+'.'+s.len,'content span',C.amber]];
+  const F=[['1.'+s.srv,'server',C.blue],['0',null,C.muted],[String(s.acc),'account',C.green],['0',null,C.muted],[s.doc+'.'+s.ver,'document.version',C.purple],['0',null,C.muted],[s.pos+'.'+s.len,'content',C.amber]];
   let out=heading('One permanent address for any piece of content');
   let x=40;F.forEach(([v,lab,col])=>{const w=lab?Math.max(70,v.length*16+24):26;out+=R(x,60,w,46,lab?'#fff':'#f3f7fa',col,6)+TMF(x+w/2,90,v,20,col);if(lab)out+=TF(x+w/2,124,lab,13,col);x+=w+8});
   // Tree.
@@ -241,10 +241,10 @@ SCENE({id:'tumblers',name:'Tumblers',tag:'Addresses that never need renumbering'
   const px=sx[s.srv-1];
   [-76,0,76].forEach((d,i)=>{const a=s.acc-1+i,ax=px+d;if(a<1)return;t+=L(px,214,ax,246,C.line,1.5)+node(ax,250,'acct '+a,a===s.acc,C.green)});
   [-76,0,76].forEach((d,i)=>{const dd=s.doc-1+i,dx=px+d;if(dd<1)return;t+=L(px,264,dx,296,C.line,1.5)+node(dx,300,'doc '+dd+'.'+(dd===s.doc?s.ver:1),dd===s.doc,C.purple)});
-  t+=L(px,314,px,336,C.line,1.5)+node(px,350,'chars 1–40',true,C.amber);
+  t+=L(px,314,px,336,C.line,1.5)+node(px,350,'content '+s.pos+'.'+s.len,true,C.amber);
   out+=node(300,160,'docuverse',false,C.ink,90)+t;
   const addr=`1.${s.srv}.0.${s.acc}.0.${s.doc}.${s.ver}.0.${s.pos}.${s.len}`;
-  return {svg:out,phase:`Address ${addr}: server 1.${s.srv}, account ${s.acc}, document ${s.doc} version ${s.ver}, ${s.len} characters from position ${s.pos}. Whatever else is added to the docuverse, this address keeps meaning the same thing.`};
+  return {svg:out,phase:`Address ${addr}: server 1.${s.srv}, account ${s.acc}, document ${s.doc} version ${s.ver}, content ${s.pos}.${s.len}. Whatever else is added to the docuverse, this address keeps meaning the same thing.`};
  }});
 
 SCENE({id:'tumblers-insert',name:'Insert without renumbering',tag:'Why addresses can stay permanent',

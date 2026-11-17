@@ -198,7 +198,7 @@ SCENE({id:'content-addressing',name:'Naming content by what it is',tag:'Location
   out+=TBF(20,196,'Content address (hash of the text)',13,C.ink,'start')+R(20,204,560,40,'#fff',C.green,8)+TMF(32,229,'fnv1a:'+h,13,C.ink,'start')+TBF(568,229,s.moved?'✓ found on server B':'✓ found',13,C.green,'end');
   out+=TBF(20,276,'The three versions and their content addresses',13,C.ink,'start');
   T8_TEXTS.forEach((x,i)=>{const y=298+i*22;out+=TMF(32,y,T8_fnv(x),13,i===s.v?C.green:C.muted,'start')+TF(130,y,'“'+x+'”',13,i===s.v?C.ink:C.muted,'start')});
-  return {svg:out,phase:`${s.moved?'The file moved: its web address now fails, but its content address still finds a copy.':'Both addresses work while the file stays put.'} One character’s change gives an unrelated hash, so a content address can never point at the wrong text.`};
+  return {svg:out,phase:`${s.moved?'The file moved: its web address now fails, but its content address still finds a copy.':'Both addresses work while the file stays put.'} One character’s change gives an unrelated hash, so, with a cryptographic hash, a content address in practice never points at the wrong text.`};
  }});
 
 // A Merkle tree over four chunks: editing one chunk changes only the hashes on its path to the root.

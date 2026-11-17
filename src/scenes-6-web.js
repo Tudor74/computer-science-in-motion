@@ -102,7 +102,7 @@ SCENE({id:'link-rot',name:'Link rot',tag:'Measured, not imagined',
  draw(s){
   let out=heading('How much of the cited web has gone?');
   T6_STUDIES.forEach((d,i)=>{const y=54+i*44;out+=TF(20,y+12,d.lab,13,C.ink,'start')+R(20,y+18,200*d.v/100,14,C.coral,'none',3)+R(20+200*d.v/100,y+18,200*(1-d.v/100),14,'#eef2f5','none',3)+TBF(226,y+30,d.v+'%',13,C.coral,'start')});
-  out+=TF(20,236,'shares of links or pages failed (see sources)',13,C.muted,'start');
+  out+=TF(20,236,'share of links, pages or (last bar) articles',13,C.muted,'start');
   // Decay model.
   const x=t=>330+t*24,y=v=>300-v*2.2;
   out+=L(330,300,570,300,C.line,1.5)+L(330,80,330,300,C.line,1.5);
@@ -151,7 +151,7 @@ SCENE({id:'link-rot-drift',name:'Content drift',tag:'The link works, but the pag
  on:{yr(s,v){s.yr=Number(v);s.arch=false;return 'keep'},arch(s){s.arch=!s.arch;return 'keep'}},
  draw(s){
   const L0=['Rainfall rose 12% in 2014.','Source: station records.','Method: daily gauges.','Contact the data team.'];
-  const CH=[[2,'Rainfall rose 9% in 2014.'],[0,'Source: revised records.'],[5,'Method: satellite estimates.'],[7,'Contact form removed.']];
+  const CH=[[2,'Rainfall rose 9% in 2014.'],[3,'Source: revised records.'],[5,'Method: satellite estimates.'],[7,'Contact form removed.']];
   const now=L0.slice();const changed=[false,false,false,false];
   CH.forEach(([at,t],i)=>{if(s.yr>=at){now[i]=t;changed[i]=true}});
   let out=heading('Cited version and the page today');
@@ -300,7 +300,7 @@ const T6_IDEAS=[
  {i:'Permanent addresses',now:'DOIs, archive copies, content hashes',sc:2},
  {i:'Reader annotation',now:'Web Annotation standard (2017); not built into browsers',sc:1},
  {i:'Micropayment royalties',now:'Largely did not happen; subscriptions instead',sc:0},
- {i:'Visible side-by-side links',now:'Rare outside demos such as OpenXanadu',sc:0}];
+ {i:'Visible side-by-side links',now:'Diff and review tools; rare in everyday reading',sc:1}];
 SCENE({id:'curse-of-xanadu-ideas',name:'Which ideas came true?',tag:'A scorecard, honestly kept',
  definition:'Many of Xanadu’s ideas reappeared later in other systems, usually in part and inside a single platform rather than across the whole web. Some, like per-reading royalties, mostly did not.',
  example:'Every Wikipedia page has “What links here”, a two-way link view, but only for links within Wikipedia.',
