@@ -145,7 +145,7 @@ const M6_set16=a=>range(16).map(i=>a.includes(i));
 const M6_SYNC_PRESETS={beat:[0,4,8,12],off:[2,6,10,14],tresillo:[0,6,12],clave:[0,3,6,10,12]};
 const M6_SY={ms:s=>60000/s.bpm/4,N:()=>16,step(s,i){if(s.steps[i])M6_sound('mid');if(i%4===0)M6_sound('click')}};
 SCENE({id:'syncopation',name:'Syncopation',tag:'Accents where the metre is weak',
- definition:'Syncopation is a note on a weak position of the metre that is not followed by a note on the next stronger position, so the strong moment is left silent.',
+ definition:'Syncopation pulls accents away from where the metre expects them: stressing weak beats or off-beats, anticipating a strong beat or holding across it. The common case measured here is a note on a weak position with the next stronger position left silent.',
  example:'Play on all four beats and nothing is syncopated. Move the notes to the “and”s and the downbeats fall silent: the rhythm pulls against the pulse.',
  desc:'A one-bar grid of sixteen semiquaver steps with metrical weights underneath; arcs link each syncopated note to the stronger silent position it leaves empty, and a counter totals the syncopation.',
  dur:11,research:'Longuet-Higgins, H. C. & Lee, C. S. (1984). The rhythmic interpretation of monophonic music. Music Perception 1(4): metrical weights and syncopation.',
