@@ -126,11 +126,11 @@ const P2_RULE=[
  ['Word by word','Each word of the final rule is defined, so that it cannot be stretched or narrowed.'],
  ['Not an offence','A list of cases the rule does not cover: accidents, illness, emergencies, and whoever did it first, before the rule existed.']];
 SCENE({id:'vinaya-pitaka-rule',name:'The anatomy of a rule',tag:'Story, rule, amendment, definition, exceptions',
- definition:'In the Suttavibhaṅga every rule is presented in the same five-part pattern: the story of the incident, the rule itself, later amendments, a word-by-word definition, and the cases that are not offences.',
+ definition:'In the Suttavibhaṅga the rules are presented in a recurring five-part pattern: the story of the incident, the rule itself, later amendments, a word-by-word definition, and the cases that are not offences.',
  example:'The first offender is never guilty: the rule did not exist when they acted. Rules are made in response to cases, as in case law.',
  desc:'Five steps of a rule’s presentation as a row of stages, with the rule’s wording growing as amendments are added.',
  research:['Horner, I. B. (trans., 1938). The Book of the Discipline, vol. 1, introduction.','von Hinüber, O. (1995). Buddhist law according to the Theravāda Vinaya. Journal of the International Association of Buddhist Studies 18(1), 7–45.','Schopen, G. (2004). Buddhist Monks and Business Matters. University of Hawai‘i Press (the origin stories as legal narrative; their historical value is debated).'],
- dur:11,hint:'Step through the five parts. The pattern is shown in outline; it is the same for every rule in the collection.',
+ dur:11,hint:'Step through the five parts. The pattern is shown in outline; most rules follow it, though many were never amended.',
  init:()=>({k:0}),
  watch(p){return {k:Math.min(4,Math.floor(p*5))}},
  ui:[{b:'Back',act:'back'},{b:'Next part',act:'next'}],
@@ -271,7 +271,7 @@ SCENE({id:'abhidhamma-pitaka',name:'The Abhidhamma basket',tag:'Seven books of s
  draw(s,f,X){
   const Q=P2_ABH[s.k];let out=P2_head(`${s.k+1}. ${Q[0]}`,'established');
   P2_ABH.forEach((q,i)=>{const x=40+i*75,on=i===s.k,h=[60,60,44,44,60,96,150][i];out+=hit(X,'pick',i,q[0],R(x,236-h,67,h,on?C.purple:C.purplep,C.purple,6)+TBF(x+33.5,254,String(i+1),13,on?C.purple:C.muted))});
-  out+=TF(300,274,'bar height: rough share of the basket',12,C.muted);
+  out+=TF(300,274,'bar height: longer books are taller (not to scale)',12,C.muted);
   out+=P2_card(40,286,520,Q[1],Q[2],C.purple);
   return {svg:out,phase:`${Q[0]} (“${Q[1]}”). ${Q[2]} The Theravāda tradition holds the Abhidhamma to be the Buddha’s teaching; scholars generally see it as compiled over several centuries from summary lists.`};
  }});

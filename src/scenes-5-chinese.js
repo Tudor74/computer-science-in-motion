@@ -254,7 +254,7 @@ const P5_CAT=[
 SCENE({id:'catalogues',name:'The cataloguers',tag:'Lists that became a canon',
  definition:'A sūtra catalogue is a list of Buddhist texts in Chinese, with their translators, dates and length, and a judgement on whether each is genuine.',
  example:'Sengyou’s catalogue of about 515 is the oldest that survives. Zhisheng’s of 730 fixed which works the Chinese canon contains.',
- desc:'A timeline from 360 to 740 with six catalogues; pressing one shows what it did and how far it is trusted.',
+ desc:'A timeline from 360 to 740 with six catalogues (the dots for 594 and 597 are drawn a little apart so each can be pressed); pressing one shows what it did and how far it is trusted.',
  research:'Sengyou (c. 515), Chu sanzang ji ji, T 2145; Fei Changfang (597), Lidai sanbao ji, T 2034; Zhisheng (730), Kaiyuan shijiao lu, T 2154; Storch, T. (2014), The History of Chinese Buddhist Bibliography, Cambria; Tokuno, K. (1990), in Buswell (ed.), Chinese Buddhist Apocrypha.',
  dur:12,hint:'Press each catalogue. They are the main evidence for who translated what, and they do not always agree.',
  init:()=>({i:1}),

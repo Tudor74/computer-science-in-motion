@@ -106,12 +106,12 @@ SCENE({id:'kangyur-tengyur',name:'Kangyur and Tengyur',tag:'Translated words, tr
  }});
 
 const P6_SORT=[
- {n:'Vinayavibhaṅga',c:'The rules for monks, each with the story of how it came to be laid down. Translated from Sanskrit.',v:'k',r:'Kangyur. It is presented as the Buddha’s own word, and it opens the collection.'},
+ {n:'Vinayavibhaṅga',c:'The rules for monks, each with the story of how it came to be laid down. Translated from Sanskrit.',v:'k',r:'Kangyur. It is presented as the Buddha’s own word, and its section, the monastic rule, opens the collection.'},
  {n:'Heart Sūtra',c:'A very short Perfection of Wisdom sūtra, translated from Sanskrit.',v:'k',r:'Kangyur. A sūtra, so it counts as the Buddha’s word. It appears twice: among the Perfection of Wisdom texts and among the tantras.'},
  {n:'Root Verses on the Middle Way',c:'A philosophical work in verse by the Indian master Nāgārjuna. Translated from Sanskrit.',v:'t',r:'Tengyur. A treatise by a named Indian author, however revered, is not the Buddha’s word.'},
  {n:'Entering the Bodhisattva’s Way',c:'A guide to the bodhisattva path by the Indian monk Śāntideva. Translated from Sanskrit.',v:'t',r:'Tengyur, for the same reason: an Indian master’s work.'},
  {n:'Great Treatise on the Stages of the Path',c:'Written in Tibetan by Tsongkhapa in 1402.',v:'n',r:'Neither. Works composed in Tibetan are not translations, so they stay outside both collections, in each author’s collected works.'},
- {n:'Guhyagarbha Tantra',c:'A tantra of the Nyingma school, translated in the early period. In Butön’s day no Sanskrit original was known.',v:'x',r:'Disputed. Butön left it out for want of a Sanskrit original. Others defended it and a Sanskrit manuscript was later reported; many Kangyurs include it among the “old tantras”.'}];
+ {n:'Guhyagarbha Tantra',c:'A tantra of the Nyingma school, translated in the early period. Its Indian origin was disputed in Butön’s day.',v:'x',r:'Disputed. Butön left it out because its Indian origin was doubted. Others defended it and a Sanskrit manuscript was reported; many Kangyurs include it among the “old tantras”.'}];
 const P6_SV={k:'Kangyur',t:'Tengyur',n:'Neither'};
 SCENE({id:'kangyur-tengyur-buton',name:'Sorting the texts',tag:'Butön’s test, 14th century',
  definition:'The scholar Butön Rinchen Drup (1290–1364) catalogued the translated texts and helped fix what belonged in the Kangyur and the Tengyur. His main test was whether a text was a genuine translation from an Indian original.',
@@ -186,7 +186,7 @@ SCENE({id:'comparing-canons',name:'Three canons side by side',tag:'Pali, Chinese
  }});
 
 const P6_GEN=[
- {n:'Early discourses',v:[3,3,1],t:['All five Nikāyas.','Four Āgamas, each from a different school, and many single sūtras.','Only a few dozen, though more are quoted inside other works.']},
+ {n:'Early discourses',v:[3,3,1],t:['All five Nikāyas.','Four Āgamas, from more than one school, and many single sūtras.','Only a few dozen, though more are quoted inside other works.']},
  {n:'Monastic rule',v:[2,3,2],t:['One Vinaya, the Theravāda.','Four complete Vinayas of other schools, and most of a fifth.','One Vinaya, the Mūlasarvāstivāda.']},
  {n:'Abhidharma',v:[3,3,1],t:['Seven books of the Theravāda.','Seven books of the Sarvāstivāda and several from other schools.','No full set of the early books; study rests on Vasubandhu’s treatise in the Tengyur.']},
  {n:'Mahāyāna sūtras',v:[0,3,3],t:['None.','Several hundred, often in more than one translation.','Several hundred.']},
@@ -195,7 +195,7 @@ const P6_GEN=[
 SCENE({id:'comparing-canons-overlap',name:'What is shared, what is not',tag:'Six kinds of text',
  definition:'The three canons overlap in the oldest layers, the early discourses and the monastic rule, and differ most in later layers such as the Mahāyāna sūtras and the tantras.',
  example:'Early discourses fill the Pali Nikāyas and the Chinese Āgamas, but only a few dozen were translated into Tibetan. Tantras are plentiful in Tibetan and absent from Pali.',
- desc:'Six kinds of text in a column; for the selected kind, three rows show how much of it each canon holds as a row of four dots, with a short note.',
+ desc:'Six kinds of text in a column; for the selected kind, three rows show how much of it each canon holds as a row of three dots, with a short note.',
  research:'Anālayo (2011), A Comparative Study of the Majjhima-nikāya, Dharma Drum; Lamotte, É. (1958/1988), History of Indian Buddhism; Skilling, P. (1994–97), Mahāsūtras, Pali Text Society (early discourses in Tibetan); Clarke, S. (2015), Vinayas, in Brill’s Encyclopedia of Buddhism.',
  dur:12,hint:'Press a kind of text. Each tradition holds its own canon to be complete; the dots only compare what was collected where.',
  init:()=>({i:0}),

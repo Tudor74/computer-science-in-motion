@@ -20,7 +20,7 @@ SOURCE('p3-cousins-1996',{title:'Cousins, L. S. (1996). The dating of the histor
 SOURCE('p3-coningham-2013',{title:'Coningham, R. A. E. et al. (2013). The earliest Buddhist shrine: excavating the birthplace of the Buddha, Lumbini (Nepal). Antiquity 87(338), 1104–1123.'});
 SOURCE('p3-language',{title:'Language In Motion: scripts, decipherment and the first writing systems.',url:'https://language-in-motion.puter.site/',note:'For Brāhmī, Kharoṣṭhī and how lost scripts are read.'});
 
-LESSON({id:'first-council',name:'The first council',short:'First council',stage:'councils',year:'c. 400 BCE (traditional)',level:'Introduction',
+LESSON({id:'first-council',name:'The first council',short:'First council',stage:'councils',year:'c. 400 BCE (traditional account)',level:'Introduction',
  why:'The tradition’s own account of how the teaching was first gathered, and how historians test it against six surviving versions.',
  prior:['oral-recitation','three-baskets'],references:['p3-cullavagga','p3-prebish-1974','p3-bareau-1955','p3-frauwallner-1956','p3-oldenberg-1879','p3-lamotte'],
  ids:['first-council','first-council-sources','first-council-history']});

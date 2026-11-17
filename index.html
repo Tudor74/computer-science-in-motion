@@ -847,7 +847,7 @@ SCENE({id:'bhanakas-differences',name:'When reciters disagreed',tag:'Two groups,
 const P1_LANG=[
  ['Dialects of the Ganges plain','c. 5th century BCE','The teaching was first given in the everyday Middle Indo-Aryan speech of north-east India. No text survives in exactly that form.',[150,130],C.amber],
  ['Pali','written from the 1st century BCE','A literary Middle Indo-Aryan language with mostly western features. The Theravāda canon is preserved in it.',[150,250],C.blue],
- ['Gāndhārī','1st century BCE to 3rd century CE','The language of the north-west, written in Kharoṣṭhī script. The oldest surviving Buddhist manuscripts are in it.',[330,90],C.green],
+ ['Gāndhārī','attested 3rd century BCE to 3rd century CE','The language of the north-west, written in Kharoṣṭhī script. The oldest surviving Buddhist manuscripts are in it.',[330,90],C.green],
  ['Buddhist Hybrid Sanskrit','from about the 1st century CE','Middle Indo-Aryan texts partly reshaped towards Sanskrit forms.',[400,180],C.purple],
  ['Sanskrit','from the early centuries CE','The learned language of India, used by several schools for their canons and by most Mahāyāna sūtras as we have them.',[400,270],C.coral]];
 SCENE({id:'languages-of-teaching',name:'The languages of the teaching',tag:'Not one language but several',
@@ -897,7 +897,7 @@ SCENE({id:'languages-of-teaching-own-dialect',name:'“In one’s own language�
  definition:'The Vinaya tells of two monks who ask to put the teaching into chandas, probably the prestigious metre or language of the Vedas. The request is refused, and the teaching is to be learned sakāya niruttiyā, “in own language”. Whose own is not stated, and readers have disagreed for fifteen centuries.',
  example:'Read as “each in his own dialect”, the passage explains why the teaching spread in many languages. Buddhaghosa read it as “in the Buddha’s own language”, which supports keeping it in Pali.',
  desc:'The Pali phrase with two readings side by side. Choosing a reading shows who holds it and what follows from it.',
- research:['Vinaya Piṭaka, Cullavagga V.33 (trans. I. B. Horner, The Book of the Discipline, vol. 5).','Brough, J. (1980). Sakāya niruttiyā: cauld kale het. In H. Bechert (ed.), The Language of the Earliest Buddhist Tradition, 35–42. Göttingen.','Norman, K. R. (1980). The dialects in which the Buddha preached. Same volume, 61–77.','Levman, B. (2008–9). Sakāya niruttiyā revisited. Bulletin d’études indiennes 26–27, 33–39.'],
+ research:['Vinaya Piṭaka, Cullavagga V.33 (trans. I. B. Horner, The Book of the Discipline, vol. 5).','Brough, J. (1980). Sakāya niruttiyā: cauld kale het. In H. Bechert (ed.), The Language of the Earliest Buddhist Tradition, 35–42. Göttingen.','Norman, K. R. (1980). The dialects in which the Buddha preached. Same volume, 61–77.','Levman, B. (2008–9). Sakāya niruttiyā revisited. Bulletin d’études indiennes 26–27, 33–89.'],
  dur:9,hint:'Switch between the two readings. Both are held by careful readers; the grammar allows either.',
  init:()=>({r:'each'}),
  watch(p){return {r:p<.5?'each':'buddha'}},
@@ -925,7 +925,7 @@ WORD(
  {key:'pali',title:'Pali',aliases:['Pali','Pāli'],linkContext:'languages-of-teaching',scene:'languages-of-teaching',here:'The Middle Indo-Aryan literary language in which the Theravāda canon is preserved.',contrast:'Linguists do not regard Pali as identical with the speech of any one region or with what the Buddha spoke; the Theravāda tradition identifies it with Māgadhī.',example:'dhamma, nibbāna and sutta are Pali spellings.'},
  {key:'gandhari',title:'Gāndhārī',aliases:['Gāndhārī','Gandhari'],linkContext:'languages-of-teaching',scene:'languages-of-teaching',here:'The Middle Indo-Aryan language of Gandhāra, in what is now north-west Pakistan and eastern Afghanistan.',contrast:'A sister language of Pali, not a dialect of it.',example:'The birch-bark scrolls in Kharoṣṭhī script are in Gāndhārī.'},
  {key:'middle-indo-aryan',title:'Middle Indo-Aryan',aliases:['Middle Indo-Aryan','Prakrit','Prakrits'],linkContext:'languages-of-teaching',scene:'languages-of-teaching',here:'The family of everyday languages of north India in the centuries after about 500 BCE, descended from the older language of the Vedas.',contrast:'Sanskrit was the learned, standardised language used alongside them.',example:'Pali and Gāndhārī are Middle Indo-Aryan languages.'},
- {key:'buddhist-hybrid-sanskrit',title:'Buddhist Hybrid Sanskrit',aliases:['Buddhist Hybrid Sanskrit','Hybrid Sanskrit'],linkContext:'languages-of-teaching',scene:'languages-of-teaching',here:'The mixed language of many Buddhist texts whose Middle Indo-Aryan wording was partly reshaped towards Sanskrit.',contrast:'It is neither standard Sanskrit nor a spoken dialect.',example:'The term was coined by Franklin Edgerton in 1953.'},
+ {key:'buddhist-hybrid-sanskrit',title:'Buddhist Hybrid Sanskrit',aliases:['Buddhist Hybrid Sanskrit','Hybrid Sanskrit'],linkContext:'languages-of-teaching',scene:'languages-of-teaching',here:'The mixed language of many Buddhist texts whose Middle Indo-Aryan wording was partly reshaped towards Sanskrit.',contrast:'It is neither standard Sanskrit nor a spoken dialect.',example:'The term comes from Franklin Edgerton, whose 1953 grammar and dictionary made it standard.'},
  {key:'sakaya-niruttiya',title:'Sakāya niruttiyā',aliases:['sakāya niruttiyā'],linkContext:'languages-of-teaching',scene:'languages-of-teaching-own-dialect',here:'“In own language”: the phrase in the Vinaya about which language the teaching should be learned in.',contrast:'Read as each learner’s own dialect or as the Buddha’s own language; the grammar allows both.',example:'Buddhaghosa took it to mean the Māgadhī language.'},
  {key:'person-buddhaghosa',title:'Buddhaghosa',aliases:['Buddhaghosa'],linkContext:'bhanakas',scene:'bhanakas-differences',here:'The fifth-century scholar-monk who, working in Sri Lanka, put the old commentaries on the Pali canon into Pali.',contrast:'His commentaries record earlier traditions; they are not themselves part of the canon.',example:'He records the different lists of the Dīgha and Majjhima reciters.'},
  {key:'person-allon',title:'Mark Allon',aliases:['Mark Allon','Allon'],linkContext:'memory-techniques',scene:'memory-techniques',here:'Scholar of early Buddhist texts whose 1997 study measured the repetition and rhythmic patterns in Pali prose.',contrast:'He studied the style of the texts to find how they were memorised.',example:'Style and Function (1997).'},
@@ -1060,11 +1060,11 @@ const P2_RULE=[
  ['Word by word','Each word of the final rule is defined, so that it cannot be stretched or narrowed.'],
  ['Not an offence','A list of cases the rule does not cover: accidents, illness, emergencies, and whoever did it first, before the rule existed.']];
 SCENE({id:'vinaya-pitaka-rule',name:'The anatomy of a rule',tag:'Story, rule, amendment, definition, exceptions',
- definition:'In the Suttavibhaṅga every rule is presented in the same five-part pattern: the story of the incident, the rule itself, later amendments, a word-by-word definition, and the cases that are not offences.',
+ definition:'In the Suttavibhaṅga the rules are presented in a recurring five-part pattern: the story of the incident, the rule itself, later amendments, a word-by-word definition, and the cases that are not offences.',
  example:'The first offender is never guilty: the rule did not exist when they acted. Rules are made in response to cases, as in case law.',
  desc:'Five steps of a rule’s presentation as a row of stages, with the rule’s wording growing as amendments are added.',
  research:['Horner, I. B. (trans., 1938). The Book of the Discipline, vol. 1, introduction.','von Hinüber, O. (1995). Buddhist law according to the Theravāda Vinaya. Journal of the International Association of Buddhist Studies 18(1), 7–45.','Schopen, G. (2004). Buddhist Monks and Business Matters. University of Hawai‘i Press (the origin stories as legal narrative; their historical value is debated).'],
- dur:11,hint:'Step through the five parts. The pattern is shown in outline; it is the same for every rule in the collection.',
+ dur:11,hint:'Step through the five parts. The pattern is shown in outline; most rules follow it, though many were never amended.',
  init:()=>({k:0}),
  watch(p){return {k:Math.min(4,Math.floor(p*5))}},
  ui:[{b:'Back',act:'back'},{b:'Next part',act:'next'}],
@@ -1205,7 +1205,7 @@ SCENE({id:'abhidhamma-pitaka',name:'The Abhidhamma basket',tag:'Seven books of s
  draw(s,f,X){
   const Q=P2_ABH[s.k];let out=P2_head(`${s.k+1}. ${Q[0]}`,'established');
   P2_ABH.forEach((q,i)=>{const x=40+i*75,on=i===s.k,h=[60,60,44,44,60,96,150][i];out+=hit(X,'pick',i,q[0],R(x,236-h,67,h,on?C.purple:C.purplep,C.purple,6)+TBF(x+33.5,254,String(i+1),13,on?C.purple:C.muted))});
-  out+=TF(300,274,'bar height: rough share of the basket',12,C.muted);
+  out+=TF(300,274,'bar height: longer books are taller (not to scale)',12,C.muted);
   out+=P2_card(40,286,520,Q[1],Q[2],C.purple);
   return {svg:out,phase:`${Q[0]} (“${Q[1]}”). ${Q[2]} The Theravāda tradition holds the Abhidhamma to be the Buddha’s teaching; scholars generally see it as compiled over several centuries from summary lists.`};
  }});
@@ -1477,7 +1477,7 @@ SCENE({id:'second-council-schools-tree',name:'A tree of schools',tag:'“Eightee
  example:'Six of these schools have a complete Vinaya that survives today: three are still followed by living monastic communities.',
  research:'Bareau, A. (1955). Les sectes bouddhiques du Petit Véhicule. Saigon: EFEO. Lamotte, É. (1958/1988). History of Indian Buddhism, pp. 517–548. Dessein, B. (2009). The Mahāsāṃghikas and the origin of Mahāyāna Buddhism. Eastern Buddhist 40.',
  desc:'A simplified family tree of eleven early schools; a green outline marks those whose complete Vinaya survives, and pressing a school describes it.',
- dur:14,hint:'Press a school. A green outline means its whole Vinaya survives, in Pali, Chinese, Tibetan or Sanskrit.',
+ dur:14,hint:'Press a school. A green outline means its whole Vinaya survives, in Pali, Chinese or Tibetan.',
  init:()=>({k:'the'}),
  watch(p){const o=['root','sth','mah','sar','mul','vib','the','mhi','dha','lok','pud'];return {k:o[Math.min(10,Math.floor(p*11))]}},
  ui:[{choose:P3_TREE.map(d=>[d.k,d.n]),label:'School',get:s=>s.k,act:'k'}],
@@ -1575,7 +1575,7 @@ SCENE({id:'ashoka-edicts-map',name:'Where the edicts stand',tag:'Four scripts ac
    out+=hit(X,'k',i,d[0],Ci(x,y,on?9:6,on?C.coral:C.blue,'#fff')+TB(x+d[4],y+d[5],d[0],12,on?C.coral:C.muted,a))});
   out+=P3_text(28,310,P3_SITES[s.k][3],544);
   out+=P3_tag('est');
-  return {svg:out,phase:'Established: the inscriptions exist and can be read. James Prinsep deciphered Brāhmī in 1837, which first tied the “Beloved of the Gods” of the stones to the Ashoka of Buddhist tradition.'};
+  return {svg:out,phase:'Established: the inscriptions exist and can be read. James Prinsep deciphered Brāhmī in 1837; the same year George Turnour used the Pali chronicles of Sri Lanka to identify the “Beloved of the Gods” of the stones with the Ashoka of Buddhist tradition.'};
  }});
 
 /* ---------------- Dating the Buddha ---------------- */
@@ -1611,7 +1611,7 @@ SCENE({id:'dating-the-buddha',name:'Dating the Buddha',tag:'A gap counted back f
 
 const P3_KINGS=[['Antiochos II','Syria',261,246],['Ptolemy II','Egypt',285,246],['Antigonos','Macedon',276,239],['Magas','Cyrene',276,250],['Alexander','Epirus',272,255]];
 SCENE({id:'dating-the-buddha-anchor',name:'How Ashoka is dated',tag:'Five Greek kings',
- definition:'Ashoka’s thirteenth rock edict names five Greek kings to whom he sent envoys. Their reigns are known from Greek and Roman sources, and all five reigned at once only for a few years. That overlap fixes Ashoka’s reign, and with it every earlier date in Indian history.',
+ definition:'Ashoka’s thirteenth rock edict names five Greek kings to whom he sent envoys. Their reigns are known from Greek and Roman sources, and all five reigned at once only for a few years. That overlap fixes Ashoka’s reign, and with it the earlier dates that are counted back from him, including the Buddha’s.',
  example:'Antiochos II came to the throne in 261 BCE and Alexander of Epirus died about 255 BCE, so the edict was composed between those years.',
  research:'Rock Edict XIII (Hultzsch 1925, pp. 43–49, 66–70). Eggermont, P. H. L. (1956). The Chronology of the Reign of Asoka Moriya. Leiden: Brill. Thapar, R. (1961). Aśoka and the Decline of the Mauryas.',
  desc:'Five bars for the reigns of the Greek kings named in the edict, with a year slider that counts how many were reigning and a shaded band where all five overlap.',
@@ -1678,7 +1678,7 @@ SOURCE('p3-cousins-1996',{title:'Cousins, L. S. (1996). The dating of the histor
 SOURCE('p3-coningham-2013',{title:'Coningham, R. A. E. et al. (2013). The earliest Buddhist shrine: excavating the birthplace of the Buddha, Lumbini (Nepal). Antiquity 87(338), 1104–1123.'});
 SOURCE('p3-language',{title:'Language In Motion: scripts, decipherment and the first writing systems.',url:'https://language-in-motion.puter.site/',note:'For Brāhmī, Kharoṣṭhī and how lost scripts are read.'});
 
-LESSON({id:'first-council',name:'The first council',short:'First council',stage:'councils',year:'c. 400 BCE (traditional)',level:'Introduction',
+LESSON({id:'first-council',name:'The first council',short:'First council',stage:'councils',year:'c. 400 BCE (traditional account)',level:'Introduction',
  why:'The tradition’s own account of how the teaching was first gathered, and how historians test it against six surviving versions.',
  prior:['oral-recitation','three-baskets'],references:['p3-cullavagga','p3-prebish-1974','p3-bareau-1955','p3-frauwallner-1956','p3-oldenberg-1879','p3-lamotte'],
  ids:['first-council','first-council-sources','first-council-history']});
@@ -2367,7 +2367,7 @@ const P5_CAT=[
 SCENE({id:'catalogues',name:'The cataloguers',tag:'Lists that became a canon',
  definition:'A sūtra catalogue is a list of Buddhist texts in Chinese, with their translators, dates and length, and a judgement on whether each is genuine.',
  example:'Sengyou’s catalogue of about 515 is the oldest that survives. Zhisheng’s of 730 fixed which works the Chinese canon contains.',
- desc:'A timeline from 360 to 740 with six catalogues; pressing one shows what it did and how far it is trusted.',
+ desc:'A timeline from 360 to 740 with six catalogues (the dots for 594 and 597 are drawn a little apart so each can be pressed); pressing one shows what it did and how far it is trusted.',
  research:'Sengyou (c. 515), Chu sanzang ji ji, T 2145; Fei Changfang (597), Lidai sanbao ji, T 2034; Zhisheng (730), Kaiyuan shijiao lu, T 2154; Storch, T. (2014), The History of Chinese Buddhist Bibliography, Cambria; Tokuno, K. (1990), in Buswell (ed.), Chinese Buddhist Apocrypha.',
  dur:12,hint:'Press each catalogue. They are the main evidence for who translated what, and they do not always agree.',
  init:()=>({i:1}),
@@ -2651,12 +2651,12 @@ SCENE({id:'kangyur-tengyur',name:'Kangyur and Tengyur',tag:'Translated words, tr
  }});
 
 const P6_SORT=[
- {n:'Vinayavibhaṅga',c:'The rules for monks, each with the story of how it came to be laid down. Translated from Sanskrit.',v:'k',r:'Kangyur. It is presented as the Buddha’s own word, and it opens the collection.'},
+ {n:'Vinayavibhaṅga',c:'The rules for monks, each with the story of how it came to be laid down. Translated from Sanskrit.',v:'k',r:'Kangyur. It is presented as the Buddha’s own word, and its section, the monastic rule, opens the collection.'},
  {n:'Heart Sūtra',c:'A very short Perfection of Wisdom sūtra, translated from Sanskrit.',v:'k',r:'Kangyur. A sūtra, so it counts as the Buddha’s word. It appears twice: among the Perfection of Wisdom texts and among the tantras.'},
  {n:'Root Verses on the Middle Way',c:'A philosophical work in verse by the Indian master Nāgārjuna. Translated from Sanskrit.',v:'t',r:'Tengyur. A treatise by a named Indian author, however revered, is not the Buddha’s word.'},
  {n:'Entering the Bodhisattva’s Way',c:'A guide to the bodhisattva path by the Indian monk Śāntideva. Translated from Sanskrit.',v:'t',r:'Tengyur, for the same reason: an Indian master’s work.'},
  {n:'Great Treatise on the Stages of the Path',c:'Written in Tibetan by Tsongkhapa in 1402.',v:'n',r:'Neither. Works composed in Tibetan are not translations, so they stay outside both collections, in each author’s collected works.'},
- {n:'Guhyagarbha Tantra',c:'A tantra of the Nyingma school, translated in the early period. In Butön’s day no Sanskrit original was known.',v:'x',r:'Disputed. Butön left it out for want of a Sanskrit original. Others defended it and a Sanskrit manuscript was later reported; many Kangyurs include it among the “old tantras”.'}];
+ {n:'Guhyagarbha Tantra',c:'A tantra of the Nyingma school, translated in the early period. Its Indian origin was disputed in Butön’s day.',v:'x',r:'Disputed. Butön left it out because its Indian origin was doubted. Others defended it and a Sanskrit manuscript was reported; many Kangyurs include it among the “old tantras”.'}];
 const P6_SV={k:'Kangyur',t:'Tengyur',n:'Neither'};
 SCENE({id:'kangyur-tengyur-buton',name:'Sorting the texts',tag:'Butön’s test, 14th century',
  definition:'The scholar Butön Rinchen Drup (1290–1364) catalogued the translated texts and helped fix what belonged in the Kangyur and the Tengyur. His main test was whether a text was a genuine translation from an Indian original.',
@@ -2731,7 +2731,7 @@ SCENE({id:'comparing-canons',name:'Three canons side by side',tag:'Pali, Chinese
  }});
 
 const P6_GEN=[
- {n:'Early discourses',v:[3,3,1],t:['All five Nikāyas.','Four Āgamas, each from a different school, and many single sūtras.','Only a few dozen, though more are quoted inside other works.']},
+ {n:'Early discourses',v:[3,3,1],t:['All five Nikāyas.','Four Āgamas, from more than one school, and many single sūtras.','Only a few dozen, though more are quoted inside other works.']},
  {n:'Monastic rule',v:[2,3,2],t:['One Vinaya, the Theravāda.','Four complete Vinayas of other schools, and most of a fifth.','One Vinaya, the Mūlasarvāstivāda.']},
  {n:'Abhidharma',v:[3,3,1],t:['Seven books of the Theravāda.','Seven books of the Sarvāstivāda and several from other schools.','No full set of the early books; study rests on Vasubandhu’s treatise in the Tengyur.']},
  {n:'Mahāyāna sūtras',v:[0,3,3],t:['None.','Several hundred, often in more than one translation.','Several hundred.']},
@@ -2740,7 +2740,7 @@ const P6_GEN=[
 SCENE({id:'comparing-canons-overlap',name:'What is shared, what is not',tag:'Six kinds of text',
  definition:'The three canons overlap in the oldest layers, the early discourses and the monastic rule, and differ most in later layers such as the Mahāyāna sūtras and the tantras.',
  example:'Early discourses fill the Pali Nikāyas and the Chinese Āgamas, but only a few dozen were translated into Tibetan. Tantras are plentiful in Tibetan and absent from Pali.',
- desc:'Six kinds of text in a column; for the selected kind, three rows show how much of it each canon holds as a row of four dots, with a short note.',
+ desc:'Six kinds of text in a column; for the selected kind, three rows show how much of it each canon holds as a row of three dots, with a short note.',
  research:'Anālayo (2011), A Comparative Study of the Majjhima-nikāya, Dharma Drum; Lamotte, É. (1958/1988), History of Indian Buddhism; Skilling, P. (1994–97), Mahāsūtras, Pali Text Society (early discourses in Tibetan); Clarke, S. (2015), Vinayas, in Brill’s Encyclopedia of Buddhism.',
  dur:12,hint:'Press a kind of text. Each tradition holds its own canon to be complete; the dots only compare what was collected where.',
  init:()=>({i:0}),
@@ -3082,7 +3082,7 @@ P7_cards({id:'song-editions-family',name:'A family of editions',tag:'Each canon 
   {d:'1080–1151',t:'Fuzhou editions',tag:'est',lines:['Two canons carved at temples in','Fuzhou, paid for by local donors,','not the court.','Folded like a concertina instead','of rolled: easier to read.'],phase:'The Fuzhou editions were funded by donors and monasteries and used folded books, the start of a southern family of editions.'},
   {d:'c. 1149–73',t:'Jin (Zhaocheng)',tag:'est',lines:['North China, funded by donations;','tradition credits a laywoman, Cui','Fazhen, with leading the appeal.','A nearly complete set was found','at Guangsheng temple in 1933.'],phase:'The Jin canon copies the Kaibao closely, so its rediscovery in 1933 gave scholars the best view of the lost first edition.'},
   {d:'1236–51',t:'Goryeo, second',tag:'est',lines:['Korea. 81,258 blocks, still kept','at Haeinsa temple.','Collated from Kaibao, Khitan and','the first Goryeo edition.','The base of the modern Taishō.'],phase:'The second Goryeo edition, the Tripitaka Koreana, survives complete and became the base text for the standard modern edition.'},
-  {d:'1410–1738',t:'Ming and Qing',tag:'est',lines:['Imperial editions at Nanjing and','Beijing; the privately funded','Jiaxing canon in thread-bound','books; the Qing “Dragon” canon','of 1733–38, about 79,000 blocks.'],phase:'Later imperial and private editions kept growing. The Jiaxing canon switched to ordinary thread-bound books, which made sets cheaper to buy and store.'}]});
+  {d:'to 1738',t:'Ming and Qing',tag:'est',lines:['Imperial editions at Nanjing and','Beijing; the privately funded','Jiaxing canon in thread-bound','books; the Qing “Dragon” canon','of 1733–38, about 79,000 blocks.'],phase:'Later imperial and private editions kept growing. The Jiaxing canon switched to ordinary thread-bound books, which made sets cheaper to buy and store.'}]});
 
 /* =========================== tripitaka-koreana =========================== */
 SCENE({id:'tripitaka-koreana',name:'The Tripitaka Koreana',tag:'81,258 blocks in sixteen years',
@@ -3348,7 +3348,7 @@ P8_cards({id:'pali-text-society',name:'The Pali Text Society',tag:'Roman-script 
   {d:'1882',t:'First texts and Journal',tag:'est',lines:['The first editions and the Journal','of the Pali Text Society appear.','Each text is edited from a handful','of palm-leaf manuscripts and set','in roman type with diacritics.'],phase:'Early editions rested on few manuscripts, sometimes two or three. That was a real limit, and later scholars have corrected many readings.'},
   {d:'1900s',t:'Caroline Rhys Davids',tag:'est',lines:['Caroline Rhys Davids edits and','translates Abhidhamma books and','the verses of the elder nuns','(Therīgāthā, 1909).','She leads the Society 1923–1942.'],phase:'Caroline Rhys Davids was among the first Western scholars of the Abhidhamma and brought the nuns’ verses, some of the oldest women’s writing known, to English readers.'},
   {d:'1921–25',t:'The dictionary',tag:'est',lines:['The Pali–English Dictionary of','T. W. Rhys Davids and William','Stede appears in parts.','It is still the working dictionary','for most readers of Pali.'],phase:'A dictionary built from the edited texts turned a pile of editions into a usable field of study.'},
-  {d:'1938–66',t:'I. B. Horner',tag:'est',lines:['Isaline Blew Horner translates the','whole Vinaya as The Book of the','Discipline, in six volumes, and','the Middle Length Sayings.','She leads the Society 1959–1981.'],phase:'I. B. Horner’s Vinaya translation made the monastic code readable in English for the first time. She also wrote an early study of women in the texts.'},
+  {d:'1938–66',t:'I. B. Horner',tag:'est',lines:['Isaline Blew Horner translates the','whole Vinaya as The Book of the','Discipline, in six volumes, and','the Middle Length Sayings.','She leads the Society 1959–1981.'],phase:'I. B. Horner’s Vinaya translation made the whole monastic code readable in English for the first time. She also wrote an early study of women in the texts.'},
   {d:'today',t:'Still in print',tag:'est',lines:['The Society keeps its editions in','print and issues new ones.','Its volume and page numbers are','printed in the margins of other','editions and used in digital','canons as reference points.'],phase:'Even readers who use the Burmese or Thai text online still cite by Pali Text Society volume and page, the way classicists cite by an old standard edition.'}]});
 
 const P8_PAIRS=[

@@ -244,7 +244,7 @@ SCENE({id:'bhanakas-differences',name:'When reciters disagreed',tag:'Two groups,
 const P1_LANG=[
  ['Dialects of the Ganges plain','c. 5th century BCE','The teaching was first given in the everyday Middle Indo-Aryan speech of north-east India. No text survives in exactly that form.',[150,130],C.amber],
  ['Pali','written from the 1st century BCE','A literary Middle Indo-Aryan language with mostly western features. The Theravāda canon is preserved in it.',[150,250],C.blue],
- ['Gāndhārī','1st century BCE to 3rd century CE','The language of the north-west, written in Kharoṣṭhī script. The oldest surviving Buddhist manuscripts are in it.',[330,90],C.green],
+ ['Gāndhārī','attested 3rd century BCE to 3rd century CE','The language of the north-west, written in Kharoṣṭhī script. The oldest surviving Buddhist manuscripts are in it.',[330,90],C.green],
  ['Buddhist Hybrid Sanskrit','from about the 1st century CE','Middle Indo-Aryan texts partly reshaped towards Sanskrit forms.',[400,180],C.purple],
  ['Sanskrit','from the early centuries CE','The learned language of India, used by several schools for their canons and by most Mahāyāna sūtras as we have them.',[400,270],C.coral]];
 SCENE({id:'languages-of-teaching',name:'The languages of the teaching',tag:'Not one language but several',
@@ -294,7 +294,7 @@ SCENE({id:'languages-of-teaching-own-dialect',name:'“In one’s own language�
  definition:'The Vinaya tells of two monks who ask to put the teaching into chandas, probably the prestigious metre or language of the Vedas. The request is refused, and the teaching is to be learned sakāya niruttiyā, “in own language”. Whose own is not stated, and readers have disagreed for fifteen centuries.',
  example:'Read as “each in his own dialect”, the passage explains why the teaching spread in many languages. Buddhaghosa read it as “in the Buddha’s own language”, which supports keeping it in Pali.',
  desc:'The Pali phrase with two readings side by side. Choosing a reading shows who holds it and what follows from it.',
- research:['Vinaya Piṭaka, Cullavagga V.33 (trans. I. B. Horner, The Book of the Discipline, vol. 5).','Brough, J. (1980). Sakāya niruttiyā: cauld kale het. In H. Bechert (ed.), The Language of the Earliest Buddhist Tradition, 35–42. Göttingen.','Norman, K. R. (1980). The dialects in which the Buddha preached. Same volume, 61–77.','Levman, B. (2008–9). Sakāya niruttiyā revisited. Bulletin d’études indiennes 26–27, 33–39.'],
+ research:['Vinaya Piṭaka, Cullavagga V.33 (trans. I. B. Horner, The Book of the Discipline, vol. 5).','Brough, J. (1980). Sakāya niruttiyā: cauld kale het. In H. Bechert (ed.), The Language of the Earliest Buddhist Tradition, 35–42. Göttingen.','Norman, K. R. (1980). The dialects in which the Buddha preached. Same volume, 61–77.','Levman, B. (2008–9). Sakāya niruttiyā revisited. Bulletin d’études indiennes 26–27, 33–89.'],
  dur:9,hint:'Switch between the two readings. Both are held by careful readers; the grammar allows either.',
  init:()=>({r:'each'}),
  watch(p){return {r:p<.5?'each':'buddha'}},

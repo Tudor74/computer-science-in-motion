@@ -164,7 +164,7 @@ SCENE({id:'second-council-schools-tree',name:'A tree of schools',tag:'“Eightee
  example:'Six of these schools have a complete Vinaya that survives today: three are still followed by living monastic communities.',
  research:'Bareau, A. (1955). Les sectes bouddhiques du Petit Véhicule. Saigon: EFEO. Lamotte, É. (1958/1988). History of Indian Buddhism, pp. 517–548. Dessein, B. (2009). The Mahāsāṃghikas and the origin of Mahāyāna Buddhism. Eastern Buddhist 40.',
  desc:'A simplified family tree of eleven early schools; a green outline marks those whose complete Vinaya survives, and pressing a school describes it.',
- dur:14,hint:'Press a school. A green outline means its whole Vinaya survives, in Pali, Chinese, Tibetan or Sanskrit.',
+ dur:14,hint:'Press a school. A green outline means its whole Vinaya survives, in Pali, Chinese or Tibetan.',
  init:()=>({k:'the'}),
  watch(p){const o=['root','sth','mah','sar','mul','vib','the','mhi','dha','lok','pud'];return {k:o[Math.min(10,Math.floor(p*11))]}},
  ui:[{choose:P3_TREE.map(d=>[d.k,d.n]),label:'School',get:s=>s.k,act:'k'}],
@@ -262,7 +262,7 @@ SCENE({id:'ashoka-edicts-map',name:'Where the edicts stand',tag:'Four scripts ac
    out+=hit(X,'k',i,d[0],Ci(x,y,on?9:6,on?C.coral:C.blue,'#fff')+TB(x+d[4],y+d[5],d[0],12,on?C.coral:C.muted,a))});
   out+=P3_text(28,310,P3_SITES[s.k][3],544);
   out+=P3_tag('est');
-  return {svg:out,phase:'Established: the inscriptions exist and can be read. James Prinsep deciphered Brāhmī in 1837, which first tied the “Beloved of the Gods” of the stones to the Ashoka of Buddhist tradition.'};
+  return {svg:out,phase:'Established: the inscriptions exist and can be read. James Prinsep deciphered Brāhmī in 1837; the same year George Turnour used the Pali chronicles of Sri Lanka to identify the “Beloved of the Gods” of the stones with the Ashoka of Buddhist tradition.'};
  }});
 
 /* ---------------- Dating the Buddha ---------------- */
@@ -298,7 +298,7 @@ SCENE({id:'dating-the-buddha',name:'Dating the Buddha',tag:'A gap counted back f
 
 const P3_KINGS=[['Antiochos II','Syria',261,246],['Ptolemy II','Egypt',285,246],['Antigonos','Macedon',276,239],['Magas','Cyrene',276,250],['Alexander','Epirus',272,255]];
 SCENE({id:'dating-the-buddha-anchor',name:'How Ashoka is dated',tag:'Five Greek kings',
- definition:'Ashoka’s thirteenth rock edict names five Greek kings to whom he sent envoys. Their reigns are known from Greek and Roman sources, and all five reigned at once only for a few years. That overlap fixes Ashoka’s reign, and with it every earlier date in Indian history.',
+ definition:'Ashoka’s thirteenth rock edict names five Greek kings to whom he sent envoys. Their reigns are known from Greek and Roman sources, and all five reigned at once only for a few years. That overlap fixes Ashoka’s reign, and with it the earlier dates that are counted back from him, including the Buddha’s.',
  example:'Antiochos II came to the throne in 261 BCE and Alexander of Epirus died about 255 BCE, so the edict was composed between those years.',
  research:'Rock Edict XIII (Hultzsch 1925, pp. 43–49, 66–70). Eggermont, P. H. L. (1956). The Chronology of the Reign of Asoka Moriya. Leiden: Brill. Thapar, R. (1961). Aśoka and the Decline of the Mauryas.',
  desc:'Five bars for the reigns of the Greek kings named in the edict, with a year slider that counts how many were reigning and a shaded band where all five overlap.',
