@@ -74,7 +74,7 @@ const P3_HIST=[
  ['Later texts are included',0,'The canon said to have been recited includes material that must be later, such as the report of the second council a century on. “The whole canon” cannot be literal.'],
  ['A plausible gathering',1,'Many historians accept that monks met after their teacher’s death to agree what to remember, on a smaller scale than the tradition describes.']];
 SCENE({id:'first-council-history',name:'Did it happen?',tag:'What historians ask',
- definition:'Historians weigh the council account like any other source: who wrote it, when, and whether independent sources agree. Most accept some early gathering but not the recitation of a complete canon.',
+ definition:'Historians weigh the council account like any other source: who wrote it, when, and whether independent sources agree. They disagree: some accept an early gathering of senior monks, others doubt it took place, and few treat the recitation of a complete canon as historical.',
  example:'Oldenberg pointed out that the narrative of the Buddha’s death does not mention a council; Frauwallner replied that every school’s Vinaya does.',
  research:'Oldenberg, H. (1879). The Vinaya Piṭakaṃ, vol. 1, introduction. Frauwallner, E. (1956). The Earliest Vinaya and the Beginnings of Buddhist Literature. Rome: IsMEO. Prebish, C. S. (1974). Journal of Asian Studies 33(2), 239–254. Gombrich, R. (1988). Theravāda Buddhism.',
  desc:'Four arguments as rows, each marked as raising doubt or supporting an early core; pressing a row shows the argument.',

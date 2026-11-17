@@ -64,8 +64,8 @@ SCENE({id:'tibetan-translation-team',name:'Scholar and translator',tag:'Building
 
 const P6_GRID=(()=>{const r=rng(7),g=[];for(let i=0;i<24;i++)g.push([r(),r()]);return g})();
 SCENE({id:'tibetan-translation-mahavyutpatti',name:'One word, one rendering',tag:'The great glossary, about 800',
- definition:'The Mahāvyutpatti is a Sanskrit–Tibetan glossary of about 9,500 entries, compiled by royal order around 800, that fixed one Tibetan equivalent for each Sanskrit term.',
- example:'With the glossary in force, a term such as bodhi is byang chub in every text, so a reader, or a search, finds every occurrence.',
+ definition:'The Mahāvyutpatti is a Sanskrit–Tibetan glossary of about 9,500 entries, compiled by royal order around 800, that set a standard Tibetan equivalent for each Sanskrit term.',
+ example:'With the glossary in force, a term such as bodhi is normally byang chub, so a reader, or a search, finds almost every occurrence; earlier and some later translations still show variants.',
  desc:'A grid of three translators by eight passages. Each cell shows whether the translator used the standard term or one of two other renderings; a slider sets how closely the glossary is followed.',
  research:'Mahāvyutpatti, ed. Sakaki, R. (1916), 9,565 entries; the companion decree sGra sbyor bam po gnyis pa (814): Scherrer-Schaub, C. (2002), JIABS 25, 263–340; Ishikawa, M. (1990), A Critical Edition of the sGra sbyor bam po gñis pa.',
  dur:12,hint:'Slide how closely translators follow the glossary. The grid is an illustrative model; the glossary and the decree are real.',
@@ -264,7 +264,7 @@ SCENE({id:'mongolian-manchu',name:'Canons from canons',tag:'Tangut, Mongolian, M
 
 SCENE({id:'mongolian-manchu-relay',name:'Translating a translation',tag:'What each step can lose',
  definition:'A relay translation is made from an earlier translation, not from the original. Each step can add small shifts of meaning, unless the translators check their work against an earlier stage.',
- example:'A Mongolian sūtra translated from Tibetan is two steps from the Sanskrit. If each step keeps 95% of the fine detail, two steps keep about 90%.',
+ example:'A Mongolian sūtra translated from Tibetan is two steps from the Sanskrit. If each step kept 95% of some measurable detail (an illustrative figure, not a measurement), two steps would keep about 90%.',
  desc:'A chain of one to four translation steps drawn as bars of shrinking length, with sliders for the number of steps and the detail kept per step, and a switch for checking against the original.',
  research:'On relay translation in these canons: Kollmar-Paulenz, K. (2002), The transmission of the Mongolian Kanjur; Seyfort Ruegg, D. (1992), Some reflections on translating Buddhist philosophical texts, Asiatische Studien 46. The percentages are an illustrative model, not measurements.',
  dur:12,hint:'Change the number of steps and how much each keeps, then switch on checking. The numbers are a model to show the shape of the problem.',
