@@ -76,7 +76,7 @@ function S4_head(cx,cy,r,deg,o={}){
 }
 SCENE({id:'sound-localisation',name:'Two ears, two clues',tag:'Time and level differences',
  definition:'With two ears the brain compares arrival times and levels. A sound from the side reaches the near ear first (an interaural time difference) and louder, because the head casts an acoustic shadow (an interaural level difference).',
- example:'A sound directly to your right reaches the right ear about 0.66 ms before the left: about 5 × 10⁻⁴ s, yet the brain uses differences as small as 10 µs.',
+ example:'A sound directly to your right reaches the right ear about 0.66 ms before the left (6.6 × 10⁻⁴ s), yet the brain uses differences as small as 10 µs.',
  desc:'A head seen from above with a sound source on an arc. Dashed paths run to each ear; readouts give the time difference from Woodworth’s formula and an illustrative level difference for the chosen frequency.',
  research:'Lord Rayleigh (1907). On our perception of sound direction. Philosophical Magazine 13, 214–232. · Woodworth (1938). Experimental Psychology (spherical-head ITD). · Feddersen, Sandel, Teas & Jeffress (1957). Localization of high-frequency tones. JASA 29, 988–991 (ILD shape; values here illustrative).',
  dur:10,hint:'Move the source and press Play burst. Headphones are needed: on speakers both ears hear both channels. This is a demonstration, not a hearing test.',
