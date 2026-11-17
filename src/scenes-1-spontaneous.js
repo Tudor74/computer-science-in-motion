@@ -44,7 +44,7 @@ const A1_RECIPES={
   truth:['Adult fleas lay eggs that fall into dust;','larvae live there and turn into fleas.','']}};
 SCENE({id:'aristotle-generation',name:'Spontaneous generation',tag:'Old recipes for making animals',
  definition:'Spontaneous generation is the idea that living things can arise directly from non-living matter, such as mud, dew or rotting meat, without parents. For about two thousand years it was the ordinary, sensible explanation for creatures that seemed to appear from nowhere.',
- example:'Aristotle described eels arising from mud. In the 1600s Jan Baptist van Helmont gave a recipe for mice: a sweaty shirt on wheat in an open pot, about 21 days. Each recipe worked, because something came in from outside that nobody was watching for.',
+ example:'Aristotle described eels arising from mud. In the 1600s Jan Baptist van Helmont gave a recipe for mice: a sweaty shirt on wheat in an open pot, about 21 days. These recipes convinced their advocates because nobody controlled for creatures getting in from outside; no controlled experiment ever produced mice from a shirt and wheat.',
  desc:'A container prepared by one of four historical recipes, followed over the days until its “product” appears. A switch reveals where the creatures really came from.',
  research:['Aristotle (c. 350 BCE). History of Animals, Book VI (eels from mud) and Book V (insects).','van Helmont, J. B. (1648). Ortus medicinae (the recipe for mice), published after his death.','Schmidt, J. (1923). The breeding places of the eel. Philosophical Transactions of the Royal Society B 211.'],
  dur:12,hint:'Choose a recipe and move the days forward until something appears. Then switch on “What really happened”.',

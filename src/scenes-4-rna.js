@@ -184,8 +184,8 @@ SCENE({id:'replicators-cross',name:'Ribozymes that copy each other',tag:'Lincoln
 /* ---- polymerase ribozymes ---- */
 const A4_POLS=[[2001,14,'A ribozyme extends a primer by up to 14 bases (Johnston et al.)'],[2011,95,'The tC19Z ribozyme copies up to 95 bases and makes a working ribozyme (Wochner et al.)'],[2013,206,'Evolved in ice, a variant makes strands up to 206 bases, longer than itself (Attwater et al.)'],[2016,null,'An RNA polymerase ribozyme amplifies short RNAs by an RNA-only PCR (Horning & Joyce)'],[2018,null,'A ribozyme copies using three-letter building blocks, reaching folded templates (Attwater et al.)']];
 SCENE({id:'replicators-polymerase',name:'Polymerase ribozymes',tag:'Can RNA copy RNA?',
- definition:'An RNA world needs an RNA that copies RNA: a polymerase ribozyme. None exists in nature, so chemists evolve them in the lab, rewarding molecules that extend RNA strands. Over two decades they have grown from adding a few letters to making strands longer than themselves, but no ribozyme has yet copied itself in full.',
- example:'The best polymerase ribozymes are roughly 200 bases long. Copying that much, accurately and through its own folded shape, is the remaining hurdle.',
+ definition:'An RNA world needs an RNA that copies RNA: a polymerase ribozyme. None exists in nature, so chemists evolve them in the lab, rewarding molecules that extend RNA strands. Over two decades they have grown from adding a few letters to making strands longer than themselves, but sustained self-replication, a ribozyme copying itself again and again, has not been shown.',
+ example:'In the studies charted here, the best polymerase ribozymes were roughly 200 bases long, and copying that much, accurately and through its own folded shape, was the hurdle. The field moves fast: newer reports describe smaller polymerases, but none yet keeps itself going.',
  desc:'Longest strand made by a polymerase ribozyme against year, with the ribozyme’s own length (about 200 bases, approximate) as a dashed line. Later milestones that are not about length are listed.',
  research:'Johnston, Unrau, Lawrence, Glasner & Bartel (2001). RNA-catalyzed RNA polymerization. Science 292, 1319–1325. Wochner, Attwater, Coulson & Holliger (2011). Science 332, 209–212. Attwater, Wochner & Holliger (2013). Nature Chemistry 5, 1011–1018. Horning & Joyce (2016). PNAS 113, 9786–9791. Attwater et al. (2018). eLife 7, e35255.',
  dur:12,hint:'Move through the years. How close have chemists come to an RNA that copies itself?',
@@ -204,7 +204,7 @@ SCENE({id:'replicators-polymerase',name:'Polymerase ribozymes',tag:'Can RNA copy
   out+=TBF(400,74,'Milestones so far',14,C.ink,'start');
   let yy=98;shown.forEach(q=>{A4_wrap(q[0]+': '+q[2],28).forEach((l,i)=>{if(yy<330)out+=TF(400,yy,l,13,i?C.ink:C.ink,'start');yy+=17});yy+=4});
   if(!shown.length)out+=TF(400,98,'none yet',13,C.muted,'start');
-  out+=TF(300,360,'No polymerase ribozyme has yet copied itself in full.',13,C.ink);
+  out+=TF(300,360,'Sustained self-replication has not yet been shown.',13,C.ink);
   return {svg:out,phase:'Status: plausible. Every step shows RNA can do more of what an RNA world needs, but copying is still slow and error-prone, and folded templates are hard to copy. A self-replicating ribozyme would be the strongest support yet.'};
  }});
 

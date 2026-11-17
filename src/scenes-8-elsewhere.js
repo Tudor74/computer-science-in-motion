@@ -366,7 +366,7 @@ const A8_WSTEP=[
  {t:'What would help',l:['A second example:','Mars? Enceladus?','Shadow biosphere?','Life made in a lab?'],d:'Finding or making a second, independent kind of life would show which features are essential and which are accidents of our history.'}];
 SCENE({id:'defining-life-why',name:'Why life is hard to define',tag:'A sample of one',
  definition:'Some philosophers argue that we cannot yet define life, only describe it, because we know of a single example: all life on Earth shares one ancestry. A real definition may need a theory of life, as defining water needed molecular chemistry.',
- example:'Every organism we know uses DNA, proteins and the same genetic code; we cannot tell which of these life anywhere would need.',
+ example:'Every organism we know uses DNA, proteins and a nearly universal genetic code (a few lineages reassign some codons); we cannot tell which of these life anywhere would need.',
  desc:'Four steps comparing how water was understood before and after chemistry with how life is understood now, and what could change that.',
  research:'Cleland, C. E. & Chyba, C. F. (2002). Defining ‘life’. Origins of Life and Evolution of the Biosphere 32, 387–393. Cleland (2019). The Quest for a Universal Theory of Life. Davies, P. C. W. et al. (2009). Signatures of a shadow biosphere. Astrobiology 9, 241–249. Trifonov (2011), 123 definitions compared. This is a philosophical argument, and others reply that a working definition is still useful.',
  dur:12,hint:'Step through the four panels. What kind of discovery would turn a list into a theory?',
