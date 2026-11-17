@@ -376,7 +376,7 @@ SCENE({id:'sexual-selection-bateman',name:'Who competes, who chooses',tag:'Batem
 /* ---------- Lesson: speciation ---------- */
 SCENE({id:'speciation',name:'How new species form',tag:'Split, diverge, stay apart',
  definition:'In the biological species concept, a species is a group of populations that can interbreed and are reproductively isolated from others. A common route to a new species is allopatric speciation: a barrier splits a population, the halves change independently, and they can no longer interbreed if they meet again.',
- example:'About 3 million years ago the Isthmus of Panama rose and split the sea. Pairs of snapping shrimp on the two sides, once one population, now mostly refuse to mate with each other in the laboratory.',
+ example:'As the Isthmus of Panama rose, finally closing about 3 million years ago, it split the sea. Pairs of snapping shrimp on the two sides, once one population, diverged at different times as the seaway narrowed, and now mostly refuse to mate with each other in the laboratory.',
  desc:'A landscape with two groups of animals, coloured by the value of a trait, on either side of an optional barrier. A graph shows the average trait of each group over 80 generations; with the barrier and little migration the lines drift apart until their difference passes a threshold; without it they stay together.',
  research:'Dobzhansky, T. (1937). Genetics and the Origin of Species; Mayr, E. (1942). Systematics and the Origin of Species; Knowlton, N. et al. (1993). Science 260, 1629–1632; Coyne, J. A. & Orr, H. A. (2004). Speciation. The model and its isolation threshold are illustrative.',
  dur:12,hint:'Remove the barrier, or let migrants cross, and watch the two halves stay alike. Different environments speed the split.',
@@ -403,10 +403,10 @@ SCENE({id:'speciation',name:'How new species form',tag:'Split, diverge, stay apa
 const B2_RING=[{n:'West Siberia',p:[180,96],l:[168,101,'end']},{n:'Central Asia',p:[92,185],l:[92,212,'middle']},{n:'West Himalaya',p:[130,290],l:[130,317,'middle']},{n:'East Himalaya',p:[270,300],l:[270,327,'middle']},{n:'Central China',p:[335,205],l:[335,232,'middle']},{n:'East Siberia',p:[250,96],l:[262,101,'start']}];
 SCENE({id:'speciation-ring',name:'A ring species',tag:'Greenish warblers around Tibet',
  definition:'A ring species is a chain of populations around a barrier in which each neighbour can interbreed, but the two ends, where they meet, behave as separate species. It shows in space the gradual change that speciation produces over time.',
- example:'Greenish warblers live in a ring around the Tibetan Plateau. Neighbouring populations recognise each other’s song. Where the two ends overlap in central Siberia, their songs differ so much that they do not interbreed.',
+ example:'Greenish warblers live in a ring around the Tibetan Plateau. Neighbouring populations recognise each other’s song. Where the two ends overlap in central Siberia, their songs differ so much that they rarely if ever interbreed. Genetic studies show gene flow round the ring was broken in the past, so it is an approximate ring.',
  desc:'A ring of six warbler populations around the plateau. The learner presses two populations; a line joins them, coloured green if they interbreed and coral if not, with a bar showing how similar their songs are.',
  research:'Irwin, D. E., Bensch, S. & Price, T. D. (2001). Speciation in a ring. Nature 409, 333–337; Irwin, D. E. et al. (2005). Science 307, 414–416; Alcaide, M. et al. (2014). Nature 511, 83–85, which found that gene flow around the ring was interrupted in the past, so it is not a perfect ring.',
- dur:10,hint:'Press one population, then another. Neighbours interbreed; the two Siberian ends do not, even though they live side by side.',
+ dur:10,hint:'Press one population, then another. Neighbours interbreed; the two Siberian ends rarely if ever do, even though they live side by side.',
  init:()=>({a:0,b:5,sel:null}),
  watch(p){const pairs=[[0,1],[1,2],[2,3],[3,4],[4,5],[0,5]];const k=Math.min(5,Math.floor(p*6));return {a:pairs[k][0],b:pairs[k][1],sel:null}},
  on:{pick(s,v){v=Number(v);if(s.sel===null){s.sel=v;s.a=v}else{s.b=v;s.sel=null}},pair(s,v){const [a,b]=String(v).split('-').map(Number);s.a=a;s.b=b;s.sel=null}},
@@ -423,10 +423,10 @@ SCENE({id:'speciation-ring',name:'A ring species',tag:'Greenish warblers around 
    out+=TF(tx,ty,B2_RING[i].n,13,on?C.blue:C.ink,anc)});
   out+=R(400,70,170,200,'#fff',C.grid,8);
   out+=B2_title(414,94,'Song similarity',C.ink)+R(414,104,140,16,'#eef3f6','none',4)+R(414,104,140*sim,16,ok?C.green:C.coral,'none',4)+TF(414,138,`${Math.round(sim*100)}% (illustrative)`,13,C.muted,'start');
-  out+=TBF(414,172,s.a===s.b?'Pick two':ok?'Interbreed':'Do not interbreed',15,s.a===s.b?C.muted:ok?C.green:C.coral,'start');
+  out+=TBF(414,172,s.a===s.b?'Pick two':ok?'Interbreed':'Barely interbreed',15,s.a===s.b?C.muted:ok?C.green:C.coral,'start');
   out+=TF(414,196,`${d} step${d===1?'':'s'} round the ring`,13,C.ink,'start');
   if(d===5)out+=TF(414,220,'yet they live side',13,C.ink,'start')+TF(414,238,'by side in Siberia',13,C.ink,'start');
-  return {svg:out,phase:s.a===s.b?'Choose two different populations.':d===5?'The two ends overlap in central Siberia but do not interbreed: their songs and genes have diverged along the two routes around the plateau.':ok?`${B2_RING[s.a].n} and ${B2_RING[s.b].n} are close enough along the ring to recognise each other’s song.`:'Far apart around the ring, the differences have built up step by step. Speciation by distance, not by a single event.'};
+  return {svg:out,phase:s.a===s.b?'Choose two different populations.':d===5?'The two ends overlap in central Siberia but rarely if ever interbreed: their songs and genes have diverged along the two routes around the plateau.':ok?`${B2_RING[s.a].n} and ${B2_RING[s.b].n} are close enough along the ring to recognise each other’s song.`:'Far apart around the ring, the differences have built up step by step. Speciation by distance, not by a single event.'};
  }});
 
 const B2_BARRIERS=['Same place','Same time','Courtship accepted','Mating works','Eggs fertilised','Hybrid survives','Hybrid fertile'];

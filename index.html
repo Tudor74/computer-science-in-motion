@@ -1598,7 +1598,7 @@ SCENE({id:'sexual-selection-bateman',name:'Who competes, who chooses',tag:'Batem
 /* ---------- Lesson: speciation ---------- */
 SCENE({id:'speciation',name:'How new species form',tag:'Split, diverge, stay apart',
  definition:'In the biological species concept, a species is a group of populations that can interbreed and are reproductively isolated from others. A common route to a new species is allopatric speciation: a barrier splits a population, the halves change independently, and they can no longer interbreed if they meet again.',
- example:'About 3 million years ago the Isthmus of Panama rose and split the sea. Pairs of snapping shrimp on the two sides, once one population, now mostly refuse to mate with each other in the laboratory.',
+ example:'As the Isthmus of Panama rose, finally closing about 3 million years ago, it split the sea. Pairs of snapping shrimp on the two sides, once one population, diverged at different times as the seaway narrowed, and now mostly refuse to mate with each other in the laboratory.',
  desc:'A landscape with two groups of animals, coloured by the value of a trait, on either side of an optional barrier. A graph shows the average trait of each group over 80 generations; with the barrier and little migration the lines drift apart until their difference passes a threshold; without it they stay together.',
  research:'Dobzhansky, T. (1937). Genetics and the Origin of Species; Mayr, E. (1942). Systematics and the Origin of Species; Knowlton, N. et al. (1993). Science 260, 1629–1632; Coyne, J. A. & Orr, H. A. (2004). Speciation. The model and its isolation threshold are illustrative.',
  dur:12,hint:'Remove the barrier, or let migrants cross, and watch the two halves stay alike. Different environments speed the split.',
@@ -1625,10 +1625,10 @@ SCENE({id:'speciation',name:'How new species form',tag:'Split, diverge, stay apa
 const B2_RING=[{n:'West Siberia',p:[180,96],l:[168,101,'end']},{n:'Central Asia',p:[92,185],l:[92,212,'middle']},{n:'West Himalaya',p:[130,290],l:[130,317,'middle']},{n:'East Himalaya',p:[270,300],l:[270,327,'middle']},{n:'Central China',p:[335,205],l:[335,232,'middle']},{n:'East Siberia',p:[250,96],l:[262,101,'start']}];
 SCENE({id:'speciation-ring',name:'A ring species',tag:'Greenish warblers around Tibet',
  definition:'A ring species is a chain of populations around a barrier in which each neighbour can interbreed, but the two ends, where they meet, behave as separate species. It shows in space the gradual change that speciation produces over time.',
- example:'Greenish warblers live in a ring around the Tibetan Plateau. Neighbouring populations recognise each other’s song. Where the two ends overlap in central Siberia, their songs differ so much that they do not interbreed.',
+ example:'Greenish warblers live in a ring around the Tibetan Plateau. Neighbouring populations recognise each other’s song. Where the two ends overlap in central Siberia, their songs differ so much that they rarely if ever interbreed. Genetic studies show gene flow round the ring was broken in the past, so it is an approximate ring.',
  desc:'A ring of six warbler populations around the plateau. The learner presses two populations; a line joins them, coloured green if they interbreed and coral if not, with a bar showing how similar their songs are.',
  research:'Irwin, D. E., Bensch, S. & Price, T. D. (2001). Speciation in a ring. Nature 409, 333–337; Irwin, D. E. et al. (2005). Science 307, 414–416; Alcaide, M. et al. (2014). Nature 511, 83–85, which found that gene flow around the ring was interrupted in the past, so it is not a perfect ring.',
- dur:10,hint:'Press one population, then another. Neighbours interbreed; the two Siberian ends do not, even though they live side by side.',
+ dur:10,hint:'Press one population, then another. Neighbours interbreed; the two Siberian ends rarely if ever do, even though they live side by side.',
  init:()=>({a:0,b:5,sel:null}),
  watch(p){const pairs=[[0,1],[1,2],[2,3],[3,4],[4,5],[0,5]];const k=Math.min(5,Math.floor(p*6));return {a:pairs[k][0],b:pairs[k][1],sel:null}},
  on:{pick(s,v){v=Number(v);if(s.sel===null){s.sel=v;s.a=v}else{s.b=v;s.sel=null}},pair(s,v){const [a,b]=String(v).split('-').map(Number);s.a=a;s.b=b;s.sel=null}},
@@ -1645,10 +1645,10 @@ SCENE({id:'speciation-ring',name:'A ring species',tag:'Greenish warblers around 
    out+=TF(tx,ty,B2_RING[i].n,13,on?C.blue:C.ink,anc)});
   out+=R(400,70,170,200,'#fff',C.grid,8);
   out+=B2_title(414,94,'Song similarity',C.ink)+R(414,104,140,16,'#eef3f6','none',4)+R(414,104,140*sim,16,ok?C.green:C.coral,'none',4)+TF(414,138,`${Math.round(sim*100)}% (illustrative)`,13,C.muted,'start');
-  out+=TBF(414,172,s.a===s.b?'Pick two':ok?'Interbreed':'Do not interbreed',15,s.a===s.b?C.muted:ok?C.green:C.coral,'start');
+  out+=TBF(414,172,s.a===s.b?'Pick two':ok?'Interbreed':'Barely interbreed',15,s.a===s.b?C.muted:ok?C.green:C.coral,'start');
   out+=TF(414,196,`${d} step${d===1?'':'s'} round the ring`,13,C.ink,'start');
   if(d===5)out+=TF(414,220,'yet they live side',13,C.ink,'start')+TF(414,238,'by side in Siberia',13,C.ink,'start');
-  return {svg:out,phase:s.a===s.b?'Choose two different populations.':d===5?'The two ends overlap in central Siberia but do not interbreed: their songs and genes have diverged along the two routes around the plateau.':ok?`${B2_RING[s.a].n} and ${B2_RING[s.b].n} are close enough along the ring to recognise each other’s song.`:'Far apart around the ring, the differences have built up step by step. Speciation by distance, not by a single event.'};
+  return {svg:out,phase:s.a===s.b?'Choose two different populations.':d===5?'The two ends overlap in central Siberia but rarely if ever interbreed: their songs and genes have diverged along the two routes around the plateau.':ok?`${B2_RING[s.a].n} and ${B2_RING[s.b].n} are close enough along the ring to recognise each other’s song.`:'Far apart around the ring, the differences have built up step by step. Speciation by distance, not by a single event.'};
  }});
 
 const B2_BARRIERS=['Same place','Same time','Courtship accepted','Mating works','Eggs fertilised','Hybrid survives','Hybrid fertile'];
@@ -5267,7 +5267,7 @@ const B7_ecgT=rr=>{const cp=.08+.08*rr,cq=cp+.14+.04*rr;return {cp,cq,ct:cq+.06+
 function B7_beat(u,rr){const {cp,cq,ct}=B7_ecgT(rr),g=(c,w,a)=>a*Math.exp(-((u-c)**2)/(2*w*w));return g(cp,.025,.15)+g(cq-.03,.008,-.12)+g(cq,.012,1.1)+g(cq+.03,.009,-.25)+g(ct,.045,.3)}
 function B7_ecg(t,rr){const k=Math.floor(t/rr);let v=0;for(let j=k-2;j<=k+1;j++)v+=B7_beat(t-j*rr,rr);return v}
 SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading an ECG',
- definition:'An electrocardiogram (ECG) records the tiny voltages on the skin made by the heart’s electrical activity. The P wave marks the atria contracting, the QRS complex the ventricles contracting, and the T wave the ventricles recovering.',
+ definition:'An electrocardiogram (ECG) records the tiny voltages on the skin made by the heart’s electrical activity. The P wave marks the atria being electrically activated (depolarisation), the QRS complex the ventricles being activated, and the T wave the ventricles resetting (repolarisation); each contraction follows its electrical signal a moment later.',
  example:'At 60 beats a minute, the peaks of the QRS complexes are 1 second apart: five large squares on standard ECG paper running at 25 mm per second.',
  desc:'A four-second strip of a synthetic ECG on standard paper (large squares are 0.2 s). Move the heart rate and the cursor; the heart cartoon lights the chambers that are active at the cursor. Press Hear eight beats for a soft lub-dub at the chosen rate.',
  research:'Waller, A. D. (1887). A demonstration on man of electromotive changes accompanying the heart’s beat. Journal of Physiology 8, 229–234. Einthoven, W. (1903) string galvanometer; Nobel Prize 1924. Waveform here is synthetic.',
@@ -5290,7 +5290,7 @@ SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading 
   const hx=120,hy=270,on=k=>phase===k;
   out+=R(hx-50,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx+2,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx-50,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8)+R(hx+2,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8);
   out+=TF(hx+72,hy+18,'atria',13,C.muted,'start')+TF(hx+72,hy+68,'ventricles',13,C.muted,'start');
-  const say={atria:'P wave: the atria contract and top up the ventricles.',ventricles:'QRS: the ventricles contract and pump blood out.',recover:'T wave: the ventricles recover, ready for the next beat.',rest:'Rest: the heart fills before the next P wave.'}[phase];
+  const say={atria:'P wave: the atria are electrically activated, then contract and top up the ventricles.',ventricles:'QRS: the ventricles are electrically activated, then contract and pump blood out.',recover:'T wave: the ventricles repolarise, ready for the next beat.',rest:'Rest: the heart fills before the next P wave.'}[phase];
   out+=B7_lines(280,290,B7_wrap(say,36),15,C.ink,'start',21);
   out+=TF(280,354,`beat-to-beat interval ${rr.toFixed(2)} s`,13,C.muted,'start');
   return {svg:out,phase:'The ECG is a record of electricity, not of pumping, but each wave lines up with a mechanical event. Faster rates squeeze the gap between T and the next P most: the resting phase shortens before contraction does.'};
@@ -6162,7 +6162,7 @@ SCENE({id:'origins-of-life',name:'The Miller–Urey experiment',tag:'Sparks in a
 const B8_master=(mu,L,sig)=>{const Q=Math.pow(1-mu,L);return Math.max(0,(sig*Q-1)/(sig-1))};
 SCENE({id:'origins-of-life-rna-world',name:'The RNA world',tag:'Copying without errors',
  definition:'The RNA-world idea is that early life used RNA both to carry information and to catalyse reactions, before DNA and proteins took over. Any copier faces Eigen’s error threshold: too many copying errors per molecule and the information melts away.',
- example:'With one error in every 100 bases copied, a self-copying RNA can keep at most a few hundred bases of information, however strong its advantage; DNA with repair keeps millions.',
+ example:'With one error in every 100 bases copied and a hundredfold growth advantage, Eigen’s threshold is about ln 100 ÷ 0.01 ≈ 460 bases; a bigger advantage helps only slowly, because it enters as a logarithm. DNA with repair keeps millions.',
  desc:'Eigen’s quasispecies model: the share of perfect copies of a “master” sequence as its length grows, for a chosen error rate and growth advantage. Beyond the threshold length the share drops to zero (error catastrophe).',
  research:'Eigen (1971). Selforganization of matter and the evolution of biological macromolecules. Naturwissenschaften 58, 465–523. Kruger et al. (1982) and Guerrier-Takada et al. (1983) found RNA enzymes (ribozymes). Gilbert (1986). The RNA world. Nature 319, 618. Johnston et al. (2001). RNA-catalyzed RNA polymerization. Science 292, 1319–1325.',
  dur:12,hint:'Raise the error rate and the longest sequence that survives shrinks. Turn the view to 3D to see the whole landscape.',

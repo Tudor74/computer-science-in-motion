@@ -601,7 +601,7 @@ SCENE({id:'origins-of-life',name:'The Miller–Urey experiment',tag:'Sparks in a
 const B8_master=(mu,L,sig)=>{const Q=Math.pow(1-mu,L);return Math.max(0,(sig*Q-1)/(sig-1))};
 SCENE({id:'origins-of-life-rna-world',name:'The RNA world',tag:'Copying without errors',
  definition:'The RNA-world idea is that early life used RNA both to carry information and to catalyse reactions, before DNA and proteins took over. Any copier faces Eigen’s error threshold: too many copying errors per molecule and the information melts away.',
- example:'With one error in every 100 bases copied, a self-copying RNA can keep at most a few hundred bases of information, however strong its advantage; DNA with repair keeps millions.',
+ example:'With one error in every 100 bases copied and a hundredfold growth advantage, Eigen’s threshold is about ln 100 ÷ 0.01 ≈ 460 bases; a bigger advantage helps only slowly, because it enters as a logarithm. DNA with repair keeps millions.',
  desc:'Eigen’s quasispecies model: the share of perfect copies of a “master” sequence as its length grows, for a chosen error rate and growth advantage. Beyond the threshold length the share drops to zero (error catastrophe).',
  research:'Eigen (1971). Selforganization of matter and the evolution of biological macromolecules. Naturwissenschaften 58, 465–523. Kruger et al. (1982) and Guerrier-Takada et al. (1983) found RNA enzymes (ribozymes). Gilbert (1986). The RNA world. Nature 319, 618. Johnston et al. (2001). RNA-catalyzed RNA polymerization. Science 292, 1319–1325.',
  dur:12,hint:'Raise the error rate and the longest sequence that survives shrinks. Turn the view to 3D to see the whole landscape.',

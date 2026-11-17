@@ -488,7 +488,7 @@ const B7_ecgT=rr=>{const cp=.08+.08*rr,cq=cp+.14+.04*rr;return {cp,cq,ct:cq+.06+
 function B7_beat(u,rr){const {cp,cq,ct}=B7_ecgT(rr),g=(c,w,a)=>a*Math.exp(-((u-c)**2)/(2*w*w));return g(cp,.025,.15)+g(cq-.03,.008,-.12)+g(cq,.012,1.1)+g(cq+.03,.009,-.25)+g(ct,.045,.3)}
 function B7_ecg(t,rr){const k=Math.floor(t/rr);let v=0;for(let j=k-2;j<=k+1;j++)v+=B7_beat(t-j*rr,rr);return v}
 SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading an ECG',
- definition:'An electrocardiogram (ECG) records the tiny voltages on the skin made by the heart’s electrical activity. The P wave marks the atria contracting, the QRS complex the ventricles contracting, and the T wave the ventricles recovering.',
+ definition:'An electrocardiogram (ECG) records the tiny voltages on the skin made by the heart’s electrical activity. The P wave marks the atria being electrically activated (depolarisation), the QRS complex the ventricles being activated, and the T wave the ventricles resetting (repolarisation); each contraction follows its electrical signal a moment later.',
  example:'At 60 beats a minute, the peaks of the QRS complexes are 1 second apart: five large squares on standard ECG paper running at 25 mm per second.',
  desc:'A four-second strip of a synthetic ECG on standard paper (large squares are 0.2 s). Move the heart rate and the cursor; the heart cartoon lights the chambers that are active at the cursor. Press Hear eight beats for a soft lub-dub at the chosen rate.',
  research:'Waller, A. D. (1887). A demonstration on man of electromotive changes accompanying the heart’s beat. Journal of Physiology 8, 229–234. Einthoven, W. (1903) string galvanometer; Nobel Prize 1924. Waveform here is synthetic.',
@@ -511,7 +511,7 @@ SCENE({id:'circulation-heart-ecg',name:'The heart’s electricity',tag:'Reading 
   const hx=120,hy=270,on=k=>phase===k;
   out+=R(hx-50,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx+2,hy,48,34,on('atria')?C.coral:C.pale,C.line,8)+R(hx-50,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8)+R(hx+2,hy+38,48,50,on('ventricles')?C.coral:on('recover')?C.amberp:C.pale,C.line,8);
   out+=TF(hx+72,hy+18,'atria',13,C.muted,'start')+TF(hx+72,hy+68,'ventricles',13,C.muted,'start');
-  const say={atria:'P wave: the atria contract and top up the ventricles.',ventricles:'QRS: the ventricles contract and pump blood out.',recover:'T wave: the ventricles recover, ready for the next beat.',rest:'Rest: the heart fills before the next P wave.'}[phase];
+  const say={atria:'P wave: the atria are electrically activated, then contract and top up the ventricles.',ventricles:'QRS: the ventricles are electrically activated, then contract and pump blood out.',recover:'T wave: the ventricles repolarise, ready for the next beat.',rest:'Rest: the heart fills before the next P wave.'}[phase];
   out+=B7_lines(280,290,B7_wrap(say,36),15,C.ink,'start',21);
   out+=TF(280,354,`beat-to-beat interval ${rr.toFixed(2)} s`,13,C.muted,'start');
   return {svg:out,phase:'The ECG is a record of electricity, not of pumping, but each wave lines up with a mechanical event. Faster rates squeeze the gap between T and the next P most: the resting phase shortens before contraction does.'};
