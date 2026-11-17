@@ -79,7 +79,7 @@ X1_cards({id:'kraftwerk',name:'Kraftwerk',tag:'Pop music made by machines, on pu
  example:'Trans-Europe Express (1977) builds a whole track from a train-like electronic rhythm and a few synthesiser lines. There is no guitar, no drum kit and no blues scale.',
  desc:'Six pressable albums and events from 1970 to 1982, each with what it added to the idea of music made by machines.',
  research:'Bussy, P. (1993). Kraftwerk: Man, Machine and Music. SAF. Schütte, U. (2020). Kraftwerk: Future Music from Germany. Penguin. Sicko, D. (1999). Techno Rebels. Billboard Books.',
- hint:'Press each year. Notice how early these records are: the last one is from 1981.',heading:'Kraftwerk: the man-machine',dw:46,
+ hint:'Press each year. Notice how early these records are: the last Kraftwerk album here is from 1981.',heading:'Kraftwerk: the man-machine',dw:46,
  items:[
   {d:'1970',t:'Kling Klang studio',text:'Ralf Hütter and Florian Schneider set up their own studio in Düsseldorf and call it Kling Klang. They treat the studio itself as the instrument and keep control of how their records are made.',phase:'Kraftwerk began as an experimental group with flutes and organs. Owning the studio let them rebuild their sound around machines over the next few years.'},
   {d:'1974',t:'Autobahn',text:'A 22-minute piece about driving on the motorway, built on synthesisers and electronic percussion. An edited version becomes an international hit in 1975.',phase:'Autobahn showed that a pop audience would accept a record whose main voices were synthesisers. It still used some flute and guitar.'},
@@ -107,7 +107,7 @@ X1_grid({id:'kraftwerk-machine-pulse',name:'Machine time',tag:'Exactly on the gr
  below(s,X,pos,y){let out=TF(94,y+38,'timing',13,C.muted,'end')+R(100,y+14,480,40,'#fff',C.grid,6);
   for(let i=0;i<16;i++)out+=L(115+i*30,y+16,115+i*30,y+52,i%4===0?C.line:C.grid,1);
   const cols=[C.blue,C.coral,C.green];
-  for(let k=0;k<3;k++)for(let i=0;i<16;i++)if(s.pat[k][i]){const dx=X1_jit(s.hum,i,k)/30*12;out+=Ci(115+i*30+dx,y+24+k*10,3.6,cols[k])}
+  for(let k=0;k<3;k++)for(let i=0;i<16;i++)if(s.pat[k][i]){const dx=X1_jit(s.hum,i,k)/X1_stepMs(s.bpm)*30;out+=Ci(115+i*30+dx,y+24+k*10,3.6,cols[k])}
   out+=TF(340,y+72,'dots: where each hit lands · lines: the grid',13,C.muted);
   out+=T(300,y+104,`One step lasts ${Math.round(X1_stepMs(s.bpm))} ms at ${s.bpm} BPM`,15,C.ink);return out},
  phase:s=>s.hum===0?'This is machine time. Every hit is exactly on its step, and the pattern is identical each bar. Kraftwerk and later techno producers treated that sameness as a sound in its own right.':`Each hit is now up to ${s.hum} ms early or late, about what human players do. The step is ${Math.round(X1_stepMs(s.bpm))} ms long, so the pattern is still clear, but the hard edge has gone.`});

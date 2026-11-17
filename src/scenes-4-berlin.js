@@ -42,9 +42,9 @@ function X4_cards(def){
 /* ---------- after-the-wall ---------- */
 X4_cards({id:'after-the-wall',name:'After the Wall',tag:'A divided city suddenly has room',
  definition:'When the Berlin Wall opened on 9 November 1989, the eastern half of the city was full of empty buildings whose owners were unknown or gone. Young people from both sides used them for parties, and techno became the music of that moment.',
- example:'Within two years of the Wall opening, clubs were running in a department-store vault, a wartime bunker and a disused power station, all in what had been East Berlin or the border strip.',
+ example:'Within four years of the Wall opening, clubs were running in a department-store vault, a wartime bunker and a disused electricity substation, all in what had been East Berlin or the border strip.',
  desc:'Six cards from West Berlin’s acid house cellar of 1988 to the clubs that opened in the East by 1993.',
- research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Sabin. Books on Demand.','Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.','Sicko, D. (2010). Techno Rebels. 2nd edn. Wayne State University Press.'],
+ research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Krumminga. Books on Demand.','Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.','Sicko, D. (2010). Techno Rebels. 2nd edn. Wayne State University Press.'],
  foot:'Dates as given in Denk & von Thülen’s oral history.',
  items:[
   {chip:'1988',title:'Ufo',when:'1988',text:'West Berlin’s first acid house club opens in a Kreuzberg cellar. It is tiny, unlicensed and soon moves, but the people who run it will open Tresor three years later.'},
@@ -57,7 +57,7 @@ X4_cards({id:'after-the-wall',name:'After the Wall',tag:'A divided city suddenly
 const X4_LP=[[1989,150],[1990,2000],[1991,6000],[1992,15000],[1993,30000],[1994,110000],[1995,280000],[1996,750000],[1997,1000000],[1998,800000],[1999,1500000]];
 SCENE({id:'after-the-wall-loveparade',name:'The Love Parade grows',tag:'From 150 people to over a million',
  definition:'The Love Parade began in 1989 as a march of about 150 people behind one van. Ten years later it filled the centre of Berlin, and techno had gone from a few cellars to a mass event.',
- example:'Attendance is estimated at about 6,000 in 1991, about 110,000 in 1994 and about a million in 1997. Each bar on a logarithmic scale is ten times the one a step below.',
+ example:'Attendance is estimated at about 6,000 in 1991, about 110,000 in 1994 and about a million in 1997. On the logarithmic scale each gridline stands for ten times the one below it.',
  desc:'Bars of estimated attendance for each year from 1989 to 1999 on a logarithmic scale, with a year slider.',
  research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie. Books on Demand.','Borneman, J. & Senders, S. (2000). Politics without a head: is the “Love Parade” a new form of political identification? Cultural Anthropology 15(2), 294–317.','Helbing, D. & Mukerji, P. (2012). Crowd disasters as systemic failures: analysis of the Love Parade disaster. EPJ Data Science 1, 7.'],
  dur:11,hint:'Move the year. The figures are organisers’ and press estimates and differ between sources.',
@@ -211,7 +211,7 @@ X4_cards({id:'minimal-people',name:'Who made minimal',tag:'Detroit, Berlin, Wind
  research:['Sicko, D. (2010). Techno Rebels. Wayne State University Press.','Sherburne, P. (2001). The rules of reduction. The Wire 209.','Rapp, T. (2010). Lost and Sound. Innervisions.','Reynolds, S. (2013). Energy Flash. Faber.'],
  foot:'Each is described by documented releases only.',
  items:[
-  {chip:'Hood',title:'Robert Hood',when:'Detroit, 1994',text:'A founding member of Underground Resistance. “Minimal Nation” (1994) reduces techno to drum machine, bass figure and a few stabbing notes, and gives the style a name.'},
+  {chip:'Hood',title:'Robert Hood',when:'Detroit, 1994',text:'An early member of Underground Resistance. “Minimal Nation” (1994) reduces techno to drum machine, bass figure and a few stabbing notes, and gives the style a name.'},
   {chip:'BC',title:'Basic Channel',when:'Berlin, 1993–95',text:'Moritz von Oswald and Mark Ernestus release nine twelve-inches in which chords are smeared by echo and filtering over a steady pulse. The approach becomes dub techno.'},
   {chip:'Hawtin',title:'Plastikman',when:'Windsor, Ontario, 1993–98',text:'Richie Hawtin, across the river from Detroit, makes slow, sparse acid as Plastikman: “Sheet One” (1993), “Musik” (1994) and the near-empty “Consumed” (1998).'},
   {chip:'Bell',title:'Daniel Bell',when:'Detroit, 1990s',text:'As DBX he makes dry, clicking tracks from very few sounds. Berlin producers of the next decade name him as a model.'},

@@ -83,7 +83,7 @@ SCENE({id:'tempo-and-kick-shape',name:'The shape of a kick',tag:'A falling pitch
  on:{pre(s,v){s.pre=v;Object.assign(s,X6_KPRE[v]);return 'keep'},from(s,v){s.from=+v;s.pre='';return 'keep'},to(s,v){s.to=+v;s.pre='';return 'keep'},decay(s,v){s.decay=+v;s.pre='';return 'keep'},
   hit(s){AUDIO.kick({from:s.from,to:s.to,decay:s.decay,gain:.28});return 'keep'}},
  draw(s){
-  let out=heading(`${s.from} Hz falling to ${s.to} Hz in ${Math.round(s.decay*1000)} ms`,28);
+  let out=heading(`${s.from} Hz falling to ${s.to} Hz; the kick lasts ${Math.round(s.decay*1000)} ms`,28);
   const px=70,pw=480,XX=t=>px+t/.8*pw;
   // pitch
   const y1=60,h1=80,YP=f=>y1+h1-(Math.log(f/30)/Math.log(10))*h1;out+=R(px,y1,pw,h1,'#fff',C.grid,4)+T(px+6,y1+16,'pitch',12,C.blue,'start');
@@ -191,7 +191,7 @@ const X6_SLPRE={none:[0,0,0,0,0,0,0,0],acc:[0,1,0,0,1,0,0,1],sl:[0,2,0,0,2,2,0,0
 const X6_SLSPEC={N:8,ms:s=>30000/s.bpm,step(s,i){const mk=s.marks[i],prev=X6_SL[(i+7)%8],sl=mk>=2,st=30/s.bpm;
   AUDIO.acid(midiHz(X6_SL[i]),{dur:sl?st*1.05:st*.55,gain:.1,cutoff:450,env:1400,res:13,decay:.14,accent:mk===1||mk===3,slideFrom:sl?midiHz(prev):0})}};
 SCENE({id:'acid-accent-slide',name:'Accent and slide',tag:'Two switches per step',
- definition:'Each step of a TB-303 pattern can carry two marks. Accent makes the note louder and opens the filter further. Slide holds the note for its full length and glides the pitch into it from the note before.',
+ definition:'Each step of a TB-303 pattern can carry two marks. Accent makes the note louder and opens the filter further. Slide ties a note to the next with no gap and glides the pitch between them. On the 303 the mark sits on the first of the two notes; this model puts it on the note the glide arrives at.',
  example:'The same eight notes sound mechanical with no marks, punchy with accents, and rubbery and vocal with slides.',
  desc:'Eight notes on a pitch grid. Each can be plain, accented, slid or both; accented notes are drawn larger and slides are drawn as a line gliding from the previous note.',
  research:['Roland Corporation (1981). TB-303 Bass Line Owner’s Manual (accent and slide).','Butler, M. J. (2006). Unlocking the Groove. Indiana University Press.','Original pattern; simplified model of the accent and slide circuits.'],
@@ -239,7 +239,7 @@ SCENE({id:'dub-techno',name:'Dub techno: the echo',tag:'One chord, many repeats'
   out+=T(x0,268,'tall purple: the stab · pale: its echoes · blue dots: kick',12,C.muted,'start');
   out+=counter(60,284,'delay',ms+' ms',C.purple,120)+counter(196,284,'echoes heard',String(ev.filter(e=>e.k>0).length),C.blue,130)+counter(342,284,'each echo',Math.round(s.fb*100)+'% as loud',C.green,150);
   out+=T(300,362,'Each echo is also a little duller than the last.',13,C.muted);
-  return {svg:out,phase:s.d===3?'Three steps is three-quarters of a beat, so the echoes land off the kick and drift across the bar before lining up again. This cross-rhythm is the heart of the style.':s.d%4===0?'A delay of a whole beat puts every echo on a kick, where it is half hidden.':s.d===2?'Two steps is half a beat: the echoes fall neatly between the kicks.':'An odd delay time makes the echoes tumble against the beat.'};
+  return {svg:out,phase:s.d===3?'Three steps is three-quarters of a beat, so the echoes land off the kick and drift across the bar before lining up again. This cross-rhythm is the heart of the style.':s.d%4===0?'A delay of a whole beat puts every echo on a kick, where it is half hidden.':s.d===2?'Two steps is half a beat: the echoes alternate, one between the kicks and the next on a kick.':'An odd delay time makes the echoes tumble against the beat.'};
  }});
 
 const X6_SSPEC={N:16,ms:s=>15000/s.bpm,step(s,i){if(s.kick&&i%4===0)AUDIO.kick({from:130,to:46,decay:.4,gain:.22});if(s.hat&&i%4===2)X6_ohat(0,.03);
@@ -280,7 +280,7 @@ X6_cards({id:'dub-techno-roots',name:'From Kingston to Berlin',tag:'Where the ec
   {k:'Systems',t:'Sound systems',body:'Dub was made for Jamaican sound systems: mobile stacks of speakers playing to open-air dances, where the weight of the bass mattered more than the tune. Engineers cut exclusive one-off discs for them.',phase:'The same culture, carried to Britain, shaped the free-party sound systems and the idea of the dubplate.'},
   {k:'1993',t:'Berlin, 1993: Basic Channel',body:'Moritz von Oswald and Mark Ernestus began releasing records as Basic Channel in 1993. They stripped techno down to a kick, a hazy chord and its echoes, with tape hiss left in. They also ran a record shop, a mastering studio and, from 1995, the label Chain Reaction.',phase:'Their later project Rhythm & Sound worked directly with reggae singers, making the Jamaican link explicit.'},
   {k:'Method',t:'What was borrowed',body:'Three things: echo timed to the beat, so repeats make a rhythm; filtering and reverb used to move a sound nearer or further away; and subtraction, where muting a part is as much of an event as adding one.',phase:'None of these needs a melody. That is why the style can hold attention with one chord for ten minutes.'},
-  {k:'Since',t:'Since then',body:'The approach spread widely: to Detroit, where producers recorded for Basic Channel’s labels, and to artists in many countries who work with long delays, soft chords and deliberate noise. “Dub techno” became the usual name for it.',phase:'It remains one of techno’s slowest and quietest branches, typically around 115–128 BPM.'}]});
+  {k:'Since',t:'Since then',body:'The approach spread widely: to Detroit, where producers took up the style, and to artists in many countries who work with long delays, soft chords and deliberate noise. “Dub techno” became the usual name for it.',phase:'It remains one of techno’s slowest and quietest branches, typically around 115–128 BPM.'}]});
 
 /* =========================== hard-and-industrial =========================== */
 const X6_shape=(x,mode)=>mode==='soft'?Math.tanh(x):clamp(x,-1,1);

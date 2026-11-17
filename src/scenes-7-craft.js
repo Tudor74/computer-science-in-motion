@@ -123,7 +123,7 @@ SCENE({id:'eq-mixing',name:'Mixing with the EQ',tag:'Only one bassline at a time
  definition:'A DJ mixer has low, mid and high controls for each channel. During a blend the DJ turns one record’s bass down before bringing the other’s up, because two basslines and two kicks at once turn to mud.',
  example:'Track B comes in with only its hats. Then its mids. At the phrase change, A’s low goes out and B’s low comes in on the same beat: the bass swap.',
  desc:'Two mixer channels with low, mid and high buttons each, and a meter of how much bass is playing in total.',
- research:'Brewster, B. & Broughton, F. (2002). How to DJ (Properly). · Butler (2006), ch. 6. · Three-band isolators became common on club mixers in the 1970s–80s (Bozak, UREI, later Rane and Pioneer).',
+ research:'Brewster, B. & Broughton, F. (2002). How to DJ (Properly). · Butler (2006), ch. 6. · Early club mixers (Bozak, UREI) had only bass and treble controls; some 1970s–80s DJs cut frequencies with a separate crossover or isolator. Three-band EQ on every channel became standard on DJ mixers in the 1990s.',
  dur:11,hint:'Press Play. Switch bands on and off on each track. Try both lows at once, then swap them. A simplified model: real EQs turn smoothly.',
  init:()=>({xa:{low:true,mid:true,high:true},xb:{low:false,mid:false,high:true},playing:false,pos:-1}),
  watch(p){const st=Math.min(4,Math.floor(p*5));return {xa:{low:st<3,mid:st<4,high:st<4},xb:{low:st>=3||st===2&&false,mid:st>=1,high:true},playing:false,pos:-1,both:st===2}},
@@ -300,10 +300,10 @@ SCENE({id:'arrangement',name:'How a track is laid out',tag:'Layers that enter an
  }});
 
 const X7_tension=(bar,nk)=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [.2,.25+.25*u,.5,nk?.5+.45*u:.5,.45,.3-.1*u][si]};
-const X7_cut=bar=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [300,300+900*u,1200,400*Math.pow(10,u*1.05),3000,800-500*u][si]};
+const X7_cut=bar=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [300,300+900*u,1200,400*Math.pow(10,u*1.05),4000,800-500*u][si]};
 SCENE({id:'arrangement-tension',name:'Tension and release',tag:'The filter is the storyteller',
  definition:'Producers build tension by taking away something the listener expects, usually the kick, and by slowly opening a filter so the sound brightens. Release comes when the kick returns.',
- example:'During a 16-bar break the lead’s filter cutoff climbs from 400 Hz to over 4 kHz and a noise riser swells. Then, on beat 1, the kick is back.',
+ example:'During a 16-bar break the lead’s filter cutoff climbs from 400 Hz to nearly 4 kHz and a noise riser swells. Then, on beat 1, the kick is back.',
  desc:'A curve of the lead’s filter cutoff across the track and a second curve of expected tension, with the break shaded; removing the kick in the break changes the tension curve.',
  research:'Butler (2006), ch. 5. · Solberg, R. T. & Jensenius, A. R. (2017). Group behaviour and interpersonal synchronization to electronic dance music. Musicae Scientiae (movement changes around break and drop). · The tension curve is this page’s illustration, not measured data.',
  dur:11,hint:'Slide through the track and press Hear to listen to the lead at that point. Switch “kick stays in the break” to hear how little tension is left.',

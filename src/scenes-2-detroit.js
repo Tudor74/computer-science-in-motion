@@ -158,7 +158,7 @@ SCENE({id:'the-electrifying-mojo-city',name:'The city behind the music',tag:'A s
 const X2_FUNK=[[1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0],[0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0],[1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1],[1,0,0,2,0,1,0,0,1,0,2,0,0,1,0,2]];
 const X2_MACH=[[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,2,1,1,1,2,1,1,1,2,1,1,2,1,1]];
 X2_grid({id:'the-electrifying-mojo-blend',name:'Funk meets the machine',tag:'Two feels, one grid',
- definition:'Funk drumming is syncopated and swung: the kicks dodge the beat and every second sixteenth note arrives a little late. Machine music is straight: every step is the same length. Detroit techno is often described as a meeting of the two.',
+ definition:'Funk drumming is syncopated and often swung: the kicks dodge the beat and every second sixteenth note may arrive a little late. Machine music is straight: every step is the same length. Detroit techno is often described as a meeting of the two.',
  example:'Derrick May’s much-quoted description of techno is that it is like George Clinton and Kraftwerk stuck in a lift with only a sequencer for company.',
  desc:'A four-track step grid with a funk-like pattern and a machine-like pattern, a swing control that delays every second step, and a strip showing the step timing.',
  research:'Sicko, D. (1999). Techno Rebels (for May’s description). Butler, M. J. (2006). Unlocking the Groove. Danielsen, A. (2006). Presence and Pleasure: The Funk Grooves of James Brown and Parliament. Wesleyan. The patterns here are original.',
@@ -211,7 +211,7 @@ X2_cards({id:'afrofuturism-drexciya',name:'Drexciya',tag:'A myth told in sleeve 
 const X2_ZP=[['laser','Laser',2400,180,.22],['drop','Falling drop',900,60,.7],['kick','Kick drum',170,48,.3],['blip','Rising blip',300,1800,.12]];
 SCENE({id:'afrofuturism-future-sound',name:'Sounds from nowhere',tag:'No instrument makes this',
  definition:'A synthesiser can make sounds that no acoustic instrument produces, such as a tone whose pitch sweeps across several octaves in a fraction of a second. Electro and techno used such sounds to signal the future.',
- example:'Start a sine wave at 2,400 Hz and drop it to 180 Hz in a fifth of a second and you get a science-fiction laser. Start at 170 Hz and fall to 48 Hz and the same circuit is a kick drum.',
+ example:'Start a sine wave at 2,400 Hz and drop it to 180 Hz in under a tenth of a second and you get a science-fiction laser. Start at 170 Hz and fall to 48 Hz and the same circuit is a kick drum.',
  desc:'A graph of pitch against time for one swept tone, with controls for the start pitch, end pitch and length, and four presets.',
  research:'Eshun, K. (1998). More Brilliant Than the Sun. Pinch, T. & Trocco, F. (2002). Analog Days. Harvard University Press. Electronic drum sounds as swept oscillators: see Electronic Music In Motion.',
  dur:12,hint:'Choose a preset and press Play, then move the sliders. A fast fall from high to low is a zap; a short fall at the bottom is a kick.',
@@ -274,7 +274,7 @@ SCENE({id:'underground-resistance-independent',name:'Owning the label',tag:'Who 
   out+=R(400,80,184,200,'#f6f9fb','none',10)+TBF(412,104,'Own label',14,C.blue,'start')+TF(412,124,'sells each record for 3',13,C.ink,'start')+TF(412,142,'pressing costs 1 each',13,C.ink,'start')+TF(412,160,'set-up costs 600',13,C.ink,'start')+TBF(412,182,'income: '+nf(o),14,C.blue,'start');
   out+=TBF(412,212,'Licensed',14,C.amber,'start')+TF(412,232,'advance 1,500',13,C.ink,'start')+TF(412,250,'royalty 0.36 a copy',13,C.ink,'start')+TBF(412,272,'income: '+nf(l),14,C.amber,'start');
   out+=T(300,356,o>l?`At ${s.c.toLocaleString('en-GB')} copies the own label pays ${nf(o-l)} more`:`At ${s.c.toLocaleString('en-GB')} copies licensing pays ${nf(l-o)} more`,15,C.ink);
-  return {svg:out,phase:o>l?'Past the crossing point, every copy sold on your own label is worth 2 to you against 0.36 under licence, and you still own the recording. That arithmetic, and the experience of unpaid royalties in Chicago, is why Detroit producers set up their own labels.':'Below the crossing point the advance is worth more, and the own-label artist may not have covered the cost of pressing. Independence means carrying that risk yourself.'};
+  return {svg:out,phase:o>l?'Past the crossing point, every copy on your own label is worth 2 to you, and you still own the recording. Under licence a copy adds nothing until the advance is earned back, at about 4,200 copies, and 0.36 after that. That arithmetic, and the experience of unpaid royalties in Chicago, is why Detroit producers set up their own labels.':'Below the crossing point the advance is worth more, and the own-label artist may not have covered the cost of pressing. Independence means carrying that risk yourself.'};
  }});
 
 const X2_FULL=[[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],[0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],[1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1],[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],[0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0]];

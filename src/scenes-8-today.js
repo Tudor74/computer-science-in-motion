@@ -167,7 +167,7 @@ SCENE({id:'credit-and-erasure-lineups',name:'Counting festival line-ups',tag:'Wh
 
 const X8_EVENTS=[[1981,'d','Cybotron','Juan Atkins and Rik Davis release “Alleys of Your Mind” in Detroit.'],[1985,'d','Model 500','Atkins starts the Metroplex label; “No UFO’s” follows.'],[1987,'d','Transmat','Derrick May’s label releases “Strings of Life”.'],
  [1988,'d','The name','A UK compilation, “Techno! The New Dance Sound of Detroit”, fixes the word “techno” for this music.'],[1988,'e','UK acid house','British clubs and raves take up Chicago and Detroit records.'],[1989,'d','Underground Resistance','Founded in Detroit as an independent label and collective.'],
- [1989,'e','The Wall falls','East Berlin’s empty buildings open up; the first Love Parade is held with about 150 people.'],[1991,'e','Tresor opens','A Berlin club in a former department-store vault, booking Detroit artists from the start.'],[1992,'e','A European industry','Labels, clubs and festivals across Europe now dominate techno’s sales and press.']];
+ [1989,'e','The Wall falls','In July the first Love Parade is held in West Berlin with about 150 people. In November the Wall falls, and East Berlin’s empty buildings open up.'],[1991,'e','Tresor opens','A Berlin club in a former department-store vault, booking Detroit artists from the start.'],[1992,'e','A European industry','Labels, clubs and festivals across Europe now dominate techno’s sales and press.']];
 SCENE({id:'credit-and-erasure-story',name:'Which came first',tag:'Detroit before Berlin',
  definition:'Techno is often described as a European, and especially a Berlin, invention. The record of releases shows the sound and the name were established in Detroit by Black artists before Berlin’s clubs opened.',
  example:'“Techno! The New Dance Sound of Detroit” came out in 1988. The Berlin Wall fell in 1989. Tresor opened in 1991, and booked Detroit artists from its first year.',
@@ -280,7 +280,7 @@ SCENE({id:'tools-today-sidechain',name:'Sidechain pumping',tag:'The kick ducks e
 const X8_GR=[
  {k:[0,4,8,12],c:[4,12],h:[0,2,4,6,8,10,12,14]},
  {k:[0,4,8,12],c:[4,12],h:[2,6,10,14]},
- {k:[0,4,8,11,12],c:[4,12],h:[2,6,7,10,14]},
+ {k:[0,4,8,11],c:[4,12],h:[2,6,7,10,14]},
  {k:[0,3,8,11],c:[4,7,12],h:[2,6,9,10,14,15]},
  {k:[0,3,5,10,13],c:[2,7,9,14],h:[1,4,6,11,12,15]}];
 // A rough syncopation count: hits that fall off the beat and are not followed by a hit on the next beat.
@@ -309,7 +309,7 @@ SCENE({id:'groove-science',name:'Why some rhythms make you move',tag:'You are th
   out+=counter(90,222,'rated',n+' of 5',C.blue,110)+counter(215,222,'this pattern',s.rate[lv]?String(s.rate[lv]):'not yet',C.coral,120)+counter(350,222,'off-beat score',String(X8_sync(p)),C.purple,130);
   out+=R(60,284,480,50,'#fff',C.grid,10)+X8_text(76,305,n>=5?'Does your highest rating sit in the middle? Five ratings from one person can easily miss it.':'Rate all five to see your own curve beside the published shape.',48);
   out+=T(300,362,'Techno’s four-on-the-floor sits at the regular end.',14,C.muted);
-  return {svg:out,phase:s.sim?'The simulated listener prefers the middle pattern. Real listeners vary: musicians and dancers tend to tolerate more syncopation.':'One explanation is prediction: a little syncopation leaves gaps where the body “fills in” the beat, which feels good. With too much, the beat cannot be predicted at all. Techno keeps the kick regular and puts its syncopation in the hats, bass and filter.'};
+  return {svg:out,phase:s.sim?'The simulated listener prefers the middle pattern. Real listeners vary.':'One explanation is prediction: a little syncopation leaves gaps where the body “fills in” the beat, which feels good. With too much, the beat cannot be predicted at all. Techno keeps the kick regular and puts its syncopation in the hats, bass and filter.'};
  }});
 
 const X8_EV=[
@@ -330,7 +330,7 @@ SCENE({id:'groove-science-bass',name:'Bass and the body',tag:'Low frequencies mo
   const on=s.vlf==='on',amp=on?1.118:1,e=X8_EV.find(q=>q[0]===s.e)||X8_EV[0],r=rng(77);let out=heading(on?'Hidden bass on: about 12% more movement':'Hidden bass off: the baseline');
   out+=R(50,54,330,96,'#fff',C.grid,10);for(let k=0;k<26;k++){const x=66+k*12,base=10+r()*16,a=base*amp;out+=L(x,102-a,x,102+a,on?C.coral:'#9db2bf',3)+Ci(x,102-a,3.5,on?C.coral:'#7f97a5')}
   out+=TF(215,166,'each line: how far one dancer moves (illustration)',12,C.muted);
-  out+=R(400,54,150,96,'#fff',C.grid,10)+TF(475,74,'movement',12,C.muted)+R(420,84,110,14,'#dfe7ec','none',7)+TF(475,112,'off: 100%',12,C.muted)+R(420,120,110*amp/1.2+0,14,on?C.coral:'#dfe7ec','none',7)+TF(475,146,on?'on: about 112%':'on: —',12,on?C.coral:C.muted);
+  out+=R(400,54,150,96,'#fff',C.grid,10)+TF(475,74,'movement',12,C.muted)+R(420,84,110/1.2,14,'#dfe7ec','none',7)+TF(475,112,'off: 100%',12,C.muted)+R(420,120,110*amp/1.2+0,14,on?C.coral:'#dfe7ec','none',7)+TF(475,146,on?'on: about 112%':'on: —',12,on?C.coral:C.muted);
   out+=X8_card(176,166,e[1],'Strength: '+e[3],e[2],e[0]==='body'?C.amber:C.green);
   out+=T(300,364,'Suggestive evidence, not settled science',14,C.muted);
   return {svg:out,phase:e[0]==='cameron'?'The striking part is that the audience could not detect the extra bass, so the effect is not a matter of taste or expectation. It is still a single event with one audience.':e[0]==='hove'?'This is a finding about hearing and timing, measured with EEG and tapping. It fits the fact that in many traditions the lowest instruments keep time.':'A plausible story, with physiology behind it, but the direct evidence in dancers is thin. Treat it as a hypothesis.'};
@@ -358,7 +358,7 @@ SCENE({id:'groove-science-tempo',name:'Tap your tempo',tag:'Where 120–130 come
   out+=L(x0,214,x0+w,214,C.line,1.5);for(const v of [80,100,120,140,160,180])out+=L(fx(v),214,fx(v),219,C.line,1.2)+TF(fx(v),234,v===180?'180 BPM':String(v),12,C.muted);
   if(ok)out+=L(fx(bpm),64,fx(bpm),214,C.amber,2.5)+Ci(fx(bpm),214,7,C.amber,'#fff');
   out+=counter(80,254,s.sim?'simulated tapper':'your tempo',ok?bpm.toFixed(1)+' BPM':'—',C.amber,150)+counter(245,254,'time between taps',ok?Math.round(m*1000)+' ms':'—',C.blue,150)+counter(410,254,'steadiness (SD)',ok?Math.round(sd)+' ms':'—',C.purple,130);
-  const where=!ok?'':bpm<118?'slower than most house and techno':bpm<=130?'inside the most common band':bpm<=140?'in techno’s usual range':'in hard-techno territory';
+  const where=!ok?'':bpm<118?'slower than most house and techno':bpm<120?'just under the most common band':bpm<=130?'inside the most common band':bpm<=140?'in techno’s usual range':'in hard-techno territory';
   out+=T(300,346,ok?'Your tempo is '+where+'.':'Typical ranges are approximate.',15,C.ink);
   return {svg:out,phase:ok?'A comfortable tapping speed of about two per second is close to walking pace, which is one proposed reason for the peak. Faster styles deliberately push above it for intensity.':'Why 120–130? One idea is that the body’s movements have a natural resonance near 2 Hz, the rate of a brisk walk. The evidence is suggestive; culture and DJ convention also keep tempos close together so records can be mixed.'};
  }});

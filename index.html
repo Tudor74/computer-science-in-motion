@@ -705,7 +705,7 @@ X1_cards({id:'kraftwerk',name:'Kraftwerk',tag:'Pop music made by machines, on pu
  example:'Trans-Europe Express (1977) builds a whole track from a train-like electronic rhythm and a few synthesiser lines. There is no guitar, no drum kit and no blues scale.',
  desc:'Six pressable albums and events from 1970 to 1982, each with what it added to the idea of music made by machines.',
  research:'Bussy, P. (1993). Kraftwerk: Man, Machine and Music. SAF. Schütte, U. (2020). Kraftwerk: Future Music from Germany. Penguin. Sicko, D. (1999). Techno Rebels. Billboard Books.',
- hint:'Press each year. Notice how early these records are: the last one is from 1981.',heading:'Kraftwerk: the man-machine',dw:46,
+ hint:'Press each year. Notice how early these records are: the last Kraftwerk album here is from 1981.',heading:'Kraftwerk: the man-machine',dw:46,
  items:[
   {d:'1970',t:'Kling Klang studio',text:'Ralf Hütter and Florian Schneider set up their own studio in Düsseldorf and call it Kling Klang. They treat the studio itself as the instrument and keep control of how their records are made.',phase:'Kraftwerk began as an experimental group with flutes and organs. Owning the studio let them rebuild their sound around machines over the next few years.'},
   {d:'1974',t:'Autobahn',text:'A 22-minute piece about driving on the motorway, built on synthesisers and electronic percussion. An edited version becomes an international hit in 1975.',phase:'Autobahn showed that a pop audience would accept a record whose main voices were synthesisers. It still used some flute and guitar.'},
@@ -733,7 +733,7 @@ X1_grid({id:'kraftwerk-machine-pulse',name:'Machine time',tag:'Exactly on the gr
  below(s,X,pos,y){let out=TF(94,y+38,'timing',13,C.muted,'end')+R(100,y+14,480,40,'#fff',C.grid,6);
   for(let i=0;i<16;i++)out+=L(115+i*30,y+16,115+i*30,y+52,i%4===0?C.line:C.grid,1);
   const cols=[C.blue,C.coral,C.green];
-  for(let k=0;k<3;k++)for(let i=0;i<16;i++)if(s.pat[k][i]){const dx=X1_jit(s.hum,i,k)/30*12;out+=Ci(115+i*30+dx,y+24+k*10,3.6,cols[k])}
+  for(let k=0;k<3;k++)for(let i=0;i<16;i++)if(s.pat[k][i]){const dx=X1_jit(s.hum,i,k)/X1_stepMs(s.bpm)*30;out+=Ci(115+i*30+dx,y+24+k*10,3.6,cols[k])}
   out+=TF(340,y+72,'dots: where each hit lands · lines: the grid',13,C.muted);
   out+=T(300,y+104,`One step lasts ${Math.round(X1_stepMs(s.bpm))} ms at ${s.bpm} BPM`,15,C.ink);return out},
  phase:s=>s.hum===0?'This is machine time. Every hit is exactly on its step, and the pattern is identical each bar. Kraftwerk and later techno producers treated that sameness as a sound in its own right.':`Each hit is now up to ${s.hum} ms early or late, about what human players do. The step is ${Math.round(X1_stepMs(s.bpm))} ms long, so the pattern is still clear, but the hard edge has gone.`});
@@ -1102,7 +1102,7 @@ SCENE({id:'the-electrifying-mojo-city',name:'The city behind the music',tag:'A s
 const X2_FUNK=[[1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0],[0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0],[1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1],[1,0,0,2,0,1,0,0,1,0,2,0,0,1,0,2]];
 const X2_MACH=[[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,2,1,1,1,2,1,1,1,2,1,1,2,1,1]];
 X2_grid({id:'the-electrifying-mojo-blend',name:'Funk meets the machine',tag:'Two feels, one grid',
- definition:'Funk drumming is syncopated and swung: the kicks dodge the beat and every second sixteenth note arrives a little late. Machine music is straight: every step is the same length. Detroit techno is often described as a meeting of the two.',
+ definition:'Funk drumming is syncopated and often swung: the kicks dodge the beat and every second sixteenth note may arrive a little late. Machine music is straight: every step is the same length. Detroit techno is often described as a meeting of the two.',
  example:'Derrick May’s much-quoted description of techno is that it is like George Clinton and Kraftwerk stuck in a lift with only a sequencer for company.',
  desc:'A four-track step grid with a funk-like pattern and a machine-like pattern, a swing control that delays every second step, and a strip showing the step timing.',
  research:'Sicko, D. (1999). Techno Rebels (for May’s description). Butler, M. J. (2006). Unlocking the Groove. Danielsen, A. (2006). Presence and Pleasure: The Funk Grooves of James Brown and Parliament. Wesleyan. The patterns here are original.',
@@ -1155,7 +1155,7 @@ X2_cards({id:'afrofuturism-drexciya',name:'Drexciya',tag:'A myth told in sleeve 
 const X2_ZP=[['laser','Laser',2400,180,.22],['drop','Falling drop',900,60,.7],['kick','Kick drum',170,48,.3],['blip','Rising blip',300,1800,.12]];
 SCENE({id:'afrofuturism-future-sound',name:'Sounds from nowhere',tag:'No instrument makes this',
  definition:'A synthesiser can make sounds that no acoustic instrument produces, such as a tone whose pitch sweeps across several octaves in a fraction of a second. Electro and techno used such sounds to signal the future.',
- example:'Start a sine wave at 2,400 Hz and drop it to 180 Hz in a fifth of a second and you get a science-fiction laser. Start at 170 Hz and fall to 48 Hz and the same circuit is a kick drum.',
+ example:'Start a sine wave at 2,400 Hz and drop it to 180 Hz in under a tenth of a second and you get a science-fiction laser. Start at 170 Hz and fall to 48 Hz and the same circuit is a kick drum.',
  desc:'A graph of pitch against time for one swept tone, with controls for the start pitch, end pitch and length, and four presets.',
  research:'Eshun, K. (1998). More Brilliant Than the Sun. Pinch, T. & Trocco, F. (2002). Analog Days. Harvard University Press. Electronic drum sounds as swept oscillators: see Electronic Music In Motion.',
  dur:12,hint:'Choose a preset and press Play, then move the sliders. A fast fall from high to low is a zap; a short fall at the bottom is a kick.',
@@ -1218,7 +1218,7 @@ SCENE({id:'underground-resistance-independent',name:'Owning the label',tag:'Who 
   out+=R(400,80,184,200,'#f6f9fb','none',10)+TBF(412,104,'Own label',14,C.blue,'start')+TF(412,124,'sells each record for 3',13,C.ink,'start')+TF(412,142,'pressing costs 1 each',13,C.ink,'start')+TF(412,160,'set-up costs 600',13,C.ink,'start')+TBF(412,182,'income: '+nf(o),14,C.blue,'start');
   out+=TBF(412,212,'Licensed',14,C.amber,'start')+TF(412,232,'advance 1,500',13,C.ink,'start')+TF(412,250,'royalty 0.36 a copy',13,C.ink,'start')+TBF(412,272,'income: '+nf(l),14,C.amber,'start');
   out+=T(300,356,o>l?`At ${s.c.toLocaleString('en-GB')} copies the own label pays ${nf(o-l)} more`:`At ${s.c.toLocaleString('en-GB')} copies licensing pays ${nf(l-o)} more`,15,C.ink);
-  return {svg:out,phase:o>l?'Past the crossing point, every copy sold on your own label is worth 2 to you against 0.36 under licence, and you still own the recording. That arithmetic, and the experience of unpaid royalties in Chicago, is why Detroit producers set up their own labels.':'Below the crossing point the advance is worth more, and the own-label artist may not have covered the cost of pressing. Independence means carrying that risk yourself.'};
+  return {svg:out,phase:o>l?'Past the crossing point, every copy on your own label is worth 2 to you, and you still own the recording. Under licence a copy adds nothing until the advance is earned back, at about 4,200 copies, and 0.36 after that. That arithmetic, and the experience of unpaid royalties in Chicago, is why Detroit producers set up their own labels.':'Below the crossing point the advance is worth more, and the own-label artist may not have covered the cost of pressing. Independence means carrying that risk yourself.'};
  }});
 
 const X2_FULL=[[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],[0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0],[1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1],[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],[0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,0]];
@@ -1445,7 +1445,7 @@ const X3_808PADS=[
  ['oh','Open hat','The same metallic source as the closed hat, left to ring for about a quarter of a second.',at=>X3_V.oh(at)],
  ['cow','Cowbell','Two square waves, near 540 Hz and 800 Hz, through a band-pass filter. It sounds little like a cowbell and became famous anyway.',at=>X3_V.cow(at)]];
 SCENE({id:'tr-808-voices',name:'Six circuits, six sounds',tag:'Drums built from oscillators and noise',
- definition:'Every sound in the TR-808 is synthesised: ringing circuits for the drums, square-wave oscillators for metal, and filtered noise for snares, claps and hats. No recordings are involved.',
+ definition:'Every sound in the TR-808 is synthesised: ringing circuits for the drums, square-wave oscillators for the hats, cymbal and cowbell, and filtered noise for snares and claps. No recordings are involved.',
  example:'The cowbell is two square waves at about 540 Hz and 800 Hz. The handclap is the same burst of noise fired three times quickly, then once more with a tail.',
  desc:'Six pads for the bass drum, snare, handclap, closed hat, open hat and cowbell; pressing one plays it and shows how the machine makes it.',
  research:['Roland Corporation (1980). TR-808 service notes (circuit descriptions).','Reid, G. (2002). Synth Secrets: practical snare, cymbal and cowbell synthesis. Sound on Sound.'],
@@ -1485,7 +1485,7 @@ const X3_909H=X3_loop(X3_909SPEC,{
  bpm(s,v,ctx){s.bpm=Number(v);X3_restart(s,ctx,X3_909SPEC,X3_909H);return 'keep'},
  floor(s){s.pat=X3_909INIT();return 'keep'},clear(s){s.pat=X3_909ROWS.map(()=>Array(16).fill(0));return 'keep'}});
 SCENE({id:'tr-909',name:'The TR-909 pattern',tag:'Four on the floor, hats on the off-beat',
- definition:'The Roland TR-909 (1983) gave house and techno their basic drum pattern: a kick on every beat (“four on the floor”), a clap on beats two and four, and an open hi-hat on each off-beat.',
+ definition:'The Roland TR-909 (1983) supplied the drum sounds for the basic pattern of house and techno, which came from disco: a kick on every beat (“four on the floor”), a clap on beats two and four, and an open hi-hat on each off-beat.',
  example:'With sixteen steps in a bar, the kick sits on steps 1, 5, 9 and 13, the clap on 5 and 13, and the open hat on 3, 7, 11 and 15, halfway between kicks.',
  desc:'A sixteen-step grid with rows for kick, clap, closed hat and open hat, a playhead, and a tempo slider.',
  research:['Roland Corporation (1983). TR-909 Rhythm Composer owner’s manual.','Butler, M. J. (2006). Unlocking the Groove: Rhythm, Meter, and Musical Design in Electronic Dance Music. Indiana University Press.'],
@@ -1570,7 +1570,7 @@ SCENE({id:'tb-303',name:'The TB-303 filter',tag:'Cutoff, resonance, envelope',
  definition:'The Roland TB-303 (1981) is a one-oscillator bass synthesiser with a built-in sequencer. Its character comes from a resonant low-pass filter: cutoff sets how bright the note is, resonance adds a whistling peak at the cutoff, and an envelope sweeps the cutoff down on every note.',
  example:'Low cutoff and no resonance gives a dull, round bass. Raise the resonance and the envelope and each note starts with a squelch as the peak sweeps down through the harmonics.',
  desc:'A graph of the filter’s response with its resting curve and the brighter curve at the start of each note, beside a sixteen-step bassline shown as a piano roll.',
- research:['Roland Corporation (1981). TB-303 Bass Line owner’s manual.','Stinchcombe, T. (2009). Analysis of the Moog transistor ladder and derivative filters (includes the TB-303 filter).','Vail, M. (2000). Vintage Synthesizers. Miller Freeman.'],
+ research:['Roland Corporation (1981). TB-303 Bass Line owner’s manual.','Stinchcombe, T. Analysis of the Moog transistor ladder and derivative filters (includes the TB-303 filter).','Vail, M. (2000). Vintage Synthesizers. Miller Freeman.'],
  dur:12,hint:'Press Play, then move one slider at a time. Changes are heard from the next beat. '+X3_NOTE,
  init:()=>({cut:400,res:10,env:1600,playing:false,pos:-1}),
  watch(p){return {cut:Math.round(250+p*900),res:Math.round(4+p*12),env:1600,playing:false,pos:-1}},
@@ -1768,9 +1768,9 @@ function X4_cards(def){
 /* ---------- after-the-wall ---------- */
 X4_cards({id:'after-the-wall',name:'After the Wall',tag:'A divided city suddenly has room',
  definition:'When the Berlin Wall opened on 9 November 1989, the eastern half of the city was full of empty buildings whose owners were unknown or gone. Young people from both sides used them for parties, and techno became the music of that moment.',
- example:'Within two years of the Wall opening, clubs were running in a department-store vault, a wartime bunker and a disused power station, all in what had been East Berlin or the border strip.',
+ example:'Within four years of the Wall opening, clubs were running in a department-store vault, a wartime bunker and a disused electricity substation, all in what had been East Berlin or the border strip.',
  desc:'Six cards from West Berlin’s acid house cellar of 1988 to the clubs that opened in the East by 1993.',
- research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Sabin. Books on Demand.','Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.','Sicko, D. (2010). Techno Rebels. 2nd edn. Wayne State University Press.'],
+ research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Krumminga. Books on Demand.','Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.','Sicko, D. (2010). Techno Rebels. 2nd edn. Wayne State University Press.'],
  foot:'Dates as given in Denk & von Thülen’s oral history.',
  items:[
   {chip:'1988',title:'Ufo',when:'1988',text:'West Berlin’s first acid house club opens in a Kreuzberg cellar. It is tiny, unlicensed and soon moves, but the people who run it will open Tresor three years later.'},
@@ -1783,7 +1783,7 @@ X4_cards({id:'after-the-wall',name:'After the Wall',tag:'A divided city suddenly
 const X4_LP=[[1989,150],[1990,2000],[1991,6000],[1992,15000],[1993,30000],[1994,110000],[1995,280000],[1996,750000],[1997,1000000],[1998,800000],[1999,1500000]];
 SCENE({id:'after-the-wall-loveparade',name:'The Love Parade grows',tag:'From 150 people to over a million',
  definition:'The Love Parade began in 1989 as a march of about 150 people behind one van. Ten years later it filled the centre of Berlin, and techno had gone from a few cellars to a mass event.',
- example:'Attendance is estimated at about 6,000 in 1991, about 110,000 in 1994 and about a million in 1997. Each bar on a logarithmic scale is ten times the one a step below.',
+ example:'Attendance is estimated at about 6,000 in 1991, about 110,000 in 1994 and about a million in 1997. On the logarithmic scale each gridline stands for ten times the one below it.',
  desc:'Bars of estimated attendance for each year from 1989 to 1999 on a logarithmic scale, with a year slider.',
  research:['Denk, F. & von Thülen, S. (2014). Der Klang der Familie. Books on Demand.','Borneman, J. & Senders, S. (2000). Politics without a head: is the “Love Parade” a new form of political identification? Cultural Anthropology 15(2), 294–317.','Helbing, D. & Mukerji, P. (2012). Crowd disasters as systemic failures: analysis of the Love Parade disaster. EPJ Data Science 1, 7.'],
  dur:11,hint:'Move the year. The figures are organisers’ and press estimates and differ between sources.',
@@ -1937,7 +1937,7 @@ X4_cards({id:'minimal-people',name:'Who made minimal',tag:'Detroit, Berlin, Wind
  research:['Sicko, D. (2010). Techno Rebels. Wayne State University Press.','Sherburne, P. (2001). The rules of reduction. The Wire 209.','Rapp, T. (2010). Lost and Sound. Innervisions.','Reynolds, S. (2013). Energy Flash. Faber.'],
  foot:'Each is described by documented releases only.',
  items:[
-  {chip:'Hood',title:'Robert Hood',when:'Detroit, 1994',text:'A founding member of Underground Resistance. “Minimal Nation” (1994) reduces techno to drum machine, bass figure and a few stabbing notes, and gives the style a name.'},
+  {chip:'Hood',title:'Robert Hood',when:'Detroit, 1994',text:'An early member of Underground Resistance. “Minimal Nation” (1994) reduces techno to drum machine, bass figure and a few stabbing notes, and gives the style a name.'},
   {chip:'BC',title:'Basic Channel',when:'Berlin, 1993–95',text:'Moritz von Oswald and Mark Ernestus release nine twelve-inches in which chords are smeared by echo and filtering over a steady pulse. The approach becomes dub techno.'},
   {chip:'Hawtin',title:'Plastikman',when:'Windsor, Ontario, 1993–98',text:'Richie Hawtin, across the river from Detroit, makes slow, sparse acid as Plastikman: “Sheet One” (1993), “Musik” (1994) and the near-empty “Consumed” (1998).'},
   {chip:'Bell',title:'Daniel Bell',when:'Detroit, 1990s',text:'As DBX he makes dry, clicking tracks from very few sounds. Berlin producers of the next decade name him as a model.'},
@@ -2002,7 +2002,7 @@ SCENE({id:'berghain-era-long-sets',name:'Long sets',tag:'The arithmetic of a nig
  }});
 
 /* Techno era 4 · Berlin (1989–2004): lessons, sources and connections. */
-SOURCE('x4-klang',{title:'Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Sabin. Books on Demand.',note:'An oral history told by the people who ran the clubs and played in them.'});
+SOURCE('x4-klang',{title:'Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Krumminga. Books on Demand.',note:'An oral history told by the people who ran the clubs and played in them.'});
 SOURCE('x4-rapp',{title:'Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.'});
 SOURCE('x4-sicko',{title:'Sicko, D. (2010). Techno Rebels: The Renegades of Electronic Funk. 2nd edn. Wayne State University Press.'});
 SOURCE('x4-brown',{title:'Brown Jr., D. (2022). Assembling a Black Counter Culture. Primary Information.'});
@@ -2080,7 +2080,7 @@ SOURCE('x5-eipa-1990',{title:'Entertainments (Increased Penalties) Act 1990, c. 
 SOURCE('x5-noise-2005',{title:'The Control of Noise at Work Regulations 2005 (UK): exposure action values of 80 and 85 dB(A).',url:'https://www.legislation.gov.uk/uksi/2005/1643/contents/made'});
 SOURCE('x5-autechre-1994',{title:'Autechre (1994). Anti EP. Warp Records (sleeve statement on the Criminal Justice Bill).'});
 SOURCE('x5-bellefortune-2004',{title:'Brian Belle-Fortune (2004). All Crews: Journeys Through Jungle / Drum & Bass Culture. Vision.'});
-SOURCE('x5-reynolds-continuum',{title:'Simon Reynolds (2009–2013). The Hardcore Continuum: a series of essays written for The Wire.',note:'The thesis is Reynolds’s own and is debated.'});
+SOURCE('x5-reynolds-continuum',{title:'Simon Reynolds (1992–2005; collected online by The Wire, 2009). The Hardcore Continuum: a series of essays written for The Wire.',note:'The thesis is Reynolds’s own and is debated.'});
 SOURCE('x5-music-in-motion',{title:'Music In Motion: rhythm, metre and syncopation, with step sequencers.',url:'https://music-in-motion.puter.site/',note:'Sister course: see “Rhythm around the world” for beat, metre and swing.'});
 
 LESSON({id:'acid-house-summer',name:'The acid house summers',short:'Acid house',stage:'rave',year:'1987–1990',level:'Introduction',
@@ -2423,7 +2423,7 @@ X5_cards({id:'after-rave-continuum',name:'Superclubs and the “hardcore continu
  definition:'After 1994 British dance music can be told as two stories: a move into large licensed “superclubs”, and a line of bass-heavy London styles that the critic Simon Reynolds named the “hardcore continuum”. The second is one writer’s thesis, and it is argued over.',
  example:'Reynolds traces hardcore to jungle, to UK garage, to grime and dubstep, each carried by pirate radio and specialist record shops. Critics reply that the line is too tidy and too centred on London.',
  desc:'Five chips: superclubs, where techno went, the continuum idea, pirate radio, and the critiques, each with a panel of text.',
- research:['Reynolds, S. (2009–2013). The Hardcore Continuum series of essays, The Wire (the thesis, labelled as his).','Reynolds, S. (1998). Energy Flash. Picador.','Collin, M. (1997). Altered State. Serpent’s Tail.','Garratt, S. (1998). Adventures in Wonderland. Headline.'],
+ research:['Reynolds, S. (1992–2005; collected online by The Wire, 2009). The Hardcore Continuum series of essays, The Wire (the thesis, labelled as his).','Reynolds, S. (1998). Energy Flash. Picador.','Collin, M. (1997). Altered State. Serpent’s Tail.','Garratt, S. (1998). Adventures in Wonderland. Headline.'],
  hint:'Press each chip. The “continuum” is a critic’s idea, presented with the objections to it.',
  heading:'Britain after 1994',foot:'The continuum is Simon Reynolds’s thesis, not a settled fact',
  items:[
@@ -2435,7 +2435,7 @@ X5_cards({id:'after-rave-continuum',name:'Superclubs and the “hardcore continu
 
 /* Techno era 5 · UK and rave: word meanings. */
 WORD(
- {key:'acid-house',title:'Acid house',aliases:['acid house'],linkContext:'acid-house-summer',scene:'acid-house-summer',here:'A style of house music built around the squelching bassline of the Roland TB-303, first made in Chicago in the mid-1980s and taken up in Britain from 1987.',contrast:'The “acid” refers to the sound of the bassline, not to a drug.',example:'A kick on every beat, an off-beat hat, a clap and a 303 line.'},
+ {key:'acid-house',title:'Acid house',aliases:['acid house'],linkContext:'acid-house-summer',scene:'acid-house-summer',here:'A style of house music built around the squelching bassline of the Roland TB-303, first made in Chicago in the mid-1980s and taken up in Britain from 1987.',contrast:'Where the “acid” comes from is disputed: some accounts tie it to the harsh sound of the bassline, others to LSD.',example:'A kick on every beat, an off-beat hat, a clap and a 303 line.'},
  {key:'balearic',title:'Balearic',aliases:['Balearic'],linkContext:'acid-house-summer',scene:'acid-house-summer',here:'The eclectic DJ style heard on Ibiza in the mid-1980s, mixing house with pop, rock and soul records.',contrast:'A way of choosing records rather than a kind of record.',example:'DJ Alfredo’s sets at Amnesia in 1987.'},
  {key:'second-summer-of-love',title:'Second Summer of Love',aliases:['Second Summer of Love'],linkContext:'acid-house-summer',scene:'acid-house-summer',here:'A nickname for the rise of acid house in Britain in 1988 and 1989.',contrast:'The first Summer of Love was in San Francisco in 1967.',example:'Used for 1988, 1989, or both, depending on the writer.'},
  {key:'orbital-rave',title:'Orbital rave',aliases:['orbital rave','orbital raves'],linkContext:'acid-house-summer',scene:'acid-house-summer-spread',here:'A large pay party of 1989 held in a warehouse, hangar or field near London’s M25 orbital motorway.',contrast:'Commercial and ticketed, unlike a free party.',example:'Sunrise at White Waltham airfield, June 1989.'},
@@ -2577,7 +2577,7 @@ SCENE({id:'tempo-and-kick-shape',name:'The shape of a kick',tag:'A falling pitch
  on:{pre(s,v){s.pre=v;Object.assign(s,X6_KPRE[v]);return 'keep'},from(s,v){s.from=+v;s.pre='';return 'keep'},to(s,v){s.to=+v;s.pre='';return 'keep'},decay(s,v){s.decay=+v;s.pre='';return 'keep'},
   hit(s){AUDIO.kick({from:s.from,to:s.to,decay:s.decay,gain:.28});return 'keep'}},
  draw(s){
-  let out=heading(`${s.from} Hz falling to ${s.to} Hz in ${Math.round(s.decay*1000)} ms`,28);
+  let out=heading(`${s.from} Hz falling to ${s.to} Hz; the kick lasts ${Math.round(s.decay*1000)} ms`,28);
   const px=70,pw=480,XX=t=>px+t/.8*pw;
   // pitch
   const y1=60,h1=80,YP=f=>y1+h1-(Math.log(f/30)/Math.log(10))*h1;out+=R(px,y1,pw,h1,'#fff',C.grid,4)+T(px+6,y1+16,'pitch',12,C.blue,'start');
@@ -2685,7 +2685,7 @@ const X6_SLPRE={none:[0,0,0,0,0,0,0,0],acc:[0,1,0,0,1,0,0,1],sl:[0,2,0,0,2,2,0,0
 const X6_SLSPEC={N:8,ms:s=>30000/s.bpm,step(s,i){const mk=s.marks[i],prev=X6_SL[(i+7)%8],sl=mk>=2,st=30/s.bpm;
   AUDIO.acid(midiHz(X6_SL[i]),{dur:sl?st*1.05:st*.55,gain:.1,cutoff:450,env:1400,res:13,decay:.14,accent:mk===1||mk===3,slideFrom:sl?midiHz(prev):0})}};
 SCENE({id:'acid-accent-slide',name:'Accent and slide',tag:'Two switches per step',
- definition:'Each step of a TB-303 pattern can carry two marks. Accent makes the note louder and opens the filter further. Slide holds the note for its full length and glides the pitch into it from the note before.',
+ definition:'Each step of a TB-303 pattern can carry two marks. Accent makes the note louder and opens the filter further. Slide ties a note to the next with no gap and glides the pitch between them. On the 303 the mark sits on the first of the two notes; this model puts it on the note the glide arrives at.',
  example:'The same eight notes sound mechanical with no marks, punchy with accents, and rubbery and vocal with slides.',
  desc:'Eight notes on a pitch grid. Each can be plain, accented, slid or both; accented notes are drawn larger and slides are drawn as a line gliding from the previous note.',
  research:['Roland Corporation (1981). TB-303 Bass Line Owner’s Manual (accent and slide).','Butler, M. J. (2006). Unlocking the Groove. Indiana University Press.','Original pattern; simplified model of the accent and slide circuits.'],
@@ -2733,7 +2733,7 @@ SCENE({id:'dub-techno',name:'Dub techno: the echo',tag:'One chord, many repeats'
   out+=T(x0,268,'tall purple: the stab · pale: its echoes · blue dots: kick',12,C.muted,'start');
   out+=counter(60,284,'delay',ms+' ms',C.purple,120)+counter(196,284,'echoes heard',String(ev.filter(e=>e.k>0).length),C.blue,130)+counter(342,284,'each echo',Math.round(s.fb*100)+'% as loud',C.green,150);
   out+=T(300,362,'Each echo is also a little duller than the last.',13,C.muted);
-  return {svg:out,phase:s.d===3?'Three steps is three-quarters of a beat, so the echoes land off the kick and drift across the bar before lining up again. This cross-rhythm is the heart of the style.':s.d%4===0?'A delay of a whole beat puts every echo on a kick, where it is half hidden.':s.d===2?'Two steps is half a beat: the echoes fall neatly between the kicks.':'An odd delay time makes the echoes tumble against the beat.'};
+  return {svg:out,phase:s.d===3?'Three steps is three-quarters of a beat, so the echoes land off the kick and drift across the bar before lining up again. This cross-rhythm is the heart of the style.':s.d%4===0?'A delay of a whole beat puts every echo on a kick, where it is half hidden.':s.d===2?'Two steps is half a beat: the echoes alternate, one between the kicks and the next on a kick.':'An odd delay time makes the echoes tumble against the beat.'};
  }});
 
 const X6_SSPEC={N:16,ms:s=>15000/s.bpm,step(s,i){if(s.kick&&i%4===0)AUDIO.kick({from:130,to:46,decay:.4,gain:.22});if(s.hat&&i%4===2)X6_ohat(0,.03);
@@ -2774,7 +2774,7 @@ X6_cards({id:'dub-techno-roots',name:'From Kingston to Berlin',tag:'Where the ec
   {k:'Systems',t:'Sound systems',body:'Dub was made for Jamaican sound systems: mobile stacks of speakers playing to open-air dances, where the weight of the bass mattered more than the tune. Engineers cut exclusive one-off discs for them.',phase:'The same culture, carried to Britain, shaped the free-party sound systems and the idea of the dubplate.'},
   {k:'1993',t:'Berlin, 1993: Basic Channel',body:'Moritz von Oswald and Mark Ernestus began releasing records as Basic Channel in 1993. They stripped techno down to a kick, a hazy chord and its echoes, with tape hiss left in. They also ran a record shop, a mastering studio and, from 1995, the label Chain Reaction.',phase:'Their later project Rhythm & Sound worked directly with reggae singers, making the Jamaican link explicit.'},
   {k:'Method',t:'What was borrowed',body:'Three things: echo timed to the beat, so repeats make a rhythm; filtering and reverb used to move a sound nearer or further away; and subtraction, where muting a part is as much of an event as adding one.',phase:'None of these needs a melody. That is why the style can hold attention with one chord for ten minutes.'},
-  {k:'Since',t:'Since then',body:'The approach spread widely: to Detroit, where producers recorded for Basic Channel’s labels, and to artists in many countries who work with long delays, soft chords and deliberate noise. “Dub techno” became the usual name for it.',phase:'It remains one of techno’s slowest and quietest branches, typically around 115–128 BPM.'}]});
+  {k:'Since',t:'Since then',body:'The approach spread widely: to Detroit, where producers took up the style, and to artists in many countries who work with long delays, soft chords and deliberate noise. “Dub techno” became the usual name for it.',phase:'It remains one of techno’s slowest and quietest branches, typically around 115–128 BPM.'}]});
 
 /* =========================== hard-and-industrial =========================== */
 const X6_shape=(x,mode)=>mode==='soft'?Math.tanh(x):clamp(x,-1,1);
@@ -2999,7 +2999,7 @@ SCENE({id:'eq-mixing',name:'Mixing with the EQ',tag:'Only one bassline at a time
  definition:'A DJ mixer has low, mid and high controls for each channel. During a blend the DJ turns one record’s bass down before bringing the other’s up, because two basslines and two kicks at once turn to mud.',
  example:'Track B comes in with only its hats. Then its mids. At the phrase change, A’s low goes out and B’s low comes in on the same beat: the bass swap.',
  desc:'Two mixer channels with low, mid and high buttons each, and a meter of how much bass is playing in total.',
- research:'Brewster, B. & Broughton, F. (2002). How to DJ (Properly). · Butler (2006), ch. 6. · Three-band isolators became common on club mixers in the 1970s–80s (Bozak, UREI, later Rane and Pioneer).',
+ research:'Brewster, B. & Broughton, F. (2002). How to DJ (Properly). · Butler (2006), ch. 6. · Early club mixers (Bozak, UREI) had only bass and treble controls; some 1970s–80s DJs cut frequencies with a separate crossover or isolator. Three-band EQ on every channel became standard on DJ mixers in the 1990s.',
  dur:11,hint:'Press Play. Switch bands on and off on each track. Try both lows at once, then swap them. A simplified model: real EQs turn smoothly.',
  init:()=>({xa:{low:true,mid:true,high:true},xb:{low:false,mid:false,high:true},playing:false,pos:-1}),
  watch(p){const st=Math.min(4,Math.floor(p*5));return {xa:{low:st<3,mid:st<4,high:st<4},xb:{low:st>=3||st===2&&false,mid:st>=1,high:true},playing:false,pos:-1,both:st===2}},
@@ -3176,10 +3176,10 @@ SCENE({id:'arrangement',name:'How a track is laid out',tag:'Layers that enter an
  }});
 
 const X7_tension=(bar,nk)=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [.2,.25+.25*u,.5,nk?.5+.45*u:.5,.45,.3-.1*u][si]};
-const X7_cut=bar=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [300,300+900*u,1200,400*Math.pow(10,u*1.05),3000,800-500*u][si]};
+const X7_cut=bar=>{const [si,a]=X7_sectAt(bar),u=(bar-a)/X7_SECT[si][1];return [300,300+900*u,1200,400*Math.pow(10,u*1.05),4000,800-500*u][si]};
 SCENE({id:'arrangement-tension',name:'Tension and release',tag:'The filter is the storyteller',
  definition:'Producers build tension by taking away something the listener expects, usually the kick, and by slowly opening a filter so the sound brightens. Release comes when the kick returns.',
- example:'During a 16-bar break the lead’s filter cutoff climbs from 400 Hz to over 4 kHz and a noise riser swells. Then, on beat 1, the kick is back.',
+ example:'During a 16-bar break the lead’s filter cutoff climbs from 400 Hz to nearly 4 kHz and a noise riser swells. Then, on beat 1, the kick is back.',
  desc:'A curve of the lead’s filter cutoff across the track and a second curve of expected tension, with the break shaded; removing the kick in the break changes the tension curve.',
  research:'Butler (2006), ch. 5. · Solberg, R. T. & Jensenius, A. R. (2017). Group behaviour and interpersonal synchronization to electronic dance music. Musicae Scientiae (movement changes around break and drop). · The tension curve is this page’s illustration, not measured data.',
  dur:11,hint:'Slide through the track and press Hear to listen to the lead at that point. Switch “kick stays in the break” to hear how little tension is left.',
@@ -3491,7 +3491,7 @@ SCENE({id:'credit-and-erasure-lineups',name:'Counting festival line-ups',tag:'Wh
 
 const X8_EVENTS=[[1981,'d','Cybotron','Juan Atkins and Rik Davis release “Alleys of Your Mind” in Detroit.'],[1985,'d','Model 500','Atkins starts the Metroplex label; “No UFO’s” follows.'],[1987,'d','Transmat','Derrick May’s label releases “Strings of Life”.'],
  [1988,'d','The name','A UK compilation, “Techno! The New Dance Sound of Detroit”, fixes the word “techno” for this music.'],[1988,'e','UK acid house','British clubs and raves take up Chicago and Detroit records.'],[1989,'d','Underground Resistance','Founded in Detroit as an independent label and collective.'],
- [1989,'e','The Wall falls','East Berlin’s empty buildings open up; the first Love Parade is held with about 150 people.'],[1991,'e','Tresor opens','A Berlin club in a former department-store vault, booking Detroit artists from the start.'],[1992,'e','A European industry','Labels, clubs and festivals across Europe now dominate techno’s sales and press.']];
+ [1989,'e','The Wall falls','In July the first Love Parade is held in West Berlin with about 150 people. In November the Wall falls, and East Berlin’s empty buildings open up.'],[1991,'e','Tresor opens','A Berlin club in a former department-store vault, booking Detroit artists from the start.'],[1992,'e','A European industry','Labels, clubs and festivals across Europe now dominate techno’s sales and press.']];
 SCENE({id:'credit-and-erasure-story',name:'Which came first',tag:'Detroit before Berlin',
  definition:'Techno is often described as a European, and especially a Berlin, invention. The record of releases shows the sound and the name were established in Detroit by Black artists before Berlin’s clubs opened.',
  example:'“Techno! The New Dance Sound of Detroit” came out in 1988. The Berlin Wall fell in 1989. Tresor opened in 1991, and booked Detroit artists from its first year.',
@@ -3604,7 +3604,7 @@ SCENE({id:'tools-today-sidechain',name:'Sidechain pumping',tag:'The kick ducks e
 const X8_GR=[
  {k:[0,4,8,12],c:[4,12],h:[0,2,4,6,8,10,12,14]},
  {k:[0,4,8,12],c:[4,12],h:[2,6,10,14]},
- {k:[0,4,8,11,12],c:[4,12],h:[2,6,7,10,14]},
+ {k:[0,4,8,11],c:[4,12],h:[2,6,7,10,14]},
  {k:[0,3,8,11],c:[4,7,12],h:[2,6,9,10,14,15]},
  {k:[0,3,5,10,13],c:[2,7,9,14],h:[1,4,6,11,12,15]}];
 // A rough syncopation count: hits that fall off the beat and are not followed by a hit on the next beat.
@@ -3633,7 +3633,7 @@ SCENE({id:'groove-science',name:'Why some rhythms make you move',tag:'You are th
   out+=counter(90,222,'rated',n+' of 5',C.blue,110)+counter(215,222,'this pattern',s.rate[lv]?String(s.rate[lv]):'not yet',C.coral,120)+counter(350,222,'off-beat score',String(X8_sync(p)),C.purple,130);
   out+=R(60,284,480,50,'#fff',C.grid,10)+X8_text(76,305,n>=5?'Does your highest rating sit in the middle? Five ratings from one person can easily miss it.':'Rate all five to see your own curve beside the published shape.',48);
   out+=T(300,362,'Techno’s four-on-the-floor sits at the regular end.',14,C.muted);
-  return {svg:out,phase:s.sim?'The simulated listener prefers the middle pattern. Real listeners vary: musicians and dancers tend to tolerate more syncopation.':'One explanation is prediction: a little syncopation leaves gaps where the body “fills in” the beat, which feels good. With too much, the beat cannot be predicted at all. Techno keeps the kick regular and puts its syncopation in the hats, bass and filter.'};
+  return {svg:out,phase:s.sim?'The simulated listener prefers the middle pattern. Real listeners vary.':'One explanation is prediction: a little syncopation leaves gaps where the body “fills in” the beat, which feels good. With too much, the beat cannot be predicted at all. Techno keeps the kick regular and puts its syncopation in the hats, bass and filter.'};
  }});
 
 const X8_EV=[
@@ -3654,7 +3654,7 @@ SCENE({id:'groove-science-bass',name:'Bass and the body',tag:'Low frequencies mo
   const on=s.vlf==='on',amp=on?1.118:1,e=X8_EV.find(q=>q[0]===s.e)||X8_EV[0],r=rng(77);let out=heading(on?'Hidden bass on: about 12% more movement':'Hidden bass off: the baseline');
   out+=R(50,54,330,96,'#fff',C.grid,10);for(let k=0;k<26;k++){const x=66+k*12,base=10+r()*16,a=base*amp;out+=L(x,102-a,x,102+a,on?C.coral:'#9db2bf',3)+Ci(x,102-a,3.5,on?C.coral:'#7f97a5')}
   out+=TF(215,166,'each line: how far one dancer moves (illustration)',12,C.muted);
-  out+=R(400,54,150,96,'#fff',C.grid,10)+TF(475,74,'movement',12,C.muted)+R(420,84,110,14,'#dfe7ec','none',7)+TF(475,112,'off: 100%',12,C.muted)+R(420,120,110*amp/1.2+0,14,on?C.coral:'#dfe7ec','none',7)+TF(475,146,on?'on: about 112%':'on: —',12,on?C.coral:C.muted);
+  out+=R(400,54,150,96,'#fff',C.grid,10)+TF(475,74,'movement',12,C.muted)+R(420,84,110/1.2,14,'#dfe7ec','none',7)+TF(475,112,'off: 100%',12,C.muted)+R(420,120,110*amp/1.2+0,14,on?C.coral:'#dfe7ec','none',7)+TF(475,146,on?'on: about 112%':'on: —',12,on?C.coral:C.muted);
   out+=X8_card(176,166,e[1],'Strength: '+e[3],e[2],e[0]==='body'?C.amber:C.green);
   out+=T(300,364,'Suggestive evidence, not settled science',14,C.muted);
   return {svg:out,phase:e[0]==='cameron'?'The striking part is that the audience could not detect the extra bass, so the effect is not a matter of taste or expectation. It is still a single event with one audience.':e[0]==='hove'?'This is a finding about hearing and timing, measured with EEG and tapping. It fits the fact that in many traditions the lowest instruments keep time.':'A plausible story, with physiology behind it, but the direct evidence in dancers is thin. Treat it as a hypothesis.'};
@@ -3682,7 +3682,7 @@ SCENE({id:'groove-science-tempo',name:'Tap your tempo',tag:'Where 120–130 come
   out+=L(x0,214,x0+w,214,C.line,1.5);for(const v of [80,100,120,140,160,180])out+=L(fx(v),214,fx(v),219,C.line,1.2)+TF(fx(v),234,v===180?'180 BPM':String(v),12,C.muted);
   if(ok)out+=L(fx(bpm),64,fx(bpm),214,C.amber,2.5)+Ci(fx(bpm),214,7,C.amber,'#fff');
   out+=counter(80,254,s.sim?'simulated tapper':'your tempo',ok?bpm.toFixed(1)+' BPM':'—',C.amber,150)+counter(245,254,'time between taps',ok?Math.round(m*1000)+' ms':'—',C.blue,150)+counter(410,254,'steadiness (SD)',ok?Math.round(sd)+' ms':'—',C.purple,130);
-  const where=!ok?'':bpm<118?'slower than most house and techno':bpm<=130?'inside the most common band':bpm<=140?'in techno’s usual range':'in hard-techno territory';
+  const where=!ok?'':bpm<118?'slower than most house and techno':bpm<120?'just under the most common band':bpm<=130?'inside the most common band':bpm<=140?'in techno’s usual range':'in hard-techno territory';
   out+=T(300,346,ok?'Your tempo is '+where+'.':'Typical ranges are approximate.',15,C.ink);
   return {svg:out,phase:ok?'A comfortable tapping speed of about two per second is close to walking pace, which is one proposed reason for the peak. Faster styles deliberately push above it for intensity.':'Why 120–130? One idea is that the body’s movements have a natural resonance near 2 Hz, the rate of a brisk walk. The evidence is suggestive; culture and DJ convention also keep tempos close together so records can be mixed.'};
  }});

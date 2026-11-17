@@ -13,7 +13,7 @@ SOURCE('x5-eipa-1990',{title:'Entertainments (Increased Penalties) Act 1990, c. 
 SOURCE('x5-noise-2005',{title:'The Control of Noise at Work Regulations 2005 (UK): exposure action values of 80 and 85 dB(A).',url:'https://www.legislation.gov.uk/uksi/2005/1643/contents/made'});
 SOURCE('x5-autechre-1994',{title:'Autechre (1994). Anti EP. Warp Records (sleeve statement on the Criminal Justice Bill).'});
 SOURCE('x5-bellefortune-2004',{title:'Brian Belle-Fortune (2004). All Crews: Journeys Through Jungle / Drum & Bass Culture. Vision.'});
-SOURCE('x5-reynolds-continuum',{title:'Simon Reynolds (2009–2013). The Hardcore Continuum: a series of essays written for The Wire.',note:'The thesis is Reynolds’s own and is debated.'});
+SOURCE('x5-reynolds-continuum',{title:'Simon Reynolds (1992–2005; collected online by The Wire, 2009). The Hardcore Continuum: a series of essays written for The Wire.',note:'The thesis is Reynolds’s own and is debated.'});
 SOURCE('x5-music-in-motion',{title:'Music In Motion: rhythm, metre and syncopation, with step sequencers.',url:'https://music-in-motion.puter.site/',note:'Sister course: see “Rhythm around the world” for beat, metre and swing.'});
 
 LESSON({id:'acid-house-summer',name:'The acid house summers',short:'Acid house',stage:'rave',year:'1987–1990',level:'Introduction',

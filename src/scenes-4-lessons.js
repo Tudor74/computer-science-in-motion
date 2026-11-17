@@ -1,5 +1,5 @@
 /* Techno era 4 · Berlin (1989–2004): lessons, sources and connections. */
-SOURCE('x4-klang',{title:'Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Sabin. Books on Demand.',note:'An oral history told by the people who ran the clubs and played in them.'});
+SOURCE('x4-klang',{title:'Denk, F. & von Thülen, S. (2014). Der Klang der Familie: Berlin, Techno and the Fall of the Wall. Trans. J. Krumminga. Books on Demand.',note:'An oral history told by the people who ran the clubs and played in them.'});
 SOURCE('x4-rapp',{title:'Rapp, T. (2010). Lost and Sound: Berlin, Techno and the Easyjet Set. Innervisions.'});
 SOURCE('x4-sicko',{title:'Sicko, D. (2010). Techno Rebels: The Renegades of Electronic Funk. 2nd edn. Wayne State University Press.'});
 SOURCE('x4-brown',{title:'Brown Jr., D. (2022). Assembling a Black Counter Culture. Primary Information.'});

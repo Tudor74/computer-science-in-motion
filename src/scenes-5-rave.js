@@ -317,7 +317,7 @@ X5_cards({id:'after-rave-continuum',name:'Superclubs and the “hardcore continu
  definition:'After 1994 British dance music can be told as two stories: a move into large licensed “superclubs”, and a line of bass-heavy London styles that the critic Simon Reynolds named the “hardcore continuum”. The second is one writer’s thesis, and it is argued over.',
  example:'Reynolds traces hardcore to jungle, to UK garage, to grime and dubstep, each carried by pirate radio and specialist record shops. Critics reply that the line is too tidy and too centred on London.',
  desc:'Five chips: superclubs, where techno went, the continuum idea, pirate radio, and the critiques, each with a panel of text.',
- research:['Reynolds, S. (2009–2013). The Hardcore Continuum series of essays, The Wire (the thesis, labelled as his).','Reynolds, S. (1998). Energy Flash. Picador.','Collin, M. (1997). Altered State. Serpent’s Tail.','Garratt, S. (1998). Adventures in Wonderland. Headline.'],
+ research:['Reynolds, S. (1992–2005; collected online by The Wire, 2009). The Hardcore Continuum series of essays, The Wire (the thesis, labelled as his).','Reynolds, S. (1998). Energy Flash. Picador.','Collin, M. (1997). Altered State. Serpent’s Tail.','Garratt, S. (1998). Adventures in Wonderland. Headline.'],
  hint:'Press each chip. The “continuum” is a critic’s idea, presented with the objections to it.',
  heading:'Britain after 1994',foot:'The continuum is Simon Reynolds’s thesis, not a settled fact',
  items:[
