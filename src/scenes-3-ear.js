@@ -57,7 +57,7 @@ SCENE({id:'outer-middle-ear',name:'Why we need a middle ear',tag:'Matching air t
  }});
 
 SCENE({id:'outer-middle-ear-canal',name:'The ear canal resonates',tag:'A tube closed at one end',
- definition:'The ear canal is a tube about 2.5 cm long, open at the outside and closed by the eardrum. Like a bottle, it resonates at the frequency whose quarter-wavelength fits its length, boosting sounds near 3 kHz by roughly 10 to 15 dB.',
+ definition:'The ear canal is a tube about 2.5 cm long, open at the outside and closed by the eardrum. Like an organ pipe closed at one end, it resonates at the frequency whose quarter-wavelength fits its length, boosting sounds near 3 kHz by roughly 10 to 15 dB.',
  example:'With c = 343 m/s and L = 2.5 cm, the resonance is 343 ÷ (4 × 0.025) ≈ 3,400 Hz, close to where human hearing is most sensitive.',
  desc:'A tube closed at the eardrum with the pressure of a quarter-wave standing wave drawn inside it, and a gain curve with its peak at c/4L.',
  research:'Shaw (1974). Transformation of sound pressure level from the free field to the eardrum in the horizontal plane. JASA 56, 1848–1861. · Wiener & Ross (1946). The pressure distribution in the auditory canal. JASA 18.',
@@ -201,7 +201,7 @@ SCENE({id:'cochlea-bekesy',name:'Békésy’s wave, and the living cochlea',tag:
  }});
 
 /* ===================== Lesson: hair-cells ===================== */
-const S3_po=x=>1/(1+Math.exp(-(x-20)/12));
+const S3_po=x=>1/(1+Math.exp(-(x-23)/12));
 SCENE({id:'hair-cells',name:'Hair cells turn bending into signals',tag:'Tip links pull channels open',
  definition:'On top of each hair cell is a bundle of stereocilia in rows of rising height, joined by fine tip links. Bending the bundle towards the tallest row stretches the tip links and opens ion channels; bending it back closes them.',
  example:'Deflections of about a nanometre, close to the width of a few atoms, are enough to change the current. About 10–15% of channels are open at rest, so the cell can signal both directions.',
@@ -242,7 +242,7 @@ SCENE({id:'hair-cells-outer',name:'Outer hair cells amplify',tag:'The cochlear a
  ui:[{choose:[[1,'Outer hair cells healthy'],[0,'Lost']],label:'Outer hair cells',get:s=>s.ohc,act:'ohc'},{range:'lev',label:'Input level',min:0,max:100,step:5,get:s=>s.lev,act:'lev',show:v=>v+' dB SPL'}],
  on:{ohc(s,v){s.ohc=+v},lev(s,v){s.lev=+v}},
  draw(s){
-  const io=(L,h)=>h?(L<=30?L+45:75+.2*(L-30)):L-11;let out=heading(s.ohc?'Healthy: sharp tuning and compression':'Outer hair cells lost: about 50 dB less gain');
+  const io=(L,h)=>h?(L<=30?L+39:69+.286*(L-30)):L-11;let out=heading(s.ohc?'Healthy: sharp tuning and compression':'Outer hair cells lost: about 50 dB less gain');
   // tuning curve at CF 4 kHz
   const x0=50,w=230,y0=320,h=210,f0=1000,f1=10000,ty=v=>y0-(100-v)/100*h;
   out+=S3_faxis(x0,y0,w,f0,f1,[1000,2000,4000,8000])+L(x0,y0,x0,y0-h,C.line,1.5);
@@ -287,7 +287,7 @@ SCENE({id:'hair-cells-oae',name:'The ear makes sounds',tag:'Otoacoustic emission
 /* ===================== Lesson: hearing-range ===================== */
 SCENE({id:'hearing-range',name:'The range of hearing',tag:'From 20 Hz to 20 kHz, unevenly',
  definition:'The quietest sound you can hear depends strongly on frequency. Young adults are most sensitive between about 2 and 5 kHz, need far more sound at low frequencies, and lose the highest frequencies with age.',
- example:'A 100 Hz tone must be about 25 dB more intense than a 3 kHz tone to be just heard. By 70, many people need about 40–60 dB more at 4–8 kHz than they did at 20.',
+ example:'A 100 Hz tone must be about 30 dB more intense than a 3 kHz tone to be just heard. By 70, many people need about 40–60 dB more at 4–8 kHz than they did at 20.',
  desc:'Threshold of hearing against frequency on a log scale (Terhardt’s fit for young adults), with an age-related shift added for the chosen age and the chosen frequency marked.',
  research:'Terhardt (1979). Calculating virtual pitch. Hearing Research 1 (threshold approximation). · ISO 226:2003 and ISO 389-7 (threshold of hearing). · ISO 7029 (age-related thresholds; the age curves here are an approximation of its shape).',
  dur:10,hint:'Choose an age and move the frequency to read the threshold. Play uses a gentle level from your device; it is not a hearing test.',
@@ -415,7 +415,7 @@ SCENE({id:'hearing-loss-audiogram',name:'Reading an audiogram',tag:'Four common 
   S3_AF.forEach((f,i)=>{out+=L(xs(i),y0,xs(i),y0+h,C.grid,1)+TF(xs(i),y0-8,f>=1000?f/1000+'k':f,12,C.muted)});
   out+=TF(x0-8,y0-8,'Hz',12,C.muted,'end')+TF(x0-46,Y(50),'dB HL',12,C.muted,'middle','transform="rotate(-90 '+fmt(x0-46)+' '+fmt(Y(50))+')"');
   let d='';q.air.forEach((v,i)=>{d+=(i?'L':'M')+fmt(xs(i))+' '+fmt(Y(v))});out+=P(d,C.coral,2.4);q.air.forEach((v,i)=>{out+=Ci(xs(i),Y(v),7,'#fff',C.coral)});
-  if(q.bone){let b='';q.bone.forEach((v,i)=>{b+=(i?'L':'M')+fmt(xs(i)+10)+' '+fmt(Y(v))});out+=P(b,C.blue,1.8,'none','stroke-dasharray="4 3"');q.bone.forEach((v,i)=>{out+=TBF(xs(i)+10,Y(v)+5,'<',16,C.blue)});out+=TF(x0+8,Y(3),'< bone conduction',12,C.blue,'start')}
+  if(q.bone){let b='';q.bone.forEach((v,i)=>{b+=(i?'L':'M')+fmt(xs(i)+10)+' '+fmt(Y(v))});out+=P(b,C.blue,1.8,'none','stroke-dasharray="4 3"');q.bone.forEach((v,i)=>{out+=TBF(xs(i)+10,Y(v)+5,'△',16,C.blue)});out+=TF(x0+8,Y(3),'△ bone conduction',12,C.blue,'start')}
   out+=TF(x0+8,y0+h-8,'○ air conduction',12,C.coral,'start')+TF(x0+w-8,y0+h-8,'worse hearing is lower',12,C.muted,'end');
   out+=S3_note('Typical example patterns. Only an audiologist’s calibrated test measures hearing.',350);
   const say={normal:'All thresholds sit within the typical range near 0 dB HL.',noise:'A dip centred near 4 kHz with recovery at 8 kHz is the classic sign of noise exposure: the cochlea is most vulnerable around the place for 3–6 kHz.',age:'A steady slope downwards towards high frequencies is typical of age-related loss (presbycusis): consonants like s, f and th fade first.',cond:'Air conduction is down but bone conduction (vibration applied to the skull, bypassing the middle ear) is normal: the cochlea works and sound is blocked on the way in, for example by fluid or otosclerosis.'};
@@ -426,7 +426,7 @@ SCENE({id:'hearing-loss-hidden',name:'Hidden hearing loss?',tag:'Synapses before
  definition:'In mice, a noise that only temporarily raises thresholds can still permanently destroy up to about half the synapses between inner hair cells and nerve fibres. Thresholds recover, so the loss is “hidden” from a standard audiogram. Whether this happens to a meaningful degree in humans is still debated.',
  example:'Kujawa and Liberman (2009) exposed mice to 100 dB noise for 2 hours: thresholds returned to normal within two weeks, but about 50% of the synapses in the affected region were gone for good.',
  desc:'Two curves over the weeks after a noise: the temporary threshold shift fading to zero, and the synapse count staying low, for mice; and evidence cards for humans.',
- research:'Kujawa & Liberman (2009). Adding insult to injury: cochlear nerve degeneration after “temporary” noise-induced hearing loss. Journal of Neuroscience 29. · Prendergast et al. (2017). Hearing Research 344 (no clear effect in young adults). · Wu et al. (2019). Primary neural degeneration in the human cochlea. Journal of Neuroscience 39. · Bramhall et al. (2019). Hearing Research 377 (review).',
+ research:'Kujawa & Liberman (2009). Adding insult to injury: cochlear nerve degeneration after “temporary” noise-induced hearing loss. Journal of Neuroscience 29. · Prendergast et al. (2017). Hearing Research 344 (no clear effect in young adults). · Wu et al. (2019). Primary neural degeneration in the human cochlea: evidence for hidden hearing loss in the aging ear. Neuroscience 407, 8–20. · Wu et al. (2021). Primary neural degeneration in noise-exposed human cochleas. Journal of Neuroscience 41, 4439–4447. · Bramhall et al. (2019). Hearing Research 377 (review).',
  dur:10,hint:'Slide the weeks after exposure for the mouse data, then switch to humans to see why the question is still open.',
  init:()=>({wk:4,who:'mice'}),
  watch(p){return {wk:Math.round(p*16),who:p<.65?'mice':'humans'}},
@@ -434,7 +434,7 @@ SCENE({id:'hearing-loss-hidden',name:'Hidden hearing loss?',tag:'Synapses before
  on:{who(s,v){s.who=v},wk(s,v){s.wk=+v}},
  draw(s){
   if(s.who==='humans'){let out=heading('In humans: evidence is mixed');
-   const cards=[['Supports','Post-mortem ears show synapse loss with age and noise (Wu et al. 2019).',C.green],['Mixed','Some studies link noise history to weaker nerve responses; others find none (Bramhall 2019 review).',C.amber],['Against','Young adults with high noise exposure showed no clear deficit (Prendergast 2017).',C.coral],['Open','Better tests are needed; “hidden” loss may explain some trouble hearing in noise.',C.blue]];
+   const cards=[['Supports','Post-mortem ears show nerve-fibre loss with age and noise (Wu et al. 2019, 2021).',C.green],['Mixed','Some studies link noise history to weaker nerve responses; others find none (Bramhall 2019 review).',C.amber],['Against','Young adults with high noise exposure showed no clear deficit (Prendergast 2017).',C.coral],['Open','Better tests are needed; “hidden” loss may explain some trouble hearing in noise.',C.blue]];
    cards.forEach(([t,b,col],i)=>{const x=40+(i%2)*270,y=70+Math.floor(i/2)*130;out+=R(x,y,250,112,'#fff',col,10)+TBF(x+14,y+26,t,14,col,'start');const words=b.split(' ');let line='',ly=y+50;for(const w of words){if((line+w).length>34){out+=TF(x+14,ly,line.trim(),12,C.ink,'start');line='';ly+=17}line+=w+' '}out+=TF(x+14,ly,line.trim(),12,C.ink,'start')});
    out+=S3_note('Status: shown in animals; in humans, plausible but debated.',344);
    return {svg:out,phase:'The mechanism is clear in rodents and synapse loss is seen in human temporal bones, but whether everyday noise causes measurable hidden loss in living people is unresolved.'}}

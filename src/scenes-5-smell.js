@@ -43,7 +43,7 @@ const S5_od=id=>S5_ODS.find(o=>o.id===id);
 const S5_shared=(a,b)=>a.a.filter((v,i)=>v>.15&&b.a[i]>.15).length;
 SCENE({id:'odorant-receptors',name:'Odorant receptors',tag:'A smell is a pattern',
  definition:'Smell starts with odorant receptors: proteins on the hair-like cilia of nerve cells high in the nose. Each odorant switches on several receptor types to different degrees, and each receptor type responds to many odorants, so a smell is coded by the pattern across receptors.',
- example:'Vanillin and geosmin share one weakly activated receptor in this sketch but otherwise use different ones. The brain tells them apart by the whole pattern, not by any single receptor.',
+ example:'Vanillin and geosmin share two receptor types in this sketch, each only weakly activated by one of them, but otherwise use different ones. The brain tells them apart by the whole pattern, not by any single receptor.',
  desc:'Bars showing how strongly each of 12 receptor types responds to one or two chosen odorants, with the receptors they share counted.',
  research:'Buck, L. & Axel, R. (1991). A novel multigene family may encode odorant receptors. Cell 65, 175–187 (Nobel Prize 2004). Malnic, Hirono, Sato & Buck (1999). Combinatorial receptor codes for odors. Cell 96, 713–723. The activation patterns here are illustrative.',
  dur:12,hint:'Choose a first odorant, then a second to compare. Count the receptor types they share.',
@@ -250,7 +250,7 @@ SCENE({id:'smell-thresholds-home',name:'Your own threshold',tag:'A kitchen dilut
 
 const S5_SPEC={
  andro:{name:'Androstenone',gene:'OR7D4',src:'Keller et al. (2007), Nature 449, 468–472',rows:[['Cannot smell it at all',30],['Unpleasant: sweaty or urine-like',45],['Sweet or floral',25]],note:'The same molecule smells foul to some, pleasant to others, and of nothing to many. Variants of one receptor gene, OR7D4, explain part of this. Shares are approximate.'},
- cilantro:{name:'Coriander (cilantro) tastes of soap',gene:'OR6A2',src:'Mauer & El-Sohemy (2012), Flavour 1, 8; Eriksson et al. (2012)',rows:[['East Asian ancestry',21],['European ancestry',17],['African ancestry',14],['South Asian ancestry',7],['Hispanic',4],['Middle Eastern',3]],note:'Share of each group who say coriander leaf tastes soapy. A variant near the receptor gene OR6A2 is linked to it, but culture and familiarity matter too.'},
+ cilantro:{name:'Disliking coriander (cilantro)',gene:'OR6A2',src:'Mauer & El-Sohemy (2012), Flavour 1, 8; Eriksson et al. (2012)',rows:[['East Asian ancestry',21],['European ancestry',17],['African ancestry',14],['South Asian ancestry',7],['Hispanic',4],['Middle Eastern',3]],note:'Share of each group who dislike coriander leaf. A variant near the receptor gene OR6A2 is linked to finding it soapy, but culture and familiarity matter too.'},
  asparagus:{name:'Asparagus urine smell',gene:'variants near OR2M7',src:'Markt et al. (2016), BMJ 355, i6071',rows:[['Men who cannot smell it',58],['Women who cannot smell it',62]],note:'Most people in this large study of US health professionals could not smell the distinctive odour in their urine after eating asparagus.'}};
 SCENE({id:'smell-thresholds-specific',name:'Specific anosmias',tag:'Smell-blind to one thing',
  definition:'A specific anosmia is an inability to smell one particular odorant while the rest of smell works normally. Many are linked to common variants in single receptor genes.',
@@ -354,7 +354,7 @@ SCENE({id:'odour-mixtures-home',name:'Two smells at once',tag:'A kitchen mixture
 const S5_cueCurve=(cue,a)=>{const g=(m,sd)=>Math.exp(-((a-m)**2)/(2*sd*sd));return cue==='odour'?100*g(8,4.5)+18*g(64,6):cue==='word'?100*g(18,6)+30*g(64,6):92*g(19,6.5)+28*g(64,6)};
 SCENE({id:'smell-memory',name:'Smell and memory',tag:'Older memories',
  definition:'When older adults recall life memories prompted by a smell, the memories come mostly from early childhood. Words and pictures bring back memories mostly from adolescence and early adulthood.',
- example:'In studies of people in their 60s and 70s, smell-prompted memories peaked around age 6 to 10, word-prompted memories around 11 to 25.',
+ example:'In studies of people in their 60s and 70s, smell-prompted memories peaked around age 6 to 10, word-prompted memories later, in the teens.',
  desc:'The spread of the ages at which recalled memories happened, for memories prompted by smells, words or pictures.',
  research:'Willander, J. & Larsson, M. (2006). Smell your way back to childhood: autobiographical odor memory. Psychonomic Bulletin & Review 13, 240–244. Chu & Downes (2000). Curve shapes follow the published pattern; heights are illustrative.',
  dur:10,hint:'Choose the kind of cue to see when the memories it brings back come from.',

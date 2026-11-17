@@ -47,7 +47,7 @@ function S1_eyeDraw(focusMm,retinaMm,objY,lensLabel){
  let out=P(`M${lx-20} ${cy-100} Q${lx-60} ${cy} ${lx-20} ${cy+100}`,C.line,2)+P(`M${lx-20} ${cy-100} Q${rx+30} ${cy-110} ${rx+12} ${cy} Q${rx+30} ${cy+110} ${lx-20} ${cy+100}`,C.line,2);
  out+=L(rx,cy-70,rx,cy+70,C.coral,4)+TF(rx+6,cy-78,'retina',13,C.coral,'start');
  out+=`<ellipse cx="${lx}" cy="${cy}" rx="10" ry="${h+4}" fill="${C.pale}" stroke="${C.blue}" stroke-width="2"/>`+TF(lx,cy+h+26,lensLabel,13,C.blue);
- const iy=cy-objY*.35;
+ const iy=cy+objY*(fx-lx)/(lx-60);
  [-h,0,h].forEach(dy=>{const ox=60,oy=cy-objY;out+=L(ox,oy,lx,cy+dy,'#e0a24a',1.8);
   const sl=(iy-(cy+dy))/(fx-lx),endx=Math.min(fx,rx),endy=cy+dy+sl*(endx-lx);out+=L(lx,cy+dy,endx,endy,'#e0a24a',1.8);
   if(fx>rx)out+=L(rx,endy,fx,iy,'#e0a24a',1.4,'stroke-dasharray="4 4"');});
@@ -76,7 +76,7 @@ SCENE({id:'eye-optics',name:'Focusing the eye',tag:'Kepler’s lens',
 
 SCENE({id:'eye-optics-myopia',name:'Short and long sight',tag:'Eye length and lenses',
  definition:'In myopia (short sight) the eye is too long for its focusing power, so distant objects focus in front of the retina; a diverging (minus) lens corrects it. In hyperopia the eye is too short, and a plus lens helps.',
- example:'In this simplified eye, each extra millimetre of length needs about −3.4 D of correction; real eyes, about 24 mm long, need roughly −2.7 D per millimetre. Myopia affected about 30% of people worldwide in 2020 and is rising fast.',
+ example:'In this simplified eye, each extra millimetre of length needs about −3.4 D of correction; real eyes, about 24 mm long, need roughly −2.7 D per millimetre. Myopia was estimated to affect about a third of people worldwide in 2020 and is rising fast.',
  desc:'Parallel rays from a distant object focusing in front of, on or behind the retina, with a correcting lens in front of the eye.',
  research:'Holden, B. A. et al. (2016). Global prevalence of myopia and high myopia and temporal trends from 2000 through 2050. Ophthalmology 123, 1036–1042. He, M. et al. (2015). Effect of time spent outdoors at school on the development of myopia. JAMA 314, 1142–1148 (outdoor time slows onset; evidence moderate).',
  dur:10,hint:'Make the eye longer, then find the lens power that brings the focus back onto the retina.',
@@ -118,7 +118,7 @@ SCENE({id:'eye-optics-kepler',name:'An image on the retina',tag:'From the camera
   const c=S1_KEP[s.k];let out=heading('An image on the back of the eye');
   const tree=(x,y,sc,col)=>L(x,y,x,y-30*sc,'#8a6d4f',3)+Ci(x,y-38*sc,14*Math.abs(sc),col);
   out+=R(40,70,200,130,'#2b3d47','none',6)+Ci(40,135,3,'#fff')+tree(20,175,1,'#3e8a4a');
-  out+=L(20,137,40,135,'#e0a24a',1.4)+L(40,135,230,175,'#e0a24a',1.4,'stroke-opacity=".6"')+tree(225,95,-1,'#3e8a4a');
+  out+=L(20,137,40,135,'#e0a24a',1.4)+L(40,135,225,116,'#e0a24a',1.4,'stroke-opacity=".6"')+tree(225,78,-1,'#3e8a4a');
   out+=TF(140,220,'camera obscura',13,C.muted);
   out+=`<ellipse cx="420" cy="135" rx="90" ry="70" fill="#fff" stroke="${C.line}" stroke-width="2"/>`+`<ellipse cx="335" cy="135" rx="8" ry="30" fill="${C.pale}" stroke="${C.blue}" stroke-width="2"/>`;
   out+=L(300,105,335,135,'#e0a24a',1.4)+L(335,135,505,165,'#e0a24a',1.4)+tree(495,115,-.6,'#3e8a4a')+TF(420,220,'eye: the image is upside down',13,C.muted);
@@ -220,7 +220,7 @@ const S1_coneT=t=>2+1.4*Math.exp(-t/1.5),S1_rodT=t=>-.4+6.5*Math.exp(-t/7);
 const S1_thr=(t,where)=>where==='fovea'?S1_coneT(t):Math.min(S1_coneT(t),S1_rodT(t));
 SCENE({id:'dark-adaptation',name:'Getting used to the dark',tag:'The two-branch curve',
  definition:'After bright light, the eye becomes more sensitive in the dark over about 30–40 minutes. Cones recover quickly but level off; rods recover slowly and become far more sensitive, taking over at the rod–cone break.',
- example:'In a dark cinema you see little at first, much more after 7–10 minutes when rods take over, and by half an hour your sensitivity has risen roughly ten-thousandfold. A light aimed at the fovea follows only the cone branch.',
+ example:'In a dark cinema you see little at first, much more after 7–10 minutes when rods take over, and by half an hour your sensitivity has risen several-thousandfold. A light aimed at the fovea follows only the cone branch.',
  desc:'Threshold intensity (log scale) against minutes in the dark, with cone and rod branches, the rod–cone break and a marker for the chosen time.',
  research:'Hecht, S., Haig, C. & Chase, A. M. (1937). The influence of light adaptation on subsequent dark adaptation of the eye. Journal of General Physiology 20, 831–850. (Curve shapes here are illustrative.)',
  dur:10,hint:'Move through the minutes. Switch the test light to the fovea and the rod branch disappears.',
@@ -276,7 +276,7 @@ SCENE({id:'dark-adaptation-purkinje',name:'Colours at dusk',tag:'The Purkinje sh
  ui:[{range:'lv',label:'Light level',min:-3,max:2,step:.5,get:s=>s.lv,act:'lv',show:v=>v>=1?'daylight':v>=-.5?'dusk':v>=-2?'moonlight':'starlight'}],
  on:{lv(s,v){s.lv=Number(v);return 'keep'}},
  draw(s){
-  const w=clamp((s.lv+2)/2.5,0,1),eff=l=>w*S1_V(l)+(1-w)*S1_Vs(l)*.9,br=eff(620),bb=eff(500),bright=Math.pow(10,(s.lv-2)/5);
+  const w=clamp((s.lv+2)/2.5,0,1),eff=l=>w*S1_V(l)+(1-w)*S1_Vs(l)*.9,br=eff(610),bb=eff(490),bright=Math.pow(10,(s.lv-2)/5);
   let out=heading(w>.8?'Daylight: cones see colour':w>.2?'Dusk: rods are taking over':'Night: rods only, no colour');
   const tone=(l,e)=>{const k=clamp(e*bright*1.2,0,1),g=Math.round(255*k);const cRGB=S1_wl(l,k);return w>.05?cRGB.replace('rgb(','').replace(')','').split(',').map(Number).map((v,i)=>Math.round(v*w+g*(1-w))).join(','):`${g},${g},${g}`};
   out+=R(40,60,520,230,`rgb(${Math.round(30*bright)},${Math.round(40*bright)},${Math.round(50*bright)})`,'none',8);
@@ -344,8 +344,10 @@ SCENE({id:'trichromacy-cones',name:'Three numbers for every colour',tag:'The con
  }});
 
 // Rayleigh match: red 670 nm + green 545 nm against yellow 589 nm, as in Nagel's anomaloscope.
-const S1_ray=(r,y)=>{const R1=S1_cone(670),G=S1_cone(545),Y=S1_cone(589);return {mL:r*R1.L+(1-r)*G.L,mM:r*R1.M+(1-r)*G.M,yL:y*Y.L,yM:y*Y.M}};
-const S1_rayBest=()=>{const R1=S1_cone(670),G=S1_cone(545),Y=S1_cone(589),t=Y.L/Y.M;// solve (rRL+(1-r)GL)/(rRM+(1-r)GM)=t
+// The red lamp is 15× as powerful as the green, to make up for the cones' weak response at 670 nm.
+const S1_rayRed=()=>{const c=S1_cone(670);return {L:15*c.L,M:15*c.M}};
+const S1_ray=(r,y)=>{const R1=S1_rayRed(),G=S1_cone(545),Y=S1_cone(589);return {mL:r*R1.L+(1-r)*G.L,mM:r*R1.M+(1-r)*G.M,yL:y*Y.L,yM:y*Y.M}};
+const S1_rayBest=()=>{const R1=S1_rayRed(),G=S1_cone(545),Y=S1_cone(589),t=Y.L/Y.M;// solve (rRL+(1-r)GL)/(rRM+(1-r)GM)=t
  const r=(t*G.M-G.L)/((R1.L-G.L)-t*(R1.M-G.M));const y=(r*R1.L+(1-r)*G.L)/Y.L;return {r,y}};
 SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Rayleigh match',
  definition:'Metamers are lights with different spectra that look identical, because they produce the same cone responses. Rayleigh’s match pairs a pure yellow with a mix of red and green; how much red a person needs reveals their cone types.',
@@ -364,7 +366,7 @@ SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Ra
   const pl=S1_plot(60,70,240,150,[500,700],[0,2.1],{xt:[[500,'500'],[600,'600'],[700,'700 nm']],yl:'light power'});out+=pl.svg;
   out+=R(pl.X(545)-4,pl.Y((1-s.r/100)*2),8,pl.Y(0)-pl.Y((1-s.r/100)*2),S1_wl(545),'none',2)+R(pl.X(670)-4,pl.Y(s.r/100*2),8,pl.Y(0)-pl.Y(s.r/100*2),S1_wl(670),'none',2);
   out+=R(pl.X(589)-4,pl.Y(Math.min(2.1,s.y/100)),8,pl.Y(0)-pl.Y(Math.min(2.1,s.y/100)),S1_wl(589),C.ink,2);
-  out+=TF(60,262,'thin bars: red + green mix · outlined bar: yellow',13,C.muted,'start');
+  out+=TF(60,262,'thin bars: red + green mix (red lamp 15× stronger) · outlined bar: yellow',13,C.muted,'start');
   const bar=(x,lab,a,b,col,on)=>{const k=60;return TF(x+40,90,lab,14,on?col:C.muted)+R(x,230-k*a,30,k*a,col,'none',3)+R(x+40,230-k*b,30,k*b,tint(col,.4),'none',3)+TF(x+15,248,'mix',13,C.muted)+TF(x+55,248,'yellow',13,C.muted)+(on?'':TF(x+40,140,'absent',13,C.muted))};
   out+=bar(340,'L cones',useL?v.mL:0,useL?v.yL:0,C.coral,useL)+bar(450,'M cones',useM?v.mM:0,useM?v.yM:0,C.green,useM);
   const b=S1_rayBest();out+=TF(60,300,`Typical match: about ${Math.round(b.r*100)}% red with yellow at ${Math.round(b.y*100)}%.`,13,C.ink,'start');
@@ -374,12 +376,12 @@ SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Ra
 
 /* =========================== opponent-colour =========================== */
 // Opponent channels from the cone curves, with illustrative weights chosen so unique yellow falls near 577 nm.
-const S1_opp=l=>{const v=S1_cone(l);return {lum:v.L+v.M,rg:v.L-1.62*v.M+.35*v.S,by:1.6*v.S-.5*(v.L+v.M)}};
+const S1_opp=l=>{const v=S1_cone(l);return {lum:v.L+v.M,rg:v.L-1.62*v.M+.35*v.S,by:clamp(18*v.S-.5*(v.L+v.M),-1,1)}};
 SCENE({id:'opponent-colour',name:'Red against green, blue against yellow',tag:'Hering’s opponent colours',
  definition:'Ewald Hering noticed that no colour looks reddish-green or yellowish-blue. He proposed opponent channels: red against green, blue against yellow, and light against dark. Each channel signals one side or the other, never both.',
  example:'At about 577 nm the red–green channel is balanced, so we see a yellow with no red or green in it: “unique yellow”. Orange is red plus yellow; teal is green plus blue; but there is no reddish green.',
  desc:'The red–green and blue–yellow channel signals for the chosen wavelength, computed from the cone responses, with the hue they signal.',
- research:'Hering, E. (1878/1920). Grundzüge der Lehre vom Lichtsinn. Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404. (Channel weights here are illustrative.)',
+ research:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn (theory first set out in the 1870s). Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404. (Channel weights here are illustrative.)',
  dur:10,hint:'Sweep the wavelength. Find where the red–green channel crosses zero: that is unique yellow.',
  init:()=>({l:577}),
  watch(p){return {l:Math.round(440+250*p)}},
@@ -392,7 +394,7 @@ SCENE({id:'opponent-colour',name:'Red against green, blue against yellow',tag:'H
    o2+=R(w<0?400+w:400,y,Math.abs(w),22,w<0?cn:cp,'none',3)+TF(255,y+40,neg,13,cn,'start')+TF(545,y+40,pos,13,cp,'end');return o2};
   out+=ch(96,'red–green channel',rg,'green','red',C.green,C.coral)+ch(186,'blue–yellow channel',by,'yellow','blue','#c99a1a',C.blue);
   const hue=(Math.abs(rg)<.04?'':rg>0?'red':'green')+(Math.abs(by)<.04?'':(Math.abs(rg)<.04?'':'-')+(by>0?'blue':'yellow'));
-  out+=TB(300,290,'Signalled hue: '+(hue||'neutral'),16,C.ink)+TF(300,316,Math.abs(rg)<.04?'Red–green is balanced: a unique hue.':'Never red and green at once.',13,C.muted);
+  out+=TB(300,290,'Signalled hue: '+(hue||(rg>0?'red':'neutral')),16,C.ink)+TF(300,316,Math.abs(rg)<.04&&Math.abs(by)>=.04?'Red–green is balanced: a unique hue.':'Never red and green at once.',13,C.muted);
   return {svg:out,phase:`At ${s.l} nm: red–green ${rg.toFixed(2)}, blue–yellow ${by.toFixed(2)}.`};
  }});
 

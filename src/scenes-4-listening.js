@@ -334,7 +334,7 @@ SCENE({id:'speech-perception-categories',name:'From “ba” to “da”',tag:'Y
  definition:'Categorical perception: along a smooth physical continuum between two speech sounds, listeners report one category, then switch sharply to the other, rather than hearing a gradual blend.',
  example:'Seven syllables differ only in how the second formant starts, from 1000 Hz to 1800 Hz. Most people call the first three “ba” and the last three “da”, with a steep change in between.',
  desc:'Fourteen trials of a seven-step synthetic “ba”–“da” continuum. The share of “da” answers at each step is plotted beside a typical steep identification curve.',
- research:'Liberman, Harris, Hoffman & Griffith (1957). The discrimination of speech sounds within and across phoneme boundaries. J. Exp. Psychol. 54, 358–368. · Pisoni & Lazarus (1974): listeners can hear differences inside a category, so the strong form is debated (McMurray 2022, Psychological Review).',
+ research:'Liberman, Harris, Hoffman & Griffith (1957). The discrimination of speech sounds within and across phoneme boundaries. J. Exp. Psychol. 54, 358–368. · Pisoni & Lazarus (1974): listeners can hear differences inside a category, so the strong form is debated (McMurray 2022, JASA 152, 3819–3842).',
  dur:10,hint:'Press Play, then answer “ba” or “da”. Fourteen trials in a fixed random order. The voice is synthetic. Your answers stay on this page.',
  init:()=>({seed:9,i:0,res:[]}),
  watch(p){const n=Math.min(14,Math.floor(p*15)),o=S4_contOrder(9),r=S4_rng(41),res=[];for(let i=0;i<n;i++){const k=o[i];res.push({k,da:r()<S4_logistic(k,3,2.6)})}return {seed:9,i:n,res,sim:true}},
@@ -381,7 +381,7 @@ SCENE({id:'pitch-perception',name:'Place and timing',tag:'Two codes for pitch',
  definition:'The ear has two ways to signal frequency: place (which part of the cochlea vibrates most) and timing (nerve fibres firing in step with each cycle, phase locking). Phase locking fades above a few kilohertz, so very high pitches rely on place alone.',
  example:'At 500 Hz fibres fire on the same part of nearly every cycle; at 6 kHz they can no longer keep up in step, and only the place of the peak says what the frequency is.',
  desc:'Left: the uncoiled cochlea from apex to base with the place of the peak for the chosen frequency. Right: a waveform with nerve spikes that line up with its peaks while phase locking is strong, and scatter when it is weak.',
- research:'Greenwood (1990). A cochlear frequency-position function for several species. JASA 87, 2592–2605. · Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122 (cat). · Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans. J. Neurosci. 39, 3938–3956 (human limit debated).',
+ research:'Greenwood (1990). A cochlear frequency-position function for several species. JASA 87, 2592–2605. · Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122 (cat). · Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans. Hearing Research 377, 109–121 (human limit debated).',
  dur:10,hint:'Slide the frequency and Play. Watch the place move along the cochlea and the spikes lose their lock to the wave.',
  init:()=>({f:500}),
  watch(p){return {f:Math.round(100*Math.pow(100,smooth(p)))}},
@@ -435,7 +435,7 @@ const S4_TUNE=[0,0,7,7,9,9,7,5,5,4,4,2,2,0];
 SCENE({id:'pitch-perception-melody',name:'Melodies at the top',tag:'Where musical pitch fades',
  definition:'Above about 4–5 kHz, tones are still heard and can be told apart, but they lose their musical quality: melodies become hard to recognise and octave judgements break down. This matches roughly where phase locking fades.',
  example:'A nursery tune played around 500 Hz is instantly familiar; moved up four octaves, near 8 kHz, many listeners struggle to name it even though every note is audible.',
- desc:'The same melody drawn on a log-frequency axis at the chosen octave shift, with the region where phase locking is strong shaded.',
+ desc:'The same melody drawn on a log-frequency axis at the chosen octave shift, with the region where phase locking is available shaded.',
  research:'Attneave & Olson (1971). Pitch as a medium: a new approach to psychophysical scaling. American Journal of Psychology 84, 147–166. · Ward (1954). Subjective musical pitch. JASA 26, 369–380. Recent work finds some listeners still hear melodies above 8 kHz (Lau, Mehta & Oxenham 2017, J. Neurosci. 37, 9013–9021).',
  dur:10,hint:'Play the tune, then shift it up octave by octave. Keep the volume low: high tones can be piercing.',
  init:()=>({oct:0}),
@@ -445,12 +445,12 @@ SCENE({id:'pitch-perception-melody',name:'Melodies at the top',tag:'Where musica
  draw(s){
   const base=midiHz(72+12*s.oct);let out=heading(`Melody starting at ${base>=1000?fmt(base/1000)+' kHz':Math.round(base)+' Hz'}`,26);
   const lx=f=>70+Math.log(f/200)/Math.log(80)*460,pl=S4_plot(70,64,460,220,[0,1],[0,1]);out+=pl.svg;
-  out+=R(70,64,lx(4000)-70,220,C.greenp,'none',0)+TF(lx(4000)-6,82,'phase locking strong',12,C.green,'end');
+  out+=R(70,64,lx(4000)-70,220,C.greenp,'none',0)+TF(lx(4000)-6,82,'phase locking available',12,C.green,'end');
   [[250,'250'],[500,'500'],[1000,'1k'],[2000,'2k'],[4000,'4k'],[8000,'8k'],[16000,'16k Hz']].forEach(([f,l])=>out+=L(lx(f),284,lx(f),290,C.line,1)+TF(lx(f),304,l,12,C.muted));
   S4_TUNE.forEach((m,i)=>{const f=midiHz(72+m+12*s.oct),x=lx(f),y=100+i*12.5;out+=R(x-6,y-4,12,8,f>5000?C.coral:C.blue,'none',3)});
   out+=TF(300,326,'frequency (log scale) · rows: notes in order',12,C.muted);
-  out+=T(300,360,base>4500?'Still audible, but the tune is much harder to recognise':'Easy to recognise: a clear musical pitch',15,C.ink);
-  return {svg:out,phase:base>4500?'Each note is heard and the steps up and down are still noticed, but naming the tune gets hard for most people. Not everyone: some listeners keep musical pitch higher, which is why the timing explanation is debated.':'In this range both place and timing codes are available and musical pitch is strong.'};
+  out+=T(300,360,base>4000?'Still audible, but the tune is much harder to recognise':'Easy to recognise: a clear musical pitch',15,C.ink);
+  return {svg:out,phase:base>4000?'Each note is heard and the steps up and down are still noticed, but naming the tune gets hard for most people. Not everyone: some listeners keep musical pitch higher, which is why the timing explanation is debated.':'In this range both place and timing codes are available and musical pitch is strong.'};
  }});
 
 /* =========================== masking =========================== */
@@ -497,7 +497,7 @@ SCENE({id:'masking-detect',name:'Find the tone in the noise',tag:'You are the li
  watch(p){const s={seed:6,i:0,db:30,run:0,dir:0,rev:[],hist:[],sim:true};const n=Math.floor(p*S4_CR_N),r=S4_rng(66);for(let k=0;k<n;k++){const pc=.5+.5/(1+Math.exp(-(s.db-S4_CR_TYP)/1.5));S4_crNext(s,r()<pc)}return s},
  ui:[{b:'Play ▶',act:'play'},{b:'Tone in 1st',act:'ans',arg:0},{b:'Tone in 2nd',act:'ans',arg:1}],
  on:{play(s){if(s.i>=S4_CR_N)return;const which=S4_crTrial(s),db=s.db;
-  S4_play(1.5,(Lc,Rc,sr,n)=>{const z=S4_noise(n,s.seed*7+s.i),A=Math.sqrt(2*Math.pow(10,db/10)/(sr/2));for(let i=0;i<n;i++){const t=i/sr,inA=t>.05&&t<.6,inB=t>.9&&t<1.45;let v=0;
+  S4_play(1.5,(Lc,Rc,sr,n)=>{const z=S4_noise(n,s.seed*7+s.i),A=Math.sqrt(2*Math.pow(10,db/10)/3/(sr/2));for(let i=0;i<n;i++){const t=i/sr,inA=t>.05&&t<.6,inB=t>.9&&t<1.45;let v=0;
    if(inA||inB)v=z[i]*S4_gate(t,inA?.05:.9,inA?.6:1.45);
    const tw=which===0?[.15,.5]:[1,1.35];if(t>tw[0]&&t<tw[1])v+=A*Math.sin(2*Math.PI*1000*t)*Math.min(1,(t-tw[0])/.02,(tw[1]-t)/.02);Lc[i]=Rc[i]=v}},{gain:.12})},
   ans(s,a){if(s.i>=S4_CR_N)return;S4_crNext(s,Number(a)===S4_crTrial(s))}},

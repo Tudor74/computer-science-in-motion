@@ -78,7 +78,7 @@ SCENE({id:'multisensory-integration-ventriloquism',name:'The ventriloquist',tag:
   out+=TBF(50,300,`heard at ${perc>=0?'+':''}${perc.toFixed(1)}°`,14,C.ink,'start');
   out+=TF(560,215,'weight',13,C.muted,'end')+R(440,224,120,16,'#fff',C.grid,3)+R(440,224,120*wv,16,C.blue,'none',3)+R(440+120*wv,224,120*(1-wv),16,C.amber,'none',3);
   out+=TF(560,258,`vision ${Math.round(wv*100)}% · hearing ${Math.round((1-wv)*100)}%`,13,C.ink,'end');
-  return {svg:out,phase:wv>.8?'The sharp spot is located far more precisely than the sound, so the sound is captured by it: the ventriloquist effect.':wv<.2?'With an extremely blurred spot, hearing is the better locator and now pulls the light towards the sound. The effect has reversed, as predicted.':'With some blur the two senses share the work, and the event seems to be between them.'};
+  return {svg:out,phase:wv>.8?'The sharp spot is located far more precisely than the sound, so the sound is captured by it: the ventriloquist effect.':wv<.2?'With the spot this blurred, hearing is the better locator and now pulls the light towards the sound. The effect has reversed, as predicted.':'With some blur the two senses share the work, and the event seems to be between them.'};
  }});
 
 // Shams, Kamitani & Shimojo (2000): one flash with two beeps is often seen as two flashes.
@@ -148,7 +148,7 @@ SCENE({id:'rubber-hand',name:'The rubber hand illusion',tag:'Owning a fake hand'
  }});
 
 // Shimada et al. (2009): the illusion weakens when the seen stroke lags the felt one by more than ~300 ms.
-const S8_lag=d=>1.6/(1+Math.exp((d-330)/70))-.9;
+const S8_lag=d=>1.6/(1+Math.exp((d-420)/50))-.9;
 SCENE({id:'rubber-hand-delay',name:'How much delay breaks it?',tag:'A window for binding',
  definition:'Sight and touch are bound into one event only if they arrive close enough in time. Delaying the seen stroke shows how wide that window is.',
  example:'Shimada and colleagues delayed video of the brush on the hand. Up to about 300 ms the illusion held; with longer delays it faded.',
@@ -178,7 +178,7 @@ const S8_RH=[
  {t:'Whole-body illusions',k:'mixed',b:'Similar tricks with video headsets make people feel located in a virtual body (Lenggenhager et al. 2007; Ehrsson 2007).'}];
 SCENE({id:'rubber-hand-critique',name:'What the illusion shows',tag:'Robust and contested',
  definition:'The rubber hand illusion is one of the most used tools for studying bodily self-awareness, but the way it is measured matters: questionnaires, drift and brain responses do not always agree.',
- example:'Lush and colleagues found that how strongly people report the illusion is predicted by their general suggestibility, even under hypnosis-like instructions, which complicates what questionnaires measure.',
+ example:'Lush and colleagues found that how strongly people report the illusion is predicted by their general suggestibility, measured as how strongly they respond to hypnosis-style imaginative suggestions, which complicates what questionnaires measure.',
  desc:'Five cards on what is solid and what is debated about the rubber hand illusion, each with a status tag.',
  research:'Lush, P. et al. (2020). Trait phenomenological control predicts experience of mirror synaesthesia and the rubber hand illusion. Nature Communications 11, 4853; Rohde, Di Luca & Ernst (2011), PLoS ONE 6(6), e21659; Ehrsson, Spence & Passingham (2004), Science 305, 875–877.',
  dur:10,hint:'Press a card to read it.',
@@ -250,7 +250,7 @@ const S8_TRI={1:[4],2:[3,5],3:[2,6],4:[1,2,3,4,5,6,7]};
 const S8_POP=(()=>{const g=[];for(let r=0;r<6;r++)for(let c=0;c<9;c++)g.push({r,c,d:(S8_TRI[r]||[]).includes(c)?2:5});return g})();
 SCENE({id:'synaesthesia-pop-out',name:'Do the colours pop out?',tag:'A famous test, mixed results',
  definition:'If letters really trigger colours early in vision, a shape made of one digit hidden among another might pop out for synaesthetes, as a colour difference would.',
- example:'Ramachandran and Hubbard reported that two synaesthetes found a triangle of 2s among 5s faster than controls. Later group studies mostly found that synaesthetes still search item by item, with colour helping only once attention reaches a digit.',
+ example:'Ramachandran and Hubbard reported that two synaesthetes were better than controls at naming a shape made of 2s hidden among 5s in a briefly shown display. Later group studies mostly found that synaesthetes still search item by item, with colour helping only once attention reaches a digit.',
  desc:'A grid of 5s with a triangle of 2s hidden inside, shown in black or as one synaesthete might colour it.',
  research:'Ramachandran, V. S. & Hubbard, E. M. (2001). Psychophysical investigations into the neural basis of synaesthesia. Proceedings of the Royal Society B 268, 979–983; Edquist et al. (2006), Cortex 42, 222–231 (mixed: most synaesthetes still search item by item).',
  dur:10,hint:'Look for the shape in black first, then switch on colours. Pop-out for colour is real; whether synaesthetes get it from digits is debated.',
@@ -447,7 +447,7 @@ const S8_BODY=[{id:'forearm',n:'Forearm',x:120,y:200,ct:'yes',b:'Hairy skin with
  {id:'thigh',n:'Thigh',x:250,y:290,ct:'yes',b:'Hairy skin with C-tactile fibres.'}];
 SCENE({id:'affective-touch-body',name:'Where the caress nerves are',tag:'Hairy and hairless skin',
  definition:'C-tactile fibres are common in hairy skin and rare or absent in hairless (glabrous) skin like the palms, which are specialised for fast, precise touch.',
- example:'Vallbo and colleagues found C-tactile fibres in the forearm and face but not in recordings from the palm. A recent study reported a few in the palm, so the question is not fully settled.',
+ example:'Vallbo and colleagues found C-tactile fibres in the hairy skin of the forearm, and others recorded them in the face, but none turned up in recordings from the palm. A recent study reported a few in the palm, so the question is not fully settled.',
  desc:'A body outline with points to press, each saying whether C-tactile fibres are found there.',
  research:'Vallbo, Å. B., Olausson, H. & Wessberg, J. (1999). Unmyelinated afferents constitute a second system coding tactile stimuli of the human hairy skin. Journal of Neurophysiology 81, 2753–2763; Watkins, R. H. et al. (2021). Journal of Neurophysiology 125, 232–237 (C-tactile afferents in glabrous skin: emerging).',
  dur:10,hint:'Press a point on the body.',

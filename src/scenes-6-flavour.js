@@ -61,7 +61,7 @@ SCENE({id:'five-tastes',name:'The tongue-map myth',tag:'Every part of the tongue
   names.forEach((n,i)=>{const y=82+i*36;out+=TF(330,y+16,n,13,C.muted,'start')+R(430,y+3,140,18,'#fff',C.grid,4)+R(430,y+3,140*vals[i],18,T6.col,'none',4)});
   if(myth&&s.t==='umami')out+=R(326,302,256,46,C.coralp,'none',8)+S6_lines(336,321,['Umami is missing from the myth map:','it was not accepted in the West until the 1980s.'],13,C.coral);
   else out+=S6_chip(330,312,myth?'myth':'est')+TF(330+(myth?70:116),327,myth?'Boring 1942':'Collings 1974',13,C.muted,'start');
-  return {svg:out,phase:myth?`The myth map gives ${T6.name.toLowerCase()} one region. Hänig’s 1901 data showed only small differences in threshold around the edge of the tongue; the 1942 redrawing turned “slightly more sensitive” into “only here”. Try it yourself: a little sugar on the back of the tongue tastes sweet.`:`Every region responds to ${T6.name.toLowerCase()}. The differences are small (the bars are illustrative of their size, after Collings 1974). Taste buds anywhere carry receptors for all five qualities, and the soft palate and throat taste too.`};
+  return {svg:out,phase:myth?`The myth map gives ${T6.name.toLowerCase()} one region. Hänig’s 1901 data showed only small differences in threshold around the edge of the tongue; the 1942 redrawing turned “slightly more sensitive” into “only here”. Try it yourself: a little sugar on the back of the tongue tastes sweet.`:`Every region responds to ${T6.name.toLowerCase()}. The differences are small (the bars are illustrative only). Taste buds anywhere carry receptors for all five qualities, and the soft palate and throat taste too.`};
  }});
 
 const S6_REC={
@@ -225,7 +225,7 @@ function S6_moth(wind,t){
 }
 SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one molecule upwind',
  definition:'A pheromone is a chemical signal, released by one animal, that triggers a specific response in another of the same species. The first identified was bombykol, the silkmoth’s sex attractant.',
- example:'A male silkmoth detects bombykol with feathery antennae and flies upwind in zigzags, surging while it is inside the scent plume.',
+ example:'A male silkmoth detects bombykol with feathery antennae and walks upwind in zigzags, wings fanning, surging while it is inside the scent plume. (Domesticated silkmoths cannot fly; flying moths track a plume in the same way.)',
  desc:'A wind tunnel with a female silkmoth releasing bombykol on the left; a wind switch and time slider show the plume and the male’s upwind path.',
  research:'Butenandt, A. et al. (1959). Über den Sexuallockstoff des Seidenspinners Bombyx mori. Zeitschrift für Naturforschung B 14 (bombykol, from about 500,000 moths). Kaissling, K.-E. & Priesner, E. (1970). Die Riechschwelle des Seidenspinners. Naturwissenschaften 57 (single molecules fire receptor cells). Karlson & Lüscher (1959) coined “pheromone”. Status: established in insects and many mammals.',
  dur:10,hint:'Switch the wind on and off and move through time. Without wind the plume has no direction to follow.',
@@ -235,7 +235,7 @@ SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one mole
  on:{wind(s,v){s.wind=v;return 'keep'},t(s,v){s.t=Number(v);return 'keep'}},
  draw(s){
   const wind=s.wind==='on',tt=s.t/100;
-  let out=heading(wind?'The male flies upwind in the plume':'Still air: no direction to follow',26);
+  let out=heading(wind?'The male heads upwind in the plume':'Still air: no direction to follow',26);
   out+=R(40,70,520,240,'#f7fafc',C.grid,8);
   if(wind)for(let i=0;i<4;i++)out+=arrow(70+i*130,88,120+i*130,88,C.line,1.5);
   out+=TF(300,84,wind?'wind':'',13,C.muted);
@@ -248,14 +248,14 @@ SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one mole
   const m=pts[pts.length-1]||[520,190];out+=P(`M${fmt(m[0]-12)} ${fmt(m[1]-8)} L${fmt(m[0])} ${fmt(m[1])} L${fmt(m[0]-12)} ${fmt(m[1]+8)}`,C.blue,3)+Ci(m[0],m[1],5,C.blue);
   out+=TF(m[0],m[1]-16,'male',13,C.blue);
   out+=S6_chip(40,324,'est')+TF(160,339,'Pheromones are well shown in insects and many mammals.',13,C.ink,'start');
-  return {svg:out,phase:wind?'The plume breaks into patchy filaments. While the male is in scent he surges upwind; when he loses it he casts side to side until he finds it again. A single bombykol molecule can fire one of his receptor cells.':'Without wind the scent spreads in every direction and gives no bearing: the male circles. Flying upwind on contact with odour is the key behaviour, not following a gradient.'};
+  return {svg:out,phase:wind?'The plume breaks into patchy filaments. While the male is in scent he surges upwind; when he loses it he casts side to side until he finds it again. A single bombykol molecule can fire one of his receptor cells.':'Without wind the scent spreads in every direction and gives no bearing: the male circles. Heading upwind on contact with odour is the key behaviour, not following a gradient.'};
  }});
 
 const S6_PHER=[
  {k:'vno',t:'A pheromone organ',claim:'Humans detect pheromones with a vomeronasal organ, as mice do.',ev:'Adult humans have at most a tiny pit with no working receptor neurons; most of the genes are broken (pseudogenes).',st:'no'},
  {k:'sync',t:'Menstrual synchrony',claim:'Women living together synchronise their cycles (McClintock 1971).',ev:'Larger later studies found no synchrony beyond chance (Yang & Schank 2006; Ziomkiewicz 2006).',st:'no'},
  {k:'andro',t:'Androstadienone',claim:'A molecule in male sweat is a human pheromone.',ev:'Effects on mood and attention are small and inconsistent; never shown to meet the pheromone test (Wyatt 2015).',st:'mixed'},
- {k:'mhc',t:'Sweaty T-shirts and MHC',claim:'People prefer the body odour of partners with different immune genes (Wedekind 1995).',ev:'Replications are mixed; a meta-analysis found weak, inconsistent effects (Havlicek & Roberts 2009).',st:'mixed'},
+ {k:'mhc',t:'Sweaty T-shirts and MHC',claim:'People prefer the body odour of partners with different immune genes (Wedekind 1995).',ev:'Replications are mixed; a review found inconsistent results (Havlicek & Roberts 2009).',st:'mixed'},
  {k:'nipple',t:'Newborns and the breast',claim:'Secretions from areolar glands help newborns find the nipple (Doucet 2009).',ev:'Suggestive behavioural evidence; the molecule has not been identified.',st:'cand'},
  {k:'spray',t:'“Pheromone” perfumes',claim:'Sprays sold to make you more attractive.',ev:'No good evidence that any of them work.',st:'myth'}];
 SCENE({id:'pheromones-human',name:'Human pheromones?',tag:'Six claims and their evidence',
@@ -465,7 +465,7 @@ SCENE({id:'how-many-smells',name:'Telling mixtures apart',tag:'The method behind
  definition:'In a triangle test you smell three samples, two identical and one different, and pick the odd one out. Guessing gives one in three.',
  example:'Bushdid and colleagues mixed 30 of 128 odorants. On average, people told two mixtures apart only when more than about half their components differed.',
  desc:'Two 30-component mixtures drawn as dots from a pool of 128, a slider for how many components differ, and the share of correct triangle-test answers (curve illustrative).',
- research:'Bushdid, C., Magnasco, M. O., Vosshall, L. B. & Keller, A. (2014). Humans can discriminate more than 1 trillion olfactory stimuli. Science 343, 1370–1372. Curve shape illustrative; the about 51% average threshold is from the paper.',
+ research:'Bushdid, C., Magnasco, M. O., Vosshall, L. B. & Keller, A. (2014). Humans can discriminate more than 1 trillion olfactory stimuli. Science 343, 1370–1372. Curve shape illustrative; the average threshold (mixtures sharing less than about 51% of their components) is from the paper.',
  dur:10,hint:'Change how many of the 30 components differ between the two mixtures.',
  init:()=>({k:15}),
  watch(p){return {k:Math.round(p*30)}},
@@ -483,14 +483,14 @@ SCENE({id:'how-many-smells',name:'Telling mixtures apart',tag:'The method behind
   out+=S6_poly(pts,C.blue)+L(pl.X(0),pl.Y(1/3),pl.X(1),pl.Y(1/3),C.line,1,'stroke-dasharray="4 4"')+Ci(pl.X(f),pl.Y(pc),6,C.coral,'#fff');
   out+=TF(340,286,`${Math.round(pc*100)}% correct (chance 33%)`,14,C.ink,'start');
   out+=TF(40,262,'Pool: 128 odorants. Each mixture: 30.',13,C.muted,'start');
-  out+=TF(40,346,'Curve illustrative; average threshold about 51% differing (Bushdid 2014).',13,C.muted,'start');
+  out+=TF(40,346,'Curve illustrative; average threshold about half differing (Bushdid 2014).',13,C.muted,'start');
   return {svg:out,phase:f<.4?'With most components shared, the two mixtures smell the same and answers sit near chance.':f<.6?'Around half the components differing, people start to tell the mixtures apart.':'With most components different, the odd one out is usually found.'};
  }});
 
-// Toy count in the spirit of Bushdid 2014: number of 30-of-128 mixtures divided by how many lie within the
-// indistinguishable radius (k components swapped). Done in log10 to stay accurate.
+// Toy count in the spirit of Bushdid 2014: number of 30-of-128 mixtures divided by how many lie within
+// half the indistinguishable distance (sphere packing; k components swapped). Done in log10 to stay accurate.
 function S6_lc(n,k){let s=0;for(let i=1;i<=k;i++)s+=Math.log10(n-k+i)-Math.log10(i);return s}
-function S6_log10Count(d){const k=Math.floor(d*30);let ball=0;const terms=[];for(let j=0;j<=k;j++)terms.push(S6_lc(30,j)+S6_lc(98,j));const m=Math.max(...terms);ball=m+Math.log10(terms.reduce((a,t)=>a+Math.pow(10,t-m),0));return S6_lc(128,30)-ball}
+function S6_log10Count(d){const k=Math.floor(d*30/2);let ball=0;const terms=[];for(let j=0;j<=k;j++)terms.push(S6_lc(30,j)+S6_lc(98,j));const m=Math.max(...terms);ball=m+Math.log10(terms.reduce((a,t)=>a+Math.pow(10,t-m),0));return S6_lc(128,30)-ball}
 SCENE({id:'how-many-smells-estimate',name:'One trillion?',tag:'A small change, a huge swing',
  definition:'The “one trillion smells” estimate was extrapolated from how different two mixtures must be to be told apart. Critics showed that the answer depends enormously on the assumptions.',
  example:'Changing the assumed discrimination threshold a little moves the estimate by many powers of ten, from far below a trillion to far above it.',

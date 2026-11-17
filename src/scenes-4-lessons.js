@@ -22,7 +22,7 @@ SOURCE('s4-pisoni-1974',{title:'Pisoni & Lazarus (1974). Categorical and noncate
 SOURCE('s4-mcmurray-2022',{title:'McMurray (2022). The myth of categorical perception. JASA 152, 3819–3842.'});
 SOURCE('s4-greenwood-1990',{title:'Greenwood (1990). A cochlear frequency-position function for several species — 29 years later. JASA 87, 2592–2605.'});
 SOURCE('s4-johnson-1980',{title:'Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122.'});
-SOURCE('s4-verschooten-2019',{title:'Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans: a compilation of viewpoints. Trends in Hearing 23.'});
+SOURCE('s4-verschooten-2019',{title:'Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans: a compilation of viewpoints. Hearing Research 377, 109–121.'});
 SOURCE('s4-wier-1977',{title:'Wier, Jesteadt & Green (1977). Frequency discrimination as a function of frequency and sensation level. JASA 61, 178–184.'});
 SOURCE('s4-micheyl-2006',{title:'Micheyl, Delhommeau, Perrot & Oxenham (2006). Influence of musical and psychoacoustical training on pitch discrimination. Hearing Research 219, 36–47.'});
 SOURCE('s4-levitt-1971',{title:'Levitt (1971). Transformed up-down methods in psychoacoustics. JASA 49, 467–477.'});

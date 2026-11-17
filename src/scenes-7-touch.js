@@ -119,7 +119,7 @@ SCENE({id:'skin-receptors-adaptation',name:'Slow and fast adaptation',tag:'Stead
   out+=TF(x0,330,'0',13,C.muted,'start')+TF(x0+w,330,'3 s',13,C.muted,'end')+TF(x0+w+6,108,'spikes',13,C.muted,'start');
   out+=T(300,358,'Slow units code how hard and how long; fast units code when it changes.',15,C.ink);
   const nsa=S7_spikes(t=>S7_adaptRate('sa',t,s.force,hold),span).length;
-  return {svg:out,phase:`A force-${s.force} press held for ${s.hold.toFixed(1)} s: the Merkel unit fires all the way through (${nsa} spikes), its rate rising with force. The Meissner unit fires only at the start and end, and the Pacinian unit gives just a spike or two at each change. Schematic model.`};
+  return {svg:out,phase:`A force-${s.force} press held for ${s.hold.toFixed(1)} s: the Merkel unit fires all the way through (${nsa} spikes), its rate rising with force. The Meissner unit fires only at the start and end, and the Pacinian unit gives only a very brief burst at each change. Schematic model.`};
  }});
 
 // Densities (units per cm²), approximate, after Johansson & Vallbo (1979).
@@ -248,7 +248,7 @@ SCENE({id:'vibration',name:'Feeling vibration',tag:'Flutter and buzz',
   out+=S7_poly(a,'#2c776c',2.4)+S7_poly(b,C.coral,2.4);
   out+=L(pl.X(f),pl.Y(200),pl.X(f),pl.Y(.05),C.amber,1.8)+Ci(pl.X(f),pl.Y(Math.min(ra,pc)),7,C.ink,'#fff');
   out+=R(436,70,144,22,'none','none')+Ci(444,80,5,'#2c776c')+TF(454,85,'flutter channel',13,'#2c776c','start')+Ci(444,104,5,C.coral)+TF(454,109,'Pacinian channel',13,C.coral,'start');
-  out+=R(436,132,144,150,'#f6f9fb','none',8)+TBF(446,156,`${f} Hz`,15,C.ink,'start')+TF(446,180,'felt first by',13,C.muted,'start')+TBF(446,200,best.split(' ')[0],14,ra<pc?'#2c776c':C.coral,'start')+TF(446,224,'threshold',13,C.muted,'start')+TBF(446,244,`${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm`,14,C.ink,'start')+TF(446,268,f<30?'(below hearing)':'',13,C.muted,'start');
+  out+=R(436,132,144,150,'#f6f9fb','none',8)+TBF(446,156,`${f} Hz`,15,C.ink,'start')+TF(446,180,'felt first by',13,C.muted,'start')+TBF(446,200,best.split(' ')[0],14,ra<pc?'#2c776c':C.coral,'start')+TF(446,224,'threshold',13,C.muted,'start')+TBF(446,244,`${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm`,14,C.ink,'start')+TF(446,268,f<30?'(too low to play)':'',13,C.muted,'start');
   out+=T(300,354,'Most sensitive near 250 Hz: movements of a fraction of a micrometre.',15,C.ink);
   return {svg:out,phase:`At ${f} Hz the ${best} channel has the lower threshold, about ${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm. Below roughly 40 Hz the skin feels flutter; above it, a smooth buzz carried by Pacinian corpuscles. Schematic curves after Verrillo (1963) and Bolanowski et al. (1988).`};
  }});
@@ -323,7 +323,7 @@ SCENE({id:'pain',name:'First and second pain',tag:'Two kinds of fibre',
   return {svg:out,phase:`Over ${s.d.toFixed(1)} m, Aδ fibres at ${s.va} m/s arrive after ${Math.round(ta)} ms and C fibres at ${s.vc.toFixed(1)} m/s after ${Math.round(tc)} ms: the classic “double pain”. Brain processing adds time to both; the speeds are typical values.`};
  }});
 
-function S7_gate(small,large,desc){const sg=clamp(.6*large-.35*small+.4*desc,0,10),t=clamp(small+.25*large-1.1*sg,0,15);return {sg,t}}
+function S7_gate(small,large,desc){const sg=clamp((.6*large+.4*desc)*(1-.03*small),0,10),t=clamp(small-.55*sg,0,15);return {sg,t}}
 SCENE({id:'pain-gate',name:'Gate control',tag:'Why rubbing helps',
  definition:'Gate control theory proposed that pain signals are adjusted in the spinal cord before they reach the brain: activity in large touch fibres, and signals coming down from the brain, can close a “gate” that small pain fibres would otherwise open.',
  example:'After banging your elbow you rub it. The rubbing drives large touch fibres, which damp the pain message at the spinal cord. Stress, attention and belief act through descending pathways.',
@@ -378,13 +378,13 @@ SCENE({id:'pain-placebo',name:'Pain, belief and evidence',tag:'Real, but smaller
 
 /* =========================== temperature =========================== */
 // Channels and their approximate activation ranges (°C). TRPA1 cold role is debated.
-const S7_TRP=[{k:'trpa1',n:'TRPA1',lo:0,hi:17,col:'#2b7bb0',feel:'painful cold (debated)'},{k:'trpm8',n:'TRPM8',lo:8,hi:26,col:'#3aa0c8',feel:'cool'},{k:'trpv3',n:'TRPV3/V4',lo:27,hi:40,col:'#e3a33a',feel:'warm'},{k:'trpv1',n:'TRPV1',lo:43,hi:60,col:'#c45238',feel:'burning heat'}];
+const S7_TRP=[{k:'trpa1',n:'TRPA1',lo:0,hi:17,col:'#2b7bb0',feel:'painful cold (debated)'},{k:'trpm8',n:'TRPM8',lo:8,hi:26,col:'#3aa0c8',feel:'cool'},{k:'trpv3',n:'TRPV3/V4',lo:27,hi:42,col:'#e3a33a',feel:'warm'},{k:'trpv1',n:'TRPV1',lo:43,hi:60,col:'#c45238',feel:'burning heat'}];
 function S7_active(temp,chem){return S7_TRP.filter(c=>{let lo=c.lo,hi=c.hi;if(chem==='menthol'&&c.k==='trpm8')hi+=10;if(chem==='capsaicin'&&c.k==='trpv1')lo=32;return temp>=lo&&temp<=hi})}
 SCENE({id:'temperature',name:'Thermometers in the skin',tag:'TRP channels',
  definition:'Temperature is sensed by ion channels in nerve endings that open over particular temperature ranges. TRPV1 opens above about 43 °C and gives burning heat; TRPM8 opens below about 26 °C and gives coolness. Some chemicals open the same channels.',
  example:'Chilli feels hot because capsaicin opens TRPV1 at body temperature; mint feels cool because menthol opens TRPM8 without any change in temperature.',
  desc:'A temperature scale with the range of each channel, the channels open at the chosen temperature, and a chemical option that shifts them.',
- research:['Caterina, M. J., Schumacher, M. A., Tominaga, M., Rosen, T. A., Levine, J. D. & Julius, D. (1997). The capsaicin receptor: a heat-activated ion channel in the pain pathway. Nature 389, 816–824.','McKemy, D. D., Neuhausser, W. M. & Julius, D. (2002) and Peier, A. M. et al. (2002), both in Nature 416, on TRPM8. Nobel Prize 2021 to David Julius and Ardem Patapoutian. Ranges here are approximate.'],
+ research:['Caterina, M. J., Schumacher, M. A., Tominaga, M., Rosen, T. A., Levine, J. D. & Julius, D. (1997). The capsaicin receptor: a heat-activated ion channel in the pain pathway. Nature 389, 816–824.','McKemy, D. D., Neuhausser, W. M. & Julius, D. (2002). Nature 416, 52–58, and Peier, A. M. et al. (2002). Cell 108, 705–715, both on TRPM8. Nobel Prize 2021 to David Julius and Ardem Patapoutian. Ranges here are approximate.'],
  dur:10,hint:'Move the temperature, then add capsaicin or menthol and see which channels open at skin temperature.',
  init:()=>({temp:33,chem:'none'}),
  watch(p){return p<.6?{temp:Math.round(5+50*p/.6),chem:'none'}:{temp:33,chem:p<.8?'capsaicin':'menthol'}},
@@ -397,9 +397,9 @@ SCENE({id:'temperature',name:'Thermometers in the skin',tag:'TRP channels',
   S7_TRP.forEach((c,i)=>{const y=96+i*46;let lo=c.lo,hi=c.hi;if(s.chem==='menthol'&&c.k==='trpm8')hi+=10;if(s.chem==='capsaicin'&&c.k==='trpv1')lo=32;const on=act.includes(c);
    out+=R(xs(c.lo),y,xs(c.hi)-xs(c.lo),22,'#eef3f6','none',5)+R(xs(lo),y,xs(Math.min(55,hi))-xs(lo),22,on?c.col:tint(c.col,.6),'none',5)+TBF(xs(lo)+6,y+16,c.n,13,on?'#fff':C.ink,'start')+TF(Math.min(xs(Math.min(55,hi))+8,520),y+16,on?c.feel:'',13,c.col,'start')});
   out+=L(xs(s.temp),82,xs(s.temp),314,C.ink,2.2)+Ci(xs(s.temp),82,6,C.ink);
-  const feel=act.length?act.map(c=>c.feel).join(' + '):'neutral: no channel strongly active';
+  const feel=s.chem==='none'&&s.temp>=30&&s.temp<=35?'close to neutral (warm channels only lightly active)':act.length?act.map(c=>c.feel).join(' + '):'no channel strongly active';
   out+=T(300,360,`${s.temp} °C${s.chem!=='none'?' with '+s.chem:''}: ${feel}`,15,C.ink);
-  return {svg:out,phase:s.chem==='capsaicin'?`Capsaicin lowers TRPV1’s threshold to around body temperature, so ordinary skin at ${s.temp} °C feels like burning heat: chilli is a chemical trick, not real heat.`:s.chem==='menthol'?`Menthol makes TRPM8 open at warmer temperatures, so skin at ${s.temp} °C feels cool with no change in temperature.`:`At ${s.temp} °C: ${feel}. Channel ranges are approximate; the role of TRPA1 in cold sensing is debated.`};
+  return {svg:out,phase:s.chem==='capsaicin'?(act.some(c=>c.k==='trpv1')?`Capsaicin lowers TRPV1’s threshold to around body temperature, so ordinary skin at ${s.temp} °C feels like burning heat: chilli is a chemical trick, not real heat.`:`In this model capsaicin lowers TRPV1’s threshold to about 32 °C; at ${s.temp} °C the channel stays closed.`):s.chem==='menthol'?(act.some(c=>c.k==='trpm8')?`Menthol makes TRPM8 open at warmer temperatures, so skin at ${s.temp} °C feels cool with no change in temperature.`:`In this model menthol keeps TRPM8 open between about 8 and 36 °C; at ${s.temp} °C it is closed.`):`At ${s.temp} °C: ${feel}. Channel ranges are approximate; the role of TRPA1 in cold sensing is debated.`};
  }});
 
 function S7_adapt(bowl,min){return 32+(bowl-32)*(1-Math.exp(-min/1.2))}
@@ -407,7 +407,7 @@ SCENE({id:'temperature-bowls',name:'Three bowls of water',tag:'Warm or cool depe
  definition:'Thermal sensation reports change relative to what the skin has adapted to, not absolute temperature. The same water can feel warm to one hand and cool to the other.',
  example:'Put one hand in cool water and one in warm for a minute, then both into a bowl of lukewarm water: the cool-adapted hand says “warm”, the warm-adapted hand says “cool”.',
  desc:'Left and right bowls with adjustable temperatures and soaking time, then both hands in a middle bowl, with each hand’s adapted skin temperature and what it reports.',
- research:['Locke, J. (1690). An Essay Concerning Human Understanding, Book II, chapter 8, section 21, where the three-bowl demonstration appears.','Weber, E. H. (1846). Der Tastsinn und das Gemeingefühl. Kenshalo, D. R. (1976). Correlations of temperature sensitivity in man and monkey. In Y. Zotterman (ed.), Sensory Functions of the Skin, 305–330. Adaptation model here is illustrative.'],
+ research:['Locke, J. (1690). An Essay Concerning Human Understanding, Book II, chapter 8, section 21, where Locke notes that the same water can feel cold to one hand and warm to the other.','Weber, E. H. (1846). Der Tastsinn und das Gemeingefühl. Kenshalo, D. R. (1976). Correlations of temperature sensitivity in man and monkey. In Y. Zotterman (ed.), Sensory Functions of the Skin, 305–330. Adaptation model here is illustrative.'],
  dur:10,hint:'Set the two bowls and the soaking time. Try it at home with tap water no hotter than 40 °C, and never with very hot water.',
  init:()=>({left:15,right:40,min:1}),
  watch(p){return {left:15,right:40,min:Math.round(p*30)/10}},
@@ -452,7 +452,7 @@ function S7_len(t,amt,vel){const ramp=amt/vel*1000;if(t<300)return 0;if(t<300+ra
 function S7_ia(t,amt,vel){const ramp=amt/vel*1000,moving=t>=300&&t<300+ramp;return 10+30*S7_len(t,amt,vel)/10+(moving?vel*12:0)}
 function S7_ii(t,amt,vel){return 10+45*S7_len(t,amt,vel)/10}
 SCENE({id:'proprioception',name:'Muscle spindles',tag:'Sensors of length and speed',
- definition:'Proprioception is the sense of where your body parts are and how they are moving. Much of it comes from muscle spindles: stretch receptors inside muscles whose primary (Ia) endings report the speed of stretch and whose secondary (II) endings report the length.',
+ definition:'Proprioception is the sense of where your body parts are and how they are moving. Much of it comes from muscle spindles: stretch receptors inside muscles whose primary (Ia) endings report mainly how fast the muscle is being stretched, as well as its length, and whose secondary (II) endings report mainly the length.',
  example:'Close your eyes and touch your nose: spindles in your arm muscles tell your brain how long each muscle is and how fast it is changing, so you can steer without looking.',
  desc:'A muscle stretched to a set length at a set speed, with traces of muscle length, primary-ending firing and secondary-ending firing.',
  research:['Sherrington, C. S. (1906). The Integrative Action of the Nervous System. Yale University Press, where “proprioceptive” was coined.','Matthews, P. B. C. (1972). Mammalian Muscle Receptors and their Central Actions. Arnold. Proske, U. & Gandevia, S. C. (2012). The proprioceptive senses. Physiological Reviews 92, 1651–1697. Firing rates here are schematic.'],

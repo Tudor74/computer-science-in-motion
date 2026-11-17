@@ -33,7 +33,7 @@ function S2_mach(k,sigma){
 }
 SCENE({id:'lateral-inhibition',name:'Mach bands',tag:'Edges are sharpened by neighbours',
  definition:'Each light-sensitive cell is inhibited by its neighbours. Where the light changes, cells on the bright side of an edge get less inhibition than their neighbours and cells on the dark side get more, so the edge is exaggerated. Ernst Mach described the resulting bands in 1865.',
- example:'A staircase of six evenly lit grey strips does not look even: each strip seems lighter next to its darker neighbour and darker next to its lighter one, though each is uniform.',
+ example:'A staircase of six evenly lit grey strips does not look even: each strip seems lighter next to its darker neighbour and darker next to its lighter one, though each is uniform. Strictly, this staircase effect is the Chevreul illusion; Mach’s own bands appear where a smooth ramp of brightness meets an even area. Both are explained the same way.',
  desc:'Six uniform grey strips above a graph of the actual light (straight steps) and the response after lateral inhibition (with dips and overshoots at each edge).',
  research:'Mach, E. (1865). Über die Wirkung der räumlichen Vertheilung des Lichtreizes auf die Netzhaut; Ratliff, F. (1965). Mach Bands: Quantitative Studies on Neural Networks in the Retina. Holden-Day. Robust; the simple model here is a sketch, not a fitted retina.',
  dur:10,hint:'Look along the strips first and notice the bright and dark borders. Then turn the inhibition up and down and watch the response curve.',
@@ -55,7 +55,7 @@ SCENE({id:'lateral-inhibition',name:'Mach bands',tag:'Edges are sharpened by nei
 
 SCENE({id:'lateral-inhibition-limulus',name:'Hartline’s horseshoe crab',tag:'Inhibition measured in single cells',
  definition:'Haldan Keffer Hartline recorded from single receptor units in the eye of the horseshoe crab, Limulus. Lighting a unit made it fire; lighting its neighbours as well made it fire less. Each unit’s output is its own excitation minus a share of its neighbours’ outputs.',
- example:'A unit firing 30 times a second in the dark surround drops to about 24 when a neighbour firing 40 times a second is lit nearby, with an inhibition coefficient of 0.15.',
+ example:'A unit firing 30 times a second in the dark surround drops to about 25 when a neighbour driven at 40 times a second is lit nearby, with an inhibition coefficient of 0.15.',
  desc:'Two neighbouring receptor units, A and B, with light levels set by sliders, and bars for A’s firing alone and with B lit, from the Hartline–Ratliff equations.',
  research:'Hartline, H. K., Wagner, H. G. & Ratliff, F. (1956). Inhibition in the eye of Limulus. Journal of General Physiology 39, 651–673; Hartline, H. K. & Ratliff, F. (1957). Inhibitory interaction of receptor units in the eye of Limulus. JGP 40, 357–376. Hartline shared the 1967 Nobel Prize. Coefficients here are illustrative.',
  dur:10,hint:'Set A’s light, then raise B’s light and watch A slow down. Raise the coupling to make the inhibition stronger.',
@@ -132,7 +132,7 @@ SCENE({id:'depth-stereo',name:'Cues to depth',tag:'Many clues, none sufficient a
  }});
 
 SCENE({id:'depth-stereo-disparity',name:'Binocular disparity',tag:'Two eyes, two views',
- definition:'The eyes are about 6 cm apart, so each sees a slightly different view. The difference in the angle an object makes at the two eyes, its disparity, shrinks with the square of distance. Charles Wheatstone proved in 1838 with his stereoscope that disparity alone can create depth.',
+ definition:'The eyes are about 6 cm apart, so each sees a slightly different view. The disparity between two objects is the difference in the angles they make at the two eyes; for a fixed depth step it shrinks with the square of distance. Charles Wheatstone proved in 1838 with his stereoscope that disparity alone can create depth.',
  example:'With a typical stereoacuity of 20 seconds of arc, a person can tell that one object is about 1.5 mm nearer than another at 1 metre, but at 10 metres the difference must be about 15 cm.',
  desc:'A top view of two eyes looking at two objects at a chosen distance and depth difference, with the disparity in seconds of arc and the smallest depth difference detectable at that distance.',
  research:'Wheatstone, C. (1838). Contributions to the physiology of vision, Part 1. Phil. Trans. R. Soc. 128, 371–394; Dodgson, N. A. (2004). Variation and extrema of human interpupillary distance (mean about 63 mm); Howard, I. P. & Rogers, B. J. (2012). Perceiving in Depth. Stereoacuity of about 20″ is typical in good conditions; it varies widely.',
@@ -423,7 +423,7 @@ SCENE({id:'face-perception-thatcher',name:'The Thatcher illusion',tag:'You take 
 
 SCENE({id:'face-perception-variation',name:'From face blindness to super-recognisers',tag:'People differ widely',
  definition:'Face recognition varies enormously between people. About 2–2.5% of people have developmental prosopagnosia, lifelong difficulty recognising faces with otherwise normal vision; at the other end, “super-recognisers” remember faces exceptionally well. The Cambridge Face Memory Test measures the range.',
- example:'On the Cambridge Face Memory Test, a score more than about two standard deviations below the average suggests prosopagnosia; two above, a super-recogniser.',
+ example:'On the Cambridge Face Memory Test, a score more than about two standard deviations below the average suggests prosopagnosia. The standard test is too easy to pick out super-recognisers, so a longer, harder version is used for them.',
  desc:'A bell curve of face-memory scores with the bottom and top tails marked, and a slider placing a person on it with their percentile.',
  research:'Duchaine, B. & Nakayama, K. (2006). The Cambridge Face Memory Test. Neuropsychologia 44, 576–585; Kennerknecht, I. et al. (2006). First report of prevalence of non-syndromic hereditary prosopagnosia. American Journal of Medical Genetics A 140, 1617–1622 (about 2.5%); Russell, R., Duchaine, B. & Nakayama, K. (2009). Super-recognizers. Psychonomic Bulletin & Review 16, 252–257. The curve is an approximate normal model.',
  dur:10,hint:'Move a score along the curve. This is not a test: it shows where a score would fall, not your own ability.',
@@ -436,13 +436,13 @@ SCENE({id:'face-perception-variation',name:'From face blindness to super-recogni
   const ax=S2_axes(70,70,460,190,[40,110],[0,1.05],'score on a face-memory test','',[[40,'40'],[58,'58'],[80,'80'],[100,'100']],[]);out+=ax.svg;
   const pts=[];for(let x=40;x<=110;x+=1)pts.push([ax.X(x),ax.Y(Math.exp(-((x-mu)**2)/(2*sd*sd)))]);
   out+=P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L')+` L${fmt(ax.X(110))} ${fmt(ax.Y(0))} L${fmt(ax.X(40))} ${fmt(ax.Y(0))} Z`,'none',0,'#e3eef5')+S2_poly(pts,C.blue,2.5);
-  out+=R(ax.X(40),70,ax.X(58)-ax.X(40),190,'rgba(196,82,56,.12)','none',0)+R(ax.X(102),70,ax.X(110)-ax.X(102),190,'rgba(44,119,108,.14)','none',0);
+  out+=R(ax.X(40),70,ax.X(58)-ax.X(40),190,'rgba(196,82,56,.12)','none',0)+R(ax.X(98),70,ax.X(100)-ax.X(98),190,'rgba(44,119,108,.14)','none',0);
   out+=TF(ax.X(49),88,'possible',13,C.coral)+TF(ax.X(49),104,'prosopagnosia',13,C.coral);
   out+=TF(ax.X(106),88,'super-',13,C.green)+TF(ax.X(106),104,'recognisers',13,C.green);
   const xx=Math.min(110,s.x);out+=L(ax.X(xx),70,ax.X(xx),260,C.ink,2.5);
   const pct=Math.round(phi((s.x-mu)/sd)*100);
   out+=T(300,330,`A score of ${s.x}% is higher than about ${pct}% of people.`,15,C.ink);
-  return {svg:out,phase:pct<3?'In the bottom tail: people here often rely on voice, gait and hair to recognise others, and many do not realise others find faces easier.':pct>97?'In the top tail: some police forces now recruit super-recognisers to review CCTV.':'Most people sit in the broad middle; face memory is partly heritable and fairly stable over time.'};
+  return {svg:out,phase:pct<3?'In the bottom tail: people here often rely on voice, gait and hair to recognise others, and many do not realise others find faces easier.':pct>=95?'In the top tail: some police forces now recruit super-recognisers to review CCTV.':'Most people sit in the broad middle; face memory is partly heritable and fairly stable over time.'};
  }});
 
 /* =========================== blind-spot-filling =========================== */

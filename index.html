@@ -614,7 +614,7 @@ function S1_eyeDraw(focusMm,retinaMm,objY,lensLabel){
  let out=P(`M${lx-20} ${cy-100} Q${lx-60} ${cy} ${lx-20} ${cy+100}`,C.line,2)+P(`M${lx-20} ${cy-100} Q${rx+30} ${cy-110} ${rx+12} ${cy} Q${rx+30} ${cy+110} ${lx-20} ${cy+100}`,C.line,2);
  out+=L(rx,cy-70,rx,cy+70,C.coral,4)+TF(rx+6,cy-78,'retina',13,C.coral,'start');
  out+=`<ellipse cx="${lx}" cy="${cy}" rx="10" ry="${h+4}" fill="${C.pale}" stroke="${C.blue}" stroke-width="2"/>`+TF(lx,cy+h+26,lensLabel,13,C.blue);
- const iy=cy-objY*.35;
+ const iy=cy+objY*(fx-lx)/(lx-60);
  [-h,0,h].forEach(dy=>{const ox=60,oy=cy-objY;out+=L(ox,oy,lx,cy+dy,'#e0a24a',1.8);
   const sl=(iy-(cy+dy))/(fx-lx),endx=Math.min(fx,rx),endy=cy+dy+sl*(endx-lx);out+=L(lx,cy+dy,endx,endy,'#e0a24a',1.8);
   if(fx>rx)out+=L(rx,endy,fx,iy,'#e0a24a',1.4,'stroke-dasharray="4 4"');});
@@ -643,7 +643,7 @@ SCENE({id:'eye-optics',name:'Focusing the eye',tag:'Kepler’s lens',
 
 SCENE({id:'eye-optics-myopia',name:'Short and long sight',tag:'Eye length and lenses',
  definition:'In myopia (short sight) the eye is too long for its focusing power, so distant objects focus in front of the retina; a diverging (minus) lens corrects it. In hyperopia the eye is too short, and a plus lens helps.',
- example:'In this simplified eye, each extra millimetre of length needs about −3.4 D of correction; real eyes, about 24 mm long, need roughly −2.7 D per millimetre. Myopia affected about 30% of people worldwide in 2020 and is rising fast.',
+ example:'In this simplified eye, each extra millimetre of length needs about −3.4 D of correction; real eyes, about 24 mm long, need roughly −2.7 D per millimetre. Myopia was estimated to affect about a third of people worldwide in 2020 and is rising fast.',
  desc:'Parallel rays from a distant object focusing in front of, on or behind the retina, with a correcting lens in front of the eye.',
  research:'Holden, B. A. et al. (2016). Global prevalence of myopia and high myopia and temporal trends from 2000 through 2050. Ophthalmology 123, 1036–1042. He, M. et al. (2015). Effect of time spent outdoors at school on the development of myopia. JAMA 314, 1142–1148 (outdoor time slows onset; evidence moderate).',
  dur:10,hint:'Make the eye longer, then find the lens power that brings the focus back onto the retina.',
@@ -685,7 +685,7 @@ SCENE({id:'eye-optics-kepler',name:'An image on the retina',tag:'From the camera
   const c=S1_KEP[s.k];let out=heading('An image on the back of the eye');
   const tree=(x,y,sc,col)=>L(x,y,x,y-30*sc,'#8a6d4f',3)+Ci(x,y-38*sc,14*Math.abs(sc),col);
   out+=R(40,70,200,130,'#2b3d47','none',6)+Ci(40,135,3,'#fff')+tree(20,175,1,'#3e8a4a');
-  out+=L(20,137,40,135,'#e0a24a',1.4)+L(40,135,230,175,'#e0a24a',1.4,'stroke-opacity=".6"')+tree(225,95,-1,'#3e8a4a');
+  out+=L(20,137,40,135,'#e0a24a',1.4)+L(40,135,225,116,'#e0a24a',1.4,'stroke-opacity=".6"')+tree(225,78,-1,'#3e8a4a');
   out+=TF(140,220,'camera obscura',13,C.muted);
   out+=`<ellipse cx="420" cy="135" rx="90" ry="70" fill="#fff" stroke="${C.line}" stroke-width="2"/>`+`<ellipse cx="335" cy="135" rx="8" ry="30" fill="${C.pale}" stroke="${C.blue}" stroke-width="2"/>`;
   out+=L(300,105,335,135,'#e0a24a',1.4)+L(335,135,505,165,'#e0a24a',1.4)+tree(495,115,-.6,'#3e8a4a')+TF(420,220,'eye: the image is upside down',13,C.muted);
@@ -787,7 +787,7 @@ const S1_coneT=t=>2+1.4*Math.exp(-t/1.5),S1_rodT=t=>-.4+6.5*Math.exp(-t/7);
 const S1_thr=(t,where)=>where==='fovea'?S1_coneT(t):Math.min(S1_coneT(t),S1_rodT(t));
 SCENE({id:'dark-adaptation',name:'Getting used to the dark',tag:'The two-branch curve',
  definition:'After bright light, the eye becomes more sensitive in the dark over about 30–40 minutes. Cones recover quickly but level off; rods recover slowly and become far more sensitive, taking over at the rod–cone break.',
- example:'In a dark cinema you see little at first, much more after 7–10 minutes when rods take over, and by half an hour your sensitivity has risen roughly ten-thousandfold. A light aimed at the fovea follows only the cone branch.',
+ example:'In a dark cinema you see little at first, much more after 7–10 minutes when rods take over, and by half an hour your sensitivity has risen several-thousandfold. A light aimed at the fovea follows only the cone branch.',
  desc:'Threshold intensity (log scale) against minutes in the dark, with cone and rod branches, the rod–cone break and a marker for the chosen time.',
  research:'Hecht, S., Haig, C. & Chase, A. M. (1937). The influence of light adaptation on subsequent dark adaptation of the eye. Journal of General Physiology 20, 831–850. (Curve shapes here are illustrative.)',
  dur:10,hint:'Move through the minutes. Switch the test light to the fovea and the rod branch disappears.',
@@ -843,7 +843,7 @@ SCENE({id:'dark-adaptation-purkinje',name:'Colours at dusk',tag:'The Purkinje sh
  ui:[{range:'lv',label:'Light level',min:-3,max:2,step:.5,get:s=>s.lv,act:'lv',show:v=>v>=1?'daylight':v>=-.5?'dusk':v>=-2?'moonlight':'starlight'}],
  on:{lv(s,v){s.lv=Number(v);return 'keep'}},
  draw(s){
-  const w=clamp((s.lv+2)/2.5,0,1),eff=l=>w*S1_V(l)+(1-w)*S1_Vs(l)*.9,br=eff(620),bb=eff(500),bright=Math.pow(10,(s.lv-2)/5);
+  const w=clamp((s.lv+2)/2.5,0,1),eff=l=>w*S1_V(l)+(1-w)*S1_Vs(l)*.9,br=eff(610),bb=eff(490),bright=Math.pow(10,(s.lv-2)/5);
   let out=heading(w>.8?'Daylight: cones see colour':w>.2?'Dusk: rods are taking over':'Night: rods only, no colour');
   const tone=(l,e)=>{const k=clamp(e*bright*1.2,0,1),g=Math.round(255*k);const cRGB=S1_wl(l,k);return w>.05?cRGB.replace('rgb(','').replace(')','').split(',').map(Number).map((v,i)=>Math.round(v*w+g*(1-w))).join(','):`${g},${g},${g}`};
   out+=R(40,60,520,230,`rgb(${Math.round(30*bright)},${Math.round(40*bright)},${Math.round(50*bright)})`,'none',8);
@@ -911,8 +911,10 @@ SCENE({id:'trichromacy-cones',name:'Three numbers for every colour',tag:'The con
  }});
 
 // Rayleigh match: red 670 nm + green 545 nm against yellow 589 nm, as in Nagel's anomaloscope.
-const S1_ray=(r,y)=>{const R1=S1_cone(670),G=S1_cone(545),Y=S1_cone(589);return {mL:r*R1.L+(1-r)*G.L,mM:r*R1.M+(1-r)*G.M,yL:y*Y.L,yM:y*Y.M}};
-const S1_rayBest=()=>{const R1=S1_cone(670),G=S1_cone(545),Y=S1_cone(589),t=Y.L/Y.M;// solve (rRL+(1-r)GL)/(rRM+(1-r)GM)=t
+// The red lamp is 15× as powerful as the green, to make up for the cones' weak response at 670 nm.
+const S1_rayRed=()=>{const c=S1_cone(670);return {L:15*c.L,M:15*c.M}};
+const S1_ray=(r,y)=>{const R1=S1_rayRed(),G=S1_cone(545),Y=S1_cone(589);return {mL:r*R1.L+(1-r)*G.L,mM:r*R1.M+(1-r)*G.M,yL:y*Y.L,yM:y*Y.M}};
+const S1_rayBest=()=>{const R1=S1_rayRed(),G=S1_cone(545),Y=S1_cone(589),t=Y.L/Y.M;// solve (rRL+(1-r)GL)/(rRM+(1-r)GM)=t
  const r=(t*G.M-G.L)/((R1.L-G.L)-t*(R1.M-G.M));const y=(r*R1.L+(1-r)*G.L)/Y.L;return {r,y}};
 SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Rayleigh match',
  definition:'Metamers are lights with different spectra that look identical, because they produce the same cone responses. Rayleigh’s match pairs a pure yellow with a mix of red and green; how much red a person needs reveals their cone types.',
@@ -931,7 +933,7 @@ SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Ra
   const pl=S1_plot(60,70,240,150,[500,700],[0,2.1],{xt:[[500,'500'],[600,'600'],[700,'700 nm']],yl:'light power'});out+=pl.svg;
   out+=R(pl.X(545)-4,pl.Y((1-s.r/100)*2),8,pl.Y(0)-pl.Y((1-s.r/100)*2),S1_wl(545),'none',2)+R(pl.X(670)-4,pl.Y(s.r/100*2),8,pl.Y(0)-pl.Y(s.r/100*2),S1_wl(670),'none',2);
   out+=R(pl.X(589)-4,pl.Y(Math.min(2.1,s.y/100)),8,pl.Y(0)-pl.Y(Math.min(2.1,s.y/100)),S1_wl(589),C.ink,2);
-  out+=TF(60,262,'thin bars: red + green mix · outlined bar: yellow',13,C.muted,'start');
+  out+=TF(60,262,'thin bars: red + green mix (red lamp 15× stronger) · outlined bar: yellow',13,C.muted,'start');
   const bar=(x,lab,a,b,col,on)=>{const k=60;return TF(x+40,90,lab,14,on?col:C.muted)+R(x,230-k*a,30,k*a,col,'none',3)+R(x+40,230-k*b,30,k*b,tint(col,.4),'none',3)+TF(x+15,248,'mix',13,C.muted)+TF(x+55,248,'yellow',13,C.muted)+(on?'':TF(x+40,140,'absent',13,C.muted))};
   out+=bar(340,'L cones',useL?v.mL:0,useL?v.yL:0,C.coral,useL)+bar(450,'M cones',useM?v.mM:0,useM?v.yM:0,C.green,useM);
   const b=S1_rayBest();out+=TF(60,300,`Typical match: about ${Math.round(b.r*100)}% red with yellow at ${Math.round(b.y*100)}%.`,13,C.ink,'start');
@@ -941,12 +943,12 @@ SCENE({id:'trichromacy-metamers',name:'Different light, same colour',tag:'The Ra
 
 /* =========================== opponent-colour =========================== */
 // Opponent channels from the cone curves, with illustrative weights chosen so unique yellow falls near 577 nm.
-const S1_opp=l=>{const v=S1_cone(l);return {lum:v.L+v.M,rg:v.L-1.62*v.M+.35*v.S,by:1.6*v.S-.5*(v.L+v.M)}};
+const S1_opp=l=>{const v=S1_cone(l);return {lum:v.L+v.M,rg:v.L-1.62*v.M+.35*v.S,by:clamp(18*v.S-.5*(v.L+v.M),-1,1)}};
 SCENE({id:'opponent-colour',name:'Red against green, blue against yellow',tag:'Hering’s opponent colours',
  definition:'Ewald Hering noticed that no colour looks reddish-green or yellowish-blue. He proposed opponent channels: red against green, blue against yellow, and light against dark. Each channel signals one side or the other, never both.',
  example:'At about 577 nm the red–green channel is balanced, so we see a yellow with no red or green in it: “unique yellow”. Orange is red plus yellow; teal is green plus blue; but there is no reddish green.',
  desc:'The red–green and blue–yellow channel signals for the chosen wavelength, computed from the cone responses, with the hue they signal.',
- research:'Hering, E. (1878/1920). Grundzüge der Lehre vom Lichtsinn. Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404. (Channel weights here are illustrative.)',
+ research:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn (theory first set out in the 1870s). Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404. (Channel weights here are illustrative.)',
  dur:10,hint:'Sweep the wavelength. Find where the red–green channel crosses zero: that is unique yellow.',
  init:()=>({l:577}),
  watch(p){return {l:Math.round(440+250*p)}},
@@ -959,7 +961,7 @@ SCENE({id:'opponent-colour',name:'Red against green, blue against yellow',tag:'H
    o2+=R(w<0?400+w:400,y,Math.abs(w),22,w<0?cn:cp,'none',3)+TF(255,y+40,neg,13,cn,'start')+TF(545,y+40,pos,13,cp,'end');return o2};
   out+=ch(96,'red–green channel',rg,'green','red',C.green,C.coral)+ch(186,'blue–yellow channel',by,'yellow','blue','#c99a1a',C.blue);
   const hue=(Math.abs(rg)<.04?'':rg>0?'red':'green')+(Math.abs(by)<.04?'':(Math.abs(rg)<.04?'':'-')+(by>0?'blue':'yellow'));
-  out+=TB(300,290,'Signalled hue: '+(hue||'neutral'),16,C.ink)+TF(300,316,Math.abs(rg)<.04?'Red–green is balanced: a unique hue.':'Never red and green at once.',13,C.muted);
+  out+=TB(300,290,'Signalled hue: '+(hue||(rg>0?'red':'neutral')),16,C.ink)+TF(300,316,Math.abs(rg)<.04&&Math.abs(by)>=.04?'Red–green is balanced: a unique hue.':'Never red and green at once.',13,C.muted);
   return {svg:out,phase:`At ${s.l} nm: red–green ${rg.toFixed(2)}, blue–yellow ${by.toFixed(2)}.`};
  }});
 
@@ -1104,7 +1106,7 @@ SOURCE('s1-cie',{title:'CIE photopic luminous efficiency V(λ) (1924) and scotop
 SOURCE('s1-young',{title:'Young, T. (1802). On the theory of light and colours. Philosophical Transactions 92, 12–48.'});
 SOURCE('s1-maxwell',{title:'Maxwell, J. C. (1860). On the theory of compound colours, and the relations of the colours of the spectrum. Philosophical Transactions 150, 57–84.'});
 SOURCE('s1-rayleigh',{title:'Rayleigh, Lord (1881). Experiments on colour. Nature 25, 64–66.'});
-SOURCE('s1-hering',{title:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn. Springer (lectures from 1878); trans. Outlines of a Theory of the Light Sense (1964).'});
+SOURCE('s1-hering',{title:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn. Springer (his opponent theory dates from the 1870s); trans. Outlines of a Theory of the Light Sense (1964).'});
 SOURCE('s1-hurvich',{title:'Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404.'});
 SOURCE('s1-devalois',{title:'De Valois, R. L., Abramov, I. & Jacobs, G. H. (1966). Analysis of response patterns of LGN cells. Journal of the Optical Society of America 56, 966–977.'});
 SOURCE('s1-ladd-franklin',{title:'Ladd-Franklin, C. (1892). A new theory of light sensation. International Congress of Psychology, London; later in Colour and Colour Theories (1929).'});
@@ -1182,7 +1184,7 @@ WORD(
  {key:'person-maxwell',title:'James Clerk Maxwell',aliases:['James Clerk Maxwell','Maxwell'],linkContext:'trichromacy',scene:'trichromacy',here:'Scottish physicist (1831–1879) who measured colour matching and took the first colour photograph in 1861.',contrast:'Better known for electromagnetism.',example:'His colour box, 1860.'},
  {key:'person-hering',title:'Ewald Hering',aliases:['Ewald Hering','Hering'],linkContext:'opponent-colour',scene:'opponent-colour',here:'German physiologist (1834–1918) who proposed opponent colour processes.',contrast:'Seen as Helmholtz’s rival; both turned out partly right.',example:'Red–green and blue–yellow opposites.'},
  {key:'person-ladd-franklin',title:'Christine Ladd-Franklin',aliases:['Christine Ladd-Franklin','Ladd-Franklin'],linkContext:'opponent-colour-zone',scene:'opponent-colour-zone',here:'American psychologist and logician (1847–1930) who proposed an evolutionary theory of colour vision in 1892.',contrast:'She completed a PhD at Johns Hopkins in 1882 but was not awarded it until 1926.',example:'Light first, then blue–yellow, then red–green.'},
- {key:'person-dalton-colour',title:'John Dalton (colour vision)',aliases:['John Dalton','Daltonism'],linkContext:'colour-blindness-genetics',scene:'colour-blindness-genetics',here:'English chemist (1766–1844) who described his own colour blindness in 1794; it was long called Daltonism.',contrast:'DNA from his eye showed in 1995 that he lacked M cones.',example:'He saw a red geranium as close to the colour of its leaves.'},
+ {key:'person-dalton-colour',title:'John Dalton (colour vision)',aliases:['John Dalton','Daltonism'],linkContext:'colour-blindness-genetics',scene:'colour-blindness-genetics',here:'English chemist (1766–1844) who described his own colour blindness in 1794; it was long called Daltonism.',contrast:'DNA from his eye showed in 1995 that he lacked M cones.',example:'To him, red sealing wax and a laurel leaf were much the same colour.'},
  {key:'person-ishihara',title:'Shinobu Ishihara',aliases:['Shinobu Ishihara','Ishihara'],linkContext:'colour-blindness-plates',scene:'colour-blindness-plates',here:'Japanese ophthalmologist (1879–1963) who published the best-known dot plates for colour vision in 1917.',contrast:'Plates screen for red–green deficiency; they do not grade it precisely.',example:'Tests for Colour-Blindness.'}
 );
 
@@ -1281,7 +1283,7 @@ function S2_mach(k,sigma){
 }
 SCENE({id:'lateral-inhibition',name:'Mach bands',tag:'Edges are sharpened by neighbours',
  definition:'Each light-sensitive cell is inhibited by its neighbours. Where the light changes, cells on the bright side of an edge get less inhibition than their neighbours and cells on the dark side get more, so the edge is exaggerated. Ernst Mach described the resulting bands in 1865.',
- example:'A staircase of six evenly lit grey strips does not look even: each strip seems lighter next to its darker neighbour and darker next to its lighter one, though each is uniform.',
+ example:'A staircase of six evenly lit grey strips does not look even: each strip seems lighter next to its darker neighbour and darker next to its lighter one, though each is uniform. Strictly, this staircase effect is the Chevreul illusion; Mach’s own bands appear where a smooth ramp of brightness meets an even area. Both are explained the same way.',
  desc:'Six uniform grey strips above a graph of the actual light (straight steps) and the response after lateral inhibition (with dips and overshoots at each edge).',
  research:'Mach, E. (1865). Über die Wirkung der räumlichen Vertheilung des Lichtreizes auf die Netzhaut; Ratliff, F. (1965). Mach Bands: Quantitative Studies on Neural Networks in the Retina. Holden-Day. Robust; the simple model here is a sketch, not a fitted retina.',
  dur:10,hint:'Look along the strips first and notice the bright and dark borders. Then turn the inhibition up and down and watch the response curve.',
@@ -1303,7 +1305,7 @@ SCENE({id:'lateral-inhibition',name:'Mach bands',tag:'Edges are sharpened by nei
 
 SCENE({id:'lateral-inhibition-limulus',name:'Hartline’s horseshoe crab',tag:'Inhibition measured in single cells',
  definition:'Haldan Keffer Hartline recorded from single receptor units in the eye of the horseshoe crab, Limulus. Lighting a unit made it fire; lighting its neighbours as well made it fire less. Each unit’s output is its own excitation minus a share of its neighbours’ outputs.',
- example:'A unit firing 30 times a second in the dark surround drops to about 24 when a neighbour firing 40 times a second is lit nearby, with an inhibition coefficient of 0.15.',
+ example:'A unit firing 30 times a second in the dark surround drops to about 25 when a neighbour driven at 40 times a second is lit nearby, with an inhibition coefficient of 0.15.',
  desc:'Two neighbouring receptor units, A and B, with light levels set by sliders, and bars for A’s firing alone and with B lit, from the Hartline–Ratliff equations.',
  research:'Hartline, H. K., Wagner, H. G. & Ratliff, F. (1956). Inhibition in the eye of Limulus. Journal of General Physiology 39, 651–673; Hartline, H. K. & Ratliff, F. (1957). Inhibitory interaction of receptor units in the eye of Limulus. JGP 40, 357–376. Hartline shared the 1967 Nobel Prize. Coefficients here are illustrative.',
  dur:10,hint:'Set A’s light, then raise B’s light and watch A slow down. Raise the coupling to make the inhibition stronger.',
@@ -1380,7 +1382,7 @@ SCENE({id:'depth-stereo',name:'Cues to depth',tag:'Many clues, none sufficient a
  }});
 
 SCENE({id:'depth-stereo-disparity',name:'Binocular disparity',tag:'Two eyes, two views',
- definition:'The eyes are about 6 cm apart, so each sees a slightly different view. The difference in the angle an object makes at the two eyes, its disparity, shrinks with the square of distance. Charles Wheatstone proved in 1838 with his stereoscope that disparity alone can create depth.',
+ definition:'The eyes are about 6 cm apart, so each sees a slightly different view. The disparity between two objects is the difference in the angles they make at the two eyes; for a fixed depth step it shrinks with the square of distance. Charles Wheatstone proved in 1838 with his stereoscope that disparity alone can create depth.',
  example:'With a typical stereoacuity of 20 seconds of arc, a person can tell that one object is about 1.5 mm nearer than another at 1 metre, but at 10 metres the difference must be about 15 cm.',
  desc:'A top view of two eyes looking at two objects at a chosen distance and depth difference, with the disparity in seconds of arc and the smallest depth difference detectable at that distance.',
  research:'Wheatstone, C. (1838). Contributions to the physiology of vision, Part 1. Phil. Trans. R. Soc. 128, 371–394; Dodgson, N. A. (2004). Variation and extrema of human interpupillary distance (mean about 63 mm); Howard, I. P. & Rogers, B. J. (2012). Perceiving in Depth. Stereoacuity of about 20″ is typical in good conditions; it varies widely.',
@@ -1671,7 +1673,7 @@ SCENE({id:'face-perception-thatcher',name:'The Thatcher illusion',tag:'You take 
 
 SCENE({id:'face-perception-variation',name:'From face blindness to super-recognisers',tag:'People differ widely',
  definition:'Face recognition varies enormously between people. About 2–2.5% of people have developmental prosopagnosia, lifelong difficulty recognising faces with otherwise normal vision; at the other end, “super-recognisers” remember faces exceptionally well. The Cambridge Face Memory Test measures the range.',
- example:'On the Cambridge Face Memory Test, a score more than about two standard deviations below the average suggests prosopagnosia; two above, a super-recogniser.',
+ example:'On the Cambridge Face Memory Test, a score more than about two standard deviations below the average suggests prosopagnosia. The standard test is too easy to pick out super-recognisers, so a longer, harder version is used for them.',
  desc:'A bell curve of face-memory scores with the bottom and top tails marked, and a slider placing a person on it with their percentile.',
  research:'Duchaine, B. & Nakayama, K. (2006). The Cambridge Face Memory Test. Neuropsychologia 44, 576–585; Kennerknecht, I. et al. (2006). First report of prevalence of non-syndromic hereditary prosopagnosia. American Journal of Medical Genetics A 140, 1617–1622 (about 2.5%); Russell, R., Duchaine, B. & Nakayama, K. (2009). Super-recognizers. Psychonomic Bulletin & Review 16, 252–257. The curve is an approximate normal model.',
  dur:10,hint:'Move a score along the curve. This is not a test: it shows where a score would fall, not your own ability.',
@@ -1684,13 +1686,13 @@ SCENE({id:'face-perception-variation',name:'From face blindness to super-recogni
   const ax=S2_axes(70,70,460,190,[40,110],[0,1.05],'score on a face-memory test','',[[40,'40'],[58,'58'],[80,'80'],[100,'100']],[]);out+=ax.svg;
   const pts=[];for(let x=40;x<=110;x+=1)pts.push([ax.X(x),ax.Y(Math.exp(-((x-mu)**2)/(2*sd*sd)))]);
   out+=P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L')+` L${fmt(ax.X(110))} ${fmt(ax.Y(0))} L${fmt(ax.X(40))} ${fmt(ax.Y(0))} Z`,'none',0,'#e3eef5')+S2_poly(pts,C.blue,2.5);
-  out+=R(ax.X(40),70,ax.X(58)-ax.X(40),190,'rgba(196,82,56,.12)','none',0)+R(ax.X(102),70,ax.X(110)-ax.X(102),190,'rgba(44,119,108,.14)','none',0);
+  out+=R(ax.X(40),70,ax.X(58)-ax.X(40),190,'rgba(196,82,56,.12)','none',0)+R(ax.X(98),70,ax.X(100)-ax.X(98),190,'rgba(44,119,108,.14)','none',0);
   out+=TF(ax.X(49),88,'possible',13,C.coral)+TF(ax.X(49),104,'prosopagnosia',13,C.coral);
   out+=TF(ax.X(106),88,'super-',13,C.green)+TF(ax.X(106),104,'recognisers',13,C.green);
   const xx=Math.min(110,s.x);out+=L(ax.X(xx),70,ax.X(xx),260,C.ink,2.5);
   const pct=Math.round(phi((s.x-mu)/sd)*100);
   out+=T(300,330,`A score of ${s.x}% is higher than about ${pct}% of people.`,15,C.ink);
-  return {svg:out,phase:pct<3?'In the bottom tail: people here often rely on voice, gait and hair to recognise others, and many do not realise others find faces easier.':pct>97?'In the top tail: some police forces now recruit super-recognisers to review CCTV.':'Most people sit in the broad middle; face memory is partly heritable and fairly stable over time.'};
+  return {svg:out,phase:pct<3?'In the bottom tail: people here often rely on voice, gait and hair to recognise others, and many do not realise others find faces easier.':pct>=95?'In the top tail: some police forces now recruit super-recognisers to review CCTV.':'Most people sit in the broad middle; face memory is partly heritable and fairly stable over time.'};
  }});
 
 /* =========================== blind-spot-filling =========================== */
@@ -1779,7 +1781,7 @@ WORD(
  {key:'akinetopsia',title:'Akinetopsia',aliases:['akinetopsia','motion blindness'],linkContext:'motion-perception-coherence',scene:'motion-perception-coherence',here:'A rare loss of the ability to see motion, after damage to the brain’s motion area.',contrast:'Not blindness: still objects are seen normally.',example:'Zihl’s patient L. M. saw pouring tea as a frozen column.'},
  {key:'muller-lyer',title:'Müller-Lyer illusion',aliases:['Müller-Lyer illusion','Müller-Lyer','Muller-Lyer'],linkContext:'visual-illusions',scene:'visual-illusions',here:'Two equal lines look different in length when one ends in arrowheads and the other in outward fins.',contrast:'How strongly people experience it seems to vary between populations; the reasons are debated.',example:'Most people must shorten the fins-out line to make the two look equal.'},
  {key:'ebbinghaus-illusion',title:'Ebbinghaus illusion',aliases:['Ebbinghaus illusion','Titchener circles'],linkContext:'visual-illusions-ebbinghaus',scene:'visual-illusions-ebbinghaus',here:'A circle looks smaller among large circles and larger among small ones.',contrast:'A size-contrast illusion, unlike lightness illusions such as the checker shadow.',example:'Himba observers were less affected than British students in one study.'},
- {key:'lightness-constancy',title:'Lightness constancy',aliases:['lightness constancy','colour constancy','color constancy'],linkContext:'visual-illusions-checker',scene:'visual-illusions-checker',here:'The tendency to see a surface’s lightness or colour as stable despite changes in the light falling on it.',contrast:'Lightness is the surface’s reflectance as perceived; brightness is how much light reaches the eye.',example:'A white page looks white in shade and in sun.'},
+ {key:'lightness-constancy',title:'Lightness constancy',aliases:['lightness constancy','colour constancy','color constancy'],linkContext:'visual-illusions-checker',scene:'visual-illusions-checker',here:'The tendency to see a surface’s lightness or colour as stable despite changes in the light falling on it.',contrast:'Lightness is the surface’s reflectance as perceived; brightness is how intense the light from it appears. The physical amount of light is called luminance.',example:'A white page looks white in shade and in sun.'},
  {key:'fusiform-face-area',title:'Fusiform face area',aliases:['fusiform face area','FFA'],linkContext:'face-perception',scene:'face-perception',here:'A region on the underside of the temporal lobe that responds more strongly to faces than to other objects.',contrast:'Whether it is specific to faces or to any category we are expert in is debated.',example:'Its response to faces is roughly twice its response to houses.'},
  {key:'inversion-effect',title:'Face inversion effect',aliases:['inversion effect','face inversion effect'],linkContext:'face-perception',scene:'face-perception',here:'Turning a face upside down impairs recognition much more than turning other objects upside down.',contrast:'Explained by holistic processing of faces rather than reading parts one by one.',example:'Yin found inverted faces much harder to recognise than inverted houses.'},
  {key:'thatcher-illusion',title:'Thatcher illusion',aliases:['Thatcher illusion','Thatcher effect'],linkContext:'face-perception-thatcher',scene:'face-perception-thatcher',here:'A face with flipped eyes and mouth looks grotesque upright but nearly normal upside down.',contrast:'Named after the photograph Thompson first used; the effect works with any face.',example:'Turning the whole face over hides the oddity almost completely.'},
@@ -1855,7 +1857,7 @@ SCENE({id:'outer-middle-ear',name:'Why we need a middle ear',tag:'Matching air t
  }});
 
 SCENE({id:'outer-middle-ear-canal',name:'The ear canal resonates',tag:'A tube closed at one end',
- definition:'The ear canal is a tube about 2.5 cm long, open at the outside and closed by the eardrum. Like a bottle, it resonates at the frequency whose quarter-wavelength fits its length, boosting sounds near 3 kHz by roughly 10 to 15 dB.',
+ definition:'The ear canal is a tube about 2.5 cm long, open at the outside and closed by the eardrum. Like an organ pipe closed at one end, it resonates at the frequency whose quarter-wavelength fits its length, boosting sounds near 3 kHz by roughly 10 to 15 dB.',
  example:'With c = 343 m/s and L = 2.5 cm, the resonance is 343 ÷ (4 × 0.025) ≈ 3,400 Hz, close to where human hearing is most sensitive.',
  desc:'A tube closed at the eardrum with the pressure of a quarter-wave standing wave drawn inside it, and a gain curve with its peak at c/4L.',
  research:'Shaw (1974). Transformation of sound pressure level from the free field to the eardrum in the horizontal plane. JASA 56, 1848–1861. · Wiener & Ross (1946). The pressure distribution in the auditory canal. JASA 18.',
@@ -1999,7 +2001,7 @@ SCENE({id:'cochlea-bekesy',name:'Békésy’s wave, and the living cochlea',tag:
  }});
 
 /* ===================== Lesson: hair-cells ===================== */
-const S3_po=x=>1/(1+Math.exp(-(x-20)/12));
+const S3_po=x=>1/(1+Math.exp(-(x-23)/12));
 SCENE({id:'hair-cells',name:'Hair cells turn bending into signals',tag:'Tip links pull channels open',
  definition:'On top of each hair cell is a bundle of stereocilia in rows of rising height, joined by fine tip links. Bending the bundle towards the tallest row stretches the tip links and opens ion channels; bending it back closes them.',
  example:'Deflections of about a nanometre, close to the width of a few atoms, are enough to change the current. About 10–15% of channels are open at rest, so the cell can signal both directions.',
@@ -2040,7 +2042,7 @@ SCENE({id:'hair-cells-outer',name:'Outer hair cells amplify',tag:'The cochlear a
  ui:[{choose:[[1,'Outer hair cells healthy'],[0,'Lost']],label:'Outer hair cells',get:s=>s.ohc,act:'ohc'},{range:'lev',label:'Input level',min:0,max:100,step:5,get:s=>s.lev,act:'lev',show:v=>v+' dB SPL'}],
  on:{ohc(s,v){s.ohc=+v},lev(s,v){s.lev=+v}},
  draw(s){
-  const io=(L,h)=>h?(L<=30?L+45:75+.2*(L-30)):L-11;let out=heading(s.ohc?'Healthy: sharp tuning and compression':'Outer hair cells lost: about 50 dB less gain');
+  const io=(L,h)=>h?(L<=30?L+39:69+.286*(L-30)):L-11;let out=heading(s.ohc?'Healthy: sharp tuning and compression':'Outer hair cells lost: about 50 dB less gain');
   // tuning curve at CF 4 kHz
   const x0=50,w=230,y0=320,h=210,f0=1000,f1=10000,ty=v=>y0-(100-v)/100*h;
   out+=S3_faxis(x0,y0,w,f0,f1,[1000,2000,4000,8000])+L(x0,y0,x0,y0-h,C.line,1.5);
@@ -2085,7 +2087,7 @@ SCENE({id:'hair-cells-oae',name:'The ear makes sounds',tag:'Otoacoustic emission
 /* ===================== Lesson: hearing-range ===================== */
 SCENE({id:'hearing-range',name:'The range of hearing',tag:'From 20 Hz to 20 kHz, unevenly',
  definition:'The quietest sound you can hear depends strongly on frequency. Young adults are most sensitive between about 2 and 5 kHz, need far more sound at low frequencies, and lose the highest frequencies with age.',
- example:'A 100 Hz tone must be about 25 dB more intense than a 3 kHz tone to be just heard. By 70, many people need about 40–60 dB more at 4–8 kHz than they did at 20.',
+ example:'A 100 Hz tone must be about 30 dB more intense than a 3 kHz tone to be just heard. By 70, many people need about 40–60 dB more at 4–8 kHz than they did at 20.',
  desc:'Threshold of hearing against frequency on a log scale (Terhardt’s fit for young adults), with an age-related shift added for the chosen age and the chosen frequency marked.',
  research:'Terhardt (1979). Calculating virtual pitch. Hearing Research 1 (threshold approximation). · ISO 226:2003 and ISO 389-7 (threshold of hearing). · ISO 7029 (age-related thresholds; the age curves here are an approximation of its shape).',
  dur:10,hint:'Choose an age and move the frequency to read the threshold. Play uses a gentle level from your device; it is not a hearing test.',
@@ -2213,7 +2215,7 @@ SCENE({id:'hearing-loss-audiogram',name:'Reading an audiogram',tag:'Four common 
   S3_AF.forEach((f,i)=>{out+=L(xs(i),y0,xs(i),y0+h,C.grid,1)+TF(xs(i),y0-8,f>=1000?f/1000+'k':f,12,C.muted)});
   out+=TF(x0-8,y0-8,'Hz',12,C.muted,'end')+TF(x0-46,Y(50),'dB HL',12,C.muted,'middle','transform="rotate(-90 '+fmt(x0-46)+' '+fmt(Y(50))+')"');
   let d='';q.air.forEach((v,i)=>{d+=(i?'L':'M')+fmt(xs(i))+' '+fmt(Y(v))});out+=P(d,C.coral,2.4);q.air.forEach((v,i)=>{out+=Ci(xs(i),Y(v),7,'#fff',C.coral)});
-  if(q.bone){let b='';q.bone.forEach((v,i)=>{b+=(i?'L':'M')+fmt(xs(i)+10)+' '+fmt(Y(v))});out+=P(b,C.blue,1.8,'none','stroke-dasharray="4 3"');q.bone.forEach((v,i)=>{out+=TBF(xs(i)+10,Y(v)+5,'<',16,C.blue)});out+=TF(x0+8,Y(3),'< bone conduction',12,C.blue,'start')}
+  if(q.bone){let b='';q.bone.forEach((v,i)=>{b+=(i?'L':'M')+fmt(xs(i)+10)+' '+fmt(Y(v))});out+=P(b,C.blue,1.8,'none','stroke-dasharray="4 3"');q.bone.forEach((v,i)=>{out+=TBF(xs(i)+10,Y(v)+5,'△',16,C.blue)});out+=TF(x0+8,Y(3),'△ bone conduction',12,C.blue,'start')}
   out+=TF(x0+8,y0+h-8,'○ air conduction',12,C.coral,'start')+TF(x0+w-8,y0+h-8,'worse hearing is lower',12,C.muted,'end');
   out+=S3_note('Typical example patterns. Only an audiologist’s calibrated test measures hearing.',350);
   const say={normal:'All thresholds sit within the typical range near 0 dB HL.',noise:'A dip centred near 4 kHz with recovery at 8 kHz is the classic sign of noise exposure: the cochlea is most vulnerable around the place for 3–6 kHz.',age:'A steady slope downwards towards high frequencies is typical of age-related loss (presbycusis): consonants like s, f and th fade first.',cond:'Air conduction is down but bone conduction (vibration applied to the skull, bypassing the middle ear) is normal: the cochlea works and sound is blocked on the way in, for example by fluid or otosclerosis.'};
@@ -2224,7 +2226,7 @@ SCENE({id:'hearing-loss-hidden',name:'Hidden hearing loss?',tag:'Synapses before
  definition:'In mice, a noise that only temporarily raises thresholds can still permanently destroy up to about half the synapses between inner hair cells and nerve fibres. Thresholds recover, so the loss is “hidden” from a standard audiogram. Whether this happens to a meaningful degree in humans is still debated.',
  example:'Kujawa and Liberman (2009) exposed mice to 100 dB noise for 2 hours: thresholds returned to normal within two weeks, but about 50% of the synapses in the affected region were gone for good.',
  desc:'Two curves over the weeks after a noise: the temporary threshold shift fading to zero, and the synapse count staying low, for mice; and evidence cards for humans.',
- research:'Kujawa & Liberman (2009). Adding insult to injury: cochlear nerve degeneration after “temporary” noise-induced hearing loss. Journal of Neuroscience 29. · Prendergast et al. (2017). Hearing Research 344 (no clear effect in young adults). · Wu et al. (2019). Primary neural degeneration in the human cochlea. Journal of Neuroscience 39. · Bramhall et al. (2019). Hearing Research 377 (review).',
+ research:'Kujawa & Liberman (2009). Adding insult to injury: cochlear nerve degeneration after “temporary” noise-induced hearing loss. Journal of Neuroscience 29. · Prendergast et al. (2017). Hearing Research 344 (no clear effect in young adults). · Wu et al. (2019). Primary neural degeneration in the human cochlea: evidence for hidden hearing loss in the aging ear. Neuroscience 407, 8–20. · Wu et al. (2021). Primary neural degeneration in noise-exposed human cochleas. Journal of Neuroscience 41, 4439–4447. · Bramhall et al. (2019). Hearing Research 377 (review).',
  dur:10,hint:'Slide the weeks after exposure for the mouse data, then switch to humans to see why the question is still open.',
  init:()=>({wk:4,who:'mice'}),
  watch(p){return {wk:Math.round(p*16),who:p<.65?'mice':'humans'}},
@@ -2232,7 +2234,7 @@ SCENE({id:'hearing-loss-hidden',name:'Hidden hearing loss?',tag:'Synapses before
  on:{who(s,v){s.who=v},wk(s,v){s.wk=+v}},
  draw(s){
   if(s.who==='humans'){let out=heading('In humans: evidence is mixed');
-   const cards=[['Supports','Post-mortem ears show synapse loss with age and noise (Wu et al. 2019).',C.green],['Mixed','Some studies link noise history to weaker nerve responses; others find none (Bramhall 2019 review).',C.amber],['Against','Young adults with high noise exposure showed no clear deficit (Prendergast 2017).',C.coral],['Open','Better tests are needed; “hidden” loss may explain some trouble hearing in noise.',C.blue]];
+   const cards=[['Supports','Post-mortem ears show nerve-fibre loss with age and noise (Wu et al. 2019, 2021).',C.green],['Mixed','Some studies link noise history to weaker nerve responses; others find none (Bramhall 2019 review).',C.amber],['Against','Young adults with high noise exposure showed no clear deficit (Prendergast 2017).',C.coral],['Open','Better tests are needed; “hidden” loss may explain some trouble hearing in noise.',C.blue]];
    cards.forEach(([t,b,col],i)=>{const x=40+(i%2)*270,y=70+Math.floor(i/2)*130;out+=R(x,y,250,112,'#fff',col,10)+TBF(x+14,y+26,t,14,col,'start');const words=b.split(' ');let line='',ly=y+50;for(const w of words){if((line+w).length>34){out+=TF(x+14,ly,line.trim(),12,C.ink,'start');line='';ly+=17}line+=w+' '}out+=TF(x+14,ly,line.trim(),12,C.ink,'start')});
    out+=S3_note('Status: shown in animals; in humans, plausible but debated.',344);
    return {svg:out,phase:'The mechanism is clear in rodents and synapse loss is seen in human temporal bones, but whether everyday noise causes measurable hidden loss in living people is unresolved.'}}
@@ -2453,7 +2455,7 @@ SOURCE('s4-pisoni-1974',{title:'Pisoni & Lazarus (1974). Categorical and noncate
 SOURCE('s4-mcmurray-2022',{title:'McMurray (2022). The myth of categorical perception. JASA 152, 3819–3842.'});
 SOURCE('s4-greenwood-1990',{title:'Greenwood (1990). A cochlear frequency-position function for several species — 29 years later. JASA 87, 2592–2605.'});
 SOURCE('s4-johnson-1980',{title:'Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122.'});
-SOURCE('s4-verschooten-2019',{title:'Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans: a compilation of viewpoints. Trends in Hearing 23.'});
+SOURCE('s4-verschooten-2019',{title:'Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans: a compilation of viewpoints. Hearing Research 377, 109–121.'});
 SOURCE('s4-wier-1977',{title:'Wier, Jesteadt & Green (1977). Frequency discrimination as a function of frequency and sensation level. JASA 61, 178–184.'});
 SOURCE('s4-micheyl-2006',{title:'Micheyl, Delhommeau, Perrot & Oxenham (2006). Influence of musical and psychoacoustical training on pitch discrimination. Hearing Research 219, 36–47.'});
 SOURCE('s4-levitt-1971',{title:'Levitt (1971). Transformed up-down methods in psychoacoustics. JASA 49, 467–477.'});
@@ -2842,7 +2844,7 @@ SCENE({id:'speech-perception-categories',name:'From “ba” to “da”',tag:'Y
  definition:'Categorical perception: along a smooth physical continuum between two speech sounds, listeners report one category, then switch sharply to the other, rather than hearing a gradual blend.',
  example:'Seven syllables differ only in how the second formant starts, from 1000 Hz to 1800 Hz. Most people call the first three “ba” and the last three “da”, with a steep change in between.',
  desc:'Fourteen trials of a seven-step synthetic “ba”–“da” continuum. The share of “da” answers at each step is plotted beside a typical steep identification curve.',
- research:'Liberman, Harris, Hoffman & Griffith (1957). The discrimination of speech sounds within and across phoneme boundaries. J. Exp. Psychol. 54, 358–368. · Pisoni & Lazarus (1974): listeners can hear differences inside a category, so the strong form is debated (McMurray 2022, Psychological Review).',
+ research:'Liberman, Harris, Hoffman & Griffith (1957). The discrimination of speech sounds within and across phoneme boundaries. J. Exp. Psychol. 54, 358–368. · Pisoni & Lazarus (1974): listeners can hear differences inside a category, so the strong form is debated (McMurray 2022, JASA 152, 3819–3842).',
  dur:10,hint:'Press Play, then answer “ba” or “da”. Fourteen trials in a fixed random order. The voice is synthetic. Your answers stay on this page.',
  init:()=>({seed:9,i:0,res:[]}),
  watch(p){const n=Math.min(14,Math.floor(p*15)),o=S4_contOrder(9),r=S4_rng(41),res=[];for(let i=0;i<n;i++){const k=o[i];res.push({k,da:r()<S4_logistic(k,3,2.6)})}return {seed:9,i:n,res,sim:true}},
@@ -2889,7 +2891,7 @@ SCENE({id:'pitch-perception',name:'Place and timing',tag:'Two codes for pitch',
  definition:'The ear has two ways to signal frequency: place (which part of the cochlea vibrates most) and timing (nerve fibres firing in step with each cycle, phase locking). Phase locking fades above a few kilohertz, so very high pitches rely on place alone.',
  example:'At 500 Hz fibres fire on the same part of nearly every cycle; at 6 kHz they can no longer keep up in step, and only the place of the peak says what the frequency is.',
  desc:'Left: the uncoiled cochlea from apex to base with the place of the peak for the chosen frequency. Right: a waveform with nerve spikes that line up with its peaks while phase locking is strong, and scatter when it is weak.',
- research:'Greenwood (1990). A cochlear frequency-position function for several species. JASA 87, 2592–2605. · Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122 (cat). · Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans. J. Neurosci. 39, 3938–3956 (human limit debated).',
+ research:'Greenwood (1990). A cochlear frequency-position function for several species. JASA 87, 2592–2605. · Johnson (1980). The relationship between spike rate and synchrony in responses of auditory-nerve fibers to single tones. JASA 68, 1115–1122 (cat). · Verschooten et al. (2019). The upper frequency limit for the use of phase locking to code temporal fine structure in humans. Hearing Research 377, 109–121 (human limit debated).',
  dur:10,hint:'Slide the frequency and Play. Watch the place move along the cochlea and the spikes lose their lock to the wave.',
  init:()=>({f:500}),
  watch(p){return {f:Math.round(100*Math.pow(100,smooth(p)))}},
@@ -2943,7 +2945,7 @@ const S4_TUNE=[0,0,7,7,9,9,7,5,5,4,4,2,2,0];
 SCENE({id:'pitch-perception-melody',name:'Melodies at the top',tag:'Where musical pitch fades',
  definition:'Above about 4–5 kHz, tones are still heard and can be told apart, but they lose their musical quality: melodies become hard to recognise and octave judgements break down. This matches roughly where phase locking fades.',
  example:'A nursery tune played around 500 Hz is instantly familiar; moved up four octaves, near 8 kHz, many listeners struggle to name it even though every note is audible.',
- desc:'The same melody drawn on a log-frequency axis at the chosen octave shift, with the region where phase locking is strong shaded.',
+ desc:'The same melody drawn on a log-frequency axis at the chosen octave shift, with the region where phase locking is available shaded.',
  research:'Attneave & Olson (1971). Pitch as a medium: a new approach to psychophysical scaling. American Journal of Psychology 84, 147–166. · Ward (1954). Subjective musical pitch. JASA 26, 369–380. Recent work finds some listeners still hear melodies above 8 kHz (Lau, Mehta & Oxenham 2017, J. Neurosci. 37, 9013–9021).',
  dur:10,hint:'Play the tune, then shift it up octave by octave. Keep the volume low: high tones can be piercing.',
  init:()=>({oct:0}),
@@ -2953,12 +2955,12 @@ SCENE({id:'pitch-perception-melody',name:'Melodies at the top',tag:'Where musica
  draw(s){
   const base=midiHz(72+12*s.oct);let out=heading(`Melody starting at ${base>=1000?fmt(base/1000)+' kHz':Math.round(base)+' Hz'}`,26);
   const lx=f=>70+Math.log(f/200)/Math.log(80)*460,pl=S4_plot(70,64,460,220,[0,1],[0,1]);out+=pl.svg;
-  out+=R(70,64,lx(4000)-70,220,C.greenp,'none',0)+TF(lx(4000)-6,82,'phase locking strong',12,C.green,'end');
+  out+=R(70,64,lx(4000)-70,220,C.greenp,'none',0)+TF(lx(4000)-6,82,'phase locking available',12,C.green,'end');
   [[250,'250'],[500,'500'],[1000,'1k'],[2000,'2k'],[4000,'4k'],[8000,'8k'],[16000,'16k Hz']].forEach(([f,l])=>out+=L(lx(f),284,lx(f),290,C.line,1)+TF(lx(f),304,l,12,C.muted));
   S4_TUNE.forEach((m,i)=>{const f=midiHz(72+m+12*s.oct),x=lx(f),y=100+i*12.5;out+=R(x-6,y-4,12,8,f>5000?C.coral:C.blue,'none',3)});
   out+=TF(300,326,'frequency (log scale) · rows: notes in order',12,C.muted);
-  out+=T(300,360,base>4500?'Still audible, but the tune is much harder to recognise':'Easy to recognise: a clear musical pitch',15,C.ink);
-  return {svg:out,phase:base>4500?'Each note is heard and the steps up and down are still noticed, but naming the tune gets hard for most people. Not everyone: some listeners keep musical pitch higher, which is why the timing explanation is debated.':'In this range both place and timing codes are available and musical pitch is strong.'};
+  out+=T(300,360,base>4000?'Still audible, but the tune is much harder to recognise':'Easy to recognise: a clear musical pitch',15,C.ink);
+  return {svg:out,phase:base>4000?'Each note is heard and the steps up and down are still noticed, but naming the tune gets hard for most people. Not everyone: some listeners keep musical pitch higher, which is why the timing explanation is debated.':'In this range both place and timing codes are available and musical pitch is strong.'};
  }});
 
 /* =========================== masking =========================== */
@@ -3005,7 +3007,7 @@ SCENE({id:'masking-detect',name:'Find the tone in the noise',tag:'You are the li
  watch(p){const s={seed:6,i:0,db:30,run:0,dir:0,rev:[],hist:[],sim:true};const n=Math.floor(p*S4_CR_N),r=S4_rng(66);for(let k=0;k<n;k++){const pc=.5+.5/(1+Math.exp(-(s.db-S4_CR_TYP)/1.5));S4_crNext(s,r()<pc)}return s},
  ui:[{b:'Play ▶',act:'play'},{b:'Tone in 1st',act:'ans',arg:0},{b:'Tone in 2nd',act:'ans',arg:1}],
  on:{play(s){if(s.i>=S4_CR_N)return;const which=S4_crTrial(s),db=s.db;
-  S4_play(1.5,(Lc,Rc,sr,n)=>{const z=S4_noise(n,s.seed*7+s.i),A=Math.sqrt(2*Math.pow(10,db/10)/(sr/2));for(let i=0;i<n;i++){const t=i/sr,inA=t>.05&&t<.6,inB=t>.9&&t<1.45;let v=0;
+  S4_play(1.5,(Lc,Rc,sr,n)=>{const z=S4_noise(n,s.seed*7+s.i),A=Math.sqrt(2*Math.pow(10,db/10)/3/(sr/2));for(let i=0;i<n;i++){const t=i/sr,inA=t>.05&&t<.6,inB=t>.9&&t<1.45;let v=0;
    if(inA||inB)v=z[i]*S4_gate(t,inA?.05:.9,inA?.6:1.45);
    const tw=which===0?[.15,.5]:[1,1.35];if(t>tw[0]&&t<tw[1])v+=A*Math.sin(2*Math.PI*1000*t)*Math.min(1,(t-tw[0])/.02,(tw[1]-t)/.02);Lc[i]=Rc[i]=v}},{gain:.12})},
   ans(s,a){if(s.i>=S4_CR_N)return;S4_crNext(s,Number(a)===S4_crTrial(s))}},
@@ -3152,7 +3154,7 @@ WORD(
  {key:'speech-reception-threshold',title:'Speech reception threshold (SRT)',aliases:['speech reception threshold','SRT','signal-to-noise ratio','SNR'],linkContext:'hearing-in-noise-spatial',here:'The signal-to-noise ratio (or level) at which half of the speech is understood.',contrast:'Lower is better; each dB matters because the curve is steep.',example:'About −6 dB for normal hearing with one noise in front (illustrative).'},
  {key:'attenuation-distortion',title:'Attenuation and distortion',aliases:['attenuation and distortion','distortion component'],linkContext:'hearing-in-noise-loss',scene:'hearing-in-noise-loss',here:'Plomp’s split of hearing loss into a part that makes sounds quieter and a part that blurs them, raising the signal-to-noise ratio needed in noise.',contrast:'Amplification fixes attenuation, not distortion.',example:'An aid restores quiet speech but helps less in a busy pub.'},
  {key:'person-rayleigh',title:'Lord Rayleigh',aliases:['Rayleigh','Lord Rayleigh'],linkContext:'sound-localisation-duplex',here:'John William Strutt, 3rd Baron Rayleigh (1842–1919), physicist whose 1907 paper set out the duplex theory of sound localisation.',contrast:'Also known for Rayleigh scattering and the discovery of argon.',example:'Rayleigh (1907), On our perception of sound direction.'},
- {key:'person-bregman',title:'Albert Bregman',aliases:['Bregman'],linkContext:'auditory-scene',here:'Canadian psychologist (born 1936) whose 1990 book Auditory Scene Analysis framed how the brain groups sounds into sources.',contrast:'Studied grouping, not recognition.',example:'Bregman (1990).'},
+ {key:'person-bregman',title:'Albert Bregman',aliases:['Bregman'],linkContext:'auditory-scene',here:'Canadian psychologist (1936–2023) whose 1990 book Auditory Scene Analysis framed how the brain groups sounds into sources.',contrast:'Studied grouping, not recognition.',example:'Bregman (1990).'},
  {key:'person-mcgurk',title:'Harry McGurk',aliases:['McGurk','MacDonald'],linkContext:'speech-perception',here:'British developmental psychologist (1936–1998) who, with John MacDonald, reported the McGurk effect in 1976.',contrast:'The effect was found by accident while studying infants.',example:'McGurk & MacDonald (1976).'},
  {key:'person-liberman',title:'Alvin Liberman',aliases:['Liberman','Alvin Liberman'],linkContext:'speech-perception-categories',here:'American speech scientist (1917–2000) at Haskins Laboratories, known for categorical perception and the motor theory of speech perception.',contrast:'The motor theory remains contested.',example:'Liberman et al. (1957, 1967).'},
  {key:'person-fletcher',title:'Harvey Fletcher',aliases:['Fletcher','Harvey Fletcher'],linkContext:'masking',here:'American physicist (1884–1981) at Bell Labs who introduced the critical band in 1940.',contrast:'Also known for equal-loudness contours with Munson.',example:'Fletcher (1940), Auditory patterns.'},
@@ -3265,7 +3267,7 @@ const S5_od=id=>S5_ODS.find(o=>o.id===id);
 const S5_shared=(a,b)=>a.a.filter((v,i)=>v>.15&&b.a[i]>.15).length;
 SCENE({id:'odorant-receptors',name:'Odorant receptors',tag:'A smell is a pattern',
  definition:'Smell starts with odorant receptors: proteins on the hair-like cilia of nerve cells high in the nose. Each odorant switches on several receptor types to different degrees, and each receptor type responds to many odorants, so a smell is coded by the pattern across receptors.',
- example:'Vanillin and geosmin share one weakly activated receptor in this sketch but otherwise use different ones. The brain tells them apart by the whole pattern, not by any single receptor.',
+ example:'Vanillin and geosmin share two receptor types in this sketch, each only weakly activated by one of them, but otherwise use different ones. The brain tells them apart by the whole pattern, not by any single receptor.',
  desc:'Bars showing how strongly each of 12 receptor types responds to one or two chosen odorants, with the receptors they share counted.',
  research:'Buck, L. & Axel, R. (1991). A novel multigene family may encode odorant receptors. Cell 65, 175–187 (Nobel Prize 2004). Malnic, Hirono, Sato & Buck (1999). Combinatorial receptor codes for odors. Cell 96, 713–723. The activation patterns here are illustrative.',
  dur:12,hint:'Choose a first odorant, then a second to compare. Count the receptor types they share.',
@@ -3472,7 +3474,7 @@ SCENE({id:'smell-thresholds-home',name:'Your own threshold',tag:'A kitchen dilut
 
 const S5_SPEC={
  andro:{name:'Androstenone',gene:'OR7D4',src:'Keller et al. (2007), Nature 449, 468–472',rows:[['Cannot smell it at all',30],['Unpleasant: sweaty or urine-like',45],['Sweet or floral',25]],note:'The same molecule smells foul to some, pleasant to others, and of nothing to many. Variants of one receptor gene, OR7D4, explain part of this. Shares are approximate.'},
- cilantro:{name:'Coriander (cilantro) tastes of soap',gene:'OR6A2',src:'Mauer & El-Sohemy (2012), Flavour 1, 8; Eriksson et al. (2012)',rows:[['East Asian ancestry',21],['European ancestry',17],['African ancestry',14],['South Asian ancestry',7],['Hispanic',4],['Middle Eastern',3]],note:'Share of each group who say coriander leaf tastes soapy. A variant near the receptor gene OR6A2 is linked to it, but culture and familiarity matter too.'},
+ cilantro:{name:'Disliking coriander (cilantro)',gene:'OR6A2',src:'Mauer & El-Sohemy (2012), Flavour 1, 8; Eriksson et al. (2012)',rows:[['East Asian ancestry',21],['European ancestry',17],['African ancestry',14],['South Asian ancestry',7],['Hispanic',4],['Middle Eastern',3]],note:'Share of each group who dislike coriander leaf. A variant near the receptor gene OR6A2 is linked to finding it soapy, but culture and familiarity matter too.'},
  asparagus:{name:'Asparagus urine smell',gene:'variants near OR2M7',src:'Markt et al. (2016), BMJ 355, i6071',rows:[['Men who cannot smell it',58],['Women who cannot smell it',62]],note:'Most people in this large study of US health professionals could not smell the distinctive odour in their urine after eating asparagus.'}};
 SCENE({id:'smell-thresholds-specific',name:'Specific anosmias',tag:'Smell-blind to one thing',
  definition:'A specific anosmia is an inability to smell one particular odorant while the rest of smell works normally. Many are linked to common variants in single receptor genes.',
@@ -3576,7 +3578,7 @@ SCENE({id:'odour-mixtures-home',name:'Two smells at once',tag:'A kitchen mixture
 const S5_cueCurve=(cue,a)=>{const g=(m,sd)=>Math.exp(-((a-m)**2)/(2*sd*sd));return cue==='odour'?100*g(8,4.5)+18*g(64,6):cue==='word'?100*g(18,6)+30*g(64,6):92*g(19,6.5)+28*g(64,6)};
 SCENE({id:'smell-memory',name:'Smell and memory',tag:'Older memories',
  definition:'When older adults recall life memories prompted by a smell, the memories come mostly from early childhood. Words and pictures bring back memories mostly from adolescence and early adulthood.',
- example:'In studies of people in their 60s and 70s, smell-prompted memories peaked around age 6 to 10, word-prompted memories around 11 to 25.',
+ example:'In studies of people in their 60s and 70s, smell-prompted memories peaked around age 6 to 10, word-prompted memories later, in the teens.',
  desc:'The spread of the ages at which recalled memories happened, for memories prompted by smells, words or pictures.',
  research:'Willander, J. & Larsson, M. (2006). Smell your way back to childhood: autobiographical odor memory. Psychonomic Bulletin & Review 13, 240–244. Chu & Downes (2000). Curve shapes follow the published pattern; heights are illustrative.',
  dur:10,hint:'Choose the kind of cue to see when the memories it brings back come from.',
@@ -3721,12 +3723,12 @@ WORD(
  {key:'piriform-cortex',title:'Piriform cortex',aliases:['piriform cortex','smell cortex'],linkContext:'olfactory-bulb-pathway',scene:'olfactory-bulb-pathway',here:'The main area of cortex that receives smell signals from the olfactory bulb.',contrast:'Reached without a relay in the thalamus, unlike the cortex for other senses.',example:'Named for its pear-like shape.'},
  {key:'olfactory-adaptation',title:'Olfactory adaptation',aliases:['olfactory adaptation','smell adaptation','odour adaptation','odor adaptation'],linkContext:'olfactory-bulb-adaptation',scene:'olfactory-bulb-adaptation',here:'The fading of a smell’s perceived strength during continued exposure, recovering after the smell is removed.',contrast:'Temporary; smell loss (anosmia) is lasting.',example:'Not noticing the smell of your own home.'},
  {key:'detection-threshold-smell',title:'Detection threshold (smell)',aliases:['odour threshold','odor threshold','smell threshold','detection threshold'],linkContext:'smell-thresholds',scene:'smell-thresholds',here:'The lowest concentration at which a person can reliably tell an odour from clean air.',contrast:'Lower than the recognition threshold, at which the person can say what the smell is.',example:'About 0.5 parts per billion for hydrogen sulfide.'},
- {key:'ppb',title:'Parts per billion (ppb)',aliases:['parts per billion','ppb'],linkContext:'smell-thresholds',scene:'smell-thresholds',here:'A measure of concentration: one molecule of a substance for every billion molecules of air.',contrast:'1,000 ppb make 1 part per million (ppm).',example:'Like one drop in a large swimming pool.'},
+ {key:'ppb',title:'Parts per billion (ppb)',aliases:['parts per billion','ppb'],linkContext:'smell-thresholds',scene:'smell-thresholds',here:'A measure of concentration: one molecule of a substance for every billion molecules of air.',contrast:'1,000 ppb make 1 part per million (ppm).',example:'Like one drop in a home swimming pool (about 50,000 litres).'},
  {key:'specific-anosmia',title:'Specific anosmia',aliases:['specific anosmia','specific anosmias','smell-blind'],linkContext:'smell-thresholds-specific',scene:'smell-thresholds-specific',here:'Inability to smell one particular odorant while the rest of the sense of smell is normal.',contrast:'General anosmia is the loss of smell as a whole.',example:'About a third of people cannot smell androstenone.'},
  {key:'androstenone',title:'Androstenone',aliases:['androstenone'],linkContext:'smell-thresholds-specific',scene:'smell-thresholds-specific',here:'A steroid odorant found in boar saliva and human sweat, perceived very differently by different people.',contrast:'Often called a human pheromone, though that is not established.',example:'Linked to variants of the receptor gene OR7D4.'},
  {key:'olfactory-white',title:'Olfactory white',aliases:['olfactory white'],linkContext:'odour-mixtures-white',scene:'odour-mixtures-white',here:'The common, nondescript smell that large mixtures of many odorants converge on, whatever their components.',contrast:'An analogy with white light, which is made of many colours.',example:'Two 30-odorant mixtures with nothing in common smell nearly the same.'},
  {key:'odour-masking',title:'Masking (smell)',aliases:['odour masking','odor masking','mixture suppression'],linkContext:'odour-mixtures-home',scene:'odour-mixtures-home',here:'One odour reducing the perceived strength of another when they are smelled together.',contrast:'Different from adaptation, which comes from exposure to the same odour over time.',example:'Coffee often masks orange peel.'},
- {key:'reminiscence-bump',title:'Reminiscence bump',aliases:['reminiscence bump'],linkContext:'smell-memory',scene:'smell-memory',here:'The tendency of older adults to recall more memories from one period of their life than from others.',contrast:'For smell cues the bump is earlier (age 6 to 10) than for word cues (11 to 25).',example:'Willander & Larsson (2006).'},
+ {key:'reminiscence-bump',title:'Reminiscence bump',aliases:['reminiscence bump'],linkContext:'smell-memory',scene:'smell-memory',here:'The tendency of older adults to recall more memories from one period of their life than from others.',contrast:'For smell cues the bump is earlier (age 6 to 10) than for word cues (the teens).',example:'Willander & Larsson (2006).'},
  {key:'proust-effect',title:'Proust effect',aliases:['Proust effect','Proust phenomenon','Proustian memory'],linkContext:'smell-memory-emotion',scene:'smell-memory-emotion',here:'The sudden return of a vivid, emotional memory triggered by a smell or taste.',contrast:'Supported in a limited form: smell-cued memories are more emotional, not more accurate.',example:'Named after Marcel Proust’s madeleine dipped in tea.'},
  {key:'anosmia',title:'Anosmia',aliases:['anosmia','anosmic','loss of smell','smell loss'],linkContext:'smell-loss',scene:'smell-loss',here:'Complete loss of the sense of smell.',contrast:'Hyposmia is a reduced sense of smell; parosmia is distorted smell.',example:'A common symptom of COVID-19, usually temporary.'},
  {key:'parosmia',title:'Parosmia',aliases:['parosmia'],linkContext:'smell-loss-living',scene:'smell-loss-living',here:'A distortion of smell in which familiar things smell wrong, often unpleasant.',contrast:'Phantosmia is smelling something that is not there at all.',example:'Coffee smelling burnt or rotten during recovery.'},
@@ -3802,7 +3804,7 @@ SCENE({id:'five-tastes',name:'The tongue-map myth',tag:'Every part of the tongue
   names.forEach((n,i)=>{const y=82+i*36;out+=TF(330,y+16,n,13,C.muted,'start')+R(430,y+3,140,18,'#fff',C.grid,4)+R(430,y+3,140*vals[i],18,T6.col,'none',4)});
   if(myth&&s.t==='umami')out+=R(326,302,256,46,C.coralp,'none',8)+S6_lines(336,321,['Umami is missing from the myth map:','it was not accepted in the West until the 1980s.'],13,C.coral);
   else out+=S6_chip(330,312,myth?'myth':'est')+TF(330+(myth?70:116),327,myth?'Boring 1942':'Collings 1974',13,C.muted,'start');
-  return {svg:out,phase:myth?`The myth map gives ${T6.name.toLowerCase()} one region. Hänig’s 1901 data showed only small differences in threshold around the edge of the tongue; the 1942 redrawing turned “slightly more sensitive” into “only here”. Try it yourself: a little sugar on the back of the tongue tastes sweet.`:`Every region responds to ${T6.name.toLowerCase()}. The differences are small (the bars are illustrative of their size, after Collings 1974). Taste buds anywhere carry receptors for all five qualities, and the soft palate and throat taste too.`};
+  return {svg:out,phase:myth?`The myth map gives ${T6.name.toLowerCase()} one region. Hänig’s 1901 data showed only small differences in threshold around the edge of the tongue; the 1942 redrawing turned “slightly more sensitive” into “only here”. Try it yourself: a little sugar on the back of the tongue tastes sweet.`:`Every region responds to ${T6.name.toLowerCase()}. The differences are small (the bars are illustrative only). Taste buds anywhere carry receptors for all five qualities, and the soft palate and throat taste too.`};
  }});
 
 const S6_REC={
@@ -3966,7 +3968,7 @@ function S6_moth(wind,t){
 }
 SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one molecule upwind',
  definition:'A pheromone is a chemical signal, released by one animal, that triggers a specific response in another of the same species. The first identified was bombykol, the silkmoth’s sex attractant.',
- example:'A male silkmoth detects bombykol with feathery antennae and flies upwind in zigzags, surging while it is inside the scent plume.',
+ example:'A male silkmoth detects bombykol with feathery antennae and walks upwind in zigzags, wings fanning, surging while it is inside the scent plume. (Domesticated silkmoths cannot fly; flying moths track a plume in the same way.)',
  desc:'A wind tunnel with a female silkmoth releasing bombykol on the left; a wind switch and time slider show the plume and the male’s upwind path.',
  research:'Butenandt, A. et al. (1959). Über den Sexuallockstoff des Seidenspinners Bombyx mori. Zeitschrift für Naturforschung B 14 (bombykol, from about 500,000 moths). Kaissling, K.-E. & Priesner, E. (1970). Die Riechschwelle des Seidenspinners. Naturwissenschaften 57 (single molecules fire receptor cells). Karlson & Lüscher (1959) coined “pheromone”. Status: established in insects and many mammals.',
  dur:10,hint:'Switch the wind on and off and move through time. Without wind the plume has no direction to follow.',
@@ -3976,7 +3978,7 @@ SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one mole
  on:{wind(s,v){s.wind=v;return 'keep'},t(s,v){s.t=Number(v);return 'keep'}},
  draw(s){
   const wind=s.wind==='on',tt=s.t/100;
-  let out=heading(wind?'The male flies upwind in the plume':'Still air: no direction to follow',26);
+  let out=heading(wind?'The male heads upwind in the plume':'Still air: no direction to follow',26);
   out+=R(40,70,520,240,'#f7fafc',C.grid,8);
   if(wind)for(let i=0;i<4;i++)out+=arrow(70+i*130,88,120+i*130,88,C.line,1.5);
   out+=TF(300,84,wind?'wind':'',13,C.muted);
@@ -3989,14 +3991,14 @@ SCENE({id:'pheromones',name:'Pheromones in animals',tag:'A moth follows one mole
   const m=pts[pts.length-1]||[520,190];out+=P(`M${fmt(m[0]-12)} ${fmt(m[1]-8)} L${fmt(m[0])} ${fmt(m[1])} L${fmt(m[0]-12)} ${fmt(m[1]+8)}`,C.blue,3)+Ci(m[0],m[1],5,C.blue);
   out+=TF(m[0],m[1]-16,'male',13,C.blue);
   out+=S6_chip(40,324,'est')+TF(160,339,'Pheromones are well shown in insects and many mammals.',13,C.ink,'start');
-  return {svg:out,phase:wind?'The plume breaks into patchy filaments. While the male is in scent he surges upwind; when he loses it he casts side to side until he finds it again. A single bombykol molecule can fire one of his receptor cells.':'Without wind the scent spreads in every direction and gives no bearing: the male circles. Flying upwind on contact with odour is the key behaviour, not following a gradient.'};
+  return {svg:out,phase:wind?'The plume breaks into patchy filaments. While the male is in scent he surges upwind; when he loses it he casts side to side until he finds it again. A single bombykol molecule can fire one of his receptor cells.':'Without wind the scent spreads in every direction and gives no bearing: the male circles. Heading upwind on contact with odour is the key behaviour, not following a gradient.'};
  }});
 
 const S6_PHER=[
  {k:'vno',t:'A pheromone organ',claim:'Humans detect pheromones with a vomeronasal organ, as mice do.',ev:'Adult humans have at most a tiny pit with no working receptor neurons; most of the genes are broken (pseudogenes).',st:'no'},
  {k:'sync',t:'Menstrual synchrony',claim:'Women living together synchronise their cycles (McClintock 1971).',ev:'Larger later studies found no synchrony beyond chance (Yang & Schank 2006; Ziomkiewicz 2006).',st:'no'},
  {k:'andro',t:'Androstadienone',claim:'A molecule in male sweat is a human pheromone.',ev:'Effects on mood and attention are small and inconsistent; never shown to meet the pheromone test (Wyatt 2015).',st:'mixed'},
- {k:'mhc',t:'Sweaty T-shirts and MHC',claim:'People prefer the body odour of partners with different immune genes (Wedekind 1995).',ev:'Replications are mixed; a meta-analysis found weak, inconsistent effects (Havlicek & Roberts 2009).',st:'mixed'},
+ {k:'mhc',t:'Sweaty T-shirts and MHC',claim:'People prefer the body odour of partners with different immune genes (Wedekind 1995).',ev:'Replications are mixed; a review found inconsistent results (Havlicek & Roberts 2009).',st:'mixed'},
  {k:'nipple',t:'Newborns and the breast',claim:'Secretions from areolar glands help newborns find the nipple (Doucet 2009).',ev:'Suggestive behavioural evidence; the molecule has not been identified.',st:'cand'},
  {k:'spray',t:'“Pheromone” perfumes',claim:'Sprays sold to make you more attractive.',ev:'No good evidence that any of them work.',st:'myth'}];
 SCENE({id:'pheromones-human',name:'Human pheromones?',tag:'Six claims and their evidence',
@@ -4206,7 +4208,7 @@ SCENE({id:'how-many-smells',name:'Telling mixtures apart',tag:'The method behind
  definition:'In a triangle test you smell three samples, two identical and one different, and pick the odd one out. Guessing gives one in three.',
  example:'Bushdid and colleagues mixed 30 of 128 odorants. On average, people told two mixtures apart only when more than about half their components differed.',
  desc:'Two 30-component mixtures drawn as dots from a pool of 128, a slider for how many components differ, and the share of correct triangle-test answers (curve illustrative).',
- research:'Bushdid, C., Magnasco, M. O., Vosshall, L. B. & Keller, A. (2014). Humans can discriminate more than 1 trillion olfactory stimuli. Science 343, 1370–1372. Curve shape illustrative; the about 51% average threshold is from the paper.',
+ research:'Bushdid, C., Magnasco, M. O., Vosshall, L. B. & Keller, A. (2014). Humans can discriminate more than 1 trillion olfactory stimuli. Science 343, 1370–1372. Curve shape illustrative; the average threshold (mixtures sharing less than about 51% of their components) is from the paper.',
  dur:10,hint:'Change how many of the 30 components differ between the two mixtures.',
  init:()=>({k:15}),
  watch(p){return {k:Math.round(p*30)}},
@@ -4224,14 +4226,14 @@ SCENE({id:'how-many-smells',name:'Telling mixtures apart',tag:'The method behind
   out+=S6_poly(pts,C.blue)+L(pl.X(0),pl.Y(1/3),pl.X(1),pl.Y(1/3),C.line,1,'stroke-dasharray="4 4"')+Ci(pl.X(f),pl.Y(pc),6,C.coral,'#fff');
   out+=TF(340,286,`${Math.round(pc*100)}% correct (chance 33%)`,14,C.ink,'start');
   out+=TF(40,262,'Pool: 128 odorants. Each mixture: 30.',13,C.muted,'start');
-  out+=TF(40,346,'Curve illustrative; average threshold about 51% differing (Bushdid 2014).',13,C.muted,'start');
+  out+=TF(40,346,'Curve illustrative; average threshold about half differing (Bushdid 2014).',13,C.muted,'start');
   return {svg:out,phase:f<.4?'With most components shared, the two mixtures smell the same and answers sit near chance.':f<.6?'Around half the components differing, people start to tell the mixtures apart.':'With most components different, the odd one out is usually found.'};
  }});
 
-// Toy count in the spirit of Bushdid 2014: number of 30-of-128 mixtures divided by how many lie within the
-// indistinguishable radius (k components swapped). Done in log10 to stay accurate.
+// Toy count in the spirit of Bushdid 2014: number of 30-of-128 mixtures divided by how many lie within
+// half the indistinguishable distance (sphere packing; k components swapped). Done in log10 to stay accurate.
 function S6_lc(n,k){let s=0;for(let i=1;i<=k;i++)s+=Math.log10(n-k+i)-Math.log10(i);return s}
-function S6_log10Count(d){const k=Math.floor(d*30);let ball=0;const terms=[];for(let j=0;j<=k;j++)terms.push(S6_lc(30,j)+S6_lc(98,j));const m=Math.max(...terms);ball=m+Math.log10(terms.reduce((a,t)=>a+Math.pow(10,t-m),0));return S6_lc(128,30)-ball}
+function S6_log10Count(d){const k=Math.floor(d*30/2);let ball=0;const terms=[];for(let j=0;j<=k;j++)terms.push(S6_lc(30,j)+S6_lc(98,j));const m=Math.max(...terms);ball=m+Math.log10(terms.reduce((a,t)=>a+Math.pow(10,t-m),0));return S6_lc(128,30)-ball}
 SCENE({id:'how-many-smells-estimate',name:'One trillion?',tag:'A small change, a huge swing',
  definition:'The “one trillion smells” estimate was extrapolated from how different two mixtures must be to be told apart. Critics showed that the answer depends enormously on the assumptions.',
  example:'Changing the assumed discrimination threshold a little moves the estimate by many powers of ten, from far below a trillion to far above it.',
@@ -4573,7 +4575,7 @@ SCENE({id:'skin-receptors-adaptation',name:'Slow and fast adaptation',tag:'Stead
   out+=TF(x0,330,'0',13,C.muted,'start')+TF(x0+w,330,'3 s',13,C.muted,'end')+TF(x0+w+6,108,'spikes',13,C.muted,'start');
   out+=T(300,358,'Slow units code how hard and how long; fast units code when it changes.',15,C.ink);
   const nsa=S7_spikes(t=>S7_adaptRate('sa',t,s.force,hold),span).length;
-  return {svg:out,phase:`A force-${s.force} press held for ${s.hold.toFixed(1)} s: the Merkel unit fires all the way through (${nsa} spikes), its rate rising with force. The Meissner unit fires only at the start and end, and the Pacinian unit gives just a spike or two at each change. Schematic model.`};
+  return {svg:out,phase:`A force-${s.force} press held for ${s.hold.toFixed(1)} s: the Merkel unit fires all the way through (${nsa} spikes), its rate rising with force. The Meissner unit fires only at the start and end, and the Pacinian unit gives only a very brief burst at each change. Schematic model.`};
  }});
 
 // Densities (units per cm²), approximate, after Johansson & Vallbo (1979).
@@ -4702,7 +4704,7 @@ SCENE({id:'vibration',name:'Feeling vibration',tag:'Flutter and buzz',
   out+=S7_poly(a,'#2c776c',2.4)+S7_poly(b,C.coral,2.4);
   out+=L(pl.X(f),pl.Y(200),pl.X(f),pl.Y(.05),C.amber,1.8)+Ci(pl.X(f),pl.Y(Math.min(ra,pc)),7,C.ink,'#fff');
   out+=R(436,70,144,22,'none','none')+Ci(444,80,5,'#2c776c')+TF(454,85,'flutter channel',13,'#2c776c','start')+Ci(444,104,5,C.coral)+TF(454,109,'Pacinian channel',13,C.coral,'start');
-  out+=R(436,132,144,150,'#f6f9fb','none',8)+TBF(446,156,`${f} Hz`,15,C.ink,'start')+TF(446,180,'felt first by',13,C.muted,'start')+TBF(446,200,best.split(' ')[0],14,ra<pc?'#2c776c':C.coral,'start')+TF(446,224,'threshold',13,C.muted,'start')+TBF(446,244,`${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm`,14,C.ink,'start')+TF(446,268,f<30?'(below hearing)':'',13,C.muted,'start');
+  out+=R(436,132,144,150,'#f6f9fb','none',8)+TBF(446,156,`${f} Hz`,15,C.ink,'start')+TF(446,180,'felt first by',13,C.muted,'start')+TBF(446,200,best.split(' ')[0],14,ra<pc?'#2c776c':C.coral,'start')+TF(446,224,'threshold',13,C.muted,'start')+TBF(446,244,`${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm`,14,C.ink,'start')+TF(446,268,f<30?'(too low to play)':'',13,C.muted,'start');
   out+=T(300,354,'Most sensitive near 250 Hz: movements of a fraction of a micrometre.',15,C.ink);
   return {svg:out,phase:`At ${f} Hz the ${best} channel has the lower threshold, about ${Math.min(ra,pc)<1?Math.min(ra,pc).toFixed(2):Math.round(Math.min(ra,pc))} µm. Below roughly 40 Hz the skin feels flutter; above it, a smooth buzz carried by Pacinian corpuscles. Schematic curves after Verrillo (1963) and Bolanowski et al. (1988).`};
  }});
@@ -4777,7 +4779,7 @@ SCENE({id:'pain',name:'First and second pain',tag:'Two kinds of fibre',
   return {svg:out,phase:`Over ${s.d.toFixed(1)} m, Aδ fibres at ${s.va} m/s arrive after ${Math.round(ta)} ms and C fibres at ${s.vc.toFixed(1)} m/s after ${Math.round(tc)} ms: the classic “double pain”. Brain processing adds time to both; the speeds are typical values.`};
  }});
 
-function S7_gate(small,large,desc){const sg=clamp(.6*large-.35*small+.4*desc,0,10),t=clamp(small+.25*large-1.1*sg,0,15);return {sg,t}}
+function S7_gate(small,large,desc){const sg=clamp((.6*large+.4*desc)*(1-.03*small),0,10),t=clamp(small-.55*sg,0,15);return {sg,t}}
 SCENE({id:'pain-gate',name:'Gate control',tag:'Why rubbing helps',
  definition:'Gate control theory proposed that pain signals are adjusted in the spinal cord before they reach the brain: activity in large touch fibres, and signals coming down from the brain, can close a “gate” that small pain fibres would otherwise open.',
  example:'After banging your elbow you rub it. The rubbing drives large touch fibres, which damp the pain message at the spinal cord. Stress, attention and belief act through descending pathways.',
@@ -4832,13 +4834,13 @@ SCENE({id:'pain-placebo',name:'Pain, belief and evidence',tag:'Real, but smaller
 
 /* =========================== temperature =========================== */
 // Channels and their approximate activation ranges (°C). TRPA1 cold role is debated.
-const S7_TRP=[{k:'trpa1',n:'TRPA1',lo:0,hi:17,col:'#2b7bb0',feel:'painful cold (debated)'},{k:'trpm8',n:'TRPM8',lo:8,hi:26,col:'#3aa0c8',feel:'cool'},{k:'trpv3',n:'TRPV3/V4',lo:27,hi:40,col:'#e3a33a',feel:'warm'},{k:'trpv1',n:'TRPV1',lo:43,hi:60,col:'#c45238',feel:'burning heat'}];
+const S7_TRP=[{k:'trpa1',n:'TRPA1',lo:0,hi:17,col:'#2b7bb0',feel:'painful cold (debated)'},{k:'trpm8',n:'TRPM8',lo:8,hi:26,col:'#3aa0c8',feel:'cool'},{k:'trpv3',n:'TRPV3/V4',lo:27,hi:42,col:'#e3a33a',feel:'warm'},{k:'trpv1',n:'TRPV1',lo:43,hi:60,col:'#c45238',feel:'burning heat'}];
 function S7_active(temp,chem){return S7_TRP.filter(c=>{let lo=c.lo,hi=c.hi;if(chem==='menthol'&&c.k==='trpm8')hi+=10;if(chem==='capsaicin'&&c.k==='trpv1')lo=32;return temp>=lo&&temp<=hi})}
 SCENE({id:'temperature',name:'Thermometers in the skin',tag:'TRP channels',
  definition:'Temperature is sensed by ion channels in nerve endings that open over particular temperature ranges. TRPV1 opens above about 43 °C and gives burning heat; TRPM8 opens below about 26 °C and gives coolness. Some chemicals open the same channels.',
  example:'Chilli feels hot because capsaicin opens TRPV1 at body temperature; mint feels cool because menthol opens TRPM8 without any change in temperature.',
  desc:'A temperature scale with the range of each channel, the channels open at the chosen temperature, and a chemical option that shifts them.',
- research:['Caterina, M. J., Schumacher, M. A., Tominaga, M., Rosen, T. A., Levine, J. D. & Julius, D. (1997). The capsaicin receptor: a heat-activated ion channel in the pain pathway. Nature 389, 816–824.','McKemy, D. D., Neuhausser, W. M. & Julius, D. (2002) and Peier, A. M. et al. (2002), both in Nature 416, on TRPM8. Nobel Prize 2021 to David Julius and Ardem Patapoutian. Ranges here are approximate.'],
+ research:['Caterina, M. J., Schumacher, M. A., Tominaga, M., Rosen, T. A., Levine, J. D. & Julius, D. (1997). The capsaicin receptor: a heat-activated ion channel in the pain pathway. Nature 389, 816–824.','McKemy, D. D., Neuhausser, W. M. & Julius, D. (2002). Nature 416, 52–58, and Peier, A. M. et al. (2002). Cell 108, 705–715, both on TRPM8. Nobel Prize 2021 to David Julius and Ardem Patapoutian. Ranges here are approximate.'],
  dur:10,hint:'Move the temperature, then add capsaicin or menthol and see which channels open at skin temperature.',
  init:()=>({temp:33,chem:'none'}),
  watch(p){return p<.6?{temp:Math.round(5+50*p/.6),chem:'none'}:{temp:33,chem:p<.8?'capsaicin':'menthol'}},
@@ -4851,9 +4853,9 @@ SCENE({id:'temperature',name:'Thermometers in the skin',tag:'TRP channels',
   S7_TRP.forEach((c,i)=>{const y=96+i*46;let lo=c.lo,hi=c.hi;if(s.chem==='menthol'&&c.k==='trpm8')hi+=10;if(s.chem==='capsaicin'&&c.k==='trpv1')lo=32;const on=act.includes(c);
    out+=R(xs(c.lo),y,xs(c.hi)-xs(c.lo),22,'#eef3f6','none',5)+R(xs(lo),y,xs(Math.min(55,hi))-xs(lo),22,on?c.col:tint(c.col,.6),'none',5)+TBF(xs(lo)+6,y+16,c.n,13,on?'#fff':C.ink,'start')+TF(Math.min(xs(Math.min(55,hi))+8,520),y+16,on?c.feel:'',13,c.col,'start')});
   out+=L(xs(s.temp),82,xs(s.temp),314,C.ink,2.2)+Ci(xs(s.temp),82,6,C.ink);
-  const feel=act.length?act.map(c=>c.feel).join(' + '):'neutral: no channel strongly active';
+  const feel=s.chem==='none'&&s.temp>=30&&s.temp<=35?'close to neutral (warm channels only lightly active)':act.length?act.map(c=>c.feel).join(' + '):'no channel strongly active';
   out+=T(300,360,`${s.temp} °C${s.chem!=='none'?' with '+s.chem:''}: ${feel}`,15,C.ink);
-  return {svg:out,phase:s.chem==='capsaicin'?`Capsaicin lowers TRPV1’s threshold to around body temperature, so ordinary skin at ${s.temp} °C feels like burning heat: chilli is a chemical trick, not real heat.`:s.chem==='menthol'?`Menthol makes TRPM8 open at warmer temperatures, so skin at ${s.temp} °C feels cool with no change in temperature.`:`At ${s.temp} °C: ${feel}. Channel ranges are approximate; the role of TRPA1 in cold sensing is debated.`};
+  return {svg:out,phase:s.chem==='capsaicin'?(act.some(c=>c.k==='trpv1')?`Capsaicin lowers TRPV1’s threshold to around body temperature, so ordinary skin at ${s.temp} °C feels like burning heat: chilli is a chemical trick, not real heat.`:`In this model capsaicin lowers TRPV1’s threshold to about 32 °C; at ${s.temp} °C the channel stays closed.`):s.chem==='menthol'?(act.some(c=>c.k==='trpm8')?`Menthol makes TRPM8 open at warmer temperatures, so skin at ${s.temp} °C feels cool with no change in temperature.`:`In this model menthol keeps TRPM8 open between about 8 and 36 °C; at ${s.temp} °C it is closed.`):`At ${s.temp} °C: ${feel}. Channel ranges are approximate; the role of TRPA1 in cold sensing is debated.`};
  }});
 
 function S7_adapt(bowl,min){return 32+(bowl-32)*(1-Math.exp(-min/1.2))}
@@ -4861,7 +4863,7 @@ SCENE({id:'temperature-bowls',name:'Three bowls of water',tag:'Warm or cool depe
  definition:'Thermal sensation reports change relative to what the skin has adapted to, not absolute temperature. The same water can feel warm to one hand and cool to the other.',
  example:'Put one hand in cool water and one in warm for a minute, then both into a bowl of lukewarm water: the cool-adapted hand says “warm”, the warm-adapted hand says “cool”.',
  desc:'Left and right bowls with adjustable temperatures and soaking time, then both hands in a middle bowl, with each hand’s adapted skin temperature and what it reports.',
- research:['Locke, J. (1690). An Essay Concerning Human Understanding, Book II, chapter 8, section 21, where the three-bowl demonstration appears.','Weber, E. H. (1846). Der Tastsinn und das Gemeingefühl. Kenshalo, D. R. (1976). Correlations of temperature sensitivity in man and monkey. In Y. Zotterman (ed.), Sensory Functions of the Skin, 305–330. Adaptation model here is illustrative.'],
+ research:['Locke, J. (1690). An Essay Concerning Human Understanding, Book II, chapter 8, section 21, where Locke notes that the same water can feel cold to one hand and warm to the other.','Weber, E. H. (1846). Der Tastsinn und das Gemeingefühl. Kenshalo, D. R. (1976). Correlations of temperature sensitivity in man and monkey. In Y. Zotterman (ed.), Sensory Functions of the Skin, 305–330. Adaptation model here is illustrative.'],
  dur:10,hint:'Set the two bowls and the soaking time. Try it at home with tap water no hotter than 40 °C, and never with very hot water.',
  init:()=>({left:15,right:40,min:1}),
  watch(p){return {left:15,right:40,min:Math.round(p*30)/10}},
@@ -4906,7 +4908,7 @@ function S7_len(t,amt,vel){const ramp=amt/vel*1000;if(t<300)return 0;if(t<300+ra
 function S7_ia(t,amt,vel){const ramp=amt/vel*1000,moving=t>=300&&t<300+ramp;return 10+30*S7_len(t,amt,vel)/10+(moving?vel*12:0)}
 function S7_ii(t,amt,vel){return 10+45*S7_len(t,amt,vel)/10}
 SCENE({id:'proprioception',name:'Muscle spindles',tag:'Sensors of length and speed',
- definition:'Proprioception is the sense of where your body parts are and how they are moving. Much of it comes from muscle spindles: stretch receptors inside muscles whose primary (Ia) endings report the speed of stretch and whose secondary (II) endings report the length.',
+ definition:'Proprioception is the sense of where your body parts are and how they are moving. Much of it comes from muscle spindles: stretch receptors inside muscles whose primary (Ia) endings report mainly how fast the muscle is being stretched, as well as its length, and whose secondary (II) endings report mainly the length.',
  example:'Close your eyes and touch your nose: spindles in your arm muscles tell your brain how long each muscle is and how fast it is changing, so you can steer without looking.',
  desc:'A muscle stretched to a set length at a set speed, with traces of muscle length, primary-ending firing and secondary-ending firing.',
  research:['Sherrington, C. S. (1906). The Integrative Action of the Nervous System. Yale University Press, where “proprioceptive” was coined.','Matthews, P. B. C. (1972). Mammalian Muscle Receptors and their Central Actions. Arnold. Proske, U. & Gandevia, S. C. (2012). The proprioceptive senses. Physiological Reviews 92, 1651–1697. Firing rates here are schematic.'],
@@ -5000,7 +5002,7 @@ WORD(
  {key:'scoville-scale',title:'Scoville scale',aliases:['Scoville scale','Scoville heat units','Scoville units','SHU'],linkContext:'temperature-capsaicin',scene:'temperature-capsaicin',here:'A measure of chilli heat, first set by diluting an extract until tasters could no longer detect it, now measured chemically.',contrast:'The original taste-panel method was subjective; modern ratings use chromatography.',example:'A jalapeño rates a few thousand units.'},
  {key:'thermal-adaptation',title:'Thermal adaptation',aliases:['thermal adaptation'],linkContext:'temperature-bowls',scene:'temperature-bowls',here:'The shift in the skin’s neutral point after time at one temperature, so that sensation reports change rather than absolute temperature.',contrast:'Not a fault: it lets the skin detect small changes over a wide range.',example:'Lukewarm water feels warm to a hand just out of cold water.'},
  {key:'proprioception-term',title:'Proprioception',aliases:['proprioception','proprioceptive','kinaesthesia','kinesthesia'],linkContext:'proprioception',scene:'proprioception',here:'The sense of the position and movement of one’s own body parts, from receptors in muscles, tendons, joints and skin.',contrast:'Sherrington coined the word in 1906; kinaesthesia usually means the sense of movement specifically.',example:'Touching your nose with your eyes closed.'},
- {key:'muscle-spindle',title:'Muscle spindle',aliases:['muscle spindle','muscle spindles','spindle','spindles'],linkContext:'proprioception',scene:'proprioception',here:'A stretch receptor inside a muscle; its primary (Ia) endings signal how fast the muscle is stretching and its secondary (II) endings how long it is.',contrast:'Golgi tendon organs, in the tendons, signal force rather than length.',example:'Spindles fire when a muscle is pulled longer.'},
+ {key:'muscle-spindle',title:'Muscle spindle',aliases:['muscle spindle','muscle spindles','spindle','spindles'],linkContext:'proprioception',scene:'proprioception',here:'A stretch receptor inside a muscle; its primary (Ia) endings signal mainly how fast the muscle is stretching, as well as its length, and its secondary (II) endings mainly how long it is.',contrast:'Golgi tendon organs, in the tendons, signal force rather than length.',example:'Spindles fire when a muscle is pulled longer.'},
  {key:'piezo2',title:'Piezo2',aliases:['Piezo2','PIEZO2'],linkContext:'proprioception-piezo2',scene:'proprioception-piezo2',here:'A mechanically activated ion channel needed by touch receptors and muscle spindles; people without it lose fine touch and proprioception.',contrast:'Its relative Piezo1 works mainly in other tissues, such as blood vessels.',example:'Discovered by Ardem Patapoutian’s group in 2010.'},
  {key:'vibration-illusion',title:'Tendon vibration illusion',aliases:['vibration illusion','tendon vibration illusion','Pinocchio illusion'],linkContext:'proprioception-vibration',scene:'proprioception-vibration',here:'A felt movement of a still limb caused by vibrating a muscle’s tendon, which drives its spindles as if the muscle were stretching.',contrast:'Vision overrides it, so it is studied with the eyes closed.',example:'Vibrating the biceps makes the elbow seem to straighten.'},
  {key:'person-johansson',title:'Roland Johansson',aliases:['Roland Johansson','Johansson'],linkContext:'skin-receptors',scene:'skin-receptors-density',here:'Swedish neurophysiologist (born 1950) who, with Åke Vallbo, mapped the four types of touch unit in the human hand by microneurography.',contrast:'',example:'Johansson & Vallbo (1979).'},
@@ -5160,7 +5162,7 @@ SCENE({id:'multisensory-integration-ventriloquism',name:'The ventriloquist',tag:
   out+=TBF(50,300,`heard at ${perc>=0?'+':''}${perc.toFixed(1)}°`,14,C.ink,'start');
   out+=TF(560,215,'weight',13,C.muted,'end')+R(440,224,120,16,'#fff',C.grid,3)+R(440,224,120*wv,16,C.blue,'none',3)+R(440+120*wv,224,120*(1-wv),16,C.amber,'none',3);
   out+=TF(560,258,`vision ${Math.round(wv*100)}% · hearing ${Math.round((1-wv)*100)}%`,13,C.ink,'end');
-  return {svg:out,phase:wv>.8?'The sharp spot is located far more precisely than the sound, so the sound is captured by it: the ventriloquist effect.':wv<.2?'With an extremely blurred spot, hearing is the better locator and now pulls the light towards the sound. The effect has reversed, as predicted.':'With some blur the two senses share the work, and the event seems to be between them.'};
+  return {svg:out,phase:wv>.8?'The sharp spot is located far more precisely than the sound, so the sound is captured by it: the ventriloquist effect.':wv<.2?'With the spot this blurred, hearing is the better locator and now pulls the light towards the sound. The effect has reversed, as predicted.':'With some blur the two senses share the work, and the event seems to be between them.'};
  }});
 
 // Shams, Kamitani & Shimojo (2000): one flash with two beeps is often seen as two flashes.
@@ -5230,7 +5232,7 @@ SCENE({id:'rubber-hand',name:'The rubber hand illusion',tag:'Owning a fake hand'
  }});
 
 // Shimada et al. (2009): the illusion weakens when the seen stroke lags the felt one by more than ~300 ms.
-const S8_lag=d=>1.6/(1+Math.exp((d-330)/70))-.9;
+const S8_lag=d=>1.6/(1+Math.exp((d-420)/50))-.9;
 SCENE({id:'rubber-hand-delay',name:'How much delay breaks it?',tag:'A window for binding',
  definition:'Sight and touch are bound into one event only if they arrive close enough in time. Delaying the seen stroke shows how wide that window is.',
  example:'Shimada and colleagues delayed video of the brush on the hand. Up to about 300 ms the illusion held; with longer delays it faded.',
@@ -5260,7 +5262,7 @@ const S8_RH=[
  {t:'Whole-body illusions',k:'mixed',b:'Similar tricks with video headsets make people feel located in a virtual body (Lenggenhager et al. 2007; Ehrsson 2007).'}];
 SCENE({id:'rubber-hand-critique',name:'What the illusion shows',tag:'Robust and contested',
  definition:'The rubber hand illusion is one of the most used tools for studying bodily self-awareness, but the way it is measured matters: questionnaires, drift and brain responses do not always agree.',
- example:'Lush and colleagues found that how strongly people report the illusion is predicted by their general suggestibility, even under hypnosis-like instructions, which complicates what questionnaires measure.',
+ example:'Lush and colleagues found that how strongly people report the illusion is predicted by their general suggestibility, measured as how strongly they respond to hypnosis-style imaginative suggestions, which complicates what questionnaires measure.',
  desc:'Five cards on what is solid and what is debated about the rubber hand illusion, each with a status tag.',
  research:'Lush, P. et al. (2020). Trait phenomenological control predicts experience of mirror synaesthesia and the rubber hand illusion. Nature Communications 11, 4853; Rohde, Di Luca & Ernst (2011), PLoS ONE 6(6), e21659; Ehrsson, Spence & Passingham (2004), Science 305, 875–877.',
  dur:10,hint:'Press a card to read it.',
@@ -5332,7 +5334,7 @@ const S8_TRI={1:[4],2:[3,5],3:[2,6],4:[1,2,3,4,5,6,7]};
 const S8_POP=(()=>{const g=[];for(let r=0;r<6;r++)for(let c=0;c<9;c++)g.push({r,c,d:(S8_TRI[r]||[]).includes(c)?2:5});return g})();
 SCENE({id:'synaesthesia-pop-out',name:'Do the colours pop out?',tag:'A famous test, mixed results',
  definition:'If letters really trigger colours early in vision, a shape made of one digit hidden among another might pop out for synaesthetes, as a colour difference would.',
- example:'Ramachandran and Hubbard reported that two synaesthetes found a triangle of 2s among 5s faster than controls. Later group studies mostly found that synaesthetes still search item by item, with colour helping only once attention reaches a digit.',
+ example:'Ramachandran and Hubbard reported that two synaesthetes were better than controls at naming a shape made of 2s hidden among 5s in a briefly shown display. Later group studies mostly found that synaesthetes still search item by item, with colour helping only once attention reaches a digit.',
  desc:'A grid of 5s with a triangle of 2s hidden inside, shown in black or as one synaesthete might colour it.',
  research:'Ramachandran, V. S. & Hubbard, E. M. (2001). Psychophysical investigations into the neural basis of synaesthesia. Proceedings of the Royal Society B 268, 979–983; Edquist et al. (2006), Cortex 42, 222–231 (mixed: most synaesthetes still search item by item).',
  dur:10,hint:'Look for the shape in black first, then switch on colours. Pop-out for colour is real; whether synaesthetes get it from digits is debated.',
@@ -5529,7 +5531,7 @@ const S8_BODY=[{id:'forearm',n:'Forearm',x:120,y:200,ct:'yes',b:'Hairy skin with
  {id:'thigh',n:'Thigh',x:250,y:290,ct:'yes',b:'Hairy skin with C-tactile fibres.'}];
 SCENE({id:'affective-touch-body',name:'Where the caress nerves are',tag:'Hairy and hairless skin',
  definition:'C-tactile fibres are common in hairy skin and rare or absent in hairless (glabrous) skin like the palms, which are specialised for fast, precise touch.',
- example:'Vallbo and colleagues found C-tactile fibres in the forearm and face but not in recordings from the palm. A recent study reported a few in the palm, so the question is not fully settled.',
+ example:'Vallbo and colleagues found C-tactile fibres in the hairy skin of the forearm, and others recorded them in the face, but none turned up in recordings from the palm. A recent study reported a few in the palm, so the question is not fully settled.',
  desc:'A body outline with points to press, each saying whether C-tactile fibres are found there.',
  research:'Vallbo, Å. B., Olausson, H. & Wessberg, J. (1999). Unmyelinated afferents constitute a second system coding tactile stimuli of the human hairy skin. Journal of Neurophysiology 81, 2753–2763; Watkins, R. H. et al. (2021). Journal of Neurophysiology 125, 232–237 (C-tactile afferents in glabrous skin: emerging).',
  dur:10,hint:'Press a point on the body.',
@@ -5619,8 +5621,8 @@ stages:[
  {id:'listening',name:'4 · Listening',years:'1876–today',why:'Where a sound is, pulling one voice from a crowd, seeing speech, pitch and masking.'},
  {id:'smell',name:'5 · Smell',years:'1920–today',why:'Receptors and the olfactory bulb, how little we can smell, mixtures, memory and losing smell.'},
  {id:'flavour',name:'6 · Taste and flavour',years:'1901–today',why:'Five tastes and the tongue-map myth, smell from the inside, pheromones, emotion and training.'},
- {id:'touch',name:'7 · Touch',years:'1834–today',why:'Skin receptors, acuity, vibration, pain, temperature, the body’s own position and gentle touch.'},
- {id:'together',name:'8 · Senses together',years:'1976–today',why:'Combining senses, owning a rubber hand, synaesthesia, substituting one sense for another, ageing and technology.'}
+ {id:'touch',name:'7 · Touch',years:'1834–today',why:'Skin receptors, acuity, vibration, pain, temperature and the body’s own position.'},
+ {id:'together',name:'8 · Senses together',years:'1976–today',why:'Combining senses, owning a rubber hand, synaesthesia, substituting one sense for another, ageing and gentle touch.'}
 ],
 lessons:[]};
 const THREADS=[];

@@ -10,8 +10,8 @@ stages:[
  {id:'listening',name:'4 · Listening',years:'1876–today',why:'Where a sound is, pulling one voice from a crowd, seeing speech, pitch and masking.'},
  {id:'smell',name:'5 · Smell',years:'1920–today',why:'Receptors and the olfactory bulb, how little we can smell, mixtures, memory and losing smell.'},
  {id:'flavour',name:'6 · Taste and flavour',years:'1901–today',why:'Five tastes and the tongue-map myth, smell from the inside, pheromones, emotion and training.'},
- {id:'touch',name:'7 · Touch',years:'1834–today',why:'Skin receptors, acuity, vibration, pain, temperature, the body’s own position and gentle touch.'},
- {id:'together',name:'8 · Senses together',years:'1976–today',why:'Combining senses, owning a rubber hand, synaesthesia, substituting one sense for another, ageing and technology.'}
+ {id:'touch',name:'7 · Touch',years:'1834–today',why:'Skin receptors, acuity, vibration, pain, temperature and the body’s own position.'},
+ {id:'together',name:'8 · Senses together',years:'1976–today',why:'Combining senses, owning a rubber hand, synaesthesia, substituting one sense for another, ageing and gentle touch.'}
 ],
 lessons:[]};
 const THREADS=[];

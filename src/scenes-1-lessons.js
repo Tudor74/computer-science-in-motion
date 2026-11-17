@@ -18,7 +18,7 @@ SOURCE('s1-cie',{title:'CIE photopic luminous efficiency V(λ) (1924) and scotop
 SOURCE('s1-young',{title:'Young, T. (1802). On the theory of light and colours. Philosophical Transactions 92, 12–48.'});
 SOURCE('s1-maxwell',{title:'Maxwell, J. C. (1860). On the theory of compound colours, and the relations of the colours of the spectrum. Philosophical Transactions 150, 57–84.'});
 SOURCE('s1-rayleigh',{title:'Rayleigh, Lord (1881). Experiments on colour. Nature 25, 64–66.'});
-SOURCE('s1-hering',{title:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn. Springer (lectures from 1878); trans. Outlines of a Theory of the Light Sense (1964).'});
+SOURCE('s1-hering',{title:'Hering, E. (1920). Grundzüge der Lehre vom Lichtsinn. Springer (his opponent theory dates from the 1870s); trans. Outlines of a Theory of the Light Sense (1964).'});
 SOURCE('s1-hurvich',{title:'Hurvich, L. M. & Jameson, D. (1957). An opponent-process theory of color vision. Psychological Review 64, 384–404.'});
 SOURCE('s1-devalois',{title:'De Valois, R. L., Abramov, I. & Jacobs, G. H. (1966). Analysis of response patterns of LGN cells. Journal of the Optical Society of America 56, 966–977.'});
 SOURCE('s1-ladd-franklin',{title:'Ladd-Franklin, C. (1892). A new theory of light sensation. International Congress of Psychology, London; later in Colour and Colour Theories (1929).'});
