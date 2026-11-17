@@ -918,7 +918,7 @@ SCENE({id:'alphabet',name:'The alphabet',tag:'Pictures that became letters',
 
 const L1_VOW=[{ph:'’alep',snd:'glottal stop ’',gr:'alpha',v:'a',g:'A'},{ph:'he',snd:'h',gr:'epsilon',v:'e',g:'E'},{ph:'yod',snd:'y',gr:'iota',v:'i',g:'I'},{ph:'‘ayin',snd:'throat sound ‘',gr:'omicron',v:'o',g:'O'},{ph:'waw',snd:'w',gr:'upsilon',v:'u',g:'Y'}];
 SCENE({id:'alphabet-vowels',name:'Adding the vowels',tag:'Phoenician consonants, Greek vowels',
- definition:'Phoenician wrote only consonants: an abjad. When Greeks adopted it around 800 BCE they reused letters for Semitic sounds Greek lacked to write vowels, creating a full alphabet with signs for both consonants and vowels.',
+ definition:'Phoenician wrote only consonants: an abjad. When Greeks adopted it around 800 BCE they reused consonant letters they did not need, some for Semitic sounds Greek lacked, to write vowels, creating a full alphabet with signs for both consonants and vowels.',
  example:'Phoenician ’alep (a glottal stop) became Greek alpha, a; ‘ayin (a throat consonant) became omicron, o.',
  research:['Powell, B. B. (1991). Homer and the Origin of the Greek Alphabet. Cambridge University Press.','Swiggers, P. (1996). Transmission of the Phoenician script to the West. In Daniels & Bright (eds.), The World’s Writing Systems.','Daniels, P. T. (1990). Fundamentals of grammatology. Journal of the American Oriental Society 110, 727–731 (the terms abjad and abugida).'],
  desc:'A sentence is shown with consonants only or with vowels. Below, five Phoenician letters can be pressed to see the Greek vowel each became.',
@@ -933,7 +933,7 @@ SCENE({id:'alphabet-vowels',name:'Adding the vowels',tag:'Phoenician consonants,
   out+=TF(300,144,'In Semitic languages a root of consonants carries the core meaning: k-t-b “write” in Arabic kataba, kitāb, kātib.',13,C.muted);
   L1_VOW.forEach((q,i)=>{const x=40+i*104,on=i===s.i;out+=hit(X,'i',i,`Phoenician ${q.ph}`,R(x,164,94,52,on?C.blue:'#fff',on?C.blue:C.line,8)+TBF(x+47,186,q.ph,14,on?'#fff':C.ink)+TF(x+47,206,q.snd,13,on?'#fff':C.muted))});
   out+=arrow(300,226,300,256,C.line,2.5)+R(170,262,260,96,C.pale,'none',12)+TBF(230,322,d.g,44,C.blue)+TBF(280,300,`Greek ${d.gr}`,16,C.ink,'start')+TF(280,326,`now a vowel: ${d.v}`,14,C.green,'start');
-  return {svg:out,phase:`${d.ph} was a consonant (${d.snd}) in Phoenician. Greek had no such consonant, so it used the letter for the vowel ${d.v}.`};
+  return {svg:out,phase:`${d.ph} was a consonant (${d.snd}) in Phoenician. Greek did not need the letter for that consonant, so it used it for the vowel ${d.v}.`};
  }});
 
 const L1_TREE={
@@ -971,11 +971,12 @@ function L1_hiero(k,x,y){const c='#5a4630';
   reeds:P(`M${x-6} ${y+14}Q${x-10} ${y} ${x-4} ${y-14}`,c,3)+P(`M${x+6} ${y+14}Q${x+2} ${y} ${x+8} ${y-14}`,c,3),reed:P(`M${x} ${y+14}Q${x-5} ${y} ${x+2} ${y-14}`,c,3),
   cloth:R(x-6,y-14,12,28,'#d9c39a',c,3)+L(x-6,y-2,x+6,y+4,c,1.5),basket:P(`M${x-15} ${y-4}Q${x} ${y+16} ${x+15} ${y-4}Z`,c,2,'#d9c39a')+P(`M${x+10} ${y}q8 0 7 -8`,c,2),
   bird:`<ellipse cx="${x}" cy="${y}" rx="13" ry="8" fill="#d9c39a" stroke="${c}" stroke-width="2"/>`+Ci(x-12,y-8,5,'#d9c39a',c,'stroke-width="2"')+L(x-4,y+8,x-4,y+15,c,2)+L(x+4,y+8,x+4,y+15,c,2),
+  slope:P(`M${x-14} ${y+10}Q${x-8} ${y-10} ${x+12} ${y-12}L${x+12} ${y+10}Z`,c,2,'#d9c39a'),rib:P(`M${x-16} ${y-4}L${x+11} ${y-4}L${x+16} ${y+4}L${x-16} ${y+4}Z`,c,2,'#d9c39a'),
   hand:R(x-15,y-5,30,10,'#d9c39a',c,4)+L(x+8,y-5,x+14,y-11,c,2),mouth:`<ellipse cx="${x}" cy="${y}" rx="15" ry="6" fill="#d9c39a" stroke="${c}" stroke-width="2"/>`};
  return m[k]||'';
 }
-const L1_PTOL=[['stool','p'],['loaf','t'],['rope','o'],['lion','l'],['owl','m'],['reeds','i'],['cloth','s']];
-const L1_CLEO=[['basket','k'],['lion','l'],['reed','e'],['rope','o'],['stool','p'],['bird','a'],['hand','t'],['mouth','r'],['bird','a']];
+const L1_PTOL=[['stool','p'],['loaf','t'],['rope','o'],['lion','l'],['rib','m'],['reeds','i'],['cloth','s']];
+const L1_CLEO=[['slope','k'],['lion','l'],['reed','e'],['rope','o'],['stool','p'],['bird','a'],['hand','t'],['mouth','r'],['bird','a']];
 const L1_RSTEP=['A decree in three scripts','Ptolemy’s name','Cleopatra’s name','Shared signs, shared sounds','Two signs for one sound'];
 SCENE({id:'decipherment',name:'Cracking Egyptian',tag:'The Rosetta Stone and two royal names',
  definition:'The Rosetta Stone (196 BCE) repeats one decree in hieroglyphs, Demotic and Greek. By comparing royal names in cartouches with their Greek spellings, Champollion showed in 1822 that hieroglyphs included sound signs, and with his knowledge of Coptic went on to read the language.',
@@ -1067,7 +1068,7 @@ SCENE({id:'decipherment-odds',name:'Why some scripts stay silent',tag:'What a de
 const L1_BOOKS=[['14th c. manuscripts',2.7],['15th c. manuscripts',5],['Printed 1454–1500',12.6],['Printed 16th c.',217],['Printed 17th c.',532]];
 SCENE({id:'printing',name:'Copies by hand and by press',tag:'The arithmetic of print',
  definition:'Copying a book by hand takes the same effort for every copy. Printing front-loads the effort, setting the type once, after which each extra copy is cheap. After Gutenberg’s press (c. 1450) the number of books in Europe rose by orders of magnitude.',
- example:'A 200-page book: a scribe copying 4 pages a day needs 50 days per copy; a press needs about 100 days to set the type once, then a few minutes per copy (illustrative rates).',
+ example:'A 200-page book: a scribe copying 4 pages a day needs 50 days per copy; a press needs about 100 days to set the type once, then well under an hour of press time per copy (illustrative rates).',
  research:['Eisenstein, E. L. (1979). The Printing Press as an Agent of Change. Cambridge University Press.','Buringh, E. & van Zanden, J. L. (2009). Charting the “rise of the West”: manuscripts and printed books in Europe. Journal of Economic History 69(2), 409–445 (book output estimates, rounded here).'],
  desc:'Time view: bars compare days to make the chosen number of copies by scribe and by press, with illustrative rates. Output view: estimated books produced in Europe per period, on a logarithmic scale, from Buringh and van Zanden.',
  dur:12,hint:'In the time view, raise the number of copies and see where the press wins. Then switch to the output view.',
@@ -1086,8 +1087,8 @@ SCENE({id:'printing',name:'Copies by hand and by press',tag:'The arithmetic of p
   out+=TF(130,96,'Scribe',14,C.ink,'end')+R(140,78,Math.max(3,scribe*sc),30,C.amber,'none',4)+TF(Math.min(560,148+scribe*sc),98,`${Math.round(scribe).toLocaleString('en-GB')} days`,13,C.ink,scribe*sc>380?'end':'start');
   out+=TF(130,152,'Press',14,C.ink,'end')+R(140,134,Math.max(3,set*sc),30,C.purple,'none',4)+R(140+set*sc,134,Math.max(2,(press-set)*sc),30,C.blue,'none',4)+TF(Math.min(560,148+press*sc),154,`${Math.round(press).toLocaleString('en-GB')} days`,13,C.ink,press*sc>380?'end':'start');
   out+=Ci(150,192,6,C.purple)+TF(162,197,'setting the type (once)',13,C.muted,'start')+Ci(340,192,6,C.blue)+TF(352,197,'printing every copy',13,C.muted,'start');
-  out+=L1_note(40,222,520,130,'Rates used (illustrative)','A scribe copies about 4 pages a day. Setting type takes about half a day per page; a hand press then prints about 3,600 impressions a day. Real figures varied widely; the shape of the comparison is what matters: the press wins from about two copies upward.',78);
-  return {svg:out,phase:press<scribe?`The press is ${Math.round(scribe/press)} times faster for ${s.copies} copies.`:'For a single copy, hand copying is still quicker than setting type.'};
+  out+=L1_note(40,222,520,130,'Rates used (illustrative)','A scribe copies about 4 pages a day. Setting type takes about half a day per page; a hand press then prints about 3,600 impressions a day. Real figures varied widely; the shape of the comparison is what matters: the press wins once more than two copies are needed.',78);
+  return {svg:out,phase:press<scribe?`The press is ${Math.round(scribe/press)} times faster for ${s.copies} copies.`:'For one or two copies, hand copying is still at least as quick as setting type.'};
  }});
 
 const L1_EVENTS=[{y:'868',n:'Diamond Sutra',d:'Oldest dated printed book: a woodblock scroll found at Dunhuang.'},{y:'c. 1040',n:'Bi Sheng',d:'Movable type of baked clay, described by Shen Kuo in China.'},{y:'1377',n:'Jikji',d:'Oldest surviving book printed with movable metal type, in Korea.'},{y:'c. 1450',n:'Gutenberg',d:'Metal type cast in a hand mould, oil-based ink and a screw press, in Mainz.'}];
@@ -1256,7 +1257,7 @@ function L2_glide(pts,dur=.6,at=0){const c=AUDIO.get();if(!c)return;try{const t0
 /* ===================== Lesson: language-families ===================== */
 const L2_LANGS=[['Sanskrit',1],['Ancient Greek',1],['Latin',1],['Old English',1],['Old Irish',1],['Finnish',0],['Hungarian',0],['Basque',0],['Arabic',0]];
 const L2_WORDS={
- three:{forms:['tráyas','treîs','trēs','þrēo','trí','kolme','három','hiru','thalātha'],note:'All five Indo-European words begin with t followed by r. English þ (th) is the regular partner of t elsewhere, as Grimm’s law will show.'},
+ three:{forms:['tráyas','treîs','trēs','þrēo','trí','kolme','három','hiru','thalātha'],note:'Four of the five Indo-European words begin with t followed by r. English þ (th) is the regular partner of t elsewhere, as Grimm’s law will show.'},
  two:{forms:['dvā́','dýo','duo','twā','dá','kaksi','kettő','bi','ithnān'],note:'d in Sanskrit, Greek, Latin and Irish matches t in English. The same d : t match appears in decem/ten and dentem/tooth.'},
  brother:{forms:['bhrā́tar-','phrā́tēr','frāter','brōþor','bráthair','veli','fivér','anaia','akh'],note:'bh in Sanskrit, ph in Greek, f in Latin and b in English and Irish: one ancestral sound with regular outcomes. (In Greek the word came to mean a clan member.)'},
  mother:{forms:['mātár-','mḗtēr','māter','mōdor','máthair','äiti','anya','ama','umm'],note:'m and t (English d) line up across all five. Short words like ama and umm look alike in many unrelated families: they are “nursery” words.'},
@@ -1286,7 +1287,7 @@ SCENE({id:'language-families',name:'Jones and the family resemblance',tag:'Sansk
 const L2_PAIRS=[
  ['English much','Spanish mucho','chance','Unrelated. Much comes from Old English mycel; mucho comes from Latin multum. They converged by chance.'],
  ['English head','Latin caput','cognate','Related. Both go back to one root: Grimm’s law turns k into h and p into f or v (Old English hēafod).'],
- ['English have','Latin habēre','chance','A famous false friend. Have matches Latin capere “take” (k → h, p → f or v), not habēre.'],
+ ['English have','Latin habēre','chance','A famous false cognate. Have matches Latin capere “take” (k → h, p → f or v), not habēre.'],
  ['English two','Latin duo','cognate','Related. Latin d regularly matches English t: duo/two, decem/ten, dentem/tooth.'],
  ['English bad','Persian bad','chance','Unrelated. Same sound and meaning, but no regular correspondences link them.'],
  ['English fish','Latin piscis','cognate','Related. Latin p matches English f (pater/father, pēs/foot), and Latin sk matches English sh.'],
@@ -1370,7 +1371,7 @@ SCENE({id:'comparative-method',name:'Rebuilding a lost word',tag:'The comparativ
 const L2_SETS=[
  {name:'“hundred”',cells:[['Italian','cento','tʃ'],['Spanish','ciento','θ or s'],['French','cent','s'],['Sardinian','kentu','k']],opts:['tʃ','θ','s','k'],ans:'k',naive:'s',why:'k often shifts to tʃ or s before i and e (palatalisation); the reverse is rare. Sardinian kept the old k, and Latin centum had it too.'},
  {name:'“son”',cells:[['Italian','figlio','f'],['Spanish','hijo','silent h'],['Portuguese','filho','f'],['French','fils','f']],opts:['f','h','nothing'],ans:'f',naive:'f',why:'f → h → nothing is a known change, which happened in Spanish; h → f would be unusual. Latin filius confirms f.'},
- {name:'“life”',cells:[['Italian','vita','t'],['Spanish','vida','ð'],['Portuguese','vida','d'],['French','vie','nothing']],opts:['t','d','ð','nothing'],ans:'t',naive:'d',why:'Between vowels t softens to d, then ð, then disappears (lenition). The chain runs one way, so the strongest sound, t, is oldest. Latin vita.'}];
+ {name:'“life”',cells:[['Italian','vita','t'],['Spanish','vida','d (said ð)'],['Portuguese','vida','d'],['French','vie','nothing']],opts:['t','d','nothing'],ans:'t',naive:'d',why:'Between vowels t softens to d, then ð, then disappears (lenition). The chain runs one way, so the strongest sound, t, is oldest. Latin vita.'}];
 SCENE({id:'comparative-method-choose',name:'Which sound came first?',tag:'Direction matters',
  definition:'When cognates disagree, the oldest sound is not simply the most common one. Linguists prefer the sound from which every attested sound can be reached by changes that happen often in the world’s languages.',
  example:'Italian cento, Spanish ciento, French cent and Sardinian kentu begin with four different sounds. Only k explains them all, because k → tʃ → s is common and the reverse is not.',
@@ -1399,7 +1400,7 @@ const L2_PIE={
  two:{pie:'*dwóh₁',d:[['Sanskrit','dvā́','w → v'],['Greek','dýo','w → u'],['Latin','duo','w → u'],['Gothic','twai','d → t'],['Old Irish','dá','w lost']]},
  three:{pie:'*tréyes',d:[['Sanskrit','tráyas','e → a'],['Greek','treîs','eye → ei'],['Latin','trēs','eye → ē'],['Gothic','þreis','t → þ'],['Old Irish','trí','eye → í']]}};
 SCENE({id:'comparative-method-pie',name:'Proto-Indo-European',tag:'A language nobody wrote down',
- definition:'Applying the comparative method to the whole family gives Proto-Indo-European, spoken perhaps 6,000 to 8,000 years ago. Its words are written with an asterisk because they are reconstructed, not attested. Some reconstructions were later confirmed by newly found languages.',
+ definition:'Applying the comparative method to the whole family gives Proto-Indo-European, spoken perhaps 6,000 years ago (estimates run from about 5,500 to 9,500). Its words are written with an asterisk because they are reconstructed, not attested. Some reconstructions were later confirmed by newly found languages.',
  example:'In 1879 the young Saussure argued from vowel patterns that the parent language had sounds lost in every known daughter. Hittite, deciphered in 1915–17, turned out to write one of them as ḫ, as in ḫant- “front” beside Latin ante.',
  desc:'A reconstructed root with its five descendants and the change that produced each; or the story of the laryngeal sounds confirmed by Hittite.',
  research:'Saussure, F. de (1879). Mémoire sur le système primitif des voyelles dans les langues indo-européennes. · Hrozný, B. (1915). Die Lösung des hethitischen Problems. · Kuryłowicz, J. (1927). ə indoeuropéen et ḫ hittite. · Fortson, B. W. (2010). Indo-European Language and Culture, 2nd ed.',
@@ -1438,7 +1439,7 @@ const L2_GRW={
  mead:{src:'Sanskrit madhu',en:'mead',ch:[['dh','d',2,1]]},
  guest:{src:'Latin hostis (h < gʰ)',en:'guest',ch:[['gʰ','g',2,2]]}};
 SCENE({id:'grimms-law',name:'Grimm’s law',tag:'Nine consonants move together',
- definition:'Grimm’s law describes a shift in the consonants of early Germanic. Voiceless stops became fricatives, voiced stops lost their voice, and breathy-voiced stops became plain voiced stops. Latin, Greek and Sanskrit did not take part, so their words keep the older sounds.',
+ definition:'Grimm’s law describes a shift in the consonants of early Germanic. Voiceless stops became fricatives, voiced stops lost their voice, and breathy-voiced stops became plain voiced stops. Latin, Greek and Sanskrit did not take part, so their words largely keep the older sounds (Sanskrit most faithfully).',
  example:'Latin pēs and English foot: p became f and d became t. Latin cornū and English horn: k became h.',
  desc:'A word in Latin or Sanskrit, its English cognate, the consonants that changed, and a 3 × 3 chart of the nine shifts with the active one lit.',
  research:'Grimm, J. (1822). Deutsche Grammatik, 2nd ed., vol. 1. Rasmus Rask described the correspondences in 1818 (Undersøgelse om det gamle Nordiske eller Islandske Sprogs Oprindelse).',
@@ -1560,7 +1561,7 @@ SCENE({id:'great-vowel-shift-spelling',name:'Why spelling stopped matching',tag:
   L2_SP.forEach((W,i)=>{const x=46+i*80;out+=L2_chip(X,'w',i,W[0],x-34,192,72,i===s.sel,`Show ${W[0]}`)});
   const W=L2_SP[s.sel];out+=R(40,236,520,116,'#fff',C.grid,10);
   out+=TF(70,262,'spelling',12,C.muted,'start')+L2_TB(70,294,W[0],26,C.ink,'start')+TF(70,320,`letters: ${W[1]}`,13,C.coral,'start');
-  out+=TF(230,262,'letters meant, c. 1400',12,C.muted,'start')+L2_lines(230,290,L2_wrap(W[2],22),15,C.purple,'start',20);
+  out+=TF(230,262,'letters meant before the shift',12,C.muted,'start')+L2_lines(230,290,L2_wrap(W[2],22),15,C.purple,'start',20);
   out+=TF(430,262,'sound today',12,C.muted,'start')+L2_TB(430,294,W[3],24,C.green,'start');
   return {svg:out,phase:`In ${W[0]} the letters ${W[1]} once meant ${W[2]}. The sound became ${W[3]}, but the spelling had already settled.`};
  }});
@@ -1642,7 +1643,7 @@ SCENE({id:'phonetics-ipa-consonants',name:'The consonant chart',tag:'Where and h
   const row=L2_CONS.find(c=>c[2]===s.sel||c[3]===s.sel),voiced=row&&row[3]===s.sel;
   const name=row?`${voiced?'voiced':'voiceless'} ${L2_PLACES[row[1]]} ${L2_MANNERS[row[0]].replace('approx.','approximant')}`:'';
   out+=R(24,302,556,56,C.pale,'none',10)+L2_TB(60,340,`[${s.sel}]`,26,C.purple)+TBF(104,324,name,14,C.ink,'start')+L2_TF(104,346,L2_EX[s.sel]?'as in '+L2_EX[s.sel]:'rare; found in a few languages',13,C.ink,'start');
-  return {svg:out,phase:eng?'English uses about 21 of these cells, plus [w], [tʃ] (church) and [dʒ] (judge), which sit outside this simple grid. Many languages use cells English never touches, such as [x], [ɬ] and [ħ].':`[${s.sel}]: ${name}. Pairs in one cell differ only in voicing: the left symbol is voiceless, the right voiced.`};
+  return {svg:out,phase:eng?'English uses 21 of these symbols, plus [w], [tʃ] (church) and [dʒ] (judge), which sit outside this simple grid. Many languages use cells English never touches, such as [x], [ɬ] and [ħ].':`[${s.sel}]: ${name}. Pairs in one cell differ only in voicing: the left symbol is voiceless, the right voiced.`};
  }});
 
 const L2_TONES={man:{syl:'ma',items:[['mā','55','mother'],['má','35','hemp'],['mǎ','214','horse'],['mà','51','to scold']]},can:{syl:'si',items:[['si1','55','poem'],['si2','25','history'],['si3','33','to try'],['si4','21','time'],['si5','23','market'],['si6','22','matter']]}};
@@ -1652,7 +1653,7 @@ SCENE({id:'phonetics-ipa-tones',name:'Tone',tag:'Pitch that changes the word',
  definition:'In a tone language, pitch distinguishes words just as consonants and vowels do. Yuen Ren Chao’s tone letters describe each tone with numbers from 1 (lowest) to 5 (highest) for the speaker’s range.',
  example:'Mandarin mā (55, high level) means “mother”, má (35, rising) “hemp”, mǎ (214, dipping) “horse” and mà (51, falling) “to scold”.',
  desc:'Pitch contours on a five-level scale for the four Mandarin tones or six Cantonese tones, with the chosen tone drawn heavier. Pressing a syllable plays a synthetic pitch glide.',
- research:'Chao, Y. R. (1930). A system of tone letters. Le Maître Phonétique 45. · Yip, M. (2002). Tone. Cambridge University Press. · Maddieson, I. (2013). Tone. In WALS Online, ch. 13: a little over half of the 527 sampled languages have tone.',
+ research:'Chao, Y. R. (1930). A system of tone letters. Le Maître Phonétique 45. · Yip, M. (2002). Tone. Cambridge University Press. · Maddieson, I. (2013). Tone. In WALS Online, ch. 13: about two in five of the 527 sampled languages (220) have tone.',
  dur:12,hint:'Choose Mandarin or Cantonese and press a syllable to hear its pitch contour (synthetic, approximate).',
  init:()=>({lang:'man',sel:2}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {lang:'man',sel:k}},
@@ -1834,7 +1835,7 @@ WORD(
  {key:'palatalisation',title:'Palatalisation',aliases:['palatalisation','palatalization','palatalised'],linkContext:'comparative-method-choose',here:'A change in which a consonant moves towards the hard palate, usually before i or e, so that k becomes tʃ or s.',contrast:'Common in one direction (k → tʃ), rare in the other, which helps linguists decide which sound is older.',example:'Latin centum with [k] became Italian cento with [tʃ].'},
  {key:'lenition',title:'Lenition',aliases:['lenition','weakening'],linkContext:'comparative-method-choose',here:'A weakening of a consonant, often between vowels: t becomes d, then ð, then disappears.',contrast:'Fortition, strengthening, is much rarer.',example:'Latin vita became Spanish vida with [ð] and French vie with no consonant.'},
  {key:'laryngeal-theory',title:'Laryngeal theory',aliases:['laryngeal theory','laryngeal','laryngeals'],linkContext:'comparative-method-pie',scene:'comparative-method-pie',here:'The theory that Proto-Indo-European had consonants, written h₁, h₂, h₃, that vanished in most daughters but left traces on neighbouring vowels.',contrast:'Saussure inferred them before any evidence was found; Hittite later confirmed one of them.',example:'*h₂énti “in front” gives Hittite ḫant- but Greek antí.'},
- {key:'sound-law',title:'Sound law',aliases:['sound law','sound laws','regular sound change'],linkContext:'grimms-law',here:'A statement that a sound changed in the same way in every word where it occurred in the same surroundings.',contrast:'The Neogrammarians held that sound laws have no exceptions; apparent exceptions come from other laws, borrowing or analogy.',example:'Grimm’s law: every inherited p became f in Germanic.'},
+ {key:'sound-law',title:'Sound law',aliases:['sound law','sound laws','regular sound change'],linkContext:'grimms-law',here:'A statement that a sound changed in the same way in every word where it occurred in the same surroundings.',contrast:'The Neogrammarians held that sound laws have no exceptions; apparent exceptions come from other laws, borrowing or analogy.',example:'Grimm’s law: inherited p became f in Germanic (Latin pēs, English foot), except in fixed surroundings such as after s.'},
  {key:'grimms-law-word',title:'Grimm’s law',aliases:['Grimm’s law','first Germanic sound shift','First Germanic Consonant Shift'],linkContext:'grimms-law',scene:'grimms-law',here:'The shift of nine stop consonants in early Germanic: p t k became f θ h, b d g became p t k, and bʰ dʰ gʰ became b d g.',contrast:'It affected only Germanic, so Latin, Greek and Sanskrit keep the older sounds.',example:'Latin pēs, English foot; Latin cornū, English horn.'},
  {key:'verners-law',title:'Verner’s law',aliases:['Verner’s law'],linkContext:'grimms-law-verner',scene:'grimms-law-verner',here:'The rule that a Germanic fricative from Grimm’s law became voiced when the old accent did not fall immediately before it.',contrast:'It explains the exceptions to Grimm’s law rather than overturning it.',example:'Gothic brōþar but fadar; English was but were.'},
  {key:'neogrammarians',title:'Neogrammarians',aliases:['Neogrammarians','Junggrammatiker','Neogrammarian hypothesis'],linkContext:'grimms-law-verner',here:'A group of linguists at Leipzig in the 1870s who argued that sound change is regular and exceptionless.',contrast:'Their claim is a working principle; later work showed some changes spread word by word.',example:'Osthoff and Brugmann stated the principle in 1878.'},
@@ -1870,7 +1871,7 @@ WORD(
 /* Language era 3 · Structure (1916–1960): lessons, sources and connections. */
 SOURCE('l3-saussure-1916',{title:'Saussure, F. de (1916). Cours de linguistique générale, ed. C. Bally & A. Sechehaye. English translation: Course in General Linguistics (Baskin 1959; Harris 1983).',url:'https://en.wikipedia.org/wiki/Course_in_General_Linguistics'});
 SOURCE('l3-hjelmslev-1943',{title:'Hjelmslev, L. (1943). Omkring sprogteoriens grundlæggelse. English translation: Prolegomena to a Theory of Language (1953).'});
-SOURCE('l3-kohler-1929',{title:'Köhler, W. (1929). Gestalt Psychology. Liveright (maluma and takete).'});
+SOURCE('l3-kohler-1929',{title:'Köhler, W. (1929). Gestalt Psychology. Liveright (baluma and takete; maluma in the 1947 edition).'});
 SOURCE('l3-ramachandran-2001',{title:'Ramachandran, V. S. & Hubbard, E. M. (2001). Synaesthesia — a window into perception, thought and language. Journal of Consciousness Studies 8(12), 3–34.'});
 SOURCE('l3-cwiek-2022',{title:'Ćwiek, A. et al. (2022). The bouba/kiki effect is robust across cultures and writing systems. Philosophical Transactions of the Royal Society B 377, 20200390.',url:'https://doi.org/10.1098/rstb.2020.0390'});
 SOURCE('l3-sapir-1925',{title:'Sapir, E. (1925). Sound patterns in language. Language 1(2), 37–51.'});
@@ -2015,14 +2016,14 @@ SCENE({id:'saussure-sign',name:'The arbitrary sign',tag:'Saussure',
  on:{k(s,v){s.k=v}},
  draw(s){
   const k=s.k,words=L3_SIGNS[k],name=L3_CONCEPTS.find(c=>c[0]===k)[1];
-  let out=heading(k==='woof'?'Copying a sound: similar, never the same':'One idea, ten unrelated words');
+  let out=heading(k==='woof'?'Copying a sound: similar, never the same':'One idea, ten different words');
   out+=R(24,50,160,150,'#f6f9fb',C.grid,10)+L3_icon(k,104,116)+TF(104,192,name,13,C.muted);
   out+=R(34,216,140,112,'#fff',C.blue,56)+L(42,272,166,272,C.blue,1.5);
   out+=TF(104,240,'signified',13,C.muted)+TBF(104,260,name,14,C.ink)+TF(104,292,'signifier',13,C.muted)+TBF(104,312,`“${words[0]}”`,14,C.blue);
   L3_LANGS.forEach((lg,i)=>{const c=i%2,r=Math.floor(i/2),x=200+c*192,y=50+r*56;
    out+=R(x,y,184,48,'#fff',C.grid,8)+TF(x+10,y+19,lg,13,C.muted,'start')+TBF(x+10,y+40,words[i],17,words[i]==='—'?C.line:C.ink,'start',L3_IPA)});
   out+=TF(390,354,'Spellings romanised; tones and long vowels marked',13,C.muted);
-  return {svg:out,phase:k==='woof'?'Imitative words share a family likeness because they copy a real sound, but each language fits the bark to its own sound system. That is Saussure’s point: even here the form is partly convention.':'The concept is the same everywhere; the sounds share nothing. Learning a word means learning a convention your community agreed on, not discovering a natural name.'};
+  return {svg:out,phase:k==='woof'?'Imitative words share a family likeness because they copy a real sound, but each language fits the bark to its own sound system. That is Saussure’s point: even here the form is partly convention.':'The concept is the same everywhere; the sounds mostly differ, and where they match (water and Wasser, lune and luna) it is shared ancestry, not a natural fit. Learning a word means learning a convention your community agreed on, not discovering a natural name.'};
  }});
 
 // Bouba–kiki: [rounded name, sharp name, made up for this page?]
@@ -2032,7 +2033,7 @@ function L3_blob(x,y,r,col){const pts=range(73).map(i=>{const a=i/72*2*Math.PI,q
 function L3_star(x,y,r,col){const j=[1,.9,1.05,.85,1,.95,1.08,.88,.97];const pts=range(18).map(i=>{const a=i/18*2*Math.PI-Math.PI/2,q=i%2?r*.42:r*j[i/2];return [x+q*Math.cos(a),y+q*Math.sin(a)]});return P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join('L')+'Z',C.ink,2,col)}
 SCENE({id:'saussure-sign-bouba',name:'Bouba and kiki',tag:'Be the participant',
  definition:'Sound symbolism is a systematic link between sounds and meanings. Shown a rounded shape and a spiky one, most people call the rounded one “bouba” or “maluma” and the spiky one “kiki” or “takete”. It is a real exception to arbitrariness, though a modest one: it shapes a few words, not whole vocabularies.',
- example:'Wolfgang Köhler used maluma and takete in 1929. Ramachandran and Hubbard (2001) reported about 95% agreement for bouba and kiki. A test in 25 languages found the effect in most of them, with 72% matching overall (Ćwiek et al. 2022).',
+ example:'Wolfgang Köhler used baluma and takete in 1929, changing it to maluma in his 1947 edition. Ramachandran and Hubbard (2001) reported about 95% agreement for bouba and kiki. A test in 25 languages found the effect in most of them, with 72% matching overall (Ćwiek et al. 2022).',
  research:'Köhler, W. (1929). Gestalt Psychology; Ramachandran, V. S. & Hubbard, E. M. (2001). Synaesthesia — a window into perception, thought and language. J. Consciousness Studies 8(12); Ćwiek, A. et al. (2022). The bouba/kiki effect is robust across cultures and writing systems. Phil. Trans. R. Soc. B 377 (replicated across 25 languages; weaker in some).',
  desc:'Two shapes, one rounded and one spiky, swap sides from trial to trial; you press the one with the given name, and your match rate is drawn beside two published results.',
  dur:10,hint:'Press Start, then press the shape you think has the name shown. Eight trials; the shapes swap sides at random. Two of the four name pairs are classic, two were made up for this page. Your answers stay in this page.',
@@ -2185,9 +2186,9 @@ SCENE({id:'phonemes-features',name:'Distinctive features',tag:'Sounds as bundles
   out+=TF(gx+cw*1.5,gy+3*ch+22,'left of each pair: voiceless · right: voiced',13,C.muted);
   const fb=`[${p[3]?'+':'−'}voice, ${L3_PLACE[p[1]]}, ${L3_MANNER[p[2]]}]`;
   out+=R(40,300,520,64,'#f6f9fb',C.grid,10)+TBF(60,326,p[0],22,C.blue,'start',L3_IPA)+TF(100,326,fb,15,C.ink,'start');
-  const note=p[4]?(p[2]===0||p[2]===1?`English plural after ${p[0]}: ${p[3]?'/z/ (as in dogs)':p[1]===1&&p[2]===1?'/ɪz/ (as in buses)':'/s/ (as in cats)'}`:'nasals are voiced in English, so plurals add /z/'):(p[2]===2?'not English: voiceless nasals occur in Burmese and Icelandic':'not English: as in German Bach (x) or Spanish lago (ɣ)');
+  const note=p[4]?(p[2]===0||p[2]===1?`English plural after ${p[0]}: ${p[1]===1&&p[2]===1?'/ɪz/ (as in buses)':p[3]?'/z/ (as in dogs)':'/s/ (as in cats)'}`:'nasals are voiced in English, so plurals add /z/'):(p[2]===2?'not English: voiceless nasals occur in Burmese and Icelandic':'not English: as in German Bach (x) or Spanish lago (ɣ)');
   out+=TF(60,350,note,13,C.muted,'start',L3_IPA);
-  return {svg:out,phase:s.cls!=='none'?`The highlighted sounds share one feature, so a single rule can mention them all. ${s.cls==='voiced'?'Voiced sounds take /z/ in the English plural.':'Children and sound changes treat such classes as units.'}`:`${p[0]} is ${fb}. Change one feature and you land on a neighbour: that is why p and b, or t and n, feel related.`};
+  return {svg:out,phase:s.cls!=='none'?`The highlighted sounds share one feature, so a single rule can mention them all. ${s.cls==='voiced'?'Voiced sounds take /z/ in the English plural (except z itself, which takes /ɪz/).':'Children and sound changes treat such classes as units.'}`:`${p[0]} is ${fb}. Change one feature and you land on a neighbour: that is why p and b, or t and n, feel related.`};
  }});
 
 /* ======================= Lesson: morphology ======================= */
@@ -2228,13 +2229,13 @@ SCENE({id:'morphology',name:'Building words from parts',tag:'Morphemes',
 const L3_TYPES=[
  {lang:'Mandarin',type:'isolating',parts:[['wǒ','I'],['mǎi','buy'],['le','PFV'],['shū','book']],word:'wǒ mǎi le shū',tr:'I bought a book (or books)',note:'Each word is a single morpheme; tense and number come from separate words or context.'},
  {lang:'Turkish',type:'agglutinating',parts:[['ev','house'],['ler','PL'],['im','1SG.POSS'],['de','LOC']],word:'evlerimde',tr:'in my houses',note:'Each ending carries one meaning and stays easy to see.'},
- {lang:'Latin',type:'fusional',parts:[['am','love'],['ā','THEME'],['bō','FUT.1SG']],word:'amābō',tr:'I will love',note:'The ending -bō packs future tense, first person and singular into one piece that cannot be split.'},
+ {lang:'Latin',type:'fusional',parts:[['am','love'],['ō','1SG.PRS']],word:'amō',tr:'I love',note:'The single ending -ō marks first person and singular together (and, in this form, present tense): no part of it means just one of these.'},
  {lang:'Inuktitut',type:'polysynthetic',parts:[['tusaa','hear'],['tsiaq','well'],['junnaq','able'],['nngit','NEG'],['tualuu','very'],['junga','1SG']],word:'tusaatsiarunnanngittualuujunga',tr:'I can’t hear very well',note:'A whole English sentence is one word. Sounds change at the joins, so the parts are not simply strung together.'},
  {lang:'English',type:'mixed',parts:[['un','NOT'],['break','break'],['able','able']],word:'unbreakable',tr:'cannot be broken',note:'English mixes types: un-break-able strings parts together, while sang packs “sing + past” into one vowel change.'}];
 const L3_INDEX=[['Vietnamese',1.06],['English',1.68],['Swahili',2.55],['Sanskrit',2.59],['West Greenlandic',3.72]];
 SCENE({id:'morphology-typology',name:'How languages build words',tag:'Morphological types',
  definition:'Languages differ in how much they pack into a word. Isolating languages use mostly one-morpheme words; agglutinating ones add clear, separable endings; fusional ones merge several meanings into one ending; polysynthetic ones build whole sentences into a word. These are points on a continuum, and most languages mix types.',
- example:'Turkish ev-ler-im-de is “in my houses”, one meaning per piece. Latin amā-bō is “I will love”, with future, first person and singular fused in -bō.',
+ example:'Turkish ev-ler-im-de is “in my houses”, one meaning per piece. Latin am-ō is “I love”, with first person and singular fused in -ō.',
  research:'Sapir, E. (1921). Language; Greenberg, J. H. (1960). A quantitative approach to the morphological typology of language. IJAL 26, 178–194 (index of synthesis: morphemes per word in 100-word samples; values approximate).',
  desc:'One word from the chosen language split into morphemes with glosses, its type named, and a scale of Greenberg’s index of synthesis (average morphemes per word) with five languages marked.',
  dur:10,hint:'Choose a language to see one word broken into its parts and where the language sits on the scale of morphemes per word.',
@@ -2262,7 +2263,7 @@ function L3_wugBird(x,y,col){return P(`M${x-26} ${y+10}Q${x-30} ${y-24} ${x} ${y
 SCENE({id:'morphology-wug',name:'The wug test',tag:'Be the participant',
  definition:'Jean Berko (1958) showed children pictures of made-up creatures, “This is a wug. Now there are two of them. There are two…?”, and they answered “wugs” with the right ending. Children could not have heard these words, so they must know a rule, not just a list.',
  example:'The English plural has three forms chosen by the last sound: /s/ after voiceless sounds (cats), /z/ after voiced sounds (dogs) and /ɪz/ after hissing and hushing sounds (horses, churches).',
- research:'Berko, J. (1958). The child’s learning of English morphology. Word 14, 150–177 (wug, gutch, lun, tass, nizz and cra are among her items; bik and zop are made up here). Replicated many times; the test now has versions for many languages.',
+ research:'Berko, J. (1958). The child’s learning of English morphology. Word 14, 150–177 (wug, gutch, lun, tass, nizz and cra follow her plural items; the rest are added for this page). Replicated many times; the test now has versions for many languages.',
  desc:'A cartoon creature appears with a made-up name; you pick the plural ending as /s/, /z/ or /ɪz/ for eight words, and a table checks your answers against the rule that depends on the final sound.',
  dur:10,hint:'Press Start. For each made-up word, say “two ___s” aloud and choose the ending you hear. Your answers stay in this page.',
  init:()=>({order:[],i:-1,ans:[],seed:9}),
@@ -2312,7 +2313,7 @@ SCENE({id:'zipf-law',name:'Zipf’s law',tag:'Rank and frequency',
 
 const L3_ALICE_REF=L3_memo('aliceref',()=>L3_rank(L3_AW).map(([,c],i)=>[Math.log10(i+1),Math.log10(c)]));
 SCENE({id:'zipf-law-monkey',name:'A monkey at a typewriter',tag:'Is Zipf’s law deep?',
- definition:'George Miller (1957) pointed out that random typing, letters and spaces pressed at random, also produces a rank–frequency curve close to Zipf’s, because short random strings are both more likely and more varied in number. So the law alone does not prove anything special about meaning.',
+ definition:'George Miller (1957) pointed out that random typing, letters and spaces pressed at random, also produces a rank–frequency curve close to Zipf’s, because each short random string is far more likely than each long one, while the number of different strings grows rapidly with length. So the law alone does not prove anything special about meaning.',
  example:'With 6 letters and a space pressed 20% of the time, one-letter “words” are common and long ones rare, and the ranked counts fall in near-straight steps on log–log axes.',
  research:'Miller, G. A. (1957). Some effects of intermittent silence. American Journal of Psychology 70, 311–314; Li, W. (1992). Random texts exhibit Zipf’s-law-like word frequency distribution. IEEE Trans. Information Theory 38; Piantadosi (2014) argues real language shows Zipf-like structure that random typing cannot explain, such as frequency tied to meaning.',
  desc:'A sample of random “text”, and its words ranked by count on log–log axes beside the curve for the Alice passage, with the fitted slope.',
@@ -2410,7 +2411,7 @@ SCENE({id:'redundancy-entropy-approx',name:'Approximations to English',tag:'Shan
  example:'Random letters give gibberish like XFOML RXKHRJFFJUJ. With letter pairs counted, text gains English-like syllables (ON IE ANTSOUTINYS ARE T INCTORE), and with word frequencies it produces real words in a meaningless order.',
  research:'Shannon, C. E. (1948). A mathematical theory of communication. Bell System Technical Journal 27 (the approximations); Shannon (1951), BSTJ 30 (the values F0 = 4.75, F1 = 4.03, F2 = 3.32, F3 = 3.1 bits from large tables of English). Language machines in era 8 take the same idea to words.',
  desc:'A paragraph of text generated from letter statistics of the Alice passage at the chosen order, with a bar chart of entropy per letter at each order beside Shannon’s values from large English tables.',
- dur:12,hint:'Choose an order and press Generate again. Orders 3 and 4 copy whole chunks of Alice: our sample is only about 4,000 letters, so high-order statistics overfit and their entropy looks too low.',
+ dur:12,hint:'Choose an order and press Generate again. Orders 3 and 4 copy whole chunks of Alice: our sample is only about 3,200 characters, so high-order statistics overfit and their entropy looks too low.',
  init:()=>({o:2,seed:1}),
  watch(p){const os=[0,1,2,3,4,'w'];return {o:os[Math.min(5,Math.floor(p*6))],seed:1}},
  ui:[{choose:[[0,'Random'],[1,'Letters'],[2,'Pairs'],[3,'Triples'],[4,'Fours'],['w','Words']],label:'Order',get:s=>s.o,act:'o'},{b:'Generate again',act:'fresh'}],
@@ -2423,7 +2424,7 @@ SCENE({id:'redundancy-entropy-approx',name:'Approximations to English',tag:'Shan
   const labs=['random','letters','pairs','triples','fours'];
   for(let k=0;k<5;k++){const F=Math.max(0,L3_F(k)),x=pl.X(k)+10,w=pl.X(1)-pl.X(0)-20,on=k===s.o;out+=R(x,pl.Y(F),w,pl.Y(0)-pl.Y(F),on?C.blue:C.pale,'none',4)+TF(x+w/2,pl.Y(F)-6,F.toFixed(2),13,C.ink)+TF(x+w/2,338,labs[k],13,on?C.blue:C.muted);
    if(k<4)out+=L(x-2,pl.Y(L3_SHAN[k]),x+w+2,pl.Y(L3_SHAN[k]),C.coral,3)}
-  out+=R(436,170,146,150,'#fff',C.grid,8)+R(450,190,24,12,C.pale,'none',3)+TF(482,201,'this passage',13,C.ink,'start')+L(450,224,474,224,C.coral,3)+TF(482,229,'Shannon’s',13,C.ink,'start')+TF(482,247,'large tables',13,C.ink,'start')+TF(509,282,'one passage of',13,C.muted)+TF(509,300,'~4,000 letters',13,C.muted);
+  out+=R(436,170,146,150,'#fff',C.grid,8)+R(450,190,24,12,C.pale,'none',3)+TF(482,201,'this passage',13,C.ink,'start')+L(450,224,474,224,C.coral,3)+TF(482,229,'Shannon’s',13,C.ink,'start')+TF(482,247,'large tables',13,C.ink,'start')+TF(509,282,'one passage of',13,C.muted)+TF(509,300,'~3,200 characters',13,C.muted);
   return {svg:out,phase:s.o==='w'?'Choosing whole words by frequency gives real words in a meaningless order: frequency alone does not make grammar.':`Each extra letter of context lowers the entropy. ${s.o>=3?'Here the drop is exaggerated: with so little text, the model mostly copies Alice back.':'Shannon’s figures from large tables (red marks) fall more slowly.'}`};
  }});
 
@@ -2566,7 +2567,7 @@ WORD(
  {key:'morpheme',title:'Morpheme',aliases:['morpheme','morphemes'],linkContext:'morphology',scene:'morphology',here:'The smallest part of a word that has a meaning or a grammatical job.',contrast:'Not the same as a syllable: un-break-able has three morphemes and four syllables.',example:'Swahili ni-ta-ku-penda has four morphemes.'},
  {key:'gloss-line',title:'Interlinear gloss',aliases:['interlinear gloss','gloss line','glossing'],linkContext:'morphology',scene:'morphology',here:'A line under a foreign-language example giving the meaning of each morpheme, with standard abbreviations such as PL and FUT.',contrast:'A gloss is not a translation: it shows structure, word for word.',example:'ev-ler-im-de / house-PL-1SG.POSS-LOC / ‘in my houses’.'},
  {key:'agglutinative',title:'Agglutinating language',aliases:['agglutinating','agglutinative','agglutination'],linkContext:'morphology',scene:'morphology-typology',here:'A language that builds words from clearly separable morphemes, each with one meaning.',contrast:'In fusional languages one ending carries several meanings at once.',example:'Turkish, Swahili, Finnish, Japanese.'},
- {key:'fusional',title:'Fusional language',aliases:['fusional','inflecting language'],linkContext:'morphology',scene:'morphology-typology',here:'A language whose endings merge several grammatical meanings into one inseparable piece.',contrast:'Agglutinating endings can be peeled off one meaning at a time.',example:'Latin amābō: -bō is future, first person and singular together.'},
+ {key:'fusional',title:'Fusional language',aliases:['fusional','inflecting language'],linkContext:'morphology',scene:'morphology-typology',here:'A language whose endings merge several grammatical meanings into one inseparable piece.',contrast:'Agglutinating endings can be peeled off one meaning at a time.',example:'Latin amō: -ō is first person and singular together.'},
  {key:'isolating',title:'Isolating language',aliases:['isolating','analytic language'],linkContext:'morphology',scene:'morphology-typology',here:'A language whose words are mostly single morphemes, with grammar carried by word order and separate words.',contrast:'Not a lack of grammar: the grammar lives in order and particles.',example:'Mandarin, Vietnamese, Yoruba.'},
  {key:'polysynthetic',title:'Polysynthetic language',aliases:['polysynthetic','polysynthesis'],linkContext:'morphology',scene:'morphology-typology',here:'A language that can build a whole sentence’s worth of meaning into one long word.',contrast:'Such words are built by productive rules, so they cannot be listed in a dictionary.',example:'Inuktitut tusaatsiarunnanngittualuujunga ‘I can’t hear very well’.'},
  {key:'wug-test',title:'Wug test',aliases:['wug test','wug'],linkContext:'morphology',scene:'morphology-wug',here:'Berko’s 1958 method of asking children to inflect made-up words, which shows they know productive rules.',contrast:'Testing real words could not tell rule use from memory.',example:'“This is a wug. Now there are two…” “Wugs!”'},
@@ -2759,7 +2760,7 @@ SCENE({id:'recursion',name:'Phrases inside phrases',tag:'Recursion and memory',
   e.w.forEach((w,i)=>{const l=L4_load(e,i);mx=Math.max(mx,l);if(l)out+=R(xs[i]-7,base-l*u,14,l*u,l>=3?C.coral:l===2?C.amber:C.blue,'none',3)});
   out+=L(14,base,586,base,C.line,1.5)+TF(20,base+20,'bars: subjects waiting for their verb at each word',13,C.muted,'start');
   out+=counter(330,318,'most held at once',String(mx),mx>=3?C.coral:C.blue,128)+counter(466,318,'words',String(n),C.ink,118);
-  return {svg:out,phase:s.type==='centre'?(s.d>=2?`At the middle of the sentence ${mx} subjects are waiting for their verbs, and the verbs then arrive in reverse order. Grammar allows it; memory gives out.`:'One clause inside is fine: two subjects held, then two verbs.'):'Right-branching keeps every subject next to its verb, so at most one is ever waiting, however deep the sentence goes.'};
+  return {svg:out,phase:s.type==='centre'?(s.d>=2?`At the middle of the sentence ${mx} subjects are waiting for their verbs, and the verbs then arrive in reverse order. Grammar allows it; memory gives out.`:(s.d===1?'One clause inside is fine: two subjects held, then two verbs.':'No clause inside: one subject, followed at once by its verb.')):'Right-branching keeps every subject next to its verb, so at most one is ever waiting, however deep the sentence goes.'};
  }});
 
 // Acceptability ratings, including the "missing verb" illusion (Gibson & Thomas 1999).
@@ -2797,7 +2798,7 @@ SCENE({id:'recursion-reading',name:'Rate the sentences',tag:'Be the participant'
    out+=L(x-30,pl.Y(L4_RPUB[c]),x+30,pl.Y(L4_RPUB[c]),C.ink,3)+L4_lines(x,334,L4_wrap(lab,14),13,C.muted,'middle',16)});
   out+=TF(570,212,'— published shape',13,C.ink,'end');
   const ok=s.data.c2.length&&s.data.miss.length;
-  return {svg:out,phase:ok?(L4_mean(s.data.miss)>=L4_mean(s.data.c2)?'Like many readers, you rated the sentence with a missing verb at least as high as the complete one: by the end, memory has lost track of the first subject.':'You rated the complete sentences higher than the broken ones, unlike many readers in the studies. Individuals vary, and two items per type is very few.'):'Black lines show the published pattern (shape from Gibson and Thomas 1999; values illustrative). Bars fill in as you rate.'};
+  return {svg:out,phase:ok?(L4_mean(s.data.miss)>=L4_mean(s.data.c2)?'Like many readers, you rated the sentence with a missing verb at least as high as the complete one: by the end, memory has lost track of the middle subject.':'You rated the complete sentences higher than the broken ones, unlike many readers in the studies. Individuals vary, and two items per type is very few.'):'Black lines show the published pattern (shape from Gibson and Thomas 1999; values illustrative). Bars fill in as you rate.'};
  }});
 
 const L4_PIR=[
@@ -3091,7 +3092,7 @@ const L4_WO=[
  {o:'none',n:189,lang:'—',s:'',g:'',t:'',also:'No single dominant order, e.g. German (main and subordinate clauses differ) or Warlpiri (free order, case marks roles).'}];
 SCENE({id:'universals',name:'Which word orders exist?',tag:'Typology',
  definition:'Joseph Greenberg (1963) compared word order in 30 languages and found striking regularities. With today’s much larger samples, the World Atlas of Language Structures shows all six orders of subject, object and verb occur, but very unevenly: orders with the subject before the object are by far the most common.',
- example:'Of 1,188 languages with a dominant order in WALS, 1,053 (89%) put the subject before the object: SOV or SVO.',
+ example:'Of 1,188 languages with a dominant order in WALS, 1,148 (97%) put the subject before the object: SOV, SVO or VSO.',
  research:'Greenberg, J. H. (1963). Some universals of grammar with particular reference to the order of meaningful elements. In Universals of Language, MIT Press; Dryer, M. S. (2013). Order of subject, object and verb. WALS Online, chapter 81; Derbyshire, D. C. (1977). Word order universals and the existence of OVS languages. Linguistic Inquiry 8, 590–599.',
  desc:'Horizontal bars counting the languages with each dominant word order in the World Atlas of Language Structures, and an example sentence with a word-by-word gloss for the chosen order.',
  dur:12,hint:'Press an order to see an example sentence and which languages use it. Counts are languages, not families; the next scenes ask why that matters.',
@@ -3609,7 +3610,7 @@ SCENE({id:'statistical-learning-segment',name:'A segmenter built on dips',tag:'W
    pred.forEach(([a,b])=>{const ok=ts.has(a+','+b);out+=L(42+a*cw,y+34,40+b*cw-6,y+34,ok?C.green:C.coral,4)+TF(40+a*cw,y+50,sy.slice(a,b).join(''),13,ok?C.green:C.coral,'start')});
    out+=TF(470,y+19,'“'+utt.join(' ')+'”',13,C.muted,'start')});
   const sc=L5_score(th);out+=counter(80,306,'precision: cuts that give real words',Math.round(sc.prec*100)+'%',C.green,210)+counter(310,306,'recall: real words found',Math.round(sc.rec*100)+'%',C.blue,210);
-  return {svg:out,phase:th<.5?'At low thresholds the learner cuts only at sharp dips. “look at” never varies in this corpus, so it stays glued as “lookat”: a statistics-only learner has no way to split a pair that always occurs together.':th>.55?'At high thresholds the learner starts splitting real words: “ba” begins both “baby” and “banana”, so even inside those words the next syllable is uncertain.':'A middle threshold finds most words. The remaining errors come from words that always appear together and from syllables shared between words: statistics alone are not the whole story.'};
+  return {svg:out,phase:th<.5?'At low thresholds the learner cuts only at sharp dips. “look at” is always followed by “the” in this corpus, so the three stay glued (“lookatthe” or longer): a statistics-only learner has no way to split words that always occur together.':th>.55?'At high thresholds the learner starts splitting real words: “ba” begins both “baby” and “banana”, so even inside those words the next syllable is uncertain.':'A middle threshold finds most words. The remaining errors come from words that always appear together and from syllables shared between words: statistics alone are not the whole story.'};
  }});
 
 /* ======================= Lesson: word-learning ======================= */
@@ -3647,7 +3648,7 @@ function L5_xTest(seed){const r=rng(seed+9);return shuffled([0,1,2,3,4,5],seed+1
 const L5_XSIM=[1,1,1,0,1,1];
 SCENE({id:'word-learning-cross',name:'Learning words across situations',tag:'Be the participant',
  definition:'In any single moment a child hears several words and sees several things, so one scene cannot say which word goes with which thing. Across many scenes, though, the right pairs keep turning up together. Chen Yu and Linda Smith showed that adults (and later infants) pick up word meanings from these co-occurrences without ever seeing a single unambiguous naming.',
- example:'You hear “bosa” and “manu” while seeing a star and a hook, then “bosa” and “kaki” with a star and a blob. The star is the only thing present both times “bosa” is heard.',
+ example:'You hear “bosa” and “manu” while seeing a pentagon and an L-shape, then “bosa” and “colat” with a pentagon and a notched shape. The pentagon is the only thing present both times “bosa” is heard.',
  research:'Yu, C. & Smith, L. B. (2007). Rapid word learning under uncertainty via cross-situational statistics. Psychological Science 18, 414–420 (adults, 2 × 2 trials: about 90% correct, approximate); Smith & Yu (2008), Cognition 106 (12- and 14-month-olds). Replicated; how learners do it (tracking all pairs or testing one guess) is debated (Trueswell et al. 2013).',
  desc:'Twelve scenes, each with two made-up words and two novel shapes in a random arrangement, then a test asking which of four shapes each word named; a co-occurrence grid shows why the right answers stand out.',
  dur:14,hint:'Press Start and watch twelve scenes (about three seconds each). Words and shapes are not lined up, so do not look for position. Then pick the shape for each word. Your answers stay in this page.',
@@ -3731,7 +3732,7 @@ SCENE({id:'critical-period',name:'Age of arrival and grammar',tag:'Johnson & New
   out+=Ci(pl.X(s.age),pl.Y(g[3]),8,'none',C.coral);
   out+=TF(300,336,`Arrived at ${g[0]}: mean ${g[3]} of 276 (natives 268.8)`,15,C.ink);
   out+=TF(300,358,'Dots simulated around the published group means (Johnson & Newport 1989, Table 2)',13,C.muted);
-  return {svg:out,phase:s.age<=7?'Children who arrived by about seven became indistinguishable from native speakers on this test.':s.age<=15?'Between 8 and 15, every extra year of age at arrival cost points, a close link (r ≈ −0.87). Johnson and Newport read this as a maturational limit.':'After 17, scores were lower on average but spread widely and no longer tracked age (r ≈ −0.16). Later studies dispute whether the decline really stops: amount of input, schooling and motivation all differ with age.'};
+  return {svg:out,phase:s.age<=7?'Children who arrived by about seven became indistinguishable from native speakers on this test.':s.age<=15?'Between 8 and 15, every extra year of age at arrival cost points; across all arrivals from 3 to 15 the link was close (r ≈ −0.87). Johnson and Newport read this as a maturational limit.':'After 17, scores were lower on average but spread widely and no longer tracked age (r ≈ −0.16). Later studies dispute whether the decline really stops: amount of input, schooling and motivation all differ with age.'};
  }});
 
 const L5_HT={r:.2,c:17.4,k:8};
@@ -3861,11 +3862,11 @@ SCENE({id:'bilingualism-flanker',name:'The flanker task',tag:'Be the participant
   return {svg:out,phase:fx!==null&&s.phase==='done'?`Opposing flankers cost you ${fx} ms. Almost everyone shows this effect; what large studies do not find is a reliable difference in its size between bilinguals and monolinguals.`:'Keep your eyes on the centre. The flankers are irrelevant, but your brain processes them anyway.'};
  }});
 
-// Code-switching and the equivalence constraint (Poplack 1980). Concepts in each language's order.
+// Code-switching and the equivalence constraint (Poplack 1980). es[c] translates en[c]; esOrd lists the concepts in Spanish order.
 const L5_CS=[
  {name:'Same word order',en:['The','house','is','very','big'],es:['La','casa','es','muy','grande'],esOrd:[0,1,2,3,4]},
- {name:'Adjective position differs',en:['She','has','a','white','house'],es:['Ella','tiene','una','casa','blanca'],esOrd:[0,1,2,4,3]},
- {name:'Object pronoun position differs',en:['I','told','him','that'],es:['Yo','le','dije','eso'],esOrd:[0,2,1,3]}];
+ {name:'Adjective position differs',en:['She','has','a','white','house'],es:['Ella','tiene','una','blanca','casa'],esOrd:[0,1,2,4,3]},
+ {name:'Object pronoun position differs',en:['I','told','him','that'],es:['Yo','dije','le','eso'],esOrd:[0,2,1,3]}];
 function L5_csMix(sen,k,startEs){const n=sen.en.length,enOrd=range(n),ord1=startEs?sen.esOrd:enOrd,ord2=startEs?enOrd:sen.esOrd,first=ord1.slice(0,k),rest=ord2.filter(c=>!first.includes(c));
  const ok=new Set(enOrd.slice(0,k)).size===first.length&&enOrd.slice(0,k).every(c=>sen.esOrd.slice(0,k).includes(c));
  return {words:first.map(c=>({w:(startEs?sen.es:sen.en)[c],es:startEs})).concat(rest.map(c=>({w:(startEs?sen.en:sen.es)[c],es:!startEs}))),ok}}
@@ -4074,7 +4075,7 @@ WORD(
  {key:'word-segmentation',title:'Word segmentation',aliases:['word segmentation','segmenting speech','segmentation'],linkContext:'statistical-learning',scene:'statistical-learning-segment',here:'Finding where words begin and end in continuous speech, which has no reliable pauses between words.',contrast:'Written spaces make it look easy; speech gives no such help.',example:'Hearing “prettybaby” as “pretty baby”.'},
  {key:'fast-mapping',title:'Fast mapping',aliases:['fast mapping','fast-mapping'],linkContext:'word-learning',scene:'word-learning',here:'Forming a first link between a new word and its meaning from a single encounter.',contrast:'A first guess is not lasting learning: without more exposure the link often fades within minutes.',example:'Picking the olive tray when asked for “the chromium one”.'},
  {key:'mutual-exclusivity',title:'Mutual exclusivity',aliases:['mutual exclusivity'],linkContext:'word-learning',scene:'word-learning',here:'The tendency to assume that a new word names something that does not already have a name.',contrast:'A helpful bias, not a rule: things do have several names (dog, animal, Rex), and bilingual children rely on it less.',example:'Told to fetch “the dax” from a cup and a strange gadget, children pick the gadget.'},
- {key:'cross-situational-learning',title:'Cross-situational learning',aliases:['cross-situational learning','cross-situational statistics'],linkContext:'word-learning',scene:'word-learning-cross',here:'Learning which word goes with which thing by noticing which pairs keep recurring across many ambiguous scenes.',contrast:'No single scene is informative; only the accumulation is.',example:'Hearing “bosa” in four scenes that each contain a star, among other things.'},
+ {key:'cross-situational-learning',title:'Cross-situational learning',aliases:['cross-situational learning','cross-situational statistics'],linkContext:'word-learning',scene:'word-learning-cross',here:'Learning which word goes with which thing by noticing which pairs keep recurring across many ambiguous scenes.',contrast:'No single scene is informative; only the accumulation is.',example:'Hearing “bosa” in four scenes that each contain the same pentagon, among other things.'},
  {key:'vocabulary-spurt',title:'Vocabulary spurt',aliases:['vocabulary spurt','vocabulary explosion','naming explosion'],linkContext:'word-learning',scene:'word-learning-vocabulary',here:'A supposed sudden jump in the rate of word learning, often placed around 18 months.',contrast:'When children are tracked closely, only a minority show a sharp jump; most accelerate gradually.',example:'A child saying 50 words at 18 months and 300 at 24 months.'},
  {key:'critical-period-word',title:'Critical period',aliases:['critical period','sensitive period','critical periods'],linkContext:'critical-period',scene:'critical-period',here:'A window in development during which a skill is learned most easily or most completely. Many researchers prefer “sensitive period” for language, since learning remains possible afterwards.',contrast:'Not a cliff: the evidence fits a gradual decline better than a sudden closure, and its causes are debated.',example:'Immigrants who arrived as young children reaching native-like grammar; later arrivals usually not.'},
  {key:'age-of-arrival',title:'Age of arrival',aliases:['age of arrival','age of acquisition','age of first exposure'],linkContext:'critical-period',scene:'critical-period',here:'The age at which someone first meets a language in daily use, for example by moving to a country where it is spoken.',contrast:'Confounded with other things: later arrivals often get less input and schooling in the new language.',example:'Arriving in the United States at 6 against at 25.'},
@@ -4086,7 +4087,7 @@ WORD(
  {key:'equivalence-constraint',title:'Equivalence constraint',aliases:['equivalence constraint'],linkContext:'bilingualism',scene:'bilingualism-code-switching',here:'Poplack’s finding that switches tend to occur at points where the word orders of the two languages agree, so neither grammar is broken.',contrast:'A strong tendency in some communities, not a universal law; other language pairs show exceptions.',example:'Avoiding “a white casa” in Spanish–English switching.'},
  {key:'visual-word-form-area',title:'Visual word form area',aliases:['visual word form area','VWFA','letterbox area'],linkContext:'reading-brain',scene:'reading-brain',here:'A region of left ventral occipito-temporal cortex that responds strongly to written words in fluent readers, in the same place across scripts.',contrast:'Not a built-in reading organ: it develops as people learn to read.',example:'Its response to sentences grew with reading skill in adults who learned late.'},
  {key:'neuronal-recycling',title:'Neuronal recycling',aliases:['neuronal recycling'],linkContext:'reading-brain',scene:'reading-brain',here:'Dehaene’s proposal that recent cultural skills like reading and arithmetic take over brain circuits that evolved for related purposes.',contrast:'A hypothesis about where and why, supported by imaging; not a claim that the old function is lost.',example:'Object and face recognition circuits being partly repurposed for letters.'},
- {key:'saccade',title:'Saccade',aliases:['saccade','saccades','fixation','fixations'],linkContext:'reading-brain',scene:'reading-brain-span',here:'A fast jump of the eyes between fixations, the pauses in which information is taken in. In reading, saccades span about 7–9 letters and fixations last about a quarter of a second.',contrast:'The eyes do not glide smoothly along a line, though it feels that way.',example:'About four fixations to read a 50-letter line.'},
+ {key:'saccade',title:'Saccade',aliases:['saccade','saccades','fixation','fixations'],linkContext:'reading-brain',scene:'reading-brain-span',here:'A fast jump of the eyes between fixations, the pauses in which information is taken in. In reading, saccades span about 7–9 letters and fixations last about a quarter of a second.',contrast:'The eyes do not glide smoothly along a line, though it feels that way.',example:'About six or seven fixations to read a 50-letter line.'},
  {key:'perceptual-span',title:'Perceptual span',aliases:['perceptual span','moving window'],linkContext:'reading-brain',scene:'reading-brain-span',here:'The region around a fixation from which useful information is taken during reading: about 3–4 letters to the left and 14–15 to the right for readers of English.',contrast:'Lopsided in the reading direction; it flips for scripts read right to left.',example:'Reading speed stays normal when only 15 letters to the right are visible.'},
  {key:'orthographic-depth',title:'Orthographic depth',aliases:['orthographic depth','shallow orthography','deep orthography','spelling consistency'],linkContext:'reading-brain',scene:'reading-brain-orthography',here:'How consistently a writing system maps letters to sounds: shallow orthographies are consistent, deep ones full of exceptions.',contrast:'Not about a language’s sounds, but about how it is spelled.',example:'Finnish is shallow; English is deep (though, through, tough, cough).'},
  {key:'dyslexia',title:'Dyslexia',aliases:['dyslexia','dyslexic','developmental dyslexia'],linkContext:'reading-brain',scene:'reading-brain-dyslexia',here:'A persistent difficulty in learning to read accurately and fluently despite adequate teaching, most often linked to processing the sounds of language.',contrast:'Not a visual problem of seeing letters backwards, and not related to intelligence.',example:'Struggling to split “cat” into c-a-t and map each sound to a letter.'},
@@ -4541,7 +4542,7 @@ const L6_TIMEC=[
 const L6_TIMEN={
  english:{dir:'lr',t:'Mostly left to right, the direction they read and write.',r:'Tversky, Kugelmass & Winter (1991); Fuhrman & Boroditsky (2010).'},
  hebrew:{dir:'rl',t:'Mostly right to left, the direction they read and write.',r:'Tversky, Kugelmass & Winter (1991); Fuhrman & Boroditsky (2010).'},
- thaayorre:{dir:'ew',t:'East to west, whichever way they are facing: towards the body when facing north.',r:'Boroditsky & Gaby (2010), Psychological Science 21 (Pormpuraaw, Australia).'},
+ thaayorre:{dir:'ew',t:'East to west, whichever way they are facing: towards the body when facing east.',r:'Boroditsky & Gaby (2010), Psychological Science 21 (Pormpuraaw, Australia).'},
  mandarin:{dir:'tb',t:'Words like shàng (up) for earlier and xià (down) for later. The claim that this makes thinking vertical has mixed evidence: replications failed (January & Kako 2007; Chen 2007).',r:'Boroditsky (2001); Boroditsky, Fuhrman & McCormick (2011).'},
  aymara:{dir:'fb',t:'The known past lies in front and the unknown future behind, in words and in gestures.',r:'Núñez & Sweetser (2006), Cognitive Science 30 (Andes).'}};
 const L6_CARDS=[['sunrise','#f2a54a'],['noon','#f2d33a'],['sunset','#c8562d']];
@@ -4827,7 +4828,7 @@ WORD(
  {key:'definite-description',title:'Definite description',aliases:['definite description','definite descriptions'],linkContext:'reference-sense-descriptions',scene:'reference-sense-descriptions',here:'A phrase of the form “the so-and-so” used to pick out one particular thing.',contrast:'Not a proper name: Russell analysed it as a hidden claim that exactly one thing fits.',example:'“The present King of France”.'},
  {key:'presupposition',title:'Presupposition',aliases:['presupposition','presuppositions','presupposes'],linkContext:'reference-sense-descriptions',scene:'reference-sense-descriptions',here:'Something a sentence takes for granted rather than asserts; it stays in force even when the sentence is negated or questioned.',contrast:'Not an entailment that is part of what is claimed: denying the sentence does not deny the presupposition.',example:'“The King of France is not bald” still presupposes there is a king.'},
  {key:'conversational-implicature',title:'Implicature',aliases:['implicature','implicatures','conversational implicature','implicate','implicates','implicated'],linkContext:'implicature',scene:'implicature',here:'Something a speaker means beyond what their words literally say, which the listener infers by assuming the speaker is cooperative.',contrast:'Unlike an entailment, it can be cancelled without contradiction.',example:'“There is a garage round the corner” implicates that it sells petrol.'},
- {key:'cooperative-principle',title:'Cooperative principle',aliases:['cooperative principle','maxims','maxim','Gricean maxims','maxim of quantity','maxim of relation'],linkContext:'implicature',scene:'implicature',here:'Grice’s idea that conversation runs on the assumption that each contribution is as informative as needed, truthful, relevant and clear (the maxims of Quantity, Quality, Relation and Manner).',contrast:'Not rules people always obey: obvious breaches (floutings) are themselves a way of meaning something.',example:'An over-long reference letter that never mentions philosophy flouts Quantity.'},
+ {key:'cooperative-principle',title:'Cooperative principle',aliases:['cooperative principle','maxims','maxim','Gricean maxims','maxim of quantity','maxim of relation'],linkContext:'implicature',scene:'implicature',here:'Grice’s idea that conversation runs on the assumption that each contribution is as informative as needed, truthful, relevant and clear (the maxims of Quantity, Quality, Relation and Manner).',contrast:'Not rules people always obey: obvious breaches (floutings) are themselves a way of meaning something.',example:'A two-line reference letter that never mentions philosophy flouts Quantity.'},
  {key:'scalar-implicature',title:'Scalar implicature',aliases:['scalar implicature','scalar implicatures','scalar inference'],linkContext:'implicature-scalar',scene:'implicature-scalar',here:'The inference from a weaker word on a scale to the falsity of the stronger words: “some” suggests “not all”.',contrast:'Not part of the literal meaning: “some, in fact all” is not a contradiction.',example:'“Some elephants have trunks” sounds false because all of them do.'},
  {key:'horn-scale',title:'Horn scale',aliases:['Horn scale','Horn scales','scale of strength'],linkContext:'implicature-cancel',scene:'implicature-cancel',here:'An ordered set of words of increasing strength, where each stronger word entails the weaker ones.',contrast:'The order is about information, not about size alone.',example:'some < most < all; warm < hot; possible < likely < certain.'},
  {key:'entailment',title:'Entailment',aliases:['entailment','entails','entailed'],linkContext:'implicature-cancel',scene:'implicature-cancel',here:'A relation between sentences: A entails B when B must be true whenever A is.',contrast:'Unlike an implicature, it cannot be cancelled without contradiction.',example:'“All the guests left” entails “some of the guests left”.'},
@@ -4854,15 +4855,15 @@ WORD(
  {key:'person-grice',title:'Paul Grice',aliases:['Grice','H. P. Grice','Paul Grice'],linkContext:'implicature',scene:'implicature',here:'British philosopher (1913–1988) whose William James lectures (1967, published 1975) introduced the cooperative principle and conversational implicature.',contrast:'He also proposed an influential theory of what it is for a speaker to mean something.',example:'The garage round the corner.'},
  {key:'person-horn',title:'Laurence Horn',aliases:['Horn','Laurence Horn'],linkContext:'implicature-cancel',scene:'implicature-cancel',here:'American linguist (born 1945) who described the scales of strength behind scalar implicature.',contrast:'His scales underpin most later work on scalar implicature.',example:'some < most < all.'},
  {key:'person-noveck',title:'Ira Noveck',aliases:['Noveck','Ira Noveck'],linkContext:'implicature-scalar',scene:'implicature-scalar',here:'Psychologist whose experiments helped found experimental pragmatics, showing that children accept under-informative “some” more than adults do.',contrast:'His work helped turn implicature from a topic of philosophy into one of laboratory experiment.',example:'Some giraffes have long necks.'},
- {key:'person-austin',title:'J. L. Austin',aliases:['Austin','J. L. Austin'],linkContext:'speech-acts',scene:'speech-acts',here:'British philosopher (1911–1960) whose lectures “How to Do Things with Words” (1955, published 1962) introduced performatives and speech acts.',contrast:'He died before most of his work was published; his students edited the lectures.',example:'I name this ship.'},
- {key:'person-searle',title:'John Searle',aliases:['Searle','John Searle'],linkContext:'speech-acts-taxonomy',scene:'speech-acts-taxonomy',here:'American philosopher (born 1932) who systematised speech act theory, classified illocutionary acts and analysed indirect speech acts.',contrast:'Also known for the Chinese Room argument about whether computers can understand.',example:'Five kinds of speech act.'},
+ {key:'person-austin',title:'J. L. Austin',aliases:['Austin','J. L. Austin'],linkContext:'speech-acts',scene:'speech-acts',here:'British philosopher (1911–1960) whose lectures “How to Do Things with Words” (1955, published 1962) introduced performatives and speech acts.',contrast:'He died before most of his work was published; colleagues edited the lectures from his notes.',example:'I name this ship.'},
+ {key:'person-searle',title:'John Searle',aliases:['Searle','John Searle'],linkContext:'speech-acts-taxonomy',scene:'speech-acts-taxonomy',here:'American philosopher (1932–2025) who systematised speech act theory, classified illocutionary acts and analysed indirect speech acts.',contrast:'Also known for the Chinese Room argument about whether computers can understand.',example:'Five kinds of speech act.'},
  {key:'person-brown-penelope',title:'Penelope Brown',aliases:['Penelope Brown'],linkContext:'speech-acts-indirect',scene:'speech-acts-indirect',here:'American linguistic anthropologist (born 1944) who, with Stephen Levinson, developed politeness theory from fieldwork including Tzeltal in Mexico.',contrast:'Her fieldwork on Tzeltal, a Mayan language, was central to testing the theory beyond English.',example:'Politeness: Some Universals in Language Usage (1987).'},
  {key:'person-lakoff',title:'George Lakoff',aliases:['Lakoff','George Lakoff'],linkContext:'metaphor',scene:'metaphor',here:'American linguist (born 1941) who, with philosopher Mark Johnson, argued that conceptual metaphor structures everyday thought.',contrast:'He later applied conceptual metaphor to mathematics and to political language.',example:'Metaphors We Live By (1980).'},
  {key:'person-glucksberg',title:'Sam Glucksberg',aliases:['Glucksberg'],linkContext:'metaphor-processing',scene:'metaphor-processing',here:'American psychologist (born 1933) whose experiments showed that people understand metaphors automatically, without first rejecting the literal meaning.',contrast:'He proposed that metaphors like “my job is a jail” work as class-inclusion statements.',example:'Some jobs are jails.'},
  {key:'person-berlin',title:'Brent Berlin',aliases:['Brent Berlin'],linkContext:'colour-terms',scene:'colour-terms',here:'American anthropologist (born 1936) who, with Paul Kay, proposed universal patterns in basic colour terms in 1969.',contrast:'Also known for work on how peoples around the world name and classify plants and animals.',example:'Basic Color Terms.'},
  {key:'person-kay',title:'Paul Kay',aliases:['Paul Kay'],linkContext:'colour-terms',scene:'colour-terms',here:'American linguist (born 1934), co-author of Basic Color Terms and a leader of the World Color Survey.',contrast:'He revised the original sequence as more languages were studied.',example:'Kay and Regier (2003).'},
  {key:'person-sacks',title:'Harvey Sacks',aliases:['Sacks','Harvey Sacks'],linkContext:'turn-taking',scene:'turn-taking',here:'American sociologist (1935–1975), a founder of conversation analysis, which studies recordings of real talk.',contrast:'He died in a car accident aged 40; much of his work circulated as lecture transcripts.',example:'A simplest systematics for turn-taking (1974).'},
- {key:'person-schegloff',title:'Emanuel Schegloff',aliases:['Schegloff'],linkContext:'turn-taking',scene:'turn-taking',here:'American sociologist (born 1937), co-founder of conversation analysis, known for work on turn-taking, repair and sequence organisation.',contrast:'He showed how speakers repair trouble in conversation and how talk is organised into sequences.',example:'Sacks, Schegloff & Jefferson (1974).'},
+ {key:'person-schegloff',title:'Emanuel Schegloff',aliases:['Schegloff'],linkContext:'turn-taking',scene:'turn-taking',here:'American sociologist (1937–2024), co-founder of conversation analysis, known for work on turn-taking, repair and sequence organisation.',contrast:'He showed how speakers repair trouble in conversation and how talk is organised into sequences.',example:'Sacks, Schegloff & Jefferson (1974).'},
  {key:'person-jefferson',title:'Gail Jefferson',aliases:['Gail Jefferson'],linkContext:'turn-taking',scene:'turn-taking',here:'American sociologist (1938–2008), co-founder of conversation analysis, who devised the transcription system it still uses.',contrast:'Her transcription symbols record overlaps, pauses and breaths in detail.',example:'Sacks, Schegloff & Jefferson (1974).'},
  {key:'person-stivers',title:'Tanya Stivers',aliases:['Stivers','Tanya Stivers'],linkContext:'turn-taking-planning',scene:'turn-taking-planning',here:'American sociologist who led the ten-language comparison of turn timing published in 2009.',contrast:'The study compared video recordings of questions and answers in everyday talk across five continents.',example:'From Japanese to Danish.'}
 );
@@ -4952,10 +4953,10 @@ const L7_person=(x,y,col,k=1)=>Ci(x,y-24*k,7*k,col)+P(`M${fmt(x-10*k)} ${fmt(y)}
 // Labov (1966): percentage of /r/ in "fourth floor", by store. All-r and some-r shares as published.
 const L7_STORES={saks:{name:'Saks Fifth Avenue',rank:'highest-priced',all:30,some:32},macys:{name:'Macy’s',rank:'middle-priced',all:20,some:31},klein:{name:'S. Klein',rank:'lowest-priced',all:4,some:17}};
 // Share of employees pronouncing /r/ in each position, casual and emphatic (approximate shapes of Labov's figure).
-const L7_POS={saks:{casual:[.63,.44],emph:[.64,.61]},macys:{casual:[.44,.27],emph:[.61,.48]},klein:{casual:[.08,.06],emph:[.18,.13]}};
+const L7_POS={saks:{casual:[.30,.63],emph:[.40,.64]},macys:{casual:[.27,.44],emph:[.22,.61]},klein:{casual:[.05,.08],emph:[.13,.18]}};
 SCENE({id:'variation',name:'Fourth floor',tag:'Labov’s department stores',
  definition:'Sociolinguistic variation is the patterned way speakers choose between equivalent forms, such as pronouncing or dropping the r in “fourth floor”, in step with social class and situation.',
- example:'In 1962 Labov asked shop assistants a question whose answer was “fourth floor”. Staff in the expensive store pronounced the r far more often than staff in the cheap one, and everyone pronounced it more when asked to repeat.',
+ example:'In 1962 Labov asked shop assistants a question whose answer was “fourth floor”. Staff in the expensive store pronounced the r far more often than staff in the cheap one, and nearly all groups pronounced it more when asked to repeat.',
  desc:'Three New York department stores; a speech bubble saying “fourth floor” with each r shown or dropped; bars for the published share of staff using r, and a simulated sample of employees.',
  research:['Labov (1966). The Social Stratification of English in New York City. Center for Applied Linguistics (store study carried out in 1962; 264 employees).','Fowler (1986) and Mather (2012) repeated the study decades later: the same ordering of stores, with r more common overall.'],
  dur:12,hint:'Choose a store and whether the reply is casual or a careful repeat, then ask ten more assistants.',
@@ -5058,7 +5059,7 @@ SCENE({id:'sound-change-s-curve',name:'The S-curve of change',tag:'Slow, fast, s
  init:()=>({mid:1540,k:20}),
  watch(p){return {mid:Math.round(lerp(1480,1550,smooth(p))),k:Math.round(lerp(10,22,smooth(p)))}},
  ui:[{range:'mid',label:'Midpoint (year)',min:1450,max:1650,step:5,get:s=>s.mid,act:'mid'},{range:'k',label:'Steepness',min:5,max:50,step:1,get:s=>s.k,act:'k',show:v=>(v/1000).toFixed(3)+' per year'},{b:'Best fit',act:'best'}],
- on:{mid(s,v){s.mid=Number(v)},k(s,v){s.k=Number(v)},best(s){s.mid=1550;s.k=19}},
+ on:{mid(s,v){s.mid=Number(v)},k(s,v){s.k=Number(v)},best(s){s.mid=1550;s.k=24}},
  draw(s){
   let out=heading('“Do you know…?” replacing “Know you…?”');
   const x0=80,y0=300,w=380,h=220,X=t=>x0+(t-1400)/325*w,Y=v=>y0-v/100*h,k=s.k/1000;
@@ -5082,7 +5083,7 @@ function L7_net(weak,bias,steps,seed){
 }
 SCENE({id:'sound-change-s-curve-network',name:'Spreading through a network',tag:'Weak ties carry change',
  definition:'A new form spreads from speaker to speaker; how fast it travels depends on who talks to whom. Loose acquaintances who link separate groups, called weak ties, can carry a change between them.',
- example:'In a model of 40 speakers who talk mainly to their neighbours, a new form creeps around the ring. Add a few long-distance acquaintances and it jumps ahead and spreads faster.',
+ example:'In a model of 40 speakers who talk mainly to their neighbours, a new form creeps around the ring. Add a few long-distance acquaintances and it can jump ahead, and it usually spreads faster.',
  desc:'A ring of 40 speakers coloured by whether they use the new form, with optional long links, and the number of users over time, which traces an S-curve.',
  research:['Milroy & Milroy (1985). Linguistic change, social network and speaker innovation. Journal of Linguistics 21, 339–384.','Granovetter (1973). The strength of weak ties. American Journal of Sociology 78, 1360–1380. The model here is a simple illustration, not fitted to data.'],
  dur:12,hint:'Step the model, switch weak ties on or off, and compare how long the change takes.',
@@ -5180,15 +5181,15 @@ SCENE({id:'contact-creoles-pidgin',name:'From pidgin to creole',tag:'Build a Tok
   L7_STAGES.forEach(([n],i)=>{const x=30+i*140,on=i===s.stage;out+=hit(X,'stage',i,n,R(x,46,128,34,on?C.purple:'#f1f5f7',on?'none':C.grid,8)+TF(x+64,68,n,14,on?'#fff':C.ink))+(i<3?arrow(x+128,63,x+140,63,C.line,1.5,5):'')});
   out+=L7_para(30,104,L7_STAGES[s.stage][1],80,13,C.muted,'start',17);
   const sub=L7_TP_SUBJ[s.sub],tam=L7_TP_TAM[s.tam],vb=L7_TP_VERB[s.verb];
-  // Predicate marker "i" follows third-person and plural subjects (not mi or yu); bai comes before it, bin after it.
-  const pm=s.sub>=2?'i':'';
+  // Predicate marker "i" follows em and mipela (not mi, yu or yumi); bai comes before it, bin after it.
+  const pm=(s.sub===2||s.sub===3)?'i':'';
   const tp=tam[0]==='pinis'?[sub[0],pm,vb[0],'pinis'].filter(Boolean).join(' '):tam[0]==='bai'?[sub[0],'bai',pm,vb[0]].filter(Boolean).join(' '):[sub[0],pm,tam[0],vb[0]].filter(Boolean).join(' ');
   const third=s.sub===2,engVerb=v=>third&&s.tam===0?(v==='go'?'goes':v==='know'?'knows':v==='eat'?'eats':'sees it'):v;
   const en=s.tam===1?`${sub[1]} will ${vb[1]}`:s.tam===2?`${sub[1]} ${vb[1]==='go'?'went':vb[1]==='eat'?'ate':vb[1]==='know'?'knew':'saw it'}`:s.tam===3?`${sub[1]} ${third?'has':'have'} already ${vb[1]==='go'?'gone':vb[1]==='eat'?'eaten':vb[1]==='know'?'known':'seen it'}`:`${sub[1]} ${engVerb(vb[1])}`;
   out+=R(30,146,540,96,'#fff',C.line,10)+TF(50,172,'Tok Pisin',13,C.muted,'start')+TBF(50,204,tp.charAt(0).toUpperCase()+tp.slice(1)+'.',24,C.purple,'start');
   out+=TF(330,172,'English',13,C.muted,'start')+L7_para(330,200,en.charAt(0).toUpperCase()+en.slice(1)+'.',28,15,C.ink,'start',20);
   out+=TF(50,232,tam[0]?`“${tam[0]}”: ${tam[2]}`:'No marker: the time comes from context',13,C.muted,'start');
-  out+=L7_para(30,272,s.sub===3||s.sub===4?'Tok Pisin has two words for “we”: mipela leaves the listener out, yumi includes them, and both take the predicate marker “i”. English cannot say this in one word; many Austronesian languages of the region can.':s.sub===2?'The little word “i” is a predicate marker: it comes before the verb after “em” and plural subjects, but not after “mi” or “yu”. English has nothing like it.':'Notice what English has that Tok Pisin does not need, such as -s on “goes”, and what Tok Pisin marks that English does not.',80,13,C.ink,'start',18);
+  out+=L7_para(30,272,s.sub===3||s.sub===4?'Tok Pisin has two words for “we”: mipela leaves the listener out, yumi includes them. Mipela takes the predicate marker “i”; yumi usually does not. English cannot say this in one word; many Austronesian languages of the region can.':s.sub===2?'The little word “i” is a predicate marker: it comes before the verb after “em” and most plural subjects, but not after “mi”, “yu” or “yumi”. English has nothing like it.':'Notice what English has that Tok Pisin does not need, such as -s on “goes”, and what Tok Pisin marks that English does not.',80,13,C.ink,'start',18);
   out+=T(300,352,'Simplified, not broken: a pidgin has rules of its own',15,C.ink);
   return {svg:out,phase:'The inclusive and exclusive “we” comes from the local languages (the substrate), while most words come from English (the lexifier). Creoles mix both.'};
  }});
@@ -5199,7 +5200,7 @@ const L7_CREOLE_CARDS=[
  ['Substrate features','Many creole patterns match the first speakers’ own languages.','Lefebvre 1998 and others','against'],
  ['Nicaraguan signers','Deaf children made a new sign language more regular within a few cohorts.','Senghas & Coppola 2001','for'],
  ['Creole exceptionalism','Creoles are not a special simpler type; that idea has a colonial history.','DeGraff 2003, 2005','against'],
- ['Creole prototype','Some creoles do share simpler word structure, as a statistical tendency.','McWhorter 2001','for']];
+ ['Creole prototype','Some creoles share simpler word structure, which McWhorter puts down to their youth, not to an inborn grammar.','McWhorter 1998, 2001','other']];
 SCENE({id:'contact-creoles-debate',name:'How creoles arise',tag:'An open debate',
  definition:'Linguists disagree about why creoles in different parts of the world look alike: an inborn default grammar, the languages of the first speakers, ordinary language change under contact, or a mixture.',
  example:'Derek Bickerton argued that children in plantation Hawaiʻi created a new grammar from a pidgin in one generation. Later archive work suggested the process took longer and drew on the speakers’ own languages.',
@@ -5226,7 +5227,7 @@ const L7_CUM=[[1,12],[2,18],[5,30],[10,42],[23,52],[50,63],[100,73],[300,85],[10
 const L7_cumAt=n=>{for(let i=1;i<L7_CUM.length;i++){const [a,va]=L7_CUM[i-1],[b,vb]=L7_CUM[i];if(n<=b){const u=(Math.log(n)-Math.log(a))/(Math.log(b)-Math.log(a));return va+(vb-va)*u}}return 100};
 SCENE({id:'endangered-languages',name:'Seven thousand languages',tag:'Few big, many small',
  definition:'About 7,000 languages are spoken today, but very unevenly: a couple of dozen are the first language of half the world, while thousands have fewer than ten thousand speakers.',
- example:'The 23 largest languages are the mother tongues of roughly half of humanity. The other half of humanity speaks the remaining 6,900 or so, and about 40% of all languages are endangered.',
+ example:'The 23 largest languages are the mother tongues of roughly half of humanity. The other half of humanity speaks the remaining 7,000 or so, and about 40% of all languages are endangered.',
  desc:'A curve of how much of the world’s population speaks the largest N languages as a first language, on a log scale, with a slider for N.',
  research:['Eberhard, Simons & Fennig (eds) (2023). Ethnologue: Languages of the World, 26th edn. SIL International (counts are approximate and change with each edition).','Hammarström, Forkel, Haspelmath & Bank. Glottolog (glottolog.org). Values on the curve are approximate.'],
  dur:10,hint:'Move the slider to see how much of the world speaks the biggest languages as a first language.',
@@ -5247,7 +5248,7 @@ SCENE({id:'endangered-languages',name:'Seven thousand languages',tag:'Few big, m
 
 SCENE({id:'endangered-languages-transmission',name:'Passing it on',tag:'The decisive link',
  definition:'Intergenerational transmission is parents passing a language to their children. When it breaks, a language can go from thriving to endangered within two or three generations, even with many adult speakers.',
- example:'If only half of each generation’s parents speak the language to their children, the share of young speakers halves every generation: 100%, 50%, 25%, 12%.',
+ example:'If only half of each generation’s parents speak the language to their children, the share of young speakers halves every generation: 100%, 50%, 25%, about 13%.',
  desc:'Four generations of a community drawn as rows of people; the share of children who learn the language is set by a slider, and the UNESCO vitality level is shown.',
  research:['UNESCO Ad Hoc Expert Group on Endangered Languages (2003). Language Vitality and Endangerment. UNESCO (transmission is the first of nine factors).','Fishman (1991). Reversing Language Shift. Multilingual Matters. Krauss (1992). The world’s languages in crisis. Language 68, 4–10. The model is a simple illustration.'],
  dur:10,hint:'Set how many parents pass the language on and watch four generations.',
@@ -5299,7 +5300,7 @@ SCENE({id:'endangered-languages-revival',name:'Revitalisation',tag:'Languages co
 /* =========================== accents-attitudes =========================== */
 // Lambert et al. (1960): matched guise. Direction of published effects; magnitudes illustrative.
 const L7_TRAITS=['Intelligence','Good looks','Dependability','Ambition','Leadership'];
-const L7_MG={english:[[.8,.6,.7,.5,.7]],french:[[.7,.5,.6,.5,.6]]};
+const L7_MG={english:[[.6,.5,.6,.5,.1]],french:[[.8,.6,.7,.6,.7]]};
 SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two voices',
  definition:'In a matched-guise test, listeners rate recordings of what they think are different people, but some are the same bilingual speaker in two languages or accents; differences in ratings reveal attitudes to the language, not the person.',
  example:'In Montreal in 1960, listeners rated the same speakers as more intelligent and dependable when they spoke English than when they spoke French. French-Canadian listeners did so too.',
@@ -5320,7 +5321,7 @@ SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two vo
   const d=L7_MG[s.who][0];
   L7_TRAITS.forEach((t,i)=>{const y=80+i*40;out+=TF(370,y+4,t,13,C.ink,'start')+R(370,y+12,200,14,'#f1f5f7','none',4)+R(370,y+12,200*d[i],14,C.blue,'none',4)});
   out+=TF(370,284,'longer bar: bigger preference',13,C.muted,'start')+TF(370,300,'(heights illustrative)',13,C.muted,'start');
-  out+=T(300,330,s.who==='french'?'French-speaking listeners also preferred the English guise':'English-speaking listeners preferred the English guise',15,C.ink);
+  out+=T(300,330,s.who==='french'?'French-speaking listeners favoured the English guise on even more traits':'English-speaking listeners preferred the English guise',15,C.ink);
   out+=T(300,354,'Attitudes to a language get pinned on the people who speak it',14,C.muted);
   return {svg:out,phase:'Because each pair of recordings came from the same person, the only thing that differed was the language. The result showed how the social standing of English in 1950s Montreal shaped judgements of individuals, even among French speakers.'};
  }});
@@ -5329,9 +5330,9 @@ SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two vo
 const L7_ACC=[['Standard (RP)',1,1],['Queen’s English',null,2],['Edinburgh',null,3],['Southern Irish',4,4],['Welsh',5,9],['North American',3,5],['Yorkshire',null,12],['Cockney (London)',11,24],['Liverpool',null,29],['Birmingham',13,34]];
 SCENE({id:'accents-attitudes-standard',name:'Ranking accents',tag:'Prestige that lasts',
  definition:'Standard language ideology is the widespread belief that one variety, usually that of powerful groups, is correct and the others are lesser, even though all accents are equally systematic.',
- example:'British listeners rated Received Pronunciation highest for prestige and the Birmingham accent lowest, both in 1970 and in a 2005 survey of more than 5,000 people.',
+ example:'British listeners rated standard accents highest for prestige and the Birmingham accent lowest, both in 1970 and in a 2005 survey of more than 5,000 people.',
  desc:'Prestige ranks for British accents from a 1970 study (13 accents) and a 2005 study (34 accents), drawn as two columns joined by lines.',
- research:['Giles (1970). Evaluative reactions to accents. Educational Review 22, 211–227.','Coupland & Bishop (2007). Ideologised values for British accents. Journal of Sociolinguistics 11, 74–93 (BBC Voices, 5,010 respondents). Ranks other than the top and bottom are approximate.'],
+ research:['Giles (1970). Evaluative reactions to accents. Educational Review 22, 211–227.','Coupland & Bishop (2007). Ideologised values for British accents. Journal of Sociolinguistics 11, 74–93 (BBC Voices, 5,010 respondents). The order of the top two in 2005 and the middle ranks are approximate.'],
  dur:10,hint:'Press an accent to follow it between the two studies.',
  init:()=>({a:9}),
  watch(p){return {a:Math.min(9,Math.floor(p*10))}},
@@ -5406,7 +5407,7 @@ SCENE({id:'world-englishes',name:'Three circles of English',tag:'Who speaks Engl
  }});
 
 const L7_VAR=[
- ['Indian English',[['I am knowing the answer.','Progressive with verbs of state, as in many Indian languages'],['You are coming tomorrow, isn’t it?','One invariant question tag'],['She is my cousin-sister.','Kin term showing a cousin of the same generation']]],
+ ['Indian English',[['I am knowing the answer.','Progressive with verbs of state, as in many Indian languages'],['You are coming tomorrow, isn’t it?','One invariant question tag'],['She is my cousin-sister.','Kin term for a female cousin; a male one is a “cousin-brother”']]],
  ['Singapore English (Singlish)',[['Can or not?','Yes–no question by “or not”'],['Don’t worry, lah.','Discourse particle “lah” from Malay and Chinese varieties'],['He go market already.','“Already” marks completion']]],
  ['Nigerian English',[['I will flash you.','Call and hang up so the other person calls back'],['Well done!','Used as a greeting to someone working'],['I am coming.','Can mean “I’ll be right back”']]],
  ['Scottish English',[['I’m needing a coffee.','Progressive with need and want'],['It’s a wee bit cold.','“Wee” for small'],['Outwith the city.','“Outwith” means outside']]]];
@@ -5732,7 +5733,7 @@ SCENE({id:'n-grams',name:'Approximations to English',tag:'Shannon’s n-gram tex
  definition:'An n-gram model predicts each symbol from the few symbols just before it, using counts from a body of text. Generating from longer contexts gives text that looks more and more like the original language.',
  example:'Choosing letters by frequency alone gives gibberish with the right mix of e’s and spaces; choosing by letter triples already produces many real words.',
  desc:'A line of text generated by a model of the chosen order from a small built-in corpus about cats, dogs and birds, the share of its words that are real words of the corpus, and a ladder of the six orders.',
- research:'Shannon (1948). A mathematical theory of communication. Bell System Technical Journal 27, 379–423, 623–656 (section 3, “The series of approximations to English”). Markov (1913) counted letter pairs in Pushkin’s Eugene Onegin.',
+ research:'Shannon (1948). A mathematical theory of communication. Bell System Technical Journal 27, 379–423, 623–656 (section 3, “The series of approximations to English”). Markov (1913) counted how vowels and consonants follow one another in the first 20,000 letters of Pushkin’s Eugene Onegin.',
  dur:12,hint:'Pick an order and press New sample a few times. Compare letter triples with word pairs. The corpus is tiny, so longer contexts mostly copy it.',
  init:()=>({o:'l3',seed:2}),
  watch(p){return {o:L8_ORDERS[Math.min(5,Math.floor(p*6))][0],seed:2}},
@@ -5747,7 +5748,7 @@ SCENE({id:'n-grams',name:'Approximations to English',tag:'Shannon’s n-gram tex
   out+=TF(300,318,'context used:',13,C.muted);
   const ctx={l0:'none (every letter equally likely)',l1:'none (letter frequencies)',l2:'the previous letter',l3:'the previous two letters',w1:'none (word frequencies)',w2:'the previous word'}[s.o];
   out+=TB(300,342,ctx,15,C.ink);
-  const phase=s.o==='l0'?'Uniform letters: about one symbol in four would be a space in English, but here it is one in 27.':s.o==='l1'?'Letter frequencies alone give the right mix of letters and word lengths, but almost no real words.':s.o==='l2'||s.o==='l3'?'With one or two letters of context, real words appear: “the”, “cat”, “sat”. The model has no idea of meaning, only of what follows what.':s.o==='w1'?'Real words in a random order: the words are right, the sentences are not.':'Word pairs give locally sensible but globally aimless sentences, the same flavour as Shannon’s second-order word approximation in 1948.';
+  const phase=s.o==='l0'?'Uniform letters: about one symbol in six would be a space in English, but here it is one in 27.':s.o==='l1'?'Letter frequencies alone give the right mix of letters and word lengths, but almost no real words.':s.o==='l2'||s.o==='l3'?'With one or two letters of context, real words appear: “the”, “cat”, “sat”. The model has no idea of meaning, only of what follows what.':s.o==='w1'?'Real words in a random order: the words are right, the sentences are not.':'Word pairs give locally sensible but globally aimless sentences, the same flavour as Shannon’s second-order word approximation in 1948.';
   return {svg:out,phase};
  }});
 
@@ -6004,7 +6005,7 @@ SCENE({id:'large-language-models',name:'Predict the next token',tag:'Temperature
   out+=TF(40,318,'samples:',13,C.muted,'start');s.samples.forEach((w,i)=>{out+=L8_pill(100+i*60,318,w,w==='mat'?C.greenp:C.pale,C.ink,54)});
   if(!s.samples.length)out+=TF(100,318,'(press Sample)',13,C.muted,'start');
   out+=TF(300,354,'scores (logits) invented for illustration · probabilities renormalised after the top-p cut',13,C.muted);
-  const phase=s.t<=.4?'At low temperature almost all the probability goes to “mat”: predictable, and in long texts prone to repeating itself.':s.t>=1.6?'At high temperature the distribution flattens and unlikely words such as “moon” get a real chance.':d.keep.size===1?'With top-p this low only the single most likely word survives, so sampling becomes the same as always taking the top choice.':s.p<.8?'Top-p removes the long tail of unlikely words before sampling, keeping variety among the sensible ones.':'Temperature 1 uses the model’s own probabilities unchanged.';
+  const phase=s.t<=.4?'At low temperature almost all the probability goes to “mat”: predictable, and in long texts prone to repeating itself.':s.t>=1.6?'At high temperature the distribution flattens and unlikely words such as “moon” get a real chance.':d.keep.size===1?'With top-p this low only the single most likely word survives, so sampling becomes the same as always taking the top choice.':s.p<.8?'Top-p removes the long tail of unlikely words before sampling, keeping variety among the sensible ones.':Math.abs(s.t-1)<.05?'Temperature 1 uses the model’s own probabilities unchanged.':s.t<1?'Below temperature 1 the likeliest words gain probability at the expense of the rest.':'Above temperature 1 probability moves from the likeliest words to the unlikely ones.';
   return {svg:out,phase};
  }});
 
@@ -6058,7 +6059,7 @@ SCENE({id:'large-language-models-tokens',name:'What is a token?',tag:'Byte-pair 
   out+=TBF(400,62,'merges',14,C.ink,'start')+(r.merges.length?'':TF(400,86,'(none yet)',13,C.muted,'start'));r.merges.slice(-9).forEach(([m,c],i)=>out+=TMF(400,86+i*20,`${r.merges.length-Math.min(9,r.merges.length)+i+1}. ${m}  (${c}×)`,13,C.ink,'start'));
   out+=counter(70,285,'tokens for the text',String(r.total),C.blue,150)+counter(240,285,'vocabulary size',String(r.vocab),C.purple,150);
   out+=TF(300,356,'Tokenisers trained mostly on English split other scripts into more, smaller pieces.',13,C.muted);
-  return {svg:out,phase:s.k===0?'Every character, plus the end-of-word mark, is its own token: these 16 words need 95 tokens.':s.k<4?'The commonest pairs merge first. Frequent endings such as “est” become single tokens.':'Whole frequent words are now single tokens. The model never sees letters inside them, which is one reason language models struggle to count letters.'};
+  return {svg:out,phase:s.k===0?'Every character, plus the end-of-word mark, is its own token: these 16 words need 95 tokens.':s.k<9?'The commonest pairs merge first. Frequent endings such as “est” become single tokens.':'Whole frequent words are now single tokens. The model never sees letters inside them, which is one reason language models struggle to count letters.'};
  }});
 
 /* =========================== understanding-debate =========================== */
@@ -6193,7 +6194,7 @@ WORD(
  {key:'person-mikolov',title:'Tomáš Mikolov',aliases:['Tomáš Mikolov','Mikolov'],linkContext:'word-embeddings-analogy',scene:'word-embeddings-analogy',here:'Czech computer scientist who led the development of word2vec at Google in 2013.',contrast:'Earlier neural language models also learned word vectors; word2vec made them fast to train on billions of words.',example:'The king − man + woman ≈ queen demonstration.'},
  {key:'person-vaswani',title:'Ashish Vaswani',aliases:['Ashish Vaswani','Vaswani'],linkContext:'attention-compute',scene:'attention-compute',here:'Computer scientist and first-listed author of “Attention is all you need” (2017), written by an eight-person team at Google, which introduced the transformer.',contrast:'The paper lists all eight authors as equal contributors.',example:'Scaled dot-product attention.'},
  {key:'person-bender',title:'Emily M. Bender',aliases:['Emily M. Bender','Emily Bender','Bender'],linkContext:'understanding-debate',scene:'understanding-debate',here:'American computational linguist at the University of Washington, known for work on grammar engineering, for the “Bender rule” (always name the language you studied) and for critiques of claims about language models.',contrast:'Her argument is about meaning from form alone, not about whether models are useful.',example:'The octopus thought experiment with Alexander Koller (2020).'},
- {key:'person-gebru',title:'Timnit Gebru',aliases:['Timnit Gebru','Gebru'],linkContext:'understanding-debate-positions',scene:'understanding-debate-positions',here:'Eritrean-born computer scientist who researches bias and accountability in AI, co-founded Black in AI and founded the Distributed AI Research Institute.',contrast:'Her departure from Google in 2020 followed a dispute over the stochastic parrots paper.',example:'Co-author of “On the dangers of stochastic parrots” (2021).'}
+ {key:'person-gebru',title:'Timnit Gebru',aliases:['Timnit Gebru','Gebru'],linkContext:'understanding-debate-positions',scene:'understanding-debate-positions',here:'Ethiopian-born computer scientist of Eritrean descent who researches bias and accountability in AI, co-founded Black in AI and founded the Distributed AI Research Institute.',contrast:'Her departure from Google in 2020 followed a dispute over the stochastic parrots paper.',example:'Co-author of “On the dangers of stochastic parrots” (2021).'}
 );
 
 /* ===================== Curriculum: eras → lessons → scenes ===================== */

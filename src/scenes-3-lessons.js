@@ -1,7 +1,7 @@
 /* Language era 3 · Structure (1916–1960): lessons, sources and connections. */
 SOURCE('l3-saussure-1916',{title:'Saussure, F. de (1916). Cours de linguistique générale, ed. C. Bally & A. Sechehaye. English translation: Course in General Linguistics (Baskin 1959; Harris 1983).',url:'https://en.wikipedia.org/wiki/Course_in_General_Linguistics'});
 SOURCE('l3-hjelmslev-1943',{title:'Hjelmslev, L. (1943). Omkring sprogteoriens grundlæggelse. English translation: Prolegomena to a Theory of Language (1953).'});
-SOURCE('l3-kohler-1929',{title:'Köhler, W. (1929). Gestalt Psychology. Liveright (maluma and takete).'});
+SOURCE('l3-kohler-1929',{title:'Köhler, W. (1929). Gestalt Psychology. Liveright (baluma and takete; maluma in the 1947 edition).'});
 SOURCE('l3-ramachandran-2001',{title:'Ramachandran, V. S. & Hubbard, E. M. (2001). Synaesthesia — a window into perception, thought and language. Journal of Consciousness Studies 8(12), 3–34.'});
 SOURCE('l3-cwiek-2022',{title:'Ćwiek, A. et al. (2022). The bouba/kiki effect is robust across cultures and writing systems. Philosophical Transactions of the Royal Society B 377, 20200390.',url:'https://doi.org/10.1098/rstb.2020.0390'});
 SOURCE('l3-sapir-1925',{title:'Sapir, E. (1925). Sound patterns in language. Language 1(2), 37–51.'});

@@ -167,7 +167,7 @@ SCENE({id:'recursion',name:'Phrases inside phrases',tag:'Recursion and memory',
   e.w.forEach((w,i)=>{const l=L4_load(e,i);mx=Math.max(mx,l);if(l)out+=R(xs[i]-7,base-l*u,14,l*u,l>=3?C.coral:l===2?C.amber:C.blue,'none',3)});
   out+=L(14,base,586,base,C.line,1.5)+TF(20,base+20,'bars: subjects waiting for their verb at each word',13,C.muted,'start');
   out+=counter(330,318,'most held at once',String(mx),mx>=3?C.coral:C.blue,128)+counter(466,318,'words',String(n),C.ink,118);
-  return {svg:out,phase:s.type==='centre'?(s.d>=2?`At the middle of the sentence ${mx} subjects are waiting for their verbs, and the verbs then arrive in reverse order. Grammar allows it; memory gives out.`:'One clause inside is fine: two subjects held, then two verbs.'):'Right-branching keeps every subject next to its verb, so at most one is ever waiting, however deep the sentence goes.'};
+  return {svg:out,phase:s.type==='centre'?(s.d>=2?`At the middle of the sentence ${mx} subjects are waiting for their verbs, and the verbs then arrive in reverse order. Grammar allows it; memory gives out.`:(s.d===1?'One clause inside is fine: two subjects held, then two verbs.':'No clause inside: one subject, followed at once by its verb.')):'Right-branching keeps every subject next to its verb, so at most one is ever waiting, however deep the sentence goes.'};
  }});
 
 // Acceptability ratings, including the "missing verb" illusion (Gibson & Thomas 1999).
@@ -205,7 +205,7 @@ SCENE({id:'recursion-reading',name:'Rate the sentences',tag:'Be the participant'
    out+=L(x-30,pl.Y(L4_RPUB[c]),x+30,pl.Y(L4_RPUB[c]),C.ink,3)+L4_lines(x,334,L4_wrap(lab,14),13,C.muted,'middle',16)});
   out+=TF(570,212,'— published shape',13,C.ink,'end');
   const ok=s.data.c2.length&&s.data.miss.length;
-  return {svg:out,phase:ok?(L4_mean(s.data.miss)>=L4_mean(s.data.c2)?'Like many readers, you rated the sentence with a missing verb at least as high as the complete one: by the end, memory has lost track of the first subject.':'You rated the complete sentences higher than the broken ones, unlike many readers in the studies. Individuals vary, and two items per type is very few.'):'Black lines show the published pattern (shape from Gibson and Thomas 1999; values illustrative). Bars fill in as you rate.'};
+  return {svg:out,phase:ok?(L4_mean(s.data.miss)>=L4_mean(s.data.c2)?'Like many readers, you rated the sentence with a missing verb at least as high as the complete one: by the end, memory has lost track of the middle subject.':'You rated the complete sentences higher than the broken ones, unlike many readers in the studies. Individuals vary, and two items per type is very few.'):'Black lines show the published pattern (shape from Gibson and Thomas 1999; values illustrative). Bars fill in as you rate.'};
  }});
 
 const L4_PIR=[
@@ -499,7 +499,7 @@ const L4_WO=[
  {o:'none',n:189,lang:'—',s:'',g:'',t:'',also:'No single dominant order, e.g. German (main and subordinate clauses differ) or Warlpiri (free order, case marks roles).'}];
 SCENE({id:'universals',name:'Which word orders exist?',tag:'Typology',
  definition:'Joseph Greenberg (1963) compared word order in 30 languages and found striking regularities. With today’s much larger samples, the World Atlas of Language Structures shows all six orders of subject, object and verb occur, but very unevenly: orders with the subject before the object are by far the most common.',
- example:'Of 1,188 languages with a dominant order in WALS, 1,053 (89%) put the subject before the object: SOV or SVO.',
+ example:'Of 1,188 languages with a dominant order in WALS, 1,148 (97%) put the subject before the object: SOV, SVO or VSO.',
  research:'Greenberg, J. H. (1963). Some universals of grammar with particular reference to the order of meaningful elements. In Universals of Language, MIT Press; Dryer, M. S. (2013). Order of subject, object and verb. WALS Online, chapter 81; Derbyshire, D. C. (1977). Word order universals and the existence of OVS languages. Linguistic Inquiry 8, 590–599.',
  desc:'Horizontal bars counting the languages with each dominant word order in the World Atlas of Language Structures, and an example sentence with a word-by-word gloss for the chosen order.',
  dur:12,hint:'Press an order to see an example sentence and which languages use it. Counts are languages, not families; the next scenes ask why that matters.',

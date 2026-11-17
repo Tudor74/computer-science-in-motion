@@ -367,7 +367,7 @@ const L6_TIMEC=[
 const L6_TIMEN={
  english:{dir:'lr',t:'Mostly left to right, the direction they read and write.',r:'Tversky, Kugelmass & Winter (1991); Fuhrman & Boroditsky (2010).'},
  hebrew:{dir:'rl',t:'Mostly right to left, the direction they read and write.',r:'Tversky, Kugelmass & Winter (1991); Fuhrman & Boroditsky (2010).'},
- thaayorre:{dir:'ew',t:'East to west, whichever way they are facing: towards the body when facing north.',r:'Boroditsky & Gaby (2010), Psychological Science 21 (Pormpuraaw, Australia).'},
+ thaayorre:{dir:'ew',t:'East to west, whichever way they are facing: towards the body when facing east.',r:'Boroditsky & Gaby (2010), Psychological Science 21 (Pormpuraaw, Australia).'},
  mandarin:{dir:'tb',t:'Words like shàng (up) for earlier and xià (down) for later. The claim that this makes thinking vertical has mixed evidence: replications failed (January & Kako 2007; Chen 2007).',r:'Boroditsky (2001); Boroditsky, Fuhrman & McCormick (2011).'},
  aymara:{dir:'fb',t:'The known past lies in front and the unknown future behind, in words and in gestures.',r:'Núñez & Sweetser (2006), Cognitive Science 30 (Andes).'}};
 const L6_CARDS=[['sunrise','#f2a54a'],['noon','#f2d33a'],['sunset','#c8562d']];

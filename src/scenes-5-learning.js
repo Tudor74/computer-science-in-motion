@@ -248,7 +248,7 @@ SCENE({id:'statistical-learning-segment',name:'A segmenter built on dips',tag:'W
    pred.forEach(([a,b])=>{const ok=ts.has(a+','+b);out+=L(42+a*cw,y+34,40+b*cw-6,y+34,ok?C.green:C.coral,4)+TF(40+a*cw,y+50,sy.slice(a,b).join(''),13,ok?C.green:C.coral,'start')});
    out+=TF(470,y+19,'“'+utt.join(' ')+'”',13,C.muted,'start')});
   const sc=L5_score(th);out+=counter(80,306,'precision: cuts that give real words',Math.round(sc.prec*100)+'%',C.green,210)+counter(310,306,'recall: real words found',Math.round(sc.rec*100)+'%',C.blue,210);
-  return {svg:out,phase:th<.5?'At low thresholds the learner cuts only at sharp dips. “look at” never varies in this corpus, so it stays glued as “lookat”: a statistics-only learner has no way to split a pair that always occurs together.':th>.55?'At high thresholds the learner starts splitting real words: “ba” begins both “baby” and “banana”, so even inside those words the next syllable is uncertain.':'A middle threshold finds most words. The remaining errors come from words that always appear together and from syllables shared between words: statistics alone are not the whole story.'};
+  return {svg:out,phase:th<.5?'At low thresholds the learner cuts only at sharp dips. “look at” is always followed by “the” in this corpus, so the three stay glued (“lookatthe” or longer): a statistics-only learner has no way to split words that always occur together.':th>.55?'At high thresholds the learner starts splitting real words: “ba” begins both “baby” and “banana”, so even inside those words the next syllable is uncertain.':'A middle threshold finds most words. The remaining errors come from words that always appear together and from syllables shared between words: statistics alone are not the whole story.'};
  }});
 
 /* ======================= Lesson: word-learning ======================= */
@@ -286,7 +286,7 @@ function L5_xTest(seed){const r=rng(seed+9);return shuffled([0,1,2,3,4,5],seed+1
 const L5_XSIM=[1,1,1,0,1,1];
 SCENE({id:'word-learning-cross',name:'Learning words across situations',tag:'Be the participant',
  definition:'In any single moment a child hears several words and sees several things, so one scene cannot say which word goes with which thing. Across many scenes, though, the right pairs keep turning up together. Chen Yu and Linda Smith showed that adults (and later infants) pick up word meanings from these co-occurrences without ever seeing a single unambiguous naming.',
- example:'You hear “bosa” and “manu” while seeing a star and a hook, then “bosa” and “kaki” with a star and a blob. The star is the only thing present both times “bosa” is heard.',
+ example:'You hear “bosa” and “manu” while seeing a pentagon and an L-shape, then “bosa” and “colat” with a pentagon and a notched shape. The pentagon is the only thing present both times “bosa” is heard.',
  research:'Yu, C. & Smith, L. B. (2007). Rapid word learning under uncertainty via cross-situational statistics. Psychological Science 18, 414–420 (adults, 2 × 2 trials: about 90% correct, approximate); Smith & Yu (2008), Cognition 106 (12- and 14-month-olds). Replicated; how learners do it (tracking all pairs or testing one guess) is debated (Trueswell et al. 2013).',
  desc:'Twelve scenes, each with two made-up words and two novel shapes in a random arrangement, then a test asking which of four shapes each word named; a co-occurrence grid shows why the right answers stand out.',
  dur:14,hint:'Press Start and watch twelve scenes (about three seconds each). Words and shapes are not lined up, so do not look for position. Then pick the shape for each word. Your answers stay in this page.',
@@ -370,7 +370,7 @@ SCENE({id:'critical-period',name:'Age of arrival and grammar',tag:'Johnson & New
   out+=Ci(pl.X(s.age),pl.Y(g[3]),8,'none',C.coral);
   out+=TF(300,336,`Arrived at ${g[0]}: mean ${g[3]} of 276 (natives 268.8)`,15,C.ink);
   out+=TF(300,358,'Dots simulated around the published group means (Johnson & Newport 1989, Table 2)',13,C.muted);
-  return {svg:out,phase:s.age<=7?'Children who arrived by about seven became indistinguishable from native speakers on this test.':s.age<=15?'Between 8 and 15, every extra year of age at arrival cost points, a close link (r ≈ −0.87). Johnson and Newport read this as a maturational limit.':'After 17, scores were lower on average but spread widely and no longer tracked age (r ≈ −0.16). Later studies dispute whether the decline really stops: amount of input, schooling and motivation all differ with age.'};
+  return {svg:out,phase:s.age<=7?'Children who arrived by about seven became indistinguishable from native speakers on this test.':s.age<=15?'Between 8 and 15, every extra year of age at arrival cost points; across all arrivals from 3 to 15 the link was close (r ≈ −0.87). Johnson and Newport read this as a maturational limit.':'After 17, scores were lower on average but spread widely and no longer tracked age (r ≈ −0.16). Later studies dispute whether the decline really stops: amount of input, schooling and motivation all differ with age.'};
  }});
 
 const L5_HT={r:.2,c:17.4,k:8};
@@ -500,11 +500,11 @@ SCENE({id:'bilingualism-flanker',name:'The flanker task',tag:'Be the participant
   return {svg:out,phase:fx!==null&&s.phase==='done'?`Opposing flankers cost you ${fx} ms. Almost everyone shows this effect; what large studies do not find is a reliable difference in its size between bilinguals and monolinguals.`:'Keep your eyes on the centre. The flankers are irrelevant, but your brain processes them anyway.'};
  }});
 
-// Code-switching and the equivalence constraint (Poplack 1980). Concepts in each language's order.
+// Code-switching and the equivalence constraint (Poplack 1980). es[c] translates en[c]; esOrd lists the concepts in Spanish order.
 const L5_CS=[
  {name:'Same word order',en:['The','house','is','very','big'],es:['La','casa','es','muy','grande'],esOrd:[0,1,2,3,4]},
- {name:'Adjective position differs',en:['She','has','a','white','house'],es:['Ella','tiene','una','casa','blanca'],esOrd:[0,1,2,4,3]},
- {name:'Object pronoun position differs',en:['I','told','him','that'],es:['Yo','le','dije','eso'],esOrd:[0,2,1,3]}];
+ {name:'Adjective position differs',en:['She','has','a','white','house'],es:['Ella','tiene','una','blanca','casa'],esOrd:[0,1,2,4,3]},
+ {name:'Object pronoun position differs',en:['I','told','him','that'],es:['Yo','dije','le','eso'],esOrd:[0,2,1,3]}];
 function L5_csMix(sen,k,startEs){const n=sen.en.length,enOrd=range(n),ord1=startEs?sen.esOrd:enOrd,ord2=startEs?enOrd:sen.esOrd,first=ord1.slice(0,k),rest=ord2.filter(c=>!first.includes(c));
  const ok=new Set(enOrd.slice(0,k)).size===first.length&&enOrd.slice(0,k).every(c=>sen.esOrd.slice(0,k).includes(c));
  return {words:first.map(c=>({w:(startEs?sen.es:sen.en)[c],es:startEs})).concat(rest.map(c=>({w:(startEs?sen.en:sen.es)[c],es:!startEs}))),ok}}

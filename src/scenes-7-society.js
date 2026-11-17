@@ -20,10 +20,10 @@ const L7_person=(x,y,col,k=1)=>Ci(x,y-24*k,7*k,col)+P(`M${fmt(x-10*k)} ${fmt(y)}
 // Labov (1966): percentage of /r/ in "fourth floor", by store. All-r and some-r shares as published.
 const L7_STORES={saks:{name:'Saks Fifth Avenue',rank:'highest-priced',all:30,some:32},macys:{name:'Macy’s',rank:'middle-priced',all:20,some:31},klein:{name:'S. Klein',rank:'lowest-priced',all:4,some:17}};
 // Share of employees pronouncing /r/ in each position, casual and emphatic (approximate shapes of Labov's figure).
-const L7_POS={saks:{casual:[.63,.44],emph:[.64,.61]},macys:{casual:[.44,.27],emph:[.61,.48]},klein:{casual:[.08,.06],emph:[.18,.13]}};
+const L7_POS={saks:{casual:[.30,.63],emph:[.40,.64]},macys:{casual:[.27,.44],emph:[.22,.61]},klein:{casual:[.05,.08],emph:[.13,.18]}};
 SCENE({id:'variation',name:'Fourth floor',tag:'Labov’s department stores',
  definition:'Sociolinguistic variation is the patterned way speakers choose between equivalent forms, such as pronouncing or dropping the r in “fourth floor”, in step with social class and situation.',
- example:'In 1962 Labov asked shop assistants a question whose answer was “fourth floor”. Staff in the expensive store pronounced the r far more often than staff in the cheap one, and everyone pronounced it more when asked to repeat.',
+ example:'In 1962 Labov asked shop assistants a question whose answer was “fourth floor”. Staff in the expensive store pronounced the r far more often than staff in the cheap one, and nearly all groups pronounced it more when asked to repeat.',
  desc:'Three New York department stores; a speech bubble saying “fourth floor” with each r shown or dropped; bars for the published share of staff using r, and a simulated sample of employees.',
  research:['Labov (1966). The Social Stratification of English in New York City. Center for Applied Linguistics (store study carried out in 1962; 264 employees).','Fowler (1986) and Mather (2012) repeated the study decades later: the same ordering of stores, with r more common overall.'],
  dur:12,hint:'Choose a store and whether the reply is casual or a careful repeat, then ask ten more assistants.',
@@ -126,7 +126,7 @@ SCENE({id:'sound-change-s-curve',name:'The S-curve of change',tag:'Slow, fast, s
  init:()=>({mid:1540,k:20}),
  watch(p){return {mid:Math.round(lerp(1480,1550,smooth(p))),k:Math.round(lerp(10,22,smooth(p)))}},
  ui:[{range:'mid',label:'Midpoint (year)',min:1450,max:1650,step:5,get:s=>s.mid,act:'mid'},{range:'k',label:'Steepness',min:5,max:50,step:1,get:s=>s.k,act:'k',show:v=>(v/1000).toFixed(3)+' per year'},{b:'Best fit',act:'best'}],
- on:{mid(s,v){s.mid=Number(v)},k(s,v){s.k=Number(v)},best(s){s.mid=1550;s.k=19}},
+ on:{mid(s,v){s.mid=Number(v)},k(s,v){s.k=Number(v)},best(s){s.mid=1550;s.k=24}},
  draw(s){
   let out=heading('“Do you know…?” replacing “Know you…?”');
   const x0=80,y0=300,w=380,h=220,X=t=>x0+(t-1400)/325*w,Y=v=>y0-v/100*h,k=s.k/1000;
@@ -150,7 +150,7 @@ function L7_net(weak,bias,steps,seed){
 }
 SCENE({id:'sound-change-s-curve-network',name:'Spreading through a network',tag:'Weak ties carry change',
  definition:'A new form spreads from speaker to speaker; how fast it travels depends on who talks to whom. Loose acquaintances who link separate groups, called weak ties, can carry a change between them.',
- example:'In a model of 40 speakers who talk mainly to their neighbours, a new form creeps around the ring. Add a few long-distance acquaintances and it jumps ahead and spreads faster.',
+ example:'In a model of 40 speakers who talk mainly to their neighbours, a new form creeps around the ring. Add a few long-distance acquaintances and it can jump ahead, and it usually spreads faster.',
  desc:'A ring of 40 speakers coloured by whether they use the new form, with optional long links, and the number of users over time, which traces an S-curve.',
  research:['Milroy & Milroy (1985). Linguistic change, social network and speaker innovation. Journal of Linguistics 21, 339–384.','Granovetter (1973). The strength of weak ties. American Journal of Sociology 78, 1360–1380. The model here is a simple illustration, not fitted to data.'],
  dur:12,hint:'Step the model, switch weak ties on or off, and compare how long the change takes.',
@@ -248,15 +248,15 @@ SCENE({id:'contact-creoles-pidgin',name:'From pidgin to creole',tag:'Build a Tok
   L7_STAGES.forEach(([n],i)=>{const x=30+i*140,on=i===s.stage;out+=hit(X,'stage',i,n,R(x,46,128,34,on?C.purple:'#f1f5f7',on?'none':C.grid,8)+TF(x+64,68,n,14,on?'#fff':C.ink))+(i<3?arrow(x+128,63,x+140,63,C.line,1.5,5):'')});
   out+=L7_para(30,104,L7_STAGES[s.stage][1],80,13,C.muted,'start',17);
   const sub=L7_TP_SUBJ[s.sub],tam=L7_TP_TAM[s.tam],vb=L7_TP_VERB[s.verb];
-  // Predicate marker "i" follows third-person and plural subjects (not mi or yu); bai comes before it, bin after it.
-  const pm=s.sub>=2?'i':'';
+  // Predicate marker "i" follows em and mipela (not mi, yu or yumi); bai comes before it, bin after it.
+  const pm=(s.sub===2||s.sub===3)?'i':'';
   const tp=tam[0]==='pinis'?[sub[0],pm,vb[0],'pinis'].filter(Boolean).join(' '):tam[0]==='bai'?[sub[0],'bai',pm,vb[0]].filter(Boolean).join(' '):[sub[0],pm,tam[0],vb[0]].filter(Boolean).join(' ');
   const third=s.sub===2,engVerb=v=>third&&s.tam===0?(v==='go'?'goes':v==='know'?'knows':v==='eat'?'eats':'sees it'):v;
   const en=s.tam===1?`${sub[1]} will ${vb[1]}`:s.tam===2?`${sub[1]} ${vb[1]==='go'?'went':vb[1]==='eat'?'ate':vb[1]==='know'?'knew':'saw it'}`:s.tam===3?`${sub[1]} ${third?'has':'have'} already ${vb[1]==='go'?'gone':vb[1]==='eat'?'eaten':vb[1]==='know'?'known':'seen it'}`:`${sub[1]} ${engVerb(vb[1])}`;
   out+=R(30,146,540,96,'#fff',C.line,10)+TF(50,172,'Tok Pisin',13,C.muted,'start')+TBF(50,204,tp.charAt(0).toUpperCase()+tp.slice(1)+'.',24,C.purple,'start');
   out+=TF(330,172,'English',13,C.muted,'start')+L7_para(330,200,en.charAt(0).toUpperCase()+en.slice(1)+'.',28,15,C.ink,'start',20);
   out+=TF(50,232,tam[0]?`“${tam[0]}”: ${tam[2]}`:'No marker: the time comes from context',13,C.muted,'start');
-  out+=L7_para(30,272,s.sub===3||s.sub===4?'Tok Pisin has two words for “we”: mipela leaves the listener out, yumi includes them, and both take the predicate marker “i”. English cannot say this in one word; many Austronesian languages of the region can.':s.sub===2?'The little word “i” is a predicate marker: it comes before the verb after “em” and plural subjects, but not after “mi” or “yu”. English has nothing like it.':'Notice what English has that Tok Pisin does not need, such as -s on “goes”, and what Tok Pisin marks that English does not.',80,13,C.ink,'start',18);
+  out+=L7_para(30,272,s.sub===3||s.sub===4?'Tok Pisin has two words for “we”: mipela leaves the listener out, yumi includes them. Mipela takes the predicate marker “i”; yumi usually does not. English cannot say this in one word; many Austronesian languages of the region can.':s.sub===2?'The little word “i” is a predicate marker: it comes before the verb after “em” and most plural subjects, but not after “mi”, “yu” or “yumi”. English has nothing like it.':'Notice what English has that Tok Pisin does not need, such as -s on “goes”, and what Tok Pisin marks that English does not.',80,13,C.ink,'start',18);
   out+=T(300,352,'Simplified, not broken: a pidgin has rules of its own',15,C.ink);
   return {svg:out,phase:'The inclusive and exclusive “we” comes from the local languages (the substrate), while most words come from English (the lexifier). Creoles mix both.'};
  }});
@@ -267,7 +267,7 @@ const L7_CREOLE_CARDS=[
  ['Substrate features','Many creole patterns match the first speakers’ own languages.','Lefebvre 1998 and others','against'],
  ['Nicaraguan signers','Deaf children made a new sign language more regular within a few cohorts.','Senghas & Coppola 2001','for'],
  ['Creole exceptionalism','Creoles are not a special simpler type; that idea has a colonial history.','DeGraff 2003, 2005','against'],
- ['Creole prototype','Some creoles do share simpler word structure, as a statistical tendency.','McWhorter 2001','for']];
+ ['Creole prototype','Some creoles share simpler word structure, which McWhorter puts down to their youth, not to an inborn grammar.','McWhorter 1998, 2001','other']];
 SCENE({id:'contact-creoles-debate',name:'How creoles arise',tag:'An open debate',
  definition:'Linguists disagree about why creoles in different parts of the world look alike: an inborn default grammar, the languages of the first speakers, ordinary language change under contact, or a mixture.',
  example:'Derek Bickerton argued that children in plantation Hawaiʻi created a new grammar from a pidgin in one generation. Later archive work suggested the process took longer and drew on the speakers’ own languages.',
@@ -294,7 +294,7 @@ const L7_CUM=[[1,12],[2,18],[5,30],[10,42],[23,52],[50,63],[100,73],[300,85],[10
 const L7_cumAt=n=>{for(let i=1;i<L7_CUM.length;i++){const [a,va]=L7_CUM[i-1],[b,vb]=L7_CUM[i];if(n<=b){const u=(Math.log(n)-Math.log(a))/(Math.log(b)-Math.log(a));return va+(vb-va)*u}}return 100};
 SCENE({id:'endangered-languages',name:'Seven thousand languages',tag:'Few big, many small',
  definition:'About 7,000 languages are spoken today, but very unevenly: a couple of dozen are the first language of half the world, while thousands have fewer than ten thousand speakers.',
- example:'The 23 largest languages are the mother tongues of roughly half of humanity. The other half of humanity speaks the remaining 6,900 or so, and about 40% of all languages are endangered.',
+ example:'The 23 largest languages are the mother tongues of roughly half of humanity. The other half of humanity speaks the remaining 7,000 or so, and about 40% of all languages are endangered.',
  desc:'A curve of how much of the world’s population speaks the largest N languages as a first language, on a log scale, with a slider for N.',
  research:['Eberhard, Simons & Fennig (eds) (2023). Ethnologue: Languages of the World, 26th edn. SIL International (counts are approximate and change with each edition).','Hammarström, Forkel, Haspelmath & Bank. Glottolog (glottolog.org). Values on the curve are approximate.'],
  dur:10,hint:'Move the slider to see how much of the world speaks the biggest languages as a first language.',
@@ -315,7 +315,7 @@ SCENE({id:'endangered-languages',name:'Seven thousand languages',tag:'Few big, m
 
 SCENE({id:'endangered-languages-transmission',name:'Passing it on',tag:'The decisive link',
  definition:'Intergenerational transmission is parents passing a language to their children. When it breaks, a language can go from thriving to endangered within two or three generations, even with many adult speakers.',
- example:'If only half of each generation’s parents speak the language to their children, the share of young speakers halves every generation: 100%, 50%, 25%, 12%.',
+ example:'If only half of each generation’s parents speak the language to their children, the share of young speakers halves every generation: 100%, 50%, 25%, about 13%.',
  desc:'Four generations of a community drawn as rows of people; the share of children who learn the language is set by a slider, and the UNESCO vitality level is shown.',
  research:['UNESCO Ad Hoc Expert Group on Endangered Languages (2003). Language Vitality and Endangerment. UNESCO (transmission is the first of nine factors).','Fishman (1991). Reversing Language Shift. Multilingual Matters. Krauss (1992). The world’s languages in crisis. Language 68, 4–10. The model is a simple illustration.'],
  dur:10,hint:'Set how many parents pass the language on and watch four generations.',
@@ -367,7 +367,7 @@ SCENE({id:'endangered-languages-revival',name:'Revitalisation',tag:'Languages co
 /* =========================== accents-attitudes =========================== */
 // Lambert et al. (1960): matched guise. Direction of published effects; magnitudes illustrative.
 const L7_TRAITS=['Intelligence','Good looks','Dependability','Ambition','Leadership'];
-const L7_MG={english:[[.8,.6,.7,.5,.7]],french:[[.7,.5,.6,.5,.6]]};
+const L7_MG={english:[[.6,.5,.6,.5,.1]],french:[[.8,.6,.7,.6,.7]]};
 SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two voices',
  definition:'In a matched-guise test, listeners rate recordings of what they think are different people, but some are the same bilingual speaker in two languages or accents; differences in ratings reveal attitudes to the language, not the person.',
  example:'In Montreal in 1960, listeners rated the same speakers as more intelligent and dependable when they spoke English than when they spoke French. French-Canadian listeners did so too.',
@@ -388,7 +388,7 @@ SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two vo
   const d=L7_MG[s.who][0];
   L7_TRAITS.forEach((t,i)=>{const y=80+i*40;out+=TF(370,y+4,t,13,C.ink,'start')+R(370,y+12,200,14,'#f1f5f7','none',4)+R(370,y+12,200*d[i],14,C.blue,'none',4)});
   out+=TF(370,284,'longer bar: bigger preference',13,C.muted,'start')+TF(370,300,'(heights illustrative)',13,C.muted,'start');
-  out+=T(300,330,s.who==='french'?'French-speaking listeners also preferred the English guise':'English-speaking listeners preferred the English guise',15,C.ink);
+  out+=T(300,330,s.who==='french'?'French-speaking listeners favoured the English guise on even more traits':'English-speaking listeners preferred the English guise',15,C.ink);
   out+=T(300,354,'Attitudes to a language get pinned on the people who speak it',14,C.muted);
   return {svg:out,phase:'Because each pair of recordings came from the same person, the only thing that differed was the language. The result showed how the social standing of English in 1950s Montreal shaped judgements of individuals, even among French speakers.'};
  }});
@@ -397,9 +397,9 @@ SCENE({id:'accents-attitudes',name:'The matched guise',tag:'Same speaker, two vo
 const L7_ACC=[['Standard (RP)',1,1],['Queen’s English',null,2],['Edinburgh',null,3],['Southern Irish',4,4],['Welsh',5,9],['North American',3,5],['Yorkshire',null,12],['Cockney (London)',11,24],['Liverpool',null,29],['Birmingham',13,34]];
 SCENE({id:'accents-attitudes-standard',name:'Ranking accents',tag:'Prestige that lasts',
  definition:'Standard language ideology is the widespread belief that one variety, usually that of powerful groups, is correct and the others are lesser, even though all accents are equally systematic.',
- example:'British listeners rated Received Pronunciation highest for prestige and the Birmingham accent lowest, both in 1970 and in a 2005 survey of more than 5,000 people.',
+ example:'British listeners rated standard accents highest for prestige and the Birmingham accent lowest, both in 1970 and in a 2005 survey of more than 5,000 people.',
  desc:'Prestige ranks for British accents from a 1970 study (13 accents) and a 2005 study (34 accents), drawn as two columns joined by lines.',
- research:['Giles (1970). Evaluative reactions to accents. Educational Review 22, 211–227.','Coupland & Bishop (2007). Ideologised values for British accents. Journal of Sociolinguistics 11, 74–93 (BBC Voices, 5,010 respondents). Ranks other than the top and bottom are approximate.'],
+ research:['Giles (1970). Evaluative reactions to accents. Educational Review 22, 211–227.','Coupland & Bishop (2007). Ideologised values for British accents. Journal of Sociolinguistics 11, 74–93 (BBC Voices, 5,010 respondents). The order of the top two in 2005 and the middle ranks are approximate.'],
  dur:10,hint:'Press an accent to follow it between the two studies.',
  init:()=>({a:9}),
  watch(p){return {a:Math.min(9,Math.floor(p*10))}},
@@ -474,7 +474,7 @@ SCENE({id:'world-englishes',name:'Three circles of English',tag:'Who speaks Engl
  }});
 
 const L7_VAR=[
- ['Indian English',[['I am knowing the answer.','Progressive with verbs of state, as in many Indian languages'],['You are coming tomorrow, isn’t it?','One invariant question tag'],['She is my cousin-sister.','Kin term showing a cousin of the same generation']]],
+ ['Indian English',[['I am knowing the answer.','Progressive with verbs of state, as in many Indian languages'],['You are coming tomorrow, isn’t it?','One invariant question tag'],['She is my cousin-sister.','Kin term for a female cousin; a male one is a “cousin-brother”']]],
  ['Singapore English (Singlish)',[['Can or not?','Yes–no question by “or not”'],['Don’t worry, lah.','Discourse particle “lah” from Malay and Chinese varieties'],['He go market already.','“Already” marks completion']]],
  ['Nigerian English',[['I will flash you.','Call and hang up so the other person calls back'],['Well done!','Used as a greeting to someone working'],['I am coming.','Can mean “I’ll be right back”']]],
  ['Scottish English',[['I’m needing a coffee.','Progressive with need and want'],['It’s a wee bit cold.','“Wee” for small'],['Outwith the city.','“Outwith” means outside']]]];

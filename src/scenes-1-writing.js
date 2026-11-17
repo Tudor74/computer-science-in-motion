@@ -245,7 +245,7 @@ SCENE({id:'alphabet',name:'The alphabet',tag:'Pictures that became letters',
 
 const L1_VOW=[{ph:'’alep',snd:'glottal stop ’',gr:'alpha',v:'a',g:'A'},{ph:'he',snd:'h',gr:'epsilon',v:'e',g:'E'},{ph:'yod',snd:'y',gr:'iota',v:'i',g:'I'},{ph:'‘ayin',snd:'throat sound ‘',gr:'omicron',v:'o',g:'O'},{ph:'waw',snd:'w',gr:'upsilon',v:'u',g:'Y'}];
 SCENE({id:'alphabet-vowels',name:'Adding the vowels',tag:'Phoenician consonants, Greek vowels',
- definition:'Phoenician wrote only consonants: an abjad. When Greeks adopted it around 800 BCE they reused letters for Semitic sounds Greek lacked to write vowels, creating a full alphabet with signs for both consonants and vowels.',
+ definition:'Phoenician wrote only consonants: an abjad. When Greeks adopted it around 800 BCE they reused consonant letters they did not need, some for Semitic sounds Greek lacked, to write vowels, creating a full alphabet with signs for both consonants and vowels.',
  example:'Phoenician ’alep (a glottal stop) became Greek alpha, a; ‘ayin (a throat consonant) became omicron, o.',
  research:['Powell, B. B. (1991). Homer and the Origin of the Greek Alphabet. Cambridge University Press.','Swiggers, P. (1996). Transmission of the Phoenician script to the West. In Daniels & Bright (eds.), The World’s Writing Systems.','Daniels, P. T. (1990). Fundamentals of grammatology. Journal of the American Oriental Society 110, 727–731 (the terms abjad and abugida).'],
  desc:'A sentence is shown with consonants only or with vowels. Below, five Phoenician letters can be pressed to see the Greek vowel each became.',
@@ -260,7 +260,7 @@ SCENE({id:'alphabet-vowels',name:'Adding the vowels',tag:'Phoenician consonants,
   out+=TF(300,144,'In Semitic languages a root of consonants carries the core meaning: k-t-b “write” in Arabic kataba, kitāb, kātib.',13,C.muted);
   L1_VOW.forEach((q,i)=>{const x=40+i*104,on=i===s.i;out+=hit(X,'i',i,`Phoenician ${q.ph}`,R(x,164,94,52,on?C.blue:'#fff',on?C.blue:C.line,8)+TBF(x+47,186,q.ph,14,on?'#fff':C.ink)+TF(x+47,206,q.snd,13,on?'#fff':C.muted))});
   out+=arrow(300,226,300,256,C.line,2.5)+R(170,262,260,96,C.pale,'none',12)+TBF(230,322,d.g,44,C.blue)+TBF(280,300,`Greek ${d.gr}`,16,C.ink,'start')+TF(280,326,`now a vowel: ${d.v}`,14,C.green,'start');
-  return {svg:out,phase:`${d.ph} was a consonant (${d.snd}) in Phoenician. Greek had no such consonant, so it used the letter for the vowel ${d.v}.`};
+  return {svg:out,phase:`${d.ph} was a consonant (${d.snd}) in Phoenician. Greek did not need the letter for that consonant, so it used it for the vowel ${d.v}.`};
  }});
 
 const L1_TREE={
@@ -298,11 +298,12 @@ function L1_hiero(k,x,y){const c='#5a4630';
   reeds:P(`M${x-6} ${y+14}Q${x-10} ${y} ${x-4} ${y-14}`,c,3)+P(`M${x+6} ${y+14}Q${x+2} ${y} ${x+8} ${y-14}`,c,3),reed:P(`M${x} ${y+14}Q${x-5} ${y} ${x+2} ${y-14}`,c,3),
   cloth:R(x-6,y-14,12,28,'#d9c39a',c,3)+L(x-6,y-2,x+6,y+4,c,1.5),basket:P(`M${x-15} ${y-4}Q${x} ${y+16} ${x+15} ${y-4}Z`,c,2,'#d9c39a')+P(`M${x+10} ${y}q8 0 7 -8`,c,2),
   bird:`<ellipse cx="${x}" cy="${y}" rx="13" ry="8" fill="#d9c39a" stroke="${c}" stroke-width="2"/>`+Ci(x-12,y-8,5,'#d9c39a',c,'stroke-width="2"')+L(x-4,y+8,x-4,y+15,c,2)+L(x+4,y+8,x+4,y+15,c,2),
+  slope:P(`M${x-14} ${y+10}Q${x-8} ${y-10} ${x+12} ${y-12}L${x+12} ${y+10}Z`,c,2,'#d9c39a'),rib:P(`M${x-16} ${y-4}L${x+11} ${y-4}L${x+16} ${y+4}L${x-16} ${y+4}Z`,c,2,'#d9c39a'),
   hand:R(x-15,y-5,30,10,'#d9c39a',c,4)+L(x+8,y-5,x+14,y-11,c,2),mouth:`<ellipse cx="${x}" cy="${y}" rx="15" ry="6" fill="#d9c39a" stroke="${c}" stroke-width="2"/>`};
  return m[k]||'';
 }
-const L1_PTOL=[['stool','p'],['loaf','t'],['rope','o'],['lion','l'],['owl','m'],['reeds','i'],['cloth','s']];
-const L1_CLEO=[['basket','k'],['lion','l'],['reed','e'],['rope','o'],['stool','p'],['bird','a'],['hand','t'],['mouth','r'],['bird','a']];
+const L1_PTOL=[['stool','p'],['loaf','t'],['rope','o'],['lion','l'],['rib','m'],['reeds','i'],['cloth','s']];
+const L1_CLEO=[['slope','k'],['lion','l'],['reed','e'],['rope','o'],['stool','p'],['bird','a'],['hand','t'],['mouth','r'],['bird','a']];
 const L1_RSTEP=['A decree in three scripts','Ptolemy’s name','Cleopatra’s name','Shared signs, shared sounds','Two signs for one sound'];
 SCENE({id:'decipherment',name:'Cracking Egyptian',tag:'The Rosetta Stone and two royal names',
  definition:'The Rosetta Stone (196 BCE) repeats one decree in hieroglyphs, Demotic and Greek. By comparing royal names in cartouches with their Greek spellings, Champollion showed in 1822 that hieroglyphs included sound signs, and with his knowledge of Coptic went on to read the language.',
@@ -394,7 +395,7 @@ SCENE({id:'decipherment-odds',name:'Why some scripts stay silent',tag:'What a de
 const L1_BOOKS=[['14th c. manuscripts',2.7],['15th c. manuscripts',5],['Printed 1454–1500',12.6],['Printed 16th c.',217],['Printed 17th c.',532]];
 SCENE({id:'printing',name:'Copies by hand and by press',tag:'The arithmetic of print',
  definition:'Copying a book by hand takes the same effort for every copy. Printing front-loads the effort, setting the type once, after which each extra copy is cheap. After Gutenberg’s press (c. 1450) the number of books in Europe rose by orders of magnitude.',
- example:'A 200-page book: a scribe copying 4 pages a day needs 50 days per copy; a press needs about 100 days to set the type once, then a few minutes per copy (illustrative rates).',
+ example:'A 200-page book: a scribe copying 4 pages a day needs 50 days per copy; a press needs about 100 days to set the type once, then well under an hour of press time per copy (illustrative rates).',
  research:['Eisenstein, E. L. (1979). The Printing Press as an Agent of Change. Cambridge University Press.','Buringh, E. & van Zanden, J. L. (2009). Charting the “rise of the West”: manuscripts and printed books in Europe. Journal of Economic History 69(2), 409–445 (book output estimates, rounded here).'],
  desc:'Time view: bars compare days to make the chosen number of copies by scribe and by press, with illustrative rates. Output view: estimated books produced in Europe per period, on a logarithmic scale, from Buringh and van Zanden.',
  dur:12,hint:'In the time view, raise the number of copies and see where the press wins. Then switch to the output view.',
@@ -413,8 +414,8 @@ SCENE({id:'printing',name:'Copies by hand and by press',tag:'The arithmetic of p
   out+=TF(130,96,'Scribe',14,C.ink,'end')+R(140,78,Math.max(3,scribe*sc),30,C.amber,'none',4)+TF(Math.min(560,148+scribe*sc),98,`${Math.round(scribe).toLocaleString('en-GB')} days`,13,C.ink,scribe*sc>380?'end':'start');
   out+=TF(130,152,'Press',14,C.ink,'end')+R(140,134,Math.max(3,set*sc),30,C.purple,'none',4)+R(140+set*sc,134,Math.max(2,(press-set)*sc),30,C.blue,'none',4)+TF(Math.min(560,148+press*sc),154,`${Math.round(press).toLocaleString('en-GB')} days`,13,C.ink,press*sc>380?'end':'start');
   out+=Ci(150,192,6,C.purple)+TF(162,197,'setting the type (once)',13,C.muted,'start')+Ci(340,192,6,C.blue)+TF(352,197,'printing every copy',13,C.muted,'start');
-  out+=L1_note(40,222,520,130,'Rates used (illustrative)','A scribe copies about 4 pages a day. Setting type takes about half a day per page; a hand press then prints about 3,600 impressions a day. Real figures varied widely; the shape of the comparison is what matters: the press wins from about two copies upward.',78);
-  return {svg:out,phase:press<scribe?`The press is ${Math.round(scribe/press)} times faster for ${s.copies} copies.`:'For a single copy, hand copying is still quicker than setting type.'};
+  out+=L1_note(40,222,520,130,'Rates used (illustrative)','A scribe copies about 4 pages a day. Setting type takes about half a day per page; a hand press then prints about 3,600 impressions a day. Real figures varied widely; the shape of the comparison is what matters: the press wins once more than two copies are needed.',78);
+  return {svg:out,phase:press<scribe?`The press is ${Math.round(scribe/press)} times faster for ${s.copies} copies.`:'For one or two copies, hand copying is still at least as quick as setting type.'};
  }});
 
 const L1_EVENTS=[{y:'868',n:'Diamond Sutra',d:'Oldest dated printed book: a woodblock scroll found at Dunhuang.'},{y:'c. 1040',n:'Bi Sheng',d:'Movable type of baked clay, described by Shen Kuo in China.'},{y:'1377',n:'Jikji',d:'Oldest surviving book printed with movable metal type, in Korea.'},{y:'c. 1450',n:'Gutenberg',d:'Metal type cast in a hand mould, oil-based ink and a screw press, in Mainz.'}];

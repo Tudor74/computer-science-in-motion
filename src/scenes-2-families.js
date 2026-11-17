@@ -28,7 +28,7 @@ function L2_glide(pts,dur=.6,at=0){const c=AUDIO.get();if(!c)return;try{const t0
 /* ===================== Lesson: language-families ===================== */
 const L2_LANGS=[['Sanskrit',1],['Ancient Greek',1],['Latin',1],['Old English',1],['Old Irish',1],['Finnish',0],['Hungarian',0],['Basque',0],['Arabic',0]];
 const L2_WORDS={
- three:{forms:['tráyas','treîs','trēs','þrēo','trí','kolme','három','hiru','thalātha'],note:'All five Indo-European words begin with t followed by r. English þ (th) is the regular partner of t elsewhere, as Grimm’s law will show.'},
+ three:{forms:['tráyas','treîs','trēs','þrēo','trí','kolme','három','hiru','thalātha'],note:'Four of the five Indo-European words begin with t followed by r. English þ (th) is the regular partner of t elsewhere, as Grimm’s law will show.'},
  two:{forms:['dvā́','dýo','duo','twā','dá','kaksi','kettő','bi','ithnān'],note:'d in Sanskrit, Greek, Latin and Irish matches t in English. The same d : t match appears in decem/ten and dentem/tooth.'},
  brother:{forms:['bhrā́tar-','phrā́tēr','frāter','brōþor','bráthair','veli','fivér','anaia','akh'],note:'bh in Sanskrit, ph in Greek, f in Latin and b in English and Irish: one ancestral sound with regular outcomes. (In Greek the word came to mean a clan member.)'},
  mother:{forms:['mātár-','mḗtēr','māter','mōdor','máthair','äiti','anya','ama','umm'],note:'m and t (English d) line up across all five. Short words like ama and umm look alike in many unrelated families: they are “nursery” words.'},
@@ -58,7 +58,7 @@ SCENE({id:'language-families',name:'Jones and the family resemblance',tag:'Sansk
 const L2_PAIRS=[
  ['English much','Spanish mucho','chance','Unrelated. Much comes from Old English mycel; mucho comes from Latin multum. They converged by chance.'],
  ['English head','Latin caput','cognate','Related. Both go back to one root: Grimm’s law turns k into h and p into f or v (Old English hēafod).'],
- ['English have','Latin habēre','chance','A famous false friend. Have matches Latin capere “take” (k → h, p → f or v), not habēre.'],
+ ['English have','Latin habēre','chance','A famous false cognate. Have matches Latin capere “take” (k → h, p → f or v), not habēre.'],
  ['English two','Latin duo','cognate','Related. Latin d regularly matches English t: duo/two, decem/ten, dentem/tooth.'],
  ['English bad','Persian bad','chance','Unrelated. Same sound and meaning, but no regular correspondences link them.'],
  ['English fish','Latin piscis','cognate','Related. Latin p matches English f (pater/father, pēs/foot), and Latin sk matches English sh.'],
@@ -142,7 +142,7 @@ SCENE({id:'comparative-method',name:'Rebuilding a lost word',tag:'The comparativ
 const L2_SETS=[
  {name:'“hundred”',cells:[['Italian','cento','tʃ'],['Spanish','ciento','θ or s'],['French','cent','s'],['Sardinian','kentu','k']],opts:['tʃ','θ','s','k'],ans:'k',naive:'s',why:'k often shifts to tʃ or s before i and e (palatalisation); the reverse is rare. Sardinian kept the old k, and Latin centum had it too.'},
  {name:'“son”',cells:[['Italian','figlio','f'],['Spanish','hijo','silent h'],['Portuguese','filho','f'],['French','fils','f']],opts:['f','h','nothing'],ans:'f',naive:'f',why:'f → h → nothing is a known change, which happened in Spanish; h → f would be unusual. Latin filius confirms f.'},
- {name:'“life”',cells:[['Italian','vita','t'],['Spanish','vida','ð'],['Portuguese','vida','d'],['French','vie','nothing']],opts:['t','d','ð','nothing'],ans:'t',naive:'d',why:'Between vowels t softens to d, then ð, then disappears (lenition). The chain runs one way, so the strongest sound, t, is oldest. Latin vita.'}];
+ {name:'“life”',cells:[['Italian','vita','t'],['Spanish','vida','d (said ð)'],['Portuguese','vida','d'],['French','vie','nothing']],opts:['t','d','nothing'],ans:'t',naive:'d',why:'Between vowels t softens to d, then ð, then disappears (lenition). The chain runs one way, so the strongest sound, t, is oldest. Latin vita.'}];
 SCENE({id:'comparative-method-choose',name:'Which sound came first?',tag:'Direction matters',
  definition:'When cognates disagree, the oldest sound is not simply the most common one. Linguists prefer the sound from which every attested sound can be reached by changes that happen often in the world’s languages.',
  example:'Italian cento, Spanish ciento, French cent and Sardinian kentu begin with four different sounds. Only k explains them all, because k → tʃ → s is common and the reverse is not.',
@@ -171,7 +171,7 @@ const L2_PIE={
  two:{pie:'*dwóh₁',d:[['Sanskrit','dvā́','w → v'],['Greek','dýo','w → u'],['Latin','duo','w → u'],['Gothic','twai','d → t'],['Old Irish','dá','w lost']]},
  three:{pie:'*tréyes',d:[['Sanskrit','tráyas','e → a'],['Greek','treîs','eye → ei'],['Latin','trēs','eye → ē'],['Gothic','þreis','t → þ'],['Old Irish','trí','eye → í']]}};
 SCENE({id:'comparative-method-pie',name:'Proto-Indo-European',tag:'A language nobody wrote down',
- definition:'Applying the comparative method to the whole family gives Proto-Indo-European, spoken perhaps 6,000 to 8,000 years ago. Its words are written with an asterisk because they are reconstructed, not attested. Some reconstructions were later confirmed by newly found languages.',
+ definition:'Applying the comparative method to the whole family gives Proto-Indo-European, spoken perhaps 6,000 years ago (estimates run from about 5,500 to 9,500). Its words are written with an asterisk because they are reconstructed, not attested. Some reconstructions were later confirmed by newly found languages.',
  example:'In 1879 the young Saussure argued from vowel patterns that the parent language had sounds lost in every known daughter. Hittite, deciphered in 1915–17, turned out to write one of them as ḫ, as in ḫant- “front” beside Latin ante.',
  desc:'A reconstructed root with its five descendants and the change that produced each; or the story of the laryngeal sounds confirmed by Hittite.',
  research:'Saussure, F. de (1879). Mémoire sur le système primitif des voyelles dans les langues indo-européennes. · Hrozný, B. (1915). Die Lösung des hethitischen Problems. · Kuryłowicz, J. (1927). ə indoeuropéen et ḫ hittite. · Fortson, B. W. (2010). Indo-European Language and Culture, 2nd ed.',
@@ -210,7 +210,7 @@ const L2_GRW={
  mead:{src:'Sanskrit madhu',en:'mead',ch:[['dh','d',2,1]]},
  guest:{src:'Latin hostis (h < gʰ)',en:'guest',ch:[['gʰ','g',2,2]]}};
 SCENE({id:'grimms-law',name:'Grimm’s law',tag:'Nine consonants move together',
- definition:'Grimm’s law describes a shift in the consonants of early Germanic. Voiceless stops became fricatives, voiced stops lost their voice, and breathy-voiced stops became plain voiced stops. Latin, Greek and Sanskrit did not take part, so their words keep the older sounds.',
+ definition:'Grimm’s law describes a shift in the consonants of early Germanic. Voiceless stops became fricatives, voiced stops lost their voice, and breathy-voiced stops became plain voiced stops. Latin, Greek and Sanskrit did not take part, so their words largely keep the older sounds (Sanskrit most faithfully).',
  example:'Latin pēs and English foot: p became f and d became t. Latin cornū and English horn: k became h.',
  desc:'A word in Latin or Sanskrit, its English cognate, the consonants that changed, and a 3 × 3 chart of the nine shifts with the active one lit.',
  research:'Grimm, J. (1822). Deutsche Grammatik, 2nd ed., vol. 1. Rasmus Rask described the correspondences in 1818 (Undersøgelse om det gamle Nordiske eller Islandske Sprogs Oprindelse).',
@@ -332,7 +332,7 @@ SCENE({id:'great-vowel-shift-spelling',name:'Why spelling stopped matching',tag:
   L2_SP.forEach((W,i)=>{const x=46+i*80;out+=L2_chip(X,'w',i,W[0],x-34,192,72,i===s.sel,`Show ${W[0]}`)});
   const W=L2_SP[s.sel];out+=R(40,236,520,116,'#fff',C.grid,10);
   out+=TF(70,262,'spelling',12,C.muted,'start')+L2_TB(70,294,W[0],26,C.ink,'start')+TF(70,320,`letters: ${W[1]}`,13,C.coral,'start');
-  out+=TF(230,262,'letters meant, c. 1400',12,C.muted,'start')+L2_lines(230,290,L2_wrap(W[2],22),15,C.purple,'start',20);
+  out+=TF(230,262,'letters meant before the shift',12,C.muted,'start')+L2_lines(230,290,L2_wrap(W[2],22),15,C.purple,'start',20);
   out+=TF(430,262,'sound today',12,C.muted,'start')+L2_TB(430,294,W[3],24,C.green,'start');
   return {svg:out,phase:`In ${W[0]} the letters ${W[1]} once meant ${W[2]}. The sound became ${W[3]}, but the spelling had already settled.`};
  }});
@@ -414,7 +414,7 @@ SCENE({id:'phonetics-ipa-consonants',name:'The consonant chart',tag:'Where and h
   const row=L2_CONS.find(c=>c[2]===s.sel||c[3]===s.sel),voiced=row&&row[3]===s.sel;
   const name=row?`${voiced?'voiced':'voiceless'} ${L2_PLACES[row[1]]} ${L2_MANNERS[row[0]].replace('approx.','approximant')}`:'';
   out+=R(24,302,556,56,C.pale,'none',10)+L2_TB(60,340,`[${s.sel}]`,26,C.purple)+TBF(104,324,name,14,C.ink,'start')+L2_TF(104,346,L2_EX[s.sel]?'as in '+L2_EX[s.sel]:'rare; found in a few languages',13,C.ink,'start');
-  return {svg:out,phase:eng?'English uses about 21 of these cells, plus [w], [tʃ] (church) and [dʒ] (judge), which sit outside this simple grid. Many languages use cells English never touches, such as [x], [ɬ] and [ħ].':`[${s.sel}]: ${name}. Pairs in one cell differ only in voicing: the left symbol is voiceless, the right voiced.`};
+  return {svg:out,phase:eng?'English uses 21 of these symbols, plus [w], [tʃ] (church) and [dʒ] (judge), which sit outside this simple grid. Many languages use cells English never touches, such as [x], [ɬ] and [ħ].':`[${s.sel}]: ${name}. Pairs in one cell differ only in voicing: the left symbol is voiceless, the right voiced.`};
  }});
 
 const L2_TONES={man:{syl:'ma',items:[['mā','55','mother'],['má','35','hemp'],['mǎ','214','horse'],['mà','51','to scold']]},can:{syl:'si',items:[['si1','55','poem'],['si2','25','history'],['si3','33','to try'],['si4','21','time'],['si5','23','market'],['si6','22','matter']]}};
@@ -424,7 +424,7 @@ SCENE({id:'phonetics-ipa-tones',name:'Tone',tag:'Pitch that changes the word',
  definition:'In a tone language, pitch distinguishes words just as consonants and vowels do. Yuen Ren Chao’s tone letters describe each tone with numbers from 1 (lowest) to 5 (highest) for the speaker’s range.',
  example:'Mandarin mā (55, high level) means “mother”, má (35, rising) “hemp”, mǎ (214, dipping) “horse” and mà (51, falling) “to scold”.',
  desc:'Pitch contours on a five-level scale for the four Mandarin tones or six Cantonese tones, with the chosen tone drawn heavier. Pressing a syllable plays a synthetic pitch glide.',
- research:'Chao, Y. R. (1930). A system of tone letters. Le Maître Phonétique 45. · Yip, M. (2002). Tone. Cambridge University Press. · Maddieson, I. (2013). Tone. In WALS Online, ch. 13: a little over half of the 527 sampled languages have tone.',
+ research:'Chao, Y. R. (1930). A system of tone letters. Le Maître Phonétique 45. · Yip, M. (2002). Tone. Cambridge University Press. · Maddieson, I. (2013). Tone. In WALS Online, ch. 13: about two in five of the 527 sampled languages (220) have tone.',
  dur:12,hint:'Choose Mandarin or Cantonese and press a syllable to hear its pitch contour (synthetic, approximate).',
  init:()=>({lang:'man',sel:2}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {lang:'man',sel:k}},

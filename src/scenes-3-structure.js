@@ -74,14 +74,14 @@ SCENE({id:'saussure-sign',name:'The arbitrary sign',tag:'Saussure',
  on:{k(s,v){s.k=v}},
  draw(s){
   const k=s.k,words=L3_SIGNS[k],name=L3_CONCEPTS.find(c=>c[0]===k)[1];
-  let out=heading(k==='woof'?'Copying a sound: similar, never the same':'One idea, ten unrelated words');
+  let out=heading(k==='woof'?'Copying a sound: similar, never the same':'One idea, ten different words');
   out+=R(24,50,160,150,'#f6f9fb',C.grid,10)+L3_icon(k,104,116)+TF(104,192,name,13,C.muted);
   out+=R(34,216,140,112,'#fff',C.blue,56)+L(42,272,166,272,C.blue,1.5);
   out+=TF(104,240,'signified',13,C.muted)+TBF(104,260,name,14,C.ink)+TF(104,292,'signifier',13,C.muted)+TBF(104,312,`“${words[0]}”`,14,C.blue);
   L3_LANGS.forEach((lg,i)=>{const c=i%2,r=Math.floor(i/2),x=200+c*192,y=50+r*56;
    out+=R(x,y,184,48,'#fff',C.grid,8)+TF(x+10,y+19,lg,13,C.muted,'start')+TBF(x+10,y+40,words[i],17,words[i]==='—'?C.line:C.ink,'start',L3_IPA)});
   out+=TF(390,354,'Spellings romanised; tones and long vowels marked',13,C.muted);
-  return {svg:out,phase:k==='woof'?'Imitative words share a family likeness because they copy a real sound, but each language fits the bark to its own sound system. That is Saussure’s point: even here the form is partly convention.':'The concept is the same everywhere; the sounds share nothing. Learning a word means learning a convention your community agreed on, not discovering a natural name.'};
+  return {svg:out,phase:k==='woof'?'Imitative words share a family likeness because they copy a real sound, but each language fits the bark to its own sound system. That is Saussure’s point: even here the form is partly convention.':'The concept is the same everywhere; the sounds mostly differ, and where they match (water and Wasser, lune and luna) it is shared ancestry, not a natural fit. Learning a word means learning a convention your community agreed on, not discovering a natural name.'};
  }});
 
 // Bouba–kiki: [rounded name, sharp name, made up for this page?]
@@ -91,7 +91,7 @@ function L3_blob(x,y,r,col){const pts=range(73).map(i=>{const a=i/72*2*Math.PI,q
 function L3_star(x,y,r,col){const j=[1,.9,1.05,.85,1,.95,1.08,.88,.97];const pts=range(18).map(i=>{const a=i/18*2*Math.PI-Math.PI/2,q=i%2?r*.42:r*j[i/2];return [x+q*Math.cos(a),y+q*Math.sin(a)]});return P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join('L')+'Z',C.ink,2,col)}
 SCENE({id:'saussure-sign-bouba',name:'Bouba and kiki',tag:'Be the participant',
  definition:'Sound symbolism is a systematic link between sounds and meanings. Shown a rounded shape and a spiky one, most people call the rounded one “bouba” or “maluma” and the spiky one “kiki” or “takete”. It is a real exception to arbitrariness, though a modest one: it shapes a few words, not whole vocabularies.',
- example:'Wolfgang Köhler used maluma and takete in 1929. Ramachandran and Hubbard (2001) reported about 95% agreement for bouba and kiki. A test in 25 languages found the effect in most of them, with 72% matching overall (Ćwiek et al. 2022).',
+ example:'Wolfgang Köhler used baluma and takete in 1929, changing it to maluma in his 1947 edition. Ramachandran and Hubbard (2001) reported about 95% agreement for bouba and kiki. A test in 25 languages found the effect in most of them, with 72% matching overall (Ćwiek et al. 2022).',
  research:'Köhler, W. (1929). Gestalt Psychology; Ramachandran, V. S. & Hubbard, E. M. (2001). Synaesthesia — a window into perception, thought and language. J. Consciousness Studies 8(12); Ćwiek, A. et al. (2022). The bouba/kiki effect is robust across cultures and writing systems. Phil. Trans. R. Soc. B 377 (replicated across 25 languages; weaker in some).',
  desc:'Two shapes, one rounded and one spiky, swap sides from trial to trial; you press the one with the given name, and your match rate is drawn beside two published results.',
  dur:10,hint:'Press Start, then press the shape you think has the name shown. Eight trials; the shapes swap sides at random. Two of the four name pairs are classic, two were made up for this page. Your answers stay in this page.',
@@ -244,9 +244,9 @@ SCENE({id:'phonemes-features',name:'Distinctive features',tag:'Sounds as bundles
   out+=TF(gx+cw*1.5,gy+3*ch+22,'left of each pair: voiceless · right: voiced',13,C.muted);
   const fb=`[${p[3]?'+':'−'}voice, ${L3_PLACE[p[1]]}, ${L3_MANNER[p[2]]}]`;
   out+=R(40,300,520,64,'#f6f9fb',C.grid,10)+TBF(60,326,p[0],22,C.blue,'start',L3_IPA)+TF(100,326,fb,15,C.ink,'start');
-  const note=p[4]?(p[2]===0||p[2]===1?`English plural after ${p[0]}: ${p[3]?'/z/ (as in dogs)':p[1]===1&&p[2]===1?'/ɪz/ (as in buses)':'/s/ (as in cats)'}`:'nasals are voiced in English, so plurals add /z/'):(p[2]===2?'not English: voiceless nasals occur in Burmese and Icelandic':'not English: as in German Bach (x) or Spanish lago (ɣ)');
+  const note=p[4]?(p[2]===0||p[2]===1?`English plural after ${p[0]}: ${p[1]===1&&p[2]===1?'/ɪz/ (as in buses)':p[3]?'/z/ (as in dogs)':'/s/ (as in cats)'}`:'nasals are voiced in English, so plurals add /z/'):(p[2]===2?'not English: voiceless nasals occur in Burmese and Icelandic':'not English: as in German Bach (x) or Spanish lago (ɣ)');
   out+=TF(60,350,note,13,C.muted,'start',L3_IPA);
-  return {svg:out,phase:s.cls!=='none'?`The highlighted sounds share one feature, so a single rule can mention them all. ${s.cls==='voiced'?'Voiced sounds take /z/ in the English plural.':'Children and sound changes treat such classes as units.'}`:`${p[0]} is ${fb}. Change one feature and you land on a neighbour: that is why p and b, or t and n, feel related.`};
+  return {svg:out,phase:s.cls!=='none'?`The highlighted sounds share one feature, so a single rule can mention them all. ${s.cls==='voiced'?'Voiced sounds take /z/ in the English plural (except z itself, which takes /ɪz/).':'Children and sound changes treat such classes as units.'}`:`${p[0]} is ${fb}. Change one feature and you land on a neighbour: that is why p and b, or t and n, feel related.`};
  }});
 
 /* ======================= Lesson: morphology ======================= */
@@ -287,13 +287,13 @@ SCENE({id:'morphology',name:'Building words from parts',tag:'Morphemes',
 const L3_TYPES=[
  {lang:'Mandarin',type:'isolating',parts:[['wǒ','I'],['mǎi','buy'],['le','PFV'],['shū','book']],word:'wǒ mǎi le shū',tr:'I bought a book (or books)',note:'Each word is a single morpheme; tense and number come from separate words or context.'},
  {lang:'Turkish',type:'agglutinating',parts:[['ev','house'],['ler','PL'],['im','1SG.POSS'],['de','LOC']],word:'evlerimde',tr:'in my houses',note:'Each ending carries one meaning and stays easy to see.'},
- {lang:'Latin',type:'fusional',parts:[['am','love'],['ā','THEME'],['bō','FUT.1SG']],word:'amābō',tr:'I will love',note:'The ending -bō packs future tense, first person and singular into one piece that cannot be split.'},
+ {lang:'Latin',type:'fusional',parts:[['am','love'],['ō','1SG.PRS']],word:'amō',tr:'I love',note:'The single ending -ō marks first person and singular together (and, in this form, present tense): no part of it means just one of these.'},
  {lang:'Inuktitut',type:'polysynthetic',parts:[['tusaa','hear'],['tsiaq','well'],['junnaq','able'],['nngit','NEG'],['tualuu','very'],['junga','1SG']],word:'tusaatsiarunnanngittualuujunga',tr:'I can’t hear very well',note:'A whole English sentence is one word. Sounds change at the joins, so the parts are not simply strung together.'},
  {lang:'English',type:'mixed',parts:[['un','NOT'],['break','break'],['able','able']],word:'unbreakable',tr:'cannot be broken',note:'English mixes types: un-break-able strings parts together, while sang packs “sing + past” into one vowel change.'}];
 const L3_INDEX=[['Vietnamese',1.06],['English',1.68],['Swahili',2.55],['Sanskrit',2.59],['West Greenlandic',3.72]];
 SCENE({id:'morphology-typology',name:'How languages build words',tag:'Morphological types',
  definition:'Languages differ in how much they pack into a word. Isolating languages use mostly one-morpheme words; agglutinating ones add clear, separable endings; fusional ones merge several meanings into one ending; polysynthetic ones build whole sentences into a word. These are points on a continuum, and most languages mix types.',
- example:'Turkish ev-ler-im-de is “in my houses”, one meaning per piece. Latin amā-bō is “I will love”, with future, first person and singular fused in -bō.',
+ example:'Turkish ev-ler-im-de is “in my houses”, one meaning per piece. Latin am-ō is “I love”, with first person and singular fused in -ō.',
  research:'Sapir, E. (1921). Language; Greenberg, J. H. (1960). A quantitative approach to the morphological typology of language. IJAL 26, 178–194 (index of synthesis: morphemes per word in 100-word samples; values approximate).',
  desc:'One word from the chosen language split into morphemes with glosses, its type named, and a scale of Greenberg’s index of synthesis (average morphemes per word) with five languages marked.',
  dur:10,hint:'Choose a language to see one word broken into its parts and where the language sits on the scale of morphemes per word.',
@@ -321,7 +321,7 @@ function L3_wugBird(x,y,col){return P(`M${x-26} ${y+10}Q${x-30} ${y-24} ${x} ${y
 SCENE({id:'morphology-wug',name:'The wug test',tag:'Be the participant',
  definition:'Jean Berko (1958) showed children pictures of made-up creatures, “This is a wug. Now there are two of them. There are two…?”, and they answered “wugs” with the right ending. Children could not have heard these words, so they must know a rule, not just a list.',
  example:'The English plural has three forms chosen by the last sound: /s/ after voiceless sounds (cats), /z/ after voiced sounds (dogs) and /ɪz/ after hissing and hushing sounds (horses, churches).',
- research:'Berko, J. (1958). The child’s learning of English morphology. Word 14, 150–177 (wug, gutch, lun, tass, nizz and cra are among her items; bik and zop are made up here). Replicated many times; the test now has versions for many languages.',
+ research:'Berko, J. (1958). The child’s learning of English morphology. Word 14, 150–177 (wug, gutch, lun, tass, nizz and cra follow her plural items; the rest are added for this page). Replicated many times; the test now has versions for many languages.',
  desc:'A cartoon creature appears with a made-up name; you pick the plural ending as /s/, /z/ or /ɪz/ for eight words, and a table checks your answers against the rule that depends on the final sound.',
  dur:10,hint:'Press Start. For each made-up word, say “two ___s” aloud and choose the ending you hear. Your answers stay in this page.',
  init:()=>({order:[],i:-1,ans:[],seed:9}),
@@ -371,7 +371,7 @@ SCENE({id:'zipf-law',name:'Zipf’s law',tag:'Rank and frequency',
 
 const L3_ALICE_REF=L3_memo('aliceref',()=>L3_rank(L3_AW).map(([,c],i)=>[Math.log10(i+1),Math.log10(c)]));
 SCENE({id:'zipf-law-monkey',name:'A monkey at a typewriter',tag:'Is Zipf’s law deep?',
- definition:'George Miller (1957) pointed out that random typing, letters and spaces pressed at random, also produces a rank–frequency curve close to Zipf’s, because short random strings are both more likely and more varied in number. So the law alone does not prove anything special about meaning.',
+ definition:'George Miller (1957) pointed out that random typing, letters and spaces pressed at random, also produces a rank–frequency curve close to Zipf’s, because each short random string is far more likely than each long one, while the number of different strings grows rapidly with length. So the law alone does not prove anything special about meaning.',
  example:'With 6 letters and a space pressed 20% of the time, one-letter “words” are common and long ones rare, and the ranked counts fall in near-straight steps on log–log axes.',
  research:'Miller, G. A. (1957). Some effects of intermittent silence. American Journal of Psychology 70, 311–314; Li, W. (1992). Random texts exhibit Zipf’s-law-like word frequency distribution. IEEE Trans. Information Theory 38; Piantadosi (2014) argues real language shows Zipf-like structure that random typing cannot explain, such as frequency tied to meaning.',
  desc:'A sample of random “text”, and its words ranked by count on log–log axes beside the curve for the Alice passage, with the fitted slope.',
@@ -469,7 +469,7 @@ SCENE({id:'redundancy-entropy-approx',name:'Approximations to English',tag:'Shan
  example:'Random letters give gibberish like XFOML RXKHRJFFJUJ. With letter pairs counted, text gains English-like syllables (ON IE ANTSOUTINYS ARE T INCTORE), and with word frequencies it produces real words in a meaningless order.',
  research:'Shannon, C. E. (1948). A mathematical theory of communication. Bell System Technical Journal 27 (the approximations); Shannon (1951), BSTJ 30 (the values F0 = 4.75, F1 = 4.03, F2 = 3.32, F3 = 3.1 bits from large tables of English). Language machines in era 8 take the same idea to words.',
  desc:'A paragraph of text generated from letter statistics of the Alice passage at the chosen order, with a bar chart of entropy per letter at each order beside Shannon’s values from large English tables.',
- dur:12,hint:'Choose an order and press Generate again. Orders 3 and 4 copy whole chunks of Alice: our sample is only about 4,000 letters, so high-order statistics overfit and their entropy looks too low.',
+ dur:12,hint:'Choose an order and press Generate again. Orders 3 and 4 copy whole chunks of Alice: our sample is only about 3,200 characters, so high-order statistics overfit and their entropy looks too low.',
  init:()=>({o:2,seed:1}),
  watch(p){const os=[0,1,2,3,4,'w'];return {o:os[Math.min(5,Math.floor(p*6))],seed:1}},
  ui:[{choose:[[0,'Random'],[1,'Letters'],[2,'Pairs'],[3,'Triples'],[4,'Fours'],['w','Words']],label:'Order',get:s=>s.o,act:'o'},{b:'Generate again',act:'fresh'}],
@@ -482,7 +482,7 @@ SCENE({id:'redundancy-entropy-approx',name:'Approximations to English',tag:'Shan
   const labs=['random','letters','pairs','triples','fours'];
   for(let k=0;k<5;k++){const F=Math.max(0,L3_F(k)),x=pl.X(k)+10,w=pl.X(1)-pl.X(0)-20,on=k===s.o;out+=R(x,pl.Y(F),w,pl.Y(0)-pl.Y(F),on?C.blue:C.pale,'none',4)+TF(x+w/2,pl.Y(F)-6,F.toFixed(2),13,C.ink)+TF(x+w/2,338,labs[k],13,on?C.blue:C.muted);
    if(k<4)out+=L(x-2,pl.Y(L3_SHAN[k]),x+w+2,pl.Y(L3_SHAN[k]),C.coral,3)}
-  out+=R(436,170,146,150,'#fff',C.grid,8)+R(450,190,24,12,C.pale,'none',3)+TF(482,201,'this passage',13,C.ink,'start')+L(450,224,474,224,C.coral,3)+TF(482,229,'Shannon’s',13,C.ink,'start')+TF(482,247,'large tables',13,C.ink,'start')+TF(509,282,'one passage of',13,C.muted)+TF(509,300,'~4,000 letters',13,C.muted);
+  out+=R(436,170,146,150,'#fff',C.grid,8)+R(450,190,24,12,C.pale,'none',3)+TF(482,201,'this passage',13,C.ink,'start')+L(450,224,474,224,C.coral,3)+TF(482,229,'Shannon’s',13,C.ink,'start')+TF(482,247,'large tables',13,C.ink,'start')+TF(509,282,'one passage of',13,C.muted)+TF(509,300,'~3,200 characters',13,C.muted);
   return {svg:out,phase:s.o==='w'?'Choosing whole words by frequency gives real words in a meaningless order: frequency alone does not make grammar.':`Each extra letter of context lowers the entropy. ${s.o>=3?'Here the drop is exaggerated: with so little text, the model mostly copies Alice back.':'Shannon’s figures from large tables (red marks) fall more slowly.'}`};
  }});
 
