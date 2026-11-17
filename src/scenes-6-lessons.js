@@ -17,7 +17,7 @@ SOURCE('c6-pasteur-1848',{title:'Pasteur, L. (1848). Mémoire sur la relation qu
 SOURCE('c6-mcbride-1961',{title:'McBride, W. G. (1961). Thalidomide and congenital abnormalities. The Lancet 278, 1358.'});
 SOURCE('c6-eriksson-1995',{title:'Eriksson, T. et al. (1995). Stereospecific determination, chiral inversion in vitro and pharmacokinetics in humans of the enantiomers of thalidomide. Chirality 7, 44–52.'});
 SOURCE('c6-staudinger-1920',{title:'Staudinger, H. (1920). Über Polymerisation. Berichte der deutschen chemischen Gesellschaft 53, 1073–1085.'});
-SOURCE('c6-carothers-1937',{title:'Carothers, W. H. (1937). Linear condensation polymers. US Patent 2,130,948.'});
+SOURCE('c6-carothers-1937',{title:'Carothers, W. H. (1938). Synthetic fiber. US Patent 2,130,948.'});
 SOURCE('c6-geyer-2017',{title:'Geyer, R., Jambeck, J. R. & Law, K. L. (2017). Production, use, and fate of all plastics ever made. Science Advances 3, e1700782.',url:'https://doi.org/10.1126/sciadv.1700782'});
 SOURCE('c6-corey-1967',{title:'Corey, E. J. (1967). General methods for the construction of complex molecules. Pure and Applied Chemistry 14, 19–37.'});
 SOURCE('c6-corey-1989',{title:'Corey, E. J. & Cheng, X.-M. (1989). The Logic of Chemical Synthesis. Wiley.'});

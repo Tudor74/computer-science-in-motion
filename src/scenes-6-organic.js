@@ -52,7 +52,7 @@ SCENE({id:'carbon-skeletons',name:'Chains of carbon',tag:'Kekulé and Couper, 18
   out+=TF(520,272,n>=5?'liquid at room temperature':'gas at room temperature',14,C.blue,'end');
   out+=TF(520,296,s.view==='skel'?'each corner and end is a CH₂ or CH₃':'four bonds on every carbon',13,C.muted,'end');
   out+=TF(300,350,'Longer chains cling together more, so boiling points climb with length.',13,C.muted);
-  return {svg:out,phase:`${name[0].toUpperCase()+name.slice(1)} has ${n} carbon${n>1?'s':''} and ${2*n+2} hydrogens. The pattern CₙH₂ₙ₊₂ holds for every unbranched alkane, because each carbon keeps four bonds. Skeletal formulas leave out the C and H labels: every corner is a carbon carrying enough hydrogens to make four bonds.`};
+  return {svg:out,phase:`${name[0].toUpperCase()+name.slice(1)} has ${n} carbon${n>1?'s':''} and ${2*n+2} hydrogens. The pattern CₙH₂ₙ₊₂ holds for every open-chain alkane, branched or not, because each carbon keeps four bonds. Skeletal formulas leave out the C and H labels: every corner is a carbon carrying enough hydrogens to make four bonds.`};
  }});
 
 // Structural isomers: the same formula, different skeletons.
@@ -472,7 +472,7 @@ SCENE({id:'stereochemistry-thalidomide',name:'Thalidomide',tag:'Handedness, harm
  }});
 
 /* ================================================================ polymers */
-const C6_POLY_CAT=[[1,'ethene, a gas'],[30,'a wax'],[1000,'a soft plastic'],[10000,'polythene bags'],[100000,'ultra-tough fibre']];
+const C6_POLY_CAT=[[1,'ethene, a gas'],[2,'still a gas'],[3,'a runny liquid, like petrol'],[10,'a wax'],[1000,'a soft plastic'],[10000,'polythene bags'],[100000,'ultra-tough fibre']];
 SCENE({id:'polymers',name:'Giant molecules',tag:'Staudinger, 1920',
  definition:'A polymer is a long chain of small repeating units joined by ordinary chemical bonds. In 1920 Hermann Staudinger argued that rubber and plastics are such giant molecules; many chemists then thought they were loose clusters of small molecules.',
  example:'Polythene is ethene units, –CH₂–CH₂–, repeated thousands of times: 10,000 units make a chain with a molar mass of about 280,000 g/mol.',
@@ -508,7 +508,7 @@ SCENE({id:'polymers-nylon',name:'Nylon and Kevlar',tag:'Carothers 1935, Kwolek 1
  definition:'Condensation polymers form when two kinds of monomer join and give off a small molecule, usually water, at each link. Nylon-6,6 alternates a diamine and a diacid joined by amide links; Kevlar has the same links between flat benzene rings, which stack into very strong fibres.',
  example:'Joining 3 diamines and 3 diacids into one chain makes 5 amide links and releases 5 molecules of water.',
  desc:'A growing chain of alternating diamine and diacid units joined by amide links, with a counter of water molecules released, and a choice of nylon or Kevlar.',
- research:'Carothers, W. H. (1937). Linear condensation polymers. US Patent 2,130,948 (nylon, first made 1935 at DuPont). Kwolek, S. L. (1965) discovered the liquid-crystal solutions that led to Kevlar; DuPont describes Kevlar as about five times stronger than steel on an equal-weight basis.',
+ research:'Carothers, W. H. (1938). Synthetic fiber. US Patent 2,130,948 (nylon, first made 1935 at DuPont). Kwolek, S. L. (1965) discovered the liquid-crystal solutions that led to Kevlar; DuPont describes Kevlar as about five times stronger than steel on an equal-weight basis.',
  dur:10,hint:'Add pairs of monomers and count the water released. Switch to Kevlar to see the ring version.',
  init:()=>({n:3,m:'nylon'}),
  watch(p){return {n:1+Math.min(5,Math.floor(p*6)),m:p<.6?'nylon':'kevlar'}},
@@ -617,7 +617,7 @@ SCENE({id:'total-synthesis-yield',name:'Yields multiply',tag:'Why long routes ar
 // Landmarks of synthesis, with the controversies.
 const C6_SYN=[
  {y:'1944',t:'Quinine (Woodward & Doering)',d:'A formal synthesis that relied on Rabe’s 1918 last step; disputed for decades until Williams repeated Rabe’s step in 2007.'},
- {y:'1944',t:'Asima Chatterjee, alkaloids',d:'First woman to earn a DSc from an Indian university; her work on vinca and other alkaloids led to an anti-epilepsy drug.'},
+ {y:'1944',t:'Asima Chatterjee, alkaloids',d:'First woman to earn a DSc from an Indian university; she studied vinca and other alkaloids and developed anti-epilepsy and anti-malarial drugs from plants.'},
  {y:'1954',t:'Strychnine (Woodward)',d:'Seven rings and six stereocentres, built in about 28 steps.'},
  {y:'1967',t:'Corey’s retrosynthesis',d:'A systematic logic for planning syntheses backwards; Nobel Prize 1990.'},
  {y:'1972',t:'Vitamin B₁₂ (Woodward, Eschenmoser)',d:'About 100 steps and roughly 100 chemists over a decade.'},

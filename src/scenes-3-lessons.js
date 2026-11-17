@@ -22,7 +22,7 @@ SOURCE('soddy-1913',{title:'Frederick Soddy (1913), Intra-atomic charge, Nature 
 SOURCE('aston-1919',{title:'Francis Aston (1919), A positive ray spectrograph, Philosophical Magazine 38: 707–714',url:'https://en.wikipedia.org/wiki/Mass_spectrometry'});
 SOURCE('ciaaw',{title:'IUPAC Commission on Isotopic Abundances and Atomic Weights (CIAAW)',url:'https://www.ciaaw.org/'});
 SOURCE('hevesy-1923',{title:'George de Hevesy (1923), The absorption and translocation of lead by plants, Biochemical Journal 17: 439–445'});
-SOURCE('libby-1949',{title:'Willard Libby et al. (1949), Age determination by radiocarbon content: checks with samples of known age, Science 110: 678–680',url:'https://en.wikipedia.org/wiki/Radiocarbon_dating'});
+SOURCE('libby-1949',{title:'James Arnold & Willard Libby (1949), Age determination by radiocarbon content: checks with samples of known age, Science 110: 678–680',url:'https://en.wikipedia.org/wiki/Radiocarbon_dating'});
 SOURCE('bohr-1913',{title:'Niels Bohr (1913), On the constitution of atoms and molecules, Philosophical Magazine 26: 1–25',url:'https://en.wikipedia.org/wiki/Bohr_model'});
 SOURCE('lewis-1916',{title:'Gilbert N. Lewis (1916), The atom and the molecule, Journal of the American Chemical Society 38: 762–785',url:'https://doi.org/10.1021/ja02261a002'});
 SOURCE('langmuir-1919',{title:'Irving Langmuir (1919), The arrangement of electrons in atoms and molecules, Journal of the American Chemical Society 41: 868–934'});

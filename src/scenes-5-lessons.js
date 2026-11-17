@@ -7,7 +7,7 @@ SOURCE('c5-vanthoff-1884',{title:'van ’t Hoff, J. H. (1884). Études de dynami
 SOURCE('c5-guldberg-waage',{title:'Guldberg, C. M. & Waage, P. (1864, 1867). Studies concerning affinity; Études sur les affinités chimiques. Christiania.'});
 SOURCE('c5-lechatelier-1884',{title:'Le Chatelier, H. L. (1884). Sur un énoncé général des lois des équilibres chimiques. Comptes rendus 99, 786–789.'});
 SOURCE('c5-williamson-1850',{title:'Williamson, A. W. (1850). Theory of ætherification. Philosophical Magazine 37, 350–356.'});
-SOURCE('c5-bodenstein',{title:'Bodenstein, M. (1899). Untersuchungen über die Zersetzung und Bildung von Jodwasserstoff. Zeitschrift für physikalische Chemie 29, 295–314.'});
+SOURCE('c5-bodenstein',{title:'Bodenstein, M. (1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 29, 295–314.'});
 SOURCE('c5-arrhenius-1887',{title:'Arrhenius, S. (1887). Über die Dissociation der in Wasser gelösten Stoffe. Zeitschrift für physikalische Chemie 1, 631–648.'});
 SOURCE('c5-sorensen-1909',{title:'Sørensen, S. P. L. (1909). Enzymstudien II. Über die Messung und die Bedeutung der Wasserstoffionenkonzentration bei enzymatischen Prozessen. Biochemische Zeitschrift 21, 131–304.'});
 SOURCE('c5-bronsted-1923',{title:'Brønsted, J. N. (1923). Einige Bemerkungen über den Begriff der Säuren und Basen. Recueil des Travaux Chimiques des Pays-Bas 42, 718–728.'});

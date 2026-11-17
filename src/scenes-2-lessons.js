@@ -1,6 +1,6 @@
 /* Chemistry era 2 · Atoms and weights: lessons, sources and connections. */
 SOURCE('c2-dalton-1808',{title:'Dalton, J. (1808). A New System of Chemical Philosophy, Part I. Manchester',url:'https://archive.org/details/newsystemofchemi01daltuoft'});
-SOURCE('c2-proust-1797',{title:'Proust, J.-L. (1797). Recherches sur le bleu de Prusse. Journal de Physique 45 (the law of definite proportions)'});
+SOURCE('c2-proust-1797',{title:'Proust, J.-L. (1790s). Recherches sur le bleu de Prusse. Journal de Physique (the law of definite proportions)'});
 SOURCE('c2-berzelius-1813',{title:'Berzelius, J. J. (1813–1814). Essay on the cause of chemical proportions, and on some circumstances relating to them. Annals of Philosophy 2–3'});
 SOURCE('c2-gay-lussac-1809',{title:'Gay-Lussac, J. L. (1809). Mémoire sur la combinaison des substances gazeuses, les unes avec les autres. Mémoires de la Société d’Arcueil 2'});
 SOURCE('c2-avogadro-1811',{title:'Avogadro, A. (1811). Essai d’une manière de déterminer les masses relatives des molécules élémentaires des corps. Journal de Physique 73'});

@@ -140,7 +140,7 @@ SCENE({id:'ir-spectroscopy',name:'Bonds as springs',tag:'Why each bond absorbs i
  definition:'Atoms joined by a bond vibrate like two masses on a spring. A stiffer spring or lighter atoms vibrate faster. A bond absorbs infrared light whose frequency matches its vibration, so each kind of bond leaves a dip at its own wavenumber (waves per centimetre).',
  example:'C–H vibrates near 3,000 cm⁻¹. Swap the hydrogen for deuterium, which is twice as heavy, and the reduced mass almost doubles, so the frequency drops by about √2 to near 2,200 cm⁻¹.',
  desc:'Two balls joined by a spring for the chosen bond, with its force constant and reduced mass. A wavenumber axis from 4,000 to 400 cm⁻¹, divided into regions, marks the calculated absorption and the range found in real molecules.',
- research:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions 90, 284–292. Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington (the first systematic catalogue of organic spectra). Wavenumber = (1/2πc)√(k/μ); the force constants are typical values and the real ranges are from standard correlation tables (Silverstein, Bassler & Morrill, 1963 onwards).',
+ research:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions 90, 284–292. Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington (the first systematic catalogue of organic spectra). Wavenumber = (1/2πc)√(k/μ); the force constants are typical values and the real ranges are from standard correlation tables (Silverstein & Bassler, 1963; later editions with Morrill).',
  dur:10,hint:'Compare C–H, C=O and C≡N: same carbon, stiffer bonds, higher wavenumber. Then swap H for D.',
  init:()=>({b:'CH',d:false}),
  watch(p){return {b:['CH','OH','CO','CN','CCl'][Math.min(4,Math.floor(p*5))],d:false}},
@@ -161,7 +161,7 @@ SCENE({id:'ir-spectroscopy',name:'Bonds as springs',tag:'Why each bond absorbs i
   const [ra1,rb1]=bd.real.split('–').map(Number),realD=lb==='D'?null:[ra1,rb1];
   if(realD)out+=R(Xw(Math.max(...realD)),y-44,Xw(Math.min(...realD))-Xw(Math.max(...realD)),6,C.green,'none',2);
   out+=L(Xw(wn),y-50,Xw(wn),y,C.coral,3)+Ci(Xw(wn),y-50,5,C.coral);
-  out+=T(300,345,`Calculated: ${Math.round(wn).toLocaleString('en-GB')} cm⁻¹${realD?` · real molecules: ${bd.real} cm⁻¹ (green bar)`:' · about 1/√2 of the C–H value'}`,15,C.ink);
+  out+=T(300,345,`Calculated: ${Math.round(wn).toLocaleString('en-GB')} cm⁻¹${realD?` · real molecules: ${bd.real} cm⁻¹ (green bar)`:` · about 1/√2 of the ${bd.n} value`}`,15,C.ink);
   return {svg:out,phase:'The spring picture is crude, since real bonds are not perfect springs and neighbouring atoms shift each band, but it explains the map every chemist uses: hydrogen stretches high, triple bonds next, then double bonds, then a crowded fingerprint region that is unique to each molecule.'};
  }});
 
@@ -175,7 +175,7 @@ SCENE({id:'ir-spectroscopy-match',name:'Reading an infrared spectrum',tag:'Match
  definition:'An infrared spectrum plots how much light gets through (transmittance) against wavenumber. Each dip is a bond absorbing. A strong, sharp dip near 1,700 cm⁻¹ means C=O; a broad dip from 3,200 to 3,600 means O–H held in hydrogen bonds.',
  example:'Ethanol has a broad O–H dip but no C=O. Propanone has a sharp C=O dip but no O–H. Ethanoic acid has both, and its O–H dip is so broad it swallows the C–H stretches.',
  desc:'A transmittance spectrum from 4,000 to 500 cm⁻¹. Press a dip to see which bond causes it. In Mystery mode the name is hidden: read the dips, then press the compound you think it is.',
- research:'Spectral Database for Organic Compounds (SDBS), National Institute of Advanced Industrial Science and Technology, Japan. Silverstein, R. M., Bassler, G. C. & Morrill, T. C. (1963 and later editions). Spectrometric Identification of Organic Compounds. Wiley. Band centres here are approximate liquid-film values; depths are illustrative.',
+ research:'Spectral Database for Organic Compounds (SDBS), National Institute of Advanced Industrial Science and Technology, Japan. Silverstein, R. M. & Bassler, G. C. (1963; later editions with Morrill, T. C.). Spectrometric Identification of Organic Compounds. Wiley. Band centres here are approximate liquid-film values; depths are illustrative.',
  dur:12,hint:'In Mystery, look first at 1,700 cm⁻¹ (C=O or not?) and then at 3,000–3,600 (O–H or not?). Two questions are enough here.',
  init:()=>({c:'ethanol',pk:-1,seed:5,guess:''}),
  watch(p){return {c:C7_IRK[Math.min(2,Math.floor(p*3))],pk:Math.floor((p*3%1)*4),seed:5,guess:''}},
@@ -344,7 +344,7 @@ const C7_NE=[[20,90.48],[21,.27],[22,9.25]],C7_V=2000,C7_R0=.15,C7_E=1.602177e-1
 const C7_rad=(m,B)=>Math.sqrt(2*m*C7_AMU*C7_V/C7_E)/B;
 const C7_mzAt=B=>C7_E*Math.pow(B*C7_R0,2)/(2*C7_V)/C7_AMU;
 SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turns out to be two kinds of atom',
- definition:'A magnetic-sector mass spectrometer, the kind Thomson and Aston used, turns molecules into ions, speeds them up with a voltage and bends them with a magnet (other designs sort ions by flight time or oscillating electric fields). Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
+ definition:'A magnetic-sector mass spectrometer, a design that goes back to Dempster in 1918, turns molecules into ions, speeds them up with a voltage and bends them with a magnet (other designs sort ions by flight time or oscillating electric fields). Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
  example:'In 1913 J. J. Thomson saw neon split into two traces, at mass 20 and mass 22: the first proof that a stable element can have isotopes. About 90% of neon is neon-20 and about 9% is neon-22.',
  desc:'An ion source on the left, a magnetic field region, and curved paths for neon-20, -21 and -22, drawn thicker for the more common ions. A slit and detector sit where only one radius reaches. On the right, the mass spectrum built by sweeping the field, with a marker at the m/z now being detected.',
  research:'Thomson, J. J. (1913). Bakerian Lecture: Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20. Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714 (Nobel Prize in Chemistry 1922). Dempster, A. J. (1918). A new method of positive ray analysis. Physical Review 11, 316–325. Natural neon abundances from IUPAC (90.48, 0.27, 9.25%). Ions accelerated through 2,000 V onto a 0.15 m radius.',
@@ -371,7 +371,7 @@ SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turn
   const sig=sp(mz);
   out+=counter(400,296,'tuned to m/z',mz.toFixed(2),C.green,82);
   out+=counter(488,296,'detector signal',sig<.05?'—':sig.toFixed(1)+'%',C.ink,82);
-  return {svg:out,phase:'Each radius depends on √m, so the isotopes land a few centimetres apart. Aston’s better instrument went on to find isotopes in most elements and to show that atomic masses are not exactly whole numbers, the mass defect that measures nuclear binding energy.'};
+  return {svg:out,phase:'Each radius depends on √m, so the isotopes land a centimetre or so apart. Aston’s better instrument went on to find isotopes in most elements and to show that atomic masses are not exactly whole numbers, the mass defect that measures nuclear binding energy.'};
  }});
 
 // Isotope patterns: convolve Cl (35/37) and Br (79/81) distributions.
@@ -439,7 +439,7 @@ SCENE({id:'crystallography',name:'Bragg’s law',tag:'X-rays reflect from planes
  definition:'Atoms in a crystal lie in regular planes. X-rays scattered from neighbouring planes add up only when the extra path, 2d sinθ, is a whole number of wavelengths: nλ = 2d sinθ. Measuring the angles of strong reflections gives the spacing d between planes, and from many reflections the positions of the atoms.',
  example:'With copper X-rays (λ = 1.5406 Å) and the (200) planes of rock salt, 2.82 Å apart, the first strong reflection comes at θ = 15.9°.',
  desc:'Two rows of atoms, an incoming X-ray beam and reflected beams. The extra path taken by the lower beam is highlighted and compared with the wavelength. A graph of reflected intensity against angle shows sharp peaks where Bragg’s law holds, with a marker at your angle.',
- research:'Friedrich, W., Knipping, P. & Laue, M. (1912). Interferenz-Erscheinungen bei Röntgenstrahlen. Sitzungsberichte der Bayerischen Akademie der Wissenschaften, 303–322. Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57. Bragg, W. H. & Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (Nobel Prize in Physics 1915). Intensity drawn for 12 planes.',
+ research:'Friedrich, W., Knipping, P. & Laue, M. (1912). Interferenz-Erscheinungen bei Röntgenstrahlen. Sitzungsberichte der Bayerischen Akademie der Wissenschaften, 303–322. Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57. Bragg, W. H. & Bragg, W. L. (1913). The reflection of X-rays by crystals. Proceedings of the Royal Society A 88, 428–438 (Nobel Prize in Physics 1915). Intensity drawn for 12 planes.',
  dur:11,hint:'Sweep the angle and watch the path difference: a reflection appears only when it equals λ, 2λ or 3λ. Then change the wavelength and see the peaks move.',
  init:()=>({th:15.9,lam:1.5406,d:2.82}),
  watch(p){return {th:Math.round(lerp(8,50,p)*10)/10,lam:1.5406,d:2.82}},
@@ -483,7 +483,7 @@ SCENE({id:'crystallography-lattice',name:'Unit cells',tag:'Count the atoms a cry
  definition:'A unit cell is a box that builds the whole crystal by repeating. The primitive cell is the smallest such box; crystallographers often use a larger conventional cell that shows the crystal’s symmetry, like the cubes drawn here (rock salt’s holds four formula units, its primitive cell one). Atoms on its corners, edges and faces are shared with neighbouring cells: a corner atom counts as 1/8, an edge atom 1/4, a face atom 1/2 and an atom inside counts whole. The count, the cell size and the atomic masses give the crystal’s density.',
  example:'Rock salt’s cubic cell holds 8 × 1/8 + 6 × 1/2 = 4 chloride ions and 12 × 1/4 + 1 = 4 sodium ions. With a cell 5.64 Å across, its density works out at 2.16 g/cm³, as measured.',
  desc:'A unit cell drawn in perspective for rock salt, caesium chloride or diamond, with each atom coloured by element. The count of shared atoms, the coordination number and the density calculated from the cell appear as readouts. The 3D view can be turned to see the lattice from any side.',
- research:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (rock salt and caesium-type halides). Bragg, W. H. & Bragg, W. L. (1913). The structure of the diamond. Nature 91, 557. Cell edges: NaCl 5.64 Å, CsCl 4.12 Å, diamond 3.567 Å; density = (atoms × molar mass)/(Avogadro’s number × a³).',
+ research:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (rock salt and other alkali halides). Bragg, W. H. & Bragg, W. L. (1913). The structure of the diamond. Nature 91, 557. Cell edges: NaCl 5.64 Å, CsCl 4.12 Å, diamond 3.567 Å; density = (atoms × molar mass)/(Avogadro’s number × a³).',
  dur:12,hint:'Show the neighbours of the central atom: six in rock salt, eight in caesium chloride, four in diamond. Then turn the 3D view.',
  init:()=>({c:'NaCl',nb:true}),
  watch(p){return {c:['NaCl','CsCl','diamond'][Math.min(2,Math.floor(p*3))],nb:(p*3%1)>.4}},
@@ -554,8 +554,8 @@ function C7_pHstrong(v,ca=.1,va=25,cb=.1){const V=va+v,d=(ca*va-cb*v)/V,h=d/2+Ma
 function C7_pHweak(v,ka=1.75e-5,ca=.1,va=25,cb=.1){const V=va+v,A=ca*va/V,Na=cb*v/V;let lo=-14,hi=0;for(let i=0;i<70;i++){const m=(lo+hi)/2,h=Math.pow(10,m),f=h+Na-A*ka/(ka+h)-C7_KW/h;if(f>0)hi=m;else lo=m}return -(lo+hi)/2}
 function C7_phth(pH){const u=clamp((pH-8.2)/1.8,0,1);return u<=0?'#f4f8fb':`rgb(${Math.round(244-(244-211)*u)},${Math.round(248-(248-53)*u)},${Math.round(251-(251-155)*u)})`}
 SCENE({id:'titration',name:'Titrating to the end point',tag:'One drop turns the flask pink',
- definition:'In a titration you add a solution of known concentration from a burette, a drop at a time, until it has exactly reacted with a measured volume of the unknown. An indicator changes colour at the end point. For a strong acid and a strong base the pH leaps from about 4 to about 10 within a single drop at the equivalence point.',
- example:'25.00 mL of 0.100 mol/dm³ hydrochloric acid needs 25.00 mL of 0.100 mol/dm³ sodium hydroxide. At 24.95 mL the pH is 4.0; one more drop, at 25.05 mL, takes it to 10.0, and phenolphthalein turns pink.',
+ definition:'In a titration you add a solution of known concentration from a burette, a drop at a time, until it has exactly reacted with a measured volume of the unknown. An indicator changes colour at the end point. For a strong acid and a strong base the pH leaps from about 4 to about 10 within a drop or two at the equivalence point.',
+ example:'25.00 mL of 0.100 mol/dm³ hydrochloric acid needs 25.00 mL of 0.100 mol/dm³ sodium hydroxide. At 24.95 mL the pH is 4.0; two more drops, at 25.05 mL, take it to 10.0, and phenolphthalein turns pink.',
  desc:'A burette over a conical flask. The flask stays colourless until the pH passes about 8.2, then turns pink. A graph of pH against volume added fills in as you add base, with the equivalence point at 25.00 mL marked.',
  research:'Gay-Lussac, J. L. (1824, 1832) standardised volumetric analysis with the burette. Mohr, K. F. (1855). Lehrbuch der chemisch-analytischen Titrirmethode (the clamped burette). Sørensen, S. P. L. (1909). Biochemische Zeitschrift 21, 131–304 (the pH scale). pH calculated exactly from the charge balance with Kw = 1.0 × 10⁻¹⁴ at 25 °C. In a real lab, wear eye protection: sodium hydroxide and hydrochloric acid are irritants even at 0.1 mol/dm³.',
  dur:12,hint:'Add 5 mL at a time until 20 mL, then slow to drops near 25 mL. The colour should change on a single drop.',
@@ -577,7 +577,7 @@ SCENE({id:'titration',name:'Titrating to the end point',tag:'One drop turns the 
   const pts=[];for(let v=0;v<=s.v+1e-9;v=Math.round((v+.05)*100)/100)pts.push([pl.X(v),pl.Y(C7_pHstrong(v))]);
   out+=C7_poly(pts,C.coral,2.2)+Ci(pl.X(s.v),pl.Y(pH),5,C.coral);
   out+=T(405,350,`pH ${pH.toFixed(2)}${pH>=8.2?' · pink: end point reached':''}`,16,pH>=8.2?C.coral:C.ink);
-  return {svg:out,phase:pH>=8.2&&s.v<26?'The flask turned pink within a drop of 25.00 mL: so few hydrogen ions are left near equivalence that one drop of base swings the pH by six units.':'Far from equivalence the pH barely moves, because there is still plenty of acid (or, past 25 mL, plenty of base) to swamp each drop.'};
+  return {svg:out,phase:pH>=8.2&&s.v<26?'The flask turned pink within a drop of 25.00 mL: so few hydrogen ions are left near equivalence that one drop of base swings the pH by three units.':'Far from equivalence the pH barely moves, because there is still plenty of acid (or, past 25 mL, plenty of base) to swamp each drop.'};
  }});
 
 // Strong against weak acid, and which indicator changes inside the steep jump.

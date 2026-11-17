@@ -104,7 +104,7 @@ const C2_MGO=24.305/15.999;
 SCENE({id:'dalton-atoms-definite',name:'Definite proportions',tag:'Extra reactant is simply left over',
  definition:'A compound always contains its elements in the same proportion by mass, however it is made (Joseph Proust, 1797). Any excess of one reactant is left over unreacted; the one that runs out first is the limiting reactant.',
  example:'Magnesium oxide is always about 3 parts magnesium to 2 parts oxygen by mass (24.3 : 16.0). Burn 6 g of magnesium and it takes about 3.95 g of oxygen, whatever extra oxygen is around.',
- research:['Proust, J.-L. (1797). Recherches sur le bleu de Prusse. Journal de Physique 45: the law of definite proportions.','Berthollet, C.-L. (1803). Essai de statique chimique: argued that compositions vary. Some solids, now called non-stoichiometric (e.g. Fe₀.₉₅O), do vary slightly.'],
+ research:['Proust, J.-L. (1790s). Recherches sur le bleu de Prusse. Journal de Physique: the law of definite proportions.','Berthollet, C.-L. (1803). Essai de statique chimique: argued that compositions vary. Some solids, now called non-stoichiometric (e.g. Fe₀.₉₅O), do vary slightly.'],
  desc:'Bars for the magnesium and oxygen supplied, how much of each reacts, the magnesium oxide formed and what is left over, with the fixed 24.3 : 16.0 mass ratio.',
  dur:10,hint:'Change the grams of magnesium and oxygen supplied. The oxide always forms in the same ratio; whichever reactant runs out first limits how much forms.',
  init:()=>({mg:6,o:6}),
@@ -281,7 +281,7 @@ SCENE({id:'electrolysis-davy',name:'Davy’s new metals',tag:'What forms depends
 const C2_MET=[['Ag','silver','Ag⁺',107.868,1,'#c7ccd1'],['Cu','copper','Cu²⁺',63.546,2,'#c47a3d'],['Zn','zinc','Zn²⁺',65.38,2,'#9aa8b4'],['Al','aluminium','Al³⁺',26.982,3,'#b5c0c8']];
 SCENE({id:'electrolysis-faraday',name:'Faraday’s laws',tag:'Charge counts atoms',
  definition:'Michael Faraday showed in 1833–34 that the mass of an element released by electrolysis is proportional to the charge passed, and that the same charge releases amounts in proportion to the element’s atomic weight divided by its charge. Each mole of electrons is 96 485 coulombs, the Faraday constant.',
- example:'1 ampere for 1 hour (3600 C) through four cells in series deposits about 4.03 g of silver, 1.19 g of copper, 1.22 g of zinc and 0.34 g of aluminium. Copper ions need two electrons each, aluminium ions three.',
+ example:'1 ampere for 1 hour (3600 C) through four cells in series deposits about 4.02 g of silver, 1.19 g of copper, 1.22 g of zinc and 0.34 g of aluminium. Copper ions need two electrons each, aluminium ions three.',
  research:['Faraday, M. (1834). Experimental researches in electricity, seventh series. Philosophical Transactions 124: the laws of electrolysis, and the words electrode, anode, cathode, ion and electrolyte, coined with William Whewell.','Mohr, P. J. et al. (2018 CODATA): Faraday constant F = Nₐ e ≈ 96 485.33 C/mol.'],
  desc:'Four electrolysis cells in series carry the same charge. Bars show the mass of each metal deposited and the moles of metal, which stand in the ratio 1 : ½ : ½ : ⅓.',
  dur:10,hint:'Change the current and time. The same charge passes through every cell; the moles deposited depend only on each ion’s charge, and the grams on its atomic weight too.',
@@ -303,7 +303,7 @@ SCENE({id:'electrolysis-faraday',name:'Faraday’s laws',tag:'Charge counts atom
 
 /* ======================= Lesson: The ideal gas ======================= */
 SCENE({id:'ideal-gas',name:'The ideal gas law',tag:'pV = nRT ties the gas laws together',
- definition:'Boyle’s law (pressure and volume), Charles’s and Gay-Lussac’s laws (volume and temperature) and Avogadro’s hypothesis (volume and amount) combine into one equation, pV = nRT, first written by Émile Clapeyron in 1834. R is the gas constant, 8.314 J per mole per kelvin.',
+ definition:'Boyle’s law (pressure and volume), Charles’s and Gay-Lussac’s laws (volume and temperature) and Avogadro’s hypothesis (volume and amount) combine into one equation, pV = nRT. Émile Clapeyron joined the pressure, volume and temperature laws in 1834; the per-mole form, with one R for every gas, came later. R is the gas constant, 8.314 J per mole per kelvin.',
  example:'One mole of gas at 0 °C (273.15 K) and 101.325 kPa occupies 22.41 L. Warm it to 25 °C at 100 kPa and it fills 24.79 L.',
  research:['Clapeyron, É. (1834). Mémoire sur la puissance motrice de la chaleur. Journal de l’École Polytechnique 14: the combined gas law.','Gay-Lussac, J. L. (1802). Recherches sur la dilatation des gaz et des vapeurs. Annales de Chimie 43 (crediting unpublished work by Jacques Charles). See Physics In Motion for the kinetic theory behind it.'],
  desc:'A gas in a cylinder under a piston. Sliders set the pressure, temperature and amount; the volume follows pV = nRT, and a note names the law that applies when only one input changes.',
@@ -466,7 +466,7 @@ SCENE({id:'flame-spectra-sun',name:'The chemistry of the stars',tag:'Dark lines 
   if(s.he){const x=C2_nmx(50,500,587.6);out+=R(x-14,210,28,28,'#0d1418','none',3)+R(x-1.5,210,3,28,C2_wl(587.6),'none',0)+TF(x-20,229,'helium 587.6 nm, from the Sun’s edge',13,C.ink,'end')}
     out+=R(50,250,500,96,'#fff',C.grid,10);
   const txt={hot:['A hot gas gives bright lines on a dark background.','Sodium: two yellow lines at 589.0 and 589.6 nm.'],white:['A hot solid or dense gas gives a continuous rainbow.','No lines: every wavelength is present.'],absorb:['Pass white light through cooler sodium vapour:','dark lines appear exactly where sodium emits.'],sun:['The Sun’s cooler outer layers absorb: D = sodium, C and F = hydrogen,','H and K = calcium, b = magnesium. Chemistry at 150 million km.']}[s.m];
-  out+=TF(300,284,txt[0],13,C.ink)+TF(300,308,txt[1],13,C.ink)+TF(300,334,'Wavelengths: NIST; Fraunhofer’s letters as he used them',13,C.muted);
+  out+=TF(300,284,txt[0],13,C.ink)+TF(300,308,txt[1],13,C.ink)+TF(300,334,'Wavelengths: NIST; Fraunhofer’s letters, with K added later',13,C.muted);
   return {svg:out,phase:{hot:'A hot sodium flame shines at 589.0 and 589.6 nm only.',white:'White light contains every wavelength.',absorb:'Cool sodium vapour absorbs exactly the wavelengths it emits when hot: Kirchhoff’s law.',sun:'Sunlight’s dark lines match elements in flames: the Sun contains sodium, hydrogen, calcium, magnesium and iron.'}[s.m]+(s.he?' Helium’s line at 587.6 nm matched no known element in 1868.':'')};
  }});
 
@@ -489,7 +489,7 @@ SCENE({id:'atomic-weights',name:'Prout’s hypothesis',tag:'Are all atoms made o
   const [e,w]=C2_AW.find(a=>a[0]===s.e),near=Math.round(w);
   out+=R(80,262,440,94,'#fff',C.grid,10)+TB(300,288,`${e}: ${w} (nearest whole number ${near})`,16,C.ink);
   if(e==='Cl')out+=TF(300,312,'75.76% ³⁵Cl (34.969) + 24.24% ³⁷Cl (36.966)',13,C.ink)+TF(300,334,'= 26.49 + 8.96 = 35.45: an average of two isotopes',13,C.green);
-  else out+=TF(300,316,Math.abs(w-near)>.2?'Far from whole: a mixture of isotopes, found from 1913':'Close to whole: mostly a single isotope',13,C.ink)+TF(300,338,'Even single isotopes are not exactly whole (binding energy)',13,C.muted);
+  else out+=TF(300,316,Math.abs(w-near)>.2?'Far from whole: a mixture of isotopes, found from 1913':(e==='Ag'?'Close to whole by chance: a near-even mix of ¹⁰⁷Ag and ¹⁰⁹Ag':'Close to whole: mostly a single isotope'),13,C.ink)+TF(300,338,'Even single isotopes are not exactly whole (binding energy)',13,C.muted);
   return {svg:out,phase:`${e} has atomic weight ${w}, ${C2_n(Math.abs(w-near),3)} from ${near}. ${e==='Cl'?'Chlorine’s 35.45 is the average of chlorine-35 and chlorine-37, which Stas’s careful work in the 1860s could not have explained.':'Prout’s whole numbers fail for elements that are mixtures of isotopes.'}`};
  }});
 

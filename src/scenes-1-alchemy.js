@@ -287,7 +287,7 @@ SCENE({id:'boyle-law-credit',name:'Whose law is it?',tag:'Credit and collaborati
 /* ================================================================ phlogiston */
 const C1_PROC=[{k:'charcoal',n:'Burn charcoal',ph:['Charcoal is rich in phlogiston; burning releases','it into the air, leaving a little ash.'],ox:['Carbon combines with oxygen from the air','to make carbon dioxide: C + O₂ → CO₂.']},
  {k:'calcine',n:'Heat a metal in air',ph:['The metal loses its phlogiston and becomes','a dull powder, its “calx”.'],ox:['The metal combines with oxygen to make an','oxide: 2Hg + O₂ → 2HgO.']},
- {k:'smelt',n:'Smelt ore with charcoal',ph:['Charcoal gives its phlogiston back to the','calx, restoring the shiny metal.'],ox:['Carbon takes the oxygen away from the','oxide: 2ZnO + C → 2Zn + CO₂.']},
+ {k:'smelt',n:'Smelt ore with charcoal',ph:['Charcoal gives its phlogiston back to the','calx, restoring the shiny metal.'],ox:['Carbon takes the oxygen away from the','oxide: 2PbO + C → 2Pb + CO₂.']},
  {k:'jar',n:'Burn in a closed jar',ph:['The air becomes saturated with phlogiston','and can take no more, so the flame dies.'],ox:['The flame uses up much of the oxygen and','goes out before it is all gone.']}];
 SCENE({id:'phlogiston',name:'The phlogiston theory',tag:'Stahl’s explanation of burning',
  definition:'Georg Ernst Stahl (around 1700), building on Johann Becher, proposed that combustible things contain phlogiston, which they give off when they burn. The theory linked burning, rusting, smelting and breathing in one scheme, and most chemists accepted it for most of the eighteenth century.',
@@ -374,7 +374,7 @@ SCENE({id:'conservation-of-mass',name:'Lavoisier’s sealed vessel',tag:'Mass is
  on:{heat(s,v){s.heat=Number(v);return 'keep'},open(s){s.open=true;return 'keep'},reset(s){s.heat=0;s.open=false;return 'keep'}},
  draw(s){
   // 10 g tin; air in flask 1.50 g of which oxygen 0.35 g (≈23% by mass). Tin takes up to all the oxygen (illustrative).
-  const glass=80,tin0=10,air0=1.5,o2=.35,used=o2*s.heat,tin=tin0+used,air=air0-used,inflow=s.open?used:0,total=glass+tin+air+inflow;
+  const glass=80,tin0=10,air0=1.5,o2=.35,used=o2*s.heat,tin=tin0+used,air=air0-used,inflow=s.open?used*28.97/32:0,total=glass+tin+air+inflow;
   let out=heading('Weigh before you open',28);
   out+=L(170,140,170,320,C.dark,4)+P('M110 320H230',C.dark,4)+L(60,140,280,140,C.dark,4);
   out+=Ci(100,190,40,'#f6fbff',C.dark)+R(92,130,16,24,'#f6fbff',C.dark,3)+(s.open?'':R(88,124,24,8,C.dark,'none',2));
@@ -384,7 +384,7 @@ SCENE({id:'conservation-of-mass',name:'Lavoisier’s sealed vessel',tag:'Mass is
   out+=counter(320,124,'tin (and calx)',C1_f(tin,2)+' g',C.blue,115)+counter(445,124,'air inside',C1_f(air+inflow,2)+' g',C.purple,115);
   out+=C1_card(320,190,250,s.open?'Opened':'Sealed',s.open?'Fresh air rushed in to replace the oxygen the tin took, so the reading went up.':'The tin gains exactly what the air inside loses, so the total stays the same.',s.open?C.coral:C.green);
   out+=TF(320,330,'Glass 80 g; air 1.50 g (illustrative).',13,C.muted,'start');
-  return {svg:out,phase:s.open?`Opened after heating: the reading rose by ${C1_f(inflow,2)} g, the oxygen the tin had taken, now replaced by fresh air.`:`Sealed and ${Math.round(s.heat*100)}% heated: the tin has gained ${C1_f(used,2)} g, the air has lost ${C1_f(used,2)} g, and the total is still ${C1_f(total,2)} g.`};
+  return {svg:out,phase:s.open?`Opened after heating: the reading rose by ${C1_f(inflow,2)} g, as fresh air filled the space left by the ${C1_f(used,2)} g of oxygen the tin had taken.`:`Sealed and ${Math.round(s.heat*100)}% heated: the tin has gained ${C1_f(used,2)} g, the air has lost ${C1_f(used,2)} g, and the total is still ${C1_f(total,2)} g.`};
  }});
 
 // Balancing equations: count atoms and masses on both sides.
@@ -429,7 +429,7 @@ SCENE({id:'conservation-of-mass-people',name:'The Lavoisier laboratory',tag:'Mor
  definition:'The chemical revolution was a team effort. Marie-Anne Paulze Lavoisier drew the apparatus plates for the Traité, translated the leading defence of phlogiston so it could be answered, and recorded experiments. Mikhail Lomonosov had reached a similar conclusion about conservation decades earlier.',
  example:'The thirteen plates in Lavoisier’s 1789 Traité, showing the gasometer, balances and calorimeter in exact detail, are signed “Paulze Lavoisier sculpsit”.',
  desc:'Five cards on the people around the discovery of mass conservation; press each to read.',
- research:'Eagle, C. T. & Sloan, J. (1998). Marie Anne Paulze Lavoisier: the mother of modern chemistry. The Chemical Educator 3, 1–18. Kawashima, K. (2000). The issue of gender and science: a case study of Madame Lavoisier. Pyle, A. (ed.) on Lomonosov; Menshutkin, B. N. (1952). Russia’s Lomonosov. Princeton University Press. The Lagrange remark is reported second-hand.',
+ research:'Eagle, C. T. & Sloan, J. (1998). Marie Anne Paulze Lavoisier: the mother of modern chemistry. The Chemical Educator 3, 1–18. Kawashima, K. (2000). The issue of gender and science: a case study of Madame Lavoisier. Menshutkin, B. N. (1952). Russia’s Lomonosov. Princeton University Press. The Lagrange remark is reported second-hand.',
  dur:11,hint:'Press each card. Historians still debate how much of the Lavoisier laboratory’s work should be credited to Marie-Anne.',
  init:()=>({k:'plates'}),
  watch(p){return {k:C1_ML[Math.min(4,Math.floor(p*5))].k}},
@@ -499,7 +499,7 @@ SCENE({id:'oxygen-discovery-names',name:'A new language for chemistry',tag:'The 
  definition:'In 1787 Guyton de Morveau, Lavoisier, Berthollet and Fourcroy published a new system of chemical names: a compound’s name would say what it was made of. Old names like “oil of vitriol” and “flowers of zinc” gave way to names like sulphuric acid and zinc oxide.',
  example:'“Oxygen” means “acid-former”: Lavoisier thought all acids contained it. Humphry Davy showed in 1810 that muriatic acid (hydrochloric acid, HCl) contains no oxygen, so the name preserves a mistake.',
  desc:'Six old names; press each to reveal its 1787 replacement and modern formula, with a note on the meaning of “oxygen”.',
- research:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris. Davy, H. (1811). On a combination of oxymuriatic gas and oxygene gas. Philosophical Transactions 101, 155–162.',
+ research:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris. Davy, H. (1810). Researches on the oxymuriatic acid, its nature and combinations; and on the elements of the muriatic acid. Philosophical Transactions 100, 231–257.',
  dur:10,hint:'Press each old name to reveal the new one. Guess first: the new names were designed to be guessable from composition.',
  init:()=>({shown:[]}),
  watch(p){return {shown:C1_NAMES.slice(0,Math.min(6,Math.floor(p*7))).map(n=>n.old)}},

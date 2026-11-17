@@ -853,7 +853,7 @@ SCENE({id:'boyle-law-credit',name:'Whose law is it?',tag:'Credit and collaborati
 /* ================================================================ phlogiston */
 const C1_PROC=[{k:'charcoal',n:'Burn charcoal',ph:['Charcoal is rich in phlogiston; burning releases','it into the air, leaving a little ash.'],ox:['Carbon combines with oxygen from the air','to make carbon dioxide: C + O₂ → CO₂.']},
  {k:'calcine',n:'Heat a metal in air',ph:['The metal loses its phlogiston and becomes','a dull powder, its “calx”.'],ox:['The metal combines with oxygen to make an','oxide: 2Hg + O₂ → 2HgO.']},
- {k:'smelt',n:'Smelt ore with charcoal',ph:['Charcoal gives its phlogiston back to the','calx, restoring the shiny metal.'],ox:['Carbon takes the oxygen away from the','oxide: 2ZnO + C → 2Zn + CO₂.']},
+ {k:'smelt',n:'Smelt ore with charcoal',ph:['Charcoal gives its phlogiston back to the','calx, restoring the shiny metal.'],ox:['Carbon takes the oxygen away from the','oxide: 2PbO + C → 2Pb + CO₂.']},
  {k:'jar',n:'Burn in a closed jar',ph:['The air becomes saturated with phlogiston','and can take no more, so the flame dies.'],ox:['The flame uses up much of the oxygen and','goes out before it is all gone.']}];
 SCENE({id:'phlogiston',name:'The phlogiston theory',tag:'Stahl’s explanation of burning',
  definition:'Georg Ernst Stahl (around 1700), building on Johann Becher, proposed that combustible things contain phlogiston, which they give off when they burn. The theory linked burning, rusting, smelting and breathing in one scheme, and most chemists accepted it for most of the eighteenth century.',
@@ -940,7 +940,7 @@ SCENE({id:'conservation-of-mass',name:'Lavoisier’s sealed vessel',tag:'Mass is
  on:{heat(s,v){s.heat=Number(v);return 'keep'},open(s){s.open=true;return 'keep'},reset(s){s.heat=0;s.open=false;return 'keep'}},
  draw(s){
   // 10 g tin; air in flask 1.50 g of which oxygen 0.35 g (≈23% by mass). Tin takes up to all the oxygen (illustrative).
-  const glass=80,tin0=10,air0=1.5,o2=.35,used=o2*s.heat,tin=tin0+used,air=air0-used,inflow=s.open?used:0,total=glass+tin+air+inflow;
+  const glass=80,tin0=10,air0=1.5,o2=.35,used=o2*s.heat,tin=tin0+used,air=air0-used,inflow=s.open?used*28.97/32:0,total=glass+tin+air+inflow;
   let out=heading('Weigh before you open',28);
   out+=L(170,140,170,320,C.dark,4)+P('M110 320H230',C.dark,4)+L(60,140,280,140,C.dark,4);
   out+=Ci(100,190,40,'#f6fbff',C.dark)+R(92,130,16,24,'#f6fbff',C.dark,3)+(s.open?'':R(88,124,24,8,C.dark,'none',2));
@@ -950,7 +950,7 @@ SCENE({id:'conservation-of-mass',name:'Lavoisier’s sealed vessel',tag:'Mass is
   out+=counter(320,124,'tin (and calx)',C1_f(tin,2)+' g',C.blue,115)+counter(445,124,'air inside',C1_f(air+inflow,2)+' g',C.purple,115);
   out+=C1_card(320,190,250,s.open?'Opened':'Sealed',s.open?'Fresh air rushed in to replace the oxygen the tin took, so the reading went up.':'The tin gains exactly what the air inside loses, so the total stays the same.',s.open?C.coral:C.green);
   out+=TF(320,330,'Glass 80 g; air 1.50 g (illustrative).',13,C.muted,'start');
-  return {svg:out,phase:s.open?`Opened after heating: the reading rose by ${C1_f(inflow,2)} g, the oxygen the tin had taken, now replaced by fresh air.`:`Sealed and ${Math.round(s.heat*100)}% heated: the tin has gained ${C1_f(used,2)} g, the air has lost ${C1_f(used,2)} g, and the total is still ${C1_f(total,2)} g.`};
+  return {svg:out,phase:s.open?`Opened after heating: the reading rose by ${C1_f(inflow,2)} g, as fresh air filled the space left by the ${C1_f(used,2)} g of oxygen the tin had taken.`:`Sealed and ${Math.round(s.heat*100)}% heated: the tin has gained ${C1_f(used,2)} g, the air has lost ${C1_f(used,2)} g, and the total is still ${C1_f(total,2)} g.`};
  }});
 
 // Balancing equations: count atoms and masses on both sides.
@@ -995,7 +995,7 @@ SCENE({id:'conservation-of-mass-people',name:'The Lavoisier laboratory',tag:'Mor
  definition:'The chemical revolution was a team effort. Marie-Anne Paulze Lavoisier drew the apparatus plates for the Traité, translated the leading defence of phlogiston so it could be answered, and recorded experiments. Mikhail Lomonosov had reached a similar conclusion about conservation decades earlier.',
  example:'The thirteen plates in Lavoisier’s 1789 Traité, showing the gasometer, balances and calorimeter in exact detail, are signed “Paulze Lavoisier sculpsit”.',
  desc:'Five cards on the people around the discovery of mass conservation; press each to read.',
- research:'Eagle, C. T. & Sloan, J. (1998). Marie Anne Paulze Lavoisier: the mother of modern chemistry. The Chemical Educator 3, 1–18. Kawashima, K. (2000). The issue of gender and science: a case study of Madame Lavoisier. Pyle, A. (ed.) on Lomonosov; Menshutkin, B. N. (1952). Russia’s Lomonosov. Princeton University Press. The Lagrange remark is reported second-hand.',
+ research:'Eagle, C. T. & Sloan, J. (1998). Marie Anne Paulze Lavoisier: the mother of modern chemistry. The Chemical Educator 3, 1–18. Kawashima, K. (2000). The issue of gender and science: a case study of Madame Lavoisier. Menshutkin, B. N. (1952). Russia’s Lomonosov. Princeton University Press. The Lagrange remark is reported second-hand.',
  dur:11,hint:'Press each card. Historians still debate how much of the Lavoisier laboratory’s work should be credited to Marie-Anne.',
  init:()=>({k:'plates'}),
  watch(p){return {k:C1_ML[Math.min(4,Math.floor(p*5))].k}},
@@ -1065,7 +1065,7 @@ SCENE({id:'oxygen-discovery-names',name:'A new language for chemistry',tag:'The 
  definition:'In 1787 Guyton de Morveau, Lavoisier, Berthollet and Fourcroy published a new system of chemical names: a compound’s name would say what it was made of. Old names like “oil of vitriol” and “flowers of zinc” gave way to names like sulphuric acid and zinc oxide.',
  example:'“Oxygen” means “acid-former”: Lavoisier thought all acids contained it. Humphry Davy showed in 1810 that muriatic acid (hydrochloric acid, HCl) contains no oxygen, so the name preserves a mistake.',
  desc:'Six old names; press each to reveal its 1787 replacement and modern formula, with a note on the meaning of “oxygen”.',
- research:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris. Davy, H. (1811). On a combination of oxymuriatic gas and oxygene gas. Philosophical Transactions 101, 155–162.',
+ research:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris. Davy, H. (1810). Researches on the oxymuriatic acid, its nature and combinations; and on the elements of the muriatic acid. Philosophical Transactions 100, 231–257.',
  dur:10,hint:'Press each old name to reveal the new one. Guess first: the new names were designed to be guessable from composition.',
  init:()=>({shown:[]}),
  watch(p){return {shown:C1_NAMES.slice(0,Math.min(6,Math.floor(p*7))).map(n=>n.old)}},
@@ -1109,7 +1109,7 @@ SOURCE('c1-scheele-1777',{title:'Scheele, C. W. (1777). Chemische Abhandlung von
 SOURCE('c1-priestley-1775',{title:'Priestley, J. (1775). Experiments and Observations on Different Kinds of Air, vol. 2. London.'});
 SOURCE('c1-kuhn-1962',{title:'Kuhn, T. S. (1962). The Structure of Scientific Revolutions, ch. 6. University of Chicago Press.'});
 SOURCE('c1-nomenclature-1787',{title:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris.'});
-SOURCE('c1-davy-1811',{title:'Davy, H. (1811). On a combination of oxymuriatic gas and oxygene gas. Philosophical Transactions 101, 155–162.'});
+SOURCE('c1-davy-1811',{title:'Davy, H. (1810). Researches on the oxymuriatic acid, its nature and combinations; and on the elements of the muriatic acid. Philosophical Transactions 100, 231–257.'});
 
 LESSON({id:'four-elements',name:'Four elements and their rivals',short:'Elements',stage:'alchemy',year:'c. 450 BCE–1661',level:'Introduction',
  why:'For two thousand years matter was explained by a few elements defined by qualities; Boyle’s critique in 1661 opened the way to elements defined by experiment.',
@@ -1277,7 +1277,7 @@ const C2_MGO=24.305/15.999;
 SCENE({id:'dalton-atoms-definite',name:'Definite proportions',tag:'Extra reactant is simply left over',
  definition:'A compound always contains its elements in the same proportion by mass, however it is made (Joseph Proust, 1797). Any excess of one reactant is left over unreacted; the one that runs out first is the limiting reactant.',
  example:'Magnesium oxide is always about 3 parts magnesium to 2 parts oxygen by mass (24.3 : 16.0). Burn 6 g of magnesium and it takes about 3.95 g of oxygen, whatever extra oxygen is around.',
- research:['Proust, J.-L. (1797). Recherches sur le bleu de Prusse. Journal de Physique 45: the law of definite proportions.','Berthollet, C.-L. (1803). Essai de statique chimique: argued that compositions vary. Some solids, now called non-stoichiometric (e.g. Fe₀.₉₅O), do vary slightly.'],
+ research:['Proust, J.-L. (1790s). Recherches sur le bleu de Prusse. Journal de Physique: the law of definite proportions.','Berthollet, C.-L. (1803). Essai de statique chimique: argued that compositions vary. Some solids, now called non-stoichiometric (e.g. Fe₀.₉₅O), do vary slightly.'],
  desc:'Bars for the magnesium and oxygen supplied, how much of each reacts, the magnesium oxide formed and what is left over, with the fixed 24.3 : 16.0 mass ratio.',
  dur:10,hint:'Change the grams of magnesium and oxygen supplied. The oxide always forms in the same ratio; whichever reactant runs out first limits how much forms.',
  init:()=>({mg:6,o:6}),
@@ -1454,7 +1454,7 @@ SCENE({id:'electrolysis-davy',name:'Davy’s new metals',tag:'What forms depends
 const C2_MET=[['Ag','silver','Ag⁺',107.868,1,'#c7ccd1'],['Cu','copper','Cu²⁺',63.546,2,'#c47a3d'],['Zn','zinc','Zn²⁺',65.38,2,'#9aa8b4'],['Al','aluminium','Al³⁺',26.982,3,'#b5c0c8']];
 SCENE({id:'electrolysis-faraday',name:'Faraday’s laws',tag:'Charge counts atoms',
  definition:'Michael Faraday showed in 1833–34 that the mass of an element released by electrolysis is proportional to the charge passed, and that the same charge releases amounts in proportion to the element’s atomic weight divided by its charge. Each mole of electrons is 96 485 coulombs, the Faraday constant.',
- example:'1 ampere for 1 hour (3600 C) through four cells in series deposits about 4.03 g of silver, 1.19 g of copper, 1.22 g of zinc and 0.34 g of aluminium. Copper ions need two electrons each, aluminium ions three.',
+ example:'1 ampere for 1 hour (3600 C) through four cells in series deposits about 4.02 g of silver, 1.19 g of copper, 1.22 g of zinc and 0.34 g of aluminium. Copper ions need two electrons each, aluminium ions three.',
  research:['Faraday, M. (1834). Experimental researches in electricity, seventh series. Philosophical Transactions 124: the laws of electrolysis, and the words electrode, anode, cathode, ion and electrolyte, coined with William Whewell.','Mohr, P. J. et al. (2018 CODATA): Faraday constant F = Nₐ e ≈ 96 485.33 C/mol.'],
  desc:'Four electrolysis cells in series carry the same charge. Bars show the mass of each metal deposited and the moles of metal, which stand in the ratio 1 : ½ : ½ : ⅓.',
  dur:10,hint:'Change the current and time. The same charge passes through every cell; the moles deposited depend only on each ion’s charge, and the grams on its atomic weight too.',
@@ -1476,7 +1476,7 @@ SCENE({id:'electrolysis-faraday',name:'Faraday’s laws',tag:'Charge counts atom
 
 /* ======================= Lesson: The ideal gas ======================= */
 SCENE({id:'ideal-gas',name:'The ideal gas law',tag:'pV = nRT ties the gas laws together',
- definition:'Boyle’s law (pressure and volume), Charles’s and Gay-Lussac’s laws (volume and temperature) and Avogadro’s hypothesis (volume and amount) combine into one equation, pV = nRT, first written by Émile Clapeyron in 1834. R is the gas constant, 8.314 J per mole per kelvin.',
+ definition:'Boyle’s law (pressure and volume), Charles’s and Gay-Lussac’s laws (volume and temperature) and Avogadro’s hypothesis (volume and amount) combine into one equation, pV = nRT. Émile Clapeyron joined the pressure, volume and temperature laws in 1834; the per-mole form, with one R for every gas, came later. R is the gas constant, 8.314 J per mole per kelvin.',
  example:'One mole of gas at 0 °C (273.15 K) and 101.325 kPa occupies 22.41 L. Warm it to 25 °C at 100 kPa and it fills 24.79 L.',
  research:['Clapeyron, É. (1834). Mémoire sur la puissance motrice de la chaleur. Journal de l’École Polytechnique 14: the combined gas law.','Gay-Lussac, J. L. (1802). Recherches sur la dilatation des gaz et des vapeurs. Annales de Chimie 43 (crediting unpublished work by Jacques Charles). See Physics In Motion for the kinetic theory behind it.'],
  desc:'A gas in a cylinder under a piston. Sliders set the pressure, temperature and amount; the volume follows pV = nRT, and a note names the law that applies when only one input changes.',
@@ -1639,7 +1639,7 @@ SCENE({id:'flame-spectra-sun',name:'The chemistry of the stars',tag:'Dark lines 
   if(s.he){const x=C2_nmx(50,500,587.6);out+=R(x-14,210,28,28,'#0d1418','none',3)+R(x-1.5,210,3,28,C2_wl(587.6),'none',0)+TF(x-20,229,'helium 587.6 nm, from the Sun’s edge',13,C.ink,'end')}
     out+=R(50,250,500,96,'#fff',C.grid,10);
   const txt={hot:['A hot gas gives bright lines on a dark background.','Sodium: two yellow lines at 589.0 and 589.6 nm.'],white:['A hot solid or dense gas gives a continuous rainbow.','No lines: every wavelength is present.'],absorb:['Pass white light through cooler sodium vapour:','dark lines appear exactly where sodium emits.'],sun:['The Sun’s cooler outer layers absorb: D = sodium, C and F = hydrogen,','H and K = calcium, b = magnesium. Chemistry at 150 million km.']}[s.m];
-  out+=TF(300,284,txt[0],13,C.ink)+TF(300,308,txt[1],13,C.ink)+TF(300,334,'Wavelengths: NIST; Fraunhofer’s letters as he used them',13,C.muted);
+  out+=TF(300,284,txt[0],13,C.ink)+TF(300,308,txt[1],13,C.ink)+TF(300,334,'Wavelengths: NIST; Fraunhofer’s letters, with K added later',13,C.muted);
   return {svg:out,phase:{hot:'A hot sodium flame shines at 589.0 and 589.6 nm only.',white:'White light contains every wavelength.',absorb:'Cool sodium vapour absorbs exactly the wavelengths it emits when hot: Kirchhoff’s law.',sun:'Sunlight’s dark lines match elements in flames: the Sun contains sodium, hydrogen, calcium, magnesium and iron.'}[s.m]+(s.he?' Helium’s line at 587.6 nm matched no known element in 1868.':'')};
  }});
 
@@ -1662,7 +1662,7 @@ SCENE({id:'atomic-weights',name:'Prout’s hypothesis',tag:'Are all atoms made o
   const [e,w]=C2_AW.find(a=>a[0]===s.e),near=Math.round(w);
   out+=R(80,262,440,94,'#fff',C.grid,10)+TB(300,288,`${e}: ${w} (nearest whole number ${near})`,16,C.ink);
   if(e==='Cl')out+=TF(300,312,'75.76% ³⁵Cl (34.969) + 24.24% ³⁷Cl (36.966)',13,C.ink)+TF(300,334,'= 26.49 + 8.96 = 35.45: an average of two isotopes',13,C.green);
-  else out+=TF(300,316,Math.abs(w-near)>.2?'Far from whole: a mixture of isotopes, found from 1913':'Close to whole: mostly a single isotope',13,C.ink)+TF(300,338,'Even single isotopes are not exactly whole (binding energy)',13,C.muted);
+  else out+=TF(300,316,Math.abs(w-near)>.2?'Far from whole: a mixture of isotopes, found from 1913':(e==='Ag'?'Close to whole by chance: a near-even mix of ¹⁰⁷Ag and ¹⁰⁹Ag':'Close to whole: mostly a single isotope'),13,C.ink)+TF(300,338,'Even single isotopes are not exactly whole (binding energy)',13,C.muted);
   return {svg:out,phase:`${e} has atomic weight ${w}, ${C2_n(Math.abs(w-near),3)} from ${near}. ${e==='Cl'?'Chlorine’s 35.45 is the average of chlorine-35 and chlorine-37, which Stas’s careful work in the 1860s could not have explained.':'Prout’s whole numbers fail for elements that are mixtures of isotopes.'}`};
  }});
 
@@ -1723,7 +1723,7 @@ SCENE({id:'atomic-weights-karlsruhe',name:'The Karlsruhe Congress',tag:'Agreeing
 
 /* Chemistry era 2 · Atoms and weights: lessons, sources and connections. */
 SOURCE('c2-dalton-1808',{title:'Dalton, J. (1808). A New System of Chemical Philosophy, Part I. Manchester',url:'https://archive.org/details/newsystemofchemi01daltuoft'});
-SOURCE('c2-proust-1797',{title:'Proust, J.-L. (1797). Recherches sur le bleu de Prusse. Journal de Physique 45 (the law of definite proportions)'});
+SOURCE('c2-proust-1797',{title:'Proust, J.-L. (1790s). Recherches sur le bleu de Prusse. Journal de Physique (the law of definite proportions)'});
 SOURCE('c2-berzelius-1813',{title:'Berzelius, J. J. (1813–1814). Essay on the cause of chemical proportions, and on some circumstances relating to them. Annals of Philosophy 2–3'});
 SOURCE('c2-gay-lussac-1809',{title:'Gay-Lussac, J. L. (1809). Mémoire sur la combinaison des substances gazeuses, les unes avec les autres. Mémoires de la Société d’Arcueil 2'});
 SOURCE('c2-avogadro-1811',{title:'Avogadro, A. (1811). Essai d’une manière de déterminer les masses relatives des molécules élémentaires des corps. Journal de Physique 73'});
@@ -1794,7 +1794,7 @@ WORD(
  {key:'ion-chem',title:'Ion',aliases:['ion','ions'],linkContext:'electrolysis',scene:'electrolysis-faraday',here:'An atom or group of atoms carrying an electric charge because it has lost or gained electrons. Faraday named ions in 1834, from the Greek for “going”.',contrast:'Faraday did not know about electrons; he named the particles that carry current through a solution.',example:'Cu²⁺ has lost two electrons; Cl⁻ has gained one.'},
  {key:'faraday-constant',title:'Faraday constant',aliases:['Faraday constant','Faraday’s laws'],linkContext:'electrolysis',scene:'electrolysis-faraday',here:'The charge on one mole of electrons: about 96 485 coulombs per mole.',contrast:'Equal to the Avogadro constant times the charge of one electron.',example:'3600 C (1 A for 1 hour) is about 0.037 mol of electrons.'},
  {key:'ideal-gas-law',title:'Ideal gas law',aliases:['ideal gas law','pV = nRT','gas constant'],linkContext:'ideal-gas',scene:'ideal-gas',here:'pV = nRT: pressure times volume equals amount times the gas constant (8.314 J/mol·K) times the absolute temperature.',contrast:'Exact only for an imaginary ideal gas; real gases depart at high pressure and low temperature.',example:'One mole at 273.15 K and 101.325 kPa: 22.41 L.'},
- {key:'compression-factor',title:'Compression factor',aliases:['compression factor','real gas'],linkContext:'ideal-gas',scene:'ideal-gas-real',here:'Z = pV ÷ nRT, which is 1 for an ideal gas, below 1 when attractions dominate and above 1 when molecular size dominates.',contrast:'A measure of how far a gas is from ideal, not of how dense it is.',example:'Carbon dioxide near 320 K and 100 bar: Z ≈ 0.5.'},
+ {key:'compression-factor',title:'Compression factor',aliases:['compression factor','real gas'],linkContext:'ideal-gas',scene:'ideal-gas-real',here:'Z = pV ÷ nRT, which is 1 for an ideal gas, below 1 when attractions dominate and above 1 when molecular size dominates.',contrast:'A measure of how far a gas is from ideal, not of how dense it is.',example:'Carbon dioxide near 320 K and 100 bar: Z ≈ 0.4.'},
  {key:'flame-test',title:'Flame test',aliases:['flame test','flame tests'],linkContext:'flame-spectra',scene:'flame-spectra',here:'Identifying an element by the colour it gives a hot flame.',contrast:'Quick but rough: some colours are similar, and sodium’s yellow hides others.',example:'Lithium: crimson; sodium: yellow; potassium: lilac.'},
  {key:'spectroscope',title:'Spectroscope',aliases:['spectroscope','spectroscopy'],linkContext:'flame-spectra',scene:'flame-spectra-spectroscope',here:'An instrument that spreads light into its wavelengths with a prism or grating so its lines can be seen and measured.',contrast:'It does not need a sample to be pure: each element’s lines can be picked out of a mixture.',example:'Kirchhoff and Bunsen found caesium and rubidium with one.'},
  {key:'absorption-spectrum',title:'Absorption spectrum',aliases:['absorption spectrum','absorption lines','dark lines','Fraunhofer lines'],linkContext:'flame-spectra',scene:'flame-spectra-sun',here:'A continuous spectrum crossed by dark lines where a cooler gas in front has absorbed particular wavelengths.',contrast:'The dark lines sit exactly where the same gas, hot, would give bright lines.',example:'The Sun’s dark D lines at 589 nm are sodium.'},
@@ -1842,7 +1842,7 @@ SOURCE('soddy-1913',{title:'Frederick Soddy (1913), Intra-atomic charge, Nature 
 SOURCE('aston-1919',{title:'Francis Aston (1919), A positive ray spectrograph, Philosophical Magazine 38: 707–714',url:'https://en.wikipedia.org/wiki/Mass_spectrometry'});
 SOURCE('ciaaw',{title:'IUPAC Commission on Isotopic Abundances and Atomic Weights (CIAAW)',url:'https://www.ciaaw.org/'});
 SOURCE('hevesy-1923',{title:'George de Hevesy (1923), The absorption and translocation of lead by plants, Biochemical Journal 17: 439–445'});
-SOURCE('libby-1949',{title:'Willard Libby et al. (1949), Age determination by radiocarbon content: checks with samples of known age, Science 110: 678–680',url:'https://en.wikipedia.org/wiki/Radiocarbon_dating'});
+SOURCE('libby-1949',{title:'James Arnold & Willard Libby (1949), Age determination by radiocarbon content: checks with samples of known age, Science 110: 678–680',url:'https://en.wikipedia.org/wiki/Radiocarbon_dating'});
 SOURCE('bohr-1913',{title:'Niels Bohr (1913), On the constitution of atoms and molecules, Philosophical Magazine 26: 1–25',url:'https://en.wikipedia.org/wiki/Bohr_model'});
 SOURCE('lewis-1916',{title:'Gilbert N. Lewis (1916), The atom and the molecule, Journal of the American Chemical Society 38: 762–785',url:'https://doi.org/10.1021/ja02261a002'});
 SOURCE('langmuir-1919',{title:'Irving Langmuir (1919), The arrangement of electrons in atoms and molecules, Journal of the American Chemical Society 41: 868–934'});
@@ -2078,7 +2078,7 @@ const C3_CURIE=[['Uranium metal','pure, the reference',2.3,'the reference'],['Pi
 SCENE({id:'radioactivity',name:'Something more active than uranium',tag:'Marie Curie measures rays',
  definition:'In 1896 Henri Becquerel found that uranium salts fog a photographic plate in the dark. Marie Curie measured this activity precisely with an electrometer designed by Pierre Curie and her own method, and found that some uranium ores were more active than pure uranium, so they had to hold a new, more active element.',
  example:'Natural chalcolite, a uranium mineral, gave 5.2 units of current. Chalcolite she made herself from pure chemicals gave only 0.9. The natural mineral had to contain something else: polonium and radium, announced in 1898.',
- desc:'An electrometer reading for each of four samples Marie Curie measured, in units of 10⁻¹¹ ampere, as reported in her 1898 note, against the reading for uranium metal.',
+ desc:'An electrometer reading for each of four samples Marie Curie measured, in units of 10⁻¹¹ ampere, as she reported them, against the reading for uranium metal.',
  research:['Becquerel, H. (1896). Sur les radiations émises par phosphorescence. Comptes rendus 122, 420–421.','Curie, M. (1898). Rayons émis par les composés de l’uranium et du thorium. Comptes rendus 126, 1101–1103.','Curie, P. & Curie, M. (1898). Sur une substance nouvelle radio-active, contenue dans la pechblende. Comptes rendus 127, 175–178.','Curie, P., Curie, M. & Bémont, G. (1898). Sur une nouvelle substance fortement radio-active, contenue dans la pechblende. Comptes rendus 127, 1215–1217.'],
  dur:11,hint:'Measure each sample. Which ones are more active than their uranium can explain?',
  init:()=>({k:2,done:[0,1,2]}),
@@ -2177,7 +2177,7 @@ SCENE({id:'atomic-number',name:'Moseley’s X-rays',tag:'Counting the elements',
 const C3_PAIRS=[['Ar','K',39.95,39.10,18,19,'Argon is heavier than potassium, yet must come first: argon is a noble gas, potassium an alkali metal.'],['Co','Ni',58.93,58.69,27,28,'Cobalt is slightly heavier than nickel; Moseley’s X-rays confirmed cobalt comes first.'],['Te','I',127.60,126.90,52,53,'Tellurium is heavier than iodine, but iodine clearly belongs with chlorine and bromine.']];
 const C3_MISSING=[[43,'Tc','technetium','1937, made in a cyclotron'],[61,'Pm','promethium','1945, from fission products'],[72,'Hf','hafnium','1923, Coster and von Hevesy'],[75,'Re','rhenium','1925, Noddack, Tacke and Berg']];
 SCENE({id:'atomic-number-gaps',name:'Order fixed, gaps counted',tag:'What atomic number settled',
- definition:'Ordering by atomic weight had three awkward swaps, which Mendeleev made on chemical grounds. Atomic number confirmed every one of them, and showed exactly how many elements were still missing between hydrogen and uranium.',
+ definition:'Ordering by atomic weight had three awkward swaps, which chemists made on chemical grounds. Atomic number confirmed every one of them, and showed exactly how many elements were still missing between hydrogen and uranium.',
  example:'Moseley’s method left gaps at Z = 43, 61, 72 and 75. Hafnium (72) was found in 1923 by Dirk Coster and George de Hevesy, who looked for its X-ray lines because the gap told them where to look.',
  desc:'Choose a pair ordered wrongly by weight, or show the missing atomic numbers of 1914 and when each was filled.',
  research:['Moseley, H. G. J. (1914). The high-frequency spectra of the elements. Part II. Philosophical Magazine 27, 703–713.','Coster, D. & Hevesy, G. (1923). On the missing element of atomic number 72. Nature 111, 79.','Noddack, W., Tacke, I. & Berg, O. (1925). Die Ekamangane. Naturwissenschaften 13, 567–574.','Perrier, C. & Segrè, E. (1937). Some chemical properties of element 43. Journal of Chemical Physics 5, 712–716.'],
@@ -2201,7 +2201,7 @@ SCENE({id:'atomic-number-gaps',name:'Order fixed, gaps counted',tag:'What atomic
     out+=R(x,y,24,40,miss?C.coralp:C.pale,miss?C.coral:'none',4)+TF(x+12,y+25,String(z),13,miss?C.coral:C.ink)}
    C3_MISSING.forEach(([z,sym,n,when],i)=>{out+=TBF(40,226+i*24,z+' '+sym,14,C.coral,'start')+TF(110,226+i*24,n+': '+when,13,C.ink,'start')});
   }
-  return {svg:out,phase:s.v==='gaps'?'Atomic number turned “how many elements are there?” into a question with a definite answer: 92 up to uranium, with four places then empty.':'Chemistry put these pairs in the right order before physics could say why; atomic number explained it.'};
+  return {svg:out,phase:s.v==='gaps'?'Atomic number turned “how many elements are there?” into a question with a definite answer: 92 up to uranium, with only a few places then empty: the four shown here, and 85 and 87 further on.':'Chemistry put these pairs in the right order before physics could say why; atomic number explained it.'};
  }});
 
 SCENE({id:'atomic-number-nucleus',name:'Z is the nuclear charge',tag:'Protons, and later neutrons',
@@ -2256,7 +2256,7 @@ SCENE({id:'isotopes-aston',name:'Aston’s mass spectrograph',tag:'Why chlorine 
  definition:'In 1913 J. J. Thomson found that neon has two kinds of atom, of mass 20 and 22. In 1919 Francis Aston built a mass spectrograph that sorted ions by mass, and found that most elements are mixtures of isotopes whose masses are close to whole numbers.',
  example:'Chlorine’s atomic weight, 35.45, is not a whole number because natural chlorine is about 75.8% chlorine-35 and 24.2% chlorine-37.',
  desc:'Two peaks for chlorine-35 and chlorine-37, with a slider for the share of chlorine-37. The weighted average is compared with chlorine’s measured atomic weight.',
- research:['Thomson, J. J. (1913). Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20.','Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714.','Aston, F. W. (1920). The constitution of the elements. Nature 104, 393.','IUPAC CIAAW, isotopic compositions of the elements (chlorine).'],
+ research:['Thomson, J. J. (1913). Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20.','Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714.','Aston, F. W. (1919). The constitution of the elements. Nature 104, 393.','IUPAC CIAAW, isotopic compositions of the elements (chlorine).'],
  dur:10,hint:'Slide the share of chlorine-37 until the average matches 35.45.',
  init:()=>({p37:10}),
  watch(p){return {p37:Math.round(smooth(Math.min(1,p*1.3))*24.2*10)/10}},
@@ -2282,7 +2282,7 @@ SCENE({id:'isotopes-uses',name:'Isotopes as tools',tag:'Tracers, heavy water and
  definition:'Because isotopes of an element behave almost identically in chemistry but can be told apart by mass or radioactivity, they became tools: tracers to follow atoms through living things, and clocks for dating.',
  example:'De Hevesy’s idea of a tracer is now used in hospital scans, where a small amount of a radioactive isotope shows where it collects in the body.',
  desc:'Three cards on how isotopes were turned into tools, with a picture for each: a plant taking up a tracer, the two hydrogen isotopes, and a carbon-14 decay curve.',
- research:['Hevesy, G. (1923). The absorption and translocation of lead by plants. Biochemical Journal 17, 439–445.','Urey, H. C., Brickwedde, F. G. & Murphy, G. M. (1932). A hydrogen isotope of mass 2. Physical Review 39, 164–165.','Libby, W. F. (1949). Age determination by radiocarbon content: checks with samples of known age. Science 110, 678–680.'],
+ research:['Hevesy, G. (1923). The absorption and translocation of lead by plants. Biochemical Journal 17, 439–445.','Urey, H. C., Brickwedde, F. G. & Murphy, G. M. (1932). A hydrogen isotope of mass 2. Physical Review 39, 164–165.','Arnold, J. R. & Libby, W. F. (1949). Age determination by radiocarbon content: checks with samples of known age. Science 110, 678–680.'],
  dur:9,hint:'Press each use to see how isotopes became tools.',
  init:()=>({u:'tracer'}),
  watch(p){return {u:['tracer','deut','date'][Math.min(2,Math.floor(p*3))]}},
@@ -2291,7 +2291,7 @@ SCENE({id:'isotopes-uses',name:'Isotopes as tools',tag:'Tracers, heavy water and
  draw(s){
   const d=C3_USES[s.u];let out=heading(d[0],26);
   d.slice(1).forEach((t,i)=>{out+=TF(330,90+i*22,t,13,C.ink,'start')});
-  if(s.u==='tracer'){out+=P('M160 300V150',C.green,4)+P('M160 220Q120 200 100 170M160 190Q200 170 220 140M160 160Q140 130 150 110',C.green,3);for(let i=0;i<9;i++){const t=i/8;out+=Ci(160+Math.sin(i)*6,300-t*150,4,C.coral)}out+=R(110,300,100,30,'#c9b48a','none',4)+TF(160,350,'roots in water with lead-210',13,C.muted)}
+  if(s.u==='tracer'){out+=P('M160 300V150',C.green,4)+P('M160 220Q120 200 100 170M160 190Q200 170 220 140M160 160Q140 130 150 110',C.green,3);for(let i=0;i<9;i++){const t=i/8;out+=Ci(160+Math.sin(i)*6,300-t*150,4,C.coral)}out+=R(110,300,100,30,'#c9b48a','none',4)+TF(160,350,'roots in water with lead-212',13,C.muted)}
   else if(s.u==='deut'){const atom=(x,lab,neu)=>Ci(x,180,9,C.coral)+(neu?Ci(x+12,180,9,'#9aa7b0'):'')+`<circle cx="${x+(neu?6:0)}" cy="180" r="48" fill="none" stroke="${C.line}" stroke-dasharray="4 4"/>`+Ci(x+(neu?6:0)+48,180,5,C.blue)+TF(x+(neu?6:0),262,lab,13,C.ink);out+=atom(110,'hydrogen-1',0)+atom(240,'deuterium',1)}
   else{const A=C3_axes(60,90,240,180,[0,30000],[0,100],{xt:[[0,'0'],[11460,'11,460'],[28650,'28,650']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'years',yl:'% left'});out+=A.svg+P(C3_path(range(31).map(i=>[A.X(i*1000),A.Y(100*Math.pow(.5,i*1000/5730))])),C.coral,2.5)+Ci(A.X(5730),A.Y(50),5,C.ink)+TF(A.X(5730)+6,A.Y(50)-6,'5,730 years',13,C.ink,'start')}
   return {svg:out,phase:'Soddy’s idea that one element can come in several weights opened the way to tracers, heavy water and radiocarbon dating.'};
@@ -2396,7 +2396,7 @@ WORD(
  {key:'group-chem',title:'Group',aliases:['group of the table'],linkContext:'periodic-table',scene:'periodic-table',here:'A column of the periodic table. Elements in a group have the same number of outer electrons and similar chemistry.',contrast:'A period is a row.'},
  {key:'period-chem',title:'Period',aliases:['row of the table'],linkContext:'electron-shells',scene:'electron-shells-subshells',here:'A row of the periodic table. Each new period starts when electrons begin a new shell.',example:'Period 4 runs from potassium to krypton: 18 elements.'},
  {key:'ionisation-energy',title:'Ionisation energy',aliases:['ionisation energy','first ionisation energy'],linkContext:'periodic-table',scene:'periodic-table-trends',here:'The energy needed to remove one electron from an atom in the gas phase, usually given in electronvolts (eV).',example:'Removing the outer electron from sodium takes 5.14 eV; from neon, 21.56 eV.'},
- {key:'noble-gas',title:'Noble gas',aliases:['noble gas','noble gases','inert gas','inert gases','rare gases'],linkContext:'noble-gases',scene:'noble-gases-column',here:'Helium, neon, argon, krypton, xenon and radon: gases with full outer shells that react very little.',contrast:'“Inert” is too strong: xenon and krypton form compounds, first shown by Neil Bartlett in 1962.'},
+ {key:'noble-gas',title:'Noble gas',aliases:['noble gas','noble gases','inert gas','inert gases','rare gases'],linkContext:'noble-gases',scene:'noble-gases-column',here:'Helium, neon, argon, krypton, xenon and radon: gases with full outer shells that react very little.',contrast:'“Inert” is too strong: xenon and krypton form compounds; Neil Bartlett made the first, a xenon compound, in 1962.'},
  {key:'emission-spectrum',title:'Emission spectrum',aliases:['emission spectrum','spectral lines','spectral line'],linkContext:'noble-gases',scene:'noble-gases-spectra',here:'The set of colours (wavelengths) a hot gas of an element gives out: a fingerprint of the element.',example:'Helium’s yellow line at 587.6 nm was seen in the Sun before helium was found on Earth.'},
  {key:'radioactivity-word',title:'Radioactivity',aliases:['radioactivity','radioactive'],linkContext:'radioactivity',scene:'radioactivity',here:'The spontaneous breaking-down of unstable atomic nuclei, giving off radiation and turning into other elements.',example:'Uranium slowly decays, through a chain of other elements, to lead.'},
  {key:'half-life',title:'Half-life',aliases:['half-life','half-lives'],linkContext:'radioactivity',scene:'radioactivity-half-life',here:'The time for half of the atoms in a radioactive sample to decay. It is the same whatever the size of the sample.',example:'Radon-222 has a half-life of 3.82 days; carbon-14, 5,730 years.'},
@@ -2541,11 +2541,11 @@ SCENE({id:'lewis-structures-cube',name:'Lewis’s cubical atom',tag:'The model b
    out+=TBF(220,330,`${names[s.n-1]}: ${s.n} outer electron${s.n>1?'s':''}`,15,C.ink);
    out+=C4_wrap(410,100,s.n===8?'All eight corners full: a stable, unreactive shell, as in neon.':`${8-s.n} corner${8-s.n>1?'s':''} empty. The atom gains, loses or shares electrons to fill them.`,24,13,C.ink);
    ph=`${names[s.n-1]} has ${s.n} outer electrons on the corners of its cube.`}
-  else if(s.v==='single'){const a=110;out+=C4_cube(170,235,a,[0,1,3,4,5,6,7],C.blue,[5,7])+C4_cube(170+a,235-a,a,[0,1,2,3,4,5,6],'#3a8a48',[0,2]);
+  else if(s.v==='single'){const a=110;out+=C4_cube(170,235,a,[0,1,2,3,4,5,6,7],C.blue,[5,7])+C4_cube(170+a,235-a,a,[0,1,2,3,4,5,6,7],'#3a8a48',[0,2]);
    out+=TBF(170,330,'Cl',15,C.ink)+TBF(280,330,'Cl',15,C.ink);
    out+=C4_wrap(410,100,'Two chlorine cubes share one edge. Each has 7 electrons of its own; the 2 corners on the shared edge count for both, so each sees 8.',24,13,C.ink);
    ph='An edge shared between two cubes: one shared pair, a single bond (Cl₂).'}
-  else if(s.v==='double'){const a=110;out+=C4_cube(160,200,a,[1,3,5,7,0,2],C.blue,[1,3,5,7])+C4_cube(160+a,200,a,[0,2,4,6,1,3],'#3a8a48',[0,2,4,6]);
+  else if(s.v==='double'){const a=110;out+=C4_cube(160,200,a,[0,1,2,3,4,5,6,7],C.blue,[1,3,5,7])+C4_cube(160+a,200,a,[0,1,2,3,4,5,6,7],'#3a8a48',[0,2,4,6]);
    out+=TBF(160,330,'O',15,C.ink)+TBF(270,330,'O',15,C.ink);
    out+=C4_wrap(410,100,'Two oxygen cubes share a face. Each has 6 electrons; the 4 shared corners count for both, so each sees 8: a double bond.',24,13,C.ink);
    ph='A face shared between two cubes: two shared pairs, a double bond (O₂).'}
@@ -2576,7 +2576,7 @@ SCENE({id:'lewis-structures-formal-charge',name:'Formal charge and resonance',ta
  on:{m(s,v){s.m=v;s.k=0;s.hy=false;return 'keep'},k(s,v){const n=C4_FCM[s.m].S.length;s.k=Math.min(n-1,Number(v));s.hy=false;return 'keep'},hy(s){s.hy=!s.hy;return 'keep'}},
  draw(s){
   const m=C4_FCM[s.m],k=Math.min(m.S.length-1,s.k),st=m.S[k],fc=C4_fc(m,st),A=m.a;let out=heading(`${m.n}: ${s.hy?'resonance hybrid':'structure '+'ABC'[k]}`,28);
-  m.b.forEach(([i,j],b)=>{const a=A[i],c=A[j];if(s.hy){const avg=sum(m.S.map(t=>t.o[b]))/m.S.length,lo=Math.floor(avg);out+=C4_bond(a[1],a[2],c[1],c[2],avg>lo?lo+1:lo,C.ink,20,20,avg>lo);
+  m.b.forEach(([i,j],b)=>{const a=A[i],c=A[j];if(s.hy){const fa=t=>sum(C4_fc(m,t).map(Math.abs)),fmin=Math.min(...m.S.map(fa)),SS=m.S.filter(t=>fa(t)===fmin),avg=sum(SS.map(t=>t.o[b]))/SS.length,lo=Math.floor(avg);out+=C4_bond(a[1],a[2],c[1],c[2],avg>lo?lo+1:lo,C.ink,20,20,avg>lo);
     const dx=c[1]-a[1],dy=c[2]-a[2],d=Math.hypot(dx,dy);out+=TF((a[1]+c[1])/2-dy/d*22,(a[2]+c[2])/2+dx/d*22+4,avg%1?(Math.abs(avg-4/3)<.01?'1⅓':'1½'):String(avg),13,C.blue)}
    else out+=C4_bond(a[1],a[2],c[1],c[2],st.o[b],C.ink)});
   const used=A.map(()=>[]);
@@ -2610,15 +2610,16 @@ SCENE({id:'ionic-covalent',name:'From covalent to ionic',tag:'One continuum, not
   const ax=150,bx=350,y=160,px=lerp(250,bx-6,ion);
   out+=`<ellipse cx="${fmt(px)}" cy="${y}" rx="${fmt(lerp(78,46,ion))}" ry="38" fill="${C.pale}" opacity=".85"/>`;
   out+=C4_atom(ax,y,la,30)+C4_atom(bx,y,lb,30)+Ci(px-6,y-42,4.5,C.ink)+Ci(px+6,y-42,4.5,C.ink);
-  const q=ion>.5?['+','−']:s.d>.05?['δ+','δ−']:['',''];out+=TBF(ax,y-46,q[0],16,C.coral)+TBF(bx+38,y-30,q[1],16,C.blue);
+  const q=ion>.5&&s.k!=='HF'?['+','−']:s.d>.05?['δ+','δ−']:['',''];out+=TBF(ax,y-46,q[0],16,C.coral)+TBF(bx+38,y-30,q[1],16,C.blue);
   // ionic-character bar
   const x0=60,w=480,yb=270;out+=R(x0,yb,w,18,'#fff',C.line,4)+R(x0,yb,w*ion,18,C.blue,'none',4);
   [[.4,'0.4'],[1.7,'1.7']].forEach(([d,l])=>{const xx=x0+w*C4_ion(d);out+=L(xx,yb-6,xx,yb+24,C.muted,1.5,'stroke-dasharray="3 3"')+TF(xx,yb+38,'Δ '+l,13,C.muted)});
   out+=TF(x0,yb-10,'non-polar',13,C.muted,'start')+TF(x0+w*.45,yb-10,'polar covalent',13,C.muted)+TF(x0+w,yb-10,'mostly ionic',13,C.muted,'end');
   out+=TBF(300,340,`About ${Math.round(ion*100)}% ionic character (Pauling’s estimate)`,15,C.ink);
-  const cls=s.d<.4?'non-polar covalent':s.d<1.7?'polar covalent':'mostly ionic';
+  const cls=s.d<.4?'non-polar covalent':s.d<1.7||s.k==='HF'?'polar covalent':'mostly ionic';
   let ph=`A difference of ${s.d.toFixed(2)} gives a ${cls} bond, about ${Math.round(ion*100)}% ionic by Pauling’s formula.`;
   if(s.k==='HCl')ph+=' The measured dipole of HCl suggests about 18%, so the formula is a rough guide.';
+  if(s.k==='HF')ph+=' The measured dipole of HF suggests about 41%, and HF is a molecule, not a salt: the 1.7 cut-off is only a rough guide.';
   return {svg:out,phase:ph};
  }});
 
@@ -2890,7 +2891,7 @@ SCENE({id:'hydrogen-bonds',name:'Hydrogen bonds',tag:'Water’s anomalous boilin
 const C4_RHO=[[-10,.99815],[-5,.99930],[0,.99984],[2,.99994],[4,.99997],[6,.99994],[8,.99985],[10,.99970],[15,.99910],[20,.99821],[25,.99705],[30,.99565]];
 function C4_rho(t){for(let i=1;i<C4_RHO.length;i++){if(t<=C4_RHO[i][0]){const [a,ra]=C4_RHO[i-1],[b,rb]=C4_RHO[i];return lerp(ra,rb,(t-a)/(b-a))}}return C4_RHO[C4_RHO.length-1][1]}
 SCENE({id:'hydrogen-bonds-ice',name:'Why ice floats',tag:'Densest at 4 °C',
- definition:'Liquid water is densest at about 4 °C. On freezing, hydrogen bonds lock each molecule to four neighbours in an open hexagonal lattice, so ice is about 9% less dense than water and floats. Most substances are denser as solids.',
+ definition:'Liquid water is densest at about 4 °C. On freezing, hydrogen bonds lock each molecule to four neighbours in an open hexagonal lattice, so ice is about 8% less dense than water and floats. Most substances are denser as solids.',
  example:'A lake cools from the top, but water below 4 °C stays at the surface and freezes there. The ice insulates the water beneath, which stays near 4 °C through winter.',
  desc:'The density of water from −10 °C (supercooled) to 30 °C, with its peak near 4 °C, and a beaker showing how deep an ice cube floats.',
  research:['Kell, G. S. (1975). Density, thermal expansivity, and compressibility of liquid water from 0° to 150 °C. Journal of Chemical and Engineering Data 20, 97–105.','Bernal, J. D. & Fowler, R. H. (1933). A theory of water and ionic solution, with particular reference to hydrogen and hydroxyl ions. Journal of Chemical Physics 1, 515–548.'],
@@ -2919,7 +2920,7 @@ const C4_tm=gc=>69.3+.41*gc;
 SCENE({id:'hydrogen-bonds-dna',name:'Hydrogen bonds in DNA',tag:'Two bonds or three',
  definition:'The two strands of DNA are held together by hydrogen bonds between bases: adenine pairs with thymine through two hydrogen bonds, guanine with cytosine through three. DNA richer in G–C pairs needs more heat to separate its strands, though stacking between neighbouring base pairs contributes much of that stability too.',
  example:'Marmur and Doty (1962) found that DNA’s melting temperature rises in a straight line with its G–C content: about 69 °C for pure A–T and 110 °C for pure G–C, in their salt solution.',
- desc:'A ten-pair stretch of DNA with dashed hydrogen bonds between partners. Press a pair to switch it between A–T and G–C; the G–C percentage and predicted melting temperature update.',
+ desc:'A ten-pair stretch standing in for long DNA, with dashed hydrogen bonds between partners. Press a pair to switch it between A–T and G–C; the G–C percentage and the melting temperature predicted for long DNA of that make-up update.',
  research:['Watson, J. D. & Crick, F. H. C. (1953). Molecular structure of nucleic acids. Nature 171, 737–738.','Marmur, J. & Doty, P. (1962). Determination of the base composition of deoxyribonucleic acid from its thermal denaturation temperature. Journal of Molecular Biology 5, 109–118.','Yakovchuk, P., Protozanova, E. & Frank-Kamenetskii, M. D. (2006). Base-stacking and base-pairing contributions into thermal stability of the DNA double helix. Nucleic Acids Research 34, 564–574.'],
  dur:12,hint:'Press base pairs to switch them, or use a preset. Count the dashed hydrogen bonds and watch the melting temperature.',
  init:()=>({gc:[0,1,0,0,1,0,1,0,0,1].map(Boolean)}),
@@ -2946,7 +2947,7 @@ const C4_EN={H:2.20,Li:.98,Be:1.57,B:2.04,C:2.55,N:3.04,O:3.44,F:3.98,Na:.93,Mg:
 const C4_GRID=[['H'],['Li','Be','B','C','N','O','F'],['Na','Mg','Al','Si','P','S','Cl'],['K','Ca','Ga','Ge','As','Se','Br']];
 function C4_heat(v){const t=clamp((v-.8)/3.2,0,1);return tint(C.blue,1-t*.85)}
 SCENE({id:'electronegativity',name:'Electronegativity',tag:'Who pulls the shared pair',
- definition:'Electronegativity measures how strongly an atom in a molecule attracts shared electrons. On Pauling’s scale it rises across each row of the periodic table and falls down each group: fluorine (3.98) is the highest, the alkali metals the lowest. The difference between two atoms predicts how polar their bond is.',
+ definition:'Electronegativity measures how strongly an atom in a molecule attracts shared electrons. On Pauling’s scale it rises across each row of the periodic table and generally falls down each group: fluorine (3.98) is the highest, the alkali metals the lowest. The difference between two atoms predicts how polar their bond is.',
  example:'Carbon (2.55) and hydrogen (2.20) differ by only 0.35, so C–H bonds are nearly non-polar; oxygen and hydrogen differ by 1.24, so O–H bonds are strongly polar.',
  desc:'Main-group elements of the first four rows shaded by Pauling electronegativity. Pick two to see the difference, the bond’s polarity and which atom takes the partial negative charge.',
  research:['Pauling, L. (1932). The nature of the chemical bond. IV. The energy of single bonds and the relative electronegativity of atoms. Journal of the American Chemical Society 54, 3570–3582.','Allred, A. L. (1961). Electronegativity values from thermochemical data. Journal of Inorganic and Nuclear Chemistry 17, 215–221 (the revised values used today).'],
@@ -2965,7 +2966,7 @@ SCENE({id:'electronegativity',name:'Electronegativity',tag:'Who pulls the shared
   out+=TF(px,96,`${C4_EN[a].toFixed(2)} and ${C4_EN[b].toFixed(2)}`,13,C.ink,'start')+TF(px,116,`difference ${d.toFixed(2)}`,13,C.ink,'start');
   out+=TF(px,140,cls,13,d<.4?C.green:d<1.7?C.blue:C.purple,'start');
   if(d>=.05)out+=C4_wrap(px,164,`${neg} takes the larger share: ${neg} is δ−, ${pos} is δ+.`,26,13,C.muted);
-  out+=C4_wrap(24,272,'Rises across a row, falls down a group. Pauling’s scale gives the lighter noble gases no value because they rarely form bonds.',60,13,C.muted);
+  out+=C4_wrap(24,272,'Rises across a row, mostly falls down a group. Pauling’s scale gives the lighter noble gases no value because they rarely form bonds.',60,13,C.muted);
   return {svg:out,phase:`${a}–${b}: difference ${d.toFixed(2)}, ${cls}.`};
  }});
 
@@ -3129,7 +3130,7 @@ SOURCE('c5-vanthoff-1884',{title:'van ’t Hoff, J. H. (1884). Études de dynami
 SOURCE('c5-guldberg-waage',{title:'Guldberg, C. M. & Waage, P. (1864, 1867). Studies concerning affinity; Études sur les affinités chimiques. Christiania.'});
 SOURCE('c5-lechatelier-1884',{title:'Le Chatelier, H. L. (1884). Sur un énoncé général des lois des équilibres chimiques. Comptes rendus 99, 786–789.'});
 SOURCE('c5-williamson-1850',{title:'Williamson, A. W. (1850). Theory of ætherification. Philosophical Magazine 37, 350–356.'});
-SOURCE('c5-bodenstein',{title:'Bodenstein, M. (1899). Untersuchungen über die Zersetzung und Bildung von Jodwasserstoff. Zeitschrift für physikalische Chemie 29, 295–314.'});
+SOURCE('c5-bodenstein',{title:'Bodenstein, M. (1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 29, 295–314.'});
 SOURCE('c5-arrhenius-1887',{title:'Arrhenius, S. (1887). Über die Dissociation der in Wasser gelösten Stoffe. Zeitschrift für physikalische Chemie 1, 631–648.'});
 SOURCE('c5-sorensen-1909',{title:'Sørensen, S. P. L. (1909). Enzymstudien II. Über die Messung und die Bedeutung der Wasserstoffionenkonzentration bei enzymatischen Prozessen. Biochemische Zeitschrift 21, 131–304.'});
 SOURCE('c5-bronsted-1923',{title:'Brønsted, J. N. (1923). Einige Bemerkungen über den Begriff der Säuren und Basen. Recueil des Travaux Chimiques des Pays-Bas 42, 718–728.'});
@@ -3314,7 +3315,7 @@ SCENE({id:'equilibrium',name:'Pushing an equilibrium',tag:'Le Chatelier’s prin
  example:'Squeeze the flask to half its volume and the brown NO₂ gets darker at once, then fades a little as some NO₂ pairs up into colourless N₂O₄, the side with fewer molecules.',
  desc:'A flask whose brown colour shows the amount of NO₂. Buttons add NO₂, remove NO₂ or halve or double the volume; a slider sets the temperature. Bars show the concentrations just after your change and at the new equilibrium, with the reaction quotient Q against K and an arrow for the direction of the shift.',
  research:'Guldberg, C. M. & Waage, P. (1864, 1867). Études sur les affinités chimiques. Le Chatelier, H. L. (1884). Sur un énoncé général des lois des équilibres chimiques. Comptes rendus 99, 786–789. Kc ≈ 4.6 × 10⁻³ mol/L at 298 K and ΔH° ≈ +57.2 kJ/mol from standard data tables (rounded). NO₂ is toxic: this is a demonstration done in sealed tubes.',
- dur:12,hint:'Try “Halve the volume” and watch the colour darken then partly fade. Then heat the flask: the reaction absorbs heat, so warming pushes it towards brown NO₂.',
+ dur:12,hint:'Try “Halve the volume”: the bars show NO₂ double, then fall part of the way back; the flask ends up darker. Then heat the flask: the reaction absorbs heat, so warming pushes it towards brown NO₂.',
  init:()=>({n0:.04,V:1,T:298,prev:null,last:''}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return [{n0:.04,V:1,T:298,prev:null,last:''},{n0:.04,V:.5,T:298,prev:{n0:.04,V:1,T:298},last:'Halved the volume'},{n0:.04,V:.5,T:340,prev:{n0:.04,V:.5,T:298},last:'Heated to 340 K'},{n0:.05,V:.5,T:340,prev:{n0:.04,V:.5,T:340,add:.02},last:'Added NO₂'}][k]},
  ui:[{b:'Add NO₂',act:'add'},{b:'Remove NO₂',act:'rem'},{b:'Halve the volume',act:'half'},{b:'Double the volume',act:'dbl'},
@@ -3390,7 +3391,7 @@ SCENE({id:'equilibrium-quotient',name:'Which way will it go?',tag:'The reaction 
  definition:'The reaction quotient Q has the same form as K but uses the concentrations you have right now. If Q is less than K the reaction runs forward; if Q is greater it runs back; if they are equal the mixture is already at equilibrium.',
  example:'Hydrogen and iodine with no HI: Q = 0, far below K = 54, so HI forms until [HI]² / ([H₂][I₂]) reaches 54.',
  desc:'Sliders set the starting amounts of H₂, I₂ and HI in a 1-litre vessel near 700 K. A gauge places Q against K on a log scale with an arrow for the direction. Paired bars compare the start with the equilibrium mixture.',
- research:'Bodenstein, M. (1894, 1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 13, 56–127; 29, 295–314. Taylor, A. H. & Crist, R. H. (1941). Journal of the American Chemical Society 63, 1381–1386 (K ≈ 54 at 698 K). The equilibrium is found by solving K(a − y)(b − y) = (c + 2y)².',
+ research:'Bodenstein, M. (1894, 1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 13, 56–127; 29, 295–314. Taylor, A. H. & Crist, R. H. (1941). Journal of the American Chemical Society 63 (K ≈ 54 at 698 K). The equilibrium is found by solving K(a − y)(b − y) = (c + 2y)².',
  dur:10,hint:'Start with only HI and see the reaction run backwards. Then give it a large excess of H₂ and watch nearly all the iodine get used up.',
  init:()=>({a:1,b:1,c:0}),
  watch(p){return p<.33?{a:1,b:1,c:0}:p<.66?{a:0,b:0,c:2}:{a:2,b:.5,c:0}},
@@ -3477,7 +3478,7 @@ SCENE({id:'acids-bases-definitions',name:'Three meanings of acid',tag:'Arrhenius
  }});
 
 /* Buffer against water: drops of 1.0 mol/L HCl, 0.05 mL each, into 100 mL. */
-function C5_buf(n){const add=n*5e-5,V=.1+n*5e-8;const water=add>0?C5_pH(add/V,1e8):7;const HA=.01+add,A=.01-add;const buf=A>0?4.76+Math.log10(A/HA):C5_pH((add-.01)/V,1e8);return {water,buf}}
+function C5_buf(n){const add=n*5e-5,V=.1+n*5e-5;const water=add>0?C5_pH(add/V,1e8):7;const HA=.01+add,A=.01-add;const buf=A>0?4.76+Math.log10(A/HA):C5_pH((add-.01)/V,1e8);return {water,buf}}
 SCENE({id:'acids-bases-buffer',name:'Holding pH steady',tag:'Buffers',
  definition:'A buffer is a mixture of a weak acid and its conjugate base. Added acid is mopped up by the base, and added alkali by the acid, so the pH barely moves. The Henderson–Hasselbalch equation gives its pH: pH = pKa + log₁₀([A⁻] / [HA]).',
  example:'Twenty drops of strong acid take 100 mL of water from pH 7 to about pH 2, but an ethanoate buffer only from 4.76 to 4.67.',
@@ -3511,7 +3512,7 @@ SCENE({id:'redox-batteries',name:'A cell from zinc and copper',tag:'The Daniell 
  research:'Volta, A. (1800). On the electricity excited by the mere contact of conducting substances of different kinds. Philosophical Transactions 90, 403–431. Daniell, J. F. (1836). On voltaic combinations. Philosophical Transactions 126, 107–124. Nernst, W. (1889). Zeitschrift für physikalische Chemie 4, 129–181. E° = +0.34 − (−0.76) = 1.10 V.',
  dur:10,hint:'Make the zinc solution strong and the copper solution weak: the voltage falls, because the products are piling up and the reactants running out.',
  init:()=>({zn:0,cu:0}),
- watch(p){return {zn:Number(lerp(-2,2,p).toFixed(1)),cu:Number(lerp(2,-2,p).toFixed(1))}},
+ watch(p){return {zn:Number(lerp(-3,.3,p).toFixed(1)),cu:Number(lerp(.3,-3,p).toFixed(1))}},
  ui:[{range:'zn',label:'Zn²⁺ concentration',min:-3,max:.3,step:.1,get:s=>s.zn,act:'zn',show:v=>C5_sci(10**Number(v),2)+' mol/L'},
   {range:'cu',label:'Cu²⁺ concentration',min:-3,max:.3,step:.1,get:s=>s.cu,act:'cu',show:v=>C5_sci(10**Number(v),2)+' mol/L'}],
  on:{zn(s,v){s.zn=Number(v)},cu(s,v){s.cu=Number(v)}},
@@ -3559,7 +3560,7 @@ SCENE({id:'redox-batteries-lithium',name:'The lithium-ion cell',tag:'Ions rockin
  example:'A phone cell runs at about 3.7 V and stores several times more energy per kilogram than a lead–acid car battery.',
  desc:'A cell drawn as graphite layers on the left and cobalt oxide layers on the right, with lithium ions as dots. A state-of-charge slider moves the ions between them; the voltage readout follows a typical discharge curve. Bars compare rough energy per kilogram for four battery types.',
  research:'Whittingham, M. S. (1976). Electrical energy storage and intercalation chemistry. Science 192, 1126–1127. Mizushima, K., Jones, P. C., Wiseman, P. J. & Goodenough, J. B. (1980). LixCoO₂: a new cathode material. Materials Research Bulletin 15, 783–789. Yoshino, A. et al. (1985), Japanese patent on the carbon anode cell; Sony commercialised it in 1991. Nobel Prize in Chemistry 2019. Energy densities are rough typical values; the voltage curve is illustrative. Cobalt mining raises serious labour and environmental concerns.',
- dur:10,hint:'Slide from full to empty and watch the ions move from graphite to oxide while the voltage sags from about 4.2 V to 3.0 V.',
+ dur:10,hint:'Slide from full to empty and watch the ions move from graphite to oxide while the voltage sags from about 4.2 V to below 3 V.',
  init:()=>({q:80}),
  watch(p){return {q:Math.round(lerp(100,0,smooth(p/.9)))}},
  ui:[{range:'q',label:'State of charge',min:0,max:100,step:1,get:s=>s.q,act:'q',show:v=>v+'%'}],
@@ -3630,7 +3631,7 @@ SCENE({id:'catalysis-haber',name:'Bread from air',tag:'Haber–Bosch: the great 
     ['Chemical weapons',C.coral,'Haber led Germany’s gas programme and oversaw the first large chlorine attack, at Ypres in April 1915. Clara Immerwahr, a chemist and his wife, opposed the work; she died by suicide days later.'],
     ['Exile',C.purple,'Haber, of Jewish descent, resigned his Berlin institute in 1933 under Nazi laws and died in exile in 1934. Explosives as well as fertiliser come from the same ammonia.']];
    cards.forEach(([t,col,body],i)=>{const y=52+i*104;out+=R(40,y,520,94,'#fff',col,10,'stroke-width="2"')+TBF(56,y+24,t,15,col,'start')+C5_lines(56,y+46,C5_wrap(body,80),13,C.ink,'start',17)});
-   return {svg:out,phase:'The same reaction feeds most of humanity and fed the explosives and gas of the First World War. Chemistry’s benefits and harms often share a flask.'}}
+   return {svg:out,phase:'The same reaction feeds about half of humanity and fed Germany’s explosives in the First World War, and its inventor also led the gas programme. Chemistry’s benefits and harms often share a flask.'}}
   let out=heading('N₂ + 3H₂ ⇌ 2NH₃   ΔH = −92 kJ/mol',26);
   const x0=70,y0=56,w=300,h=230;
   for(let i=0;i<30;i++)for(let j=0;j<20;j++){const T=200+i*400/30+400/60,lp=1+j*2/20+.05,y=C5_haber(T,10**lp);const a=y/100;out+=R(x0+i*w/30,y0+h-(j+1)*h/20,w/30+.4,h/20+.4,`rgb(${Math.round(240-a*190)},${Math.round(244-a*120)},${Math.round(250-a*90)})`,'none',0)}
@@ -3683,7 +3684,7 @@ SCENE({id:'free-energy',name:'Which way is downhill?',tag:'Gibbs free energy: Δ
  definition:'Gibbs showed that at constant temperature and pressure a reaction can go by itself only if it lowers the free energy G: ΔG = ΔH − TΔS must be negative. Heat given out (negative ΔH) helps; an increase in disorder (positive ΔS) helps more at higher temperature.',
  example:'Ice melting absorbs heat (ΔH > 0) but increases disorder (ΔS > 0), so it happens only above 273 K, where TΔS outweighs ΔH.',
  desc:'A choice of four reactions. A plot shows ΔG against temperature as a straight line, crossing zero at T = ΔH / ΔS, with the region where the reaction can proceed shaded. A slider moves a marker along the line and tiles give ΔH, TΔS and ΔG.',
- research:'Gibbs, J. W. (1876–1878). On the equilibrium of heterogeneous substances. Transactions of the Connecticut Academy of Arts and Sciences 3, 108–248 and 343–524. Standard enthalpies and entropies at 298 K from standard data tables (rounded), treated as constant with temperature, which is an approximation. A negative ΔG says a reaction can go, not how fast: hydrogen and oxygen sit unreacted until a spark lowers the barrier.',
+ research:'Gibbs, J. W. (1876–1878). On the equilibrium of heterogeneous substances. Transactions of the Connecticut Academy of Arts and Sciences 3, 108–248 and 343–524. Standard enthalpies and entropies at 298 K from standard data tables (rounded), treated as constant with temperature, which is an approximation. A negative ΔG says a reaction can go, not how fast: hydrogen and oxygen sit unreacted until a spark supplies the activation energy to get them over the barrier.',
  dur:12,hint:'Try limestone: it needs strong heating before ΔG turns negative, which is why lime kilns run near 900 °C.',
  init:()=>({k:0,T:298}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {k,T:Math.round(lerp(200,1400,(p*4)%1))}},
@@ -3819,7 +3820,7 @@ SOURCE('c6-pasteur-1848',{title:'Pasteur, L. (1848). Mémoire sur la relation qu
 SOURCE('c6-mcbride-1961',{title:'McBride, W. G. (1961). Thalidomide and congenital abnormalities. The Lancet 278, 1358.'});
 SOURCE('c6-eriksson-1995',{title:'Eriksson, T. et al. (1995). Stereospecific determination, chiral inversion in vitro and pharmacokinetics in humans of the enantiomers of thalidomide. Chirality 7, 44–52.'});
 SOURCE('c6-staudinger-1920',{title:'Staudinger, H. (1920). Über Polymerisation. Berichte der deutschen chemischen Gesellschaft 53, 1073–1085.'});
-SOURCE('c6-carothers-1937',{title:'Carothers, W. H. (1937). Linear condensation polymers. US Patent 2,130,948.'});
+SOURCE('c6-carothers-1937',{title:'Carothers, W. H. (1938). Synthetic fiber. US Patent 2,130,948.'});
 SOURCE('c6-geyer-2017',{title:'Geyer, R., Jambeck, J. R. & Law, K. L. (2017). Production, use, and fate of all plastics ever made. Science Advances 3, e1700782.',url:'https://doi.org/10.1126/sciadv.1700782'});
 SOURCE('c6-corey-1967',{title:'Corey, E. J. (1967). General methods for the construction of complex molecules. Pure and Applied Chemistry 14, 19–37.'});
 SOURCE('c6-corey-1989',{title:'Corey, E. J. & Cheng, X.-M. (1989). The Logic of Chemical Synthesis. Wiley.'});
@@ -3914,7 +3915,7 @@ SCENE({id:'carbon-skeletons',name:'Chains of carbon',tag:'Kekulé and Couper, 18
   out+=TF(520,272,n>=5?'liquid at room temperature':'gas at room temperature',14,C.blue,'end');
   out+=TF(520,296,s.view==='skel'?'each corner and end is a CH₂ or CH₃':'four bonds on every carbon',13,C.muted,'end');
   out+=TF(300,350,'Longer chains cling together more, so boiling points climb with length.',13,C.muted);
-  return {svg:out,phase:`${name[0].toUpperCase()+name.slice(1)} has ${n} carbon${n>1?'s':''} and ${2*n+2} hydrogens. The pattern CₙH₂ₙ₊₂ holds for every unbranched alkane, because each carbon keeps four bonds. Skeletal formulas leave out the C and H labels: every corner is a carbon carrying enough hydrogens to make four bonds.`};
+  return {svg:out,phase:`${name[0].toUpperCase()+name.slice(1)} has ${n} carbon${n>1?'s':''} and ${2*n+2} hydrogens. The pattern CₙH₂ₙ₊₂ holds for every open-chain alkane, branched or not, because each carbon keeps four bonds. Skeletal formulas leave out the C and H labels: every corner is a carbon carrying enough hydrogens to make four bonds.`};
  }});
 
 // Structural isomers: the same formula, different skeletons.
@@ -4334,7 +4335,7 @@ SCENE({id:'stereochemistry-thalidomide',name:'Thalidomide',tag:'Handedness, harm
  }});
 
 /* ================================================================ polymers */
-const C6_POLY_CAT=[[1,'ethene, a gas'],[30,'a wax'],[1000,'a soft plastic'],[10000,'polythene bags'],[100000,'ultra-tough fibre']];
+const C6_POLY_CAT=[[1,'ethene, a gas'],[2,'still a gas'],[3,'a runny liquid, like petrol'],[10,'a wax'],[1000,'a soft plastic'],[10000,'polythene bags'],[100000,'ultra-tough fibre']];
 SCENE({id:'polymers',name:'Giant molecules',tag:'Staudinger, 1920',
  definition:'A polymer is a long chain of small repeating units joined by ordinary chemical bonds. In 1920 Hermann Staudinger argued that rubber and plastics are such giant molecules; many chemists then thought they were loose clusters of small molecules.',
  example:'Polythene is ethene units, –CH₂–CH₂–, repeated thousands of times: 10,000 units make a chain with a molar mass of about 280,000 g/mol.',
@@ -4370,7 +4371,7 @@ SCENE({id:'polymers-nylon',name:'Nylon and Kevlar',tag:'Carothers 1935, Kwolek 1
  definition:'Condensation polymers form when two kinds of monomer join and give off a small molecule, usually water, at each link. Nylon-6,6 alternates a diamine and a diacid joined by amide links; Kevlar has the same links between flat benzene rings, which stack into very strong fibres.',
  example:'Joining 3 diamines and 3 diacids into one chain makes 5 amide links and releases 5 molecules of water.',
  desc:'A growing chain of alternating diamine and diacid units joined by amide links, with a counter of water molecules released, and a choice of nylon or Kevlar.',
- research:'Carothers, W. H. (1937). Linear condensation polymers. US Patent 2,130,948 (nylon, first made 1935 at DuPont). Kwolek, S. L. (1965) discovered the liquid-crystal solutions that led to Kevlar; DuPont describes Kevlar as about five times stronger than steel on an equal-weight basis.',
+ research:'Carothers, W. H. (1938). Synthetic fiber. US Patent 2,130,948 (nylon, first made 1935 at DuPont). Kwolek, S. L. (1965) discovered the liquid-crystal solutions that led to Kevlar; DuPont describes Kevlar as about five times stronger than steel on an equal-weight basis.',
  dur:10,hint:'Add pairs of monomers and count the water released. Switch to Kevlar to see the ring version.',
  init:()=>({n:3,m:'nylon'}),
  watch(p){return {n:1+Math.min(5,Math.floor(p*6)),m:p<.6?'nylon':'kevlar'}},
@@ -4479,7 +4480,7 @@ SCENE({id:'total-synthesis-yield',name:'Yields multiply',tag:'Why long routes ar
 // Landmarks of synthesis, with the controversies.
 const C6_SYN=[
  {y:'1944',t:'Quinine (Woodward & Doering)',d:'A formal synthesis that relied on Rabe’s 1918 last step; disputed for decades until Williams repeated Rabe’s step in 2007.'},
- {y:'1944',t:'Asima Chatterjee, alkaloids',d:'First woman to earn a DSc from an Indian university; her work on vinca and other alkaloids led to an anti-epilepsy drug.'},
+ {y:'1944',t:'Asima Chatterjee, alkaloids',d:'First woman to earn a DSc from an Indian university; she studied vinca and other alkaloids and developed anti-epilepsy and anti-malarial drugs from plants.'},
  {y:'1954',t:'Strychnine (Woodward)',d:'Seven rings and six stereocentres, built in about 28 steps.'},
  {y:'1967',t:'Corey’s retrosynthesis',d:'A systematic logic for planning syntheses backwards; Nobel Prize 1990.'},
  {y:'1972',t:'Vitamin B₁₂ (Woodward, Eschenmoser)',d:'About 100 steps and roughly 100 chemists over a decade.'},
@@ -4508,7 +4509,7 @@ SCENE({id:'total-synthesis-woodward',name:'Landmarks of synthesis',tag:'Woodward
 
 /* Chemistry era 6 · The chemistry of carbon: word meanings. */
 WORD(
- {key:'alkane',title:'Alkane',aliases:['alkane','alkanes'],linkContext:'carbon-skeletons',scene:'carbon-skeletons',here:'A compound of carbon and hydrogen with only single bonds, formula CₙH₂ₙ₊₂ when unbranched and acyclic.',contrast:'Alkenes have at least one C=C double bond.',example:'Methane, ethane, propane and butane are the first four.'},
+ {key:'alkane',title:'Alkane',aliases:['alkane','alkanes'],linkContext:'carbon-skeletons',scene:'carbon-skeletons',here:'A compound of carbon and hydrogen with only single bonds, formula CₙH₂ₙ₊₂ unless the carbons form a ring.',contrast:'Alkenes have at least one C=C double bond.',example:'Methane, ethane, propane and butane are the first four.'},
  {key:'tetravalence',title:'Tetravalence of carbon',aliases:['tetravalent','four bonds'],linkContext:'carbon-skeletons',scene:'carbon-skeletons',here:'The rule, proposed by Kekulé and Couper in 1858, that a carbon atom forms four bonds.',contrast:'Hydrogen forms one, oxygen usually two, nitrogen three.',example:'In methane, CH₄, carbon bonds to four hydrogens.'},
  {key:'skeletal-formula',title:'Skeletal formula',aliases:['skeletal formula','skeletal formulas'],linkContext:'carbon-skeletons',scene:'carbon-skeletons',here:'A shorthand drawing in which each corner and line end is a carbon atom and hydrogens on carbon are left out.',contrast:'A full structural formula shows every atom and bond.',example:'Hexane is drawn as a zigzag of five lines.'},
  {key:'structural-isomer',title:'Structural isomer',aliases:['structural isomer','structural isomers','isomer','isomers'],linkContext:'carbon-skeletons',scene:'carbon-skeletons-isomers',here:'One of two or more compounds with the same molecular formula but atoms joined in a different order.',contrast:'Stereoisomers have the same order of atoms but a different 3D arrangement.',example:'Butane and 2-methylpropane are both C₄H₁₀.'},
@@ -4522,7 +4523,7 @@ WORD(
  {key:'delocalisation',title:'Delocalised electrons',aliases:['delocalised','delocalisation'],linkContext:'benzene-aromaticity',scene:'benzene-aromaticity',here:'Electrons shared over several atoms rather than held between two.',contrast:'A localised bond belongs to one pair of atoms.',example:'Benzene’s six π electrons are spread around its ring.'},
  {key:'aromaticity',title:'Aromaticity',aliases:['aromatic','aromaticity'],linkContext:'benzene-aromaticity',scene:'benzene-aromaticity-huckel',here:'The extra stability of a flat ring with a continuous loop of p orbitals holding 4n + 2 π electrons.',contrast:'"Aromatic" once meant fragrant; many aromatic compounds have no smell.',example:'Benzene is about 150 kJ/mol more stable than a ring of three separate C=C bonds.'},
  {key:'huckel-rule',title:'Hückel’s rule',aliases:['Hückel’s rule','4n + 2','4n+2'],linkContext:'benzene-aromaticity',scene:'benzene-aromaticity-huckel',here:'A flat cyclic π system is aromatic when it has 4n + 2 π electrons (2, 6, 10 …).',contrast:'4n electrons make a flat ring antiaromatic and unstable.',example:'The tropylium cation, with 6 π electrons, is aromatic.'},
- {key:'chirality-word',title:'Chirality',aliases:['chiral','chirality','handedness'],linkContext:'stereochemistry',scene:'stereochemistry',here:'The property of an object or molecule of not being superimposable on its mirror image.',contrast:'An achiral molecule has a mirror plane and matches its reflection.',example:'A carbon with four different groups is usually chiral.'},
+ {key:'chirality-word',title:'Chirality',aliases:['chiral','chirality','handedness'],linkContext:'stereochemistry',scene:'stereochemistry',here:'The property of an object or molecule of not being superimposable on its mirror image.',contrast:'An achiral molecule matches its reflection; most have a mirror plane.',example:'A carbon with four different groups is usually chiral.'},
  {key:'enantiomers',title:'Enantiomers',aliases:['enantiomer','enantiomers','R and S'],linkContext:'stereochemistry',scene:'stereochemistry',here:'The two mirror-image forms of a chiral molecule, labelled R and S by the Cahn–Ingold–Prelog rules.',contrast:'Identical in most physical properties; they differ in how they rotate light and how they meet other chiral molecules.',example:'(S)-alanine is the form in proteins.'},
  {key:'racemic',title:'Racemic mixture',aliases:['racemic','racemate'],linkContext:'stereochemistry',scene:'stereochemistry-pasteur',here:'An equal mixture of two enantiomers, which does not rotate polarised light.',contrast:'An enantiopure sample contains only one form.',example:'Pasteur separated racemic tartrate crystals by hand.'},
  {key:'optical-rotation',title:'Optical rotation',aliases:['optical rotation','optically active','polarimeter'],linkContext:'stereochemistry',scene:'stereochemistry-pasteur',here:'The turning of the plane of polarised light by a solution of a chiral substance; measured with a polarimeter.',contrast:'Its direction (+ or −) does not tell you whether a molecule is R or S.',example:'(+)-tartaric acid rotates light by about +12°.'},
@@ -4689,7 +4690,7 @@ SCENE({id:'ir-spectroscopy',name:'Bonds as springs',tag:'Why each bond absorbs i
  definition:'Atoms joined by a bond vibrate like two masses on a spring. A stiffer spring or lighter atoms vibrate faster. A bond absorbs infrared light whose frequency matches its vibration, so each kind of bond leaves a dip at its own wavenumber (waves per centimetre).',
  example:'C–H vibrates near 3,000 cm⁻¹. Swap the hydrogen for deuterium, which is twice as heavy, and the reduced mass almost doubles, so the frequency drops by about √2 to near 2,200 cm⁻¹.',
  desc:'Two balls joined by a spring for the chosen bond, with its force constant and reduced mass. A wavenumber axis from 4,000 to 400 cm⁻¹, divided into regions, marks the calculated absorption and the range found in real molecules.',
- research:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions 90, 284–292. Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington (the first systematic catalogue of organic spectra). Wavenumber = (1/2πc)√(k/μ); the force constants are typical values and the real ranges are from standard correlation tables (Silverstein, Bassler & Morrill, 1963 onwards).',
+ research:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions 90, 284–292. Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington (the first systematic catalogue of organic spectra). Wavenumber = (1/2πc)√(k/μ); the force constants are typical values and the real ranges are from standard correlation tables (Silverstein & Bassler, 1963; later editions with Morrill).',
  dur:10,hint:'Compare C–H, C=O and C≡N: same carbon, stiffer bonds, higher wavenumber. Then swap H for D.',
  init:()=>({b:'CH',d:false}),
  watch(p){return {b:['CH','OH','CO','CN','CCl'][Math.min(4,Math.floor(p*5))],d:false}},
@@ -4710,7 +4711,7 @@ SCENE({id:'ir-spectroscopy',name:'Bonds as springs',tag:'Why each bond absorbs i
   const [ra1,rb1]=bd.real.split('–').map(Number),realD=lb==='D'?null:[ra1,rb1];
   if(realD)out+=R(Xw(Math.max(...realD)),y-44,Xw(Math.min(...realD))-Xw(Math.max(...realD)),6,C.green,'none',2);
   out+=L(Xw(wn),y-50,Xw(wn),y,C.coral,3)+Ci(Xw(wn),y-50,5,C.coral);
-  out+=T(300,345,`Calculated: ${Math.round(wn).toLocaleString('en-GB')} cm⁻¹${realD?` · real molecules: ${bd.real} cm⁻¹ (green bar)`:' · about 1/√2 of the C–H value'}`,15,C.ink);
+  out+=T(300,345,`Calculated: ${Math.round(wn).toLocaleString('en-GB')} cm⁻¹${realD?` · real molecules: ${bd.real} cm⁻¹ (green bar)`:` · about 1/√2 of the ${bd.n} value`}`,15,C.ink);
   return {svg:out,phase:'The spring picture is crude, since real bonds are not perfect springs and neighbouring atoms shift each band, but it explains the map every chemist uses: hydrogen stretches high, triple bonds next, then double bonds, then a crowded fingerprint region that is unique to each molecule.'};
  }});
 
@@ -4724,7 +4725,7 @@ SCENE({id:'ir-spectroscopy-match',name:'Reading an infrared spectrum',tag:'Match
  definition:'An infrared spectrum plots how much light gets through (transmittance) against wavenumber. Each dip is a bond absorbing. A strong, sharp dip near 1,700 cm⁻¹ means C=O; a broad dip from 3,200 to 3,600 means O–H held in hydrogen bonds.',
  example:'Ethanol has a broad O–H dip but no C=O. Propanone has a sharp C=O dip but no O–H. Ethanoic acid has both, and its O–H dip is so broad it swallows the C–H stretches.',
  desc:'A transmittance spectrum from 4,000 to 500 cm⁻¹. Press a dip to see which bond causes it. In Mystery mode the name is hidden: read the dips, then press the compound you think it is.',
- research:'Spectral Database for Organic Compounds (SDBS), National Institute of Advanced Industrial Science and Technology, Japan. Silverstein, R. M., Bassler, G. C. & Morrill, T. C. (1963 and later editions). Spectrometric Identification of Organic Compounds. Wiley. Band centres here are approximate liquid-film values; depths are illustrative.',
+ research:'Spectral Database for Organic Compounds (SDBS), National Institute of Advanced Industrial Science and Technology, Japan. Silverstein, R. M. & Bassler, G. C. (1963; later editions with Morrill, T. C.). Spectrometric Identification of Organic Compounds. Wiley. Band centres here are approximate liquid-film values; depths are illustrative.',
  dur:12,hint:'In Mystery, look first at 1,700 cm⁻¹ (C=O or not?) and then at 3,000–3,600 (O–H or not?). Two questions are enough here.',
  init:()=>({c:'ethanol',pk:-1,seed:5,guess:''}),
  watch(p){return {c:C7_IRK[Math.min(2,Math.floor(p*3))],pk:Math.floor((p*3%1)*4),seed:5,guess:''}},
@@ -4893,7 +4894,7 @@ const C7_NE=[[20,90.48],[21,.27],[22,9.25]],C7_V=2000,C7_R0=.15,C7_E=1.602177e-1
 const C7_rad=(m,B)=>Math.sqrt(2*m*C7_AMU*C7_V/C7_E)/B;
 const C7_mzAt=B=>C7_E*Math.pow(B*C7_R0,2)/(2*C7_V)/C7_AMU;
 SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turns out to be two kinds of atom',
- definition:'A magnetic-sector mass spectrometer, the kind Thomson and Aston used, turns molecules into ions, speeds them up with a voltage and bends them with a magnet (other designs sort ions by flight time or oscillating electric fields). Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
+ definition:'A magnetic-sector mass spectrometer, a design that goes back to Dempster in 1918, turns molecules into ions, speeds them up with a voltage and bends them with a magnet (other designs sort ions by flight time or oscillating electric fields). Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
  example:'In 1913 J. J. Thomson saw neon split into two traces, at mass 20 and mass 22: the first proof that a stable element can have isotopes. About 90% of neon is neon-20 and about 9% is neon-22.',
  desc:'An ion source on the left, a magnetic field region, and curved paths for neon-20, -21 and -22, drawn thicker for the more common ions. A slit and detector sit where only one radius reaches. On the right, the mass spectrum built by sweeping the field, with a marker at the m/z now being detected.',
  research:'Thomson, J. J. (1913). Bakerian Lecture: Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20. Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714 (Nobel Prize in Chemistry 1922). Dempster, A. J. (1918). A new method of positive ray analysis. Physical Review 11, 316–325. Natural neon abundances from IUPAC (90.48, 0.27, 9.25%). Ions accelerated through 2,000 V onto a 0.15 m radius.',
@@ -4920,7 +4921,7 @@ SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turn
   const sig=sp(mz);
   out+=counter(400,296,'tuned to m/z',mz.toFixed(2),C.green,82);
   out+=counter(488,296,'detector signal',sig<.05?'—':sig.toFixed(1)+'%',C.ink,82);
-  return {svg:out,phase:'Each radius depends on √m, so the isotopes land a few centimetres apart. Aston’s better instrument went on to find isotopes in most elements and to show that atomic masses are not exactly whole numbers, the mass defect that measures nuclear binding energy.'};
+  return {svg:out,phase:'Each radius depends on √m, so the isotopes land a centimetre or so apart. Aston’s better instrument went on to find isotopes in most elements and to show that atomic masses are not exactly whole numbers, the mass defect that measures nuclear binding energy.'};
  }});
 
 // Isotope patterns: convolve Cl (35/37) and Br (79/81) distributions.
@@ -4988,7 +4989,7 @@ SCENE({id:'crystallography',name:'Bragg’s law',tag:'X-rays reflect from planes
  definition:'Atoms in a crystal lie in regular planes. X-rays scattered from neighbouring planes add up only when the extra path, 2d sinθ, is a whole number of wavelengths: nλ = 2d sinθ. Measuring the angles of strong reflections gives the spacing d between planes, and from many reflections the positions of the atoms.',
  example:'With copper X-rays (λ = 1.5406 Å) and the (200) planes of rock salt, 2.82 Å apart, the first strong reflection comes at θ = 15.9°.',
  desc:'Two rows of atoms, an incoming X-ray beam and reflected beams. The extra path taken by the lower beam is highlighted and compared with the wavelength. A graph of reflected intensity against angle shows sharp peaks where Bragg’s law holds, with a marker at your angle.',
- research:'Friedrich, W., Knipping, P. & Laue, M. (1912). Interferenz-Erscheinungen bei Röntgenstrahlen. Sitzungsberichte der Bayerischen Akademie der Wissenschaften, 303–322. Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57. Bragg, W. H. & Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (Nobel Prize in Physics 1915). Intensity drawn for 12 planes.',
+ research:'Friedrich, W., Knipping, P. & Laue, M. (1912). Interferenz-Erscheinungen bei Röntgenstrahlen. Sitzungsberichte der Bayerischen Akademie der Wissenschaften, 303–322. Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57. Bragg, W. H. & Bragg, W. L. (1913). The reflection of X-rays by crystals. Proceedings of the Royal Society A 88, 428–438 (Nobel Prize in Physics 1915). Intensity drawn for 12 planes.',
  dur:11,hint:'Sweep the angle and watch the path difference: a reflection appears only when it equals λ, 2λ or 3λ. Then change the wavelength and see the peaks move.',
  init:()=>({th:15.9,lam:1.5406,d:2.82}),
  watch(p){return {th:Math.round(lerp(8,50,p)*10)/10,lam:1.5406,d:2.82}},
@@ -5032,7 +5033,7 @@ SCENE({id:'crystallography-lattice',name:'Unit cells',tag:'Count the atoms a cry
  definition:'A unit cell is a box that builds the whole crystal by repeating. The primitive cell is the smallest such box; crystallographers often use a larger conventional cell that shows the crystal’s symmetry, like the cubes drawn here (rock salt’s holds four formula units, its primitive cell one). Atoms on its corners, edges and faces are shared with neighbouring cells: a corner atom counts as 1/8, an edge atom 1/4, a face atom 1/2 and an atom inside counts whole. The count, the cell size and the atomic masses give the crystal’s density.',
  example:'Rock salt’s cubic cell holds 8 × 1/8 + 6 × 1/2 = 4 chloride ions and 12 × 1/4 + 1 = 4 sodium ions. With a cell 5.64 Å across, its density works out at 2.16 g/cm³, as measured.',
  desc:'A unit cell drawn in perspective for rock salt, caesium chloride or diamond, with each atom coloured by element. The count of shared atoms, the coordination number and the density calculated from the cell appear as readouts. The 3D view can be turned to see the lattice from any side.',
- research:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (rock salt and caesium-type halides). Bragg, W. H. & Bragg, W. L. (1913). The structure of the diamond. Nature 91, 557. Cell edges: NaCl 5.64 Å, CsCl 4.12 Å, diamond 3.567 Å; density = (atoms × molar mass)/(Avogadro’s number × a³).',
+ research:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277 (rock salt and other alkali halides). Bragg, W. H. & Bragg, W. L. (1913). The structure of the diamond. Nature 91, 557. Cell edges: NaCl 5.64 Å, CsCl 4.12 Å, diamond 3.567 Å; density = (atoms × molar mass)/(Avogadro’s number × a³).',
  dur:12,hint:'Show the neighbours of the central atom: six in rock salt, eight in caesium chloride, four in diamond. Then turn the 3D view.',
  init:()=>({c:'NaCl',nb:true}),
  watch(p){return {c:['NaCl','CsCl','diamond'][Math.min(2,Math.floor(p*3))],nb:(p*3%1)>.4}},
@@ -5103,8 +5104,8 @@ function C7_pHstrong(v,ca=.1,va=25,cb=.1){const V=va+v,d=(ca*va-cb*v)/V,h=d/2+Ma
 function C7_pHweak(v,ka=1.75e-5,ca=.1,va=25,cb=.1){const V=va+v,A=ca*va/V,Na=cb*v/V;let lo=-14,hi=0;for(let i=0;i<70;i++){const m=(lo+hi)/2,h=Math.pow(10,m),f=h+Na-A*ka/(ka+h)-C7_KW/h;if(f>0)hi=m;else lo=m}return -(lo+hi)/2}
 function C7_phth(pH){const u=clamp((pH-8.2)/1.8,0,1);return u<=0?'#f4f8fb':`rgb(${Math.round(244-(244-211)*u)},${Math.round(248-(248-53)*u)},${Math.round(251-(251-155)*u)})`}
 SCENE({id:'titration',name:'Titrating to the end point',tag:'One drop turns the flask pink',
- definition:'In a titration you add a solution of known concentration from a burette, a drop at a time, until it has exactly reacted with a measured volume of the unknown. An indicator changes colour at the end point. For a strong acid and a strong base the pH leaps from about 4 to about 10 within a single drop at the equivalence point.',
- example:'25.00 mL of 0.100 mol/dm³ hydrochloric acid needs 25.00 mL of 0.100 mol/dm³ sodium hydroxide. At 24.95 mL the pH is 4.0; one more drop, at 25.05 mL, takes it to 10.0, and phenolphthalein turns pink.',
+ definition:'In a titration you add a solution of known concentration from a burette, a drop at a time, until it has exactly reacted with a measured volume of the unknown. An indicator changes colour at the end point. For a strong acid and a strong base the pH leaps from about 4 to about 10 within a drop or two at the equivalence point.',
+ example:'25.00 mL of 0.100 mol/dm³ hydrochloric acid needs 25.00 mL of 0.100 mol/dm³ sodium hydroxide. At 24.95 mL the pH is 4.0; two more drops, at 25.05 mL, take it to 10.0, and phenolphthalein turns pink.',
  desc:'A burette over a conical flask. The flask stays colourless until the pH passes about 8.2, then turns pink. A graph of pH against volume added fills in as you add base, with the equivalence point at 25.00 mL marked.',
  research:'Gay-Lussac, J. L. (1824, 1832) standardised volumetric analysis with the burette. Mohr, K. F. (1855). Lehrbuch der chemisch-analytischen Titrirmethode (the clamped burette). Sørensen, S. P. L. (1909). Biochemische Zeitschrift 21, 131–304 (the pH scale). pH calculated exactly from the charge balance with Kw = 1.0 × 10⁻¹⁴ at 25 °C. In a real lab, wear eye protection: sodium hydroxide and hydrochloric acid are irritants even at 0.1 mol/dm³.',
  dur:12,hint:'Add 5 mL at a time until 20 mL, then slow to drops near 25 mL. The colour should change on a single drop.',
@@ -5126,7 +5127,7 @@ SCENE({id:'titration',name:'Titrating to the end point',tag:'One drop turns the 
   const pts=[];for(let v=0;v<=s.v+1e-9;v=Math.round((v+.05)*100)/100)pts.push([pl.X(v),pl.Y(C7_pHstrong(v))]);
   out+=C7_poly(pts,C.coral,2.2)+Ci(pl.X(s.v),pl.Y(pH),5,C.coral);
   out+=T(405,350,`pH ${pH.toFixed(2)}${pH>=8.2?' · pink: end point reached':''}`,16,pH>=8.2?C.coral:C.ink);
-  return {svg:out,phase:pH>=8.2&&s.v<26?'The flask turned pink within a drop of 25.00 mL: so few hydrogen ions are left near equivalence that one drop of base swings the pH by six units.':'Far from equivalence the pH barely moves, because there is still plenty of acid (or, past 25 mL, plenty of base) to swamp each drop.'};
+  return {svg:out,phase:pH>=8.2&&s.v<26?'The flask turned pink within a drop of 25.00 mL: so few hydrogen ions are left near equivalence that one drop of base swings the pH by three units.':'Far from equivalence the pH barely moves, because there is still plenty of acid (or, past 25 mL, plenty of base) to swamp each drop.'};
  }});
 
 // Strong against weak acid, and which indicator changes inside the steep jump.
@@ -5199,7 +5200,7 @@ SOURCE('c7-james-martin-1952',{title:'James, A. T. & Martin, A. J. P. (1952). Ga
 SOURCE('c7-stahl-1956',{title:'Stahl, E. (1956). Dünnschicht-Chromatographie. Pharmazie 11, 633–637.'});
 SOURCE('c7-herschel-1800',{title:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions of the Royal Society 90, 284–292.',url:'https://doi.org/10.1098/rstl.1800.0015'});
 SOURCE('c7-coblentz-1905',{title:'Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington.',url:'https://archive.org/details/investigationsof00cobl'});
-SOURCE('c7-silverstein',{title:'Silverstein, R. M., Bassler, G. C. & Morrill, T. C. (1963 and later editions). Spectrometric Identification of Organic Compounds. Wiley.'});
+SOURCE('c7-silverstein',{title:'Silverstein, R. M. & Bassler, G. C. (1963; later editions with Morrill, T. C.). Spectrometric Identification of Organic Compounds. Wiley.'});
 SOURCE('c7-sdbs',{title:'Spectral Database for Organic Compounds (SDBS). National Institute of Advanced Industrial Science and Technology, Japan.',url:'https://sdbs.db.aist.go.jp/'});
 SOURCE('c7-foote-1856',{title:'Foote, E. (1856). Circumstances affecting the heat of the Sun’s rays. American Journal of Science and Arts 22, 382–383.'});
 SOURCE('c7-tyndall-1861',{title:'Tyndall, J. (1861). On the absorption and radiation of heat by gases and vapours. Philosophical Transactions of the Royal Society 151, 1–36.',url:'https://doi.org/10.1098/rstl.1861.0001'});
@@ -5214,7 +5215,7 @@ SOURCE('c7-aston-1919',{title:'Aston, F. W. (1919). A positive ray spectrograph.
 SOURCE('c7-mclafferty-1993',{title:'McLafferty, F. W. & Tureček, F. (1993). Interpretation of Mass Spectra, 4th edn. University Science Books.'});
 SOURCE('c7-nist-webbook',{title:'NIST Chemistry WebBook, Standard Reference Database 69 (mass spectra).',url:'https://webbook.nist.gov/chemistry/'});
 SOURCE('c7-bragg-1913',{title:'Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57.'});
-SOURCE('c7-braggs-1913',{title:'Bragg, W. H. & Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277.',url:'https://doi.org/10.1098/rspa.1913.0083'});
+SOURCE('c7-braggs-1913',{title:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277.',url:'https://doi.org/10.1098/rspa.1913.0083'});
 SOURCE('c7-lonsdale-1929',{title:'Lonsdale, K. (1929). The structure of the benzene ring in C₆(CH₃)₆. Proceedings of the Royal Society A 123, 494–515.',url:'https://doi.org/10.1098/rspa.1929.0081'});
 SOURCE('c7-hodgkin-1956',{title:'Hodgkin, D. C. et al. (1956). Structure of vitamin B₁₂. Nature 178, 64–66.',url:'https://doi.org/10.1038/178064a0'});
 SOURCE('c7-adams-1969',{title:'Adams, M. J. et al. (1969). Structure of rhombohedral 2 zinc insulin crystals. Nature 224, 491–495.',url:'https://doi.org/10.1038/224491a0'});
@@ -5262,7 +5263,7 @@ WORD(
  {key:'stationary-phase',title:'Stationary and mobile phase',aliases:['stationary phase','mobile phase','moving phase'],linkContext:'chromatography',scene:'chromatography',here:'The stationary phase stays put (chalk, silica, a liquid film); the mobile phase flows past it (a solvent or a gas), carrying the mixture.',contrast:'A substance that prefers the stationary phase moves slowly; one that prefers the mobile phase moves fast.',example:'In thin-layer chromatography the silica is stationary and the solvent climbing the plate is mobile.'},
  {key:'retardation-factor',title:'Retardation factor (Rf)',aliases:['Rf','Rf value','retardation factor'],linkContext:'chromatography-tlc',scene:'chromatography-tlc',here:'In thin-layer chromatography, the distance a spot travels divided by the distance the solvent front travels; always between 0 and 1.',contrast:'Depends on the plate, the solvent and the temperature, so it is compared only on the same plate.',example:'A spot at 3.2 cm with the front at 8.0 cm has Rf 0.40.'},
  {key:'retention-time',title:'Retention time',aliases:['retention time','retention times'],linkContext:'chromatography-gc',scene:'chromatography-gc',here:'In gas or liquid chromatography, the time from injection until a compound reaches the detector.',contrast:'Shortened by heating the column, but early peaks then crowd together.',example:'Hexane comes out before heptane on a non-polar column.'},
- {key:'resolution-chrom',title:'Resolution (chromatography)',aliases:['peak resolution','resolved peaks'],linkContext:'chromatography-gc',scene:'chromatography-gc',here:'How well two peaks are separated: the gap between their centres divided by their combined widths. A value of 1.5 means they barely touch.',contrast:'Not the same as the resolution of a microscope, though both describe telling two things apart.',example:'Raising the column temperature saves time but lowers resolution.'},
+ {key:'resolution-chrom',title:'Resolution (chromatography)',aliases:['peak resolution','resolved peaks'],linkContext:'chromatography-gc',scene:'chromatography-gc',here:'How well two peaks are separated: the gap between their centres divided by their average width at the base. A value of 1.5 means they barely touch.',contrast:'Not the same as the resolution of a microscope, though both describe telling two things apart.',example:'Raising the column temperature saves time but lowers resolution.'},
  {key:'wavenumber',title:'Wavenumber',aliases:['wavenumber','wavenumbers','cm⁻¹'],linkContext:'ir-spectroscopy',scene:'ir-spectroscopy',here:'The number of waves in one centimetre, in cm⁻¹; proportional to frequency and energy. Infrared spectra are plotted in wavenumbers.',contrast:'Higher wavenumber means shorter wavelength: 2,000 cm⁻¹ is 5 µm.',example:'C=O stretches absorb near 1,700 cm⁻¹.'},
  {key:'force-constant',title:'Force constant',aliases:['force constant','bond stiffness'],linkContext:'ir-spectroscopy',scene:'ir-spectroscopy',here:'How stiff a bond is when treated as a spring, in newtons per metre. Double and triple bonds are stiffer than single bonds.',contrast:'A stiffer bond vibrates faster; heavier atoms vibrate slower.',example:'About 500 N/m for C–H and 1,200 N/m for C=O.'},
  {key:'reduced-mass',title:'Reduced mass',aliases:['reduced mass'],linkContext:'ir-spectroscopy',scene:'ir-spectroscopy',here:'For two atoms of mass m₁ and m₂ joined by a bond, μ = m₁m₂ ÷ (m₁ + m₂): the single mass that behaves the same on a spring.',contrast:'Dominated by the lighter atom: the reduced mass of C–H is close to 1.',example:'Swapping H for D nearly doubles μ and lowers the C–H frequency by about √2.'},
@@ -5609,7 +5610,7 @@ SCENE({id:'nanomaterials-quantum-dots',name:'Quantum dots',tag:'Size sets the co
   [2.5,3.2,4.0,5.0,6.5].forEach((D,i)=>{const c=C8_wl(C8_peak(D)+15),x=78+i*104;
    out+=R(x,284,44,52,c,C.ink,6)+R(x+8,274,28,12,C.grid,C.ink,3)+TF(x+22,352,D+' nm',13,C.muted)});
   out+=TF(300,372,'Colours approximate; emission taken as peak + 15 nm.',13,C.muted);
-  return {svg:out,phase:`A ${s.D.toFixed(1)} nm cadmium selenide dot absorbs most strongly near ${Math.round(pk)} nm and glows ${C8_band(em)}. Smaller dots squeeze the electron harder, raise the gap and shift the light towards blue; bulk CdSe has a gap of 1.74 eV and glows in the near infrared. Dots like these now colour some TV screens.`};
+  return {svg:out,phase:`A ${s.D.toFixed(1)} nm cadmium selenide dot absorbs most strongly near ${Math.round(pk)} nm and glows ${C8_band(em)}. Smaller dots squeeze the electron harder, raise the gap and shift the light towards blue; bulk CdSe has a gap of 1.74 eV and glows deep red, near 710 nm. Dots like these now colour some TV screens.`};
  }});
 
 /* ================================================================ click chemistry */
@@ -5670,7 +5671,7 @@ SCENE({id:'click-chemistry-modules',name:'Snap-together molecules',tag:'Build a 
   return {svg:out,phase:s.made.length===9?'All nine products made with the same reaction and the same conditions. That modularity is the point of click chemistry.':`${s.made.length} of 9 products made. Every pairing uses the same copper-catalysed click, whatever the pieces carry.`};
  }});
 
-const C8_BIO={stau:{n:'Staudinger ligation',k:2e-3,safe:true,yr:2000},spaac:{n:'Strain-promoted (SPAAC)',k:7.6e-2,safe:true,yr:2007},tz:{n:'Tetrazine–trans-cyclooctene',k:2e3,safe:true,yr:2008},cu:{n:'Copper-catalysed click',k:20,safe:false,yr:2002}};
+const C8_BIO={stau:{n:'Staudinger ligation',k:2e-3,safe:true,yr:2000},spaac:{n:'Strain-promoted (SPAAC)',k:7.6e-2,safe:true,yr:2004},tz:{n:'Tetrazine–trans-cyclooctene',k:2e3,safe:true,yr:2008},cu:{n:'Copper-catalysed click',k:20,safe:false,yr:2002}};
 const C8_BIOK=['stau','spaac','cu','tz'];
 SCENE({id:'click-chemistry-bioorthogonal',name:'Chemistry inside living things',tag:'Bertozzi’s bioorthogonal reactions',
  definition:'Bioorthogonal reactions work inside living cells without disturbing their own chemistry. Carolyn Bertozzi fed cells sugars carrying azides, which ended up on the cell surface, then labelled them with a probe. Copper is toxic to cells, so her group designed strained ring molecules (cyclooctynes) that click with azides without any catalyst.',
@@ -5828,7 +5829,7 @@ SCENE({id:'atmospheric-chemistry-hole',name:'The ozone hole and its repair',tag:
   out+=TF(70,328,'Antarctica ≈ 14 million km²; dashed line capped at 60.',13,C.muted,'start');
   out+=TBF(560,354,`${s.y}: about ${v.toFixed(0)} million km²${s.proto?'':' (world avoided)'}`,14,C.ink,'end');
   out+=TF(70,374,'Smoothed and approximate, after WMO 2022 and Newman et al. 2009.',13,C.muted,'start');
-  return {svg:out,phase:s.proto?(s.y<1978?`${s.y}: no ozone hole yet; CFCs are building up in the atmosphere.`:s.y<2015?`${s.y}: the hole is near its largest, about ${v.toFixed(0)} million km², even though CFC production was cut from 1987. CFCs take decades to leave the air.`:`${s.y}: the hole is slowly shrinking, to about ${v.toFixed(0)} million km². Recovery to 1980 levels is projected around 2066.`):`In the world without the Protocol, the hole would have kept growing: about ${v.toFixed(0)} million km² by ${s.y}. The Montreal Protocol is the most successful environmental treaty so far.`};
+  return {svg:out,phase:s.proto?(v<.5?`${s.y}: no ozone hole yet; CFCs are building up in the atmosphere.`:s.y<1995?`${s.y}: the hole is growing fast, to about ${v.toFixed(0)} million km², as CFCs build up in the stratosphere.`:s.y<2015?`${s.y}: the hole is near its largest, about ${v.toFixed(0)} million km², even though CFC production was cut from 1987. CFCs take decades to leave the air.`:`${s.y}: the hole is slowly shrinking, to about ${v.toFixed(0)} million km². Recovery to 1980 levels is projected around 2066.`):`In the world without the Protocol, the hole would have kept growing: about ${v.toFixed(0)} million km² by ${s.y}. The Montreal Protocol is the most successful environmental treaty so far.`};
  }});
 
 SCENE({id:'atmospheric-chemistry-ocean',name:'An acidifying ocean',tag:'CO₂ dissolves too',
@@ -5900,7 +5901,7 @@ SCENE({id:'computational-chemistry-scaling',name:'Why accuracy is expensive',tag
  draw(s){
   const N=10**s.lg;let out=heading('Bigger molecules, much longer waits',28);
   const fmtT=t=>t<60?t.toFixed(t<10?1:0)+' s':t<3600?(t/60).toFixed(0)+' min':t<86400*2?(t/3600).toFixed(1)+' h':t<3.15e7*2?(t/86400).toFixed(0)+' days':(t/3.15e7).toFixed(0)+' years';
-  const A=C8_plot(170,58,390,186,[-1,10],[0,4],{xt:[[0,'1 s'],[1.556,'1 min'],[3.556,'1 h'],[4.937,'1 day'],[7.5,'1 yr']],xl:'time (log scale)'});out+=A.svg;
+  const A=C8_plot(170,58,390,186,[-1,10],[0,4],{xt:[[0,'1 s'],[1.778,'1 min'],[3.556,'1 h'],[4.937,'1 day'],[7.5,'1 yr']],xl:'time (log scale)'});out+=A.svg;
   C8_SC.forEach(([n,pw,col],i)=>{const t=(N/50)**pw,y=A.Y(4-i)+10,lt=Math.log10(t);
    out+=R(A.X(-1),y,Math.max(2,A.X(clamp(lt,-1,10))-A.X(-1)),30,col,'none',4);
    out+=TF(160,y+20,n,13,C.ink,'end')+TF(clamp(A.X(lt)+6,180,520),y+20,fmtT(t),13,C.ink,'start')});
@@ -5915,7 +5916,7 @@ const C8_LIM=[['Static pictures','It predicts a structure, not the folding proce
 SCENE({id:'computational-chemistry-alphafold',name:'Predicting protein shapes',tag:'AlphaFold and its limits',
  definition:'Most proteins’ chains of amino acids fold into a precise 3D shape that decides what they do; some proteins or regions are intrinsically disordered and shift between many shapes. Predicting the shape from the sequence was a fifty-year challenge, tested every two years in the blind CASP competition. In 2020 DeepMind’s AlphaFold 2, a machine-learning system trained on known structures, predicted many shapes about as accurately as experiments measure them.',
  example:'At CASP14 (2020) AlphaFold 2 reached a median score of about 92 on the 0–100 GDT scale, where around 90 is considered competitive with experiment. Demis Hassabis and John Jumper shared the 2024 Nobel Prize with David Baker, who designs new proteins.',
- desc:'Left: approximate median accuracy (GDT) of the best group in each CASP round on the hardest targets, with the CASP14 figure as published. Press a limitation card on the right to read what AlphaFold does not do.',
+ desc:'Left: approximate median accuracy (GDT) of the best group in each CASP round on the hardest targets; the CASP14 bar is the published median across all targets (87.0 on the hardest). Press a limitation card on the right to read what AlphaFold does not do.',
  research:['Jumper, J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589.','Moult, J. et al. (1995). A large-scale experiment to assess protein structure prediction methods. Proteins 23, ii–v (the start of CASP).','Abramson, J. et al. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. Nature 630, 493–500.','Nobel Prize in Chemistry 2024: Baker, Hassabis and Jumper.'],
  dur:10,hint:'Look at the jump after 2016. Then read the limits: a prediction is a hypothesis to test.',
  init:()=>({lim:0}),

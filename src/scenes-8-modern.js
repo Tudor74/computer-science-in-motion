@@ -237,7 +237,7 @@ SCENE({id:'nanomaterials-quantum-dots',name:'Quantum dots',tag:'Size sets the co
   [2.5,3.2,4.0,5.0,6.5].forEach((D,i)=>{const c=C8_wl(C8_peak(D)+15),x=78+i*104;
    out+=R(x,284,44,52,c,C.ink,6)+R(x+8,274,28,12,C.grid,C.ink,3)+TF(x+22,352,D+' nm',13,C.muted)});
   out+=TF(300,372,'Colours approximate; emission taken as peak + 15 nm.',13,C.muted);
-  return {svg:out,phase:`A ${s.D.toFixed(1)} nm cadmium selenide dot absorbs most strongly near ${Math.round(pk)} nm and glows ${C8_band(em)}. Smaller dots squeeze the electron harder, raise the gap and shift the light towards blue; bulk CdSe has a gap of 1.74 eV and glows in the near infrared. Dots like these now colour some TV screens.`};
+  return {svg:out,phase:`A ${s.D.toFixed(1)} nm cadmium selenide dot absorbs most strongly near ${Math.round(pk)} nm and glows ${C8_band(em)}. Smaller dots squeeze the electron harder, raise the gap and shift the light towards blue; bulk CdSe has a gap of 1.74 eV and glows deep red, near 710 nm. Dots like these now colour some TV screens.`};
  }});
 
 /* ================================================================ click chemistry */
@@ -298,7 +298,7 @@ SCENE({id:'click-chemistry-modules',name:'Snap-together molecules',tag:'Build a 
   return {svg:out,phase:s.made.length===9?'All nine products made with the same reaction and the same conditions. That modularity is the point of click chemistry.':`${s.made.length} of 9 products made. Every pairing uses the same copper-catalysed click, whatever the pieces carry.`};
  }});
 
-const C8_BIO={stau:{n:'Staudinger ligation',k:2e-3,safe:true,yr:2000},spaac:{n:'Strain-promoted (SPAAC)',k:7.6e-2,safe:true,yr:2007},tz:{n:'Tetrazine–trans-cyclooctene',k:2e3,safe:true,yr:2008},cu:{n:'Copper-catalysed click',k:20,safe:false,yr:2002}};
+const C8_BIO={stau:{n:'Staudinger ligation',k:2e-3,safe:true,yr:2000},spaac:{n:'Strain-promoted (SPAAC)',k:7.6e-2,safe:true,yr:2004},tz:{n:'Tetrazine–trans-cyclooctene',k:2e3,safe:true,yr:2008},cu:{n:'Copper-catalysed click',k:20,safe:false,yr:2002}};
 const C8_BIOK=['stau','spaac','cu','tz'];
 SCENE({id:'click-chemistry-bioorthogonal',name:'Chemistry inside living things',tag:'Bertozzi’s bioorthogonal reactions',
  definition:'Bioorthogonal reactions work inside living cells without disturbing their own chemistry. Carolyn Bertozzi fed cells sugars carrying azides, which ended up on the cell surface, then labelled them with a probe. Copper is toxic to cells, so her group designed strained ring molecules (cyclooctynes) that click with azides without any catalyst.',
@@ -456,7 +456,7 @@ SCENE({id:'atmospheric-chemistry-hole',name:'The ozone hole and its repair',tag:
   out+=TF(70,328,'Antarctica ≈ 14 million km²; dashed line capped at 60.',13,C.muted,'start');
   out+=TBF(560,354,`${s.y}: about ${v.toFixed(0)} million km²${s.proto?'':' (world avoided)'}`,14,C.ink,'end');
   out+=TF(70,374,'Smoothed and approximate, after WMO 2022 and Newman et al. 2009.',13,C.muted,'start');
-  return {svg:out,phase:s.proto?(s.y<1978?`${s.y}: no ozone hole yet; CFCs are building up in the atmosphere.`:s.y<2015?`${s.y}: the hole is near its largest, about ${v.toFixed(0)} million km², even though CFC production was cut from 1987. CFCs take decades to leave the air.`:`${s.y}: the hole is slowly shrinking, to about ${v.toFixed(0)} million km². Recovery to 1980 levels is projected around 2066.`):`In the world without the Protocol, the hole would have kept growing: about ${v.toFixed(0)} million km² by ${s.y}. The Montreal Protocol is the most successful environmental treaty so far.`};
+  return {svg:out,phase:s.proto?(v<.5?`${s.y}: no ozone hole yet; CFCs are building up in the atmosphere.`:s.y<1995?`${s.y}: the hole is growing fast, to about ${v.toFixed(0)} million km², as CFCs build up in the stratosphere.`:s.y<2015?`${s.y}: the hole is near its largest, about ${v.toFixed(0)} million km², even though CFC production was cut from 1987. CFCs take decades to leave the air.`:`${s.y}: the hole is slowly shrinking, to about ${v.toFixed(0)} million km². Recovery to 1980 levels is projected around 2066.`):`In the world without the Protocol, the hole would have kept growing: about ${v.toFixed(0)} million km² by ${s.y}. The Montreal Protocol is the most successful environmental treaty so far.`};
  }});
 
 SCENE({id:'atmospheric-chemistry-ocean',name:'An acidifying ocean',tag:'CO₂ dissolves too',
@@ -528,7 +528,7 @@ SCENE({id:'computational-chemistry-scaling',name:'Why accuracy is expensive',tag
  draw(s){
   const N=10**s.lg;let out=heading('Bigger molecules, much longer waits',28);
   const fmtT=t=>t<60?t.toFixed(t<10?1:0)+' s':t<3600?(t/60).toFixed(0)+' min':t<86400*2?(t/3600).toFixed(1)+' h':t<3.15e7*2?(t/86400).toFixed(0)+' days':(t/3.15e7).toFixed(0)+' years';
-  const A=C8_plot(170,58,390,186,[-1,10],[0,4],{xt:[[0,'1 s'],[1.556,'1 min'],[3.556,'1 h'],[4.937,'1 day'],[7.5,'1 yr']],xl:'time (log scale)'});out+=A.svg;
+  const A=C8_plot(170,58,390,186,[-1,10],[0,4],{xt:[[0,'1 s'],[1.778,'1 min'],[3.556,'1 h'],[4.937,'1 day'],[7.5,'1 yr']],xl:'time (log scale)'});out+=A.svg;
   C8_SC.forEach(([n,pw,col],i)=>{const t=(N/50)**pw,y=A.Y(4-i)+10,lt=Math.log10(t);
    out+=R(A.X(-1),y,Math.max(2,A.X(clamp(lt,-1,10))-A.X(-1)),30,col,'none',4);
    out+=TF(160,y+20,n,13,C.ink,'end')+TF(clamp(A.X(lt)+6,180,520),y+20,fmtT(t),13,C.ink,'start')});
@@ -543,7 +543,7 @@ const C8_LIM=[['Static pictures','It predicts a structure, not the folding proce
 SCENE({id:'computational-chemistry-alphafold',name:'Predicting protein shapes',tag:'AlphaFold and its limits',
  definition:'Most proteins’ chains of amino acids fold into a precise 3D shape that decides what they do; some proteins or regions are intrinsically disordered and shift between many shapes. Predicting the shape from the sequence was a fifty-year challenge, tested every two years in the blind CASP competition. In 2020 DeepMind’s AlphaFold 2, a machine-learning system trained on known structures, predicted many shapes about as accurately as experiments measure them.',
  example:'At CASP14 (2020) AlphaFold 2 reached a median score of about 92 on the 0–100 GDT scale, where around 90 is considered competitive with experiment. Demis Hassabis and John Jumper shared the 2024 Nobel Prize with David Baker, who designs new proteins.',
- desc:'Left: approximate median accuracy (GDT) of the best group in each CASP round on the hardest targets, with the CASP14 figure as published. Press a limitation card on the right to read what AlphaFold does not do.',
+ desc:'Left: approximate median accuracy (GDT) of the best group in each CASP round on the hardest targets; the CASP14 bar is the published median across all targets (87.0 on the hardest). Press a limitation card on the right to read what AlphaFold does not do.',
  research:['Jumper, J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. Nature 596, 583–589.','Moult, J. et al. (1995). A large-scale experiment to assess protein structure prediction methods. Proteins 23, ii–v (the start of CASP).','Abramson, J. et al. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. Nature 630, 493–500.','Nobel Prize in Chemistry 2024: Baker, Hassabis and Jumper.'],
  dur:10,hint:'Look at the jump after 2016. Then read the limits: a prediction is a hypothesis to test.',
  init:()=>({lim:0}),

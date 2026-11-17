@@ -28,7 +28,7 @@ SOURCE('c1-scheele-1777',{title:'Scheele, C. W. (1777). Chemische Abhandlung von
 SOURCE('c1-priestley-1775',{title:'Priestley, J. (1775). Experiments and Observations on Different Kinds of Air, vol. 2. London.'});
 SOURCE('c1-kuhn-1962',{title:'Kuhn, T. S. (1962). The Structure of Scientific Revolutions, ch. 6. University of Chicago Press.'});
 SOURCE('c1-nomenclature-1787',{title:'Guyton de Morveau, L.-B., Lavoisier, A.-L., Berthollet, C.-L. & Fourcroy, A.-F. (1787). Méthode de nomenclature chimique. Paris.'});
-SOURCE('c1-davy-1811',{title:'Davy, H. (1811). On a combination of oxymuriatic gas and oxygene gas. Philosophical Transactions 101, 155–162.'});
+SOURCE('c1-davy-1811',{title:'Davy, H. (1810). Researches on the oxymuriatic acid, its nature and combinations; and on the elements of the muriatic acid. Philosophical Transactions 100, 231–257.'});
 
 LESSON({id:'four-elements',name:'Four elements and their rivals',short:'Elements',stage:'alchemy',year:'c. 450 BCE–1661',level:'Introduction',
  why:'For two thousand years matter was explained by a few elements defined by qualities; Boyle’s critique in 1661 opened the way to elements defined by experiment.',

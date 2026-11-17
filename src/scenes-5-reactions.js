@@ -129,7 +129,7 @@ SCENE({id:'equilibrium',name:'Pushing an equilibrium',tag:'Le Chatelier’s prin
  example:'Squeeze the flask to half its volume and the brown NO₂ gets darker at once, then fades a little as some NO₂ pairs up into colourless N₂O₄, the side with fewer molecules.',
  desc:'A flask whose brown colour shows the amount of NO₂. Buttons add NO₂, remove NO₂ or halve or double the volume; a slider sets the temperature. Bars show the concentrations just after your change and at the new equilibrium, with the reaction quotient Q against K and an arrow for the direction of the shift.',
  research:'Guldberg, C. M. & Waage, P. (1864, 1867). Études sur les affinités chimiques. Le Chatelier, H. L. (1884). Sur un énoncé général des lois des équilibres chimiques. Comptes rendus 99, 786–789. Kc ≈ 4.6 × 10⁻³ mol/L at 298 K and ΔH° ≈ +57.2 kJ/mol from standard data tables (rounded). NO₂ is toxic: this is a demonstration done in sealed tubes.',
- dur:12,hint:'Try “Halve the volume” and watch the colour darken then partly fade. Then heat the flask: the reaction absorbs heat, so warming pushes it towards brown NO₂.',
+ dur:12,hint:'Try “Halve the volume”: the bars show NO₂ double, then fall part of the way back; the flask ends up darker. Then heat the flask: the reaction absorbs heat, so warming pushes it towards brown NO₂.',
  init:()=>({n0:.04,V:1,T:298,prev:null,last:''}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return [{n0:.04,V:1,T:298,prev:null,last:''},{n0:.04,V:.5,T:298,prev:{n0:.04,V:1,T:298},last:'Halved the volume'},{n0:.04,V:.5,T:340,prev:{n0:.04,V:.5,T:298},last:'Heated to 340 K'},{n0:.05,V:.5,T:340,prev:{n0:.04,V:.5,T:340,add:.02},last:'Added NO₂'}][k]},
  ui:[{b:'Add NO₂',act:'add'},{b:'Remove NO₂',act:'rem'},{b:'Halve the volume',act:'half'},{b:'Double the volume',act:'dbl'},
@@ -205,7 +205,7 @@ SCENE({id:'equilibrium-quotient',name:'Which way will it go?',tag:'The reaction 
  definition:'The reaction quotient Q has the same form as K but uses the concentrations you have right now. If Q is less than K the reaction runs forward; if Q is greater it runs back; if they are equal the mixture is already at equilibrium.',
  example:'Hydrogen and iodine with no HI: Q = 0, far below K = 54, so HI forms until [HI]² / ([H₂][I₂]) reaches 54.',
  desc:'Sliders set the starting amounts of H₂, I₂ and HI in a 1-litre vessel near 700 K. A gauge places Q against K on a log scale with an arrow for the direction. Paired bars compare the start with the equilibrium mixture.',
- research:'Bodenstein, M. (1894, 1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 13, 56–127; 29, 295–314. Taylor, A. H. & Crist, R. H. (1941). Journal of the American Chemical Society 63, 1381–1386 (K ≈ 54 at 698 K). The equilibrium is found by solving K(a − y)(b − y) = (c + 2y)².',
+ research:'Bodenstein, M. (1894, 1899). Gasreaktionen in der chemischen Kinetik. Zeitschrift für physikalische Chemie 13, 56–127; 29, 295–314. Taylor, A. H. & Crist, R. H. (1941). Journal of the American Chemical Society 63 (K ≈ 54 at 698 K). The equilibrium is found by solving K(a − y)(b − y) = (c + 2y)².',
  dur:10,hint:'Start with only HI and see the reaction run backwards. Then give it a large excess of H₂ and watch nearly all the iodine get used up.',
  init:()=>({a:1,b:1,c:0}),
  watch(p){return p<.33?{a:1,b:1,c:0}:p<.66?{a:0,b:0,c:2}:{a:2,b:.5,c:0}},
@@ -292,7 +292,7 @@ SCENE({id:'acids-bases-definitions',name:'Three meanings of acid',tag:'Arrhenius
  }});
 
 /* Buffer against water: drops of 1.0 mol/L HCl, 0.05 mL each, into 100 mL. */
-function C5_buf(n){const add=n*5e-5,V=.1+n*5e-8;const water=add>0?C5_pH(add/V,1e8):7;const HA=.01+add,A=.01-add;const buf=A>0?4.76+Math.log10(A/HA):C5_pH((add-.01)/V,1e8);return {water,buf}}
+function C5_buf(n){const add=n*5e-5,V=.1+n*5e-5;const water=add>0?C5_pH(add/V,1e8):7;const HA=.01+add,A=.01-add;const buf=A>0?4.76+Math.log10(A/HA):C5_pH((add-.01)/V,1e8);return {water,buf}}
 SCENE({id:'acids-bases-buffer',name:'Holding pH steady',tag:'Buffers',
  definition:'A buffer is a mixture of a weak acid and its conjugate base. Added acid is mopped up by the base, and added alkali by the acid, so the pH barely moves. The Henderson–Hasselbalch equation gives its pH: pH = pKa + log₁₀([A⁻] / [HA]).',
  example:'Twenty drops of strong acid take 100 mL of water from pH 7 to about pH 2, but an ethanoate buffer only from 4.76 to 4.67.',
@@ -326,7 +326,7 @@ SCENE({id:'redox-batteries',name:'A cell from zinc and copper',tag:'The Daniell 
  research:'Volta, A. (1800). On the electricity excited by the mere contact of conducting substances of different kinds. Philosophical Transactions 90, 403–431. Daniell, J. F. (1836). On voltaic combinations. Philosophical Transactions 126, 107–124. Nernst, W. (1889). Zeitschrift für physikalische Chemie 4, 129–181. E° = +0.34 − (−0.76) = 1.10 V.',
  dur:10,hint:'Make the zinc solution strong and the copper solution weak: the voltage falls, because the products are piling up and the reactants running out.',
  init:()=>({zn:0,cu:0}),
- watch(p){return {zn:Number(lerp(-2,2,p).toFixed(1)),cu:Number(lerp(2,-2,p).toFixed(1))}},
+ watch(p){return {zn:Number(lerp(-3,.3,p).toFixed(1)),cu:Number(lerp(.3,-3,p).toFixed(1))}},
  ui:[{range:'zn',label:'Zn²⁺ concentration',min:-3,max:.3,step:.1,get:s=>s.zn,act:'zn',show:v=>C5_sci(10**Number(v),2)+' mol/L'},
   {range:'cu',label:'Cu²⁺ concentration',min:-3,max:.3,step:.1,get:s=>s.cu,act:'cu',show:v=>C5_sci(10**Number(v),2)+' mol/L'}],
  on:{zn(s,v){s.zn=Number(v)},cu(s,v){s.cu=Number(v)}},
@@ -374,7 +374,7 @@ SCENE({id:'redox-batteries-lithium',name:'The lithium-ion cell',tag:'Ions rockin
  example:'A phone cell runs at about 3.7 V and stores several times more energy per kilogram than a lead–acid car battery.',
  desc:'A cell drawn as graphite layers on the left and cobalt oxide layers on the right, with lithium ions as dots. A state-of-charge slider moves the ions between them; the voltage readout follows a typical discharge curve. Bars compare rough energy per kilogram for four battery types.',
  research:'Whittingham, M. S. (1976). Electrical energy storage and intercalation chemistry. Science 192, 1126–1127. Mizushima, K., Jones, P. C., Wiseman, P. J. & Goodenough, J. B. (1980). LixCoO₂: a new cathode material. Materials Research Bulletin 15, 783–789. Yoshino, A. et al. (1985), Japanese patent on the carbon anode cell; Sony commercialised it in 1991. Nobel Prize in Chemistry 2019. Energy densities are rough typical values; the voltage curve is illustrative. Cobalt mining raises serious labour and environmental concerns.',
- dur:10,hint:'Slide from full to empty and watch the ions move from graphite to oxide while the voltage sags from about 4.2 V to 3.0 V.',
+ dur:10,hint:'Slide from full to empty and watch the ions move from graphite to oxide while the voltage sags from about 4.2 V to below 3 V.',
  init:()=>({q:80}),
  watch(p){return {q:Math.round(lerp(100,0,smooth(p/.9)))}},
  ui:[{range:'q',label:'State of charge',min:0,max:100,step:1,get:s=>s.q,act:'q',show:v=>v+'%'}],
@@ -445,7 +445,7 @@ SCENE({id:'catalysis-haber',name:'Bread from air',tag:'Haber–Bosch: the great 
     ['Chemical weapons',C.coral,'Haber led Germany’s gas programme and oversaw the first large chlorine attack, at Ypres in April 1915. Clara Immerwahr, a chemist and his wife, opposed the work; she died by suicide days later.'],
     ['Exile',C.purple,'Haber, of Jewish descent, resigned his Berlin institute in 1933 under Nazi laws and died in exile in 1934. Explosives as well as fertiliser come from the same ammonia.']];
    cards.forEach(([t,col,body],i)=>{const y=52+i*104;out+=R(40,y,520,94,'#fff',col,10,'stroke-width="2"')+TBF(56,y+24,t,15,col,'start')+C5_lines(56,y+46,C5_wrap(body,80),13,C.ink,'start',17)});
-   return {svg:out,phase:'The same reaction feeds most of humanity and fed the explosives and gas of the First World War. Chemistry’s benefits and harms often share a flask.'}}
+   return {svg:out,phase:'The same reaction feeds about half of humanity and fed Germany’s explosives in the First World War, and its inventor also led the gas programme. Chemistry’s benefits and harms often share a flask.'}}
   let out=heading('N₂ + 3H₂ ⇌ 2NH₃   ΔH = −92 kJ/mol',26);
   const x0=70,y0=56,w=300,h=230;
   for(let i=0;i<30;i++)for(let j=0;j<20;j++){const T=200+i*400/30+400/60,lp=1+j*2/20+.05,y=C5_haber(T,10**lp);const a=y/100;out+=R(x0+i*w/30,y0+h-(j+1)*h/20,w/30+.4,h/20+.4,`rgb(${Math.round(240-a*190)},${Math.round(244-a*120)},${Math.round(250-a*90)})`,'none',0)}
@@ -498,7 +498,7 @@ SCENE({id:'free-energy',name:'Which way is downhill?',tag:'Gibbs free energy: Δ
  definition:'Gibbs showed that at constant temperature and pressure a reaction can go by itself only if it lowers the free energy G: ΔG = ΔH − TΔS must be negative. Heat given out (negative ΔH) helps; an increase in disorder (positive ΔS) helps more at higher temperature.',
  example:'Ice melting absorbs heat (ΔH > 0) but increases disorder (ΔS > 0), so it happens only above 273 K, where TΔS outweighs ΔH.',
  desc:'A choice of four reactions. A plot shows ΔG against temperature as a straight line, crossing zero at T = ΔH / ΔS, with the region where the reaction can proceed shaded. A slider moves a marker along the line and tiles give ΔH, TΔS and ΔG.',
- research:'Gibbs, J. W. (1876–1878). On the equilibrium of heterogeneous substances. Transactions of the Connecticut Academy of Arts and Sciences 3, 108–248 and 343–524. Standard enthalpies and entropies at 298 K from standard data tables (rounded), treated as constant with temperature, which is an approximation. A negative ΔG says a reaction can go, not how fast: hydrogen and oxygen sit unreacted until a spark lowers the barrier.',
+ research:'Gibbs, J. W. (1876–1878). On the equilibrium of heterogeneous substances. Transactions of the Connecticut Academy of Arts and Sciences 3, 108–248 and 343–524. Standard enthalpies and entropies at 298 K from standard data tables (rounded), treated as constant with temperature, which is an approximation. A negative ΔG says a reaction can go, not how fast: hydrogen and oxygen sit unreacted until a spark supplies the activation energy to get them over the barrier.',
  dur:12,hint:'Try limestone: it needs strong heating before ΔG turns negative, which is why lime kilns run near 900 °C.',
  init:()=>({k:0,T:298}),
  watch(p){const k=Math.min(3,Math.floor(p*4));return {k,T:Math.round(lerp(200,1400,(p*4)%1))}},

@@ -104,11 +104,11 @@ SCENE({id:'lewis-structures-cube',name:'Lewis’s cubical atom',tag:'The model b
    out+=TBF(220,330,`${names[s.n-1]}: ${s.n} outer electron${s.n>1?'s':''}`,15,C.ink);
    out+=C4_wrap(410,100,s.n===8?'All eight corners full: a stable, unreactive shell, as in neon.':`${8-s.n} corner${8-s.n>1?'s':''} empty. The atom gains, loses or shares electrons to fill them.`,24,13,C.ink);
    ph=`${names[s.n-1]} has ${s.n} outer electrons on the corners of its cube.`}
-  else if(s.v==='single'){const a=110;out+=C4_cube(170,235,a,[0,1,3,4,5,6,7],C.blue,[5,7])+C4_cube(170+a,235-a,a,[0,1,2,3,4,5,6],'#3a8a48',[0,2]);
+  else if(s.v==='single'){const a=110;out+=C4_cube(170,235,a,[0,1,2,3,4,5,6,7],C.blue,[5,7])+C4_cube(170+a,235-a,a,[0,1,2,3,4,5,6,7],'#3a8a48',[0,2]);
    out+=TBF(170,330,'Cl',15,C.ink)+TBF(280,330,'Cl',15,C.ink);
    out+=C4_wrap(410,100,'Two chlorine cubes share one edge. Each has 7 electrons of its own; the 2 corners on the shared edge count for both, so each sees 8.',24,13,C.ink);
    ph='An edge shared between two cubes: one shared pair, a single bond (Cl₂).'}
-  else if(s.v==='double'){const a=110;out+=C4_cube(160,200,a,[1,3,5,7,0,2],C.blue,[1,3,5,7])+C4_cube(160+a,200,a,[0,2,4,6,1,3],'#3a8a48',[0,2,4,6]);
+  else if(s.v==='double'){const a=110;out+=C4_cube(160,200,a,[0,1,2,3,4,5,6,7],C.blue,[1,3,5,7])+C4_cube(160+a,200,a,[0,1,2,3,4,5,6,7],'#3a8a48',[0,2,4,6]);
    out+=TBF(160,330,'O',15,C.ink)+TBF(270,330,'O',15,C.ink);
    out+=C4_wrap(410,100,'Two oxygen cubes share a face. Each has 6 electrons; the 4 shared corners count for both, so each sees 8: a double bond.',24,13,C.ink);
    ph='A face shared between two cubes: two shared pairs, a double bond (O₂).'}
@@ -139,7 +139,7 @@ SCENE({id:'lewis-structures-formal-charge',name:'Formal charge and resonance',ta
  on:{m(s,v){s.m=v;s.k=0;s.hy=false;return 'keep'},k(s,v){const n=C4_FCM[s.m].S.length;s.k=Math.min(n-1,Number(v));s.hy=false;return 'keep'},hy(s){s.hy=!s.hy;return 'keep'}},
  draw(s){
   const m=C4_FCM[s.m],k=Math.min(m.S.length-1,s.k),st=m.S[k],fc=C4_fc(m,st),A=m.a;let out=heading(`${m.n}: ${s.hy?'resonance hybrid':'structure '+'ABC'[k]}`,28);
-  m.b.forEach(([i,j],b)=>{const a=A[i],c=A[j];if(s.hy){const avg=sum(m.S.map(t=>t.o[b]))/m.S.length,lo=Math.floor(avg);out+=C4_bond(a[1],a[2],c[1],c[2],avg>lo?lo+1:lo,C.ink,20,20,avg>lo);
+  m.b.forEach(([i,j],b)=>{const a=A[i],c=A[j];if(s.hy){const fa=t=>sum(C4_fc(m,t).map(Math.abs)),fmin=Math.min(...m.S.map(fa)),SS=m.S.filter(t=>fa(t)===fmin),avg=sum(SS.map(t=>t.o[b]))/SS.length,lo=Math.floor(avg);out+=C4_bond(a[1],a[2],c[1],c[2],avg>lo?lo+1:lo,C.ink,20,20,avg>lo);
     const dx=c[1]-a[1],dy=c[2]-a[2],d=Math.hypot(dx,dy);out+=TF((a[1]+c[1])/2-dy/d*22,(a[2]+c[2])/2+dx/d*22+4,avg%1?(Math.abs(avg-4/3)<.01?'1⅓':'1½'):String(avg),13,C.blue)}
    else out+=C4_bond(a[1],a[2],c[1],c[2],st.o[b],C.ink)});
   const used=A.map(()=>[]);
@@ -173,15 +173,16 @@ SCENE({id:'ionic-covalent',name:'From covalent to ionic',tag:'One continuum, not
   const ax=150,bx=350,y=160,px=lerp(250,bx-6,ion);
   out+=`<ellipse cx="${fmt(px)}" cy="${y}" rx="${fmt(lerp(78,46,ion))}" ry="38" fill="${C.pale}" opacity=".85"/>`;
   out+=C4_atom(ax,y,la,30)+C4_atom(bx,y,lb,30)+Ci(px-6,y-42,4.5,C.ink)+Ci(px+6,y-42,4.5,C.ink);
-  const q=ion>.5?['+','−']:s.d>.05?['δ+','δ−']:['',''];out+=TBF(ax,y-46,q[0],16,C.coral)+TBF(bx+38,y-30,q[1],16,C.blue);
+  const q=ion>.5&&s.k!=='HF'?['+','−']:s.d>.05?['δ+','δ−']:['',''];out+=TBF(ax,y-46,q[0],16,C.coral)+TBF(bx+38,y-30,q[1],16,C.blue);
   // ionic-character bar
   const x0=60,w=480,yb=270;out+=R(x0,yb,w,18,'#fff',C.line,4)+R(x0,yb,w*ion,18,C.blue,'none',4);
   [[.4,'0.4'],[1.7,'1.7']].forEach(([d,l])=>{const xx=x0+w*C4_ion(d);out+=L(xx,yb-6,xx,yb+24,C.muted,1.5,'stroke-dasharray="3 3"')+TF(xx,yb+38,'Δ '+l,13,C.muted)});
   out+=TF(x0,yb-10,'non-polar',13,C.muted,'start')+TF(x0+w*.45,yb-10,'polar covalent',13,C.muted)+TF(x0+w,yb-10,'mostly ionic',13,C.muted,'end');
   out+=TBF(300,340,`About ${Math.round(ion*100)}% ionic character (Pauling’s estimate)`,15,C.ink);
-  const cls=s.d<.4?'non-polar covalent':s.d<1.7?'polar covalent':'mostly ionic';
+  const cls=s.d<.4?'non-polar covalent':s.d<1.7||s.k==='HF'?'polar covalent':'mostly ionic';
   let ph=`A difference of ${s.d.toFixed(2)} gives a ${cls} bond, about ${Math.round(ion*100)}% ionic by Pauling’s formula.`;
   if(s.k==='HCl')ph+=' The measured dipole of HCl suggests about 18%, so the formula is a rough guide.';
+  if(s.k==='HF')ph+=' The measured dipole of HF suggests about 41%, and HF is a molecule, not a salt: the 1.7 cut-off is only a rough guide.';
   return {svg:out,phase:ph};
  }});
 
@@ -453,7 +454,7 @@ SCENE({id:'hydrogen-bonds',name:'Hydrogen bonds',tag:'Water’s anomalous boilin
 const C4_RHO=[[-10,.99815],[-5,.99930],[0,.99984],[2,.99994],[4,.99997],[6,.99994],[8,.99985],[10,.99970],[15,.99910],[20,.99821],[25,.99705],[30,.99565]];
 function C4_rho(t){for(let i=1;i<C4_RHO.length;i++){if(t<=C4_RHO[i][0]){const [a,ra]=C4_RHO[i-1],[b,rb]=C4_RHO[i];return lerp(ra,rb,(t-a)/(b-a))}}return C4_RHO[C4_RHO.length-1][1]}
 SCENE({id:'hydrogen-bonds-ice',name:'Why ice floats',tag:'Densest at 4 °C',
- definition:'Liquid water is densest at about 4 °C. On freezing, hydrogen bonds lock each molecule to four neighbours in an open hexagonal lattice, so ice is about 9% less dense than water and floats. Most substances are denser as solids.',
+ definition:'Liquid water is densest at about 4 °C. On freezing, hydrogen bonds lock each molecule to four neighbours in an open hexagonal lattice, so ice is about 8% less dense than water and floats. Most substances are denser as solids.',
  example:'A lake cools from the top, but water below 4 °C stays at the surface and freezes there. The ice insulates the water beneath, which stays near 4 °C through winter.',
  desc:'The density of water from −10 °C (supercooled) to 30 °C, with its peak near 4 °C, and a beaker showing how deep an ice cube floats.',
  research:['Kell, G. S. (1975). Density, thermal expansivity, and compressibility of liquid water from 0° to 150 °C. Journal of Chemical and Engineering Data 20, 97–105.','Bernal, J. D. & Fowler, R. H. (1933). A theory of water and ionic solution, with particular reference to hydrogen and hydroxyl ions. Journal of Chemical Physics 1, 515–548.'],
@@ -482,7 +483,7 @@ const C4_tm=gc=>69.3+.41*gc;
 SCENE({id:'hydrogen-bonds-dna',name:'Hydrogen bonds in DNA',tag:'Two bonds or three',
  definition:'The two strands of DNA are held together by hydrogen bonds between bases: adenine pairs with thymine through two hydrogen bonds, guanine with cytosine through three. DNA richer in G–C pairs needs more heat to separate its strands, though stacking between neighbouring base pairs contributes much of that stability too.',
  example:'Marmur and Doty (1962) found that DNA’s melting temperature rises in a straight line with its G–C content: about 69 °C for pure A–T and 110 °C for pure G–C, in their salt solution.',
- desc:'A ten-pair stretch of DNA with dashed hydrogen bonds between partners. Press a pair to switch it between A–T and G–C; the G–C percentage and predicted melting temperature update.',
+ desc:'A ten-pair stretch standing in for long DNA, with dashed hydrogen bonds between partners. Press a pair to switch it between A–T and G–C; the G–C percentage and the melting temperature predicted for long DNA of that make-up update.',
  research:['Watson, J. D. & Crick, F. H. C. (1953). Molecular structure of nucleic acids. Nature 171, 737–738.','Marmur, J. & Doty, P. (1962). Determination of the base composition of deoxyribonucleic acid from its thermal denaturation temperature. Journal of Molecular Biology 5, 109–118.','Yakovchuk, P., Protozanova, E. & Frank-Kamenetskii, M. D. (2006). Base-stacking and base-pairing contributions into thermal stability of the DNA double helix. Nucleic Acids Research 34, 564–574.'],
  dur:12,hint:'Press base pairs to switch them, or use a preset. Count the dashed hydrogen bonds and watch the melting temperature.',
  init:()=>({gc:[0,1,0,0,1,0,1,0,0,1].map(Boolean)}),
@@ -509,7 +510,7 @@ const C4_EN={H:2.20,Li:.98,Be:1.57,B:2.04,C:2.55,N:3.04,O:3.44,F:3.98,Na:.93,Mg:
 const C4_GRID=[['H'],['Li','Be','B','C','N','O','F'],['Na','Mg','Al','Si','P','S','Cl'],['K','Ca','Ga','Ge','As','Se','Br']];
 function C4_heat(v){const t=clamp((v-.8)/3.2,0,1);return tint(C.blue,1-t*.85)}
 SCENE({id:'electronegativity',name:'Electronegativity',tag:'Who pulls the shared pair',
- definition:'Electronegativity measures how strongly an atom in a molecule attracts shared electrons. On Pauling’s scale it rises across each row of the periodic table and falls down each group: fluorine (3.98) is the highest, the alkali metals the lowest. The difference between two atoms predicts how polar their bond is.',
+ definition:'Electronegativity measures how strongly an atom in a molecule attracts shared electrons. On Pauling’s scale it rises across each row of the periodic table and generally falls down each group: fluorine (3.98) is the highest, the alkali metals the lowest. The difference between two atoms predicts how polar their bond is.',
  example:'Carbon (2.55) and hydrogen (2.20) differ by only 0.35, so C–H bonds are nearly non-polar; oxygen and hydrogen differ by 1.24, so O–H bonds are strongly polar.',
  desc:'Main-group elements of the first four rows shaded by Pauling electronegativity. Pick two to see the difference, the bond’s polarity and which atom takes the partial negative charge.',
  research:['Pauling, L. (1932). The nature of the chemical bond. IV. The energy of single bonds and the relative electronegativity of atoms. Journal of the American Chemical Society 54, 3570–3582.','Allred, A. L. (1961). Electronegativity values from thermochemical data. Journal of Inorganic and Nuclear Chemistry 17, 215–221 (the revised values used today).'],
@@ -528,7 +529,7 @@ SCENE({id:'electronegativity',name:'Electronegativity',tag:'Who pulls the shared
   out+=TF(px,96,`${C4_EN[a].toFixed(2)} and ${C4_EN[b].toFixed(2)}`,13,C.ink,'start')+TF(px,116,`difference ${d.toFixed(2)}`,13,C.ink,'start');
   out+=TF(px,140,cls,13,d<.4?C.green:d<1.7?C.blue:C.purple,'start');
   if(d>=.05)out+=C4_wrap(px,164,`${neg} takes the larger share: ${neg} is δ−, ${pos} is δ+.`,26,13,C.muted);
-  out+=C4_wrap(24,272,'Rises across a row, falls down a group. Pauling’s scale gives the lighter noble gases no value because they rarely form bonds.',60,13,C.muted);
+  out+=C4_wrap(24,272,'Rises across a row, mostly falls down a group. Pauling’s scale gives the lighter noble gases no value because they rarely form bonds.',60,13,C.muted);
   return {svg:out,phase:`${a}–${b}: difference ${d.toFixed(2)}, ${cls}.`};
  }});
 

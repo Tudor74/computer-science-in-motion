@@ -6,7 +6,7 @@ SOURCE('c7-james-martin-1952',{title:'James, A. T. & Martin, A. J. P. (1952). Ga
 SOURCE('c7-stahl-1956',{title:'Stahl, E. (1956). Dünnschicht-Chromatographie. Pharmazie 11, 633–637.'});
 SOURCE('c7-herschel-1800',{title:'Herschel, W. (1800). Experiments on the refrangibility of the invisible rays of the Sun. Philosophical Transactions of the Royal Society 90, 284–292.',url:'https://doi.org/10.1098/rstl.1800.0015'});
 SOURCE('c7-coblentz-1905',{title:'Coblentz, W. W. (1905). Investigations of Infra-Red Spectra. Carnegie Institution of Washington.',url:'https://archive.org/details/investigationsof00cobl'});
-SOURCE('c7-silverstein',{title:'Silverstein, R. M., Bassler, G. C. & Morrill, T. C. (1963 and later editions). Spectrometric Identification of Organic Compounds. Wiley.'});
+SOURCE('c7-silverstein',{title:'Silverstein, R. M. & Bassler, G. C. (1963; later editions with Morrill, T. C.). Spectrometric Identification of Organic Compounds. Wiley.'});
 SOURCE('c7-sdbs',{title:'Spectral Database for Organic Compounds (SDBS). National Institute of Advanced Industrial Science and Technology, Japan.',url:'https://sdbs.db.aist.go.jp/'});
 SOURCE('c7-foote-1856',{title:'Foote, E. (1856). Circumstances affecting the heat of the Sun’s rays. American Journal of Science and Arts 22, 382–383.'});
 SOURCE('c7-tyndall-1861',{title:'Tyndall, J. (1861). On the absorption and radiation of heat by gases and vapours. Philosophical Transactions of the Royal Society 151, 1–36.',url:'https://doi.org/10.1098/rstl.1861.0001'});
@@ -21,7 +21,7 @@ SOURCE('c7-aston-1919',{title:'Aston, F. W. (1919). A positive ray spectrograph.
 SOURCE('c7-mclafferty-1993',{title:'McLafferty, F. W. & Tureček, F. (1993). Interpretation of Mass Spectra, 4th edn. University Science Books.'});
 SOURCE('c7-nist-webbook',{title:'NIST Chemistry WebBook, Standard Reference Database 69 (mass spectra).',url:'https://webbook.nist.gov/chemistry/'});
 SOURCE('c7-bragg-1913',{title:'Bragg, W. L. (1913). The diffraction of short electromagnetic waves by a crystal. Proceedings of the Cambridge Philosophical Society 17, 43–57.'});
-SOURCE('c7-braggs-1913',{title:'Bragg, W. H. & Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277.',url:'https://doi.org/10.1098/rspa.1913.0083'});
+SOURCE('c7-braggs-1913',{title:'Bragg, W. L. (1913). The structure of some crystals as indicated by their diffraction of X-rays. Proceedings of the Royal Society A 89, 248–277.',url:'https://doi.org/10.1098/rspa.1913.0083'});
 SOURCE('c7-lonsdale-1929',{title:'Lonsdale, K. (1929). The structure of the benzene ring in C₆(CH₃)₆. Proceedings of the Royal Society A 123, 494–515.',url:'https://doi.org/10.1098/rspa.1929.0081'});
 SOURCE('c7-hodgkin-1956',{title:'Hodgkin, D. C. et al. (1956). Structure of vitamin B₁₂. Nature 178, 64–66.',url:'https://doi.org/10.1038/178064a0'});
 SOURCE('c7-adams-1969',{title:'Adams, M. J. et al. (1969). Structure of rhombohedral 2 zinc insulin crystals. Nature 224, 491–495.',url:'https://doi.org/10.1038/224491a0'});

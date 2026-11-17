@@ -196,7 +196,7 @@ const C3_CURIE=[['Uranium metal','pure, the reference',2.3,'the reference'],['Pi
 SCENE({id:'radioactivity',name:'Something more active than uranium',tag:'Marie Curie measures rays',
  definition:'In 1896 Henri Becquerel found that uranium salts fog a photographic plate in the dark. Marie Curie measured this activity precisely with an electrometer designed by Pierre Curie and her own method, and found that some uranium ores were more active than pure uranium, so they had to hold a new, more active element.',
  example:'Natural chalcolite, a uranium mineral, gave 5.2 units of current. Chalcolite she made herself from pure chemicals gave only 0.9. The natural mineral had to contain something else: polonium and radium, announced in 1898.',
- desc:'An electrometer reading for each of four samples Marie Curie measured, in units of 10⁻¹¹ ampere, as reported in her 1898 note, against the reading for uranium metal.',
+ desc:'An electrometer reading for each of four samples Marie Curie measured, in units of 10⁻¹¹ ampere, as she reported them, against the reading for uranium metal.',
  research:['Becquerel, H. (1896). Sur les radiations émises par phosphorescence. Comptes rendus 122, 420–421.','Curie, M. (1898). Rayons émis par les composés de l’uranium et du thorium. Comptes rendus 126, 1101–1103.','Curie, P. & Curie, M. (1898). Sur une substance nouvelle radio-active, contenue dans la pechblende. Comptes rendus 127, 175–178.','Curie, P., Curie, M. & Bémont, G. (1898). Sur une nouvelle substance fortement radio-active, contenue dans la pechblende. Comptes rendus 127, 1215–1217.'],
  dur:11,hint:'Measure each sample. Which ones are more active than their uranium can explain?',
  init:()=>({k:2,done:[0,1,2]}),
@@ -295,7 +295,7 @@ SCENE({id:'atomic-number',name:'Moseley’s X-rays',tag:'Counting the elements',
 const C3_PAIRS=[['Ar','K',39.95,39.10,18,19,'Argon is heavier than potassium, yet must come first: argon is a noble gas, potassium an alkali metal.'],['Co','Ni',58.93,58.69,27,28,'Cobalt is slightly heavier than nickel; Moseley’s X-rays confirmed cobalt comes first.'],['Te','I',127.60,126.90,52,53,'Tellurium is heavier than iodine, but iodine clearly belongs with chlorine and bromine.']];
 const C3_MISSING=[[43,'Tc','technetium','1937, made in a cyclotron'],[61,'Pm','promethium','1945, from fission products'],[72,'Hf','hafnium','1923, Coster and von Hevesy'],[75,'Re','rhenium','1925, Noddack, Tacke and Berg']];
 SCENE({id:'atomic-number-gaps',name:'Order fixed, gaps counted',tag:'What atomic number settled',
- definition:'Ordering by atomic weight had three awkward swaps, which Mendeleev made on chemical grounds. Atomic number confirmed every one of them, and showed exactly how many elements were still missing between hydrogen and uranium.',
+ definition:'Ordering by atomic weight had three awkward swaps, which chemists made on chemical grounds. Atomic number confirmed every one of them, and showed exactly how many elements were still missing between hydrogen and uranium.',
  example:'Moseley’s method left gaps at Z = 43, 61, 72 and 75. Hafnium (72) was found in 1923 by Dirk Coster and George de Hevesy, who looked for its X-ray lines because the gap told them where to look.',
  desc:'Choose a pair ordered wrongly by weight, or show the missing atomic numbers of 1914 and when each was filled.',
  research:['Moseley, H. G. J. (1914). The high-frequency spectra of the elements. Part II. Philosophical Magazine 27, 703–713.','Coster, D. & Hevesy, G. (1923). On the missing element of atomic number 72. Nature 111, 79.','Noddack, W., Tacke, I. & Berg, O. (1925). Die Ekamangane. Naturwissenschaften 13, 567–574.','Perrier, C. & Segrè, E. (1937). Some chemical properties of element 43. Journal of Chemical Physics 5, 712–716.'],
@@ -319,7 +319,7 @@ SCENE({id:'atomic-number-gaps',name:'Order fixed, gaps counted',tag:'What atomic
     out+=R(x,y,24,40,miss?C.coralp:C.pale,miss?C.coral:'none',4)+TF(x+12,y+25,String(z),13,miss?C.coral:C.ink)}
    C3_MISSING.forEach(([z,sym,n,when],i)=>{out+=TBF(40,226+i*24,z+' '+sym,14,C.coral,'start')+TF(110,226+i*24,n+': '+when,13,C.ink,'start')});
   }
-  return {svg:out,phase:s.v==='gaps'?'Atomic number turned “how many elements are there?” into a question with a definite answer: 92 up to uranium, with four places then empty.':'Chemistry put these pairs in the right order before physics could say why; atomic number explained it.'};
+  return {svg:out,phase:s.v==='gaps'?'Atomic number turned “how many elements are there?” into a question with a definite answer: 92 up to uranium, with only a few places then empty: the four shown here, and 85 and 87 further on.':'Chemistry put these pairs in the right order before physics could say why; atomic number explained it.'};
  }});
 
 SCENE({id:'atomic-number-nucleus',name:'Z is the nuclear charge',tag:'Protons, and later neutrons',
@@ -374,7 +374,7 @@ SCENE({id:'isotopes-aston',name:'Aston’s mass spectrograph',tag:'Why chlorine 
  definition:'In 1913 J. J. Thomson found that neon has two kinds of atom, of mass 20 and 22. In 1919 Francis Aston built a mass spectrograph that sorted ions by mass, and found that most elements are mixtures of isotopes whose masses are close to whole numbers.',
  example:'Chlorine’s atomic weight, 35.45, is not a whole number because natural chlorine is about 75.8% chlorine-35 and 24.2% chlorine-37.',
  desc:'Two peaks for chlorine-35 and chlorine-37, with a slider for the share of chlorine-37. The weighted average is compared with chlorine’s measured atomic weight.',
- research:['Thomson, J. J. (1913). Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20.','Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714.','Aston, F. W. (1920). The constitution of the elements. Nature 104, 393.','IUPAC CIAAW, isotopic compositions of the elements (chlorine).'],
+ research:['Thomson, J. J. (1913). Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20.','Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714.','Aston, F. W. (1919). The constitution of the elements. Nature 104, 393.','IUPAC CIAAW, isotopic compositions of the elements (chlorine).'],
  dur:10,hint:'Slide the share of chlorine-37 until the average matches 35.45.',
  init:()=>({p37:10}),
  watch(p){return {p37:Math.round(smooth(Math.min(1,p*1.3))*24.2*10)/10}},
@@ -400,7 +400,7 @@ SCENE({id:'isotopes-uses',name:'Isotopes as tools',tag:'Tracers, heavy water and
  definition:'Because isotopes of an element behave almost identically in chemistry but can be told apart by mass or radioactivity, they became tools: tracers to follow atoms through living things, and clocks for dating.',
  example:'De Hevesy’s idea of a tracer is now used in hospital scans, where a small amount of a radioactive isotope shows where it collects in the body.',
  desc:'Three cards on how isotopes were turned into tools, with a picture for each: a plant taking up a tracer, the two hydrogen isotopes, and a carbon-14 decay curve.',
- research:['Hevesy, G. (1923). The absorption and translocation of lead by plants. Biochemical Journal 17, 439–445.','Urey, H. C., Brickwedde, F. G. & Murphy, G. M. (1932). A hydrogen isotope of mass 2. Physical Review 39, 164–165.','Libby, W. F. (1949). Age determination by radiocarbon content: checks with samples of known age. Science 110, 678–680.'],
+ research:['Hevesy, G. (1923). The absorption and translocation of lead by plants. Biochemical Journal 17, 439–445.','Urey, H. C., Brickwedde, F. G. & Murphy, G. M. (1932). A hydrogen isotope of mass 2. Physical Review 39, 164–165.','Arnold, J. R. & Libby, W. F. (1949). Age determination by radiocarbon content: checks with samples of known age. Science 110, 678–680.'],
  dur:9,hint:'Press each use to see how isotopes became tools.',
  init:()=>({u:'tracer'}),
  watch(p){return {u:['tracer','deut','date'][Math.min(2,Math.floor(p*3))]}},
@@ -409,7 +409,7 @@ SCENE({id:'isotopes-uses',name:'Isotopes as tools',tag:'Tracers, heavy water and
  draw(s){
   const d=C3_USES[s.u];let out=heading(d[0],26);
   d.slice(1).forEach((t,i)=>{out+=TF(330,90+i*22,t,13,C.ink,'start')});
-  if(s.u==='tracer'){out+=P('M160 300V150',C.green,4)+P('M160 220Q120 200 100 170M160 190Q200 170 220 140M160 160Q140 130 150 110',C.green,3);for(let i=0;i<9;i++){const t=i/8;out+=Ci(160+Math.sin(i)*6,300-t*150,4,C.coral)}out+=R(110,300,100,30,'#c9b48a','none',4)+TF(160,350,'roots in water with lead-210',13,C.muted)}
+  if(s.u==='tracer'){out+=P('M160 300V150',C.green,4)+P('M160 220Q120 200 100 170M160 190Q200 170 220 140M160 160Q140 130 150 110',C.green,3);for(let i=0;i<9;i++){const t=i/8;out+=Ci(160+Math.sin(i)*6,300-t*150,4,C.coral)}out+=R(110,300,100,30,'#c9b48a','none',4)+TF(160,350,'roots in water with lead-212',13,C.muted)}
   else if(s.u==='deut'){const atom=(x,lab,neu)=>Ci(x,180,9,C.coral)+(neu?Ci(x+12,180,9,'#9aa7b0'):'')+`<circle cx="${x+(neu?6:0)}" cy="180" r="48" fill="none" stroke="${C.line}" stroke-dasharray="4 4"/>`+Ci(x+(neu?6:0)+48,180,5,C.blue)+TF(x+(neu?6:0),262,lab,13,C.ink);out+=atom(110,'hydrogen-1',0)+atom(240,'deuterium',1)}
   else{const A=C3_axes(60,90,240,180,[0,30000],[0,100],{xt:[[0,'0'],[11460,'11,460'],[28650,'28,650']],yt:[[0,'0'],[50,'50'],[100,'100']],xl:'years',yl:'% left'});out+=A.svg+P(C3_path(range(31).map(i=>[A.X(i*1000),A.Y(100*Math.pow(.5,i*1000/5730))])),C.coral,2.5)+Ci(A.X(5730),A.Y(50),5,C.ink)+TF(A.X(5730)+6,A.Y(50)-6,'5,730 years',13,C.ink,'start')}
   return {svg:out,phase:'Soddy’s idea that one element can come in several weights opened the way to tracers, heavy water and radiocarbon dating.'};
