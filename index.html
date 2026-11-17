@@ -1805,7 +1805,7 @@ function H3_hidden(s,id){
 }
 SCENE({id:'wimp',name:'Windows, icons, menus, pointer',tag:'Overlapping windows',
  definition:'The WIMP interface shows each task in its own window. Windows overlap like papers on a desk, and the pointer brings any one to the front.',
- example:'The Xerox Alto (1973) and Star (1981) introduced overlapping windows, icons and menus driven by a mouse. Almost every desktop since has kept the same four ideas.',
+ example:'On the Xerox Alto (from 1973), the Smalltalk system pioneered overlapping windows, icons and menus driven by a mouse; the Xerox Star (1981) brought the desktop to market, though its main windows did not overlap. Almost every desktop since has kept the same four ideas.',
  desc:'Three overlapping windows on a grey desktop, with a front-to-back list showing how much of each window is hidden.',
  research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface. Byte 7(4).',
  dur:10,hint:'Press a window to bring it to the front, press its close box to close it, and nudge the front window with the buttons.',
@@ -2856,7 +2856,7 @@ SCENE({id:'affordances-mapping',name:'Natural mapping',tag:'Controls laid out li
 function H4_temp(t,set){const reach=(set-15)/0.5;return set<=15?15:t<reach?15+0.5*t:set}
 SCENE({id:'mental-models',name:'The thermostat myth',tag:'Two theories of heat',
  definition:'A mental model is the user’s own theory of how a system works. Wrong models lead to sensible-looking actions that do not help.',
- example:'Many people turn a thermostat right up to warm a cold room faster, as if it were a valve. Most heating is simply on or off: a higher setting only means it stays on longer, overshooting.',
+ example:'Many people turn a thermostat right up to warm a cold room faster, as if it were a valve. A simple on–off heating system works the same at any setting: a higher one only means it stays on longer, overshooting. (Some modern boilers and heat pumps do vary their output.)',
  desc:'Room temperature over time for two thermostat settings under the real on–off behaviour, with an optional dashed line showing what the valve theory predicts.',
  research:'Kempton, W. (1986). Two theories of home heat control. Cognitive Science, 10, 75–90. Norman, D. A. (1988). The Psychology of Everyday Things.',
  dur:10,hint:'Move the setting and switch the valve theory on and off. When does the room reach 20 °C?',
@@ -3354,7 +3354,7 @@ SCENE({id:'graphical-perception-pie-bar',name:'Pie or bar?',tag:'Same numbers, d
 
 SCENE({id:'graphical-perception-area',name:'Area is underestimated',tag:'Stevens’ power law',
  definition:'Perceived magnitude grows as a power of physical magnitude (Stevens’ power law). For area the exponent is below 1, so a circle with twice the area looks less than twice as big.',
- example:'Scaling a circle’s radius by the value makes its area grow with the square: a value twice as big looks four times as big. Scaling the area is correct, but still looks smaller than it is.',
+ example:'Scaling a circle’s radius by the value makes its area grow with the square: a value twice as big gets four times the area, exaggerating the difference. Scaling the area is correct, but because area is underestimated it still looks smaller than it is.',
  research:'Stevens, S. S. (1957). On the psychophysical law. Psychological Review. Flannery, J. J. (1971). The relative effectiveness of some common graduated point symbols. The Canadian Cartographer.',
  desc:'Pairs of circles for a value and a multiple of it: scaled by radius, scaled by area, and scaled by Flannery’s cartographic correction, with bars comparing actual and typically perceived size.',
  dur:10,hint:'Slide how many times bigger the second value is. Compare what each circle actually shows with how big it typically looks.',

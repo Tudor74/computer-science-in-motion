@@ -379,7 +379,7 @@ SCENE({id:'affordances-mapping',name:'Natural mapping',tag:'Controls laid out li
 function H4_temp(t,set){const reach=(set-15)/0.5;return set<=15?15:t<reach?15+0.5*t:set}
 SCENE({id:'mental-models',name:'The thermostat myth',tag:'Two theories of heat',
  definition:'A mental model is the user’s own theory of how a system works. Wrong models lead to sensible-looking actions that do not help.',
- example:'Many people turn a thermostat right up to warm a cold room faster, as if it were a valve. Most heating is simply on or off: a higher setting only means it stays on longer, overshooting.',
+ example:'Many people turn a thermostat right up to warm a cold room faster, as if it were a valve. A simple on–off heating system works the same at any setting: a higher one only means it stays on longer, overshooting. (Some modern boilers and heat pumps do vary their output.)',
  desc:'Room temperature over time for two thermostat settings under the real on–off behaviour, with an optional dashed line showing what the valve theory predicts.',
  research:'Kempton, W. (1986). Two theories of home heat control. Cognitive Science, 10, 75–90. Norman, D. A. (1988). The Psychology of Everyday Things.',
  dur:10,hint:'Move the setting and switch the valve theory on and off. When does the room reach 20 °C?',

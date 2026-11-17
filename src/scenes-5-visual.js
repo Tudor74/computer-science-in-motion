@@ -170,7 +170,7 @@ SCENE({id:'graphical-perception-pie-bar',name:'Pie or bar?',tag:'Same numbers, d
 
 SCENE({id:'graphical-perception-area',name:'Area is underestimated',tag:'Stevens’ power law',
  definition:'Perceived magnitude grows as a power of physical magnitude (Stevens’ power law). For area the exponent is below 1, so a circle with twice the area looks less than twice as big.',
- example:'Scaling a circle’s radius by the value makes its area grow with the square: a value twice as big looks four times as big. Scaling the area is correct, but still looks smaller than it is.',
+ example:'Scaling a circle’s radius by the value makes its area grow with the square: a value twice as big gets four times the area, exaggerating the difference. Scaling the area is correct, but because area is underestimated it still looks smaller than it is.',
  research:'Stevens, S. S. (1957). On the psychophysical law. Psychological Review. Flannery, J. J. (1971). The relative effectiveness of some common graduated point symbols. The Canadian Cartographer.',
  desc:'Pairs of circles for a value and a multiple of it: scaled by radius, scaled by area, and scaled by Flannery’s cartographic correction, with bars comparing actual and typically perceived size.',
  dur:10,hint:'Slide how many times bigger the second value is. Compare what each circle actually shows with how big it typically looks.',

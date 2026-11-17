@@ -37,7 +37,7 @@ function H3_hidden(s,id){
 }
 SCENE({id:'wimp',name:'Windows, icons, menus, pointer',tag:'Overlapping windows',
  definition:'The WIMP interface shows each task in its own window. Windows overlap like papers on a desk, and the pointer brings any one to the front.',
- example:'The Xerox Alto (1973) and Star (1981) introduced overlapping windows, icons and menus driven by a mouse. Almost every desktop since has kept the same four ideas.',
+ example:'On the Xerox Alto (from 1973), the Smalltalk system pioneered overlapping windows, icons and menus driven by a mouse; the Xerox Star (1981) brought the desktop to market, though its main windows did not overlap. Almost every desktop since has kept the same four ideas.',
  desc:'Three overlapping windows on a grey desktop, with a front-to-back list showing how much of each window is hidden.',
  research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface. Byte 7(4).',
  dur:10,hint:'Press a window to bring it to the front, press its close box to close it, and nudge the front window with the buttons.',
