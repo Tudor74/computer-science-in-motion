@@ -51,7 +51,7 @@ SCENE({id:'wave-basics',name:'Wave',tag:'Energy moves; the medium stays',
 
 SCENE({id:'wave-basics-speed',name:'Wave speed, frequency and wavelength',tag:'v = f λ',
  definition:'A wave’s speed equals its frequency times its wavelength: in one period the pattern moves on by exactly one wavelength.',
- example:'A wave with frequency 2 Hz and wavelength 1.5 m travels at 3 m/s. In a given medium the speed is fixed, so raising the frequency shortens the wavelength.',
+ example:'A wave with frequency 2 Hz and wavelength 1.5 m travels at 3 m/s. In a medium where speed does not depend on frequency, raising the frequency shortens the wavelength (in dispersive media, such as glass for light, the speed itself varies with frequency).',
  desc:'A wave over a six-metre ruler; one crest is tracked while readouts show frequency, wavelength, period and the speed they multiply to.',
  dur:10,hint:'Set frequency and wavelength, then press Play and time the coral crest along the ruler. Its speed is always f × λ.',
  research:'Huygens (1690). Traité de la lumière: waves as disturbances spreading at a definite speed; v = fλ follows from one wavelength per period.',

@@ -187,7 +187,7 @@ SCENE({id:'electric-field-potential',name:'Potential and equipotentials',tag:'Vo
  }});
 
 SCENE({id:'electric-field-cage',name:'Faraday cage',tag:'No field inside a conductor',
- definition:'A closed conducting shell blocks an outside electric field: its free electrons move until their own field cancels the outside one everywhere inside, so the field in the hollow is zero.',
+ definition:'A closed conducting shell blocks an outside steady electric field: its free electrons move until their own field cancels the outside one everywhere inside, so the field in the hollow is zero. Shielding changing fields depends on their frequency, the metal and any gaps.',
  example:'Faraday sat inside a metal-coated room while sparks flew outside and his electroscope showed nothing. A car body or an aircraft protects people from lightning the same way.',
  desc:'A uniform field between two plates, with and without a hollow conducting box: with the box, field lines end on induced charges on its surface and the inside is empty.',
  dur:9,hint:'Switch the cage on and off, change the outside field, and move the probe inside or outside.',
@@ -484,7 +484,7 @@ SCENE({id:'electromagnetic-waves',name:'Electromagnetic wave',tag:'Fields that k
 
 SCENE({id:'electromagnetic-waves-maxwell',name:'Maxwell’s speed of light',tag:'Light from electrical measurements',
  definition:'Maxwell’s equations predict waves travelling at 1/√(μ₀ε₀), a speed built only from electrical and magnetic constants measured on a laboratory bench. It came out equal to the measured speed of light.',
- example:'μ₀ = 4π × 10⁻⁷ and ε₀ = 8.854 × 10⁻¹² give 2.998 × 10⁸ m/s. Maxwell wrote that light must be an electromagnetic disturbance.',
+ example:'μ₀ ≈ 4π × 10⁻⁷ and ε₀ = 8.854 × 10⁻¹² give 2.998 × 10⁸ m/s. Maxwell wrote that light must be an electromagnetic disturbance.',
  desc:'The calculation of 1/√(μ₀ε₀) step by step, then compared on a bar chart with measurements of the speed of light by Fizeau and Foucault and the electrical ratio of Weber and Kohlrausch.',
  dur:12,hint:'Step through the calculation. Then try a different ε₀ to see how closely nature ties electricity to light.',
  research:'Maxwell (1865); Weber & Kohlrausch (1856) measured the ratio of electrical units, about 3.1 × 10⁸ m/s; Fizeau (1849) and Foucault (1862) measured light.',
@@ -494,7 +494,7 @@ SCENE({id:'electromagnetic-waves-maxwell',name:'Maxwell’s speed of light',tag:
  trace(s){return [{st:0,say:'Start with two constants measured with coils and capacitors, nothing to do with light: μ₀ (magnetic) and ε₀ (electric).'},{st:1,say:'Multiply them: μ₀ε₀ ≈ 1.11 × 10⁻¹⁷ s²/m². The units are those of 1 / speed².'},{st:2,say:'Take the square root and invert it: a speed.'},{st:3,say:'Compare with measured light speeds. They agree within the errors of the time: light is an electromagnetic wave.'}]},
  draw(s,f){
   const eps=P6_EPS0*s.k,v=1/Math.sqrt(P6_MU0*eps);let out=heading('A speed from bench-top electricity');
-  const rows=[['μ₀ = 4π × 10⁻⁷ = 1.257 × 10⁻⁶ T m/A',0],[`ε₀ = ${P6_sci(eps,3)} F/m${s.k!==1?' (changed)':''}`,0],[`μ₀ε₀ = ${P6_sci(P6_MU0*eps,3)} s²/m²`,1],[`1/√(μ₀ε₀) = ${P6_sci(v,3)} m/s`,2]];
+  const rows=[['μ₀ ≈ 4π × 10⁻⁷ ≈ 1.257 × 10⁻⁶ T m/A',0],[`ε₀ = ${P6_sci(eps,3)} F/m${s.k!==1?' (changed)':''}`,0],[`μ₀ε₀ = ${P6_sci(P6_MU0*eps,3)} s²/m²`,1],[`1/√(μ₀ε₀) = ${P6_sci(v,3)} m/s`,2]];
   rows.forEach(([t,k],i)=>{if(f.st>=k)out+=R(40,58+i*40,330,32,f.st===k&&k?C.amberp:'#fff',C.grid,6)+TMF(52,79+i*40,t,14,C.ink,'start')});
   if(f.st>=3){const A=P6_axes(410,64,170,200,{x0:0,x1:4,y0:2.8,y1:3.3,yt:[2.8,2.9,3,3.1,3.2,3.3],fy:v=>v.toFixed(1)});out+=A.svg;
    [['Fizeau',3.13,C.blue],['Foucault',2.98,C.blue],['W & K',3.107,C.purple],['1/√μ₀ε₀',v/1e8,C.coral]].forEach(([n,val,col],i)=>{const x=A.X(i+.5),y=A.Y(clamp(val,2.8,3.3));out+=R(x-14,y,28,A.Y(2.8)-y,col,'none',3)+TF(x,286+((i%2)*14),n,13,C.ink)});

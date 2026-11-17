@@ -64,7 +64,7 @@ SCENE({id:'work-energy',name:'Work',tag:'Force along the motion',
 
 SCENE({id:'work-energy-kinetic',name:'Kinetic energy',tag:'Twice as fast, four times the energy',
  definition:'Kinetic energy is the energy of motion: KE = ½ m v². It grows with the square of speed, so doubling the speed quadruples the energy.',
- example:'A 2 kg ball at 3 m/s has 9 J of kinetic energy; at 6 m/s it has 36 J. Dropped into soft clay, the faster ball digs a dent about four times as deep.',
+ example:'A 2 kg ball at 3 m/s has 9 J of kinetic energy; at 6 m/s it has 36 J. Dropped into soft clay that resists with about the same force, the faster ball digs a dent about four times as deep.',
  desc:'A graph of kinetic energy against speed curves upwards; beside it, two balls fall into clay at speeds v and 2v and leave dents in the ratio one to four.',
  research:'’s Gravesande (1722) dropped brass balls into clay; Émilie du Châtelet (1740), Institutions de physique, used his results to argue for vis viva, mv².',
  dur:10,hint:'Change the mass and speed, or double the speed. Compare the two dents: depth tracks speed squared, not speed.',
@@ -291,7 +291,7 @@ SCENE({id:'collisions',name:'Collisions',tag:'Momentum always survives a crash',
 
 const P3_POOL_T=4;
 SCENE({id:'collisions-2d',name:'Collisions in two dimensions',tag:'Billiard balls part at right angles',
- definition:'In two dimensions momentum is conserved as a vector, in each direction separately. Two equal balls in an elastic glancing collision always leave at right angles to each other.',
+ definition:'In two dimensions momentum is conserved as a vector, in each direction separately. When an elastic ball glances off an equal ball at rest, the two always leave at right angles to each other.',
  example:'A cue ball striking an object ball off-centre sends the object ball along the line joining their centres; the cue ball leaves at 90° to it, sharing the momentum like the sides of a right-angled triangle.',
  desc:'A cue ball strikes a still ball off-centre on a table; beside it, a vector triangle shows the incoming momentum split into two perpendicular outgoing momenta.',
  research:'Huygens (1669) and Newton (1687) on collisions; the right-angle rule follows from conserving both momentum and kinetic energy for equal masses.',
