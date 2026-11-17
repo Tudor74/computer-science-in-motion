@@ -126,7 +126,7 @@ function H5_stim(t){
 }
 SCENE({id:'graphical-perception',name:'Graphical perception',tag:'Be the participant',
  definition:'Graphical perception is how accurately people decode the quantities a chart encodes. Judgements of position on a common scale are the most accurate; angles and areas are much worse.',
- example:'Cleveland and McGill asked people what percentage the smaller marked value was of the larger. Errors grew from position, to length, to angle, to area. Heer and Bostock repeated it online in 2010 with the same order.',
+ example:'Cleveland and McGill asked people what percentage the smaller marked value was of the larger. Position on a common scale gave clearly smaller errors than length or angle; their ranking put area lower still. Heer and Bostock repeated the tests online in 2010, added area, and found much the same.',
  research:'Cleveland, W. S. & McGill, R. (1984). Graphical perception. Journal of the American Statistical Association. Replicated by Heer, J. & Bostock, M. (2010), CHI.',
  desc:'A chart with two marked values, A and B, encoded by position, length, angle or area, beside a chart of the learner’s own average error for each encoding.',
  dur:12,hint:'Estimate what percentage A is of B, then press Submit. Twelve trials: three per encoding. Your errors appear on the right.',
@@ -144,15 +144,15 @@ SCENE({id:'graphical-perception',name:'Graphical perception',tag:'Be the partici
   H5_ENCS.forEach(([e,lab],j)=>{const r=s.res.filter(x=>x.enc===e),m=r.length?sum(r.map(x=>x.err))/r.length:null,y=118+j*50;
    out+=TF(362,y,lab.split(' (')[0],13,C.ink,'start')+R(362,y+8,210,16,'#f1f5f8','none',4);
    if(m!==null){out+=R(362,y+8,clamp(m,0,6)/6*210,16,[C.green,C.blue,C.amber,C.coral][j],'none',4)+TBF(568,y,fmt(m),13,C.ink,'end')}else out+=TF(568,y,'—',13,C.muted,'end')});
-  out+=TF(470,328,'Published order: position < length',12,C.muted)+TF(470,343,'< angle < area (least to most error)',12,C.muted);
+  out+=TF(470,328,'Published ranking: position best,',12,C.muted)+TF(470,343,'then length and angle, then area',12,C.muted);
   const done=s.res.length;
-  return {svg:out,phase:!X.try?'The same comparison, four ways. In the 1984 experiment, position on a common scale gave the smallest errors and angle the largest of the three they tested; later studies put circle area lower still.':done?`After ${done} trial${done>1?'s':''}: last answer ${s.res[done-1].guess}% against a true ${Math.round(s.res[done-1].truth)}%. Compare your bars with the published order.`:'Judge by eye; do not measure. The study used the same question for every encoding.'};
+  return {svg:out,phase:!X.try?'The same comparison, four ways. In the 1984 experiment, position on a common scale gave the smallest errors; unaligned length and angle, tested in separate experiments, were both clearly worse. Later studies added circle area, which also did worse than position.':done?`After ${done} trial${done>1?'s':''}: last answer ${s.res[done-1].guess}% against a true ${Math.round(s.res[done-1].truth)}%. Compare your bars with the published order.`:'Judge by eye; do not measure. The study used the same question for every encoding.'};
  }});
 
 SCENE({id:'graphical-perception-pie-bar',name:'Pie or bar?',tag:'Same numbers, different accuracy',
  definition:'A pie chart encodes values as angles and areas; a bar chart encodes them as positions on a common scale. The bar chart makes small differences and rankings far easier to see.',
  example:'With shares of 22, 20, 19, 21 and 18%, the pie slices look equal; the bars line up and the order is plain.',
- research:'Cleveland & McGill (1984); Spence, I. & Lewandowsky, S. (1991). Displaying proportions and percentages. Applied Cognitive Psychology.',
+ research:'Cleveland & McGill (1984). For a counterpoint, Spence, I. & Lewandowsky, S. (1991). Displaying proportions and percentages. Applied Cognitive Psychology: pies held their own for part-of-whole judgements.',
  desc:'The same five values drawn as a pie chart and as a bar chart side by side.',
  dur:10,hint:'Pick a data set, or press a bar to grow it. Can you rank the slices without looking at the bars?',
  init:()=>({vals:[22,20,19,21,18]}),
@@ -185,7 +185,7 @@ SCENE({id:'graphical-perception-area',name:'Area is underestimated',tag:'Stevens
    out+=TB(20,y+8,lab,14,C.ink,'start')+TF(20,y+26,note,13,C.muted,'start');
    const r2=Math.min(44,base*rs);out+=Ci(200,y+20,base,C.pale,C.blue)+Ci(200+base+8+r2,y+20,r2,'#9cc4e0',C.blue);
    const bx=370,sc=200/Math.max(9,k*k);out+=R(bx,y+2,Math.min(205,area*sc),12,C.blue,'none',3)+TF(bx-6,y+12,'drawn',12,C.muted,'end')+R(bx,y+22,Math.min(205,seen*sc),12,C.coral,'none',3)+TF(bx-6,y+32,'looks',12,C.muted,'end')+TF(bx,y+52,`looks about ×${fmt(seen)} (value is ×${fmt(k)})`,12,C.ink,'start')});
-  out+=TF(300,360,'“Looks” uses Stevens’ exponent of about 0.7 for area; real estimates vary by person and shape.',12,C.muted);
+  out+=TF(300,360,'“Looks” uses Stevens’ exponent of about 0.7 for area; Flannery found nearer 0.87.',12,C.muted);
   return {svg:out,phase:`Scaling by radius exaggerates: ×${fmt(k)} becomes ×${fmt(k*k)} in area. Scaling by area is honest but is typically seen as about ×${fmt(Math.pow(k,.7))}. Cartographers such as Flannery enlarged symbols slightly to compensate; position avoids the problem.`};
  }});
 

@@ -39,7 +39,7 @@ SCENE({id:'wimp',name:'Windows, icons, menus, pointer',tag:'Overlapping windows'
  definition:'The WIMP interface shows each task in its own window. Windows overlap like papers on a desk, and the pointer brings any one to the front.',
  example:'On the Xerox Alto (from 1973), the Smalltalk system pioneered overlapping windows, icons and menus driven by a mouse; the Xerox Star (1981) brought the desktop to market, though its main windows did not overlap. Almost every desktop since has kept the same four ideas.',
  desc:'Three overlapping windows on a grey desktop, with a front-to-back list showing how much of each window is hidden.',
- research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface. Byte 7(4).',
+ research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball, Verplank & Harslem (1982). Designing the Star user interface. Byte 7(4).',
  dur:10,hint:'Press a window to bring it to the front, press its close box to close it, and nudge the front window with the buttons.',
  init:H3_winInit,
  watch(p){const s=H3_winInit(),seq=['a','b','a','c'],k=Math.min(4,Math.floor(p*5));for(let j=0;j<k;j++)H3_raise(s,seq[j]);s.cursor=k?seq[k-1]:null;return s},
@@ -76,7 +76,7 @@ SCENE({id:'wimp-desktop-metaphor',name:'The desktop metaphor',tag:'Icons as offi
  definition:'Icons borrow the look and behaviour of office objects (documents, folders, a wastebasket) so people can guess what an action will do from what they already know.',
  example:'Dragging a document onto a folder files it, just as on a real desk. But dragging a disk onto the wastebasket ejected it, which no real bin does: metaphors help until they break.',
  desc:'A desktop with a document, a folder, a disk and a wastebasket; a panel reports whether each drag behaves like the real object it imitates.',
- research:'Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface · Neale & Carroll (1997). The role of metaphors in user interface design. Handbook of Human–Computer Interaction.',
+ research:'Smith, Irby, Kimball, Verplank & Harslem (1982). Designing the Star user interface · Neale & Carroll (1997). The role of metaphors in user interface design. Handbook of Human–Computer Interaction.',
  dur:11,hint:'Press one icon to pick it up, then press another to drop it there. Which drags behave like the real objects?',
  init:H3_dmInit,
  watch(p){const s=H3_dmInit(),acts=[['report','disk'],['report','projects'],['disk','trash']],seg=p*3,k=Math.min(3,Math.floor(seg)),u=seg-k;const done=k+(k<3&&u>.8?1:0);
@@ -276,7 +276,7 @@ SCENE({id:'direct-manipulation',name:'Direct manipulation',tag:'Drag it, don’t
    const words=t.split(' ');let l1='',l2='';for(const w of words){if((l1+' '+w).length<=20&&!l2)l1=l1?l1+' '+w:w;else l2=l2?l2+' '+w:w}
    out+=TF(430,y+22,l1,13,C.ink,'start')+TF(430,y+40,l2,13,C.ink,'start')});
   out+=TF(488,290,isDrag?'All three principles hold.':'None of the three holds.',13,isDrag?C.green:C.coral);
-  return {svg:out,phase:f.m==='cmd'?(f.done?(f.ok?'The command worked, but the screen does not show it: you have to ask again. Shneiderman’s point is that people should see objects and results continuously.':'A one-letter typo fails, and the message names the file you meant to type, not the one you did. Syntax is a barrier between intention and action.'):'Typing describes the action in a language: verb, object, destination, in the right order.'):(f.done?'The result is visible at once, and dragging it back would undo it. Rapid, incremental, reversible actions make experimenting safe.':'Every movement of the hand is matched on screen, so you can correct course before letting go.')};
+  return {svg:out,phase:f.m==='cmd'?(f.done?(f.ok?'The command worked, but the screen does not show it: you have to ask again. Shneiderman’s point is that people should see objects and results continuously.':'A small typo fails, and the message only repeats the name you mistyped: it does not tell you which file you meant. Syntax is a barrier between intention and action.'):'Typing describes the action in a language: verb, object, destination, in the right order.'):(f.done?'The result is visible at once, and dragging it back would undo it. Rapid, incremental, reversible actions make experimenting safe.':'Every movement of the hand is matched on screen, so you can correct course before letting go.')};
  }});
 
 const H3_GULF_PRESETS={cmd:{name:'Command line',ex:85,ev:75},menu:{name:'Menus and dialogs',ex:45,ev:40},dm:{name:'Direct manipulation',ex:15,ev:12}};
@@ -364,7 +364,7 @@ const H3_dev=o=>o==='P'||o==='B'?'mouse':o==='K'?'keys':null;
 function H3_withHoming(ops,hand){const out=[];let at=hand;for(const o of ops){const d=H3_dev(o);if(d&&d!==at){out.push('H');at=d}out.push(o)}return out}
 SCENE({id:'keystroke-model-compare',name:'GOMS: choosing a method',tag:'Goals, operators, methods, selection rules',
  definition:'GOMS describes a task as Goals, the Operators that achieve them, alternative Methods, and Selection rules for choosing between methods. With keystroke-level times it predicts which method is faster.',
- example:'To save a file you can use the File menu or a keyboard shortcut. Which is faster depends on where your hand already is: the selection rule.',
+ example:'To save a file you can use the File menu or a keyboard shortcut. Where your hand already is changes how long each one takes; a selection rule says which to use.',
  desc:'Two predicted timelines, menu and keyboard shortcut, for a chosen task and starting hand position, beside a small GOMS tree naming the selection rule.',
  research:'Card, Moran & Newell (1983). The Psychology of Human–Computer Interaction · John & Kieras (1996). The GOMS family of user interface analysis techniques. ACM TOCHI 3(4).',
  dur:10,hint:'Choose a task and where your hand starts. The model inserts a homing step (H) whenever the hand must switch devices.',
@@ -470,15 +470,15 @@ SCENE({id:'spreadsheet-references',name:'Relative and absolute references',tag:'
  draw(s,f,X){
   let out=heading('Copy the formula down: what does it point at?');
   const y0=52,rh=40,x={A:24,B:124,C:204,E:438};
-  out+=R(24,y0,410,30,'#eef2f4',C.grid,0)+TBF(74,y0+20,'A: item',13,C.muted)+TBF(164,y0+20,'B: price',13,C.muted)+TBF(318,y0+20,'C: with VAT',13,C.muted)+R(438,y0,90,30,'#eef2f4',C.grid,0)+TBF(483,y0+20,'E',13,C.muted);
-  out+=R(438,y0+30,90,rh,C.pale,C.blue,0)+TM(483,y0+56,'20%',14,C.ink)+TF(483,y0+86,'E1: VAT rate',13,C.blue);
+  out+=R(24,y0,410,30,'#eef2f4',C.grid,0)+TBF(74,y0+20,'A: item',13,C.muted)+TBF(164,y0+20,'B: price',13,C.muted)+TBF(318,y0+20,'C: with VAT',13,C.muted);
+  out+=R(438,y0,90,30,C.pale,C.blue,0)+TF(483,y0+20,'E1: 20% VAT',13,C.ink);
   for(let r=0;r<4;r++){const y=y0+30+r*rh,row=r+2,shown=r<=f.k,eRow=s.mode==='relative'?1+r:1,bad=s.mode==='relative'&&r>0;
    out+=R(24,y,100,rh,'#fff',C.grid,0)+T(36,y+26,['Pens','Paper','Lamp','Mug'][r],14,C.ink,'start')+R(124,y,80,rh,'#fff',C.grid,0)+TM(194,y+26,'£'+H3_REF_PRICES[r],14,C.ink,'end');
    const formula=s.mode==='relative'?`=B${row}*(1+E${eRow})`:`=B${row}*(1+$E$1)`,val=H3_REF_PRICES[r]*(1+(eRow===1?.2:0));
    out+=R(204,y,230,rh,shown?(bad?C.coralp:C.greenp):'#fff',C.grid,0);
    if(shown){out+=TMF(214,y+26,formula,13,C.ink,'start')+TM(424,y+26,'£'+val.toFixed(2),14,bad?C.coral:C.green,'end');
-    if(eRow>1)out+=R(438,y0+30+(eRow-1)*rh,90,rh,'#fff',C.coral,0,'stroke-dasharray="4 3"')+TF(483,y0+30+(eRow-1)*rh+25,`E${eRow}: empty`,13,C.coral);
-    out+=curveArrow(392,y+12,446,y0+30+(eRow-1)*rh+rh/2,-14,bad?C.coral:C.blue,1.8)}}
+    if(eRow>1)out+=R(438,y0+30+(eRow-2)*rh,90,rh,'#fff',C.coral,0,'stroke-dasharray="4 3"')+TF(483,y0+30+(eRow-2)*rh+25,`E${eRow}: empty`,13,C.coral);
+    out+=curveArrow(392,y+12,446,eRow===1?y0+15:y0+30+(eRow-2)*rh+rh/2,-14,bad?C.coral:C.blue,1.8)}}
   const r=f.k,row=r+2,bad=s.mode==='relative'&&r>0;
   return {svg:out,phase:r===0?'C2 multiplies the price by 1 + the VAT rate in E1: £12.00.':bad?`Copied to C${row}, the relative reference slid down to E${row-1}, which is empty, so the VAT is silently 0. The spreadsheet shows a plausible number, not an error.`:s.mode==='absolute'?`C${row} still points at $E$1: the dollar signs pin the reference while the B reference moves with the row.`:''};
  }});

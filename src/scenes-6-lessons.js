@@ -1,7 +1,7 @@
 /* Era 6 · The networked page: lessons, further reading and connections. */
 SOURCE('berners-lee-1989',{title:'Tim Berners-Lee (1989). Information Management: A Proposal. CERN',url:'https://www.w3.org/History/1989/proposal.html'});
 SOURCE('nelson-1981',{title:'Ted Nelson (1981). Literary Machines'});
-SOURCE('zittrain-2014',{title:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citation. Harvard Law Review Forum 127'});
+SOURCE('zittrain-2014',{title:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citations. Harvard Law Review Forum 127'});
 SOURCE('wcag-1999',{title:'W3C (1999). Web Content Accessibility Guidelines 1.0',url:'https://www.w3.org/TR/WCAG10/'});
 SOURCE('pirolli-card-1999',{title:'Pirolli & Card (1999). Information foraging. Psychological Review 106(4), 643–675',url:'https://doi.org/10.1037/0033-295X.106.4.643'});
 SOURCE('charnov-1976',{title:'Charnov (1976). Optimal foraging, the marginal value theorem. Theoretical Population Biology 9(2)',url:'https://doi.org/10.1016/0040-5809(76)90040-X'});

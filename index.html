@@ -615,7 +615,7 @@ LESSON({id:'front-panel',name:'Front panels and blinking lights',short:'Front pa
 LESSON({id:'punched-cards',name:'Punched cards and batch processing',short:'Punched cards',stage:'lights',year:'1890–1970s',why:'Cards made data portable, but batch processing meant waiting hours to learn whether a program worked.',prior:['front-panel'],level:'Introduction',references:['hollerith-1889','punched-card','sackman-1968','barchard-2011'],ids:['punched-cards','punched-cards-batch','punched-cards-verify']});
 LESSON({id:'command-line',name:'Teletypes and the command line',short:'Command line',stage:'lights',year:'1960s–',why:'Typing commands and reading replies made computing a conversation, but one where you had to remember every word.',prior:['punched-cards'],level:'Introduction',references:['teletype-33','ritchie-1974','shepard-1967','shneiderman-1982'],ids:['command-line','command-line-recall','command-line-errors']});
 LESSON({id:'time-sharing',name:'Time-sharing and response time',short:'Time-sharing',stage:'lights',year:'1961–',why:'Sharing one machine among many terminals made replies fast enough to think with, and showed how much waiting matters.',prior:['command-line'],level:'Core',references:['licklider-1960','corbato-1962','ctss','miller-1968','card-1991','scherr-1965'],ids:['time-sharing','time-sharing-response','time-sharing-queue']});
-LESSON({id:'light-pen',name:'Radar screens and the light pen',short:'Light pen',stage:'lights',year:'1950s–1960s',why:'Air-defence consoles let operators point at the screen itself, decades before the mouse, and revealed the limits of the human arm and eye.',prior:['front-panel'],level:'Core',references:['astrahan-1983','light-pen','hincapie-2014'],ids:['light-pen','light-pen-refresh','light-pen-fatigue']});
+LESSON({id:'light-pen',name:'Radar screens and the light pen',short:'Light pen',stage:'lights',year:'1950s–1960s',why:'Air-defence consoles let operators point at the screen itself, about a decade before the mouse, and revealed the limits of the human arm and eye.',prior:['front-panel'],level:'Core',references:['astrahan-1983','light-pen','hincapie-2014'],ids:['light-pen','light-pen-refresh','light-pen-fatigue']});
 LESSON({id:'vigilance',name:'Watching for rare signals',short:'Vigilance',stage:'lights',year:'1948–',why:'Radar watchkeeping started the science of attention: people miss rare signals, and alarms that cry wolf get ignored.',prior:['light-pen'],level:'Core',references:['mackworth-1948','green-swets-1966','sdt','breznitz-1984','bliss-1995'],ids:['vigilance','vigilance-sdt','vigilance-alarms']});
 
 THREAD({id:'h1-waiting',name:'How long people will wait',ids:['punched-cards-batch','time-sharing-response','response-time']});
@@ -946,7 +946,7 @@ function H1_mva(N,S,Z){const out=[];let Q=0;for(let k=1;k<=N;k++){const Rr=S*(1+
 SCENE({id:'time-sharing-queue',name:'More users, slower replies',tag:'The knee of the curve',
  definition:'A shared computer stays responsive until it is nearly fully busy; then each extra user adds a full share of waiting. Response time rises in a sharp “knee”.',
  example:'If each request needs 0.5 s of processor time and people think for 20 s between requests, about 41 users can share the machine before replies slow sharply.',
- research:['Scherr (1965). An analysis of time-shared computer systems: measurements of MIT’s CTSS matched a simple queueing model.','Reiser & Lavenberg (1980). Mean-value analysis of closed queueing networks.'],
+ research:['Scherr (1965). An analysis of time-shared computer systems: measurements of MIT’s CTSS matched a simple queueing model.','Reiser & Lavenberg (1980). Mean-value analysis of closed multichain queuing networks (Journal of the ACM 27(2)).'],
  desc:'A graph of response time against number of users: flat at first, then rising along a straight asymptote after a marked knee; a dot marks the chosen number of users.',
  dur:11,hint:'Change users, thinking time and processor time per request. Watch where the knee falls.',
  init:()=>({n:20,z:20,sv:.5}),
@@ -972,7 +972,7 @@ SCENE({id:'time-sharing-queue',name:'More users, slower replies',tag:'The knee o
 const H1_BLIPS=[[130,150],[250,130],[272,250],[150,284],[208,206],[106,226]];
 SCENE({id:'light-pen',name:'Light pen',tag:'Pointing at the screen',
  definition:'A light pen is a photocell in a pen. A vector screen draws its shapes one after another; the pen fires when the beam passes under it, and the timing tells the computer which shape you pointed at.',
- example:'SAGE air-defence operators in the late 1950s pointed a light gun at a radar blip to ask the computer about that aircraft: the first pointing at a screen.',
+ example:'SAGE air-defence operators in the late 1950s pointed a light gun at a radar blip to ask the computer about that aircraft: an early, large-scale use of pointing at a screen, inherited from MIT’s Whirlwind.',
  research:'Astrahan & Jacobs (1983). History of the design of the SAGE computer, the AN/FSQ-7 (Annals of the History of Computing): consoles with light guns.',
  desc:'A round radar screen with six blips drawn in order by the beam, a light pen touching one of them, and a timeline of one refresh showing when the pen’s photocell fires.',
  dur:11,hint:'Press any blip to touch it with the pen. The pen only knows when it saw light; the computer turns that moment into a blip.',
@@ -1625,7 +1625,7 @@ SCENE({id:'hypertext-transclusion',name:'Transclusion and two-way links',tag:'Ne
  definition:'In Ted Nelson’s Xanadu design, a quotation is included by reference (transclusion), so it stays connected to its source, and links are visible from both ends. The web instead copies text and uses one-way links that can break.',
  example:'Quote a paragraph on the web and the author later corrects it: your copy is now out of date, and if the page moves your link shows “404 Not Found”. With Xanadu transclusion the quote stays tied to the exact version you quoted, so its words never silently change, while readers can see that a newer version exists; and the source can list everyone who quotes it. (A live embed, by contrast, simply shows the latest text.)',
  research:'Nelson, T. H. (1981). Literary Machines. Mindful Press. Nelson, T. H. (1995). The heart of connection: hypermedia unified by transclusion. Communications of the ACM, 38(8), 31–33.',
- desc:'Your document A quoting a passage of source document B, either as a copy with a one-way link or as a live transclusion with a two-way link; editing or deleting B shows the consequences.',
+ desc:'Your document A quoting a passage of source document B, either as a copy with a one-way link or as a transclusion with a two-way link; editing or deleting B shows the consequences.',
  dur:12,hint:'Choose copy or transclusion, then have the author edit or delete the source.',
  init:()=>({mode:'copy',edited:false,deleted:false}),
  watch(p){const i=Math.min(5,Math.floor(p*6));return {mode:i<3?'copy':'transclude',edited:i%3===1,deleted:i%3===2}},
@@ -1708,9 +1708,9 @@ SCENE({id:'augmenting-chord',name:'The chord keyset',tag:'Five keys, thirty-one 
  init:()=>({keys:[0,0,0,0,0],typed:''}),
  watch(p){const w='MOUSE',i=Math.min(4,Math.floor(p*5)),v=H2_ABC.indexOf(w[i])+1;return {keys:bin(v,5).split('').map(Number),typed:w.slice(0,i)}},
  ui:[{b:'Enter chord',act:'enter'},{b:'Delete letter',act:'del'},{b:'Clear',act:'clear'}],
- on:{key(s,i){s.keys[Number(i)]^=1},enter(s){const v=parseInt(s.keys.join(''),2);if(v>=1&&v<=26&&s.typed.length<14)s.typed+=H2_ABC[v-1];else if(v===27&&s.typed.length<14)s.typed+=' ';s.keys=[0,0,0,0,0]},del(s){s.typed=s.typed.slice(0,-1)},clear(s){s.typed='';s.keys=[0,0,0,0,0]}},
+ on:{key(s,i){s.keys[Number(i)]^=1},enter(s){const v=parseInt(s.keys.join(''),2);if(v>=1&&v<=26&&s.typed.length<14)s.typed+=H2_ABC[v-1];s.keys=[0,0,0,0,0]},del(s){s.typed=s.typed.slice(0,-1)},clear(s){s.typed='';s.keys=[0,0,0,0,0]}},
  draw(s,f,X){
-  const v=parseInt(s.keys.join(''),2),ch=v>=1&&v<=26?H2_ABC[v-1]:v===27?'space':v===0?'—':'(command)';let out=heading('A chord is a five-bit number');
+  const v=parseInt(s.keys.join(''),2),ch=v>=1&&v<=26?H2_ABC[v-1]:v===0?'—':'(other)';let out=heading('A chord is a five-bit number');
   s.keys.forEach((k,i)=>{const x=40+i*58;out+=hit(X,'key',i,`Key ${i+1} ${k?'down':'up'}. Press to toggle.`,R(x,56,50,130,k?C.blue:'#fff',k?C.blue:C.line,6)+TF(x+25,170,'2'+'⁴³²¹⁰'[i],13,k?'#fff':C.muted)+TB(x+25,120,k,20,k?'#fff':C.muted))});
   out+=TM(170,216,s.keys.join(''),22,C.ink)+TF(170,242,`= ${v}`,15,C.muted)+TB(170,286,ch,34,C.blue);
   out+=R(330,52,250,206,'#fff',C.grid,8);for(let i=0;i<26;i++){const x=340+(i%3)*80,y=70+Math.floor(i/3)*21.5,on=i===v-1;out+=(on?R(x-4,y-14,76,20,C.amberp,'none',4):'')+TF(x,y+2,H2_ABC[i],13,C.ink,'start','font-weight="700"')+TMF(x+18,y+2,bin(i+1,5),13,C.muted,'start')}
@@ -1759,7 +1759,7 @@ WORD(
  {key:'hypertext',title:'Hypertext',aliases:['hypertext','hypermedia'],linkContext:'hypertext',scene:'hypertext',here:'Text joined by links that readers follow in an order they choose; Ted Nelson’s 1965 term.',contrast:'Hypertext is the idea; the World Wide Web (1989) is one particular system built on it.',example:'A wiki is hypertext.'},
  {key:'memex',title:'Memex',aliases:['memex'],linkContext:'hypertext',scene:'hypertext-memex',here:'Vannevar Bush’s imagined 1945 desk that stored a library on microfilm and let the user tie items into trails.',contrast:'A design idea, never built.',example:'A trail on the history of the bow.'},
  {key:'trail',title:'Associative trail',aliases:['associative trail','trails'],linkContext:'hypertext',scene:'hypertext-memex',here:'In the memex, a saved sequence of linked items that can be followed again or shared.',contrast:'A trail has an order chosen by its maker, unlike a web of links.',example:'Encyclopedia → history → notes.'},
- {key:'transclusion',title:'Transclusion',aliases:['transclusion','transcluded'],linkContext:'hypertext',scene:'hypertext-transclusion',here:'Including part of one document in another by reference, so it stays connected to and updated with its source.',contrast:'Copy and paste makes an independent duplicate that can drift out of date.',example:'An embedded live quote that credits its source.'},
+ {key:'transclusion',title:'Transclusion',aliases:['transclusion','transcluded'],linkContext:'hypertext',scene:'hypertext-transclusion',here:'Including part of one document in another by reference, so it stays connected to its source and to the exact version quoted.',contrast:'Copy and paste makes an independent duplicate that loses its connection to the source.',example:'A quotation that still points back to the passage and version it came from, and shows when a newer version exists.'},
  {key:'disorientation',title:'Disorientation (lost in hyperspace)',aliases:['disorientation','lost in hyperspace','cognitive overhead'],linkContext:'hypertext',scene:'hypertext-lost',here:'Losing track of where you are and how you arrived while following links; Conklin also named the extra effort of choosing links “cognitive overhead”.',contrast:'Not a fault of the reader: it comes from structures that show only one page at a time.',example:'Breadcrumbs and overview maps reduce it.'},
  {key:'chord-keyset',title:'Chord keyset',aliases:['chord keyset','keyset','chord','chords'],linkContext:'augmenting-intellect',scene:'augmenting-chord',here:'A five-key device where keys pressed together form a binary chord standing for a letter or command.',contrast:'Unlike a keyboard, one hand and five keys cover 31 symbols.',example:'00001 is A.'},
  {key:'bootstrapping',title:'Bootstrapping',aliases:['bootstrapping','bootstrap'],linkContext:'augmenting-intellect',scene:'augmenting-bootstrapping',here:'Engelbart’s strategy of using one’s own tools to build better tools, so improvement compounds.',contrast:'Not the computing sense of starting up a machine.',example:'Writing the editor’s manual in the editor.'},
@@ -1807,7 +1807,7 @@ SCENE({id:'wimp',name:'Windows, icons, menus, pointer',tag:'Overlapping windows'
  definition:'The WIMP interface shows each task in its own window. Windows overlap like papers on a desk, and the pointer brings any one to the front.',
  example:'On the Xerox Alto (from 1973), the Smalltalk system pioneered overlapping windows, icons and menus driven by a mouse; the Xerox Star (1981) brought the desktop to market, though its main windows did not overlap. Almost every desktop since has kept the same four ideas.',
  desc:'Three overlapping windows on a grey desktop, with a front-to-back list showing how much of each window is hidden.',
- research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface. Byte 7(4).',
+ research:'Thacker, McCreight, Lampson, Sproull & Boggs (1973/1979). Alto: a personal computer, Xerox PARC · Smith, Irby, Kimball, Verplank & Harslem (1982). Designing the Star user interface. Byte 7(4).',
  dur:10,hint:'Press a window to bring it to the front, press its close box to close it, and nudge the front window with the buttons.',
  init:H3_winInit,
  watch(p){const s=H3_winInit(),seq=['a','b','a','c'],k=Math.min(4,Math.floor(p*5));for(let j=0;j<k;j++)H3_raise(s,seq[j]);s.cursor=k?seq[k-1]:null;return s},
@@ -1844,7 +1844,7 @@ SCENE({id:'wimp-desktop-metaphor',name:'The desktop metaphor',tag:'Icons as offi
  definition:'Icons borrow the look and behaviour of office objects (documents, folders, a wastebasket) so people can guess what an action will do from what they already know.',
  example:'Dragging a document onto a folder files it, just as on a real desk. But dragging a disk onto the wastebasket ejected it, which no real bin does: metaphors help until they break.',
  desc:'A desktop with a document, a folder, a disk and a wastebasket; a panel reports whether each drag behaves like the real object it imitates.',
- research:'Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface · Neale & Carroll (1997). The role of metaphors in user interface design. Handbook of Human–Computer Interaction.',
+ research:'Smith, Irby, Kimball, Verplank & Harslem (1982). Designing the Star user interface · Neale & Carroll (1997). The role of metaphors in user interface design. Handbook of Human–Computer Interaction.',
  dur:11,hint:'Press one icon to pick it up, then press another to drop it there. Which drags behave like the real objects?',
  init:H3_dmInit,
  watch(p){const s=H3_dmInit(),acts=[['report','disk'],['report','projects'],['disk','trash']],seg=p*3,k=Math.min(3,Math.floor(seg)),u=seg-k;const done=k+(k<3&&u>.8?1:0);
@@ -2044,7 +2044,7 @@ SCENE({id:'direct-manipulation',name:'Direct manipulation',tag:'Drag it, don’t
    const words=t.split(' ');let l1='',l2='';for(const w of words){if((l1+' '+w).length<=20&&!l2)l1=l1?l1+' '+w:w;else l2=l2?l2+' '+w:w}
    out+=TF(430,y+22,l1,13,C.ink,'start')+TF(430,y+40,l2,13,C.ink,'start')});
   out+=TF(488,290,isDrag?'All three principles hold.':'None of the three holds.',13,isDrag?C.green:C.coral);
-  return {svg:out,phase:f.m==='cmd'?(f.done?(f.ok?'The command worked, but the screen does not show it: you have to ask again. Shneiderman’s point is that people should see objects and results continuously.':'A one-letter typo fails, and the message names the file you meant to type, not the one you did. Syntax is a barrier between intention and action.'):'Typing describes the action in a language: verb, object, destination, in the right order.'):(f.done?'The result is visible at once, and dragging it back would undo it. Rapid, incremental, reversible actions make experimenting safe.':'Every movement of the hand is matched on screen, so you can correct course before letting go.')};
+  return {svg:out,phase:f.m==='cmd'?(f.done?(f.ok?'The command worked, but the screen does not show it: you have to ask again. Shneiderman’s point is that people should see objects and results continuously.':'A small typo fails, and the message only repeats the name you mistyped: it does not tell you which file you meant. Syntax is a barrier between intention and action.'):'Typing describes the action in a language: verb, object, destination, in the right order.'):(f.done?'The result is visible at once, and dragging it back would undo it. Rapid, incremental, reversible actions make experimenting safe.':'Every movement of the hand is matched on screen, so you can correct course before letting go.')};
  }});
 
 const H3_GULF_PRESETS={cmd:{name:'Command line',ex:85,ev:75},menu:{name:'Menus and dialogs',ex:45,ev:40},dm:{name:'Direct manipulation',ex:15,ev:12}};
@@ -2132,7 +2132,7 @@ const H3_dev=o=>o==='P'||o==='B'?'mouse':o==='K'?'keys':null;
 function H3_withHoming(ops,hand){const out=[];let at=hand;for(const o of ops){const d=H3_dev(o);if(d&&d!==at){out.push('H');at=d}out.push(o)}return out}
 SCENE({id:'keystroke-model-compare',name:'GOMS: choosing a method',tag:'Goals, operators, methods, selection rules',
  definition:'GOMS describes a task as Goals, the Operators that achieve them, alternative Methods, and Selection rules for choosing between methods. With keystroke-level times it predicts which method is faster.',
- example:'To save a file you can use the File menu or a keyboard shortcut. Which is faster depends on where your hand already is: the selection rule.',
+ example:'To save a file you can use the File menu or a keyboard shortcut. Where your hand already is changes how long each one takes; a selection rule says which to use.',
  desc:'Two predicted timelines, menu and keyboard shortcut, for a chosen task and starting hand position, beside a small GOMS tree naming the selection rule.',
  research:'Card, Moran & Newell (1983). The Psychology of Human–Computer Interaction · John & Kieras (1996). The GOMS family of user interface analysis techniques. ACM TOCHI 3(4).',
  dur:10,hint:'Choose a task and where your hand starts. The model inserts a homing step (H) whenever the hand must switch devices.',
@@ -2238,15 +2238,15 @@ SCENE({id:'spreadsheet-references',name:'Relative and absolute references',tag:'
  draw(s,f,X){
   let out=heading('Copy the formula down: what does it point at?');
   const y0=52,rh=40,x={A:24,B:124,C:204,E:438};
-  out+=R(24,y0,410,30,'#eef2f4',C.grid,0)+TBF(74,y0+20,'A: item',13,C.muted)+TBF(164,y0+20,'B: price',13,C.muted)+TBF(318,y0+20,'C: with VAT',13,C.muted)+R(438,y0,90,30,'#eef2f4',C.grid,0)+TBF(483,y0+20,'E',13,C.muted);
-  out+=R(438,y0+30,90,rh,C.pale,C.blue,0)+TM(483,y0+56,'20%',14,C.ink)+TF(483,y0+86,'E1: VAT rate',13,C.blue);
+  out+=R(24,y0,410,30,'#eef2f4',C.grid,0)+TBF(74,y0+20,'A: item',13,C.muted)+TBF(164,y0+20,'B: price',13,C.muted)+TBF(318,y0+20,'C: with VAT',13,C.muted);
+  out+=R(438,y0,90,30,C.pale,C.blue,0)+TF(483,y0+20,'E1: 20% VAT',13,C.ink);
   for(let r=0;r<4;r++){const y=y0+30+r*rh,row=r+2,shown=r<=f.k,eRow=s.mode==='relative'?1+r:1,bad=s.mode==='relative'&&r>0;
    out+=R(24,y,100,rh,'#fff',C.grid,0)+T(36,y+26,['Pens','Paper','Lamp','Mug'][r],14,C.ink,'start')+R(124,y,80,rh,'#fff',C.grid,0)+TM(194,y+26,'£'+H3_REF_PRICES[r],14,C.ink,'end');
    const formula=s.mode==='relative'?`=B${row}*(1+E${eRow})`:`=B${row}*(1+$E$1)`,val=H3_REF_PRICES[r]*(1+(eRow===1?.2:0));
    out+=R(204,y,230,rh,shown?(bad?C.coralp:C.greenp):'#fff',C.grid,0);
    if(shown){out+=TMF(214,y+26,formula,13,C.ink,'start')+TM(424,y+26,'£'+val.toFixed(2),14,bad?C.coral:C.green,'end');
-    if(eRow>1)out+=R(438,y0+30+(eRow-1)*rh,90,rh,'#fff',C.coral,0,'stroke-dasharray="4 3"')+TF(483,y0+30+(eRow-1)*rh+25,`E${eRow}: empty`,13,C.coral);
-    out+=curveArrow(392,y+12,446,y0+30+(eRow-1)*rh+rh/2,-14,bad?C.coral:C.blue,1.8)}}
+    if(eRow>1)out+=R(438,y0+30+(eRow-2)*rh,90,rh,'#fff',C.coral,0,'stroke-dasharray="4 3"')+TF(483,y0+30+(eRow-2)*rh+25,`E${eRow}: empty`,13,C.coral);
+    out+=curveArrow(392,y+12,446,eRow===1?y0+15:y0+30+(eRow-2)*rh+rh/2,-14,bad?C.coral:C.blue,1.8)}}
   const r=f.k,row=r+2,bad=s.mode==='relative'&&r>0;
   return {svg:out,phase:r===0?'C2 multiplies the price by 1 + the VAT rate in E1: £12.00.':bad?`Copied to C${row}, the relative reference slid down to E${row-1}, which is empty, so the VAT is silently 0. The spreadsheet shows a plausible number, not an error.`:s.mode==='absolute'?`C${row} still points at $E$1: the dollar signs pin the reference while the B reference moves with the row.`:''};
  }});
@@ -2369,7 +2369,7 @@ SCENE({id:'wysiwyg-consistency',name:'Consistency and guidelines',tag:'Same comm
  }});
 
 /* Era 3 · The desktop: lessons, sources and connections. */
-SOURCE('star-1982',{title:'Smith, Irby, Kimball & Verplank (1982). Designing the Star user interface. Byte 7(4)',url:'https://en.wikipedia.org/wiki/Xerox_Star'});
+SOURCE('star-1982',{title:'Smith, Irby, Kimball, Verplank & Harslem (1982). Designing the Star user interface. Byte 7(4)',url:'https://en.wikipedia.org/wiki/Xerox_Star'});
 SOURCE('alto',{title:'Thacker, McCreight, Lampson, Sproull & Boggs (1979). Alto: a personal computer. Xerox PARC',url:'https://en.wikipedia.org/wiki/Xerox_Alto'});
 SOURCE('callahan-1988',{title:'Callahan, Hopkins, Weiser & Shneiderman (1988). An empirical comparison of pie vs. linear menus. Proc. CHI ’88',url:'https://doi.org/10.1145/57167.57182'});
 SOURCE('neale-carroll-1997',{title:'Neale & Carroll (1997). The role of metaphors in user interface design. In Handbook of Human–Computer Interaction (2nd edn)'});
@@ -2395,7 +2395,7 @@ SOURCE('crow-1977',{title:'Crow (1977). The aliasing problem in computer-generat
 SOURCE('apple-hig-1987',{title:'Apple Computer (1987). Human Interface Guidelines: The Apple Desktop Interface. Addison-Wesley'});
 SOURCE('nielsen-1989',{title:'Nielsen (ed.) (1989). Coordinating User Interfaces for Consistency. Academic Press'});
 
-LESSON({id:'wimp',name:'Windows, icons, menus, pointer',short:'WIMP',stage:'desktop',year:'1973–1981',why:'The Alto and Star made the screen a desk of overlapping documents, borrowed office objects as icons, and put commands in menus.',prior:['mouse','sketchpad'],level:'Introduction',references:['alto','star-1982','callahan-1988','neale-carroll-1997'],ids:['wimp','wimp-desktop-metaphor','wimp-menus']});
+LESSON({id:'wimp',name:'Windows, icons, menus, pointer',short:'WIMP',stage:'desktop',year:'1973–1981',why:'The Alto and Star made the screen a desk of documents in windows, borrowed office objects as icons, and put commands in menus.',prior:['mouse','sketchpad'],level:'Introduction',references:['alto','star-1982','callahan-1988','neale-carroll-1997'],ids:['wimp','wimp-desktop-metaphor','wimp-menus']});
 LESSON({id:'dynabook',name:'The Dynabook and Logo',short:'Dynabook',stage:'desktop',year:'1972',why:'Kay and Papert saw the computer as a medium children could think and build with, and designed for doing, seeing and symbolising.',prior:['augmenting-intellect','wimp'],level:'Introduction',references:['kay-1972','kay-goldberg-1977','papert-1980','bruner-1966','kay-1990'],ids:['dynabook','dynabook-turtle','dynabook-bruner']});
 LESSON({id:'direct-manipulation',name:'Direct manipulation',short:'Direct manip.',stage:'desktop',year:'1983',why:'Showing objects, acting on them physically and making every action reversible narrows the gaps between intention and result.',prior:['wimp','command-line'],level:'Core',references:['shneiderman-1983','hutchins-1985','norman-1986','abowd-dix-1992'],ids:['direct-manipulation','direct-manipulation-gulfs','direct-manipulation-undo']});
 LESSON({id:'keystroke-model',name:'Predicting performance: KLM and GOMS',short:'KLM & GOMS',stage:'desktop',year:'1980–1983',why:'Card, Moran and Newell turned psychology into engineering: add up standard step times to predict how long an expert will take.',prior:['fitts-law','hick-law','direct-manipulation'],level:'Core',references:['card-1980','card-1983','john-kieras-1996'],ids:['keystroke-model','keystroke-model-compare','keystroke-model-processor']});
@@ -2727,15 +2727,15 @@ SCENE({id:'working-memory-chunking',name:'Chunking',tag:'Fewer, bigger units',
  ui:[{choose:[[0,'Letters'],[1,'Years'],[2,'Random']],label:'String',get:s=>s.set,act:'set'},{choose:[['none','One by one'],['threes','In threes'],['meaning','Meaningful']],label:'Grouping',get:s=>s.group,act:'group'}],
  on:{set(s,v){s.set=Number(v)},group(s,v){s.group=v}},
  draw(s){
-  const c=H4_CHUNKS[s.set],t=c.text;let sizes=s.group==='none'?Array(12).fill(1):s.group==='threes'?[3,3,3,3]:(c.meaning||[3,3,3,3]);
-  const known=s.group==='meaning'&&!!c.meaning;let out=heading('Twelve characters, how many units?');
+  const c=H4_CHUNKS[s.set],t=c.text;let sizes=s.group==='none'||(s.group==='meaning'&&!c.meaning)?Array(12).fill(1):s.group==='threes'?[3,3,3,3]:c.meaning;
+  const known=!!c.meaning&&(s.group==='meaning'||(s.group==='threes'&&c.meaning.every(n=>n===3)));let out=heading('Twelve characters, how many units?');
   let x=300-(12*34+(sizes.length-1)*18)/2,pos=0;
   sizes.forEach(sz=>{out+=R(x-6,82,sz*34+12,64,known?C.greenp:s.group==='none'?'#fff':C.pale,known?C.green:C.line,12);for(let k=0;k<sz;k++)out+=TM(x+k*34+17,124,t[pos+k],26,C.ink,'middle','font-weight="700"');pos+=sz;x+=sz*34+18});
-  const units=sizes.length;out+=T(300,186,s.group==='meaning'&&!c.meaning?'This string has no familiar groups, so meaningful grouping is not possible.':known?c.note:'',15,known?C.green:C.coral);
+  const units=known||s.group==='none'?sizes.length:12;out+=T(300,186,s.group==='meaning'&&!c.meaning?'This string has no familiar groups, so meaningful grouping is not possible.':known?c.note:'',15,known?C.green:C.coral);
   out+=T(110,232,'Units to hold',15,C.ink,'start');for(let k=0;k<12;k++)out+=R(110+k*32,246,26,26,k<units?(units<=4?C.green:C.coral):'#f1f4f6','none',5);
   out+=L(110+4*32-3,240,110+4*32-3,280,C.purple,2.5,'stroke-dasharray="4 3"')+TF(110+4*32,296,'≈ 4',12,C.purple);
-  out+=TB(300,336,`${units} unit${units>1?'s':''}`+(s.group==='threes'&&s.set===2?' — but each unfamiliar triple is harder to keep':''),16,units<=4?C.green:C.coral);
-  return {svg:out,phase:known?'Familiar chunks compress the string to four units, within capacity. Chess masters recall real positions better than novices, but not random ones: their advantage is chunks, not a bigger memory.':s.group==='threes'?'Grouping into threes adds rhythm and helps a little, which is why phone numbers are spaced, but unfamiliar triples are still three things each.':'Twelve separate characters overflow a working memory of about four items.'};
+  out+=TB(300,336,!known&&s.group==='threes'?'4 groups, still 12 items':`${units} unit${units>1?'s':''}`,16,units<=4?C.green:C.coral);
+  return {svg:out,phase:known?`Familiar chunks compress the string to ${units} units, within capacity. Chess masters recall real positions better than novices, but not random ones: their advantage is chunks, not a bigger memory.`:s.group==='threes'?'Grouping into threes adds rhythm and helps a little, which is why phone numbers are spaced, but unfamiliar triples are still three things each.':'Twelve separate characters overflow a working memory of about four items.'};
  }});
 
 // Approximate recall after a distracting delay, after Peterson & Peterson (1959).
@@ -2862,7 +2862,7 @@ SCENE({id:'mental-models',name:'The thermostat myth',tag:'Two theories of heat',
  dur:10,hint:'Move the setting and switch the valve theory on and off. When does the room reach 20 °C?',
  init:()=>({set:28,valve:true}),
  watch(p){return {set:Math.round(20+10*smooth(p)),valve:p>.3}},
- ui:[{range:'set',label:'Thermostat setting (°C)',min:16,max:30,get:s=>s.set,act:'set'},{b:'Valve theory on/off',act:'valve'}],
+ ui:[{range:'set',label:'Thermostat setting (°C)',min:20,max:30,get:s=>s.set,act:'set'},{b:'Valve theory on/off',act:'valve'}],
  on:{set(s,v){s.set=v},valve(s){s.valve=!s.valve}},
  draw(s){
   let out=heading('Turning it up does not heat the room faster');const gx=40,gy=56,gw=380,gh=260,px=t=>gx+40+t/40*(gw-60),py=v=>gy+gh-30-(v-14)/18*(gh-50);
@@ -2895,10 +2895,10 @@ SCENE({id:'mental-models-gulfs',name:'The two gulfs',tag:'Seven stages of action
  trace(s){return H4_STAGES.map((st,i)=>({i,say:`${st}: ${H4_VARIANTS[s.v].notes[i]}`}))},
  draw(s,f,X){
   const v=H4_VARIANTS[s.v];let out=heading(v.name+': turning on a projector');
-  out+=R(30,60,120,260,C.pale,'none',12)+TB(90,86,'Person',15,C.blue)+R(450,60,120,260,C.greenp,'none',12)+TB(510,86,'System',15,C.green);
+  out+=R(30,60,120,260,C.pale,'none',12)+TB(90,86,'Doing',15,C.blue)+R(450,60,120,260,C.greenp,'none',12)+TB(510,86,'Checking',15,C.green);
   const gapW=g=>40+g*30;
   const exW=gapW(v.ex),evW=gapW(v.ev);
-  // Execution runs down the person's side and across the bottom; evaluation returns up the system's side and across the top.
+  // All seven stages are the person's. Execution runs down the left (doing) and across the bottom; evaluation returns up the right (checking) and across the top.
   out+=R(300-evW/2,128,evW,40,v.ev>1?C.coralp:'#f1f4f6',v.ev>1?C.coral:C.grid,8)+TB(300,153,'gulf of evaluation',13,v.ev>1?C.coral:C.muted);
   out+=R(300-exW/2,236,exW,40,v.ex>1?C.coralp:'#f1f4f6',v.ex>1?C.coral:C.grid,8)+TB(300,261,'gulf of execution',13,v.ex>1?C.coral:C.muted);
   out+=arrow(450,113,150,113,C.green,2.5)+arrow(150,300,450,300,C.blue,2.5)+TF(300,105,'evaluation: what happened?',12,C.green)+TF(300,318,'execution: how do I do it?',12,C.blue);
@@ -3035,12 +3035,12 @@ SCENE({id:'eye-movements',name:'Saccades and fixations',tag:'The eye jumps, then
   pts.forEach((p,j)=>{if(j>0)out+=arrow(pts[j-1][0],pts[j-1][1],p[0],p[1],C.coral,2,7);});
   pts.forEach((p,j)=>out+=Ci(p[0],p[1],6+H4_DUR[j]/40,j===k?C.coral:'#c4523888','#fff')+TF(p[0],p[1]+4,j+1,11,'#fff'));
   const tot=sum(H4_DUR.slice(0,k+1));out+=T(300,362,`${k+1} fixations · ${tot} ms of looking · saccades take only about 20–40 ms each`,13,C.muted);
-  return {svg:out,phase:`Fixation ${k+1} lasts about ${H4_DUR[k]} ms. The scanpath is illustrative, in the spirit of Yarbus’s recordings: the instructions, not the picture, decide where the eyes go.`};
+  return {svg:out,phase:`Fixation ${k+1} lasts about ${H4_DUR[k]} ms. The scanpath is illustrative, in the spirit of Yarbus’s recordings: the instructions, as well as the picture, decide where the eyes go.`};
  }});
 
 const H4_TEXT='The eye sees fine detail only in a small central region, so reading is a series of short glances along the line.';
 SCENE({id:'eye-movements-fovea',name:'The moving window',tag:'How much do you see at once?',
- definition:'During a fixation in reading, useful letter information comes from a small window: roughly 3–4 characters to the left of fixation and about 14–15 to the right, in left-to-right scripts.',
+ definition:'During a fixation in reading, useful information comes from a small window: roughly 3–4 characters to the left of fixation and about 14–15 to the right, in left-to-right scripts.',
  example:'If text outside a window around the gaze is replaced by x’s, reading speed is normal once the window extends about 15 characters to the right, and slows when it is smaller.',
  desc:'A line of text in which only a window around the fixation point is legible and the rest is masked with x’s; the window size and fixation point can be changed.',
  research:'McConkie, G. W. & Rayner, K. (1975). The span of the effective stimulus during a fixation in reading. Perception & Psychophysics, 17, 578–586. Rayner, K. (1998). Eye movements in reading. Psychological Bulletin, 124.',
@@ -3074,10 +3074,10 @@ SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail tak
  ui:[{range:'d',label:'Viewing distance (cm)',min:30,max:100,get:s=>s.d,act:'d'}],
  on:{d(s,v){s.d=v}},
  draw(s){
-  let out=heading('The fovea covers about 2° of what you see');const r=a=>s.d*Math.tan(a*Math.PI/180);const fov=2*r(1),para=2*r(2.5);
+  let out=heading('The fovea covers about 2° of what you see');const r=a=>s.d*Math.tan(a*Math.PI/180);const fov=2*r(1),para=2*r(5);
   const ex=60,ey=200,sx=60+s.d*2.6;out+=Ci(ex,ey,18,'#fff',C.dark)+Ci(ex+12,ey,6,C.dark)+R(sx,90,8,220,C.dark,'none',2);
-  const ray=(a,col,w)=>{const h=Math.tan(a*Math.PI/180)*(sx-ex)*1;return L(ex+12,ey,sx,ey-h*6,col,w)+L(ex+12,ey,sx,ey+h*6,col,w)};
-  out+=ray(2.5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-70,'angles drawn ×6 for visibility',11,C.muted)+TF((ex+sx)/2,ey+56,s.d+' cm',13,C.ink);
+  const ray=(a,col,w)=>{const h=Math.tan(a*Math.PI/180)*(sx-ex)*1;return L(ex+12,ey,sx,ey-h*4,col,w)+L(ex+12,ey,sx,ey+h*4,col,w)};
+  out+=ray(5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-70,'angles drawn ×4 for visibility',11,C.muted)+TF((ex+sx)/2,ey+66,s.d+' cm',13,C.ink);
   const fx=470,fy=200,sc=6;out+=R(380,90,180,220,'#fff',C.line,6)+Ci(fx,fy,para/2*sc,C.purplep,C.purple)+Ci(fx,fy,Math.max(2,fov/2*sc),C.coralp,C.coral);
   out+=TF(470,112,'screen, actual proportions (1 cm = 6 units)',11,C.muted)+TF(470,292,`sharp zone ≈ ${fov.toFixed(1)} cm across`,13,C.coral)+TF(470,272,`parafovea ≈ ${para.toFixed(1)} cm`,12,C.purple);
   out+=T(300,350,'Outside the coral circle, detail and colour fall off steeply.',13,C.muted);
@@ -3087,9 +3087,9 @@ SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail tak
   const d=s.d,k=a=>d*Math.tan(a*Math.PI/180),P=project([[0,0,0],[0,d,0],[-25,d,-16],[25,d,16]]);let out='';
   const scr=[[-25,d,-16],[25,d,-16],[25,d,16],[-25,d,16]];out+=poly3(scr,P,'#ffffffcc',C.line);
   const ring=(rad,col,fill)=>{const pts=range(24).map(i=>{const a=i/24*Math.PI*2;return [rad*Math.cos(a),d,rad*Math.sin(a)]});return poly3(pts,P,fill,col)+[0,6,12,18].map(i=>line3([0,0,0],pts[i],P,col,1.4)).join('')};
-  out+=ring(k(10),C.line,'#e7eef3aa')+ring(k(2.5),C.purple,'#ece6f6cc')+ring(k(1),C.coral,'#f9e2d9');
+  out+=ring(k(10),C.line,'#e7eef3aa')+ring(k(5),C.purple,'#ece6f6cc')+ring(k(1),C.coral,'#f9e2d9');
   out+=point3([0,0,0],P,C.dark,9)+(()=>{const p=P([k(10),d,0]);return label3(p[0]+40,p[1],'10°',13,C.muted)})();
-  return {svg:out,title:'Gaze cones in 3D',caption:`Cones of 2° (coral), 5° (purple) and 20° (grey) from the eye to a screen ${d} cm away, drawn to scale. The sharp cone is a thin needle.`};
+  return {svg:out,title:'Gaze cones in 3D',caption:`Cones of 2° (coral), 10° (purple) and 20° (grey) from the eye to a screen ${d} cm away, drawn to scale. The sharp cone is a thin needle.`};
  }});
 
 /* Era 4 word meanings: concepts and people of the mind lessons. */
@@ -3310,7 +3310,7 @@ function H5_stim(t){
 }
 SCENE({id:'graphical-perception',name:'Graphical perception',tag:'Be the participant',
  definition:'Graphical perception is how accurately people decode the quantities a chart encodes. Judgements of position on a common scale are the most accurate; angles and areas are much worse.',
- example:'Cleveland and McGill asked people what percentage the smaller marked value was of the larger. Errors grew from position, to length, to angle, to area. Heer and Bostock repeated it online in 2010 with the same order.',
+ example:'Cleveland and McGill asked people what percentage the smaller marked value was of the larger. Position on a common scale gave clearly smaller errors than length or angle; their ranking put area lower still. Heer and Bostock repeated the tests online in 2010, added area, and found much the same.',
  research:'Cleveland, W. S. & McGill, R. (1984). Graphical perception. Journal of the American Statistical Association. Replicated by Heer, J. & Bostock, M. (2010), CHI.',
  desc:'A chart with two marked values, A and B, encoded by position, length, angle or area, beside a chart of the learner’s own average error for each encoding.',
  dur:12,hint:'Estimate what percentage A is of B, then press Submit. Twelve trials: three per encoding. Your errors appear on the right.',
@@ -3328,15 +3328,15 @@ SCENE({id:'graphical-perception',name:'Graphical perception',tag:'Be the partici
   H5_ENCS.forEach(([e,lab],j)=>{const r=s.res.filter(x=>x.enc===e),m=r.length?sum(r.map(x=>x.err))/r.length:null,y=118+j*50;
    out+=TF(362,y,lab.split(' (')[0],13,C.ink,'start')+R(362,y+8,210,16,'#f1f5f8','none',4);
    if(m!==null){out+=R(362,y+8,clamp(m,0,6)/6*210,16,[C.green,C.blue,C.amber,C.coral][j],'none',4)+TBF(568,y,fmt(m),13,C.ink,'end')}else out+=TF(568,y,'—',13,C.muted,'end')});
-  out+=TF(470,328,'Published order: position < length',12,C.muted)+TF(470,343,'< angle < area (least to most error)',12,C.muted);
+  out+=TF(470,328,'Published ranking: position best,',12,C.muted)+TF(470,343,'then length and angle, then area',12,C.muted);
   const done=s.res.length;
-  return {svg:out,phase:!X.try?'The same comparison, four ways. In the 1984 experiment, position on a common scale gave the smallest errors and angle the largest of the three they tested; later studies put circle area lower still.':done?`After ${done} trial${done>1?'s':''}: last answer ${s.res[done-1].guess}% against a true ${Math.round(s.res[done-1].truth)}%. Compare your bars with the published order.`:'Judge by eye; do not measure. The study used the same question for every encoding.'};
+  return {svg:out,phase:!X.try?'The same comparison, four ways. In the 1984 experiment, position on a common scale gave the smallest errors; unaligned length and angle, tested in separate experiments, were both clearly worse. Later studies added circle area, which also did worse than position.':done?`After ${done} trial${done>1?'s':''}: last answer ${s.res[done-1].guess}% against a true ${Math.round(s.res[done-1].truth)}%. Compare your bars with the published order.`:'Judge by eye; do not measure. The study used the same question for every encoding.'};
  }});
 
 SCENE({id:'graphical-perception-pie-bar',name:'Pie or bar?',tag:'Same numbers, different accuracy',
  definition:'A pie chart encodes values as angles and areas; a bar chart encodes them as positions on a common scale. The bar chart makes small differences and rankings far easier to see.',
  example:'With shares of 22, 20, 19, 21 and 18%, the pie slices look equal; the bars line up and the order is plain.',
- research:'Cleveland & McGill (1984); Spence, I. & Lewandowsky, S. (1991). Displaying proportions and percentages. Applied Cognitive Psychology.',
+ research:'Cleveland & McGill (1984). For a counterpoint, Spence, I. & Lewandowsky, S. (1991). Displaying proportions and percentages. Applied Cognitive Psychology: pies held their own for part-of-whole judgements.',
  desc:'The same five values drawn as a pie chart and as a bar chart side by side.',
  dur:10,hint:'Pick a data set, or press a bar to grow it. Can you rank the slices without looking at the bars?',
  init:()=>({vals:[22,20,19,21,18]}),
@@ -3369,7 +3369,7 @@ SCENE({id:'graphical-perception-area',name:'Area is underestimated',tag:'Stevens
    out+=TB(20,y+8,lab,14,C.ink,'start')+TF(20,y+26,note,13,C.muted,'start');
    const r2=Math.min(44,base*rs);out+=Ci(200,y+20,base,C.pale,C.blue)+Ci(200+base+8+r2,y+20,r2,'#9cc4e0',C.blue);
    const bx=370,sc=200/Math.max(9,k*k);out+=R(bx,y+2,Math.min(205,area*sc),12,C.blue,'none',3)+TF(bx-6,y+12,'drawn',12,C.muted,'end')+R(bx,y+22,Math.min(205,seen*sc),12,C.coral,'none',3)+TF(bx-6,y+32,'looks',12,C.muted,'end')+TF(bx,y+52,`looks about ×${fmt(seen)} (value is ×${fmt(k)})`,12,C.ink,'start')});
-  out+=TF(300,360,'“Looks” uses Stevens’ exponent of about 0.7 for area; real estimates vary by person and shape.',12,C.muted);
+  out+=TF(300,360,'“Looks” uses Stevens’ exponent of about 0.7 for area; Flannery found nearer 0.87.',12,C.muted);
   return {svg:out,phase:`Scaling by radius exaggerates: ×${fmt(k)} becomes ×${fmt(k*k)} in area. Scaling by area is honest but is typically seen as about ×${fmt(Math.pow(k,.7))}. Cartographers such as Flannery enlarged symbols slightly to compensate; position avoids the problem.`};
  }});
 
@@ -3793,13 +3793,13 @@ WORD(
  {key:'person-tufte',title:'Edward Tufte',aliases:['Tufte','Edward Tufte'],linkContext:'data-ink',scene:'data-ink',here:'Statistician and designer whose The Visual Display of Quantitative Information (1983) introduced data-ink, chartjunk and small multiples.',contrast:'His principles are design arguments; several have since been tested and refined.',example:'“Above all else show the data.”'},
  {key:'person-buzan',title:'Tony Buzan',aliases:['Buzan','Tony Buzan'],linkContext:'mind-maps',scene:'mind-maps',here:'British author and broadcaster (1942–2019) who popularised mind maps from the 1970s, starting with Use Your Head (1974).',contrast:'A populariser rather than a researcher: some of his claims outran the evidence.',example:'Central image, curved branches, one key word per line.'},
  {key:'person-rosling',title:'Hans Rosling',aliases:['Rosling','Hans Rosling'],linkContext:'animated-bubbles',scene:'animated-bubbles',here:'Swedish physician and statistician (1948–2017), co-founder of Gapminder, famous for animated bubble charts of global health and wealth.',contrast:'His goal was correcting misconceptions about the world, not chart design for its own sake.',example:'His 2006 TED talk on the “developing world”.'},
- {key:'person-furnas',title:'George Furnas',aliases:['Furnas','George Furnas'],linkContext:'overview-detail',scene:'overview-detail-fisheye',here:'Cognitive scientist at Bell Labs who formalised fisheye views with a “degree of interest” function (1986).',contrast:'A fisheye in his sense is about information, not just optical distortion.',example:'Show nearby lines of code in full and distant ones as outlines.'}
+ {key:'person-furnas',title:'George Furnas',aliases:['Furnas','George Furnas'],linkContext:'overview-detail',scene:'overview-detail-fisheye',here:'Cognitive scientist at Bellcore (earlier at Bell Labs) who formalised fisheye views with a “degree of interest” function (1986).',contrast:'A fisheye in his sense is about information, not just optical distortion.',example:'Show nearby lines of code in full and distant ones as outlines.'}
 );
 
 /* Era 6 · The networked page: lessons, further reading and connections. */
 SOURCE('berners-lee-1989',{title:'Tim Berners-Lee (1989). Information Management: A Proposal. CERN',url:'https://www.w3.org/History/1989/proposal.html'});
 SOURCE('nelson-1981',{title:'Ted Nelson (1981). Literary Machines'});
-SOURCE('zittrain-2014',{title:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citation. Harvard Law Review Forum 127'});
+SOURCE('zittrain-2014',{title:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citations. Harvard Law Review Forum 127'});
 SOURCE('wcag-1999',{title:'W3C (1999). Web Content Accessibility Guidelines 1.0',url:'https://www.w3.org/TR/WCAG10/'});
 SOURCE('pirolli-card-1999',{title:'Pirolli & Card (1999). Information foraging. Psychological Review 106(4), 643–675',url:'https://doi.org/10.1037/0033-295X.106.4.643'});
 SOURCE('charnov-1976',{title:'Charnov (1976). Optimal foraging, the marginal value theorem. Theoretical Population Biology 9(2)',url:'https://doi.org/10.1016/0040-5809(76)90040-X'});
@@ -3944,7 +3944,7 @@ const H6_ROT_ORDER=shuffled(range(40),61);
 SCENE({id:'world-wide-web-link-rot',name:'Link rot',tag:'Links decay over time',
  definition:'Link rot is the steady loss of linked pages as sites move, close or change. A link that worked when written later leads nowhere, or to something else.',
  example:'Zittrain, Albert and Lessig found in 2014 that about half of the web addresses cited in US Supreme Court opinions no longer led to the material originally cited. Archives keep copies to rescue them.',
- research:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citation. Harvard Law Review Forum.',
+ research:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citations. Harvard Law Review Forum 127.',
  desc:'A curve of the share of links still working as years pass, beside forty link dots that turn into broken crosses as time runs; archived links stay readable.',
  dur:9,hint:'Slide the years and the half-life of this illustrative model. Turn archiving on to rescue some links.',
  init:()=>({years:10,half:9,archive:false}),
@@ -4821,7 +4821,7 @@ SCENE({id:'gestures-agreement',name:'User-defined gestures',tag:'Asking people f
    out+=hit(X,'dec',j,`Fewer people proposed ${p}`,R(352,y+20,30,28,'#fff',C.line,6)+TB(367,y+39,'−',16,C.ink))+hit(X,'inc',j,`More people proposed ${p}`,R(388,y+20,30,28,'#fff',C.line,6)+TB(403,y+39,'+',16,C.ink))});
   out+=R(440,70,145,150,'#fff',C.grid,10)+T(512,94,'agreement',13,C.muted)+TB(512,130,fmt(A),28,A>.3?C.green:A>.15?C.amber:C.coral)+T(512,160,A>.3?'strong':A>.15?'moderate':'weak',14,C.ink)+T(512,192,`(${Math.round(A*100)}% chance two`,13,C.muted)+T(512,208,'people agree)',13,C.muted);
   out+=T(30,312,'A = Σ (share of each proposal)²',15,C.ink,'start')+TM(30,338,c.map(v=>`(${v}/${n})²`).join(' + ')+' = '+fmt(A),13,C.muted,'start');
-  return {svg:out,phase:A>.3?`Most people converge on “${ref.props[best]}”, so it is a natural choice for “${ref.name}”.`:`Proposals are spread out (agreement ${fmt(A)}), so no gesture is obvious for “${ref.name}”. A visible button or menu item is the safer design.`};
+  return {svg:out,phase:A>.3?`“${ref.props[best]}” is the most common proposal and agreement is strong (${fmt(A)}), so it is a natural choice for “${ref.name}”.`:`Proposals are spread out (agreement ${fmt(A)}), so no gesture is obvious for “${ref.name}”. A visible button or menu item is the safer design.`};
  }});
 
 /* ---------- Lesson: interruptions ---------- */
@@ -4909,7 +4909,7 @@ SCENE({id:'accessibility',name:'Colour contrast',tag:'Text everyone can read',
  dur:11,hint:'Pick a text colour and a background, then slide the text lighter or darker until it passes.',
  init:()=>({fg:'grey',bg:'white',t:.25}),
  watch(p){return {fg:'grey',bg:'white',t:Math.round(lerp(.7,-.5,smooth(p))*100)/100}},
- ui:[{range:'t',label:'Lighter ↔ darker',min:-.9,max:.9,step:.05,get:s=>s.t,act:'t',show:v=>v>0?'+'+fmt(v):fmt(v)}],
+ ui:[{range:'t',label:'Darker ↔ lighter',min:-.9,max:.9,step:.05,get:s=>s.t,act:'t',show:v=>v>0?'+'+fmt(v):fmt(v)}],
  on:{t(s,v){s.t=v},fg(s,v){s.fg=v},bg(s,v){s.bg=v}},
  draw(s,f,X){
   const fg=H7_shade(H7_HUES[s.fg],s.t),bg=H7_BGS[s.bg],cr=H7_contrast(fg,bg);let out=heading('Contrast ratio = (L₁ + 0.05) ÷ (L₂ + 0.05)');
@@ -4947,7 +4947,7 @@ SCENE({id:'accessibility-focus-order',name:'Focus order',tag:'What a keyboard or
   out+=R(374,90,210,90,'#1f2f38','none',10)+T(479,114,'screen reader says',13,'#aac2cf')+TB(479,150,said,15,'#fff');
   out+=T(374,214,`Tab presses: ${Math.max(0,f.k+1)} of 5`,14,C.ink,'start');
   out+=T(374,244,s.order==='good'?'Order follows the layout.':'Order follows the code,',14,s.order==='good'?C.green:C.coral,'start')+(s.order==='bad'?T(374,264,'not the layout.',14,C.coral,'start'):'');
-  return {svg:out,phase:f.k<0?'Focus starts before the form. Each Tab moves it to the next control in code order.':s.order==='bad'&&f.k>=2&&f.k<4?'Focus has skipped the right-hand column and jumped to the button: a sighted keyboard user is confused, and a screen-reader user may submit an unfinished form.':s.labels==='no'&&!H7_FIELDS[f.f].btn?'Placeholder text is not a label: the screen reader can only say “edit text”, so the user does not know what to type.':'Focus moves in an order that matches what you see, and each field announces its name.'};
+  return {svg:out,phase:f.k<0?'Focus starts before the form. Each Tab moves it to the next control in code order.':s.order==='bad'&&f.k===2?'Focus has skipped the right-hand column and jumped to the button: a sighted keyboard user is confused, and a screen-reader user may submit an unfinished form.':s.labels==='no'&&!H7_FIELDS[f.f].btn?'Placeholder text is not a label: it disappears as soon as you type and is not reliably announced, so a screen reader may say only “edit text” and the user does not know what to type.':(s.order==='bad'?(f.k>=3?'Focus has now jumped back up to the right-hand column, after the Send button: the order follows the code, not the layout.':'Focus is moving down the left-hand column first, because that is the order of the code.'):s.labels==='yes'?'Focus moves in an order that matches what you see, and each field announces its name.':'Focus moves in an order that matches what you see.')};
  }});
 
 const H7_SPEC=[['Touch','One arm','Arm injury','New parent','one-handed and voice control'],['See','Blind','Cataract','Distracted driver','screen readers, audio and high contrast'],['Hear','Deaf','Ear infection','Bartender','captions and visual alerts'],['Speak','Non-verbal','Laryngitis','Heavy accent','typed and visual alternatives to speech']];
@@ -4973,7 +4973,7 @@ SCENE({id:'accessibility-spectrum',name:'The persona spectrum',tag:'Permanent, t
 const H7_DP=[{id:'sneak',name:'Sneak into basket',cat:'Sneaking',say:'Insurance was added without asking; you must notice and remove it.'},{id:'timer',name:'Countdown timer',cat:'Urgency',say:'A deadline pressures a hurried decision; Mathur and colleagues found some timers simply reset.'},{id:'stock',name:'Low-stock message',cat:'Scarcity',say:'“Only 2 left” pushes you to buy now, whether or not it is true.'},{id:'optin',name:'Pre-ticked opt-in',cat:'Interface interference',say:'The default does the company’s work: many people never untick it.'},{id:'shame',name:'Confirmshaming',cat:'Misdirection',say:'Declining is worded to make you feel foolish.'}];
 SCENE({id:'dark-patterns',name:'Dark patterns',tag:'Design that works against you',
  definition:'Interface designs that trick or pressure people into choices they did not intend, such as buying extras, sharing data or signing up.',
- example:'Harry Brignull named and catalogued dark patterns in 2010. Mathur and colleagues crawled about 11,000 shopping sites in 2019 and found deceptive patterns on roughly one in ten.',
+ example:'Harry Brignull named and catalogued dark patterns in 2010. Mathur and colleagues crawled about 11,000 shopping sites in 2019 and found dark patterns on roughly one in ten.',
  desc:'A generic checkout screen containing five dark patterns; finding each one reveals its name and category.',
  research:['Brignull (2010). Dark patterns (now deceptive.design).','Mathur, Acar, Friedman, Lucherini, Mayer, Chetty & Narayanan (2019). Dark patterns at scale: findings from a crawl of 11K shopping websites. CSCW.','Gray, Kou, Battles, Hoggatt & Toombs (2018). The dark (patterns) side of UX design. CHI.'],
  dur:12,hint:'Press anything on the checkout that seems designed to push you. Five dark patterns are hidden here.',
@@ -5068,7 +5068,7 @@ WORD(
  {key:'attention-residue',title:'Attention residue',aliases:['attention residue'],linkContext:'interruptions',scene:'interruptions-residue',here:'Thoughts about a previous, unfinished task that carry over and reduce performance on the next one.',contrast:'It is not the switch itself but what the unfinished task leaves behind.',example:'Still thinking about an unanswered email during a meeting.'},
  {key:'notification-batching',title:'Notification batching',aliases:['batching','batched','batch delivery'],linkContext:'interruptions',scene:'interruptions-batching',here:'Holding notifications and delivering them together at set times instead of as they arrive.',contrast:'It delays delivery but does not hide messages.',example:'Delivering all notifications at 11:00, 14:00 and 16:30.'},
  {key:'accessibility',title:'Accessibility',aliases:['accessibility','accessible'],linkContext:'accessibility',scene:'accessibility',here:'The degree to which people with disabilities can perceive, operate and understand an interface.',contrast:'Not a special version for a few people: accessible design usually improves the interface for everyone.',example:'Captions help deaf viewers and anyone watching in a noisy place.'},
- {key:'contrast-ratio',title:'Contrast ratio',aliases:['contrast ratio'],linkContext:'accessibility',scene:'accessibility',here:'The ratio of the relative luminance of the lighter colour to the darker one, each plus 0.05; from 1:1 to 21:1.',contrast:'It measures brightness difference, not hue: red on green can look different yet have poor contrast.',example:'Black on white is 21:1; mid-grey #777 on white is about 4.5:1.'},
+ {key:'contrast-ratio',title:'Contrast ratio',aliases:['contrast ratio'],linkContext:'accessibility',scene:'accessibility',here:'The ratio of the relative luminance of the lighter colour to the darker one, each plus 0.05; from 1:1 to 21:1.',contrast:'It measures brightness difference, not hue: red on green can look different yet have poor contrast.',example:'Black on white is 21:1; mid-grey #767676 on white is 4.54:1, just passing the 4.5:1 minimum.'},
  {key:'wcag',title:'WCAG',aliases:['WCAG','Web Content Accessibility Guidelines'],linkContext:'accessibility',scene:'accessibility',here:'The World Wide Web Consortium’s guidelines for accessible web content, with testable success criteria at levels A, AA and AAA.',contrast:'They are guidelines with measurable criteria, often written into law, not merely advice.',example:'Success criterion 1.4.3 sets the 4.5:1 minimum contrast.'},
  {key:'screen-reader',title:'Screen reader',aliases:['screen reader','screen readers','screen-reader'],linkContext:'accessibility',scene:'accessibility-focus-order',here:'Software that reads the interface aloud or to a braille display, moving through it in code order.',contrast:'It reads the structure and labels in the code, not the visual appearance.',example:'Without a label, a text field is announced only as “edit text”.'},
  {key:'focus-order',title:'Focus order',aliases:['focus order','tab order'],linkContext:'accessibility',scene:'accessibility-focus-order',here:'The sequence in which keyboard focus moves between controls when pressing Tab.',contrast:'It follows the code order, which can differ from the visual layout.',example:'A two-column form coded column by column tabs down one side first.'},
@@ -5206,7 +5206,7 @@ SCENE({id:'head-mounted-display-dof',name:'Six degrees of freedom',tag:'Turning 
   const ring=(fn,col)=>{const pts=range(41).map(i=>fn(i/40*2*Math.PI));let o='';for(let i=0;i<40;i++)o+=line3(pts[i],pts[i+1],P,col,2.2);return o};
   out+=ring(a=>[Math.cos(a),Math.sin(a),0],C.coral)+ring(a=>[Math.cos(a),0,Math.sin(a)],C.purple)+ring(a=>[0,Math.cos(a),Math.sin(a)],C.green);
   const lean=s.mode==='6'?s.lean/50:0;out+=point3([lean*.5,0,0],P,C.blue,12);
-  const q1=P([1,0,0]),q2=P([0,0,1]),q3=P([0,1,0]);out+=label3(q1[0]+8,q1[1]-8,'turn',13,C.coral)+label3(q2[0]+10,q2[1]-8,'nod',13,C.purple)+label3(q3[0]-10,q3[1]-8,'tilt',13,C.green);
+  const q1=P([1,0,0]),q2=P([0,0,1]),q3=P([0,1,0]);out+=label3(q1[0]+8,q1[1]-8,'turn',13,C.coral)+label3(q2[0]+10,q2[1]-8,'tilt',13,C.purple)+label3(q3[0]-10,q3[1]-8,'nod',13,C.green);
   return {svg:out,title:'Three rotations and three translations',caption:`Three rings for rotation and three arrows for movement around your head (blue).${s.mode==='6'?' Your lean moves the head along the left–right axis.':' In 3 DoF the head stays at the centre whatever you do.'}`};
  }});
 
@@ -5485,7 +5485,7 @@ SCENE({id:'conversational-ui-repair',name:'Repair and discoverability in voice',
   turns.forEach(([who,t],i)=>{const y=56+i*48,me=who==='you';out+=R(me?250:30,y,320,38,me?C.blue:'#fff',me?C.blue:C.line,19)+TF(me?560:44,y+24,t,13.5,me?'#fff':C.ink,me?'end':'start')});
   out+=counter(30,300,'turns',turns.length,C.blue,110)+counter(150,300,'error slipped through',slipped?'yes':'no',slipped?C.coral:C.green,170);
   out+=R(340,292,230,62,'#fff',C.grid,8)+TF(455,312,'On screen you would see a menu.',12.5,C.muted)+TF(455,330,'By voice, people must guess',12.5,C.muted)+TF(455,346,'what they are allowed to say.',12.5,C.muted);
-  return {svg:out,phase:slipped?'Without any confirmation the misheard “fourteen” goes straight into the booking: a silent error.':s.strat==='explicit'&&!wrong?'Asking outright when the system was already sure costs an extra turn for nothing: confirmation should match uncertainty.':s.strat==='implicit'&&!wrong?'Implicit confirmation repeats what was heard while moving on, so a correct hearing costs no extra turn.':'The check catches the mishearing, at the price of extra turns. Conversation is cooperative: people expect a partner to say as much as needed and no more.'};
+  return {svg:out,phase:slipped?'Without any confirmation the misheard “fourteen” goes straight into the booking: a silent error.':s.strat==='explicit'&&!wrong?'Asking outright when the system was already sure costs an extra question and answer for nothing: confirmation should match uncertainty.':s.strat==='implicit'&&!wrong?'Implicit confirmation repeats what was heard while moving on, so a correct hearing costs no extra turn.':'The check catches the mishearing, at the price of extra turns. Conversation is cooperative: people expect a partner to say as much as needed and no more.'};
  }});
 
 SCENE({id:'conversational-ui-social',name:'The media equation',tag:'People treat computers socially',
@@ -5630,7 +5630,7 @@ SCENE({id:'ai-agents-levels',name:'Levels of automation',tag:'Who decides, who a
 const H8_SUGG=[[96,1],[92,1],[88,1],[85,0],[83,1],[78,1],[72,0],[70,1],[64,1],[58,0],[52,1],[40,0]];
 SCENE({id:'ai-agents-confidence',name:'Confidence and automation bias',tag:'When to accept a suggestion',
  definition:'Automation bias is accepting an automated suggestion without checking it. Showing the agent’s confidence lets people check the doubtful cases, but only if the confidence is honest.',
- example:'With a well-calibrated agent, checking only suggestions below 80% confidence catches most errors in a third of the effort; with an over-confident agent, the same rule lets errors through.',
+ example:'With a well-calibrated agent, checking only suggestions below 80% confidence catches most errors (three of four in this example) with just over half the effort; with an over-confident agent, the same rule lets errors through.',
  research:['Parasuraman, R. & Manzey, D. H. (2010). Complacency and bias in human use of automation: an attentional integration. Human Factors 52(3).','Horvitz, E. (1999). Principles of mixed-initiative user interfaces. ACM CHI.'],
  desc:'Twelve suggestions with the agent’s stated confidence and whether each was right, a threshold below which the person checks, and counts of checks made and errors let through.',
  dur:12,hint:'Set your threshold: suggestions below it get checked. Then switch to an over-confident agent and see the same rule fail.',
@@ -5675,7 +5675,7 @@ SCENE({id:'calm-technology',name:'Calm technology',tag:'Information at the edge 
 SCENE({id:'calm-technology-ubiquitous',name:'Ubiquitous computing',tag:'Many computers per person',
  definition:'Weiser’s vision of computers so numerous and so embedded in everyday things that they disappear into the background. He described three waves: many people sharing one computer, one person to one computer, then many computers to one person.',
  example:'A 1960s office shared one mainframe; a 1990s desk had one PC; today a person may carry a phone, a watch and earbuds and live among thermostats, cars and speakers that all compute.',
- research:'Weiser, M. (1991). The computer for the 21st century. Scientific American 265(3).',
+ research:['Weiser, M. (1991). The computer for the 21st century. Scientific American 265(3).','Weiser, M. & Brown, J. S. (1996). The coming age of calm technology. Xerox PARC.'],
  desc:'A timeline from 1960 to 2030 with the three waves of computing and figures for people and computers, illustrating the shift from many people per computer to many computers per person.',
  dur:10,hint:'Move through the years. The figures are an illustration of Weiser’s three waves, not measured counts.',
  init:()=>({year:1995}),

@@ -250,15 +250,15 @@ SCENE({id:'working-memory-chunking',name:'Chunking',tag:'Fewer, bigger units',
  ui:[{choose:[[0,'Letters'],[1,'Years'],[2,'Random']],label:'String',get:s=>s.set,act:'set'},{choose:[['none','One by one'],['threes','In threes'],['meaning','Meaningful']],label:'Grouping',get:s=>s.group,act:'group'}],
  on:{set(s,v){s.set=Number(v)},group(s,v){s.group=v}},
  draw(s){
-  const c=H4_CHUNKS[s.set],t=c.text;let sizes=s.group==='none'?Array(12).fill(1):s.group==='threes'?[3,3,3,3]:(c.meaning||[3,3,3,3]);
-  const known=s.group==='meaning'&&!!c.meaning;let out=heading('Twelve characters, how many units?');
+  const c=H4_CHUNKS[s.set],t=c.text;let sizes=s.group==='none'||(s.group==='meaning'&&!c.meaning)?Array(12).fill(1):s.group==='threes'?[3,3,3,3]:c.meaning;
+  const known=!!c.meaning&&(s.group==='meaning'||(s.group==='threes'&&c.meaning.every(n=>n===3)));let out=heading('Twelve characters, how many units?');
   let x=300-(12*34+(sizes.length-1)*18)/2,pos=0;
   sizes.forEach(sz=>{out+=R(x-6,82,sz*34+12,64,known?C.greenp:s.group==='none'?'#fff':C.pale,known?C.green:C.line,12);for(let k=0;k<sz;k++)out+=TM(x+k*34+17,124,t[pos+k],26,C.ink,'middle','font-weight="700"');pos+=sz;x+=sz*34+18});
-  const units=sizes.length;out+=T(300,186,s.group==='meaning'&&!c.meaning?'This string has no familiar groups, so meaningful grouping is not possible.':known?c.note:'',15,known?C.green:C.coral);
+  const units=known||s.group==='none'?sizes.length:12;out+=T(300,186,s.group==='meaning'&&!c.meaning?'This string has no familiar groups, so meaningful grouping is not possible.':known?c.note:'',15,known?C.green:C.coral);
   out+=T(110,232,'Units to hold',15,C.ink,'start');for(let k=0;k<12;k++)out+=R(110+k*32,246,26,26,k<units?(units<=4?C.green:C.coral):'#f1f4f6','none',5);
   out+=L(110+4*32-3,240,110+4*32-3,280,C.purple,2.5,'stroke-dasharray="4 3"')+TF(110+4*32,296,'≈ 4',12,C.purple);
-  out+=TB(300,336,`${units} unit${units>1?'s':''}`+(s.group==='threes'&&s.set===2?' — but each unfamiliar triple is harder to keep':''),16,units<=4?C.green:C.coral);
-  return {svg:out,phase:known?'Familiar chunks compress the string to four units, within capacity. Chess masters recall real positions better than novices, but not random ones: their advantage is chunks, not a bigger memory.':s.group==='threes'?'Grouping into threes adds rhythm and helps a little, which is why phone numbers are spaced, but unfamiliar triples are still three things each.':'Twelve separate characters overflow a working memory of about four items.'};
+  out+=TB(300,336,!known&&s.group==='threes'?'4 groups, still 12 items':`${units} unit${units>1?'s':''}`,16,units<=4?C.green:C.coral);
+  return {svg:out,phase:known?`Familiar chunks compress the string to ${units} units, within capacity. Chess masters recall real positions better than novices, but not random ones: their advantage is chunks, not a bigger memory.`:s.group==='threes'?'Grouping into threes adds rhythm and helps a little, which is why phone numbers are spaced, but unfamiliar triples are still three things each.':'Twelve separate characters overflow a working memory of about four items.'};
  }});
 
 // Approximate recall after a distracting delay, after Peterson & Peterson (1959).
@@ -385,7 +385,7 @@ SCENE({id:'mental-models',name:'The thermostat myth',tag:'Two theories of heat',
  dur:10,hint:'Move the setting and switch the valve theory on and off. When does the room reach 20 °C?',
  init:()=>({set:28,valve:true}),
  watch(p){return {set:Math.round(20+10*smooth(p)),valve:p>.3}},
- ui:[{range:'set',label:'Thermostat setting (°C)',min:16,max:30,get:s=>s.set,act:'set'},{b:'Valve theory on/off',act:'valve'}],
+ ui:[{range:'set',label:'Thermostat setting (°C)',min:20,max:30,get:s=>s.set,act:'set'},{b:'Valve theory on/off',act:'valve'}],
  on:{set(s,v){s.set=v},valve(s){s.valve=!s.valve}},
  draw(s){
   let out=heading('Turning it up does not heat the room faster');const gx=40,gy=56,gw=380,gh=260,px=t=>gx+40+t/40*(gw-60),py=v=>gy+gh-30-(v-14)/18*(gh-50);
@@ -418,10 +418,10 @@ SCENE({id:'mental-models-gulfs',name:'The two gulfs',tag:'Seven stages of action
  trace(s){return H4_STAGES.map((st,i)=>({i,say:`${st}: ${H4_VARIANTS[s.v].notes[i]}`}))},
  draw(s,f,X){
   const v=H4_VARIANTS[s.v];let out=heading(v.name+': turning on a projector');
-  out+=R(30,60,120,260,C.pale,'none',12)+TB(90,86,'Person',15,C.blue)+R(450,60,120,260,C.greenp,'none',12)+TB(510,86,'System',15,C.green);
+  out+=R(30,60,120,260,C.pale,'none',12)+TB(90,86,'Doing',15,C.blue)+R(450,60,120,260,C.greenp,'none',12)+TB(510,86,'Checking',15,C.green);
   const gapW=g=>40+g*30;
   const exW=gapW(v.ex),evW=gapW(v.ev);
-  // Execution runs down the person's side and across the bottom; evaluation returns up the system's side and across the top.
+  // All seven stages are the person's. Execution runs down the left (doing) and across the bottom; evaluation returns up the right (checking) and across the top.
   out+=R(300-evW/2,128,evW,40,v.ev>1?C.coralp:'#f1f4f6',v.ev>1?C.coral:C.grid,8)+TB(300,153,'gulf of evaluation',13,v.ev>1?C.coral:C.muted);
   out+=R(300-exW/2,236,exW,40,v.ex>1?C.coralp:'#f1f4f6',v.ex>1?C.coral:C.grid,8)+TB(300,261,'gulf of execution',13,v.ex>1?C.coral:C.muted);
   out+=arrow(450,113,150,113,C.green,2.5)+arrow(150,300,450,300,C.blue,2.5)+TF(300,105,'evaluation: what happened?',12,C.green)+TF(300,318,'execution: how do I do it?',12,C.blue);
@@ -558,12 +558,12 @@ SCENE({id:'eye-movements',name:'Saccades and fixations',tag:'The eye jumps, then
   pts.forEach((p,j)=>{if(j>0)out+=arrow(pts[j-1][0],pts[j-1][1],p[0],p[1],C.coral,2,7);});
   pts.forEach((p,j)=>out+=Ci(p[0],p[1],6+H4_DUR[j]/40,j===k?C.coral:'#c4523888','#fff')+TF(p[0],p[1]+4,j+1,11,'#fff'));
   const tot=sum(H4_DUR.slice(0,k+1));out+=T(300,362,`${k+1} fixations · ${tot} ms of looking · saccades take only about 20–40 ms each`,13,C.muted);
-  return {svg:out,phase:`Fixation ${k+1} lasts about ${H4_DUR[k]} ms. The scanpath is illustrative, in the spirit of Yarbus’s recordings: the instructions, not the picture, decide where the eyes go.`};
+  return {svg:out,phase:`Fixation ${k+1} lasts about ${H4_DUR[k]} ms. The scanpath is illustrative, in the spirit of Yarbus’s recordings: the instructions, as well as the picture, decide where the eyes go.`};
  }});
 
 const H4_TEXT='The eye sees fine detail only in a small central region, so reading is a series of short glances along the line.';
 SCENE({id:'eye-movements-fovea',name:'The moving window',tag:'How much do you see at once?',
- definition:'During a fixation in reading, useful letter information comes from a small window: roughly 3–4 characters to the left of fixation and about 14–15 to the right, in left-to-right scripts.',
+ definition:'During a fixation in reading, useful information comes from a small window: roughly 3–4 characters to the left of fixation and about 14–15 to the right, in left-to-right scripts.',
  example:'If text outside a window around the gaze is replaced by x’s, reading speed is normal once the window extends about 15 characters to the right, and slows when it is smaller.',
  desc:'A line of text in which only a window around the fixation point is legible and the rest is masked with x’s; the window size and fixation point can be changed.',
  research:'McConkie, G. W. & Rayner, K. (1975). The span of the effective stimulus during a fixation in reading. Perception & Psychophysics, 17, 578–586. Rayner, K. (1998). Eye movements in reading. Psychological Bulletin, 124.',
@@ -597,10 +597,10 @@ SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail tak
  ui:[{range:'d',label:'Viewing distance (cm)',min:30,max:100,get:s=>s.d,act:'d'}],
  on:{d(s,v){s.d=v}},
  draw(s){
-  let out=heading('The fovea covers about 2° of what you see');const r=a=>s.d*Math.tan(a*Math.PI/180);const fov=2*r(1),para=2*r(2.5);
+  let out=heading('The fovea covers about 2° of what you see');const r=a=>s.d*Math.tan(a*Math.PI/180);const fov=2*r(1),para=2*r(5);
   const ex=60,ey=200,sx=60+s.d*2.6;out+=Ci(ex,ey,18,'#fff',C.dark)+Ci(ex+12,ey,6,C.dark)+R(sx,90,8,220,C.dark,'none',2);
-  const ray=(a,col,w)=>{const h=Math.tan(a*Math.PI/180)*(sx-ex)*1;return L(ex+12,ey,sx,ey-h*6,col,w)+L(ex+12,ey,sx,ey+h*6,col,w)};
-  out+=ray(2.5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-70,'angles drawn ×6 for visibility',11,C.muted)+TF((ex+sx)/2,ey+56,s.d+' cm',13,C.ink);
+  const ray=(a,col,w)=>{const h=Math.tan(a*Math.PI/180)*(sx-ex)*1;return L(ex+12,ey,sx,ey-h*4,col,w)+L(ex+12,ey,sx,ey+h*4,col,w)};
+  out+=ray(5,C.purple,1.5)+ray(1,C.coral,2.5)+TF((ex+sx)/2,ey-70,'angles drawn ×4 for visibility',11,C.muted)+TF((ex+sx)/2,ey+66,s.d+' cm',13,C.ink);
   const fx=470,fy=200,sc=6;out+=R(380,90,180,220,'#fff',C.line,6)+Ci(fx,fy,para/2*sc,C.purplep,C.purple)+Ci(fx,fy,Math.max(2,fov/2*sc),C.coralp,C.coral);
   out+=TF(470,112,'screen, actual proportions (1 cm = 6 units)',11,C.muted)+TF(470,292,`sharp zone ≈ ${fov.toFixed(1)} cm across`,13,C.coral)+TF(470,272,`parafovea ≈ ${para.toFixed(1)} cm`,12,C.purple);
   out+=T(300,350,'Outside the coral circle, detail and colour fall off steeply.',13,C.muted);
@@ -610,7 +610,7 @@ SCENE({id:'eye-movements-acuity',name:'The sharp spot',tag:'Seeing in detail tak
   const d=s.d,k=a=>d*Math.tan(a*Math.PI/180),P=project([[0,0,0],[0,d,0],[-25,d,-16],[25,d,16]]);let out='';
   const scr=[[-25,d,-16],[25,d,-16],[25,d,16],[-25,d,16]];out+=poly3(scr,P,'#ffffffcc',C.line);
   const ring=(rad,col,fill)=>{const pts=range(24).map(i=>{const a=i/24*Math.PI*2;return [rad*Math.cos(a),d,rad*Math.sin(a)]});return poly3(pts,P,fill,col)+[0,6,12,18].map(i=>line3([0,0,0],pts[i],P,col,1.4)).join('')};
-  out+=ring(k(10),C.line,'#e7eef3aa')+ring(k(2.5),C.purple,'#ece6f6cc')+ring(k(1),C.coral,'#f9e2d9');
+  out+=ring(k(10),C.line,'#e7eef3aa')+ring(k(5),C.purple,'#ece6f6cc')+ring(k(1),C.coral,'#f9e2d9');
   out+=point3([0,0,0],P,C.dark,9)+(()=>{const p=P([k(10),d,0]);return label3(p[0]+40,p[1],'10°',13,C.muted)})();
-  return {svg:out,title:'Gaze cones in 3D',caption:`Cones of 2° (coral), 5° (purple) and 20° (grey) from the eye to a screen ${d} cm away, drawn to scale. The sharp cone is a thin needle.`};
+  return {svg:out,title:'Gaze cones in 3D',caption:`Cones of 2° (coral), 10° (purple) and 20° (grey) from the eye to a screen ${d} cm away, drawn to scale. The sharp cone is a thin needle.`};
  }});

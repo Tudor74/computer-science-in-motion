@@ -124,7 +124,7 @@ SCENE({id:'head-mounted-display-dof',name:'Six degrees of freedom',tag:'Turning 
   const ring=(fn,col)=>{const pts=range(41).map(i=>fn(i/40*2*Math.PI));let o='';for(let i=0;i<40;i++)o+=line3(pts[i],pts[i+1],P,col,2.2);return o};
   out+=ring(a=>[Math.cos(a),Math.sin(a),0],C.coral)+ring(a=>[Math.cos(a),0,Math.sin(a)],C.purple)+ring(a=>[0,Math.cos(a),Math.sin(a)],C.green);
   const lean=s.mode==='6'?s.lean/50:0;out+=point3([lean*.5,0,0],P,C.blue,12);
-  const q1=P([1,0,0]),q2=P([0,0,1]),q3=P([0,1,0]);out+=label3(q1[0]+8,q1[1]-8,'turn',13,C.coral)+label3(q2[0]+10,q2[1]-8,'nod',13,C.purple)+label3(q3[0]-10,q3[1]-8,'tilt',13,C.green);
+  const q1=P([1,0,0]),q2=P([0,0,1]),q3=P([0,1,0]);out+=label3(q1[0]+8,q1[1]-8,'turn',13,C.coral)+label3(q2[0]+10,q2[1]-8,'tilt',13,C.purple)+label3(q3[0]-10,q3[1]-8,'nod',13,C.green);
   return {svg:out,title:'Three rotations and three translations',caption:`Three rings for rotation and three arrows for movement around your head (blue).${s.mode==='6'?' Your lean moves the head along the left–right axis.':' In 3 DoF the head stays at the centre whatever you do.'}`};
  }});
 
@@ -403,7 +403,7 @@ SCENE({id:'conversational-ui-repair',name:'Repair and discoverability in voice',
   turns.forEach(([who,t],i)=>{const y=56+i*48,me=who==='you';out+=R(me?250:30,y,320,38,me?C.blue:'#fff',me?C.blue:C.line,19)+TF(me?560:44,y+24,t,13.5,me?'#fff':C.ink,me?'end':'start')});
   out+=counter(30,300,'turns',turns.length,C.blue,110)+counter(150,300,'error slipped through',slipped?'yes':'no',slipped?C.coral:C.green,170);
   out+=R(340,292,230,62,'#fff',C.grid,8)+TF(455,312,'On screen you would see a menu.',12.5,C.muted)+TF(455,330,'By voice, people must guess',12.5,C.muted)+TF(455,346,'what they are allowed to say.',12.5,C.muted);
-  return {svg:out,phase:slipped?'Without any confirmation the misheard “fourteen” goes straight into the booking: a silent error.':s.strat==='explicit'&&!wrong?'Asking outright when the system was already sure costs an extra turn for nothing: confirmation should match uncertainty.':s.strat==='implicit'&&!wrong?'Implicit confirmation repeats what was heard while moving on, so a correct hearing costs no extra turn.':'The check catches the mishearing, at the price of extra turns. Conversation is cooperative: people expect a partner to say as much as needed and no more.'};
+  return {svg:out,phase:slipped?'Without any confirmation the misheard “fourteen” goes straight into the booking: a silent error.':s.strat==='explicit'&&!wrong?'Asking outright when the system was already sure costs an extra question and answer for nothing: confirmation should match uncertainty.':s.strat==='implicit'&&!wrong?'Implicit confirmation repeats what was heard while moving on, so a correct hearing costs no extra turn.':'The check catches the mishearing, at the price of extra turns. Conversation is cooperative: people expect a partner to say as much as needed and no more.'};
  }});
 
 SCENE({id:'conversational-ui-social',name:'The media equation',tag:'People treat computers socially',
@@ -548,7 +548,7 @@ SCENE({id:'ai-agents-levels',name:'Levels of automation',tag:'Who decides, who a
 const H8_SUGG=[[96,1],[92,1],[88,1],[85,0],[83,1],[78,1],[72,0],[70,1],[64,1],[58,0],[52,1],[40,0]];
 SCENE({id:'ai-agents-confidence',name:'Confidence and automation bias',tag:'When to accept a suggestion',
  definition:'Automation bias is accepting an automated suggestion without checking it. Showing the agent’s confidence lets people check the doubtful cases, but only if the confidence is honest.',
- example:'With a well-calibrated agent, checking only suggestions below 80% confidence catches most errors in a third of the effort; with an over-confident agent, the same rule lets errors through.',
+ example:'With a well-calibrated agent, checking only suggestions below 80% confidence catches most errors (three of four in this example) with just over half the effort; with an over-confident agent, the same rule lets errors through.',
  research:['Parasuraman, R. & Manzey, D. H. (2010). Complacency and bias in human use of automation: an attentional integration. Human Factors 52(3).','Horvitz, E. (1999). Principles of mixed-initiative user interfaces. ACM CHI.'],
  desc:'Twelve suggestions with the agent’s stated confidence and whether each was right, a threshold below which the person checks, and counts of checks made and errors let through.',
  dur:12,hint:'Set your threshold: suggestions below it get checked. Then switch to an over-confident agent and see the same rule fail.',
@@ -593,7 +593,7 @@ SCENE({id:'calm-technology',name:'Calm technology',tag:'Information at the edge 
 SCENE({id:'calm-technology-ubiquitous',name:'Ubiquitous computing',tag:'Many computers per person',
  definition:'Weiser’s vision of computers so numerous and so embedded in everyday things that they disappear into the background. He described three waves: many people sharing one computer, one person to one computer, then many computers to one person.',
  example:'A 1960s office shared one mainframe; a 1990s desk had one PC; today a person may carry a phone, a watch and earbuds and live among thermostats, cars and speakers that all compute.',
- research:'Weiser, M. (1991). The computer for the 21st century. Scientific American 265(3).',
+ research:['Weiser, M. (1991). The computer for the 21st century. Scientific American 265(3).','Weiser, M. & Brown, J. S. (1996). The coming age of calm technology. Xerox PARC.'],
  desc:'A timeline from 1960 to 2030 with the three waves of computing and figures for people and computers, illustrating the shift from many people per computer to many computers per person.',
  dur:10,hint:'Move through the years. The figures are an illustration of Weiser’s three waves, not measured counts.',
  init:()=>({year:1995}),

@@ -430,7 +430,7 @@ SCENE({id:'hypertext-transclusion',name:'Transclusion and two-way links',tag:'Ne
  definition:'In Ted Nelson’s Xanadu design, a quotation is included by reference (transclusion), so it stays connected to its source, and links are visible from both ends. The web instead copies text and uses one-way links that can break.',
  example:'Quote a paragraph on the web and the author later corrects it: your copy is now out of date, and if the page moves your link shows “404 Not Found”. With Xanadu transclusion the quote stays tied to the exact version you quoted, so its words never silently change, while readers can see that a newer version exists; and the source can list everyone who quotes it. (A live embed, by contrast, simply shows the latest text.)',
  research:'Nelson, T. H. (1981). Literary Machines. Mindful Press. Nelson, T. H. (1995). The heart of connection: hypermedia unified by transclusion. Communications of the ACM, 38(8), 31–33.',
- desc:'Your document A quoting a passage of source document B, either as a copy with a one-way link or as a live transclusion with a two-way link; editing or deleting B shows the consequences.',
+ desc:'Your document A quoting a passage of source document B, either as a copy with a one-way link or as a transclusion with a two-way link; editing or deleting B shows the consequences.',
  dur:12,hint:'Choose copy or transclusion, then have the author edit or delete the source.',
  init:()=>({mode:'copy',edited:false,deleted:false}),
  watch(p){const i=Math.min(5,Math.floor(p*6));return {mode:i<3?'copy':'transclude',edited:i%3===1,deleted:i%3===2}},
@@ -513,9 +513,9 @@ SCENE({id:'augmenting-chord',name:'The chord keyset',tag:'Five keys, thirty-one 
  init:()=>({keys:[0,0,0,0,0],typed:''}),
  watch(p){const w='MOUSE',i=Math.min(4,Math.floor(p*5)),v=H2_ABC.indexOf(w[i])+1;return {keys:bin(v,5).split('').map(Number),typed:w.slice(0,i)}},
  ui:[{b:'Enter chord',act:'enter'},{b:'Delete letter',act:'del'},{b:'Clear',act:'clear'}],
- on:{key(s,i){s.keys[Number(i)]^=1},enter(s){const v=parseInt(s.keys.join(''),2);if(v>=1&&v<=26&&s.typed.length<14)s.typed+=H2_ABC[v-1];else if(v===27&&s.typed.length<14)s.typed+=' ';s.keys=[0,0,0,0,0]},del(s){s.typed=s.typed.slice(0,-1)},clear(s){s.typed='';s.keys=[0,0,0,0,0]}},
+ on:{key(s,i){s.keys[Number(i)]^=1},enter(s){const v=parseInt(s.keys.join(''),2);if(v>=1&&v<=26&&s.typed.length<14)s.typed+=H2_ABC[v-1];s.keys=[0,0,0,0,0]},del(s){s.typed=s.typed.slice(0,-1)},clear(s){s.typed='';s.keys=[0,0,0,0,0]}},
  draw(s,f,X){
-  const v=parseInt(s.keys.join(''),2),ch=v>=1&&v<=26?H2_ABC[v-1]:v===27?'space':v===0?'—':'(command)';let out=heading('A chord is a five-bit number');
+  const v=parseInt(s.keys.join(''),2),ch=v>=1&&v<=26?H2_ABC[v-1]:v===0?'—':'(other)';let out=heading('A chord is a five-bit number');
   s.keys.forEach((k,i)=>{const x=40+i*58;out+=hit(X,'key',i,`Key ${i+1} ${k?'down':'up'}. Press to toggle.`,R(x,56,50,130,k?C.blue:'#fff',k?C.blue:C.line,6)+TF(x+25,170,'2'+'⁴³²¹⁰'[i],13,k?'#fff':C.muted)+TB(x+25,120,k,20,k?'#fff':C.muted))});
   out+=TM(170,216,s.keys.join(''),22,C.ink)+TF(170,242,`= ${v}`,15,C.muted)+TB(170,286,ch,34,C.blue);
   out+=R(330,52,250,206,'#fff',C.grid,8);for(let i=0;i<26;i++){const x=340+(i%3)*80,y=70+Math.floor(i/3)*21.5,on=i===v-1;out+=(on?R(x-4,y-14,76,20,C.amberp,'none',4):'')+TF(x,y+2,H2_ABC[i],13,C.ink,'start','font-weight="700"')+TMF(x+18,y+2,bin(i+1,5),13,C.muted,'start')}

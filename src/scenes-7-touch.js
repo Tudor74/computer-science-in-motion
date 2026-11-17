@@ -265,7 +265,7 @@ SCENE({id:'gestures-agreement',name:'User-defined gestures',tag:'Asking people f
    out+=hit(X,'dec',j,`Fewer people proposed ${p}`,R(352,y+20,30,28,'#fff',C.line,6)+TB(367,y+39,'−',16,C.ink))+hit(X,'inc',j,`More people proposed ${p}`,R(388,y+20,30,28,'#fff',C.line,6)+TB(403,y+39,'+',16,C.ink))});
   out+=R(440,70,145,150,'#fff',C.grid,10)+T(512,94,'agreement',13,C.muted)+TB(512,130,fmt(A),28,A>.3?C.green:A>.15?C.amber:C.coral)+T(512,160,A>.3?'strong':A>.15?'moderate':'weak',14,C.ink)+T(512,192,`(${Math.round(A*100)}% chance two`,13,C.muted)+T(512,208,'people agree)',13,C.muted);
   out+=T(30,312,'A = Σ (share of each proposal)²',15,C.ink,'start')+TM(30,338,c.map(v=>`(${v}/${n})²`).join(' + ')+' = '+fmt(A),13,C.muted,'start');
-  return {svg:out,phase:A>.3?`Most people converge on “${ref.props[best]}”, so it is a natural choice for “${ref.name}”.`:`Proposals are spread out (agreement ${fmt(A)}), so no gesture is obvious for “${ref.name}”. A visible button or menu item is the safer design.`};
+  return {svg:out,phase:A>.3?`“${ref.props[best]}” is the most common proposal and agreement is strong (${fmt(A)}), so it is a natural choice for “${ref.name}”.`:`Proposals are spread out (agreement ${fmt(A)}), so no gesture is obvious for “${ref.name}”. A visible button or menu item is the safer design.`};
  }});
 
 /* ---------- Lesson: interruptions ---------- */
@@ -353,7 +353,7 @@ SCENE({id:'accessibility',name:'Colour contrast',tag:'Text everyone can read',
  dur:11,hint:'Pick a text colour and a background, then slide the text lighter or darker until it passes.',
  init:()=>({fg:'grey',bg:'white',t:.25}),
  watch(p){return {fg:'grey',bg:'white',t:Math.round(lerp(.7,-.5,smooth(p))*100)/100}},
- ui:[{range:'t',label:'Lighter ↔ darker',min:-.9,max:.9,step:.05,get:s=>s.t,act:'t',show:v=>v>0?'+'+fmt(v):fmt(v)}],
+ ui:[{range:'t',label:'Darker ↔ lighter',min:-.9,max:.9,step:.05,get:s=>s.t,act:'t',show:v=>v>0?'+'+fmt(v):fmt(v)}],
  on:{t(s,v){s.t=v},fg(s,v){s.fg=v},bg(s,v){s.bg=v}},
  draw(s,f,X){
   const fg=H7_shade(H7_HUES[s.fg],s.t),bg=H7_BGS[s.bg],cr=H7_contrast(fg,bg);let out=heading('Contrast ratio = (L₁ + 0.05) ÷ (L₂ + 0.05)');
@@ -391,7 +391,7 @@ SCENE({id:'accessibility-focus-order',name:'Focus order',tag:'What a keyboard or
   out+=R(374,90,210,90,'#1f2f38','none',10)+T(479,114,'screen reader says',13,'#aac2cf')+TB(479,150,said,15,'#fff');
   out+=T(374,214,`Tab presses: ${Math.max(0,f.k+1)} of 5`,14,C.ink,'start');
   out+=T(374,244,s.order==='good'?'Order follows the layout.':'Order follows the code,',14,s.order==='good'?C.green:C.coral,'start')+(s.order==='bad'?T(374,264,'not the layout.',14,C.coral,'start'):'');
-  return {svg:out,phase:f.k<0?'Focus starts before the form. Each Tab moves it to the next control in code order.':s.order==='bad'&&f.k>=2&&f.k<4?'Focus has skipped the right-hand column and jumped to the button: a sighted keyboard user is confused, and a screen-reader user may submit an unfinished form.':s.labels==='no'&&!H7_FIELDS[f.f].btn?'Placeholder text is not a label: the screen reader can only say “edit text”, so the user does not know what to type.':'Focus moves in an order that matches what you see, and each field announces its name.'};
+  return {svg:out,phase:f.k<0?'Focus starts before the form. Each Tab moves it to the next control in code order.':s.order==='bad'&&f.k===2?'Focus has skipped the right-hand column and jumped to the button: a sighted keyboard user is confused, and a screen-reader user may submit an unfinished form.':s.labels==='no'&&!H7_FIELDS[f.f].btn?'Placeholder text is not a label: it disappears as soon as you type and is not reliably announced, so a screen reader may say only “edit text” and the user does not know what to type.':(s.order==='bad'?(f.k>=3?'Focus has now jumped back up to the right-hand column, after the Send button: the order follows the code, not the layout.':'Focus is moving down the left-hand column first, because that is the order of the code.'):s.labels==='yes'?'Focus moves in an order that matches what you see, and each field announces its name.':'Focus moves in an order that matches what you see.')};
  }});
 
 const H7_SPEC=[['Touch','One arm','Arm injury','New parent','one-handed and voice control'],['See','Blind','Cataract','Distracted driver','screen readers, audio and high contrast'],['Hear','Deaf','Ear infection','Bartender','captions and visual alerts'],['Speak','Non-verbal','Laryngitis','Heavy accent','typed and visual alternatives to speech']];
@@ -417,7 +417,7 @@ SCENE({id:'accessibility-spectrum',name:'The persona spectrum',tag:'Permanent, t
 const H7_DP=[{id:'sneak',name:'Sneak into basket',cat:'Sneaking',say:'Insurance was added without asking; you must notice and remove it.'},{id:'timer',name:'Countdown timer',cat:'Urgency',say:'A deadline pressures a hurried decision; Mathur and colleagues found some timers simply reset.'},{id:'stock',name:'Low-stock message',cat:'Scarcity',say:'“Only 2 left” pushes you to buy now, whether or not it is true.'},{id:'optin',name:'Pre-ticked opt-in',cat:'Interface interference',say:'The default does the company’s work: many people never untick it.'},{id:'shame',name:'Confirmshaming',cat:'Misdirection',say:'Declining is worded to make you feel foolish.'}];
 SCENE({id:'dark-patterns',name:'Dark patterns',tag:'Design that works against you',
  definition:'Interface designs that trick or pressure people into choices they did not intend, such as buying extras, sharing data or signing up.',
- example:'Harry Brignull named and catalogued dark patterns in 2010. Mathur and colleagues crawled about 11,000 shopping sites in 2019 and found deceptive patterns on roughly one in ten.',
+ example:'Harry Brignull named and catalogued dark patterns in 2010. Mathur and colleagues crawled about 11,000 shopping sites in 2019 and found dark patterns on roughly one in ten.',
  desc:'A generic checkout screen containing five dark patterns; finding each one reveals its name and category.',
  research:['Brignull (2010). Dark patterns (now deceptive.design).','Mathur, Acar, Friedman, Lucherini, Mayer, Chetty & Narayanan (2019). Dark patterns at scale: findings from a crawl of 11K shopping websites. CSCW.','Gray, Kou, Battles, Hoggatt & Toombs (2018). The dark (patterns) side of UX design. CHI.'],
  dur:12,hint:'Press anything on the checkout that seems designed to push you. Five dark patterns are hidden here.',

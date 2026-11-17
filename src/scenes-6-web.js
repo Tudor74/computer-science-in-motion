@@ -93,7 +93,7 @@ const H6_ROT_ORDER=shuffled(range(40),61);
 SCENE({id:'world-wide-web-link-rot',name:'Link rot',tag:'Links decay over time',
  definition:'Link rot is the steady loss of linked pages as sites move, close or change. A link that worked when written later leads nowhere, or to something else.',
  example:'Zittrain, Albert and Lessig found in 2014 that about half of the web addresses cited in US Supreme Court opinions no longer led to the material originally cited. Archives keep copies to rescue them.',
- research:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citation. Harvard Law Review Forum.',
+ research:'Zittrain, Albert & Lessig (2014). Perma: Scoping and addressing the problem of link and reference rot in legal citations. Harvard Law Review Forum 127.',
  desc:'A curve of the share of links still working as years pass, beside forty link dots that turn into broken crosses as time runs; archived links stay readable.',
  dur:9,hint:'Slide the years and the half-life of this illustrative model. Turn archiving on to rescue some links.',
  init:()=>({years:10,half:9,archive:false}),

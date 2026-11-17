@@ -320,7 +320,7 @@ function H1_mva(N,S,Z){const out=[];let Q=0;for(let k=1;k<=N;k++){const Rr=S*(1+
 SCENE({id:'time-sharing-queue',name:'More users, slower replies',tag:'The knee of the curve',
  definition:'A shared computer stays responsive until it is nearly fully busy; then each extra user adds a full share of waiting. Response time rises in a sharp “knee”.',
  example:'If each request needs 0.5 s of processor time and people think for 20 s between requests, about 41 users can share the machine before replies slow sharply.',
- research:['Scherr (1965). An analysis of time-shared computer systems: measurements of MIT’s CTSS matched a simple queueing model.','Reiser & Lavenberg (1980). Mean-value analysis of closed queueing networks.'],
+ research:['Scherr (1965). An analysis of time-shared computer systems: measurements of MIT’s CTSS matched a simple queueing model.','Reiser & Lavenberg (1980). Mean-value analysis of closed multichain queuing networks (Journal of the ACM 27(2)).'],
  desc:'A graph of response time against number of users: flat at first, then rising along a straight asymptote after a marked knee; a dot marks the chosen number of users.',
  dur:11,hint:'Change users, thinking time and processor time per request. Watch where the knee falls.',
  init:()=>({n:20,z:20,sv:.5}),
@@ -346,7 +346,7 @@ SCENE({id:'time-sharing-queue',name:'More users, slower replies',tag:'The knee o
 const H1_BLIPS=[[130,150],[250,130],[272,250],[150,284],[208,206],[106,226]];
 SCENE({id:'light-pen',name:'Light pen',tag:'Pointing at the screen',
  definition:'A light pen is a photocell in a pen. A vector screen draws its shapes one after another; the pen fires when the beam passes under it, and the timing tells the computer which shape you pointed at.',
- example:'SAGE air-defence operators in the late 1950s pointed a light gun at a radar blip to ask the computer about that aircraft: the first pointing at a screen.',
+ example:'SAGE air-defence operators in the late 1950s pointed a light gun at a radar blip to ask the computer about that aircraft: an early, large-scale use of pointing at a screen, inherited from MIT’s Whirlwind.',
  research:'Astrahan & Jacobs (1983). History of the design of the SAGE computer, the AN/FSQ-7 (Annals of the History of Computing): consoles with light guns.',
  desc:'A round radar screen with six blips drawn in order by the beam, a light pen touching one of them, and a timeline of one refresh showing when the pen’s photocell fires.',
  dur:11,hint:'Press any blip to touch it with the pen. The pen only knows when it saw light; the computer turns that moment into a blip.',
