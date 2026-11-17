@@ -226,7 +226,7 @@ const A6_PERM={fa:{ion:.3,ribose:1,nuc:12,rna:Infinity},pl:{ion:300,ribose:200,n
 const A6_MOL={ion:'ions (Na⁺, Mg²⁺)',ribose:'ribose sugar',nuc:'nucleotides',rna:'RNA strands'};
 SCENE({id:'membrane-growth-permeability',name:'Leaky by design',tag:'What crosses an early membrane',
  definition:'Fatty-acid membranes are much leakier than the phospholipid membranes of modern cells. Small sugars and even nucleotides can cross them slowly, while long RNA cannot: an early cell could feed on building blocks from outside without any transport proteins.',
- example:'Mansy and colleagues showed in 2008 that activated nucleotides cross fatty-acid membranes and are copied on an RNA template inside the vesicle.',
+ example:'Mansy and colleagues showed in 2008 that activated nucleotides cross fatty-acid membranes and extend a copy along a DNA template inside the vesicle.',
  desc:'A vesicle with molecules outside and inside. Choose the membrane and the molecule; the time slider shows how much has crossed. The ordering is from the published experiments; the times are illustrative.',
  research:'Mansy, S. S. et al. (2008). Template-directed synthesis of a genetic polymer in a model protocell. Nature 454, 122–125. Sacerdote, M. G. & Szostak, J. W. (2005). Semipermeable lipid bilayers exhibit diastereoselectivity favoring ribose. PNAS 102, 6004–6008. Budin & Szostak (2011). PNAS 108, 5249–5254.',
  dur:12,hint:'Try nucleotides with both membranes. Long RNA never leaves, which is exactly what a genome needs.',
@@ -260,8 +260,8 @@ SCENE({id:'chirality',name:'Life is one-handed',tag:'Homochirality',
  on:{m(s,v){s.m=v;return 'keep'},h(s,v){s.h=v;return 'keep'}},
  draw(s){
   const M=A6_MOLS[s.m],sgn=s.h==='L'?1:-1;let out=A6_tag('demonstrated')+heading('Two mirror forms',26);
-  const cx=170,cy=200,g=M.groups,pos=[[0,-80],[sgn*80,30],[-sgn*80,30],[0,70]];
-  out+=L(cx,cy,cx+pos[0][0],cy+pos[0][1]+16,C.ink,3)+P(`M${cx} ${cy} L${cx+pos[1][0]*.62} ${cy+pos[1][1]*.62-7} L${cx+pos[1][0]*.62} ${cy+pos[1][1]*.62+5} Z`,C.ink,1.5,C.ink)+L(cx,cy,cx+pos[2][0]*.8,cy+pos[2][1]*.8,C.ink,2.5,'stroke-dasharray="3 4"')+L(cx,cy,cx,cy+54,C.ink,3);
+  const cx=170,cy=200,g=M.groups,pos=[[0,-80],[-sgn*78,28],[sgn*72,48],[-sgn*30,74]];
+  out+=L(cx,cy,cx+pos[0][0],cy+pos[0][1]+16,C.ink,3)+P(`M${cx} ${cy} L${cx+pos[1][0]*.62} ${cy+pos[1][1]*.62-7} L${cx+pos[1][0]*.62} ${cy+pos[1][1]*.62+5} Z`,C.ink,1.5,C.ink)+L(cx,cy,cx+pos[2][0]*.62,cy+pos[2][1]*.62,C.ink,3)+L(cx,cy,cx+pos[3][0]*.7,cy+pos[3][1]*.7,C.ink,2.5,'stroke-dasharray="3 4"');
   out+=Ci(cx,cy,14,'#fff',C.ink)+TBF(cx,cy+5,'C',14,C.ink);
   g.forEach((t,i)=>{const [dx,dy]=pos[i];out+=TBF(cx+dx,cy+dy+5+(i===0?0:i===3?6:0),t,15,i===3?C.muted:C.blue)});
   out+=L(320,60,320,330,C.grid,2,'stroke-dasharray="6 6"')+TF(320,350,'mirror',12,C.muted);
@@ -303,7 +303,7 @@ SCENE({id:'chirality-viedma',name:'Where the first tilt came from',tag:'Sources 
  definition:'Amplification needs a first, small imbalance. Candidates include grinding of crystals (Viedma ripening), circularly polarised light in space, excesses delivered by meteorites, and spin-selective magnetic mineral surfaces. None is established as the origin of life’s handedness.',
  example:'Grinding a slurry of sodium chlorate crystals with glass beads turned an even mix of left- and right-handed crystals into a single hand within days (Viedma 2005).',
  desc:'A model of Viedma grinding on the left: crystals coloured by hand, with the share of the winning hand growing over time. On the right, four candidate sources of an imbalance; press one for its evidence.',
- research:'Viedma, C. (2005). Chiral symmetry breaking during crystallization: complete chiral purity induced by nonlinear autocatalysis and recycling. Physical Review Letters 94, 065504. Glavin, D. P. & Dworkin, J. P. (2009). Enrichment of the amino acid L-isovaline by aqueous alteration on CI and CM meteorite parent bodies. PNAS 106, 5487–5492. Ozturk, S. F. et al. (2023). Origins of biological homochirality through chiral-induced spin selectivity. Science Advances 9, eadg8274. Meierhenrich, U. (2008). Amino Acids and the Asymmetry of Life. Springer.',
+ research:'Viedma, C. (2005). Chiral symmetry breaking during crystallization: complete chiral purity induced by nonlinear autocatalysis and recycling. Physical Review Letters 94, 065504. Glavin, D. P. & Dworkin, J. P. (2009). Enrichment of the amino acid L-isovaline by aqueous alteration on CI and CM meteorite parent bodies. PNAS 106, 5487–5492. Ozturk, S. F. et al. (2023). Origin of biological homochirality by crystallization of an RNA precursor on a magnetic surface. Science Advances 9, eadg8274. Meierhenrich, U. (2008). Amino Acids and the Asymmetry of Life. Springer.',
  dur:12,hint:'Slide the grinding time, then press each source card. All four are candidates; none is settled.',
  init:()=>({t:3,k:0}),
  watch(p){return {t:Math.round(p*10),k:Math.min(3,Math.floor(p*4))}},

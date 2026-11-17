@@ -16,7 +16,7 @@ SOURCE('a6-frank-1953',{title:'Frank, F. C. (1953). On spontaneous asymmetric sy
 SOURCE('a6-soai-1995',{title:'Soai, K., Shibata, T., Morioka, H. & Choji, K. (1995). Asymmetric autocatalysis and amplification of enantiomeric excess of a chiral molecule. Nature 378, 767–768.'});
 SOURCE('a6-viedma-2005',{title:'Viedma, C. (2005). Chiral symmetry breaking during crystallization: complete chiral purity induced by nonlinear autocatalysis and recycling. Physical Review Letters 94, 065504.'});
 SOURCE('a6-glavin-2009',{title:'Glavin, D. P. & Dworkin, J. P. (2009). Enrichment of the amino acid L-isovaline by aqueous alteration on CI and CM meteorite parent bodies. PNAS 106, 5487–5492.'});
-SOURCE('a6-ozturk-2023',{title:'Ozturk, S. F. et al. (2023). Origins of biological homochirality through chiral-induced spin selectivity. Science Advances 9, eadg8274.'});
+SOURCE('a6-ozturk-2023',{title:'Ozturk, S. F. et al. (2023). Origin of biological homochirality by crystallization of an RNA precursor on a magnetic surface. Science Advances 9, eadg8274.'});
 SOURCE('a6-blackmond-2010',{title:'Blackmond, D. G. (2010). The origin of biological homochirality. Cold Spring Harbor Perspectives in Biology 2, a002147.'});
 SOURCE('a6-biology',{title:'Biology In Motion: a sister course.',url:'https://biology-in-motion.puter.site/',note:'Its cells era covers membranes, diffusion and osmosis in living cells.'});
 SOURCE('a6-physics',{title:'Physics In Motion: a sister course.',url:'https://physics-in-motion.puter.site/',note:'Polarised light and symmetry appear in its light era.'});

@@ -30,7 +30,7 @@ const A8_HZ_IN=.99,A8_HZ_OUT=1.70;// AU for the Sun, conservative limits (Koppar
 const A8_teq=(L,d,A=.3)=>278.6*Math.pow(L,.25)/Math.sqrt(d)*Math.pow(1-A,.25);
 SCENE({id:'habitable-zone',name:'The habitable zone',tag:'Where liquid water could last',
  definition:'A star’s habitable zone is the range of orbits where a rocky planet with a suitable atmosphere could keep liquid water on its surface. Too close and water boils away in a runaway greenhouse; too far and even a thick carbon dioxide atmosphere cannot stop it freezing.',
- example:'For the Sun the conservative zone runs from about 0.99 to 1.7 times Earth’s distance; for a dim red dwarf it shrinks to a few hundredths of that.',
+ example:'For the Sun the conservative zone runs from about 0.99 to 1.7 times Earth’s distance; for a dim red dwarf it shrinks to about a seventh of that.',
  desc:'Top-down view of a star, its habitable zone (green ring) and a planet. Choose the star and move the planet. The panel gives the starlight the planet receives and its equilibrium temperature with an Earth-like reflectivity (albedo 0.3), before any greenhouse warming.',
  research:'Kasting, J. F., Whitmire, D. P. & Reynolds, R. T. (1993). Habitable zones around main sequence stars. Icarus 101, 108–128. Kopparapu, R. K. et al. (2013). Habitable zones around main-sequence stars: new estimates. Astrophysical Journal 765, 131 (0.99–1.70 AU for the Sun, conservative). Here the zone is scaled by √L, a simplification: cooler stars shift it slightly outward.',
  dur:12,hint:'Pick each star and find its zone. Notice how close a planet must be to a red dwarf.',
@@ -77,7 +77,7 @@ const A8_WORLDS=[
  {n:'Mars',lab:[104,'middle',0],S:.43,hz:true,rock:'yes',atm:'thin CO₂, 0.006 bar',lock:'no',d:'Inside the conservative zone, but small: it lost most of its atmosphere and its water is now frozen or underground.'},
  {n:'Proxima b',lab:[88,'end',-6],S:.65,hz:true,rock:'probably',atm:'unknown',lock:'probably',d:'The nearest exoplanet (4.2 light years), at least about 1.1 Earth masses, orbiting a flaring red dwarf every 11.2 days.'},
  {n:'TRAPPIST-1e',lab:[104,'start',6],S:.66,hz:true,rock:'yes',atm:'unknown',lock:'probably',d:'One of seven Earth-sized planets around an ultracool dwarf; JWST found no thick atmosphere on the two innermost planets.'},
- {n:'K2-18b',lab:[104,'middle',0],S:1.3,hz:true,rock:'no',atm:'hydrogen-rich',lock:'possibly',d:'About 2.6 Earth radii: a mini-Neptune, perhaps with an ocean under hydrogen (a proposed “hycean” world). Starlight value approximate.'}];
+ {n:'K2-18b',lab:[104,'middle',0],S:1.3,hz:'near the inner edge (estimates vary)',rock:'no',atm:'hydrogen-rich',lock:'possibly',d:'About 2.6 Earth radii: a mini-Neptune, perhaps with an ocean under hydrogen (a proposed “hycean” world). Starlight value approximate.'}];
 SCENE({id:'habitable-zone-worlds',name:'Worlds on the starlight scale',tag:'In the zone is not the same as habitable',
  definition:'Comparing planets by the starlight they receive (relative to Earth) puts worlds around different stars on one scale. Being in the habitable zone is only the first test: size, atmosphere, tidal locking and stellar flares also matter.',
  example:'Mars sits inside the Sun’s conservative habitable zone, yet its surface is a frozen desert.',
@@ -90,13 +90,13 @@ SCENE({id:'habitable-zone-worlds',name:'Worlds on the starlight scale',tag:'In t
  on:{sel(s,v){s.sel=Number(v);return 'keep'}},
  draw(s,f,X){
   const x0=40,x1=560,lx=v=>x0+(Math.log10(v)-Math.log10(.2))/(Math.log10(3)-Math.log10(.2))*(x1-x0);let out=heading('Six worlds on one scale of starlight',26);
-  out+=R(lx(.36),56,lx(1.1)-lx(.36),60,'#e3f2ec','none',4)+TF((lx(.36)+lx(1.1))/2,72,'Sun-like habitable zone',13,C.green);
+  out+=R(lx(.35),56,lx(1.02)-lx(.35),60,'#e3f2ec','none',4)+TF((lx(.35)+lx(1.02))/2,72,'Sun-like habitable zone',13,C.green);
   out+=L(x0,116,x1,116,C.line,2);[.2,.5,1,2,3].forEach(v=>{out+=L(lx(v),112,lx(v),120,C.line,1.5)+TF(lx(v),136,v+'×',13,C.muted)});
   out+=TF(300,154,'starlight received, relative to Earth (log scale) · more starlight to the right',13,C.muted);
   A8_WORLDS.forEach((w,i)=>{const x=lx(w.S),[dy,anc,dx]=w.lab;out+=hit(X,'sel',i,w.n,Ci(x,116,i===s.sel?8:6,i===s.sel?C.blue:'#fff',C.blue)+TF(x+dx,dy,w.n,13,i===s.sel?C.ink:C.muted,anc))});
   const w=A8_WORLDS[s.sel];
   out+=R(20,168,562,178,'#fff',C.grid,8)+TBF(36,192,w.n,15,C.ink,'start');
-  [['In the Sun-like zone',w.hz?'yes':'no'],['Rocky',w.rock],['Atmosphere',w.atm],['Tidally locked',w.lock]].forEach(([k,v],i)=>{out+=TF(36,218+i*22,k,13,C.muted,'start')+TF(190,218+i*22,v,13,C.ink,'start')});
+  [['In the Sun-like zone',w.hz===true?'yes':w.hz||'no'],['Rocky',w.rock],['Atmosphere',w.atm],['Tidally locked',w.lock]].forEach(([k,v],i)=>{out+=TF(36,218+i*22,k,13,C.muted,'start')+TF(190,218+i*22,v,13,C.ink,'start')});
   out+=A8_lines(36,312,A8_wrap(w.d,82),C.ink,13,17);
   out+=A8_tag('plausible');
   return {svg:out,phase:`${w.n}: ${w.d}`};
@@ -108,7 +108,7 @@ SCENE({id:'habitable-zone-greenhouse',name:'Albedo and the greenhouse',tag:'Why 
  example:'Earth’s equilibrium temperature is about 255 K (−18 °C); greenhouse gases raise the average surface to about 288 K (15 °C).',
  desc:'Sliders for the Sun’s brightness, the planet’s albedo and the greenhouse warming. A thermometer shows the surface temperature against the range where water is liquid at Earth’s surface pressure.',
  research:'Energy balance: T = 278.6 K × L^¼ × (1 − albedo)^¼ ÷ √d (d in AU). Sagan, C. & Mullen, G. (1972). Earth and Mars: evolution of atmospheres and surface temperatures. Science 177, 52–56 (the faint young Sun paradox). Gough, D. O. (1981). Solar Physics 74, 21–34 (the young Sun about 70% as bright). Hoffman, P. F. et al. (1998). Science 281, 1342–1346 (Snowball Earth).',
- dur:12,hint:'Dim the Sun to 0.7, as it was 4 billion years ago. How much greenhouse warming would early Earth need to keep its oceans?',
+ dur:12,hint:'Dim the Sun to 0.75, as it was about 4 billion years ago. How much greenhouse warming would early Earth need to keep its oceans?',
  init:()=>({L:1,A:.3,g:33}),
  watch(p){return p<.5?{L:1-p*.6,A:.3,g:33}:{L:.7,A:.3,g:33+(p-.5)*120}},
  ui:[{range:'L',label:'Sun’s brightness',min:.6,max:1.2,step:.01,get:s=>s.L,act:'L',show:v=>Math.round(v*100)+'% of today'},{range:'A',label:'Albedo',min:0,max:.8,step:.01,get:s=>s.A,act:'A',show:v=>v.toFixed(2)},{range:'g',label:'Greenhouse warming',min:0,max:100,get:s=>s.g,act:'g',show:v=>'+'+v+' K'}],
@@ -123,7 +123,7 @@ SCENE({id:'habitable-zone-greenhouse',name:'Albedo and the greenhouse',tag:'Why 
   out+=TBF(300,82,'Equilibrium temperature',14,C.ink,'start')+TBF(300,104,Math.round(Te)+' K ('+Math.round(Te-273.15)+' °C)',16,C.amber,'start');
   out+=TBF(300,140,'Surface, with greenhouse',14,C.ink,'start')+TBF(300,162,Math.round(Ts)+' K ('+Math.round(Ts-273.15)+' °C)',16,C.ink,'start');
   out+=TBF(300,196,state,16,state==='frozen'?C.blue:state==='boiling'?C.coral:C.green,'start');
-  out+=A8_lines(300,230,s.L<.85&&state==='frozen'?['A young Sun at '+Math.round(s.L*100)+'% brightness leaves','Earth frozen here, yet rocks show','liquid water 4 billion years ago:','the faint young Sun paradox.']:s.L<.85?['With this much greenhouse warming','(or a darker surface) the young','Earth keeps liquid water: one','proposed answer to the faint','young Sun paradox.']:['Raise the albedo past about 0.55','and even today’s greenhouse','cannot stop a global freeze, as','in the Snowball Earth episodes.'],C.muted,13,18);
+  out+=A8_lines(300,230,s.L<.85&&state==='frozen'?['A young Sun at '+Math.round(s.L*100)+'% brightness leaves','Earth frozen here, yet rocks show','liquid water 4 billion years ago:','the faint young Sun paradox.']:s.L<.85?['With this much greenhouse warming','(or a darker surface) the young','Earth keeps liquid water: one','proposed answer to the faint','young Sun paradox.']:['Raise the albedo past about 0.45','and even today’s greenhouse','cannot stop a global freeze, as','in the Snowball Earth episodes.'],C.muted,13,18);
   out+=A8_tag('demonstrated');
   return {svg:out,phase:`With the Sun at ${Math.round(s.L*100)}% and albedo ${s.A.toFixed(2)}, the equilibrium temperature is ${Math.round(Te)} K; adding ${s.g} K of greenhouse warming gives ${Math.round(Ts)} K: ${state}. The energy balance is basic physics; how much greenhouse warming early Earth had is still debated.`};
  }});
@@ -131,7 +131,7 @@ SCENE({id:'habitable-zone-greenhouse',name:'Albedo and the greenhouse',tag:'Why 
 /* ---------------------------------------------------------------- icy moons */
 const A8_MOONS={
  europa:{n:'Europa (Jupiter)',R:1561,ice:'15–25 km (estimates range from a few to 30)',ocean:'perhaps 60–150 km deep',water:'Galileo’s magnetometer found a salty, conducting layer (Kivelson et al. 2000).',energy:'Tidal flexing by Jupiter; possible sea-floor volcanism.',chem:'Salts and carbon dioxide seen on the surface, the CO₂ probably from the ocean (JWST, 2023).',next:'Europa Clipper, launched in 2024, arrives in 2030; ESA’s JUICE arrives in 2031.',iceF:.06,oceanF:.12},
- enceladus:{n:'Enceladus (Saturn)',R:252,ice:'about 20–25 km on average, a few km at the south pole',ocean:'a global ocean about 10 km deep',water:'Plumes of water from the south pole, and a wobble showing a global ocean (Thomas et al. 2016).',energy:'Tidal heating; silica grains and hydrogen gas point to hot water reacting with rock.',chem:'Salts, organic molecules, ammonia, hydrogen and phosphate in the plume and ice grains.',next:'No mission yet; ESA is studying one for the 2040s.',iceF:.1,oceanF:.06},
+ enceladus:{n:'Enceladus (Saturn)',R:252,ice:'about 20–25 km on average, a few km at the south pole',ocean:'a global ocean perhaps 25–40 km deep',water:'Plumes of water from the south pole, and a wobble showing a global ocean (Thomas et al. 2016).',energy:'Tidal heating; silica grains and hydrogen gas point to hot water reacting with rock.',chem:'Salts, organic molecules, ammonia, hydrogen and phosphate in the plume and ice grains.',next:'No mission yet; ESA is studying one for the 2040s.',iceF:.1,oceanF:.12},
  titan:{n:'Titan (Saturn)',R:2575,ice:'perhaps 50–100 km',ocean:'a deep water ocean inferred under the ice',water:'Cassini measured tidal flexing too large for solid ice: an ocean below (Iess et al. 2012).',energy:'Tidal heating and sunlight driving rich atmospheric chemistry.',chem:'A thick nitrogen atmosphere, lakes of liquid methane and ethane, and many organic molecules.',next:'NASA’s Dragonfly drone is due to launch in 2028 and arrive in 2034.',iceF:.05,oceanF:.1}};
 SCENE({id:'icy-moons',name:'Oceans under ice',tag:'Europa, Enceladus and Titan',
  definition:'Several moons of the outer planets hide oceans of liquid water beneath their ice, kept warm by tides rather than sunlight. They may be the most likely places in the Solar System for life beyond Earth.',

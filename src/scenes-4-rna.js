@@ -226,13 +226,13 @@ SCENE({id:'error-threshold',name:'The error threshold',tag:'When copying errors 
  ui:[{range:'mu',label:'Errors per letter (%)',min:0,max:25,get:s=>s.mu,act:'mu',show:v=>v+'%'},{range:'sig',label:'Master’s advantage σ',min:2,max:40,get:s=>s.sig,act:'sig'}],
  on:{mu(s,v){s.mu=Number(v);return 'end'},sig(s,v){s.sig=Number(v);return 'end'}},
  draw(s,f){
-  const all=this.trace(s),fr=f||all[all.length-1],thr=Math.log(s.sig)/20;let out=A4_tag('demonstrated')+heading('The error threshold',30);
+  const all=this.trace(s),fr=f||all[all.length-1];let out=A4_tag('demonstrated')+heading('The error threshold',30);
   const pl=A4_plot(70,64,260,200,[-.5,20.5],[0,1],{xt:[[0,'0'],[5,'5'],[10,'10'],[15,'15'],[20,'20']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'letters different from the master',xlDy:34,yl:'share of the population'});
   out+=pl.svg;fr.x.forEach((v,k)=>{out+=R(pl.X(k)-5,pl.Y(v),10,pl.Y(0)-pl.Y(v),k?C.blue:C.coral,'none',1)});
   const p2=A4_plot(380,64,190,200,[0,60],[0,1],{xt:[[0,'0'],[30,'30'],[60,'60']],yt:[[0,'0'],[1,'1']],xl:'generation',xlDy:34,yl:'master’s share'});
   out+=p2.svg+A4_poly(all.filter(q=>q.g<=fr.g).map(q=>[p2.X(q.g),p2.Y(q.x[0])]),C.coral,2.6);
-  const above=s.mu/100>thr;
-  out+=TF(300,326,`error rate ${s.mu}% · threshold ≈ ln ${s.sig} ÷ 20 = ${(thr*100).toFixed(1)}% · generation ${fr.g}`,13,C.ink);
+  const above=s.sig*Math.pow(1-s.mu/100,20)<1;
+  out+=TF(300,326,`error rate ${s.mu}% · threshold ${((1-Math.pow(s.sig,-1/20))*100).toFixed(1)}% (about ln ${s.sig} ÷ 20) · generation ${fr.g}`,13,C.ink);
   out+=TBF(300,350,above?'Above the threshold: the master sequence is lost':'Below the threshold: the master sequence persists',14,above?C.coral:C.green);
   const Q=Math.pow(1-s.mu/100,20),pred=Math.max(0,(s.sig*Q-1)/(s.sig-1));
   return {svg:out,phase:`Status: demonstrated. Master share now ${(fr.x[0]*100).toFixed(1)}%; Eigen’s formula (σQ − 1) ÷ (σ − 1), with Q the chance of a perfect copy, predicts about ${(pred*100).toFixed(1)}% (it ignores back-mutations). The threshold is a sharp transition, and RNA viruses live close to it: drugs such as ribavirin that raise their error rate can push them over (Crotty et al. 2001).`};
@@ -253,7 +253,7 @@ SCENE({id:'error-threshold-paradox',name:'Eigen’s paradox',tag:'Longer genomes
  draw(s,f,X){
   const pl=A4_plot(80,60,320,240,[1,8],[-11,-1],{xt:[[1,'10'],[3,'1,000'],[5,'10⁵'],[7,'10⁷']],yt:[[-1,'1 in 10'],[-4,'1 in 10⁴'],[-7,'1 in 10⁷'],[-10,'1 in 10¹⁰']],xl:'genome length (letters, log scale)',xlDy:34,yl:'errors per letter per copy (log scale)'});
   let out=A4_tag('demonstrated')+heading('Eigen’s paradox',30)+pl.svg;
-  const ls=Math.log10(Math.log(s.sig));out+=A4_poly([[pl.X(1),pl.Y(Math.min(-1,ls-1))],[pl.X(8),pl.Y(Math.max(-11,ls-8))]].map(p=>p),C.coral,2.4);
+  const ls=Math.log10(Math.log(s.sig));out+=A4_poly([[pl.X(Math.max(1,ls+1)),pl.Y(Math.min(-1,ls-1))],[pl.X(8),pl.Y(ls-8)]].map(p=>p),C.coral,2.4);
   out+=A4_poly([[pl.X(1),pl.Y(Math.log10(.003)-1)],[pl.X(8),pl.Y(Math.max(-11,Math.log10(.003)-8))]],C.green,1.6,'stroke-dasharray="5 4"');
   out+=TF(pl.X(6.3),pl.Y(ls-6.3)-8,'threshold',13,C.coral)+TF(pl.X(2.6),pl.Y(Math.log10(.003)-2.6)+18,'Drake’s rule',13,C.green);
   A4_ORGS.forEach(([n,mu,l],i)=>{out+=hit(X,'o',i,`${n}: about ${Math.round(Math.pow(10,l)).toLocaleString('en-GB')} letters`,Ci(pl.X(l),pl.Y(mu),s.o===i?9:7,C.blue,s.o===i?C.ink:'#fff','stroke-width="2.4"'))});
@@ -305,10 +305,10 @@ SCENE({id:'error-threshold-hypercycle',name:'Hypercycles',tag:'Cooperation and i
 /* ================================================================ nucleotide-synthesis */
 const A4_ROUTES={
  classic:[['formaldehyde','Formaldehyde','Simple carbon molecules thought to be common on the early Earth.'],['formose','Sugar mixture','The formose reaction makes dozens of sugars; ribose is only a tiny share, and it breaks down quickly.'],['nucleoside','Ribose + base','Joining ribose to a base: works poorly for purines, and not at all for pyrimidines (C, U).'],['stuck','Stuck','This “obvious” route stalls: the pieces will not join. For decades this was a central problem.']],
- powner:[['start','Simple starting chemicals','Cyanamide, cyanoacetylene, glycolaldehyde, glyceraldehyde and phosphate.'],['oxazole','2-aminooxazole','Cyanamide and glycolaldehyde give 2-aminooxazole, which can be purified by evaporating it.'],['aminooxazoline','Pentose aminooxazoline','Adding glyceraldehyde builds the sugar and half the base at once; one form crystallises out pure.'],['anhydro','Anhydronucleoside','Cyanoacetylene completes the base: sugar and base are joined without ever making free ribose.'],['cyclic','Cytidine cyclic phosphate','Heating with phosphate gives an activated nucleotide, ready to link into chains.'],['uv','UV light cleans up','Ultraviolet light destroys the wrong forms and turns some C into U.']]};
+ powner:[['start','Simple starting chemicals','Cyanamide, cyanoacetylene, glycolaldehyde, glyceraldehyde and phosphate.'],['oxazole','2-aminooxazole','Cyanamide and glycolaldehyde give 2-aminooxazole, which can be purified by evaporating it.'],['aminooxazoline','Pentose aminooxazoline','Adding glyceraldehyde builds the sugar and half the base at once; the arabinose form is carried on, while the ribose form crystallises out.'],['anhydro','Anhydronucleoside','Cyanoacetylene completes the base: sugar and base are joined without ever making free ribose.'],['cyclic','Cytidine cyclic phosphate','Heating with phosphate gives an activated nucleotide, ready to link into chains.'],['uv','UV light cleans up','Ultraviolet light destroys the wrong forms and turns some C into U.']]};
 SCENE({id:'nucleotide-synthesis',name:'Making nucleotides',tag:'Bypassing free ribose',
  definition:'An RNA world needs nucleotides, the letters of RNA, each made of a sugar (ribose), a base and a phosphate. The obvious route, making ribose and a base separately and joining them, fails. In 2009 Matthew Powner, Béatrice Gerland and John Sutherland found another way: build the sugar and part of the base together, so free ribose is never needed.',
- example:'In the Powner–Gerland–Sutherland route, the key intermediate, a pentose aminooxazoline, crystallises out of the mixture, purifying itself.',
+ example:'In the Powner–Gerland–Sutherland route, the key intermediate, a pentose aminooxazoline, already has the sugar and half the base joined together; a sister form, the ribose one, crystallises out of the mixture.',
  desc:'Two routes as chains of boxes: the classic route, which stalls, and the 2009 route to an activated pyrimidine nucleotide. Step through either route.',
  research:'Butlerow (1861) (the formose reaction). Breslow (1959). Tetrahedron Letters 1, 22–26. Fuller, Sanchez & Orgel (1972). Journal of Molecular Biology 67, 25–33. Powner, Gerland & Sutherland (2009). Synthesis of activated pyrimidine ribonucleotides in prebiotically plausible conditions. Nature 459, 239–242. Becker et al. (2019). Science 366, 76–82 (purines and pyrimidines from shared conditions).',
  dur:14,hint:'Step through the classic route, then the 2009 route. Where does each one succeed or stall?',

@@ -29,7 +29,7 @@ const A5_VENTS={
  alk:{name:'Alkaline vent (Lost City)',T:[70,4],pH:[10,6.5],chem:'H₂ and methane',rock:'carbonate and brucite towers',col:'#e8e2d4',note:'Warm, not scalding, and rich in hydrogen: the kind of vent proposed as a cradle for life.'}};
 SCENE({id:'hydrothermal-vents',name:'Two kinds of vent',tag:'Black smokers and alkaline towers',
  definition:'Hydrothermal vents are places where heated water seeps out of the sea floor. Black smokers sit on volcanic ridges and pour out acidic water at 350 °C or more; alkaline vents such as Lost City sit off the ridges, where seawater reacts with mantle rock and seeps out warm, alkaline and full of hydrogen.',
- example:'The Lost City field, found in 2000 on the Mid-Atlantic Ridge, has white carbonate towers up to about 60 m tall venting fluid at roughly 40–90 °C and pH 9–11.',
+ example:'The Lost City field, found in 2000 about 15 km off the Mid-Atlantic Ridge, has white carbonate towers up to about 60 m tall venting fluid at roughly 40–90 °C and pH 9–11.',
  desc:'A sketch of the chosen vent beside the temperature and pH of the water as vent fluid mixes into the ocean. Move the slider from the vent mouth out into the sea.',
  research:'Corliss et al. (1979). Submarine thermal springs on the Galápagos Rift. Science 203, 1073–1083. Kelley et al. (2001). An off-axis hydrothermal vent field near the Mid-Atlantic Ridge at 30° N. Nature 412, 145–149. Martin, Baross, Kelley & Russell (2008). Hydrothermal vents and the origin of life. Nature Reviews Microbiology 6, 805–814.',
  dur:12,hint:'Switch between the two vents and slide from the vent mouth into the ocean. The mixing profile is a sketch; the end values are measured.',
@@ -60,7 +60,7 @@ SCENE({id:'hydrothermal-vents',name:'Two kinds of vent',tag:'Black smokers and a
 const A5_accum=(h,dT,n)=>Math.exp(0.022*h*dT*Math.sqrt(n)/10);
 SCENE({id:'hydrothermal-vents-pores',name:'Pores that concentrate',tag:'Heat flow piles molecules up',
  definition:'In a narrow pore that is warm on one side and cool on the other, molecules drift towards the cold side (thermophoresis) while the water slowly circulates. Together the two movements pile molecules up at the bottom of the pore, and longer molecules pile up far more.',
- example:'Baaske and colleagues showed that DNA in a thin, heated capillary collects at its base, and that the build-up grows steeply with the length of the pore and of the molecule.',
+ example:'Baaske and colleagues calculated in 2007, and later capillary experiments confirmed, that DNA in a thin, heated pore collects at its base, and that the build-up grows steeply with the length of the pore and of the molecule.',
  desc:'A tall pore with a hot wall on the left and a cold wall on the right; dots show molecules, and the bar on the right gives how strongly they are concentrated at the bottom.',
  research:'Baaske, Weinert, Duhr, Lemke, Russell & Braun (2007). Extreme accumulation of nucleotides in simulated hydrothermal pore systems. PNAS 104, 9346–9351. Mast, Schink, Gerland & Braun (2013). Escalation of polymerization in a thermal gradient. PNAS 110, 8030–8035.',
  dur:12,hint:'Make the pore taller, the temperature difference larger, or the molecules longer, and watch them crowd to the bottom. The numbers are illustrative; the steep growth is the published result.',
@@ -86,7 +86,7 @@ SCENE({id:'hydrothermal-vents-pores',name:'Pores that concentrate',tag:'Heat flo
 
 /* ---- what vent-like reactors have actually made ---- */
 const A5_REACT=[
- {k:'herschy',name:'Herschy et al. 2014',set:'Bench reactor, H₂-rich alkaline fluid into acidic water through Fe(Ni)S precipitates',made:'Formaldehyde, at very low (micromolar) amounts',miss:'Yields far below what a living cell would need'},
+ {k:'herschy',name:'Herschy et al. 2014',set:'Bench reactor, H₂-rich alkaline fluid into acidic water through Fe(Ni)S precipitates',made:'Formate (tens of micromolar) and traces of formaldehyde (nanomolar)',miss:'Yields far below what a living cell would need'},
  {k:'preiner',name:'Preiner et al. 2020',set:'H₂ and CO₂ in water with natural iron and nickel minerals (greigite, magnetite, awaruite), 100 °C',made:'Formate, acetate, pyruvate and methanol: the first steps of the acetyl-CoA pathway',miss:'No feedback loops or long chains; minerals act only as catalysts'},
  {k:'hudson',name:'Hudson et al. 2020',set:'Microfluidic cell with a natural-like pH gradient across a thin mineral wall',made:'Formate from CO₂, driven by the pH difference itself',miss:'Small amounts, in a carefully built device'}];
 SCENE({id:'hydrothermal-vents-reactor',name:'Vents in the lab',tag:'What vent-like reactors have made',
@@ -323,7 +323,7 @@ SCENE({id:'proton-gradients',name:'Chemiosmosis',tag:'How every cell charges its
   out+=TF(460,198,`Making ATP in a cell: about ${need} kJ/mol`,13,C.muted);
   out+=R(360,216,200,18,'#fff',C.grid,4)+R(360,216,Math.min(200,200*3*kJ/need/1.5),18,ok?C.green:C.coral,'none',4)+L(360+200/1.5,212,360+200/1.5,238,C.ink,2);
   out+=TBF(460,262,ok?'Enough to make ATP':'Not enough yet',14,ok?C.green:C.coral);
-  out+=A5_lines(460,296,'Real cells use 2.7 to 4.7 protons per ATP, depending on the synthase; three is a round figure.',30,C.muted,'middle');
+  out+=A5_lines(460,296,'Real cells use about 2.7 to 5 protons per ATP, depending on the synthase; three is a round figure.',30,C.muted,'middle');
   return {svg:out,phase:`A proton-motive force of ${Math.round(dp)} mV gives each proton about ${kJ.toFixed(1)} kJ/mol. Bacteria, archaea, plants and animals all make ATP this way, which is why some think the first cells harnessed a ready-made gradient.`};
  }});
 

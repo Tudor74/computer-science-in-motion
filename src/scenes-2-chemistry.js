@@ -58,11 +58,11 @@ SCENE({id:'wohler-urea',name:'Wöhler’s urea',tag:'A substance of life from a 
  }});
 
 const A2_VIT=[
- {y:'1828',who:'Wöhler',t:'urea from ammonium cyanate',left:4,note:'Critics noted his cyanate came from animal-derived materials; Wöhler himself claimed little.'},
- {y:'1845',who:'Kolbe',t:'acetic acid built up from carbon disulfide, made from the elements',left:3,note:'An organic acid made all the way from carbon, sulphur, chlorine and water.'},
- {y:'1860',who:'Berthelot',t:'many organic compounds from the elements (Chimie organique fondée sur la synthèse)',left:2,note:'Methane, acetylene, benzene, alcohols: “synthesis” becomes a programme.'},
- {y:'1897',who:'Buchner',t:'fermentation by a juice pressed from yeast, with no living cells',left:1,note:'Enzymes, not life itself, do the chemistry of fermentation.'},
- {y:'1930s on',who:'textbooks',t:'retell 1828 as the day vitalism died',left:1,note:'Historians show the story is a later simplification (Brooke 1968; Ramberg 2000).'}];
+ {y:'1828',who:'Wöhler',t:'urea from ammonium cyanate',left:3,note:'Critics noted his cyanate came from animal-derived materials; Wöhler himself claimed little.'},
+ {y:'1845',who:'Kolbe',t:'acetic acid built up from carbon disulfide, made from the elements',left:2,note:'An organic acid made all the way from carbon, sulphur, chlorine and water.'},
+ {y:'1860',who:'Berthelot',t:'many organic compounds from the elements (Chimie organique fondée sur la synthèse)',left:1,note:'Formic acid, methane and alcohol, later acetylene and benzene: “synthesis” becomes a programme.'},
+ {y:'1897',who:'Buchner',t:'fermentation by a juice pressed from yeast, with no living cells',left:0,note:'Enzymes, not life itself, do the chemistry of fermentation.'},
+ {y:'1930s on',who:'textbooks',t:'retell 1828 as the day vitalism died',left:0,note:'Historians show the story is a later simplification (Brooke 1968; Ramberg 2000).'}];
 const A2_ONLY=['make urea','make organic acids','make fuels and alcohols','ferment sugar','?'];
 SCENE({id:'wohler-urea-vitalism',name:'Did urea kill vitalism?',tag:'A famous story, corrected',
  definition:'Textbooks often say Wöhler’s urea synthesis of 1828 destroyed vitalism, the idea that the chemistry of living things needs a special vital force. Historians have shown the change was slow: it took decades of syntheses, and some vitalist ideas lasted into the twentieth century.',
@@ -298,20 +298,20 @@ SCENE({id:'meteorite-chemistry',name:'Amino acids from space',tag:'The Murchison
 
 SCENE({id:'meteorite-chemistry-chirality',name:'A slight left-handed excess',tag:'Mirror-image molecules in a meteorite',
  definition:'Most amino acids come in two mirror-image forms, left (L) and right (D). Ordinary chemistry makes equal amounts; life uses almost only L. Some amino acids in carbonaceous meteorites show a small excess of the L form, which raises the possibility that space chemistry tipped the balance before life began.',
- example:'Cronin and Pizzarello (1997) found L-excesses of a few per cent in α-methyl amino acids such as isovaline in Murchison; later work reported excesses up to about 18% in some meteorites (Glavin and Dworkin, 2009). Because life does not make isovaline, this excess cannot come from Earth contamination. Whether it mattered for life’s handedness is unknown (see era 6).',
- desc:'One hundred molecules of a chosen amino acid, left-handed in blue and right-handed in coral, with a slider for the excess. A switch compares isovaline, which life does not make, with alanine, where contamination is a risk.',
+ example:'Cronin and Pizzarello (1997) found L-excesses of a few per cent in α-methyl amino acids such as isovaline in Murchison; later work reported excesses up to about 18% in some meteorites (Glavin and Dworkin, 2009). Because isovaline is very rare in living things, this excess is very unlikely to be Earth contamination. Whether it mattered for life’s handedness is unknown (see era 6).',
+ desc:'One hundred molecules of a chosen amino acid, left-handed in blue and right-handed in coral, with a slider for the excess. A switch compares isovaline, which is very rare in life, with alanine, where contamination is a risk.',
  research:['Cronin, J. R. & Pizzarello, S. (1997). Enantiomeric excesses in meteoritic amino acids. Science 275: 951–955.','Glavin, D. P. & Dworkin, J. P. (2009). Enrichment of the amino acid L-isovaline by aqueous alteration on CI and CM meteorite parent bodies. PNAS 106: 5487–5492.'],
  dur:12,hint:'Raise the excess and count the colours. Then switch to alanine: why is an excess there harder to trust?',
  init:()=>({ee:8,aa:'iso'}),
- watch(p){return {ee:Math.round(p*18),aa:p<.75?'iso':'ala'}},
- ui:[{range:'ee',label:'L excess',min:0,max:20,step:1,get:s=>s.ee,act:'ee',show:v=>v+'%'},{choose:[['iso','Isovaline'],['ala','Alanine']],label:'Molecule',get:s=>s.aa,act:'aa'}],
+ watch(p){return {ee:2*Math.round(p*9),aa:p<.75?'iso':'ala'}},
+ ui:[{range:'ee',label:'L excess',min:0,max:20,step:2,get:s=>s.ee,act:'ee',show:v=>v+'%'},{choose:[['iso','Isovaline'],['ala','Alanine']],label:'Molecule',get:s=>s.aa,act:'aa'}],
  on:{ee(s,v){s.ee=+v},aa(s,v){s.aa=v}},
  draw(s){
-  const nL=Math.round(50+s.ee/2),nD=100-nL;let out=A2_head(s.aa==='iso'?'Isovaline: not made by life':'Alanine: made by every cell','demonstrated');
+  const nL=Math.round(50+s.ee/2),nD=100-nL;let out=A2_head(s.aa==='iso'?'Isovaline: very rare in life':'Alanine: made by every cell','demonstrated');
   const order=shuffled(range(100),23);
   order.forEach((k,i)=>{const x=60+(i%20)*22,y=82+Math.floor(i/20)*30,isL=k<nL;out+=isL?P(`M${x-6} ${y+6}L${x} ${y-7}L${x+6} ${y+6}`,C.blue,2.5):P(`M${x-6} ${y-6}L${x} ${y+7}L${x+6} ${y-6}`,C.coral,2.5)});
   out+=TBF(160,256,`L: ${nL}`,16,C.blue)+TBF(300,256,`D: ${nD}`,16,C.coral)+TBF(450,256,`excess ${s.ee}%`,16,C.ink);
-  const lines=s.aa==='iso'?['Life never makes isovaline, so an L excess','cannot have come from Earth microbes or fingers.']:['Every cell makes L-alanine. A little Earth','contamination would look exactly like an L excess.'];
+  const lines=s.aa==='iso'?['Isovaline is very rare in life, so an L excess','is unlikely to come from Earth microbes or fingers.']:['Every cell makes L-alanine. A little Earth','contamination would look exactly like an L excess.'];
   out+=A2_card(60,276,480,s.aa==='iso'?'Trustworthy signal':'Hard to trust',lines,s.aa==='iso'?C.green:C.coral);
   return {svg:out,phase:`${nL} left-handed and ${nD} right-handed: an excess of ${s.ee}% means ${s.ee} more left-handed than right-handed molecules in every 100.`};
  }});

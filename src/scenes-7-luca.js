@@ -155,7 +155,7 @@ SCENE({id:'genetic-code-origin',name:'Where did the genetic code come from?',tag
 
 /* ---- is the code good at limiting errors? ---- */
 const A7_AA='FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
-const A7_PR={A:7.0,R:9.1,N:10.0,D:13.0,C:4.8,Q:8.6,E:12.5,G:7.9,H:8.4,I:4.9,L:4.9,K:10.1,M:5.3,F:5.0,P:6.6,S:7.5,T:6.6,W:5.3,Y:5.4,V:5.6};
+const A7_PR={A:7.0,R:9.1,N:10.0,D:13.0,C:4.8,Q:8.6,E:12.5,G:7.9,H:8.4,I:4.9,L:4.9,K:10.1,M:5.3,F:5.0,P:6.6,S:7.5,T:6.6,W:5.2,Y:5.4,V:5.6};
 const A7_AAS=Object.keys(A7_PR);
 function A7_cost(code){let s=0,n=0;for(let c=0;c<64;c++){const a=code[c];if(a==='*')continue;for(let pos=0;pos<3;pos++){const sh=pos===0?16:pos===1?4:1,base=Math.floor(c/sh)%4;for(let nb=0;nb<4;nb++){if(nb===base)continue;const b=code[c+(nb-base)*sh];if(b==='*')continue;const d=A7_PR[a]-A7_PR[b];s+=d*d;n++}}}return s/n}
 const A7_REAL=A7_cost(A7_AA);
@@ -370,7 +370,7 @@ const A7_GEN=[
  {n:'Phage T4',kb:169,v:true,d:'A virus of bacteria with about 169,000 base pairs of DNA.'},
  {n:'Carsonella',kb:160,v:false,d:'A bacterium living inside insect cells, with one of the smallest known cellular genomes, about 160,000 base pairs.'},
  {n:'Mycoplasma genitalium',kb:580,v:false,d:'A free-living (but parasitic) bacterium with about 580,000 base pairs.'},
- {n:'Mimivirus',kb:1181,v:true,d:'Found in 2003 in an amoeba; first mistaken for a bacterium. About 1.18 million base pairs and some protein-making genes.'},
+ {n:'Mimivirus',kb:1181,v:true,d:'Found in 1992 in an amoeba and mistaken for a bacterium; recognised as a virus in 2003. About 1.18 million base pairs and some protein-making genes.'},
  {n:'Pandoravirus salinus',kb:2470,v:true,d:'Described in 2013, with about 2.5 million base pairs, larger than many bacteria.'},
  {n:'E. coli',kb:4640,v:false,d:'A typical gut bacterium with about 4.6 million base pairs.'}];
 SCENE({id:'viruses-origins-giants',name:'Giant viruses',tag:'When a virus outgrows a cell',

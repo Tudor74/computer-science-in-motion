@@ -73,7 +73,7 @@ SCENE({id:'hadean-earth',name:'The Hadean Earth',tag:'The first billion years',
 const A3_lum=age=>1/(1+.4*(1-(4.57-age)/4.57));   // Gough (1981), relative to today
 SCENE({id:'hadean-earth-cooling',name:'The faint young Sun',tag:'Why was early Earth not frozen?',
  definition:'Stars like the Sun brighten as they age. Four billion years ago the Sun gave out only about three-quarters of today’s light, so with today’s air the oceans should have frozen. Yet rocks show liquid water. This is the faint young Sun paradox; a stronger greenhouse effect is the usual answer.',
- example:'With today’s greenhouse warming of about 33 °C, Earth 4 billion years ago would average about −3 °C: below freezing. Doubling the greenhouse effect keeps the oceans liquid.',
+ example:'With today’s greenhouse warming of about 33 °C, Earth 4 billion years ago would average about −4 °C: below freezing. Doubling the greenhouse effect keeps the oceans liquid.',
  desc:'The Sun’s brightness at the chosen time (Gough’s formula), the temperature Earth would have without a greenhouse effect, and the surface temperature after adding the chosen greenhouse warming, against the freezing line.',
  research:'Sagan & Mullen (1972). Earth and Mars: evolution of atmospheres and surface temperatures. Science 177, 52–56. Gough (1981). Solar interior structure and luminosity variations. Solar Physics 74, 21–34. Feulner (2012). The faint young Sun problem. Reviews of Geophysics 50, RG2006. Temperatures use today’s reflectivity (albedo 0.3), a simplification.',
  dur:12,hint:'Go back in time and the Sun dims. How much greenhouse warming keeps the ocean liquid 4 billion years ago?',
@@ -260,7 +260,7 @@ const A3_BG=[2,3,3,4,4,5,5,6,5,5,4,3,2,2],A3_IMB=[0,0,0,0,0,0,1,5,11,6,1,0,0,0];
 SCENE({id:'bombardment-timeline-apollo',name:'One basin, many ages',tag:'How sampling can make a spike',
  definition:'All six Apollo landing sites lie on the Moon’s near side, many near the huge Imbrium basin. Molten rock splashed out by one giant impact can travel across the Moon, so many “impact-melt” samples may record the same event. Heating can also partly reset argon clocks, pulling ages together.',
  example:'If a large share of the dated melts are Imbrium ejecta, a cluster near 3.9 billion years tells us about one impact, not about the rate of all impacts.',
- desc:'A histogram of impact-melt ages (counts illustrative). Samples that may be Imbrium ejecta are shown in coral; remove them and the spike shrinks to a gentle slope.',
+ desc:'A histogram of impact-melt ages (counts illustrative). Samples that may be Imbrium ejecta are shown in coral; remove them and the spike flattens into a broad, low hump.',
  research:'Haskin, Korotev, Rockow & Jolliff (1998). The case for an Imbrium origin of the Apollo thorium-rich impact-melt breccias. Meteoritics & Planetary Science 33, 959–975. Boehnke & Harrison (2016). Illusory Late Heavy Bombardments. PNAS 113, 10802–10806. Zellner (2017). Origins of Life and Evolution of Biospheres 47, 261–280. Counts here are illustrative.',
  dur:12,hint:'Remove the samples that may come from the Imbrium impact and see what happens to the spike.',
  init:()=>({imb:'in'}),
@@ -274,7 +274,7 @@ SCENE({id:'bombardment-timeline-apollo',name:'One basin, many ages',tag:'How sam
   A3_BINS.forEach((a,i)=>{const x=pl.X(a)-bw/2+2,b=A3_BG[i],m=inc?A3_IMB[i]:0;out+=R(x,pl.Y(b),bw-4,pl.Y(0)-pl.Y(b),C.blue,'none',2);if(m)out+=R(x,pl.Y(b+m),bw-4,pl.Y(b)-pl.Y(b+m),C.coral,'none',2)});
   const tot=sum(A3_BG)+(inc?sum(A3_IMB):0);
   out+=R(92,70,14,14,C.blue,'none',3)+TF(112,82,'other impacts',13,C.ink,'start')+R(92,92,14,14,C.coral,'none',3)+TF(112,104,'possible Imbrium ejecta',13,C.ink,'start');
-  out+=TF(300,350,inc?`${tot} samples: a sharp spike near 3.9 billion years`:`${tot} samples: the spike shrinks to a gentle decline`,13,C.ink);
+  out+=TF(300,350,inc?`${tot} samples: a sharp spike near 3.9 billion years`:`${tot} samples: the spike flattens into a broad, low hump`,13,C.ink);
   out+=TF(300,370,'Imbrium’s age is itself debated (about 3.9 billion years or a little older)',13,C.muted);
   return {svg:out,phase:'Status: plausible. Sampling bias and partial resetting of argon ages can both create an apparent spike from a declining rate. Meteorites, which come from random places, show a broader spread of impact ages, one reason the cataclysm is now doubted.'};
  }});
