@@ -121,7 +121,7 @@ SCENE({id:'intervals-consonance',name:'Why some intervals blend',tag:'Simple rat
   out+=TF(x0+W,290,`${cyc} cycles of the lower note`,13,C.muted,'end');
   const msg=d<=cyc?`The combined wave repeats every ${d} cycle${d===1?'':'s'} of the lower note.`:`The pattern repeats only every ${d} cycles: off this chart.`;
   out+=T(300,318,msg,15,d<=cyc?C.green:C.coral);
-  out+=T(300,346,`Just ratio ${fmt(n/d)} · equal-tempered ${et.toFixed(3)} (close, but not exact)`,14,C.muted);
+  out+=T(300,346,`Just ratio ${fmt(n/d)} · equal-tempered ${et.toFixed(3)} ${s.i===12?'(exact)':'(close, but not exact)'}`,14,C.muted);
   return {svg:out,phase:`${msg} Simple ratios share many harmonics, which is one reason many listeners hear them as smooth. Culture and familiarity also shape what sounds consonant.`};
  }});
 
@@ -145,7 +145,7 @@ SCENE({id:'intervals-inversion',name:'Inverting an interval',tag:'Flip the lower
   out+=T(150,58,`${M3_INT[i]} (${i})`,16,C.ink)+T(445,58,`${M3_INT[j]} (${j})`,16,C.ink);
   M3_INV_ROWS.forEach(([a,b],r)=>{const x=40+(r%3)*180,y=232+Math.floor(r/3)*44,on=a===i||b===i;
    out+=hit(X,'row',a,`${M3_INT[a]} and ${M3_INT[b]}`,R(x,y,170,36,on?C.amberp:'#fff',on?C.amber:C.grid,8)+TF(x+85,y+23,`${M3_INT[a].replace('perfect ','P').replace('major ','M').replace('minor ','m')} ↔ ${M3_INT[b].replace('perfect ','P').replace('major ','M').replace('minor ','m')}`,13,C.ink))});
-  out+=T(300,345,`${i} + ${j} = 12 semitones · ${M3_NUM[i]} + ${M3_NUM[j]} = 9 · major ↔ minor, perfect ↔ perfect`,14,C.muted);
+  out+=T(300,345,`${i} + ${j} = 12 semitones · ${M3_NUM[i]} + ${9-M3_NUM[i]} = 9 · ${i===6?'augmented ↔ diminished':'major ↔ minor, perfect ↔ perfect'}`,14,C.muted);
   return {svg:out,phase:`${M3_INT[i]} inverts to ${M3_INT[j]}. Inversion keeps the same two pitch letters but swaps which is on the bottom, which is why Rameau could treat C–E and E–C as the same harmony.`};
  }});
 
@@ -271,13 +271,13 @@ SCENE({id:'cadences',name:'Cadence',tag:'How a phrase comes to rest',
   out+=TB(180,248,c.rn[0],19,C.ink)+TB(340,248,c.rn[1],19,C.ink)+arrow(212,243,305,243,C.muted,1.6);
   M3_VOICE.slice().reverse().forEach((v,i)=>out+=Ci(470,90+i*26,6,v.c)+TF(484,95+i*26,v.n,14,C.ink,'start'));
   out+=R(80,282,440,46,'#fff',C.grid,10)+T(300,311,`Sounds ${c.feel}.`,16,C.ink);
-  out+=TF(300,352,s.c==='plagal'?'The plagal cadence closes many hymns on the word “Amen”.':s.c==='interrupted'?'The bass rises a step to A instead of falling to C.':s.c==='imperfect'?'Phrases that end on V invite an answering phrase.':'The soprano’s B rises to C: the leading note goes home.',13,C.muted);
+  out+=TF(300,352,s.c==='plagal'?'The plagal cadence closes many hymns on the word “Amen”.':s.c==='interrupted'?'The bass rises only a step to A instead of leaping to C.':s.c==='imperfect'?'Phrases that end on V invite an answering phrase.':'The soprano’s B rises to C: the leading note goes home.',13,C.muted);
   return {svg:out,phase:`${c.n}: ${c.rn.join(' to ')}. It sounds ${c.feel}. Notice how little the upper voices move: most go by step or stay put.`};
  }});
 
 const M3_V7=[[43,62,65,71],[48,60,64,72]];
 const M3_VL=[null,{v:3,say:'The leading note B (soprano) rises a semitone to C, the tonic.'},{v:2,say:'The seventh F (alto) falls a semitone to E.'},
- {v:1,say:'D (tenor) falls a step to C.'},{v:0,say:'The bass leaps from G down to C, the strongest root move.'},{v:-1,say:'Every upper voice moved by step: smooth voice leading.'}];
+ {v:1,say:'D (tenor) falls a step to C.'},{v:0,say:'The bass leaps from G up a fourth to C, the strongest root move.'},{v:-1,say:'Every upper voice moved by step: smooth voice leading.'}];
 SCENE({id:'cadences-voice-leading',name:'Voice leading',tag:'Each voice takes the shortest path',
  definition:'Voice leading is how each individual line moves from chord to chord. Good voice leading moves voices by step and resolves tense notes the way they lean.',
  example:'In V7 → I in C, the leading note B rises to C and the seventh F falls to E, each by a semitone. The bass leaps G → C.',
@@ -406,7 +406,7 @@ SCENE({id:'counterpoint-motion',name:'Kinds of motion',tag:'Parallel, similar, c
   const m=M3_MOT[s.k],g=12,yB=190,xs=[150,250,350,450];let out=heading(s.k[0].toUpperCase()+s.k.slice(1)+' motion');
   out+=M3_staff(60,540,yB,g);
   xs.forEach((x,i)=>{out+=M3_head(x,M3_root(m.u[i]),M3_TREB,yB,g,C.blue)+M3_head(x,M3_root(m.l[i]),M3_TREB,yB,g,C.coral);
-   const d=m.u[i]-m.l[i];out+=TB(x,yB+46,M3_INT[M3_pc(d)===0&&d>0?12:M3_pc(d)].replace('perfect ','P').replace('major ','M').replace('minor ','m'),14,M3_pc(d)===7||M3_pc(d)===0?C.amber:C.muted);
+   const d=m.u[i]-m.l[i];out+=TB(x,yB+46,(d>12&&d<24&&d!==18?M3_INT[d-12].replace(/\d.*/,'')+(M3_NUM[d-12]+7)+'th':M3_intName(d)).replace('perfect ','P').replace('major ','M').replace('minor ','m'),14,M3_pc(d)===7||M3_pc(d)===0?C.amber:C.muted);
    if(i<3){const yu1=M3_y(M3_root(m.u[i]).step,M3_TREB,yB,g),yu2=M3_y(M3_root(m.u[i+1]).step,M3_TREB,yB,g),yl1=M3_y(M3_root(m.l[i]).step,M3_TREB,yB,g),yl2=M3_y(M3_root(m.l[i+1]).step,M3_TREB,yB,g);
     out+=arrow(x+14,yu1,x+86,yu2,C.blue,1.8,7)+(m.l[i]===m.l[i+1]?L(x+14,yl1,x+86,yl2,C.coral,1.8,'stroke-dasharray="4 3"'):arrow(x+14,yl1,x+86,yl2,C.coral,1.8,7))}});
   out+=TF(300,yB+70,'interval between the voices',13,C.muted);
@@ -417,10 +417,10 @@ SCENE({id:'counterpoint-motion',name:'Kinds of motion',tag:'Parallel, similar, c
 // Species examples above the first four notes of the cantus firmus. Each bar: list of {m, d, tie, rest}.
 const M3_SPEC={
  1:{n:'First species: 1 : 1',bars:[[{m:69,d:'w'}],[{m:69,d:'w'}],[{m:67,d:'w'}],[{m:69,d:'w'}]],say:'One whole note against each note: every pair is a consonance.'},
- 2:{n:'Second species: 2 : 1',bars:[[{m:69,d:'h'},{m:71,d:'h'}],[{m:69,d:'h'},{m:72,d:'h'}],[{m:71,d:'h'},{m:72,d:'h'}],[{m:74,d:'w'}]],say:'Two notes against one: the strong beat is consonant; a weak beat may be a dissonance only if it passes by step.'},
- 3:{n:'Third species: 4 : 1',bars:[[{m:69,d:'q'},{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:74,d:'q'},{m:76,d:'q'},{m:77,d:'q'}],[{m:76,d:'q'},{m:74,d:'q'},{m:72,d:'q'},{m:71,d:'q'}],[{m:69,d:'w'}]],say:'Four notes against one: passing dissonances move by step between consonances.'},
+ 2:{n:'Second species: 2 : 1',bars:[[{m:69,d:'h'},{m:71,d:'h'}],[{m:74,d:'h'},{m:69,d:'h'}],[{m:71,d:'h'},{m:72,d:'h'}],[{m:74,d:'w'}]],say:'Two notes against one: the strong beat is consonant; a weak beat may be a dissonance only if it passes by step.'},
+ 3:{n:'Third species: 4 : 1',bars:[[{m:69,d:'q'},{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:74,d:'q'},{m:76,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:71,d:'q'},{m:69,d:'q'},{m:67,d:'q'}],[{m:69,d:'w'}]],say:'Four notes against one: passing dissonances move by step between consonances.'},
  4:{n:'Fourth species: syncopation',bars:[[{rest:true,d:'h'},{m:69,d:'h',tie:true}],[{m:69,d:'h'},{m:72,d:'h',tie:true}],[{m:72,d:'h'},{m:72,d:'h',tie:true}],[{m:72,d:'h',sus:true},{m:71,d:'h'}]],say:'Notes are tied across the bar. In the last bar the held C is a dissonant seventh over D, a suspension, and it resolves down to B.'},
- 5:{n:'Fifth species: florid',bars:[[{m:69,d:'h'},{m:71,d:'q'},{m:72,d:'q'}],[{m:74,d:'h'},{m:72,d:'h'}],[{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'h'}],[{m:74,d:'w'}]],say:'Florid counterpoint mixes all the earlier rhythms into a freer line.'}};
+ 5:{n:'Fifth species: florid',bars:[[{m:69,d:'h'},{m:71,d:'q'},{m:72,d:'q'}],[{m:74,d:'h'},{m:69,d:'h'}],[{m:71,d:'q'},{m:69,d:'q'},{m:67,d:'h'}],[{m:69,d:'w'}]],say:'Florid counterpoint mixes all the earlier rhythms into a freer line.'}};
 const M3_DUR={w:1.6,h:.8,q:.4};
 SCENE({id:'counterpoint-species',name:'The five species',tag:'Fux’s graded steps',
  definition:'Fux taught counterpoint in five species of increasing rhythmic freedom: note against note, two against one, four against one, syncopation and florid.',
@@ -511,7 +511,7 @@ SCENE({id:'temperament-cents',name:'Cents',tag:'Measuring tiny pitch differences
 
 SCENE({id:'temperament-keys',name:'Every key a different colour',tag:'Well temperament and the wolf',
  definition:'In meantone and well temperaments, intervals change size from key to key, so keys have different characters. Equal temperament makes every key the same.',
- example:'In ¼-comma meantone the third on C is pure, but the “third” from A♭ is about 427 cents, so harsh it was called a wolf. Werckmeister III lets every key be used, each with its own colour.',
+ example:'In ¼-comma meantone the third on C is pure, but the “third” from G♯ (G♯–C) is about 427 cents, so harsh it was called a wolf. Werckmeister III lets every key be used, each with its own colour.',
  desc:'The size of the major third built on each of the twelve notes in the chosen tuning, compared with a pure third and equal temperament.',
  research:['Werckmeister (1691). Musicalische Temperatur.','Bach (1722). The Well-Tempered Clavier.','Lehman (2005). Bach’s extraordinary temperament: our Rosetta Stone, Early Music 33(1), a proposal that remains debated.'],
  dur:13,hint:'Choose a tuning, then press a key name to hear its major chord in that tuning.',
@@ -551,7 +551,7 @@ SCENE({id:'circle-of-fifths',name:'Circle of fifths',tag:'Keys arranged by their
  definition:'The circle of fifths arranges the twelve keys so that each is a fifth above the last. Moving one step clockwise adds a sharp; anticlockwise adds a flat.',
  example:'C has no sharps; G has one (F♯); D has two (F♯, C♯). Going the other way, F has one flat (B♭). Each major key shares its signature with a relative minor: C major and A minor.',
  desc:'Twelve major keys around a circle with their relative minors inside, and the selected key’s signature on a stave.',
- research:['Diletsky (c. 1679). Grammatika: an early circle of keys.','Heinichen (1711). Der General-Bass in der Composition: the circle of keys.'],
+ research:['Diletsky (c. 1679). Grammatika: an early circle of keys.','Heinichen (1711). Neu erfundene und gründliche Anweisung: the circle of keys.'],
  dur:14,hint:'Press a key on the circle to see its signature and hear its tonic chord.',
  init:()=>({k:2}),
  watch(p){return {k:[0,1,2,3,4,5,6,7,8,9,10,11][Math.min(11,Math.floor(p*12))]}},
@@ -597,7 +597,7 @@ SCENE({id:'circle-of-fifths-function',name:'Harmonic function',tag:'Tonic, subdo
  definition:'Harmonic function groups chords by what they do: tonic chords feel at rest, subdominant chords move away, dominant chords pull back towards the tonic.',
  example:'I–IV–V–I (C–F–G–C) is tonic, subdominant, dominant, tonic: away, tension, home. Many songs use the same journey.',
  desc:'A progression builder in C major: chord cards coloured by function (T, S, D), with arrows showing each move.',
- research:['Rameau (1722). Traité de l’harmonie: tonic, dominant and subdominant.','Riemann (1893). Vereinfachte Harmonielehre: the theory of harmonic functions.'],
+ research:['Rameau (1722). Traité de l’harmonie, and his later writings: tonic, dominant and subdominant.','Riemann (1893). Vereinfachte Harmonielehre: the theory of harmonic functions.'],
  dur:14,hint:'Add chords with the buttons (up to 8), then Play. The checker notes when a dominant moves to a subdominant, which is rarer in Classical music but common in rock.',
  init:()=>({prog:[0,3,4,0]}),
  watch(p){const all=[0,5,1,4,0];return {prog:all.slice(0,Math.max(1,Math.ceil(p*all.length)))}},

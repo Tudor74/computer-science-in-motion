@@ -122,7 +122,7 @@ SCENE({id:'fourier-timbre-pitch',name:'Timbre across pitch',tag:'The pattern mov
   for(const f of [50,100,200,500,1000,2000,5000]){const x=M5_logX(f,x0,w,50,5000);out+=L(x,base,x,base+6,C.line,1.5)+TF(x,base+22,f>=1000?f/1000+' kHz':f+' Hz',12,C.muted)}
   I.amps.forEach((a,k)=>{const f=f0*(k+1);if(f>5000)return;const x=M5_logX(f,x0,w,50,5000);out+=L(x,base,x,base-a*170,C.purple,6)+(k<4?TF(x,base-a*170-8,k+1,12,C.purple):'')});
   out+=T(300,330,'Frequency on a log scale: equal steps are equal ratios',14,C.muted);
-  return {svg:out,phase:`Harmonic 1 sits at ${fmt(f0)} Hz and the rest at 2×, 3×, 4× …. Moving the pitch slides the whole pattern sideways without changing its shape, which is part of why we still recognise the instrument.`};
+  return {svg:out,phase:`Harmonic 1 sits at ${fmt(f0)} Hz and the rest at 2×, 3×, 4× …. Moving the pitch slides the whole pattern sideways without changing its shape. Real instruments are less tidy: their fixed body resonances change the strengths of the harmonics from note to note.`};
  }});
 
 /* ===================== Lesson: envelope ===================== */
@@ -130,7 +130,7 @@ SCENE({id:'envelope',name:'Envelope (ADSR)',tag:'How a sound starts, holds and f
  definition:'A sound’s envelope is how its loudness changes over time. Synthesisers describe it with four numbers: attack, decay, sustain and release (ADSR).',
  example:'A piano note starts instantly and then fades even while the key is held; an organ note reaches full volume and stays there until you let go.',
  desc:'An ADSR envelope graph above a tone whose amplitude follows the envelope.',
- research:'ADSR envelopes were introduced in early analogue synthesisers (Buchla and Moog, 1960s); see also Pinch & Trocco (2002). Analog Days.',
+ research:'ADSR envelopes were introduced in early analogue synthesisers (Moog, 1960s); see also Pinch & Trocco (2002). Analog Days.',
  dur:10,hint:'Set attack, decay, sustain and release, then press Play. The same harmonics with a different envelope can sound like a different instrument.',
  init:()=>({a:120,d:150,s:80,r:300}),
  watch(p){const A=M5_INST.organ.env,B=M5_INST.piano.env,u=smooth(p);return {a:Math.round(lerp(A.a,B.a,u)*1000),d:Math.round(lerp(A.d,B.d,u)*1000),s:Math.round(lerp(A.s,B.s,u)*100),r:Math.round(lerp(A.r,B.r,u)*1000)}},
@@ -216,9 +216,9 @@ const M5_BODIES={
 };
 SCENE({id:'instrument-resonance',name:'Resonant bodies',tag:'Why drums are less pitched',
  definition:'An instrument’s vibrating body has natural modes. Strings and pipes have modes at whole-number ratios, so they sound clearly pitched; drums, bars and bells have inharmonic modes.',
- example:'A timpani’s membrane modes sit at about 1, 1.59, 2.14 and 2.30 times the lowest mode, not 1, 2, 3, 4, which is why a drum sounds less like a single note than a string does.',
+ example:'An ideal drumhead’s modes sit at about 1, 1.59, 2.14 and 2.30 times the lowest mode, not 1, 2, 3, 4, so most drums sound less like a single note than a string does. Timpani are an exception: the air in the kettle pulls some modes near harmonic ratios.',
  desc:'The chosen body’s modes as bars on a frequency axis, with grey guide lines at whole-number multiples to show which modes line up.',
- research:'Rayleigh (1877). The Theory of Sound. · Rossing & Fletcher (1998). The Physics of Musical Instruments.',
+ research:'Rayleigh (1877). The Theory of Sound. · Fletcher & Rossing (1998). The Physics of Musical Instruments, 2nd ed.',
  dur:12,hint:'Choose a vibrating body and press Strike to hear its first few modes together.',
  init:()=>({body:'membrane'}),
  watch(p){const ks=['string','closedpipe','membrane','bar','bell'];return {body:ks[Math.min(4,Math.floor(p*5))]}},
@@ -249,7 +249,7 @@ SCENE({id:'instrument-resonance-string',name:'Where you pluck',tag:'Pluck positi
   const a=M5_pluckAmps(s.x),x0=60,w=480;let out=heading(`Plucked ${Math.round(s.x*100)}% of the way along`);
   out+=L(x0,120,x0+w,120,C.grid,1)+Ci(x0,120,5,C.dark)+Ci(x0+w,120,5,C.dark)+P(`M${x0} 120L${fmt(x0+s.x*w)} 66L${x0+w} 120`,C.amber,3)+Ci(x0+s.x*w,66,6,C.coral)+TF(x0+s.x*w,56,'pluck',12,C.coral);
   out+=M5_bars(X,a,60,320,480,150,C.purple);
-  const missing=a.map((v,k)=>v<.02?k+1:0).filter(Boolean);
+  const missing=range(12).map(k=>Math.abs(Math.sin((k+1)*Math.PI*s.x))<.05?k+1:0).filter(Boolean);
   out+=TF(300,350,missing.length?`missing harmonics: ${missing.join(', ')}`:'all harmonics present',13,C.muted);
   return {svg:out,phase:missing.length&&missing[0]===2?'Plucked in the middle: every even harmonic is missing, because each has a node exactly where you plucked. The tone is soft and hollow.':`Plucking ${Math.round(s.x*100)}% along: the closer to the end, the more high harmonics, so the tone gets brighter and more metallic.`};
  }});

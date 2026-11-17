@@ -184,7 +184,7 @@ SCENE({id:'microphones-speakers-pickup',name:'Electric guitar pickup',tag:'Where
   out+=M7_bars(amps,80,320,440,140,i=>i===0?C.blue:C.purple,range(10).map(i=>String(i+1)));
   out+=TF(300,350,'harmonic number',13,C.muted)+TF(300,175,'what the pickup hears (relative strength of each harmonic)',13,C.muted);
   const bright=sum(amps.slice(3))/sum(amps);
-  return {svg:out,phase:`Harmonics with a node at the pickup are silent there. With the pickup ${Math.round(s.pick*100)}% of the way from the bridge, ${Math.round(bright*100)}% of what it hears is harmonics 4 and above, so the tone is ${bright>.35?'bright':bright>.2?'balanced':'warm'}.`};
+  return {svg:out,phase:`Harmonics with a node at the pickup are silent there. With the pickup ${Math.round(s.pick*100)}% of the way from the bridge, ${Math.round(bright*100)}% of what it hears is harmonics 4 and above, so the tone is ${bright>.2?'bright':bright>.08?'balanced':'warm'}.`};
  }});
 function M7_pickup(s){return range(10).map(i=>{const n=i+1;return Math.abs(Math.sin(n*Math.PI*s.pluck)/(n*n)*Math.sin(n*Math.PI*s.pick))})}
 
@@ -216,7 +216,7 @@ SCENE({id:'tape-music-edit',name:'Splice, reverse, loop',tag:'Editing with a raz
  definition:'On tape, sound became a physical object: composers cut it with a razor blade, spliced pieces in a new order, played them backwards and joined the ends into loops.',
  example:'A piano note played backwards swells up from nothing and stops dead: reversal turns a sharp attack into a slow fade-in. Loops repeat a fragment for as long as the machine runs.',
  desc:'A strip of tape cut into six coloured pieces; pieces can be swapped, the whole strip reversed and looped, and the order is played back.',
- research:'Schaeffer, P. (1952). À la recherche d’une musique concrète. · Cage, J. (1952–53). Williams Mix, assembled from hundreds of tape splices.',
+ research:'Schaeffer, P. (1952). À la recherche d’une musique concrète. · Cage, J. (1952–53). Williams Mix, assembled from a great many tape splices.',
  dur:10,hint:'Press one piece, then another, to splice them into each other’s places. Try Reverse and Loop, then Play.',
  init:()=>({order:[0,1,2,3,4,5],rev:false,loops:1,sel:null,prog:0,playing:false}),
  watch(p){const k=Math.min(3,Math.floor(p*4));const orders=[[0,1,2,3,4,5],[3,1,2,0,4,5],[3,1,5,0,4,2],[3,1,5,0,4,2]];return {order:orders[k],rev:k===3,loops:1,sel:null,prog:0}},
@@ -325,8 +325,8 @@ SCENE({id:'synthesis-fm',name:'FM synthesis',tag:'One wave wobbling another',
   const x0=50,w=500,base=300,h=200,fmax=fc*5;out+=L(x0,base,x0+w,base,C.line,1.5);
   for(let k=0;k<=5;k++)out+=TF(x0+w*k/5,base+16,Math.round(fmax*k/5)+' Hz',12,C.muted);
   lines.forEach(l=>{if(l.f<=0||l.f>fmax)return;const x=x0+w*l.f/fmax,hh=l.a*h;out+=L(x,base,x,base-hh,l.k===0?C.blue:C.purple,4)});
-  const harmonic=Math.abs(s.ratio-Math.round(s.ratio))<.02||Math.abs(1/s.ratio-Math.round(1/s.ratio))<.02;
-  out+=TF(300,base+38,harmonic?'Whole-number ratio: the sidebands land on a harmonic series (instrument-like).':'Non-whole ratio: sidebands fall between harmonics (bell-like, metallic).',13,harmonic?C.green:C.coral);
+  const harmonic=[1,2,3,4].some(q=>Math.abs(s.ratio*q-Math.round(s.ratio*q))<.02*q);
+  out+=TF(300,base+38,harmonic?'Simple ratio (1:1, 3:2…): sidebands land on a harmonic series (instrument-like).':'No simple ratio: sidebands fall between harmonics (bell-like, metallic).',13,harmonic?C.green:C.coral);
   out+=TF(300,90,'sideband k sits at carrier ± k × modulator, with height |Jₖ(index)|',13,C.muted);
   return {svg:out,phase:`With index ${fmt(s.index)} about ${lines.filter(l=>l.a>.05&&l.f>0).length} components are audible. Raising the index spreads energy into more sidebands, so the tone grows brighter, which is how FM instruments make a note brighten as it gets louder.`};
  }});
@@ -352,7 +352,7 @@ SCENE({id:'digital-audio',name:'Sampling',tag:'Measuring the wave many times a s
   const n=Math.floor(s.fs*T);for(let i=0;i<=n;i++){const t=i/s.fs,u=t/T,v=Math.sin(M7_TAU*s.f*t);out+=L(x0+w*u,y,x0+w*u,y-h*v,C.dark,1)+Ci(x0+w*u,y-h*v,4.5,C.dark)}
   out+=TF(300,y+108,`showing ${T*1000} ms · ${n+1} samples`,13,C.muted);
   out+=counter(70,300,'Nyquist limit',fmt(s.fs/2)+' Hz',C.ink,140)+counter(230,300,'signal',s.f+' Hz',C.blue,140)+counter(390,300,'stored as',fmt(Math.round(fa))+' Hz',al?C.coral:C.green,140);
-  return {svg:out,phase:al?`${s.f} Hz is above half the sampling rate (${s.fs/2} Hz), so the same dots also fit a ${fmt(Math.round(fa))} Hz wave, and that is what plays back. Real converters filter out such frequencies before sampling.`:`${s.f} Hz is below the Nyquist limit of ${s.fs/2} Hz, so the samples pin down this wave exactly; it can be rebuilt perfectly.`};
+  return {svg:out,phase:al?`${s.f} Hz is above half the sampling rate (${s.fs/2} Hz), so the same dots also fit a ${fmt(Math.round(fa))} Hz wave, and that is what plays back. Real converters filter out such frequencies before sampling.`:s.f*2===s.fs?`${s.f} Hz is exactly half the sampling rate: here every sample lands on a zero crossing, so the wave is lost. The signal must be strictly below the Nyquist limit.`:`${s.f} Hz is below the Nyquist limit of ${s.fs/2} Hz, so the samples pin down this wave exactly; it can be rebuilt perfectly.`};
  }});
 function M7_alias(s){return Math.abs(s.f-s.fs*Math.round(s.f/s.fs))}
 
@@ -409,7 +409,7 @@ SCENE({id:'midi-sequencing',name:'MIDI messages',tag:'Music as instructions, not
  definition:'MIDI, standardised in 1983, sends performance instructions rather than audio: “note 60 on, this hard”, “note 60 off”. Each message is a few bytes, so one cable can carry 16 channels of playing.',
  example:'Pressing middle C fairly hard on channel 1 sends three bytes: 90 3C 64 in hexadecimal (Note On, channel 1; note 60; velocity 100). Releasing it sends 80 3C 40.',
  desc:'A keyboard and velocity control; the Note On and Note Off messages for the chosen key are shown as bytes in hexadecimal and binary.',
- research:'MIDI Manufacturers Association (1983). MIDI 1.0 Detailed Specification. · Smith, D. & Wood, C. (1981). The “USI”, or Universal Synthesizer Interface. AES Convention.',
+ research:'MIDI Manufacturers Association. MIDI 1.0 Detailed Specification (standard first published 1983). · Smith, D. & Wood, C. (1981). The “USI”, or Universal Synthesizer Interface. AES Convention.',
  dur:9,hint:'Press a key, and change the velocity and channel. The status byte, note number and velocity update as bytes.',
  init:()=>({key:12,vel:100,ch:1}),
  watch(p){return {key:Math.min(24,Math.floor(p*25)),vel:Math.round(40+p*80),ch:1}},
@@ -427,7 +427,7 @@ SCENE({id:'midi-sequencing',name:'MIDI messages',tag:'Music as instructions, not
 const M7_ROLL_NOTES=[60,62,64,65,67,69,71,72];
 SCENE({id:'midi-sequencing-roll',name:'Piano roll sequencer',tag:'Composing on a grid',
  definition:'A sequencer stores notes as events on a time grid and plays them back automatically. The piano-roll view, borrowed from mechanical player pianos, shows pitch up the side and time along the bottom.',
- example:'Max Mathews’s MUSIC program at Bell Labs (1957) first had a computer play a score. Today’s sequencers show the same idea as a grid you can click.',
+ example:'Max Mathews’s MUSIC program at Bell Labs (1957) was the first to have a computer calculate the sound wave itself from a score. Today’s sequencers show the same idea as a grid you can click.',
  desc:'An eight-step grid of eight pitches; pressed cells become notes, and a playhead sweeps across while they play.',
  research:'Mathews, M. V. (1963). The digital computer as a musical instrument. Science 142. · Mathews, M. V. (1957), MUSIC I at Bell Telephone Laboratories.',
  dur:10,hint:'Press cells to add or remove notes, set the tempo, then press Play.',

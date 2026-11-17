@@ -15,7 +15,7 @@ SOURCE('m7-nyquist-1928',{title:'Nyquist, H. (1928). Certain topics in telegraph
 SOURCE('m7-shannon',{title:'Shannon, C. E. (1949). Communication in the presence of noise. Proceedings of the IRE 37(1).'});
 SOURCE('m7-zwicker',{title:'Zwicker, E. & Fastl, H. (1990). Psychoacoustics: Facts and Models. Springer.'});
 SOURCE('m7-brandenburg',{title:'Brandenburg, K. (1999). MP3 and AAC explained. AES 17th International Conference on High-Quality Audio Coding.'});
-SOURCE('m7-midi',{title:'MIDI Manufacturers Association (1983). MIDI 1.0 Detailed Specification.',url:'https://midi.org/'});
+SOURCE('m7-midi',{title:'MIDI Manufacturers Association. MIDI 1.0 Detailed Specification (standard first published 1983).',url:'https://midi.org/'});
 SOURCE('m7-emim',{title:'Electronic Music In Motion: a companion course on electronic music, from tape to modular synths.',url:'https://electronic-music-in-motion.puter.site/'});
 SOURCE('m7-mathews',{title:'Mathews, M. V. (1963). The digital computer as a musical instrument. Science 142(3592).'});
 

@@ -99,7 +99,7 @@ SCENE({id:'missing-fundamental-match',name:'Match the pitch',tag:'You are the li
  definition:'A pitch-matching test: listen to a sound with no fundamental, then tune a pure tone until it seems to have the same pitch.',
  example:'For harmonics 3, 4 and 5 of 150 Hz (450, 600 and 750 Hz), most listeners set the pure tone near 150 Hz, a frequency absent from the sound, not near 450 Hz.',
  desc:'A pitch-matching experiment: each match is plotted against the true missing fundamental, with lines for the fundamental, its octave and the lowest component.',
- research:'Schouten (1940); Houtsma & Goldstein (1972). The perception of musical intervals: evidence for the central origin of the pitch of complex tones. Octave errors are common in matching tasks.',
+ research:'Schouten (1940); Houtsma & Goldstein (1972). The central origin of the pitch of complex tones: evidence from musical interval recognition. JASA 51. Octave errors are common in matching tasks.',
  dur:10,hint:'Play the mystery sound, slide your tone until it matches, then Record. Five trials, each with a different missing fundamental.',
  init:()=>({seed:1,i:0,match:300,res:[]}),
  watch(p){const n=Math.min(5,Math.floor(p*6)),r=M8_rng(77),o=M8_matchOrder({seed:1}),res=[];for(let i=0;i<n;i++){const f0=o[i],e=1+.02*M8_gauss(r);res.push({f0,m:Math.round((i===3?2:1)*f0*e)})}return {seed:1,i:n,match:n?res[n-1].m:300,res,sim:true}},
@@ -129,7 +129,7 @@ SCENE({id:'missing-fundamental-speaker',name:'Bass from small speakers',tag:'The
  definition:'Small speakers cannot reproduce low bass notes, but they still play the upper harmonics, and the ear rebuilds the missing low pitch from them.',
  example:'A phone speaker barely produces 55 Hz, yet a bass A1 (55 Hz) still sounds like A1, because 110, 165, 220 Hz and higher harmonics get through.',
  desc:'Harmonics of a bass note on a log frequency axis, with a small speaker’s response curve cutting the lowest ones.',
- research:'Schouten (1940); Larsen & Aarts (2005). Audio Bandwidth Extension (psychoacoustic “virtual bass”), Wiley.',
+ research:'Schouten (1940); Larsen & Aarts (2004). Audio Bandwidth Extension (psychoacoustic “virtual bass”), Wiley.',
  dur:9,hint:'Choose a bass note and the speaker’s cut-off, then compare the full sound with the speaker version. On a laptop both may sound alike, which is the point.',
  init:()=>({m:33,cut:150}),
  watch(p){return {m:33,cut:Math.round(40+p*220)}},
@@ -224,7 +224,7 @@ SCENE({id:'consonance-roughness-intervals',name:'Why fifths sound smooth',tag:'H
   const near=M8_RATIOS.map(([a,b])=>({a,b,c:1200*Math.log2(a/b)})).sort((p,q)=>Math.abs(p.c-s.c)-Math.abs(q.c-s.c))[0];
   out+=T(300,330,`${s.c} cents ≈ ${M8_IVN[Math.round(s.c/100)]} · nearest simple ratio ${near.a}:${near.b} (${Math.round(near.c)} cents)`,15,C.ink);
   out+=T(300,354,`roughness here: ${yv.toFixed(2)} of the maximum`,14,C.muted);
-  return {svg:out,phase:s.kind==='sine'?'With pure tones only the region just above unison is rough; there are no dips at fifths or thirds. Consonance of intervals comes largely from the harmonics.':'Each dip is an interval where harmonics coincide: octave, fifth, fourth, sixths and thirds. Equal-tempered intervals sit close to, but not exactly on, the dips.'};
+  return {svg:out,phase:s.kind==='sine'?'With pure tones only the region just above unison is rough; there are no dips at fifths or thirds. Consonance of intervals comes largely from the harmonics.':'Each dip is an interval where harmonics coincide: octave, fifth, fourth, major sixth and both thirds. Equal-tempered intervals sit close to, but not exactly on, the dips.'};
  }});
 
 /* =========================== expectation =========================== */
@@ -285,7 +285,7 @@ const M8_KF=[{name:'Twinkle',notes:[60,60,67,67,69,69,67,65,65,64,64,62,62,60]},
 function M8_keyCorrs(notes){const d=Array(12).fill(0);notes.forEach(m=>d[M8_pc(m)]++);const res=[];for(const [prof,q] of [[M8_KKMAJ,'major'],[M8_KKMIN,'minor']])for(let k=0;k<12;k++)res.push({k,q,r:M8_corr(d,range(12).map(pc=>prof[(pc-k+12)%12]))});return res}
 SCENE({id:'expectation-key-finding',name:'Finding the key',tag:'Krumhansl–Schmuckler',
  definition:'The key of a melody can be estimated by counting how often each note occurs and comparing that pattern with the probe-tone profile of every major and minor key.',
- example:'“Twinkle” uses C, G and E most and never C♯, so its counts correlate best with the C major profile.',
+ example:'“Twinkle” uses C and G most and never C♯ or F♯, so its counts correlate best with the C major profile.',
  desc:'A melody strip, correlations with all 24 major and minor key profiles as two rows of bars, and a keyboard for adding notes.',
  research:'Krumhansl (1990). Cognitive Foundations of Musical Pitch, Oxford University Press (the Krumhansl–Schmuckler key-finding algorithm). Counts here ignore note durations.',
  dur:10,hint:'Choose a tune or build your own by pressing keys. The bars show how well your notes fit each key.',
@@ -381,7 +381,7 @@ SCENE({id:'music-emotion-mozart',name:'The “Mozart effect”',tag:'Checking a 
   const bars=[{l:'Chabris: Mozart vs silence or relaxation',d:.09,from:1},{l:'Pietschnig: Mozart vs no music',d:.37,from:2},{l:'Pietschnig: other music vs no music',d:.38,from:2},{l:'Pietschnig: Mozart vs other music',d:.15,from:2}];
   const x0=300,sc=420;out+=L(x0,60,x0,250,C.line,1.4);[0,.2,.5].forEach(v=>{const x=x0+v*sc;out+=L(x,60,x,250,C.grid,1)+TF(x,268,v===0?'0':v===.2?'0.2 small':'0.5 medium',13,C.muted)});
   bars.forEach((b,i)=>{const y=70+i*44,on=s.v>=b.from;out+=TF(x0-10,y+20,b.l,13,on?C.ink:C.line,'end');if(on)out+=R(x0,y+6,b.d*sc,22,i===3?C.coral:C.blue,'none',4)+TBF(x0+b.d*sc+8,y+22,b.d.toFixed(2),13,C.ink,'start')});
-  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher','on a spatial reasoning task after 10 minutes of a Mozart sonata.','The gain lasted 10–15 minutes. It was never a claim about IQ.'],
+  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher','on a spatial reasoning task after 10 minutes of a Mozart sonata.','The gain lasted 10–15 minutes: no claim of a lasting rise in IQ.'],
    ['Chabris (1999) pooled 16 studies: the average gain was tiny,','about 1.4 points on an IQ-like scale, and fits a brief boost','in arousal rather than anything special about Mozart.'],
    ['Pietschnig and colleagues (2010) pooled about 40 studies: any music','gives about the same small gain over silence. Mozart versus other music','is small, and the larger effects came mostly from one laboratory.'],
    ['Thompson, Schellenberg and Husain (2001): upbeat Mozart beat slow, sad','Albinoni, but the difference vanished once mood and arousal','were taken into account. Enjoyment and alertness do the work.']][s.v];
@@ -421,7 +421,7 @@ SCENE({id:'beat-entrainment',name:'Keeping the beat',tag:'Tap along',
   return {svg:out,phase:s.sim?'A simulated tapper leads the clicks by about 45 ms, inside the range typical for non-musicians.':vals.length>=3?(m<0?'You tapped ahead of the clicks on average, as most people do. One explanation: the brain synchronises the felt touch with the heard click, and touch signals take longer to arrive.':'You tapped after the clicks on average. Device delays (mouse release, audio output) can shift this; try the Space bar with the pad focused.'):'Each dot will show how far each tap was from its click. Below zero means early.'};
  }});
 
-function M8_phaseSim(s){const N=30,r=M8_rng(17),A=[-30],P=[600];for(let n=0;n<N-1;n++){const Cn=n<10?600:600+s.step,e=s.noise?8*M8_gauss(r):0;A.push((1-s.alpha)*A[n]+P[n]-Cn+e);P.push(P[n]-s.beta*A[n])}return A}
+function M8_phaseSim(s){const N=30,r=M8_rng(17),A=[-30],P=[600];for(let n=0;n<N-1;n++){const Cn=n<9?600:600+s.step,e=s.noise?8*M8_gauss(r):0;A.push((1-s.alpha)*A[n]+P[n]-Cn+e);P.push(P[n]-s.beta*A[n])}return A}
 SCENE({id:'beat-entrainment-tempo',name:'Following a tempo change',tag:'Error correction',
  definition:'People stay with a beat by correcting each tap a little, in proportion to the last error. When the tempo changes, these partial corrections bring the taps back in step over several beats.',
  example:'If the metronome suddenly slows, your next taps come too early; you shift each one later by part of the error and adjust your inner tempo, and within a few taps you are back in step.',
@@ -431,13 +431,13 @@ SCENE({id:'beat-entrainment-tempo',name:'Following a tempo change',tag:'Error co
  init:()=>({alpha:.4,beta:.1,step:-60,noise:1}),
  watch(p){return {alpha:.4,beta:.1,step:-60,noise:1,upto:Math.max(2,Math.floor(p*30))}},
  ui:[{range:'alpha',label:'Phase correction α',min:0,max:1,step:.05,get:s=>s.alpha,act:'alpha'},{range:'beta',label:'Period correction β',min:0,max:.5,step:.05,get:s=>s.beta,act:'beta'},{range:'step',label:'Tempo change',min:-100,max:100,step:10,get:s=>s.step,act:'step',show:v=>(v>0?'+':'')+v+' ms'},{choose:[[1,'with timing noise'],[0,'no noise']],label:'Noise',get:s=>s.noise,act:'noise'},{b:'Hear',act:'hear'}],
- on:{alpha(s,v){s.alpha=v},beta(s,v){s.beta=v},step(s,v){s.step=v},noise(s,v){s.noise=Number(v)},hear(s){let t=0;for(let i=0;i<20;i++){M8_click(t,{hz:i===10?1320:880});t+=(i<10?600:600+s.step)/1000}}},
+ on:{alpha(s,v){s.alpha=v},beta(s,v){s.beta=v},step(s,v){s.step=v},noise(s,v){s.noise=Number(v)},hear(s){let t=0;for(let i=0;i<20;i++){M8_click(t,{hz:i===9?1320:880});t+=(i<9?600:600+s.step)/1000}}},
  draw(s){
   const A=M8_phaseSim(s),n=s.upto||30;let out=heading(`Metronome ${s.step>0?'slows':s.step<0?'speeds up':'stays'} at beat 10${s.step?` (${s.step>0?'+':''}${s.step} ms)`:''}`,26);
   const pl=M8_plot(70,52,490,236,[0,31],[-160,160],{yt:[[-150,'−150'],[0,'0'],[150,'+150 ms']],xt:[[1,'1'],[10,'10'],[20,'20'],[30,'30']],xl:'tap number',yl:'tap minus click'});out+=pl.svg;
   out+=L(pl.X(10.5),52,pl.X(10.5),288,C.amber,1.4,'stroke-dasharray="5 4"')+TF(pl.X(10.5)+5,70,'tempo change',13,C.amber,'start')+L(70,pl.Y(0),560,pl.Y(0),C.muted,1.2);
   const pts=A.slice(0,n).map((a,i)=>[pl.X(i+1),pl.Y(clamp(a,-160,160))]);out+=M8_poly(pts,C.blue,2);pts.forEach(p=>out+=Ci(p[0],p[1],3.5,C.blue));
-  const after=A.slice(10);let k=after.findIndex((a,i)=>i>0&&after.slice(i).every(x=>Math.abs(x-A[9])<25));
+  const after=A.slice(9);let k=after.findIndex((a,i)=>i>0&&after.slice(i).every(x=>Math.abs(x-A[8])<25));
   out+=T(300,352,s.alpha===0&&s.beta===0?'No correction: the taps drift away from the clicks for good.':k>0?`Back in step about ${k} taps after the change`:'Not settled within 20 taps',15,C.ink);
   return {svg:out,phase:'α is the share of the last error corrected at once; β adjusts the inner tempo. With α near 1 the taps snap back but overreact to noise; with α near 0 they drift. Measured values are well below 1, so corrections are partial.'};
  }});

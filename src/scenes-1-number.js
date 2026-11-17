@@ -239,8 +239,8 @@ SCENE({id:'harmonic-series-build',name:'Building a tone',tag:'Mix the harmonics'
   const norm=sum(amps.map(Math.abs))||1;
   out+=R(40,244,520,104,'#fff',C.grid,10)+M1_wave(48,250,504,92,2,t=>sum(amps.map((a,k)=>a*Math.sin(2*Math.PI*(k+1)*t)))/norm*1.6,C.coral,2.4);
   out+=TF(300,366,'two cycles of the summed wave',13,C.muted);
-  const used=amps.filter(v=>v>0).length;
-  return {svg:out,phase:`${used} harmonic${used===1?'':'s'} switched on. The pitch stays the same (the repetition rate of the fundamental); only the shape of each cycle, and the colour of the sound, changes.`};
+  const used=amps.filter(v=>v>0).length,gcd=(a,b)=>b?gcd(b,a%b):a,g=amps.reduce((a,v,i)=>v>0?gcd(a,i+1):a,0);
+  return {svg:out,phase:used===0?'0 harmonics switched on: silence.':`${used} harmonic${used===1?'':'s'} switched on. `+(g===1?'The pitch stays the same (the repetition rate of the fundamental); only the shape of each cycle, and the colour of the sound, changes.':`Only multiples of harmonic ${g} are on, so the wave repeats ${g} times as fast and the pitch you hear jumps up.`)};
  }});
 
 /* ---------------- Lesson: consonant ratios ---------------- */
@@ -308,7 +308,7 @@ SCENE({id:'consonant-ratios-rate',name:'Rate the pairs yourself',tag:'You are th
   if(s.pos<8&&!s.demo){out+=T(300,72,`Pair ${s.pos+1} of 8 — press Play pair, then rate it`,15,C.ink);
    for(let v=1;v<=5;v++){const x=120+(v-1)*76;out+=hit(X,'rate',v,`Rate ${v}`,R(x,86,64,46,'#fff',C.blue,10)+TB(x+32,116,String(v),19,C.blue))}
    out+=TF(120,150,'1 = rough',13,C.muted,'start')+TF(480,150,'5 = smooth',13,C.muted,'end')}
-  else out+=T(300,100,s.demo?'Typical shape: smooth for simple ratios, rough for complex ones':'Done. Your ratings, simplest ratio first:',15,C.ink);
+  else out+=T(300,100,s.demo?'Typical shape: smooth for simple ratios, rough for complex ones':'Done. Your ratings, from simple ratios to complex:',15,C.ink);
   const base=320;out+=L(60,base,560,base,C.line,2);
   M1_RAT.forEach(([p,q,nm],i)=>{const x=66+i*61,v=s.r[i];if(v)out+=R(x,base-v*30,46,v*30,C.blue,'none',4)+TF(x+23,base-v*30-6,String(+v.toFixed(1)),13,C.blue);
    out+=TF(x+23,base+18,p+':'+q,13,C.ink)+TF(x+23,base+34,nm.split(' ').pop(),13,C.muted)});
@@ -384,7 +384,7 @@ SCENE({id:'pythagorean-tuning-thirds',name:'Two kinds of major third',tag:'81:64
  }});
 
 /* ---------------- Lesson: pentatonic scales ---------------- */
-SCENE({id:'pentatonic-scales',name:'Five fifths make a scale',tag:'The pentatonic',
+SCENE({id:'pentatonic-scales',name:'Four fifths make a scale',tag:'The pentatonic',
  definition:'Stack four fifths above a note (five notes in all), fold them into one octave and sort them: you get a five-note scale with no semitones, the anhemitonic pentatonic.',
  example:'C G D A E, sorted: C D E G A. The steps are tone, tone, minor third, tone, minor third — no two notes are a jarring semitone apart.',
  research:'Day-O’Connell, J. (2007). Pentatonicism from the Eighteenth Century to Debussy; the fifth-generation construction appears in early Chinese sources such as the Guanzi (c. 4th–3rd century BCE).',
@@ -395,7 +395,7 @@ SCENE({id:'pentatonic-scales',name:'Five fifths make a scale',tag:'The pentatoni
  ui:[{b:'Play the scale',act:'play'}],
  on:{play(){AUDIO.seq([0,2,4,7,9,12].map((d,i)=>({hz:midiHz(60+d),at:i*.34,dur:.32})),{type:'triangle',gain:.15});return 'keep'}},
  draw(s,f){
-  const k=f.k,cx=150,cy=200,Rr=110,circ=['C','G','D','A','E','B','F♯','C♯','A♭','E♭','B♭','F'];let out=heading('From five stacked fifths to a scale');
+  const k=f.k,cx=150,cy=200,Rr=110,circ=['C','G','D','A','E','B','F♯','C♯','A♭','E♭','B♭','F'];let out=heading('From four stacked fifths to a five-note scale');
   out+=Ci(cx,cy,Rr,'none',C.grid);
   circ.forEach((n,i)=>{const a=-Math.PI/2+i*Math.PI/6,on=i<Math.min(k+1,5);out+=Ci(cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr,17,on?C.blue:'#fff',on?C.blue:C.line)+TB(cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr+5,n,14,on?'#fff':C.muted)});
   if(k>=5){const sc=[['C',0],['D',2],['E',4],['G',7],['A',9],['C',12]];
@@ -418,7 +418,7 @@ SCENE({id:'pentatonic-scales-black-keys',name:'The black keys',tag:'Hard to play
   tune(s){const r=rng(nextSeed()),bl=[66,68,70,73,75,78,80,82];const t=range(10).map(()=>bl[Math.floor(r()*bl.length)]);AUDIO.seq(t.map((m,i)=>({hz:midiHz(m),at:i*.28,dur:.26})),{type:'triangle',gain:.14});s.last=t.slice(-8);s.lit=null;return 'keep'},
   clear(s){s.last=[];s.lit=null;return 'keep'}},
  draw(s,f,X){
-  const black=new Set([66,68,70,73,75,78,80,82]);let out=heading('The black keys are a pentatonic scale');
+  const black=new Set([61,63,66,68,70,73,75,78,80,82]);let out=heading('The black keys are a pentatonic scale');
   out+=M1_keyboard(X,40,70,520,170,60,83,black,'key',s.lit);
   out+=TF(300,262,'blue keys: F♯ G♯ A♯ C♯ D♯ — no two a semitone apart',13,C.blue);
   out+=T(300,300,s.last.length?'You played: '+s.last.map(noteName).join('  '):'Nothing played yet',15,C.ink);

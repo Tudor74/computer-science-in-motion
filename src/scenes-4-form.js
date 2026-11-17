@@ -133,9 +133,9 @@ SCENE({id:'major-minor-relative-parallel',name:'Relative and parallel keys',tag:
   let bt=0;const beats=sum(notes.map(n=>n.dur));
   notes.forEach((n,i)=>{const x=72+490*(bt+.35)/beats,changed=s.key==='parallel'&&n.acc!==0;out+=M4_note(x,n.st,n.acc,n.dur,y,g,i===s.pos?C.coral:changed?C.purple:C.ink);bt+=n.dur;if(bt%4===0&&bt<beats)out+=M4_bar(72+490*(bt+.05)/beats,y,g)});
   out+=M4_bar(568,y,g);
-  const box1=s.key==='major'?['C major: C D E F G A B','The original tune.']:s.key==='parallel'?['C minor: C D E♭ F G A♭ B♭','Same tonic C; three notes lowered (purple).']:['A minor: A B C D E F G','Same notes as C major; the tune is moved to start on A.'];
+  const box1=s.key==='major'?['C major: C D E F G A B','The original tune.']:s.key==='parallel'?['C minor: C D E♭ F G A♭ B♭','Same tonic C; in this tune only E is lowered (purple).']:['A minor: A B C D E F G','Same notes as C major; the tune is moved to start on A.'];
   out+=R(60,196,480,70,'#fff',C.grid,10)+TB(300,224,box1[0],17,C.ink)+T(300,250,box1[1],15,C.muted);
-  out+=R(60,280,480,74,C.amberp,'none',10)+TF(300,304,'Does minor sound sad? Children in one study only used mode',14,C.ink)+TF(300,324,'for sad/happy judgements from about age 6; tempo mattered earlier.',14,C.ink)+TF(300,344,'The link is learned and shaped by culture, not built into the notes.',14,C.ink);
+  out+=R(60,280,480,74,C.amberp,'none',10)+TF(300,304,'Does minor sound sad? Children in one study only used mode',14,C.ink)+TF(300,324,'for sad/happy judgements from about age 6; tempo mattered earlier.',14,C.ink)+TF(300,344,'The link seems to be largely learned and shaped by culture.',14,C.ink);
   return {svg:out,phase:s.key==='parallel'?'Parallel minor: same starting note, three notes lowered a semitone. Many Western listeners hear it as darker, but that association is learned.':s.key==='relative'?'Relative minor: every note comes from the same set as C major, but the tune now centres on A.':'The tune in C major, the reference version.'};
  }});
 
@@ -247,7 +247,7 @@ SCENE({id:'motif',name:'Motif and its development',tag:'Four notes, a whole move
 
 SCENE({id:'motif-shapes',name:'Shape a motif yourself',tag:'Retrograde and inversion',
  definition:'Because a motif is defined by its rhythm and contour, the same transformations can be applied to any short idea: play it backwards (retrograde), upside down (inversion), or both.',
- example:'A rising C–D–G becomes G–D–C in retrograde, and C–B♭–F in inversion around C. The rhythm keeps them recognisable.',
+ example:'A rising C–D–G becomes G–D–C in retrograde, and C–B–F in inversion around C on the white keys. The rhythm keeps them recognisable.',
  desc:'Four editable notes on a staff with up and down presses, and three smaller staves showing the original, its retrograde and its inversion.',
  research:['Schoenberg (1967). Fundamentals of Musical Composition: motif variation by inversion and retrograde.','Bach (1747). The Musical Offering: canons by inversion and retrograde (crab canon).'],
  dur:9,hint:'Press the arrows above or below each note to change your motif. The retrograde and inversion update. Play any of the three.',
@@ -273,7 +273,7 @@ const M4_CON=[{st:0,dur:1},{st:2,dur:1},{st:4,dur:1},{st:2,dur:1},{st:3,dur:1},{
 SCENE({id:'motif-period',name:'Question and answer phrases',tag:'From motif to theme',
  definition:'Motifs combine into phrases. A classical period pairs a question phrase (antecedent) that ends unresolved, often on the dominant, with an answer phrase (consequent) that starts the same way but ends home on the tonic.',
  example:'The question ends on D over a G chord (a half cadence); the answer repeats the opening and closes on C (a perfect cadence).',
- desc:'Two four-bar phrases on staves with their endings marked: the first ends on a half cadence, the second on a perfect cadence.',
+ desc:'Two two-bar phrases on staves with their endings marked: the first ends on a half cadence, the second on a perfect cadence.',
  research:['Caplin (1998). Classical Form: the period, antecedent and consequent.','Koch (1782–93). Versuch einer Anleitung zur Composition: phrase and cadence in eighteenth-century theory.'],
  dur:9,hint:'Play the question, then the answer. Which one sounds finished? Play both to hear the pair.',
  init:()=>({pos:-1,which:null}),
@@ -367,7 +367,7 @@ const M4_VARS={
  rhythm:{n:M4_TWINKLE.flatMap(n=>n.dur===2?[{...n,dur:.5},{...n,dur:.5},{...n,dur:1}]:[{...n,dur:.5},{...n,dur:.5}]),say:'Rhythmic variation: the same pitches, but each beat divided into quavers. Busier, same outline.'},
  ornament:{n:M4_TWINKLE.flatMap((n,i)=>{const nx=M4_TWINKLE[i+1];return n.dur===2||!nx?[n]:[{...n,dur:.5},{st:Math.round((n.st+nx.st)/2)===n.st?n.st+1:Math.round((n.st+nx.st)/2),acc:0,dur:.5}]}),say:'Melodic ornament: passing and neighbour notes fill the gaps, the way Mozart decorates the tune.'},
  minor:{n:M4_TWINKLE.map(n=>({...n,acc:[2,5,6].includes(((n.st%7)+7)%7)?-1:0})),say:'Change of mode: the tune in C minor. E, A and B are lowered. A classic variation set nearly always includes one minor variation.'},
- harmony:{n:M4_TWINKLE.map((n,i)=>({...n,chord:[[48,52,55],null,[45,48,52],null,[41,45,48],null,[48,52,55],[41,45,50],null,[48,52,55],null,[43,47,50],null,[48,52,55]][i]})),say:'New harmony: the melody is unchanged, but the chords underneath change colour (C, A minor, F…).'}};
+ harmony:{n:M4_TWINKLE.map((n,i)=>({...n,chord:[[48,52,55],null,[45,48,52],null,[41,45,48],null,[48,52,55],[41,45,48],null,[48,52,55],null,[43,47,50],null,[48,52,55]][i]})),say:'New harmony: the melody is unchanged, but the chords underneath change colour (C, A minor, F…).'}};
 SCENE({id:'theme-variation',name:'Theme and variations',tag:'Same tune, new clothes',
  definition:'Theme and variations is a form in which a theme is stated and then repeated several times, each time changed in rhythm, melody, mode, harmony or texture while staying recognisable.',
  example:'Mozart wrote twelve variations (K. 265, around 1781) on the French song “Ah! vous dirai-je, maman”, the tune English speakers know as Twinkle, Twinkle, Little Star.',
@@ -455,7 +455,7 @@ const M4_INST=[{n:'Piccolo',lo:74,hi:108,col:'#1772b7',p:[1,.15,.05]},{n:'Flute'
  {n:'Violin',lo:55,hi:100,col:'#2c776c',p:[1,.5,.33,.25,.2,.16,.14]},{n:'Viola',lo:48,hi:88,col:'#2c776c',p:[1,.6,.4,.3,.2,.15]},{n:'Cello',lo:36,hi:81,col:'#2c776c',p:[1,.7,.5,.35,.25,.2]},{n:'Double bass',lo:28,hi:67,col:'#2c776c',p:[1,.7,.45,.3,.2]}];
 SCENE({id:'orchestration-ranges',name:'Instrument ranges',tag:'Who can play this note?',
  definition:'Each instrument has a range of notes it can play. Orchestrators choose instruments partly by range: a melody high up suits violin or flute; a deep bass line suits cello, double bass, bassoon or tuba.',
- example:'Middle C (C4) lies within the range of nine of these thirteen instruments; a top C (C7) leaves only the piccolo, flute and violin.',
+ example:'Middle C (C4) lies within the range of twelve of these thirteen instruments (all but the piccolo); a top C (C7) leaves only the piccolo, flute and violin.',
  desc:'Horizontal bars showing the approximate sounding range of thirteen orchestral instruments against a keyboard axis, with a movable note line marking which can play it.',
  research:['Adler (2016). The Study of Orchestration, 4th edn: instrument ranges.','Berlioz (1844). Grand traité d’instrumentation et d’orchestration modernes.'],
  dur:10,hint:'Slide the note. Instruments that can play it light up; press one to hear the note in an illustrative synthetic timbre. Ranges are approximate.',

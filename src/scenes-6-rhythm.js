@@ -127,7 +127,7 @@ SCENE({id:'beat-metre-hemiola',name:'Hemiola',tag:'Six as two threes or three tw
    for(let gI=0;gI<6/size;gI++){const a=bx+gI*size*dx-12,b=a+(size-1)*dx+24;out+=P(`M${a} 112V100H${b}V112`,m==='68'?C.blue:C.coral,2)}
    for(let j=0;j<6;j++){const i=bar*6+j,x=bx+j*dx,acc=M6_hemAcc(s.mode,i),cur=i===pos;
     out+=Ci(x,150,acc?15:8,acc?(m==='68'?C.blue:C.coral):'#cfe0eb');if(cur)out+=Ci(x,150,(acc?15:8)+7,'none',C.amber);
-    out+=TF(x,186,acc?'ONE':(m==='68'&&j%3===2?'a':'and'),13,acc?C.ink:C.muted);}
+    out+=TF(x,186,acc?['ONE','TWO','THREE'][Math.floor(j/size)]:(m==='68'&&j%3===2?'a':'and'),13,acc?C.ink:C.muted);}
    if(bar===0)out+=L(x0+225,96,x0+225,196,C.line,2);
   }
   out+=R(70,226,460,62,'#fff',C.grid,10)+T(300,252,'Same notes, same tempo: only the accents move.',15,C.ink)+T(300,274,'Two beats of three feel lilting; three beats of two feel square.',14,C.muted);
@@ -170,7 +170,7 @@ const M6_STYLES={
  march:{name:'March: accents on 1 and 3',lanes:[['Bass drum','low',[0,8]],['Snare','mid',[4,12]],['Hi-hat','hat',[]]]},
  backbeat:{name:'Backbeat: snare on 2 and 4',lanes:[['Bass drum','low',[0,8,10]],['Snare','mid',[4,12]],['Hi-hat','hat',[0,2,4,6,8,10,12,14]]]},
  floor:{name:'Four on the floor',lanes:[['Bass drum','low',[0,4,8,12]],['Snare','mid',[4,12]],['Hi-hat','hat',[2,6,10,14]]]},
- onedrop:{name:'One drop (reggae): beat 1 left empty',lanes:[['Bass drum','low',[8]],['Rim','mid',[8]],['Guitar skank','high',[2,6,10,14]]]}
+ onedrop:{name:'One drop (reggae): beat 1 left empty',lanes:[['Bass drum','low',[8]],['Rim','mid',[8]],['Guitar skank','high',[4,12]]]}
 };
 const M6_BB={ms:s=>60000/s.bpm/4,N:()=>16,step(s,i){for(const [,k,hits] of M6_STYLES[s.style].lanes)if(hits.includes(i))M6_sound(k)}};
 SCENE({id:'syncopation-backbeat',name:'Backbeat and off-beat',tag:'Which beats get the accent',
@@ -190,8 +190,7 @@ SCENE({id:'syncopation-backbeat',name:'Backbeat and off-beat',tag:'Which beats g
   out+=TF(x0-10,100,'metre',13,C.muted,'end');
   const cols=[C.blue,C.coral,C.green];
   st.lanes.forEach(([nm,k,hits],li)=>{const y=140+li*52;out+=TF(x0-10,y+25,nm,13,C.ink,'end');out+=M6_row(X,x0,y,cw,36,16,i=>hits.includes(i),pos,{beatEvery:4,col:()=>cols[li]})});
-  const accents=st.lanes[1][2].map(i=>i/4+1).filter(Number.isInteger);
-  return {svg:out,phase:s.style==='backbeat'?'The snare (coral) cracks on beats 2 and 4, metrically weaker than 1 and 3. That push against the grid is the backbeat.':s.style==='onedrop'?'In the one drop the bass drum and rim fall on beat 3 and beat 1 is left empty, while the guitar skanks on every off-beat.':s.style==='floor'?'Four on the floor: the bass drum marks every beat while the hi-hat fills the off-beats in between.':`A march accents ${accents.join(' and ')||'the strong beats'} with the snare: the loudness agrees with the metre.`};
+  return {svg:out,phase:s.style==='backbeat'?'The snare (coral) cracks on beats 2 and 4, metrically weaker than 1 and 3. That push against the grid is the backbeat.':s.style==='onedrop'?'In the one drop the bass drum and rim fall on beat 3 and beat 1 is left empty, while the guitar skanks on beats 2 and 4.':s.style==='floor'?'Four on the floor: the bass drum marks every beat while the hi-hat fills the off-beats in between.':`A march puts its heaviest sound, the bass drum, on beats ${st.lanes[0][2].map(i=>i/4+1).filter(Number.isInteger).join(' and ')}, with the lighter snare in between: the loudness agrees with the metre.`};
  }});
 
 const M6_GROOVE=[[0,4,8,12],[0,4,6,12],[0,3,6,10,12],[0,3,7,10,14],[3,6,10,14],[1,3,6,9,11,14]];
@@ -272,7 +271,7 @@ SCENE({id:'polyrhythm-composite',name:'Hearing a cross-rhythm',tag:'Which pulse 
 const M6_BELL=[0,2,4,5,7,9,11];
 const M6_BP={ms:s=>60000/s.bpm/3,N:()=>12,step(s,i){if(M6_BELL.includes(i))M6_sound('bell');const step=s.feel==='4'?3:4;if(s.feel!=='none'&&i%step===0)M6_sound('low')}};
 SCENE({id:'polyrhythm-bell',name:'The standard bell pattern',tag:'Seven strokes in a cycle of twelve',
- definition:'A widespread West African bell pattern places seven strokes in a cycle of twelve fast pulses. Heard against four dance beats or against three, it sits in a 3:2 tension.',
+ definition:'A widespread West African bell pattern places seven strokes in a cycle of twelve fast pulses. The twelve pulses can be felt as four beats of three or as three beats of four; the bell fits neither completely, which gives it its tension.',
  example:'Ewe drumming in Ghana uses this pattern on the gankogui bell; versions travelled to Cuba and Brazil. Its gaps are 2-2-1-2-2-2-1.',
  desc:'A circle of twelve pulses with the seven bell strokes filled, and markers for the chosen dance beat: four groups of three or three groups of four.',
  dur:11,research:['Agawu, K. (2006). Structural analysis or cultural analysis? Competing perspectives on the “standard pattern” of West African rhythm. JAMS 59(1).','Arom, S. (1991). African Polyphony and Polyrhythm.'],
@@ -289,7 +288,7 @@ SCENE({id:'polyrhythm-bell',name:'The standard bell pattern',tag:'Seven strokes 
   if(s.feel!=='none'){let d='';for(let i=0;i<=12;i+=step){const a=-Math.PI/2+(i%12)*M6_TAU/12;d+=(i?'L':'M')+fmt(cx+72*Math.cos(a))+' '+fmt(cy+72*Math.sin(a))}out+=P(d,C.blue,1.5,'none','opacity=".5"')}
   out+=TB(450,110,'Bell gaps',15,C.amber)+TMF(450,136,'2 2 1 2 2 2 1',15,C.ink);
   out+=TB(450,186,s.feel==='4'?'Dance beat in 4':s.feel==='3'?'Dance beat in 3':'No beat',15,C.blue);
-  out+=TF(450,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/4)':'',13,C.muted);
+  out+=TF(450,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/2)':'',13,C.muted);
   out+=T(450,264,'Strokes on beats:',14,C.ink)+TB(450,288,s.feel==='none'?'—':String(M6_BELL.filter(i=>i%step===0).length)+' of '+(12/step),17,C.ink);
   return {svg:out,phase:`The bell’s seven strokes fall on pulses ${M6_BELL.map(i=>i+1).join(', ')}. ${s.feel==='none'?'Heard alone, many listeners find it ambiguous where the beat is.':'Against the dance beat only some strokes coincide; the rest cross it, giving the pattern its drive.'}`};
  }});

@@ -848,8 +848,8 @@ SCENE({id:'harmonic-series-build',name:'Building a tone',tag:'Mix the harmonics'
   const norm=sum(amps.map(Math.abs))||1;
   out+=R(40,244,520,104,'#fff',C.grid,10)+M1_wave(48,250,504,92,2,t=>sum(amps.map((a,k)=>a*Math.sin(2*Math.PI*(k+1)*t)))/norm*1.6,C.coral,2.4);
   out+=TF(300,366,'two cycles of the summed wave',13,C.muted);
-  const used=amps.filter(v=>v>0).length;
-  return {svg:out,phase:`${used} harmonic${used===1?'':'s'} switched on. The pitch stays the same (the repetition rate of the fundamental); only the shape of each cycle, and the colour of the sound, changes.`};
+  const used=amps.filter(v=>v>0).length,gcd=(a,b)=>b?gcd(b,a%b):a,g=amps.reduce((a,v,i)=>v>0?gcd(a,i+1):a,0);
+  return {svg:out,phase:used===0?'0 harmonics switched on: silence.':`${used} harmonic${used===1?'':'s'} switched on. `+(g===1?'The pitch stays the same (the repetition rate of the fundamental); only the shape of each cycle, and the colour of the sound, changes.':`Only multiples of harmonic ${g} are on, so the wave repeats ${g} times as fast and the pitch you hear jumps up.`)};
  }});
 
 /* ---------------- Lesson: consonant ratios ---------------- */
@@ -917,7 +917,7 @@ SCENE({id:'consonant-ratios-rate',name:'Rate the pairs yourself',tag:'You are th
   if(s.pos<8&&!s.demo){out+=T(300,72,`Pair ${s.pos+1} of 8 — press Play pair, then rate it`,15,C.ink);
    for(let v=1;v<=5;v++){const x=120+(v-1)*76;out+=hit(X,'rate',v,`Rate ${v}`,R(x,86,64,46,'#fff',C.blue,10)+TB(x+32,116,String(v),19,C.blue))}
    out+=TF(120,150,'1 = rough',13,C.muted,'start')+TF(480,150,'5 = smooth',13,C.muted,'end')}
-  else out+=T(300,100,s.demo?'Typical shape: smooth for simple ratios, rough for complex ones':'Done. Your ratings, simplest ratio first:',15,C.ink);
+  else out+=T(300,100,s.demo?'Typical shape: smooth for simple ratios, rough for complex ones':'Done. Your ratings, from simple ratios to complex:',15,C.ink);
   const base=320;out+=L(60,base,560,base,C.line,2);
   M1_RAT.forEach(([p,q,nm],i)=>{const x=66+i*61,v=s.r[i];if(v)out+=R(x,base-v*30,46,v*30,C.blue,'none',4)+TF(x+23,base-v*30-6,String(+v.toFixed(1)),13,C.blue);
    out+=TF(x+23,base+18,p+':'+q,13,C.ink)+TF(x+23,base+34,nm.split(' ').pop(),13,C.muted)});
@@ -993,7 +993,7 @@ SCENE({id:'pythagorean-tuning-thirds',name:'Two kinds of major third',tag:'81:64
  }});
 
 /* ---------------- Lesson: pentatonic scales ---------------- */
-SCENE({id:'pentatonic-scales',name:'Five fifths make a scale',tag:'The pentatonic',
+SCENE({id:'pentatonic-scales',name:'Four fifths make a scale',tag:'The pentatonic',
  definition:'Stack four fifths above a note (five notes in all), fold them into one octave and sort them: you get a five-note scale with no semitones, the anhemitonic pentatonic.',
  example:'C G D A E, sorted: C D E G A. The steps are tone, tone, minor third, tone, minor third — no two notes are a jarring semitone apart.',
  research:'Day-O’Connell, J. (2007). Pentatonicism from the Eighteenth Century to Debussy; the fifth-generation construction appears in early Chinese sources such as the Guanzi (c. 4th–3rd century BCE).',
@@ -1004,7 +1004,7 @@ SCENE({id:'pentatonic-scales',name:'Five fifths make a scale',tag:'The pentatoni
  ui:[{b:'Play the scale',act:'play'}],
  on:{play(){AUDIO.seq([0,2,4,7,9,12].map((d,i)=>({hz:midiHz(60+d),at:i*.34,dur:.32})),{type:'triangle',gain:.15});return 'keep'}},
  draw(s,f){
-  const k=f.k,cx=150,cy=200,Rr=110,circ=['C','G','D','A','E','B','F♯','C♯','A♭','E♭','B♭','F'];let out=heading('From five stacked fifths to a scale');
+  const k=f.k,cx=150,cy=200,Rr=110,circ=['C','G','D','A','E','B','F♯','C♯','A♭','E♭','B♭','F'];let out=heading('From four stacked fifths to a five-note scale');
   out+=Ci(cx,cy,Rr,'none',C.grid);
   circ.forEach((n,i)=>{const a=-Math.PI/2+i*Math.PI/6,on=i<Math.min(k+1,5);out+=Ci(cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr,17,on?C.blue:'#fff',on?C.blue:C.line)+TB(cx+Math.cos(a)*Rr,cy+Math.sin(a)*Rr+5,n,14,on?'#fff':C.muted)});
   if(k>=5){const sc=[['C',0],['D',2],['E',4],['G',7],['A',9],['C',12]];
@@ -1027,7 +1027,7 @@ SCENE({id:'pentatonic-scales-black-keys',name:'The black keys',tag:'Hard to play
   tune(s){const r=rng(nextSeed()),bl=[66,68,70,73,75,78,80,82];const t=range(10).map(()=>bl[Math.floor(r()*bl.length)]);AUDIO.seq(t.map((m,i)=>({hz:midiHz(m),at:i*.28,dur:.26})),{type:'triangle',gain:.14});s.last=t.slice(-8);s.lit=null;return 'keep'},
   clear(s){s.last=[];s.lit=null;return 'keep'}},
  draw(s,f,X){
-  const black=new Set([66,68,70,73,75,78,80,82]);let out=heading('The black keys are a pentatonic scale');
+  const black=new Set([61,63,66,68,70,73,75,78,80,82]);let out=heading('The black keys are a pentatonic scale');
   out+=M1_keyboard(X,40,70,520,170,60,83,black,'key',s.lit);
   out+=TF(300,262,'blue keys: F♯ G♯ A♯ C♯ D♯ — no two a semitone apart',13,C.blue);
   out+=T(300,300,s.last.length?'You played: '+s.last.map(noteName).join('  '):'Nothing played yet',15,C.ink);
@@ -1366,20 +1366,20 @@ SCENE({id:'note-values-bar',name:'Filling a bar',tag:'Time signatures and dots',
  on:{ts(s,v){s.ts=v},add(s,v){if(s.notes.length<12)s.notes=s.notes.concat(Number(v))},undo(s){s.notes=s.notes.slice(0,-1)},
   play(s,a,ctx){let t=0;const ev=[];s.notes.forEach((d,i)=>{ev.push({m:M2_m([4,5,6,7,6,5,4,2,4,5,4,2][i%12]),t,d});t+=d});M2_play(s,ctx,ev,.5);return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
  draw(s,f,X){
-  const cap=s.ts==='6/8'?3:M2_TS[s.ts],used=sum(s.notes),yb=200,sp=14;let out=heading(`${s.ts}: ${s.ts==='6/8'?'six quavers (two dotted crotchet beats)':cap+' crotchet beats'} per bar`);
+  const cap=s.ts==='6/8'?3:M2_TS[s.ts],used=sum(s.notes),yb=200,sp=14,u=s.ts==='6/8'?'crotchet':'beat';let out=heading(`${s.ts}: ${s.ts==='6/8'?'six quavers (two dotted crotchet beats)':cap+' crotchet beats'} per bar`);
   out+=M2_lines(60,540,yb,sp)+M2_clef(84,yb-sp,'G');const [tn,td]=s.ts.split('/');out+=TB(120,yb-2*sp-4,tn,20)+TB(120,yb-4,td,20);
   out+=L(540,yb,540,yb-4*sp,C.ink,2);
   let t=0;const ph=s.ph==null?-1:s.ph;const scale=380/Math.max(cap,used);
   s.notes.forEach((d,i)=>{const x=150+(t+d*.2)*scale,over=t+d>cap+1e-9,on=ph>=t&&ph<t+d;out+=M2_note(x,[4,5,6,7,6,5,4,2,4,5,4,2][i%12],yb,sp,d,{col:on?C.coral:over?C.coral:C.ink});t+=d});
   const cw=380;out+=R(110,262,cw,22,'#fff',C.grid,6)+R(110,262,cw*Math.min(1,used/cap),22,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.blue,'none',6);
-  out+=TB(300,310,Math.abs(used-cap)<1e-9?`Full: ${fmt(used)} of ${cap} beats ✓`:used>cap?`Overflow: ${fmt(used)} beats in a ${cap}-beat bar`:`${fmt(used)} of ${cap} beats used`,16,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.ink);
+  out+=TB(300,310,Math.abs(used-cap)<1e-9?`Full: ${fmt(used)} of ${cap} ${u}s ✓`:used>cap?`Overflow: ${fmt(used)} ${u}s in a ${cap}-${u} bar`:`${fmt(used)} of ${cap} ${u}s used`,16,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.ink);
   out+=T(300,348,s.ts==='6/8'?'In 6/8 the beat is a dotted crotchet: two beats of three quavers each':'Beats counted in crotchets',13,C.muted);
-  return {svg:out,phase:Math.abs(used-cap)<1e-9?'The bar adds up exactly. Composers check this the same way: every bar’s values must sum to what the time signature promises.':used>cap?'Too many beats for one bar: the extra time belongs in the next bar, often joined with a tie.':`${fmt(cap-used)} beat${cap-used===1?'':'s'} still to fill. A dot adds half a note’s value again.`};
+  return {svg:out,phase:Math.abs(used-cap)<1e-9?'The bar adds up exactly. Composers check this the same way: every bar’s values must sum to what the time signature promises.':used>cap?`Too many ${u}s for one bar: the extra time belongs in the next bar, often joined with a tie.`:`${fmt(cap-used)} ${u}${cap-used===1?'':'s'} still to fill. A dot adds half a note’s value again.`};
  }});
 
 SCENE({id:'note-values-mensural',name:'Mensural notation',tag:'Shapes that measure time',
  definition:'Mensural notation, codified by Franco of Cologne around 1280, gave each note shape a length: the long, the breve and the semibreve. Whether each split into three (perfect) or two (imperfect) was set by context.',
- example:'In perfect time a long equals three breves; in imperfect time, two. Our “breve” and “semibreve” are those medieval names, now much longer in practice than they once were.',
+ example:'A perfect long equals three breves; an imperfect long, two. Our “breve” and “semibreve” are those medieval names, now much longer in practice than they once were.',
  desc:'A tree dividing one long into breves and semibreves, in threes or twos depending on the chosen settings, with the old note shapes drawn at each level.',
  research:'Franco of Cologne (c. 1280). Ars cantus mensurabilis; Apel (1942). The Notation of Polyphonic Music 900–1600.',
  dur:9,hint:'Switch each level between perfect (three) and imperfect (two), then Play: you hear the long, its breves and their semibreves together.',
@@ -1493,7 +1493,7 @@ SCENE({id:'canon-round',name:'Canon and round',tag:'One tune, staggered entries'
 const M2_CHORD=[0,4,7];
 SCENE({id:'canon-round-harmony',name:'Why rounds work',tag:'Every section fits one chord',
  definition:'A round only works if every section of the melody fits the same harmony, so any two sections sounding together blend.',
- example:'In “Frère Jacques” almost every beat stacks the notes C, E and G, the C major chord, so three or four voices rarely clash.',
+ example:'In “Frère Jacques” every bar starts and ends on notes of the C major chord (C, E, G). Around the second beat the voices pass through D, F or A, then settle back.',
  desc:'Beat by beat, the notes sounding in all voices are stacked on a small staff and checked against the C major chord; passing notes are flagged.',
  research:'Mann (1958). The Study of Fugue; Kennan (1959). Counterpoint.',
  dur:12,hint:'Choose the number of voices, then Step through the beats. Coral notes are outside the chord; count how few there are.',
@@ -1508,14 +1508,14 @@ SCENE({id:'canon-round-harmony',name:'Why rounds work',tag:'Every section fits o
   steps.forEach((st,i)=>{const ok=M2_CHORD.includes(M2_mod(f.notes[i],12));out+=M2_note(290+(i%2)*26,st,yb,sp,1,{col:ok?M2_VCOL[i]:C.coral})});
   out+=hit(X,'hear',0,'Hear this beat',G(R(250,276,100,36,C.pale,'none',8)+TB(300,299,'Hear it',15,C.blue)));
   const names=f.notes.map(noteName).join(' · ');out+=T(300,340,names,15,C.ink);
-  out+=T(300,364,f.out?`${f.out} note${f.out>1?'s':''} outside C–E–G (a passing note)`:'All notes belong to C–E–G',14,f.out?C.coral:C.green);
-  return {svg:out,phase:f.out?'A passing note briefly steps outside the chord; it resolves on the next beat, so the clash is fleeting.':'Every voice is on a note of the C major chord, so the stack sounds like a single chord.'};
+  out+=T(300,364,f.out?`${f.out} note${f.out>1?'s':''} outside C–E–G (passing)`:'All notes belong to C–E–G',14,f.out?C.coral:C.green);
+  return {svg:out,phase:f.out?'Some voices briefly step outside the chord; they settle back on C, E or G within a beat or two, so the clash is fleeting.':'Every voice is on a note of the C major chord, so the stack sounds like a single chord.'};
  }});
 
 const M2_CANON=[0,2,1,3,2,4,3,1,0];
 SCENE({id:'canon-round-fifth',name:'Canon at the fifth',tag:'The second voice transposed',
  definition:'In a canon at the fifth, the second voice copies the first a fifth higher. Composers must write the melody so the two lines make consonances when they overlap.',
- example:'A simple stepwise tune with the second voice entering one beat later at the fifth makes some clashing seconds and sevenths; change the delay and the clashes move.',
+ example:'A simple tune with the second voice entering one beat later at the fifth makes mostly thirds and sixths, with one clashing seventh; change the delay and fourths or seconds appear instead.',
  desc:'Two lines of notes, the leader and the follower a chosen interval higher and a chosen delay later, with each overlapping beat labelled by its interval and coloured consonant or dissonant.',
  research:'Zarlino (1558). Le istitutioni harmoniche; Mann (1958). The Study of Fugue.',
  dur:10,hint:'Change the interval and the delay, then Play. Count the coral (dissonant) beats; good canon melodies keep them few and brief.',
@@ -1536,7 +1536,7 @@ SCENE({id:'canon-round-fifth',name:'Canon at the fifth',tag:'The second voice tr
  }});
 
 /* ---------- polyphony (c. 900–1200) ---------- */
-const M2_TENOR=[{m:57,t:0,d:8},{m:59,t:8,d:6},{m:57,t:14,d:10}];
+const M2_TENOR=[{m:55,t:0,d:8},{m:59,t:8,d:6},{m:55,t:14,d:10}];
 const M2_DUPLUM=(()=>{const st=[4,5,6,7,6,5,4,5,6,5,4,3,4,5,6,7,8,7,6,5,4,3,4,4],ev=[];st.forEach((s,i)=>ev.push({m:M2_m(s),t:i,d:1}));return ev})();
 SCENE({id:'polyphony',name:'Organum and polyphony',tag:'Many voices, each its own line',
  definition:'Polyphony is music for several independent voices. At Notre-Dame in Paris around 1200, a chant was slowed into long held notes (the tenor) while a new voice danced above it.',
@@ -1560,7 +1560,7 @@ SCENE({id:'polyphony',name:'Organum and polyphony',tag:'Many voices, each its ow
 const M2_CHANT=[0,1,2,1,3,2,1,0];
 SCENE({id:'polyphony-parallel',name:'Parallel and free organum',tag:'Moving together or apart',
  definition:'The earliest written polyphony, described in Musica enchiriadis (about 900), added a second voice a fourth or fifth below the chant, moving in parallel. Later, free organum let the voices move in contrary and oblique motion.',
- example:'In parallel organum at the fifth, every note of the chant is doubled five letters lower. In free organum the added voice may hold still or move the opposite way.',
+ example:'In parallel organum at the fifth, every note of the chant is doubled a fifth lower (four letter steps down). In free organum the added voice may hold still or move the opposite way.',
  desc:'A chant line and an added voice drawn as two connected lines, with the interval between them labelled at each note.',
  research:'Musica enchiriadis and Scolica enchiriadis (c. 900); Guido of Arezzo (c. 1026). Micrologus, ch. 18–19.',
  dur:9,hint:'Choose parallel fourths, parallel fifths or free organum and Play. Watch the gap between the lines.',
@@ -1568,13 +1568,13 @@ SCENE({id:'polyphony-parallel',name:'Parallel and free organum',tag:'Moving toge
  watch(p){return {kind:p<.33?'fourth':p<.66?'fifth':'free'}},
  ui:[{choose:[['fourth','Parallel 4ths'],['fifth','Parallel 5ths'],['free','Free organum']],label:'Organum',get:s=>s.kind,act:'kind'},{b:'Play',act:'play'}],
  on:{kind(s,v){s.kind=v},play(s,a,ctx){const lo=SCENES['polyphony-parallel'].lower(s.kind);M2_play(s,ctx,M2_CHANT.map((st,i)=>({m:[M2_m(st+4),M2_m(lo[i]+4)],t:i,d:1})),.5);return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
- lower(kind){return kind==='fourth'?M2_CHANT.map(s=>s-3):kind==='fifth'?M2_CHANT.map(s=>s-4):[-3,-3,-2,-3,-2,-3,-3,-4]},
+ lower(kind){return kind==='fourth'?M2_CHANT.map(s=>s-3):kind==='fifth'?M2_CHANT.map(s=>s-4):[-3,-3,-2,-2,-1,-1,0,0]},
  draw(s,f,X){
   const lo=this.lower(s.kind),x=i=>110+i*55,y=st=>210-st*22,ph=s.ph==null?-1:s.ph;
   let out=heading(s.kind==='free'?'Free organum: oblique and contrary motion':`Parallel organum at the ${s.kind}`);
   out+=P('M'+M2_CHANT.map((st,i)=>fmt(x(i))+' '+fmt(y(st))).join(' L'),C.blue,2.6)+P('M'+lo.map((st,i)=>fmt(x(i))+' '+fmt(y(st))).join(' L'),C.purple,2.6);
-  M2_CHANT.forEach((st,i)=>{const on=ph>=i&&ph<i+1,d=st-lo[i];out+=Ci(x(i),y(st),on?9:6,on?C.coral:C.blue)+Ci(x(i),y(lo[i]),on?9:6,on?C.coral:C.purple)+L(x(i),y(st)+8,x(i),y(lo[i])-8,C.grid,1.2,'stroke-dasharray="3 3"');
-   out+=TF(x(i),330,d+1,14,[3,4,7].includes(d)?C.ink:C.amber,'middle','font-weight="700"')});
+  M2_CHANT.forEach((st,i)=>{const on=ph>=i&&ph<i+1,d=st-lo[i];out+=Ci(x(i),y(st),on?9:6,on?C.coral:C.blue)+Ci(x(i),y(lo[i]),on?9:6,on?C.coral:C.purple)+(d?L(x(i),y(st)+8,x(i),y(lo[i])-8,C.grid,1.2,'stroke-dasharray="3 3"'):'');
+   out+=TF(x(i),330,d+1,14,[0,3,4,7].includes(d)?C.ink:C.amber,'middle','font-weight="700"')});
   out+=TF(70,y(0)+4,'chant',13,C.blue,'end')+TF(70,y(lo[0])+4,'added',13,C.purple,'end')+TF(70,334,'interval',13,C.muted,'end');
   return {svg:out,phase:s.kind==='free'?'The added voice holds a note while the chant moves, or moves the other way: the first step towards truly independent lines.':`Every interval is a ${s.kind}: the voices move in lockstep, which sounds rich but not yet independent.`};
  }});
@@ -1619,7 +1619,7 @@ WORD(
  {key:'time-signature',title:'Time signature',aliases:['time signature','time signatures'],linkContext:'note-values',scene:'note-values-bar',here:'Two numbers at the start of music: how many beats in a bar and what kind of note gets the beat.',contrast:'It is not a fraction to simplify: 6/8 and 3/4 hold the same total time but group it differently.',example:'3/4 means three crotchet beats per bar.'},
  {key:'bar-line',title:'Bar',aliases:['bar line','bar lines','barline'],linkContext:'note-values',here:'A bar (US: measure) is one group of beats, separated from the next by a vertical bar line.',contrast:'Bar lines organise reading; they do not mean a pause.',example:'In 4/4 every bar adds up to four crotchets.'},
  {key:'dotted-note',title:'Dotted note',aliases:['dotted note','dotted notes','dotted minim','dotted crotchet'],linkContext:'note-values',here:'A dot after a note adds half of its value again.',contrast:'A dot above or below the head (staccato) means something else: play it short.',example:'A dotted minim lasts three crotchets.'},
- {key:'mensural-notation',title:'Mensural notation',aliases:['mensural notation','longa','brevis','semibrevis'],linkContext:'note-values',scene:'note-values-mensural',here:'Medieval and Renaissance notation in which each note shape had a measured length, splitting into threes (perfect) or twos (imperfect).',contrast:'Unlike modern notation, the same shape could be worth three or two of the next value depending on context.',example:'In perfect time a long equals three breves.'},
+ {key:'mensural-notation',title:'Mensural notation',aliases:['mensural notation','longa','brevis','semibrevis'],linkContext:'note-values',scene:'note-values-mensural',here:'Medieval and Renaissance notation in which each note shape had a measured length, splitting into threes (perfect) or twos (imperfect).',contrast:'Unlike modern notation, the same shape could be worth three or two of the next value depending on context.',example:'A perfect long equals three breves.'},
  {key:'church-mode',title:'Church mode',aliases:['church mode','church modes','Dorian','Phrygian','Lydian','Mixolydian','Aeolian','Ionian'],linkContext:'modes',scene:'modes',here:'One of the scales of medieval chant, each built on the white keys from a different final.',contrast:'The Greek names were borrowed from ancient theory and do not match the ancient Greek scales.',example:'Dorian runs from D to D.'},
  {key:'final-note',title:'Final',aliases:['finalis'],linkContext:'modes',here:'The note on which a melody in a given mode comes to rest, its home.',contrast:'Not simply the lowest note: some modes range below their final.',example:'The final of Dorian is D.'},
  {key:'reciting-tone',title:'Reciting tone',aliases:['reciting tone','reciting tones'],linkContext:'modes',scene:'modes-melody',here:'The note on which much of a chanted text is sung in a given mode, also called the tenor or dominant.',contrast:'Not always a fifth above the final; Phrygian’s is a sixth above.',example:'In Dorian the reciting tone is A.'},
@@ -1760,7 +1760,7 @@ SCENE({id:'intervals-consonance',name:'Why some intervals blend',tag:'Simple rat
   out+=TF(x0+W,290,`${cyc} cycles of the lower note`,13,C.muted,'end');
   const msg=d<=cyc?`The combined wave repeats every ${d} cycle${d===1?'':'s'} of the lower note.`:`The pattern repeats only every ${d} cycles: off this chart.`;
   out+=T(300,318,msg,15,d<=cyc?C.green:C.coral);
-  out+=T(300,346,`Just ratio ${fmt(n/d)} · equal-tempered ${et.toFixed(3)} (close, but not exact)`,14,C.muted);
+  out+=T(300,346,`Just ratio ${fmt(n/d)} · equal-tempered ${et.toFixed(3)} ${s.i===12?'(exact)':'(close, but not exact)'}`,14,C.muted);
   return {svg:out,phase:`${msg} Simple ratios share many harmonics, which is one reason many listeners hear them as smooth. Culture and familiarity also shape what sounds consonant.`};
  }});
 
@@ -1784,7 +1784,7 @@ SCENE({id:'intervals-inversion',name:'Inverting an interval',tag:'Flip the lower
   out+=T(150,58,`${M3_INT[i]} (${i})`,16,C.ink)+T(445,58,`${M3_INT[j]} (${j})`,16,C.ink);
   M3_INV_ROWS.forEach(([a,b],r)=>{const x=40+(r%3)*180,y=232+Math.floor(r/3)*44,on=a===i||b===i;
    out+=hit(X,'row',a,`${M3_INT[a]} and ${M3_INT[b]}`,R(x,y,170,36,on?C.amberp:'#fff',on?C.amber:C.grid,8)+TF(x+85,y+23,`${M3_INT[a].replace('perfect ','P').replace('major ','M').replace('minor ','m')} ↔ ${M3_INT[b].replace('perfect ','P').replace('major ','M').replace('minor ','m')}`,13,C.ink))});
-  out+=T(300,345,`${i} + ${j} = 12 semitones · ${M3_NUM[i]} + ${M3_NUM[j]} = 9 · major ↔ minor, perfect ↔ perfect`,14,C.muted);
+  out+=T(300,345,`${i} + ${j} = 12 semitones · ${M3_NUM[i]} + ${9-M3_NUM[i]} = 9 · ${i===6?'augmented ↔ diminished':'major ↔ minor, perfect ↔ perfect'}`,14,C.muted);
   return {svg:out,phase:`${M3_INT[i]} inverts to ${M3_INT[j]}. Inversion keeps the same two pitch letters but swaps which is on the bottom, which is why Rameau could treat C–E and E–C as the same harmony.`};
  }});
 
@@ -1910,13 +1910,13 @@ SCENE({id:'cadences',name:'Cadence',tag:'How a phrase comes to rest',
   out+=TB(180,248,c.rn[0],19,C.ink)+TB(340,248,c.rn[1],19,C.ink)+arrow(212,243,305,243,C.muted,1.6);
   M3_VOICE.slice().reverse().forEach((v,i)=>out+=Ci(470,90+i*26,6,v.c)+TF(484,95+i*26,v.n,14,C.ink,'start'));
   out+=R(80,282,440,46,'#fff',C.grid,10)+T(300,311,`Sounds ${c.feel}.`,16,C.ink);
-  out+=TF(300,352,s.c==='plagal'?'The plagal cadence closes many hymns on the word “Amen”.':s.c==='interrupted'?'The bass rises a step to A instead of falling to C.':s.c==='imperfect'?'Phrases that end on V invite an answering phrase.':'The soprano’s B rises to C: the leading note goes home.',13,C.muted);
+  out+=TF(300,352,s.c==='plagal'?'The plagal cadence closes many hymns on the word “Amen”.':s.c==='interrupted'?'The bass rises only a step to A instead of leaping to C.':s.c==='imperfect'?'Phrases that end on V invite an answering phrase.':'The soprano’s B rises to C: the leading note goes home.',13,C.muted);
   return {svg:out,phase:`${c.n}: ${c.rn.join(' to ')}. It sounds ${c.feel}. Notice how little the upper voices move: most go by step or stay put.`};
  }});
 
 const M3_V7=[[43,62,65,71],[48,60,64,72]];
 const M3_VL=[null,{v:3,say:'The leading note B (soprano) rises a semitone to C, the tonic.'},{v:2,say:'The seventh F (alto) falls a semitone to E.'},
- {v:1,say:'D (tenor) falls a step to C.'},{v:0,say:'The bass leaps from G down to C, the strongest root move.'},{v:-1,say:'Every upper voice moved by step: smooth voice leading.'}];
+ {v:1,say:'D (tenor) falls a step to C.'},{v:0,say:'The bass leaps from G up a fourth to C, the strongest root move.'},{v:-1,say:'Every upper voice moved by step: smooth voice leading.'}];
 SCENE({id:'cadences-voice-leading',name:'Voice leading',tag:'Each voice takes the shortest path',
  definition:'Voice leading is how each individual line moves from chord to chord. Good voice leading moves voices by step and resolves tense notes the way they lean.',
  example:'In V7 → I in C, the leading note B rises to C and the seventh F falls to E, each by a semitone. The bass leaps G → C.',
@@ -2045,7 +2045,7 @@ SCENE({id:'counterpoint-motion',name:'Kinds of motion',tag:'Parallel, similar, c
   const m=M3_MOT[s.k],g=12,yB=190,xs=[150,250,350,450];let out=heading(s.k[0].toUpperCase()+s.k.slice(1)+' motion');
   out+=M3_staff(60,540,yB,g);
   xs.forEach((x,i)=>{out+=M3_head(x,M3_root(m.u[i]),M3_TREB,yB,g,C.blue)+M3_head(x,M3_root(m.l[i]),M3_TREB,yB,g,C.coral);
-   const d=m.u[i]-m.l[i];out+=TB(x,yB+46,M3_INT[M3_pc(d)===0&&d>0?12:M3_pc(d)].replace('perfect ','P').replace('major ','M').replace('minor ','m'),14,M3_pc(d)===7||M3_pc(d)===0?C.amber:C.muted);
+   const d=m.u[i]-m.l[i];out+=TB(x,yB+46,(d>12&&d<24&&d!==18?M3_INT[d-12].replace(/\d.*/,'')+(M3_NUM[d-12]+7)+'th':M3_intName(d)).replace('perfect ','P').replace('major ','M').replace('minor ','m'),14,M3_pc(d)===7||M3_pc(d)===0?C.amber:C.muted);
    if(i<3){const yu1=M3_y(M3_root(m.u[i]).step,M3_TREB,yB,g),yu2=M3_y(M3_root(m.u[i+1]).step,M3_TREB,yB,g),yl1=M3_y(M3_root(m.l[i]).step,M3_TREB,yB,g),yl2=M3_y(M3_root(m.l[i+1]).step,M3_TREB,yB,g);
     out+=arrow(x+14,yu1,x+86,yu2,C.blue,1.8,7)+(m.l[i]===m.l[i+1]?L(x+14,yl1,x+86,yl2,C.coral,1.8,'stroke-dasharray="4 3"'):arrow(x+14,yl1,x+86,yl2,C.coral,1.8,7))}});
   out+=TF(300,yB+70,'interval between the voices',13,C.muted);
@@ -2056,10 +2056,10 @@ SCENE({id:'counterpoint-motion',name:'Kinds of motion',tag:'Parallel, similar, c
 // Species examples above the first four notes of the cantus firmus. Each bar: list of {m, d, tie, rest}.
 const M3_SPEC={
  1:{n:'First species: 1 : 1',bars:[[{m:69,d:'w'}],[{m:69,d:'w'}],[{m:67,d:'w'}],[{m:69,d:'w'}]],say:'One whole note against each note: every pair is a consonance.'},
- 2:{n:'Second species: 2 : 1',bars:[[{m:69,d:'h'},{m:71,d:'h'}],[{m:69,d:'h'},{m:72,d:'h'}],[{m:71,d:'h'},{m:72,d:'h'}],[{m:74,d:'w'}]],say:'Two notes against one: the strong beat is consonant; a weak beat may be a dissonance only if it passes by step.'},
- 3:{n:'Third species: 4 : 1',bars:[[{m:69,d:'q'},{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:74,d:'q'},{m:76,d:'q'},{m:77,d:'q'}],[{m:76,d:'q'},{m:74,d:'q'},{m:72,d:'q'},{m:71,d:'q'}],[{m:69,d:'w'}]],say:'Four notes against one: passing dissonances move by step between consonances.'},
+ 2:{n:'Second species: 2 : 1',bars:[[{m:69,d:'h'},{m:71,d:'h'}],[{m:74,d:'h'},{m:69,d:'h'}],[{m:71,d:'h'},{m:72,d:'h'}],[{m:74,d:'w'}]],say:'Two notes against one: the strong beat is consonant; a weak beat may be a dissonance only if it passes by step.'},
+ 3:{n:'Third species: 4 : 1',bars:[[{m:69,d:'q'},{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:74,d:'q'},{m:76,d:'q'},{m:74,d:'q'}],[{m:72,d:'q'},{m:71,d:'q'},{m:69,d:'q'},{m:67,d:'q'}],[{m:69,d:'w'}]],say:'Four notes against one: passing dissonances move by step between consonances.'},
  4:{n:'Fourth species: syncopation',bars:[[{rest:true,d:'h'},{m:69,d:'h',tie:true}],[{m:69,d:'h'},{m:72,d:'h',tie:true}],[{m:72,d:'h'},{m:72,d:'h',tie:true}],[{m:72,d:'h',sus:true},{m:71,d:'h'}]],say:'Notes are tied across the bar. In the last bar the held C is a dissonant seventh over D, a suspension, and it resolves down to B.'},
- 5:{n:'Fifth species: florid',bars:[[{m:69,d:'h'},{m:71,d:'q'},{m:72,d:'q'}],[{m:74,d:'h'},{m:72,d:'h'}],[{m:71,d:'q'},{m:72,d:'q'},{m:74,d:'h'}],[{m:74,d:'w'}]],say:'Florid counterpoint mixes all the earlier rhythms into a freer line.'}};
+ 5:{n:'Fifth species: florid',bars:[[{m:69,d:'h'},{m:71,d:'q'},{m:72,d:'q'}],[{m:74,d:'h'},{m:69,d:'h'}],[{m:71,d:'q'},{m:69,d:'q'},{m:67,d:'h'}],[{m:69,d:'w'}]],say:'Florid counterpoint mixes all the earlier rhythms into a freer line.'}};
 const M3_DUR={w:1.6,h:.8,q:.4};
 SCENE({id:'counterpoint-species',name:'The five species',tag:'Fux’s graded steps',
  definition:'Fux taught counterpoint in five species of increasing rhythmic freedom: note against note, two against one, four against one, syncopation and florid.',
@@ -2150,7 +2150,7 @@ SCENE({id:'temperament-cents',name:'Cents',tag:'Measuring tiny pitch differences
 
 SCENE({id:'temperament-keys',name:'Every key a different colour',tag:'Well temperament and the wolf',
  definition:'In meantone and well temperaments, intervals change size from key to key, so keys have different characters. Equal temperament makes every key the same.',
- example:'In ¼-comma meantone the third on C is pure, but the “third” from A♭ is about 427 cents, so harsh it was called a wolf. Werckmeister III lets every key be used, each with its own colour.',
+ example:'In ¼-comma meantone the third on C is pure, but the “third” from G♯ (G♯–C) is about 427 cents, so harsh it was called a wolf. Werckmeister III lets every key be used, each with its own colour.',
  desc:'The size of the major third built on each of the twelve notes in the chosen tuning, compared with a pure third and equal temperament.',
  research:['Werckmeister (1691). Musicalische Temperatur.','Bach (1722). The Well-Tempered Clavier.','Lehman (2005). Bach’s extraordinary temperament: our Rosetta Stone, Early Music 33(1), a proposal that remains debated.'],
  dur:13,hint:'Choose a tuning, then press a key name to hear its major chord in that tuning.',
@@ -2190,7 +2190,7 @@ SCENE({id:'circle-of-fifths',name:'Circle of fifths',tag:'Keys arranged by their
  definition:'The circle of fifths arranges the twelve keys so that each is a fifth above the last. Moving one step clockwise adds a sharp; anticlockwise adds a flat.',
  example:'C has no sharps; G has one (F♯); D has two (F♯, C♯). Going the other way, F has one flat (B♭). Each major key shares its signature with a relative minor: C major and A minor.',
  desc:'Twelve major keys around a circle with their relative minors inside, and the selected key’s signature on a stave.',
- research:['Diletsky (c. 1679). Grammatika: an early circle of keys.','Heinichen (1711). Der General-Bass in der Composition: the circle of keys.'],
+ research:['Diletsky (c. 1679). Grammatika: an early circle of keys.','Heinichen (1711). Neu erfundene und gründliche Anweisung: the circle of keys.'],
  dur:14,hint:'Press a key on the circle to see its signature and hear its tonic chord.',
  init:()=>({k:2}),
  watch(p){return {k:[0,1,2,3,4,5,6,7,8,9,10,11][Math.min(11,Math.floor(p*12))]}},
@@ -2236,7 +2236,7 @@ SCENE({id:'circle-of-fifths-function',name:'Harmonic function',tag:'Tonic, subdo
  definition:'Harmonic function groups chords by what they do: tonic chords feel at rest, subdominant chords move away, dominant chords pull back towards the tonic.',
  example:'I–IV–V–I (C–F–G–C) is tonic, subdominant, dominant, tonic: away, tension, home. Many songs use the same journey.',
  desc:'A progression builder in C major: chord cards coloured by function (T, S, D), with arrows showing each move.',
- research:['Rameau (1722). Traité de l’harmonie: tonic, dominant and subdominant.','Riemann (1893). Vereinfachte Harmonielehre: the theory of harmonic functions.'],
+ research:['Rameau (1722). Traité de l’harmonie, and his later writings: tonic, dominant and subdominant.','Riemann (1893). Vereinfachte Harmonielehre: the theory of harmonic functions.'],
  dur:14,hint:'Add chords with the buttons (up to 8), then Play. The checker notes when a dominant moves to a subdominant, which is rarer in Classical music but common in rock.',
  init:()=>({prog:[0,3,4,0]}),
  watch(p){const all=[0,5,1,4,0];return {prog:all.slice(0,Math.max(1,Math.ceil(p*all.length)))}},
@@ -2328,13 +2328,13 @@ WORD(
  {key:'parallel-fifths',title:'Parallel fifths and octaves',aliases:['parallel fifths','parallel octaves','consecutive fifths','consecutive octaves'],linkContext:'counterpoint',scene:'counterpoint',here:'Two voices moving in the same direction while staying a fifth (or octave) apart.',contrast:'Forbidden in strict counterpoint because the voices fuse, but common and fine in many other styles.',example:'C–G moving to D–A.'},
  {key:'temperament',title:'Temperament',aliases:['temperament','temperaments','tempered','tempering'],linkContext:'temperament',scene:'temperament',here:'A tuning of the twelve notes that adjusts some intervals away from pure so music can be played in many keys.',contrast:'No temperament makes every interval pure; each spreads the error differently.',example:'Meantone, Werckmeister III, equal temperament.'},
  {key:'equal-temperament',title:'Equal temperament',aliases:['equal temperament','12-TET','twelve-tone equal temperament','equal-tempered'],linkContext:'temperament',scene:'temperament',here:'A tuning in which all twelve semitones are exactly the same size, 100 cents.',contrast:'Every key sounds the same, but only octaves are pure; thirds are 14 cents wide.',example:'A modern piano.'},
- {key:'meantone',title:'Meantone temperament',aliases:['meantone','quarter-comma meantone','¼-comma meantone','meantone temperament'],linkContext:'temperament',scene:'temperament-keys',here:'A Renaissance and Baroque tuning that narrows the fifths so that most major thirds are pure.',contrast:'Beautiful in a few keys, unusable in distant ones because of the wolf.',example:'Pure C–E, harsh A♭–C.'},
+ {key:'meantone',title:'Meantone temperament',aliases:['meantone','quarter-comma meantone','¼-comma meantone','meantone temperament'],linkContext:'temperament',scene:'temperament-keys',here:'A Renaissance and Baroque tuning that narrows the fifths so that most major thirds are pure.',contrast:'Beautiful in a few keys, unusable in distant ones because of the wolf.',example:'Pure C–E, harsh G♯–C.'},
  {key:'well-temperament',title:'Well temperament',aliases:['well temperament','well-tempered','well tempered','Werckmeister III'],linkContext:'temperament',scene:'temperament-keys',here:'A family of tunings in which every key is usable but keys still differ in colour.',contrast:'“Well-tempered” is not the same as equal temperament, though it is often confused with it.',example:'Werckmeister III (1691).'},
- {key:'wolf-interval',title:'Wolf interval',aliases:['wolf interval','wolf fifth','wolf third','wolf thirds','wolf'],linkContext:'temperament',scene:'temperament-keys',here:'An interval tuned so far from pure that it howls, where a temperament puts its leftover error.',contrast:'A by-product of the tuning, not of the instrument.',example:'The A♭–E♭ fifth in quarter-comma meantone.'},
+ {key:'wolf-interval',title:'Wolf interval',aliases:['wolf interval','wolf fifth','wolf third','wolf thirds','wolf'],linkContext:'temperament',scene:'temperament-keys',here:'An interval tuned so far from pure that it howls, where a temperament puts its leftover error.',contrast:'A by-product of the tuning, not of the instrument.',example:'The G♯–E♭ “fifth” in quarter-comma meantone.'},
  {key:'circle-of-fifths',title:'Circle of fifths',aliases:['circle of fifths','cycle of fifths','circle of keys'],linkContext:'circle-of-fifths',scene:'circle-of-fifths',here:'The twelve keys arranged so each is a fifth above the last; neighbours differ by one sharp or flat.',contrast:'It closes into a circle only with enharmonic equivalence (F♯ = G♭), as in equal temperament.',example:'C → G → D → A …'},
  {key:'tonal-function',title:'Harmonic function',aliases:['harmonic function','tonal function','tonic function','dominant function','subdominant function','tonic','dominant','subdominant'],linkContext:'circle-of-fifths',scene:'circle-of-fifths-function',here:'The role a chord plays in a key: tonic (rest), subdominant (moving away) or dominant (tension that pulls home).',contrast:'Several chords can share a function: vi often stands in for I.',example:'I–IV–V–I: tonic, subdominant, dominant, tonic.'},
  {key:'person-zarlino',title:'Gioseffo Zarlino',aliases:['Zarlino'],linkContext:'intervals',scene:'intervals-consonance',here:'Venetian theorist (1517–1590) whose Le istitutioni harmoniche (1558) explained consonances by the numbers 1 to 6 and accepted thirds and sixths as consonant.',contrast:'He described the major and minor triads but did not yet think of chords as having roots; that came with Rameau.',example:'The senario: ratios from 1 to 6.'},
- {key:'person-rameau',title:'Jean-Philippe Rameau',aliases:['Rameau'],linkContext:'circle-of-fifths',scene:'circle-of-fifths-function',here:'French composer and theorist (1683–1764) whose Traité de l’harmonie (1722) treated chords by their roots and named the tonic, dominant and subdominant.',contrast:'Much of his theory has been revised, but chord roots and inversions remain standard.',example:'C–E–G and E–G–C are the same chord.'},
+ {key:'person-rameau',title:'Jean-Philippe Rameau',aliases:['Rameau'],linkContext:'circle-of-fifths',scene:'circle-of-fifths-function',here:'French composer and theorist (1683–1764) whose Traité de l’harmonie (1722) treated chords by their roots; his writings named the tonic, dominant and subdominant.',contrast:'Much of his theory has been revised, but chord roots and inversions remain standard.',example:'C–E–G and E–G–C are the same chord.'},
  {key:'person-fux',title:'Johann Joseph Fux',aliases:['Fux'],linkContext:'counterpoint',scene:'counterpoint',here:'Austrian composer and theorist (c. 1660–1741) whose Gradus ad Parnassum (1725) taught counterpoint in five species.',contrast:'He modelled the rules on Palestrina’s style, as he understood it, not on his own Baroque music.',example:'Haydn, Mozart and Beethoven studied his book.'},
  {key:'person-werckmeister',title:'Andreas Werckmeister',aliases:['Werckmeister'],linkContext:'temperament',scene:'temperament-keys',here:'German organist and theorist (1645–1706) whose Musicalische Temperatur (1691) described well temperaments usable in every key.',contrast:'His temperaments are not equal: keys still sound different.',example:'Werckmeister III narrows four of the twelve fifths.'},
  {key:'person-bach',title:'Johann Sebastian Bach',aliases:['J. S. Bach','Bach'],linkContext:'temperament',scene:'temperament-keys',here:'German composer (1685–1750) whose Well-Tempered Clavier (1722, 1742) has a prelude and fugue in all 24 major and minor keys.',contrast:'The title shows he wanted every key usable; which tuning he used is unknown and debated.',example:'The C major prelude that opens Book I.'}
@@ -2475,9 +2475,9 @@ SCENE({id:'major-minor-relative-parallel',name:'Relative and parallel keys',tag:
   let bt=0;const beats=sum(notes.map(n=>n.dur));
   notes.forEach((n,i)=>{const x=72+490*(bt+.35)/beats,changed=s.key==='parallel'&&n.acc!==0;out+=M4_note(x,n.st,n.acc,n.dur,y,g,i===s.pos?C.coral:changed?C.purple:C.ink);bt+=n.dur;if(bt%4===0&&bt<beats)out+=M4_bar(72+490*(bt+.05)/beats,y,g)});
   out+=M4_bar(568,y,g);
-  const box1=s.key==='major'?['C major: C D E F G A B','The original tune.']:s.key==='parallel'?['C minor: C D E♭ F G A♭ B♭','Same tonic C; three notes lowered (purple).']:['A minor: A B C D E F G','Same notes as C major; the tune is moved to start on A.'];
+  const box1=s.key==='major'?['C major: C D E F G A B','The original tune.']:s.key==='parallel'?['C minor: C D E♭ F G A♭ B♭','Same tonic C; in this tune only E is lowered (purple).']:['A minor: A B C D E F G','Same notes as C major; the tune is moved to start on A.'];
   out+=R(60,196,480,70,'#fff',C.grid,10)+TB(300,224,box1[0],17,C.ink)+T(300,250,box1[1],15,C.muted);
-  out+=R(60,280,480,74,C.amberp,'none',10)+TF(300,304,'Does minor sound sad? Children in one study only used mode',14,C.ink)+TF(300,324,'for sad/happy judgements from about age 6; tempo mattered earlier.',14,C.ink)+TF(300,344,'The link is learned and shaped by culture, not built into the notes.',14,C.ink);
+  out+=R(60,280,480,74,C.amberp,'none',10)+TF(300,304,'Does minor sound sad? Children in one study only used mode',14,C.ink)+TF(300,324,'for sad/happy judgements from about age 6; tempo mattered earlier.',14,C.ink)+TF(300,344,'The link seems to be largely learned and shaped by culture.',14,C.ink);
   return {svg:out,phase:s.key==='parallel'?'Parallel minor: same starting note, three notes lowered a semitone. Many Western listeners hear it as darker, but that association is learned.':s.key==='relative'?'Relative minor: every note comes from the same set as C major, but the tune now centres on A.':'The tune in C major, the reference version.'};
  }});
 
@@ -2589,7 +2589,7 @@ SCENE({id:'motif',name:'Motif and its development',tag:'Four notes, a whole move
 
 SCENE({id:'motif-shapes',name:'Shape a motif yourself',tag:'Retrograde and inversion',
  definition:'Because a motif is defined by its rhythm and contour, the same transformations can be applied to any short idea: play it backwards (retrograde), upside down (inversion), or both.',
- example:'A rising C–D–G becomes G–D–C in retrograde, and C–B♭–F in inversion around C. The rhythm keeps them recognisable.',
+ example:'A rising C–D–G becomes G–D–C in retrograde, and C–B–F in inversion around C on the white keys. The rhythm keeps them recognisable.',
  desc:'Four editable notes on a staff with up and down presses, and three smaller staves showing the original, its retrograde and its inversion.',
  research:['Schoenberg (1967). Fundamentals of Musical Composition: motif variation by inversion and retrograde.','Bach (1747). The Musical Offering: canons by inversion and retrograde (crab canon).'],
  dur:9,hint:'Press the arrows above or below each note to change your motif. The retrograde and inversion update. Play any of the three.',
@@ -2615,7 +2615,7 @@ const M4_CON=[{st:0,dur:1},{st:2,dur:1},{st:4,dur:1},{st:2,dur:1},{st:3,dur:1},{
 SCENE({id:'motif-period',name:'Question and answer phrases',tag:'From motif to theme',
  definition:'Motifs combine into phrases. A classical period pairs a question phrase (antecedent) that ends unresolved, often on the dominant, with an answer phrase (consequent) that starts the same way but ends home on the tonic.',
  example:'The question ends on D over a G chord (a half cadence); the answer repeats the opening and closes on C (a perfect cadence).',
- desc:'Two four-bar phrases on staves with their endings marked: the first ends on a half cadence, the second on a perfect cadence.',
+ desc:'Two two-bar phrases on staves with their endings marked: the first ends on a half cadence, the second on a perfect cadence.',
  research:['Caplin (1998). Classical Form: the period, antecedent and consequent.','Koch (1782–93). Versuch einer Anleitung zur Composition: phrase and cadence in eighteenth-century theory.'],
  dur:9,hint:'Play the question, then the answer. Which one sounds finished? Play both to hear the pair.',
  init:()=>({pos:-1,which:null}),
@@ -2709,7 +2709,7 @@ const M4_VARS={
  rhythm:{n:M4_TWINKLE.flatMap(n=>n.dur===2?[{...n,dur:.5},{...n,dur:.5},{...n,dur:1}]:[{...n,dur:.5},{...n,dur:.5}]),say:'Rhythmic variation: the same pitches, but each beat divided into quavers. Busier, same outline.'},
  ornament:{n:M4_TWINKLE.flatMap((n,i)=>{const nx=M4_TWINKLE[i+1];return n.dur===2||!nx?[n]:[{...n,dur:.5},{st:Math.round((n.st+nx.st)/2)===n.st?n.st+1:Math.round((n.st+nx.st)/2),acc:0,dur:.5}]}),say:'Melodic ornament: passing and neighbour notes fill the gaps, the way Mozart decorates the tune.'},
  minor:{n:M4_TWINKLE.map(n=>({...n,acc:[2,5,6].includes(((n.st%7)+7)%7)?-1:0})),say:'Change of mode: the tune in C minor. E, A and B are lowered. A classic variation set nearly always includes one minor variation.'},
- harmony:{n:M4_TWINKLE.map((n,i)=>({...n,chord:[[48,52,55],null,[45,48,52],null,[41,45,48],null,[48,52,55],[41,45,50],null,[48,52,55],null,[43,47,50],null,[48,52,55]][i]})),say:'New harmony: the melody is unchanged, but the chords underneath change colour (C, A minor, F…).'}};
+ harmony:{n:M4_TWINKLE.map((n,i)=>({...n,chord:[[48,52,55],null,[45,48,52],null,[41,45,48],null,[48,52,55],[41,45,48],null,[48,52,55],null,[43,47,50],null,[48,52,55]][i]})),say:'New harmony: the melody is unchanged, but the chords underneath change colour (C, A minor, F…).'}};
 SCENE({id:'theme-variation',name:'Theme and variations',tag:'Same tune, new clothes',
  definition:'Theme and variations is a form in which a theme is stated and then repeated several times, each time changed in rhythm, melody, mode, harmony or texture while staying recognisable.',
  example:'Mozart wrote twelve variations (K. 265, around 1781) on the French song “Ah! vous dirai-je, maman”, the tune English speakers know as Twinkle, Twinkle, Little Star.',
@@ -2797,7 +2797,7 @@ const M4_INST=[{n:'Piccolo',lo:74,hi:108,col:'#1772b7',p:[1,.15,.05]},{n:'Flute'
  {n:'Violin',lo:55,hi:100,col:'#2c776c',p:[1,.5,.33,.25,.2,.16,.14]},{n:'Viola',lo:48,hi:88,col:'#2c776c',p:[1,.6,.4,.3,.2,.15]},{n:'Cello',lo:36,hi:81,col:'#2c776c',p:[1,.7,.5,.35,.25,.2]},{n:'Double bass',lo:28,hi:67,col:'#2c776c',p:[1,.7,.45,.3,.2]}];
 SCENE({id:'orchestration-ranges',name:'Instrument ranges',tag:'Who can play this note?',
  definition:'Each instrument has a range of notes it can play. Orchestrators choose instruments partly by range: a melody high up suits violin or flute; a deep bass line suits cello, double bass, bassoon or tuba.',
- example:'Middle C (C4) lies within the range of nine of these thirteen instruments; a top C (C7) leaves only the piccolo, flute and violin.',
+ example:'Middle C (C4) lies within the range of twelve of these thirteen instruments (all but the piccolo); a top C (C7) leaves only the piccolo, flute and violin.',
  desc:'Horizontal bars showing the approximate sounding range of thirteen orchestral instruments against a keyboard axis, with a movable note line marking which can play it.',
  research:['Adler (2016). The Study of Orchestration, 4th edn: instrument ranges.','Berlioz (1844). Grand traité d’instrumentation et d’orchestration modernes.'],
  dur:10,hint:'Slide the note. Instruments that can play it light up; press one to hear the note in an illustrative synthetic timbre. Ranges are approximate.',
@@ -3098,7 +3098,7 @@ SCENE({id:'fourier-timbre-pitch',name:'Timbre across pitch',tag:'The pattern mov
   for(const f of [50,100,200,500,1000,2000,5000]){const x=M5_logX(f,x0,w,50,5000);out+=L(x,base,x,base+6,C.line,1.5)+TF(x,base+22,f>=1000?f/1000+' kHz':f+' Hz',12,C.muted)}
   I.amps.forEach((a,k)=>{const f=f0*(k+1);if(f>5000)return;const x=M5_logX(f,x0,w,50,5000);out+=L(x,base,x,base-a*170,C.purple,6)+(k<4?TF(x,base-a*170-8,k+1,12,C.purple):'')});
   out+=T(300,330,'Frequency on a log scale: equal steps are equal ratios',14,C.muted);
-  return {svg:out,phase:`Harmonic 1 sits at ${fmt(f0)} Hz and the rest at 2×, 3×, 4× …. Moving the pitch slides the whole pattern sideways without changing its shape, which is part of why we still recognise the instrument.`};
+  return {svg:out,phase:`Harmonic 1 sits at ${fmt(f0)} Hz and the rest at 2×, 3×, 4× …. Moving the pitch slides the whole pattern sideways without changing its shape. Real instruments are less tidy: their fixed body resonances change the strengths of the harmonics from note to note.`};
  }});
 
 /* ===================== Lesson: envelope ===================== */
@@ -3106,7 +3106,7 @@ SCENE({id:'envelope',name:'Envelope (ADSR)',tag:'How a sound starts, holds and f
  definition:'A sound’s envelope is how its loudness changes over time. Synthesisers describe it with four numbers: attack, decay, sustain and release (ADSR).',
  example:'A piano note starts instantly and then fades even while the key is held; an organ note reaches full volume and stays there until you let go.',
  desc:'An ADSR envelope graph above a tone whose amplitude follows the envelope.',
- research:'ADSR envelopes were introduced in early analogue synthesisers (Buchla and Moog, 1960s); see also Pinch & Trocco (2002). Analog Days.',
+ research:'ADSR envelopes were introduced in early analogue synthesisers (Moog, 1960s); see also Pinch & Trocco (2002). Analog Days.',
  dur:10,hint:'Set attack, decay, sustain and release, then press Play. The same harmonics with a different envelope can sound like a different instrument.',
  init:()=>({a:120,d:150,s:80,r:300}),
  watch(p){const A=M5_INST.organ.env,B=M5_INST.piano.env,u=smooth(p);return {a:Math.round(lerp(A.a,B.a,u)*1000),d:Math.round(lerp(A.d,B.d,u)*1000),s:Math.round(lerp(A.s,B.s,u)*100),r:Math.round(lerp(A.r,B.r,u)*1000)}},
@@ -3192,9 +3192,9 @@ const M5_BODIES={
 };
 SCENE({id:'instrument-resonance',name:'Resonant bodies',tag:'Why drums are less pitched',
  definition:'An instrument’s vibrating body has natural modes. Strings and pipes have modes at whole-number ratios, so they sound clearly pitched; drums, bars and bells have inharmonic modes.',
- example:'A timpani’s membrane modes sit at about 1, 1.59, 2.14 and 2.30 times the lowest mode, not 1, 2, 3, 4, which is why a drum sounds less like a single note than a string does.',
+ example:'An ideal drumhead’s modes sit at about 1, 1.59, 2.14 and 2.30 times the lowest mode, not 1, 2, 3, 4, so most drums sound less like a single note than a string does. Timpani are an exception: the air in the kettle pulls some modes near harmonic ratios.',
  desc:'The chosen body’s modes as bars on a frequency axis, with grey guide lines at whole-number multiples to show which modes line up.',
- research:'Rayleigh (1877). The Theory of Sound. · Rossing & Fletcher (1998). The Physics of Musical Instruments.',
+ research:'Rayleigh (1877). The Theory of Sound. · Fletcher & Rossing (1998). The Physics of Musical Instruments, 2nd ed.',
  dur:12,hint:'Choose a vibrating body and press Strike to hear its first few modes together.',
  init:()=>({body:'membrane'}),
  watch(p){const ks=['string','closedpipe','membrane','bar','bell'];return {body:ks[Math.min(4,Math.floor(p*5))]}},
@@ -3225,7 +3225,7 @@ SCENE({id:'instrument-resonance-string',name:'Where you pluck',tag:'Pluck positi
   const a=M5_pluckAmps(s.x),x0=60,w=480;let out=heading(`Plucked ${Math.round(s.x*100)}% of the way along`);
   out+=L(x0,120,x0+w,120,C.grid,1)+Ci(x0,120,5,C.dark)+Ci(x0+w,120,5,C.dark)+P(`M${x0} 120L${fmt(x0+s.x*w)} 66L${x0+w} 120`,C.amber,3)+Ci(x0+s.x*w,66,6,C.coral)+TF(x0+s.x*w,56,'pluck',12,C.coral);
   out+=M5_bars(X,a,60,320,480,150,C.purple);
-  const missing=a.map((v,k)=>v<.02?k+1:0).filter(Boolean);
+  const missing=range(12).map(k=>Math.abs(Math.sin((k+1)*Math.PI*s.x))<.05?k+1:0).filter(Boolean);
   out+=TF(300,350,missing.length?`missing harmonics: ${missing.join(', ')}`:'all harmonics present',13,C.muted);
   return {svg:out,phase:missing.length&&missing[0]===2?'Plucked in the middle: every even harmonic is missing, because each has a node exactly where you plucked. The tone is soft and hollow.':`Plucking ${Math.round(s.x*100)}% along: the closer to the end, the more high harmonics, so the tone gets brighter and more metallic.`};
  }});
@@ -3716,7 +3716,7 @@ SCENE({id:'beat-metre-hemiola',name:'Hemiola',tag:'Six as two threes or three tw
    for(let gI=0;gI<6/size;gI++){const a=bx+gI*size*dx-12,b=a+(size-1)*dx+24;out+=P(`M${a} 112V100H${b}V112`,m==='68'?C.blue:C.coral,2)}
    for(let j=0;j<6;j++){const i=bar*6+j,x=bx+j*dx,acc=M6_hemAcc(s.mode,i),cur=i===pos;
     out+=Ci(x,150,acc?15:8,acc?(m==='68'?C.blue:C.coral):'#cfe0eb');if(cur)out+=Ci(x,150,(acc?15:8)+7,'none',C.amber);
-    out+=TF(x,186,acc?'ONE':(m==='68'&&j%3===2?'a':'and'),13,acc?C.ink:C.muted);}
+    out+=TF(x,186,acc?['ONE','TWO','THREE'][Math.floor(j/size)]:(m==='68'&&j%3===2?'a':'and'),13,acc?C.ink:C.muted);}
    if(bar===0)out+=L(x0+225,96,x0+225,196,C.line,2);
   }
   out+=R(70,226,460,62,'#fff',C.grid,10)+T(300,252,'Same notes, same tempo: only the accents move.',15,C.ink)+T(300,274,'Two beats of three feel lilting; three beats of two feel square.',14,C.muted);
@@ -3759,7 +3759,7 @@ const M6_STYLES={
  march:{name:'March: accents on 1 and 3',lanes:[['Bass drum','low',[0,8]],['Snare','mid',[4,12]],['Hi-hat','hat',[]]]},
  backbeat:{name:'Backbeat: snare on 2 and 4',lanes:[['Bass drum','low',[0,8,10]],['Snare','mid',[4,12]],['Hi-hat','hat',[0,2,4,6,8,10,12,14]]]},
  floor:{name:'Four on the floor',lanes:[['Bass drum','low',[0,4,8,12]],['Snare','mid',[4,12]],['Hi-hat','hat',[2,6,10,14]]]},
- onedrop:{name:'One drop (reggae): beat 1 left empty',lanes:[['Bass drum','low',[8]],['Rim','mid',[8]],['Guitar skank','high',[2,6,10,14]]]}
+ onedrop:{name:'One drop (reggae): beat 1 left empty',lanes:[['Bass drum','low',[8]],['Rim','mid',[8]],['Guitar skank','high',[4,12]]]}
 };
 const M6_BB={ms:s=>60000/s.bpm/4,N:()=>16,step(s,i){for(const [,k,hits] of M6_STYLES[s.style].lanes)if(hits.includes(i))M6_sound(k)}};
 SCENE({id:'syncopation-backbeat',name:'Backbeat and off-beat',tag:'Which beats get the accent',
@@ -3779,8 +3779,7 @@ SCENE({id:'syncopation-backbeat',name:'Backbeat and off-beat',tag:'Which beats g
   out+=TF(x0-10,100,'metre',13,C.muted,'end');
   const cols=[C.blue,C.coral,C.green];
   st.lanes.forEach(([nm,k,hits],li)=>{const y=140+li*52;out+=TF(x0-10,y+25,nm,13,C.ink,'end');out+=M6_row(X,x0,y,cw,36,16,i=>hits.includes(i),pos,{beatEvery:4,col:()=>cols[li]})});
-  const accents=st.lanes[1][2].map(i=>i/4+1).filter(Number.isInteger);
-  return {svg:out,phase:s.style==='backbeat'?'The snare (coral) cracks on beats 2 and 4, metrically weaker than 1 and 3. That push against the grid is the backbeat.':s.style==='onedrop'?'In the one drop the bass drum and rim fall on beat 3 and beat 1 is left empty, while the guitar skanks on every off-beat.':s.style==='floor'?'Four on the floor: the bass drum marks every beat while the hi-hat fills the off-beats in between.':`A march accents ${accents.join(' and ')||'the strong beats'} with the snare: the loudness agrees with the metre.`};
+  return {svg:out,phase:s.style==='backbeat'?'The snare (coral) cracks on beats 2 and 4, metrically weaker than 1 and 3. That push against the grid is the backbeat.':s.style==='onedrop'?'In the one drop the bass drum and rim fall on beat 3 and beat 1 is left empty, while the guitar skanks on beats 2 and 4.':s.style==='floor'?'Four on the floor: the bass drum marks every beat while the hi-hat fills the off-beats in between.':`A march puts its heaviest sound, the bass drum, on beats ${st.lanes[0][2].map(i=>i/4+1).filter(Number.isInteger).join(' and ')}, with the lighter snare in between: the loudness agrees with the metre.`};
  }});
 
 const M6_GROOVE=[[0,4,8,12],[0,4,6,12],[0,3,6,10,12],[0,3,7,10,14],[3,6,10,14],[1,3,6,9,11,14]];
@@ -3861,7 +3860,7 @@ SCENE({id:'polyrhythm-composite',name:'Hearing a cross-rhythm',tag:'Which pulse 
 const M6_BELL=[0,2,4,5,7,9,11];
 const M6_BP={ms:s=>60000/s.bpm/3,N:()=>12,step(s,i){if(M6_BELL.includes(i))M6_sound('bell');const step=s.feel==='4'?3:4;if(s.feel!=='none'&&i%step===0)M6_sound('low')}};
 SCENE({id:'polyrhythm-bell',name:'The standard bell pattern',tag:'Seven strokes in a cycle of twelve',
- definition:'A widespread West African bell pattern places seven strokes in a cycle of twelve fast pulses. Heard against four dance beats or against three, it sits in a 3:2 tension.',
+ definition:'A widespread West African bell pattern places seven strokes in a cycle of twelve fast pulses. The twelve pulses can be felt as four beats of three or as three beats of four; the bell fits neither completely, which gives it its tension.',
  example:'Ewe drumming in Ghana uses this pattern on the gankogui bell; versions travelled to Cuba and Brazil. Its gaps are 2-2-1-2-2-2-1.',
  desc:'A circle of twelve pulses with the seven bell strokes filled, and markers for the chosen dance beat: four groups of three or three groups of four.',
  dur:11,research:['Agawu, K. (2006). Structural analysis or cultural analysis? Competing perspectives on the “standard pattern” of West African rhythm. JAMS 59(1).','Arom, S. (1991). African Polyphony and Polyrhythm.'],
@@ -3878,7 +3877,7 @@ SCENE({id:'polyrhythm-bell',name:'The standard bell pattern',tag:'Seven strokes 
   if(s.feel!=='none'){let d='';for(let i=0;i<=12;i+=step){const a=-Math.PI/2+(i%12)*M6_TAU/12;d+=(i?'L':'M')+fmt(cx+72*Math.cos(a))+' '+fmt(cy+72*Math.sin(a))}out+=P(d,C.blue,1.5,'none','opacity=".5"')}
   out+=TB(450,110,'Bell gaps',15,C.amber)+TMF(450,136,'2 2 1 2 2 2 1',15,C.ink);
   out+=TB(450,186,s.feel==='4'?'Dance beat in 4':s.feel==='3'?'Dance beat in 3':'No beat',15,C.blue);
-  out+=TF(450,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/4)':'',13,C.muted);
+  out+=TF(450,210,s.feel==='4'?'every 3 pulses (12/8)':s.feel==='3'?'every 4 pulses (3/2)':'',13,C.muted);
   out+=T(450,264,'Strokes on beats:',14,C.ink)+TB(450,288,s.feel==='none'?'—':String(M6_BELL.filter(i=>i%step===0).length)+' of '+(12/step),17,C.ink);
   return {svg:out,phase:`The bell’s seven strokes fall on pulses ${M6_BELL.map(i=>i+1).join(', ')}. ${s.feel==='none'?'Heard alone, many listeners find it ambiguous where the beat is.':'Against the dance beat only some strokes coincide; the rest cross it, giving the pattern its drive.'}`};
  }});
@@ -4119,7 +4118,7 @@ WORD(
  {key:'metre',title:'Metre',aliases:['metre','metres','meter','metrical'],linkContext:'beat-metre',scene:'beat-metre-hierarchy',here:'The grouping of beats into repeating units of strong and weak, such as twos, threes or fours.',contrast:'A time signature writes a metre down, but metre is something heard; listeners hear groups even in identical clicks.',example:'A waltz is in triple metre: STRONG-weak-weak.'},
  {key:'tempo-bpm',title:'Tempo',aliases:['tempo','BPM','beats per minute'],linkContext:'beat-metre',scene:'beat-metre',here:'How fast the beat goes, usually counted in beats per minute (BPM).',contrast:'Tempo is the speed of the pulse, not how many notes are played: a slow piece can be full of fast notes.',example:'60 BPM: one beat per second.'},
  {key:'hemiola',title:'Hemiola',aliases:['hemiola','hemiolas'],linkContext:'beat-metre',scene:'beat-metre-hemiola',here:'A switch between hearing six pulses as two groups of three and as three groups of two.',contrast:'A hemiola regroups pulses one after another; a polyrhythm plays both groupings at once.',example:'Bernstein’s “America” alternates 6/8 and 3/4.'},
- {key:'syncopation',title:'Syncopation',aliases:['syncopation','syncopated','syncopations'],linkContext:'syncopation',scene:'syncopation',here:'Accents placed against the metre: most often a note on a weak part that leaves the next stronger position silent, so the rhythm pulls against the beat.',contrast:'An off-beat note that is followed by a note on the beat is not syncopated in this sense.',example:'The tresillo, x..x..x., leaves beats 2 and 4 silent.'},
+ {key:'syncopation',title:'Syncopation',aliases:['syncopation','syncopated','syncopations'],linkContext:'syncopation',scene:'syncopation',here:'Accents placed against the metre: most often a note on a weak part that leaves the next stronger position silent, so the rhythm pulls against the beat.',contrast:'An off-beat note that is followed by a note on the beat is not syncopated in this sense.',example:'The tresillo, x..x..x., leaves beats 2 and 3 silent: its second stroke falls between them.'},
  {key:'backbeat',title:'Backbeat',aliases:['backbeat','backbeats'],linkContext:'syncopation',scene:'syncopation-backbeat',here:'A strong accent, often a snare drum, on beats 2 and 4 of a four-beat bar.',contrast:'In a march the loudest sounds agree with the metre on 1 and 3; the backbeat reverses that.',example:'Most rock, soul and rhythm and blues.'},
  {key:'groove-feel',title:'Groove (feel)',aliases:['urge to move'],linkContext:'syncopation',scene:'syncopation-groove',here:'The pleasurable sense of wanting to move with music, studied by asking listeners to rate rhythms.',contrast:'Not the groove cut into a record (era 7): this is a feeling the music produces.',example:'Witek and colleagues (2014) found it peaked at medium syncopation.'},
  {key:'polyrhythm',title:'Polyrhythm',aliases:['polyrhythm','polyrhythms','polyrhythmic'],linkContext:'polyrhythm',scene:'polyrhythm',here:'Two or more evenly spaced pulses sounding together over the same span, such as three against two.',contrast:'In a cross-rhythm one pulse is heard as the beat and the other as crossing it; “polyrhythm” is the wider term.',example:'3:2 gives the composite 2-1-1-2.'},
@@ -4329,7 +4328,7 @@ SCENE({id:'microphones-speakers-pickup',name:'Electric guitar pickup',tag:'Where
   out+=M7_bars(amps,80,320,440,140,i=>i===0?C.blue:C.purple,range(10).map(i=>String(i+1)));
   out+=TF(300,350,'harmonic number',13,C.muted)+TF(300,175,'what the pickup hears (relative strength of each harmonic)',13,C.muted);
   const bright=sum(amps.slice(3))/sum(amps);
-  return {svg:out,phase:`Harmonics with a node at the pickup are silent there. With the pickup ${Math.round(s.pick*100)}% of the way from the bridge, ${Math.round(bright*100)}% of what it hears is harmonics 4 and above, so the tone is ${bright>.35?'bright':bright>.2?'balanced':'warm'}.`};
+  return {svg:out,phase:`Harmonics with a node at the pickup are silent there. With the pickup ${Math.round(s.pick*100)}% of the way from the bridge, ${Math.round(bright*100)}% of what it hears is harmonics 4 and above, so the tone is ${bright>.2?'bright':bright>.08?'balanced':'warm'}.`};
  }});
 function M7_pickup(s){return range(10).map(i=>{const n=i+1;return Math.abs(Math.sin(n*Math.PI*s.pluck)/(n*n)*Math.sin(n*Math.PI*s.pick))})}
 
@@ -4361,7 +4360,7 @@ SCENE({id:'tape-music-edit',name:'Splice, reverse, loop',tag:'Editing with a raz
  definition:'On tape, sound became a physical object: composers cut it with a razor blade, spliced pieces in a new order, played them backwards and joined the ends into loops.',
  example:'A piano note played backwards swells up from nothing and stops dead: reversal turns a sharp attack into a slow fade-in. Loops repeat a fragment for as long as the machine runs.',
  desc:'A strip of tape cut into six coloured pieces; pieces can be swapped, the whole strip reversed and looped, and the order is played back.',
- research:'Schaeffer, P. (1952). À la recherche d’une musique concrète. · Cage, J. (1952–53). Williams Mix, assembled from hundreds of tape splices.',
+ research:'Schaeffer, P. (1952). À la recherche d’une musique concrète. · Cage, J. (1952–53). Williams Mix, assembled from a great many tape splices.',
  dur:10,hint:'Press one piece, then another, to splice them into each other’s places. Try Reverse and Loop, then Play.',
  init:()=>({order:[0,1,2,3,4,5],rev:false,loops:1,sel:null,prog:0,playing:false}),
  watch(p){const k=Math.min(3,Math.floor(p*4));const orders=[[0,1,2,3,4,5],[3,1,2,0,4,5],[3,1,5,0,4,2],[3,1,5,0,4,2]];return {order:orders[k],rev:k===3,loops:1,sel:null,prog:0}},
@@ -4470,8 +4469,8 @@ SCENE({id:'synthesis-fm',name:'FM synthesis',tag:'One wave wobbling another',
   const x0=50,w=500,base=300,h=200,fmax=fc*5;out+=L(x0,base,x0+w,base,C.line,1.5);
   for(let k=0;k<=5;k++)out+=TF(x0+w*k/5,base+16,Math.round(fmax*k/5)+' Hz',12,C.muted);
   lines.forEach(l=>{if(l.f<=0||l.f>fmax)return;const x=x0+w*l.f/fmax,hh=l.a*h;out+=L(x,base,x,base-hh,l.k===0?C.blue:C.purple,4)});
-  const harmonic=Math.abs(s.ratio-Math.round(s.ratio))<.02||Math.abs(1/s.ratio-Math.round(1/s.ratio))<.02;
-  out+=TF(300,base+38,harmonic?'Whole-number ratio: the sidebands land on a harmonic series (instrument-like).':'Non-whole ratio: sidebands fall between harmonics (bell-like, metallic).',13,harmonic?C.green:C.coral);
+  const harmonic=[1,2,3,4].some(q=>Math.abs(s.ratio*q-Math.round(s.ratio*q))<.02*q);
+  out+=TF(300,base+38,harmonic?'Simple ratio (1:1, 3:2…): sidebands land on a harmonic series (instrument-like).':'No simple ratio: sidebands fall between harmonics (bell-like, metallic).',13,harmonic?C.green:C.coral);
   out+=TF(300,90,'sideband k sits at carrier ± k × modulator, with height |Jₖ(index)|',13,C.muted);
   return {svg:out,phase:`With index ${fmt(s.index)} about ${lines.filter(l=>l.a>.05&&l.f>0).length} components are audible. Raising the index spreads energy into more sidebands, so the tone grows brighter, which is how FM instruments make a note brighten as it gets louder.`};
  }});
@@ -4497,7 +4496,7 @@ SCENE({id:'digital-audio',name:'Sampling',tag:'Measuring the wave many times a s
   const n=Math.floor(s.fs*T);for(let i=0;i<=n;i++){const t=i/s.fs,u=t/T,v=Math.sin(M7_TAU*s.f*t);out+=L(x0+w*u,y,x0+w*u,y-h*v,C.dark,1)+Ci(x0+w*u,y-h*v,4.5,C.dark)}
   out+=TF(300,y+108,`showing ${T*1000} ms · ${n+1} samples`,13,C.muted);
   out+=counter(70,300,'Nyquist limit',fmt(s.fs/2)+' Hz',C.ink,140)+counter(230,300,'signal',s.f+' Hz',C.blue,140)+counter(390,300,'stored as',fmt(Math.round(fa))+' Hz',al?C.coral:C.green,140);
-  return {svg:out,phase:al?`${s.f} Hz is above half the sampling rate (${s.fs/2} Hz), so the same dots also fit a ${fmt(Math.round(fa))} Hz wave, and that is what plays back. Real converters filter out such frequencies before sampling.`:`${s.f} Hz is below the Nyquist limit of ${s.fs/2} Hz, so the samples pin down this wave exactly; it can be rebuilt perfectly.`};
+  return {svg:out,phase:al?`${s.f} Hz is above half the sampling rate (${s.fs/2} Hz), so the same dots also fit a ${fmt(Math.round(fa))} Hz wave, and that is what plays back. Real converters filter out such frequencies before sampling.`:s.f*2===s.fs?`${s.f} Hz is exactly half the sampling rate: here every sample lands on a zero crossing, so the wave is lost. The signal must be strictly below the Nyquist limit.`:`${s.f} Hz is below the Nyquist limit of ${s.fs/2} Hz, so the samples pin down this wave exactly; it can be rebuilt perfectly.`};
  }});
 function M7_alias(s){return Math.abs(s.f-s.fs*Math.round(s.f/s.fs))}
 
@@ -4554,7 +4553,7 @@ SCENE({id:'midi-sequencing',name:'MIDI messages',tag:'Music as instructions, not
  definition:'MIDI, standardised in 1983, sends performance instructions rather than audio: “note 60 on, this hard”, “note 60 off”. Each message is a few bytes, so one cable can carry 16 channels of playing.',
  example:'Pressing middle C fairly hard on channel 1 sends three bytes: 90 3C 64 in hexadecimal (Note On, channel 1; note 60; velocity 100). Releasing it sends 80 3C 40.',
  desc:'A keyboard and velocity control; the Note On and Note Off messages for the chosen key are shown as bytes in hexadecimal and binary.',
- research:'MIDI Manufacturers Association (1983). MIDI 1.0 Detailed Specification. · Smith, D. & Wood, C. (1981). The “USI”, or Universal Synthesizer Interface. AES Convention.',
+ research:'MIDI Manufacturers Association. MIDI 1.0 Detailed Specification (standard first published 1983). · Smith, D. & Wood, C. (1981). The “USI”, or Universal Synthesizer Interface. AES Convention.',
  dur:9,hint:'Press a key, and change the velocity and channel. The status byte, note number and velocity update as bytes.',
  init:()=>({key:12,vel:100,ch:1}),
  watch(p){return {key:Math.min(24,Math.floor(p*25)),vel:Math.round(40+p*80),ch:1}},
@@ -4572,7 +4571,7 @@ SCENE({id:'midi-sequencing',name:'MIDI messages',tag:'Music as instructions, not
 const M7_ROLL_NOTES=[60,62,64,65,67,69,71,72];
 SCENE({id:'midi-sequencing-roll',name:'Piano roll sequencer',tag:'Composing on a grid',
  definition:'A sequencer stores notes as events on a time grid and plays them back automatically. The piano-roll view, borrowed from mechanical player pianos, shows pitch up the side and time along the bottom.',
- example:'Max Mathews’s MUSIC program at Bell Labs (1957) first had a computer play a score. Today’s sequencers show the same idea as a grid you can click.',
+ example:'Max Mathews’s MUSIC program at Bell Labs (1957) was the first to have a computer calculate the sound wave itself from a score. Today’s sequencers show the same idea as a grid you can click.',
  desc:'An eight-step grid of eight pitches; pressed cells become notes, and a playhead sweeps across while they play.',
  research:'Mathews, M. V. (1963). The digital computer as a musical instrument. Science 142. · Mathews, M. V. (1957), MUSIC I at Bell Telephone Laboratories.',
  dur:10,hint:'Press cells to add or remove notes, set the tempo, then press Play.',
@@ -4631,7 +4630,7 @@ SOURCE('m7-nyquist-1928',{title:'Nyquist, H. (1928). Certain topics in telegraph
 SOURCE('m7-shannon',{title:'Shannon, C. E. (1949). Communication in the presence of noise. Proceedings of the IRE 37(1).'});
 SOURCE('m7-zwicker',{title:'Zwicker, E. & Fastl, H. (1990). Psychoacoustics: Facts and Models. Springer.'});
 SOURCE('m7-brandenburg',{title:'Brandenburg, K. (1999). MP3 and AAC explained. AES 17th International Conference on High-Quality Audio Coding.'});
-SOURCE('m7-midi',{title:'MIDI Manufacturers Association (1983). MIDI 1.0 Detailed Specification.',url:'https://midi.org/'});
+SOURCE('m7-midi',{title:'MIDI Manufacturers Association. MIDI 1.0 Detailed Specification (standard first published 1983).',url:'https://midi.org/'});
 SOURCE('m7-emim',{title:'Electronic Music In Motion: a companion course on electronic music, from tape to modular synths.',url:'https://electronic-music-in-motion.puter.site/'});
 SOURCE('m7-mathews',{title:'Mathews, M. V. (1963). The digital computer as a musical instrument. Science 142(3592).'});
 
@@ -4676,7 +4675,7 @@ WORD(
  {key:'pickup',title:'Pickup',aliases:['pickup','pickups'],linkContext:'microphones-speakers',scene:'microphones-speakers-pickup',here:'A magnet wrapped in a coil that turns a vibrating steel string into a voltage.',contrast:'It hears the string where it sits, so its position changes the tone.',example:'Bridge pickups sound brighter than neck pickups.'},
  {key:'musique-concrete',title:'Musique concrète',aliases:['musique concrète','musique concrete'],linkContext:'tape-music',here:'Music made from recorded sounds, transformed and arranged on disc or tape, pioneered by Pierre Schaeffer in Paris from 1948.',contrast:'It starts from real recorded sounds rather than from notes on a page.',example:'Schaeffer’s railway study (1948).'},
  {key:'tape-loop',title:'Tape loop',aliases:['tape loop','tape loops'],linkContext:'tape-music',scene:'tape-music-edit',here:'A length of tape joined end to end so it repeats for as long as it runs.',contrast:'The ancestor of looping in digital music software.',example:'A loop of a single chord repeated under a melody.'},
- {key:'splice',title:'Splice',aliases:['splice','splices','spliced','splicing'],linkContext:'tape-music',scene:'tape-music-edit',here:'A join between two pieces of cut tape, used to edit or rearrange recorded sound.',contrast:'Cut at an angle so the join is silent.',example:'John Cage’s Williams Mix was made from hundreds of splices.'},
+ {key:'splice',title:'Splice',aliases:['splice','splices','spliced','splicing'],linkContext:'tape-music',scene:'tape-music-edit',here:'A join between two pieces of cut tape, used to edit or rearrange recorded sound.',contrast:'Cut at an angle so the join is silent.',example:'John Cage’s Williams Mix was made from a great many splices.'},
  {key:'oscillator',title:'Oscillator',aliases:['oscillator','oscillators'],linkContext:'synthesis',here:'A circuit or program that produces a repeating wave at a chosen frequency.',contrast:'In synthesis it is the sound source; the filter and amplifier only shape what it makes.',example:'A sawtooth oscillator at 110 Hz.'},
  {key:'low-pass-filter',title:'Low-pass filter',aliases:['low-pass filter','low-pass','cutoff','filter cutoff'],linkContext:'synthesis',scene:'synthesis',here:'A filter that lets frequencies below its cutoff through and weakens those above it, making a sound darker.',contrast:'It removes harmonics; it cannot add any that the oscillator did not make.',example:'Sweeping the cutoff gives a “wah”.'},
  {key:'filter-resonance',title:'Resonance (filter)',aliases:['filter resonance','resonance peak'],linkContext:'synthesis',here:'A boost just at a filter’s cutoff frequency, giving a vocal, whistling edge.',contrast:'A setting of the filter, not the resonance of an instrument body.',example:'High resonance makes the classic squelchy synth bass.'},
@@ -4702,7 +4701,7 @@ WORD(
  {key:'person-derbyshire',title:'Delia Derbyshire',aliases:['Derbyshire','Delia Derbyshire'],linkContext:'tape-music',scene:'tape-music-radiophonic',here:'British composer (1937–2001) at the BBC Radiophonic Workshop who realised Ron Grainer’s 1963 Doctor Who theme from oscillators and tape.',contrast:'She built it note by note, timing notes by measuring tape, years before commercial synthesisers.',example:'The 1963 Doctor Who theme.'},
  {key:'person-moog',title:'Robert Moog',aliases:['Moog'],linkContext:'synthesis',scene:'synthesis',here:'American engineer (1934–2005) whose voltage-controlled modular synthesiser (1964) made electronic sound playable from a keyboard.',contrast:'Don Buchla built a parallel system in California at the same time.',example:'His 1965 paper on voltage-controlled modules.'},
  {key:'person-wendy-carlos',title:'Wendy Carlos',aliases:['Wendy Carlos','Carlos'],linkContext:'synthesis',scene:'synthesis',here:'American composer (born 1939) whose 1968 album of Bach played on a modular synthesiser brought electronic music to millions.',contrast:'Each line was recorded separately and layered on multitrack tape.',example:'Switched-On Bach (1968).'},
- {key:'person-mathews',title:'Max Mathews',aliases:['Max Mathews','Mathews'],linkContext:'midi-sequencing',scene:'midi-sequencing-roll',here:'American engineer (1926–2011) at Bell Labs whose MUSIC program (1957) first made a computer generate music.',contrast:'Often called the father of computer music.',example:'MUSIC I, 1957.'},
+ {key:'person-mathews',title:'Max Mathews',aliases:['Max Mathews','Mathews'],linkContext:'midi-sequencing',scene:'midi-sequencing-roll',here:'American engineer (1926–2011) at Bell Labs whose MUSIC program (1957) was the first to synthesise musical sound digitally on a computer.',contrast:'Often called the father of computer music.',example:'MUSIC I, 1957.'},
  {key:'person-nyquist',title:'Harry Nyquist',aliases:['Nyquist'],linkContext:'digital-audio',scene:'digital-audio',here:'Swedish-American engineer (1889–1976) at Bell Labs who showed how fast a signal must be sampled, and how feedback loops stay stable.',contrast:'The sampling theorem is shared with Shannon (and others), who proved it in general.',example:'The Nyquist frequency, half the sampling rate.'}
 );
 
@@ -4864,7 +4863,7 @@ SCENE({id:'missing-fundamental-match',name:'Match the pitch',tag:'You are the li
  definition:'A pitch-matching test: listen to a sound with no fundamental, then tune a pure tone until it seems to have the same pitch.',
  example:'For harmonics 3, 4 and 5 of 150 Hz (450, 600 and 750 Hz), most listeners set the pure tone near 150 Hz, a frequency absent from the sound, not near 450 Hz.',
  desc:'A pitch-matching experiment: each match is plotted against the true missing fundamental, with lines for the fundamental, its octave and the lowest component.',
- research:'Schouten (1940); Houtsma & Goldstein (1972). The perception of musical intervals: evidence for the central origin of the pitch of complex tones. Octave errors are common in matching tasks.',
+ research:'Schouten (1940); Houtsma & Goldstein (1972). The central origin of the pitch of complex tones: evidence from musical interval recognition. JASA 51. Octave errors are common in matching tasks.',
  dur:10,hint:'Play the mystery sound, slide your tone until it matches, then Record. Five trials, each with a different missing fundamental.',
  init:()=>({seed:1,i:0,match:300,res:[]}),
  watch(p){const n=Math.min(5,Math.floor(p*6)),r=M8_rng(77),o=M8_matchOrder({seed:1}),res=[];for(let i=0;i<n;i++){const f0=o[i],e=1+.02*M8_gauss(r);res.push({f0,m:Math.round((i===3?2:1)*f0*e)})}return {seed:1,i:n,match:n?res[n-1].m:300,res,sim:true}},
@@ -4894,7 +4893,7 @@ SCENE({id:'missing-fundamental-speaker',name:'Bass from small speakers',tag:'The
  definition:'Small speakers cannot reproduce low bass notes, but they still play the upper harmonics, and the ear rebuilds the missing low pitch from them.',
  example:'A phone speaker barely produces 55 Hz, yet a bass A1 (55 Hz) still sounds like A1, because 110, 165, 220 Hz and higher harmonics get through.',
  desc:'Harmonics of a bass note on a log frequency axis, with a small speaker’s response curve cutting the lowest ones.',
- research:'Schouten (1940); Larsen & Aarts (2005). Audio Bandwidth Extension (psychoacoustic “virtual bass”), Wiley.',
+ research:'Schouten (1940); Larsen & Aarts (2004). Audio Bandwidth Extension (psychoacoustic “virtual bass”), Wiley.',
  dur:9,hint:'Choose a bass note and the speaker’s cut-off, then compare the full sound with the speaker version. On a laptop both may sound alike, which is the point.',
  init:()=>({m:33,cut:150}),
  watch(p){return {m:33,cut:Math.round(40+p*220)}},
@@ -4989,7 +4988,7 @@ SCENE({id:'consonance-roughness-intervals',name:'Why fifths sound smooth',tag:'H
   const near=M8_RATIOS.map(([a,b])=>({a,b,c:1200*Math.log2(a/b)})).sort((p,q)=>Math.abs(p.c-s.c)-Math.abs(q.c-s.c))[0];
   out+=T(300,330,`${s.c} cents ≈ ${M8_IVN[Math.round(s.c/100)]} · nearest simple ratio ${near.a}:${near.b} (${Math.round(near.c)} cents)`,15,C.ink);
   out+=T(300,354,`roughness here: ${yv.toFixed(2)} of the maximum`,14,C.muted);
-  return {svg:out,phase:s.kind==='sine'?'With pure tones only the region just above unison is rough; there are no dips at fifths or thirds. Consonance of intervals comes largely from the harmonics.':'Each dip is an interval where harmonics coincide: octave, fifth, fourth, sixths and thirds. Equal-tempered intervals sit close to, but not exactly on, the dips.'};
+  return {svg:out,phase:s.kind==='sine'?'With pure tones only the region just above unison is rough; there are no dips at fifths or thirds. Consonance of intervals comes largely from the harmonics.':'Each dip is an interval where harmonics coincide: octave, fifth, fourth, major sixth and both thirds. Equal-tempered intervals sit close to, but not exactly on, the dips.'};
  }});
 
 /* =========================== expectation =========================== */
@@ -5050,7 +5049,7 @@ const M8_KF=[{name:'Twinkle',notes:[60,60,67,67,69,69,67,65,65,64,64,62,62,60]},
 function M8_keyCorrs(notes){const d=Array(12).fill(0);notes.forEach(m=>d[M8_pc(m)]++);const res=[];for(const [prof,q] of [[M8_KKMAJ,'major'],[M8_KKMIN,'minor']])for(let k=0;k<12;k++)res.push({k,q,r:M8_corr(d,range(12).map(pc=>prof[(pc-k+12)%12]))});return res}
 SCENE({id:'expectation-key-finding',name:'Finding the key',tag:'Krumhansl–Schmuckler',
  definition:'The key of a melody can be estimated by counting how often each note occurs and comparing that pattern with the probe-tone profile of every major and minor key.',
- example:'“Twinkle” uses C, G and E most and never C♯, so its counts correlate best with the C major profile.',
+ example:'“Twinkle” uses C and G most and never C♯ or F♯, so its counts correlate best with the C major profile.',
  desc:'A melody strip, correlations with all 24 major and minor key profiles as two rows of bars, and a keyboard for adding notes.',
  research:'Krumhansl (1990). Cognitive Foundations of Musical Pitch, Oxford University Press (the Krumhansl–Schmuckler key-finding algorithm). Counts here ignore note durations.',
  dur:10,hint:'Choose a tune or build your own by pressing keys. The bars show how well your notes fit each key.',
@@ -5146,7 +5145,7 @@ SCENE({id:'music-emotion-mozart',name:'The “Mozart effect”',tag:'Checking a 
   const bars=[{l:'Chabris: Mozart vs silence or relaxation',d:.09,from:1},{l:'Pietschnig: Mozart vs no music',d:.37,from:2},{l:'Pietschnig: other music vs no music',d:.38,from:2},{l:'Pietschnig: Mozart vs other music',d:.15,from:2}];
   const x0=300,sc=420;out+=L(x0,60,x0,250,C.line,1.4);[0,.2,.5].forEach(v=>{const x=x0+v*sc;out+=L(x,60,x,250,C.grid,1)+TF(x,268,v===0?'0':v===.2?'0.2 small':'0.5 medium',13,C.muted)});
   bars.forEach((b,i)=>{const y=70+i*44,on=s.v>=b.from;out+=TF(x0-10,y+20,b.l,13,on?C.ink:C.line,'end');if(on)out+=R(x0,y+6,b.d*sc,22,i===3?C.coral:C.blue,'none',4)+TBF(x0+b.d*sc+8,y+22,b.d.toFixed(2),13,C.ink,'start')});
-  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher','on a spatial reasoning task after 10 minutes of a Mozart sonata.','The gain lasted 10–15 minutes. It was never a claim about IQ.'],
+  const txt=[['Rauscher, Shaw and Ky (1993): 36 students scored about 8–9 points higher','on a spatial reasoning task after 10 minutes of a Mozart sonata.','The gain lasted 10–15 minutes: no claim of a lasting rise in IQ.'],
    ['Chabris (1999) pooled 16 studies: the average gain was tiny,','about 1.4 points on an IQ-like scale, and fits a brief boost','in arousal rather than anything special about Mozart.'],
    ['Pietschnig and colleagues (2010) pooled about 40 studies: any music','gives about the same small gain over silence. Mozart versus other music','is small, and the larger effects came mostly from one laboratory.'],
    ['Thompson, Schellenberg and Husain (2001): upbeat Mozart beat slow, sad','Albinoni, but the difference vanished once mood and arousal','were taken into account. Enjoyment and alertness do the work.']][s.v];
@@ -5186,7 +5185,7 @@ SCENE({id:'beat-entrainment',name:'Keeping the beat',tag:'Tap along',
   return {svg:out,phase:s.sim?'A simulated tapper leads the clicks by about 45 ms, inside the range typical for non-musicians.':vals.length>=3?(m<0?'You tapped ahead of the clicks on average, as most people do. One explanation: the brain synchronises the felt touch with the heard click, and touch signals take longer to arrive.':'You tapped after the clicks on average. Device delays (mouse release, audio output) can shift this; try the Space bar with the pad focused.'):'Each dot will show how far each tap was from its click. Below zero means early.'};
  }});
 
-function M8_phaseSim(s){const N=30,r=M8_rng(17),A=[-30],P=[600];for(let n=0;n<N-1;n++){const Cn=n<10?600:600+s.step,e=s.noise?8*M8_gauss(r):0;A.push((1-s.alpha)*A[n]+P[n]-Cn+e);P.push(P[n]-s.beta*A[n])}return A}
+function M8_phaseSim(s){const N=30,r=M8_rng(17),A=[-30],P=[600];for(let n=0;n<N-1;n++){const Cn=n<9?600:600+s.step,e=s.noise?8*M8_gauss(r):0;A.push((1-s.alpha)*A[n]+P[n]-Cn+e);P.push(P[n]-s.beta*A[n])}return A}
 SCENE({id:'beat-entrainment-tempo',name:'Following a tempo change',tag:'Error correction',
  definition:'People stay with a beat by correcting each tap a little, in proportion to the last error. When the tempo changes, these partial corrections bring the taps back in step over several beats.',
  example:'If the metronome suddenly slows, your next taps come too early; you shift each one later by part of the error and adjust your inner tempo, and within a few taps you are back in step.',
@@ -5196,13 +5195,13 @@ SCENE({id:'beat-entrainment-tempo',name:'Following a tempo change',tag:'Error co
  init:()=>({alpha:.4,beta:.1,step:-60,noise:1}),
  watch(p){return {alpha:.4,beta:.1,step:-60,noise:1,upto:Math.max(2,Math.floor(p*30))}},
  ui:[{range:'alpha',label:'Phase correction α',min:0,max:1,step:.05,get:s=>s.alpha,act:'alpha'},{range:'beta',label:'Period correction β',min:0,max:.5,step:.05,get:s=>s.beta,act:'beta'},{range:'step',label:'Tempo change',min:-100,max:100,step:10,get:s=>s.step,act:'step',show:v=>(v>0?'+':'')+v+' ms'},{choose:[[1,'with timing noise'],[0,'no noise']],label:'Noise',get:s=>s.noise,act:'noise'},{b:'Hear',act:'hear'}],
- on:{alpha(s,v){s.alpha=v},beta(s,v){s.beta=v},step(s,v){s.step=v},noise(s,v){s.noise=Number(v)},hear(s){let t=0;for(let i=0;i<20;i++){M8_click(t,{hz:i===10?1320:880});t+=(i<10?600:600+s.step)/1000}}},
+ on:{alpha(s,v){s.alpha=v},beta(s,v){s.beta=v},step(s,v){s.step=v},noise(s,v){s.noise=Number(v)},hear(s){let t=0;for(let i=0;i<20;i++){M8_click(t,{hz:i===9?1320:880});t+=(i<9?600:600+s.step)/1000}}},
  draw(s){
   const A=M8_phaseSim(s),n=s.upto||30;let out=heading(`Metronome ${s.step>0?'slows':s.step<0?'speeds up':'stays'} at beat 10${s.step?` (${s.step>0?'+':''}${s.step} ms)`:''}`,26);
   const pl=M8_plot(70,52,490,236,[0,31],[-160,160],{yt:[[-150,'−150'],[0,'0'],[150,'+150 ms']],xt:[[1,'1'],[10,'10'],[20,'20'],[30,'30']],xl:'tap number',yl:'tap minus click'});out+=pl.svg;
   out+=L(pl.X(10.5),52,pl.X(10.5),288,C.amber,1.4,'stroke-dasharray="5 4"')+TF(pl.X(10.5)+5,70,'tempo change',13,C.amber,'start')+L(70,pl.Y(0),560,pl.Y(0),C.muted,1.2);
   const pts=A.slice(0,n).map((a,i)=>[pl.X(i+1),pl.Y(clamp(a,-160,160))]);out+=M8_poly(pts,C.blue,2);pts.forEach(p=>out+=Ci(p[0],p[1],3.5,C.blue));
-  const after=A.slice(10);let k=after.findIndex((a,i)=>i>0&&after.slice(i).every(x=>Math.abs(x-A[9])<25));
+  const after=A.slice(9);let k=after.findIndex((a,i)=>i>0&&after.slice(i).every(x=>Math.abs(x-A[8])<25));
   out+=T(300,352,s.alpha===0&&s.beta===0?'No correction: the taps drift away from the clicks for good.':k>0?`Back in step about ${k} taps after the change`:'Not settled within 20 taps',15,C.ink);
   return {svg:out,phase:'α is the share of the last error corrected at once; β adjusts the inner tempo. With α near 1 the taps snap back but overreact to noise; with α near 0 they drift. Measured values are well below 1, so corrections are partial.'};
  }});

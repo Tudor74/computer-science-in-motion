@@ -233,20 +233,20 @@ SCENE({id:'note-values-bar',name:'Filling a bar',tag:'Time signatures and dots',
  on:{ts(s,v){s.ts=v},add(s,v){if(s.notes.length<12)s.notes=s.notes.concat(Number(v))},undo(s){s.notes=s.notes.slice(0,-1)},
   play(s,a,ctx){let t=0;const ev=[];s.notes.forEach((d,i)=>{ev.push({m:M2_m([4,5,6,7,6,5,4,2,4,5,4,2][i%12]),t,d});t+=d});M2_play(s,ctx,ev,.5);return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
  draw(s,f,X){
-  const cap=s.ts==='6/8'?3:M2_TS[s.ts],used=sum(s.notes),yb=200,sp=14;let out=heading(`${s.ts}: ${s.ts==='6/8'?'six quavers (two dotted crotchet beats)':cap+' crotchet beats'} per bar`);
+  const cap=s.ts==='6/8'?3:M2_TS[s.ts],used=sum(s.notes),yb=200,sp=14,u=s.ts==='6/8'?'crotchet':'beat';let out=heading(`${s.ts}: ${s.ts==='6/8'?'six quavers (two dotted crotchet beats)':cap+' crotchet beats'} per bar`);
   out+=M2_lines(60,540,yb,sp)+M2_clef(84,yb-sp,'G');const [tn,td]=s.ts.split('/');out+=TB(120,yb-2*sp-4,tn,20)+TB(120,yb-4,td,20);
   out+=L(540,yb,540,yb-4*sp,C.ink,2);
   let t=0;const ph=s.ph==null?-1:s.ph;const scale=380/Math.max(cap,used);
   s.notes.forEach((d,i)=>{const x=150+(t+d*.2)*scale,over=t+d>cap+1e-9,on=ph>=t&&ph<t+d;out+=M2_note(x,[4,5,6,7,6,5,4,2,4,5,4,2][i%12],yb,sp,d,{col:on?C.coral:over?C.coral:C.ink});t+=d});
   const cw=380;out+=R(110,262,cw,22,'#fff',C.grid,6)+R(110,262,cw*Math.min(1,used/cap),22,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.blue,'none',6);
-  out+=TB(300,310,Math.abs(used-cap)<1e-9?`Full: ${fmt(used)} of ${cap} beats ✓`:used>cap?`Overflow: ${fmt(used)} beats in a ${cap}-beat bar`:`${fmt(used)} of ${cap} beats used`,16,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.ink);
+  out+=TB(300,310,Math.abs(used-cap)<1e-9?`Full: ${fmt(used)} of ${cap} ${u}s ✓`:used>cap?`Overflow: ${fmt(used)} ${u}s in a ${cap}-${u} bar`:`${fmt(used)} of ${cap} ${u}s used`,16,used>cap+1e-9?C.coral:Math.abs(used-cap)<1e-9?C.green:C.ink);
   out+=T(300,348,s.ts==='6/8'?'In 6/8 the beat is a dotted crotchet: two beats of three quavers each':'Beats counted in crotchets',13,C.muted);
-  return {svg:out,phase:Math.abs(used-cap)<1e-9?'The bar adds up exactly. Composers check this the same way: every bar’s values must sum to what the time signature promises.':used>cap?'Too many beats for one bar: the extra time belongs in the next bar, often joined with a tie.':`${fmt(cap-used)} beat${cap-used===1?'':'s'} still to fill. A dot adds half a note’s value again.`};
+  return {svg:out,phase:Math.abs(used-cap)<1e-9?'The bar adds up exactly. Composers check this the same way: every bar’s values must sum to what the time signature promises.':used>cap?`Too many ${u}s for one bar: the extra time belongs in the next bar, often joined with a tie.`:`${fmt(cap-used)} ${u}${cap-used===1?'':'s'} still to fill. A dot adds half a note’s value again.`};
  }});
 
 SCENE({id:'note-values-mensural',name:'Mensural notation',tag:'Shapes that measure time',
  definition:'Mensural notation, codified by Franco of Cologne around 1280, gave each note shape a length: the long, the breve and the semibreve. Whether each split into three (perfect) or two (imperfect) was set by context.',
- example:'In perfect time a long equals three breves; in imperfect time, two. Our “breve” and “semibreve” are those medieval names, now much longer in practice than they once were.',
+ example:'A perfect long equals three breves; an imperfect long, two. Our “breve” and “semibreve” are those medieval names, now much longer in practice than they once were.',
  desc:'A tree dividing one long into breves and semibreves, in threes or twos depending on the chosen settings, with the old note shapes drawn at each level.',
  research:'Franco of Cologne (c. 1280). Ars cantus mensurabilis; Apel (1942). The Notation of Polyphonic Music 900–1600.',
  dur:9,hint:'Switch each level between perfect (three) and imperfect (two), then Play: you hear the long, its breves and their semibreves together.',
@@ -360,7 +360,7 @@ SCENE({id:'canon-round',name:'Canon and round',tag:'One tune, staggered entries'
 const M2_CHORD=[0,4,7];
 SCENE({id:'canon-round-harmony',name:'Why rounds work',tag:'Every section fits one chord',
  definition:'A round only works if every section of the melody fits the same harmony, so any two sections sounding together blend.',
- example:'In “Frère Jacques” almost every beat stacks the notes C, E and G, the C major chord, so three or four voices rarely clash.',
+ example:'In “Frère Jacques” every bar starts and ends on notes of the C major chord (C, E, G). Around the second beat the voices pass through D, F or A, then settle back.',
  desc:'Beat by beat, the notes sounding in all voices are stacked on a small staff and checked against the C major chord; passing notes are flagged.',
  research:'Mann (1958). The Study of Fugue; Kennan (1959). Counterpoint.',
  dur:12,hint:'Choose the number of voices, then Step through the beats. Coral notes are outside the chord; count how few there are.',
@@ -375,14 +375,14 @@ SCENE({id:'canon-round-harmony',name:'Why rounds work',tag:'Every section fits o
   steps.forEach((st,i)=>{const ok=M2_CHORD.includes(M2_mod(f.notes[i],12));out+=M2_note(290+(i%2)*26,st,yb,sp,1,{col:ok?M2_VCOL[i]:C.coral})});
   out+=hit(X,'hear',0,'Hear this beat',G(R(250,276,100,36,C.pale,'none',8)+TB(300,299,'Hear it',15,C.blue)));
   const names=f.notes.map(noteName).join(' · ');out+=T(300,340,names,15,C.ink);
-  out+=T(300,364,f.out?`${f.out} note${f.out>1?'s':''} outside C–E–G (a passing note)`:'All notes belong to C–E–G',14,f.out?C.coral:C.green);
-  return {svg:out,phase:f.out?'A passing note briefly steps outside the chord; it resolves on the next beat, so the clash is fleeting.':'Every voice is on a note of the C major chord, so the stack sounds like a single chord.'};
+  out+=T(300,364,f.out?`${f.out} note${f.out>1?'s':''} outside C–E–G (passing)`:'All notes belong to C–E–G',14,f.out?C.coral:C.green);
+  return {svg:out,phase:f.out?'Some voices briefly step outside the chord; they settle back on C, E or G within a beat or two, so the clash is fleeting.':'Every voice is on a note of the C major chord, so the stack sounds like a single chord.'};
  }});
 
 const M2_CANON=[0,2,1,3,2,4,3,1,0];
 SCENE({id:'canon-round-fifth',name:'Canon at the fifth',tag:'The second voice transposed',
  definition:'In a canon at the fifth, the second voice copies the first a fifth higher. Composers must write the melody so the two lines make consonances when they overlap.',
- example:'A simple stepwise tune with the second voice entering one beat later at the fifth makes some clashing seconds and sevenths; change the delay and the clashes move.',
+ example:'A simple tune with the second voice entering one beat later at the fifth makes mostly thirds and sixths, with one clashing seventh; change the delay and fourths or seconds appear instead.',
  desc:'Two lines of notes, the leader and the follower a chosen interval higher and a chosen delay later, with each overlapping beat labelled by its interval and coloured consonant or dissonant.',
  research:'Zarlino (1558). Le istitutioni harmoniche; Mann (1958). The Study of Fugue.',
  dur:10,hint:'Change the interval and the delay, then Play. Count the coral (dissonant) beats; good canon melodies keep them few and brief.',
@@ -403,7 +403,7 @@ SCENE({id:'canon-round-fifth',name:'Canon at the fifth',tag:'The second voice tr
  }});
 
 /* ---------- polyphony (c. 900–1200) ---------- */
-const M2_TENOR=[{m:57,t:0,d:8},{m:59,t:8,d:6},{m:57,t:14,d:10}];
+const M2_TENOR=[{m:55,t:0,d:8},{m:59,t:8,d:6},{m:55,t:14,d:10}];
 const M2_DUPLUM=(()=>{const st=[4,5,6,7,6,5,4,5,6,5,4,3,4,5,6,7,8,7,6,5,4,3,4,4],ev=[];st.forEach((s,i)=>ev.push({m:M2_m(s),t:i,d:1}));return ev})();
 SCENE({id:'polyphony',name:'Organum and polyphony',tag:'Many voices, each its own line',
  definition:'Polyphony is music for several independent voices. At Notre-Dame in Paris around 1200, a chant was slowed into long held notes (the tenor) while a new voice danced above it.',
@@ -427,7 +427,7 @@ SCENE({id:'polyphony',name:'Organum and polyphony',tag:'Many voices, each its ow
 const M2_CHANT=[0,1,2,1,3,2,1,0];
 SCENE({id:'polyphony-parallel',name:'Parallel and free organum',tag:'Moving together or apart',
  definition:'The earliest written polyphony, described in Musica enchiriadis (about 900), added a second voice a fourth or fifth below the chant, moving in parallel. Later, free organum let the voices move in contrary and oblique motion.',
- example:'In parallel organum at the fifth, every note of the chant is doubled five letters lower. In free organum the added voice may hold still or move the opposite way.',
+ example:'In parallel organum at the fifth, every note of the chant is doubled a fifth lower (four letter steps down). In free organum the added voice may hold still or move the opposite way.',
  desc:'A chant line and an added voice drawn as two connected lines, with the interval between them labelled at each note.',
  research:'Musica enchiriadis and Scolica enchiriadis (c. 900); Guido of Arezzo (c. 1026). Micrologus, ch. 18–19.',
  dur:9,hint:'Choose parallel fourths, parallel fifths or free organum and Play. Watch the gap between the lines.',
@@ -435,13 +435,13 @@ SCENE({id:'polyphony-parallel',name:'Parallel and free organum',tag:'Moving toge
  watch(p){return {kind:p<.33?'fourth':p<.66?'fifth':'free'}},
  ui:[{choose:[['fourth','Parallel 4ths'],['fifth','Parallel 5ths'],['free','Free organum']],label:'Organum',get:s=>s.kind,act:'kind'},{b:'Play',act:'play'}],
  on:{kind(s,v){s.kind=v},play(s,a,ctx){const lo=SCENES['polyphony-parallel'].lower(s.kind);M2_play(s,ctx,M2_CHANT.map((st,i)=>({m:[M2_m(st+4),M2_m(lo[i]+4)],t:i,d:1})),.5);return 'keep'},tick(s,tok){return M2_tick(s,tok)}},
- lower(kind){return kind==='fourth'?M2_CHANT.map(s=>s-3):kind==='fifth'?M2_CHANT.map(s=>s-4):[-3,-3,-2,-3,-2,-3,-3,-4]},
+ lower(kind){return kind==='fourth'?M2_CHANT.map(s=>s-3):kind==='fifth'?M2_CHANT.map(s=>s-4):[-3,-3,-2,-2,-1,-1,0,0]},
  draw(s,f,X){
   const lo=this.lower(s.kind),x=i=>110+i*55,y=st=>210-st*22,ph=s.ph==null?-1:s.ph;
   let out=heading(s.kind==='free'?'Free organum: oblique and contrary motion':`Parallel organum at the ${s.kind}`);
   out+=P('M'+M2_CHANT.map((st,i)=>fmt(x(i))+' '+fmt(y(st))).join(' L'),C.blue,2.6)+P('M'+lo.map((st,i)=>fmt(x(i))+' '+fmt(y(st))).join(' L'),C.purple,2.6);
-  M2_CHANT.forEach((st,i)=>{const on=ph>=i&&ph<i+1,d=st-lo[i];out+=Ci(x(i),y(st),on?9:6,on?C.coral:C.blue)+Ci(x(i),y(lo[i]),on?9:6,on?C.coral:C.purple)+L(x(i),y(st)+8,x(i),y(lo[i])-8,C.grid,1.2,'stroke-dasharray="3 3"');
-   out+=TF(x(i),330,d+1,14,[3,4,7].includes(d)?C.ink:C.amber,'middle','font-weight="700"')});
+  M2_CHANT.forEach((st,i)=>{const on=ph>=i&&ph<i+1,d=st-lo[i];out+=Ci(x(i),y(st),on?9:6,on?C.coral:C.blue)+Ci(x(i),y(lo[i]),on?9:6,on?C.coral:C.purple)+(d?L(x(i),y(st)+8,x(i),y(lo[i])-8,C.grid,1.2,'stroke-dasharray="3 3"'):'');
+   out+=TF(x(i),330,d+1,14,[0,3,4,7].includes(d)?C.ink:C.amber,'middle','font-weight="700"')});
   out+=TF(70,y(0)+4,'chant',13,C.blue,'end')+TF(70,y(lo[0])+4,'added',13,C.purple,'end')+TF(70,334,'interval',13,C.muted,'end');
   return {svg:out,phase:s.kind==='free'?'The added voice holds a note while the chant moves, or moves the other way: the first step towards truly independent lines.':`Every interval is a ${s.kind}: the voices move in lockstep, which sounds rich but not yet independent.`};
  }});
