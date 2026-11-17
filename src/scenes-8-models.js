@@ -580,7 +580,7 @@ SCENE({id:'consciousness',name:'Seeing and not seeing',tag:'Backward masking',
 // Global workspace toy: a local signal grows linearly; workspace activity ignites past a threshold.
 const D8_ign=(x,att)=>1/(1+Math.exp(-(x*att-.5)*18));
 SCENE({id:'consciousness-workspace',name:'The global workspace',tag:'Ignition and broadcast',
- definition:'Global workspace theory says that many specialised processes run unconsciously in parallel; a content becomes conscious when it wins access to a shared workspace and is broadcast to all of them at once. In the brain this shows up as a sudden, sustained “ignition” across frontal and parietal areas.',
+ definition:'Global workspace theory says that many specialised processes run unconsciously in parallel; a content becomes conscious when it wins access to a shared workspace and is broadcast to all of them at once. In the brain the theory predicts a sudden “ignition” of widespread activity, especially in frontal and parietal areas; how long it lasts and which areas are essential are debated.',
  example:'A faint word activates visual areas a little whether or not you see it; only when it is seen does activity jump across the brain and become available for speech, memory and planning.',
  desc:'Five specialised processors around a central workspace, lit by a stimulus whose strength you set, beside a chart of local activity rising steadily and workspace activity jumping at a threshold.',
  research:'Baars (1988). A Cognitive Theory of Consciousness. Cambridge University Press; Dehaene, Kerszberg & Changeux (1998). PNAS 95; Dehaene & Naccache (2001). Cognition 79. An adversarial test against integrated information theory (Cogitate Consortium 2025, Nature) gave mixed results for both.',
