@@ -53,7 +53,7 @@ SCENE({id:'prisoners-dilemma',name:'The prisoner’s dilemma',tag:'Ten strangers
  definition:'In a prisoner’s dilemma each player does better by defecting whatever the other does, yet both do better if both cooperate than if both defect.',
  example:'Two firms can each hold prices or undercut. Undercutting wins customers whatever the rival does, but if both undercut, both earn less than if both had held their prices.',
  desc:'A payoff table with your points in blue and the other player’s in coral. You play ten one-off rounds, each against a different stranger, and see your score beside what always cooperating or always defecting would have earned against the same strangers.',
- research:'Flood (1958), Some experimental games, Management Science 5: the 1950 RAND experiments with Melvin Dresher. Albert Tucker (1950) gave the game its prisoners’ story. Sally (1995), Rationality and Society 7: across one-shot experiments from 1958 to 1992, roughly half of players cooperated.',
+ research:'Flood (1958), Some experimental games, Management Science 5: the 1950 RAND experiments with Melvin Dresher. Albert Tucker (1950) gave the game its prisoners’ story. Sally (1995), Rationality and Society 7: across social-dilemma experiments from 1958 to 1992, players cooperated roughly half the time on average.',
  dur:12,hint:'Choose Cooperate or Defect in each of ten one-off rounds. Each stranger’s move is fixed in advance by a seeded draw. Your choices stay in this page.',
  init:()=>({seed:4,hist:[]}),
  watch(p){const n=Math.min(10,Math.floor(p*11));return {seed:4,hist:E4_pdSim(4,n),sim:true}},
@@ -199,10 +199,10 @@ SCENE({id:'nash-equilibrium',name:'Nash equilibrium',tag:'Best replies that poin
  }});
 
 // Penalty kicks: scoring probabilities (%) from Palacios-Huerta (2003), rows = kicker, columns = keeper; N = natural side.
-const E4_PK=[[58.30,94.97],[92.91,69.92]];
+const E4_PK=[[69.92,92.91],[94.97,58.30]];
 SCENE({id:'nash-equilibrium-mixed',name:'Mixed strategies: penalty kicks',tag:'Be unpredictable in the right proportions',
  definition:'A mixed strategy chooses between actions at random with set probabilities. In a mixed equilibrium each player mixes so that the other is indifferent between their options.',
- example:'A kicker who always shoots to their natural side is easy to read. Shooting there about 39% of the time leaves the keeper no better dive.',
+ example:'A kicker who always shoots to their natural side is easy to read. Shooting there about 61% of the time leaves the keeper no better dive.',
  desc:'A graph of the chance of scoring against how often the kicker shoots to their natural side. One line is the keeper diving to that side, the other diving the other way; the keeper picks the lower, and the kicker’s best mix is where the lines cross.',
  research:'Palacios-Huerta (2003). Professionals play minimax. Review of Economic Studies 70, 395–415: 1,417 penalty kicks; scoring rates of 58.3, 95.0, 92.9 and 69.9%, and observed mixes within about 1.5 percentage points of the equilibrium. Chiappori, Levitt & Groseclose (2002), American Economic Review 92.',
  dur:10,hint:'Move the kicker’s mix. The keeper always chooses the dive that lowers your chance of scoring; find the mix that makes the keeper’s choice irrelevant.',

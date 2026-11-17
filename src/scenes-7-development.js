@@ -92,7 +92,7 @@ SCENE({id:'solow-growth-convergence',name:'Do poor countries catch up?',tag:'Con
   out+=TF(400,80,'poor country',13,C.coral,'start')+TF(400,97,'rich country',13,C.blue,'start');
   const gap=yr[t]/yp[t];
   out+=counter(70,322,'poor: income',E7_n(yp[t],2),C.coral,130)+counter(210,322,'rich: income',E7_n(yr[t],2),C.blue,130)+counter(350,322,'rich ÷ poor',E7_n(gap,2)+'×',C.ink,120);
-  return {svg:out,phase:s.mode==='same'?`With the same saving rate both head for the same steady state, so the poor country grows faster and the gap shrinks to ${E7_n(gap,2)}× by year ${t}.`:`Saving only 12%, the poor country heads for a lower steady state: it still grows fast at first, but the gap settles near ${E7_n(Math.pow(E7_kstar(.25,.06)/E7_kstar(.12,.06),E7_A),2)}× and never closes. Convergence is conditional on saving, population growth and technology.`};
+  return {svg:out,phase:s.mode==='same'?`With the same saving rate both head for the same steady state, so the poor country grows faster and the gap shrinks to ${E7_n(gap,2)}× by year ${t}.`:`Saving only 12%, the poor country heads for a lower steady state: it grows only about 1% a year at first, and the gap settles near ${E7_n(Math.pow(E7_kstar(.25,.06)/E7_kstar(.12,.06),E7_A),2)}× and never closes. Convergence is conditional on saving, population growth and technology.`};
  }});
 
 // The production function itself, in 2D and 3D.
@@ -166,7 +166,7 @@ SCENE({id:'inequality-lorenz',name:'Drawing inequality',tag:'The Lorenz curve an
 // Ten incomes; redistribute and watch the Gini.
 const E7_INC0=[8,12,15,18,22,26,31,38,50,80];
 SCENE({id:'inequality-lorenz-build',name:'Moving money between ten people',tag:'What changes the Gini',
- definition:'The Gini depends only on relative incomes. Moving money from someone richer to someone poorer always lowers it (the Pigou–Dalton principle). Doubling every income leaves it unchanged; giving everyone the same extra amount lowers it.',
+ definition:'The Gini depends only on relative incomes. Moving money from someone richer to someone poorer, without reversing their order, always lowers it (the Pigou–Dalton principle). Doubling every income leaves it unchanged; giving everyone the same extra amount lowers it.',
  example:'Ten people earning £8k to £80k have a Gini of about 0.36. Moving £10k from the richest to the poorest drops it to about 0.30; doubling everyone’s income leaves it at 0.36.',
  desc:'Bars for ten incomes from poorest to richest, the step-shaped Lorenz curve they make, and the Gini, with buttons that transfer money or change everyone’s income.',
  research:'Dalton, H. (1920). The measurement of the inequality of incomes. Economic Journal 30, 348–361. Atkinson, A. B. (1970). On the measurement of inequality. Journal of Economic Theory 2, 244–263. Cowell, F. (2011). Measuring Inequality, 3rd edn.',
@@ -175,8 +175,8 @@ SCENE({id:'inequality-lorenz-build',name:'Moving money between ten people',tag:'
  watch(p){const steps=[['',E7_INC0],['rich→poor',[18,12,15,18,22,26,31,38,50,70]],['double',[36,24,30,36,44,52,62,76,100,140]],['+5 each',[41,29,35,41,49,57,67,81,105,145]]];const st=steps[Math.min(3,Math.floor(p*4))];return {inc:st[1].slice(),last:st[0]}},
  ui:[],
  on:{op(s,v){const a=s.inc.slice().sort((x,y)=>x-y);
-  if(v==='rp'){const g=Math.min(10,a[9]-a[0]);a[9]-=g;a[0]+=g;s.last='rich→poor'}
-  else if(v==='mp'){const g=Math.min(5,a[5]);a[5]-=g;a[0]+=g;s.last='middle→poor'}
+  if(v==='rp'){const g=Math.min(10,(a[9]-a[0])/2);a[9]-=g;a[0]+=g;s.last='rich→poor'}
+  else if(v==='mp'){const g=Math.min(5,(a[5]-a[0])/2);a[5]-=g;a[0]+=g;s.last='middle→poor'}
   else if(v==='pr'){const g=Math.min(5,a[0]-1);a[0]-=g;a[9]+=g;s.last='poor→rich'}
   else if(v==='dbl'){for(let i=0;i<10;i++)a[i]*=2;s.last='double'}
   else if(v==='add'){for(let i=0;i<10;i++)a[i]+=5;s.last='+5 each'}
@@ -368,7 +368,7 @@ SCENE({id:'randomised-trials-worms',name:'The worm wars',tag:'A famous trial and
  definition:'A 2004 study of school deworming in Kenya became one of the best-known randomised trials in development, and the basis for large programmes. A decade later its re-analysis started a public argument, the “worm wars”, about what the evidence shows.',
  example:'Supporters point to long-run earnings gains; critics point to reviews finding little effect on schooling. Both sides use randomised evidence; they disagree about which results to trust and how far they generalise.',
  desc:'Five cards from the original study to the twenty-year follow-up, each with what it found; the verdict is marked contested.',
- research:'Miguel, E. & Kremer, M. (2004). Worms. Econometrica 72, 159–217. Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). International Journal of Epidemiology 44, 1572–1597. Hicks, J. H., Kremer, M. & Miguel, E. (2015). IJE 44, 1593–1596. Taylor-Robinson, D. C. et al. (2019). Cochrane Database of Systematic Reviews CD000371. Hamory, J. et al. (2021). PNAS 118, e2023185118.',
+ research:'Miguel, E. & Kremer, M. (2004). Worms. Econometrica 72, 159–217. Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). International Journal of Epidemiology 44, 1572–1592. Hicks, J. H., Kremer, M. & Miguel, E. (2015). IJE 44, 1593–1596. Taylor-Robinson, D. C. et al. (2019). Cochrane Database of Systematic Reviews CD000371. Hamory, J. et al. (2021). PNAS 118, e2023185118.',
  dur:10,hint:'Press each card in turn. The point is not to pick a side: it is that even a randomised trial needs replication, re-analysis and long-run follow-up.',
  init:()=>({c:'2004'}),
  watch(p){return {c:E7_WORMS[Math.min(4,Math.floor(p*5))].k}},

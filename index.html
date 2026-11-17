@@ -655,7 +655,7 @@ SCENE({id:'division-of-labour-why',name:'Why dividing work helps',tag:'Smith’s
 // The extent of the market: a team only pays if it can sell what it makes.
 SCENE({id:'division-of-labour-market',name:'Limited by the market',tag:'The extent of the market',
  definition:'Smith’s third chapter argues that the division of labour is limited by the extent of the market: a specialist is only worth employing if enough buyers want what they make. He also warned that a lifetime of one simple task could stunt a worker, and proposed public schooling.',
- example:'A village that buys a few hundred pins a day cannot keep even two specialist pin-makers busy, so its smith does many jobs; a city market of tens of thousands can support a full team.',
+ example:'A village that buys fifty pins a day cannot keep even two specialist pin-makers busy, so its smith does many jobs; a city market of tens of thousands can support a full team.',
  desc:'A market-size slider on a log scale sets the largest pin team that can sell its whole output, with output per worker; a second view shows Smith’s own warning about repetitive work.',
  research:'Smith, A. (1776). The Wealth of Nations, Book I, chapter 3, and Book V, chapter 1, part III (on the effects of repetitive work and the case for parish schools). Stigler, G. J. (1951). The division of labor is limited by the extent of the market. Journal of Political Economy 59, 185–193.',
  dur:10,hint:'Slide the size of the market. Better roads, canals and ports widen markets, which is why Smith tied specialisation to trade.',
@@ -721,13 +721,13 @@ function E1_bakers(dB,weeks){
 }
 SCENE({id:'invisible-hand-prices',name:'Prices as signals',tag:'Coordination without a plan',
  definition:'When demand rises somewhere, its price rises; producers chasing the better price move resources there until prices even out. No one plans the move: the price carries the information. This is the idea later read into Smith’s phrase.',
- example:'If the people of town B start wanting 150 loaves a day instead of 100, bread there gets dearer, bakers drift from A to B, and within a few weeks the two prices meet again with about 12 or 13 bakers in B.',
+ example:'If the people of town B start wanting 160 loaves a day instead of 100, bread there gets dearer, bakers drift from A to B, and within three weeks the two prices meet again at £1.30 with 13 bakers in B.',
  desc:'Two towns with twenty bakers between them, the price of bread in each, and a chart of both prices week by week as bakers move to the dearer town.',
  research:'Smith, A. (1776). The Wealth of Nations, Book I, chapter 7 (natural and market price). Hayek, F. A. (1945). The use of knowledge in society. American Economic Review 35, 519–530. The adjustment rule here (one baker moves per week) is illustrative.',
  dur:10,hint:'Change how much bread town B wants and how many weeks pass. Bakers move one at a time towards the higher price.',
- init:()=>({dB:150,wk:12}),
- watch(p){return {dB:150,wk:Math.round(p*12)}},
- ui:[{range:'dB',label:'Loaves wanted in town B',min:40,max:200,step:10,get:s=>s.dB,act:'dB'},{range:'wk',label:'Weeks',min:0,max:12,step:1,get:s=>s.wk,act:'wk'}],
+ init:()=>({dB:160,wk:12}),
+ watch(p){return {dB:160,wk:Math.round(p*12)}},
+ ui:[{range:'dB',label:'Loaves wanted in town B',min:40,max:200,step:20,get:s=>s.dB,act:'dB'},{range:'wk',label:'Weeks',min:0,max:12,step:1,get:s=>s.wk,act:'wk'}],
  on:{dB(s,v){s.dB=Number(v);return 'keep'},wk(s,v){s.wk=Number(v);return 'keep'}},
  draw(s){
   const H=E1_bakers(s.dB,12),now=H[Math.min(12,s.wk)];let out=heading('Bread prices in two towns',28);
@@ -829,7 +829,7 @@ SCENE({id:'comparative-advantage-ppf',name:'Who gains, at what price',tag:'Terms
 
 SCENE({id:'comparative-advantage-limits',name:'Costs and losers',tag:'What the simple model leaves out',
  definition:'Ricardo’s example assumes no transport costs and workers who move freely between industries. Shipping costs eat into the gains, and inside each country some people lose even when the country as a whole gains.',
- example:'If a tenth of every shipment were lost on the way, Portugal’s gain in Ricardo’s example would vanish; England’s would survive until about a sixth was lost. And English wine-makers, or Portuguese weavers, lose their trade.',
+ example:'If a ninth of every shipment were lost on the way, Portugal’s gain in Ricardo’s example would vanish; England’s would survive until about a sixth was lost. And English wine-makers, or Portuguese weavers, lose their trade.',
  desc:'A transport-cost slider shows each country’s gain from trading one cloth for one wine shrinking to nothing; a second view lists who gains and who loses inside each country.',
  research:'Ricardo, D. (1817). Principles, chapter 7. Stolper, W. F. & Samuelson, P. A. (1941). Protection and real wages. Review of Economic Studies 9, 58–73. Samuelson, P. A. (1954) on “iceberg” transport costs. Autor, D., Dorn, D. & Hanson, G. (2013). The China syndrome. American Economic Review 103, 2121–2168.',
  dur:10,hint:'Raise the share lost in shipping and watch the gains disappear, or switch to see who wins and who loses inside each country.',
@@ -936,12 +936,12 @@ SCENE({id:'malthus-population-transition',name:'The demographic transition',tag:
   [0,.25,.5,.75].forEach((x,i)=>{out+=L(pl.X(x),62,pl.X(x),212,C.grid,1)+TF(pl.X(x+.125),228,'stage '+(i+1),12.5,C.muted)});
   out+=TF(80,80,'births',13,C.blue,'start')+TF(80,98,'deaths',13,C.coral,'start');
   // Population index from integrating the gap.
-  const pp=E1_plot(70,262,300,80,[0,1],[0,8],{yt:[[1,'1'],[4,'4'],[8,'8']],yl:'population (×)'});
-  out+=pp.svg;let P0=1;const pts=[[pp.X(0),pp.Y(1)]];for(let i=1;i<=N*s.t;i++){const t=i/N,r=E1_bd(t);P0*=Math.exp((r.b-r.d)/1000*2.6);pts.push([pp.X(t),pp.Y(Math.min(8,P0))])}
+  const pp=E1_plot(70,262,300,80,[0,1],[0,13],{yt:[[1,'1'],[6,'6'],[12,'12']],yl:'population (×)'});
+  out+=pp.svg;let P0=1;const pts=[[pp.X(0),pp.Y(1)]];for(let i=1;i<=N*s.t;i++){const t=i/N,r=E1_bd(t);P0*=Math.exp((r.b-r.d)/1000*2.6);pts.push([pp.X(t),pp.Y(Math.min(13,P0))])}
   out+=E1_poly(pts,C.ink,2.4);
   const r=E1_bd(s.t),st=1+Math.min(3,Math.floor(s.t*4));
   out+=counter(410,70,'birth rate',r.b.toFixed(0),C.blue,150)+counter(410,128,'death rate',r.d.toFixed(0),C.coral,150)+counter(410,186,'natural growth',((r.b-r.d)/10).toFixed(1)+'% a year',C.green,150)+counter(410,262,'population',`×${E1_f(P0,1)}`,C.ink,150);
-  return {svg:out,phase:`Stage ${st}: about ${r.b.toFixed(0)} births and ${r.d.toFixed(0)} deaths per 1,000 people a year, so the population grows ${((r.b-r.d)/10).toFixed(1)}% a year. ${st===2?'Deaths have fallen but births have not yet: the fastest growth.':st===4?'Both are low: growth has almost stopped without Malthus’s checks.':''}`};
+  return {svg:out,phase:`Stage ${st}: about ${r.b.toFixed(0)} births and ${r.d.toFixed(0)} deaths per 1,000 people a year, so the population grows ${((r.b-r.d)/10).toFixed(1)}% a year. ${st===2?'Deaths have fallen but births have not yet: the fastest growth.':st===4?'Both are now low, so growth is slowing towards a stop without Malthus’s checks.':''}`};
  }});
 
 /* ================================================================ diminishing-returns */
@@ -1610,7 +1610,7 @@ SCENE({id:'general-equilibrium',name:'Walras’s auctioneer',tag:'Every market c
   out+=g.svg+L(g.X(0),g.Y(E2_PSTAR),g.X(13),g.Y(E2_PSTAR),C.green,1.3,'stroke-dasharray="5 4"');
   const h=(s.hist&&s.hist.length?s.hist:[p]).slice(-14);out+=E2_poly(h.map((v,i)=>[g.X(i),g.Y(Math.min(2,v))]),C.ink,2)+h.map((v,i)=>Ci(g.X(i),g.Y(Math.min(2,v)),3.5,C.ink)).join('');
   out+=TF(475,272,'price × apple gap',13,C.muted)+TF(475,290,'+ bread gap = '+E2_n(p*za+zb,2),13,C.muted);
-  return {svg:out,phase:Math.abs(za)<.05?`At ${p.toFixed(2)} loaves an apple, both markets clear at once. That is a general equilibrium (exactly 0.78 here).`:`At ${p.toFixed(2)} loaves an apple, apples are ${za>0?'short':'in surplus'} by ${E2_n(Math.abs(za),1)} and bread is ${zb>0?'short':'in surplus'} by ${E2_n(Math.abs(zb),1)}. Walras’s law: the value of one market’s gap always balances the other’s, so raising the apple price ${za>0?'helps both':'is the wrong way'}.`};
+  return {svg:out,phase:Math.abs(za)<.05?`At ${p.toFixed(2)} loaves an apple, both markets clear at once. That is a general equilibrium (about 0.78 here).`:`At ${p.toFixed(2)} loaves an apple, apples are ${za>0?'short':'in surplus'} by ${E2_n(Math.abs(za),1)} and bread is ${zb>0?'short':'in surplus'} by ${E2_n(Math.abs(zb),1)}. Walras’s law: the value of one market’s gap always balances the other’s, so raising the apple price ${za>0?'helps both':'is the wrong way'}.`};
  }});
 
 // Edgeworth box: A's utility x^0.6 y^0.4, B's x^0.3 y^0.7, 10 apples and 10 loaves in total.
@@ -1650,7 +1650,7 @@ SCENE({id:'general-equilibrium-edgeworth',name:'The Edgeworth box',tag:'Trades t
 
 SCENE({id:'general-equilibrium-stability',name:'Can prices find their way?',tag:'Stability of tâtonnement',
  definition:'Proving that an equilibrium exists is not the same as showing that markets reach it. If the auctioneer reacts too strongly to excess demand, prices overshoot and swing back and forth; in some examples they cycle for ever, however gently they adjust.',
- example:'In the apple market here, adjusting by 0.06 per unit of excess demand settles smoothly; at 0.30 it swings back and forth; above about 0.34 the swings grow.',
+ example:'In the apple market here, adjusting by 0.06 per unit of excess demand settles smoothly; at 0.30 it swings back and forth; above about 0.34 the swings never die away.',
  desc:'Prices called round after round from the same start, for the chosen adjustment speed, against the equilibrium price.',
  research:'Walras, L. (1874). Éléments. Scarf, H. (1960). Some examples of global instability of the competitive equilibrium. International Economic Review 1, 157–172. Sonnenschein, H. (1973), Mantel, R. (1974), Debreu, G. (1974): aggregate excess demand can have almost any shape. The speeds here are an illustration with the two-trader economy, not Scarf’s three-good example.',
  dur:10,hint:'Change how strongly the auctioneer reacts. Small steps creep to the equilibrium; large ones overshoot. Scarf showed that with three goods, prices can circle for ever even with small steps.',
@@ -1664,9 +1664,9 @@ SCENE({id:'general-equilibrium-stability',name:'Can prices find their way?',tag:
   out+=pl.svg+L(pl.X(0),pl.Y(E2_PSTAR),pl.X(24),pl.Y(E2_PSTAR),C.green,1.4,'stroke-dasharray="6 4"')+TF(pl.X(24)-4,pl.Y(E2_PSTAR)-6,'equilibrium 0.78',13,C.green,'end');
   out+=E2_poly(h.map((v,i)=>[pl.X(i),pl.Y(Math.min(2,v))]),C.blue,2.4)+h.map((v,i)=>Ci(pl.X(i),pl.Y(Math.min(2,v)),3,C.blue)).join('');
   const last=h.slice(-4),swing=Math.max(...last)-Math.min(...last),gain=s.k*3.6/(E2_PSTAR*E2_PSTAR);
-  const verdict=gain<1?'settles smoothly':gain<2?'overshoots, then settles':'swings grow';
+  const verdict=gain<1?'settles smoothly':gain<2?'overshoots, then settles':'keeps swinging';
   out+=TF(300,336,`speed ${s.k.toFixed(2)}: ${verdict}`,15,gain<1?C.green:gain<2?C.amber:C.coral);
-  return {svg:out,phase:gain<1?`At speed ${s.k.toFixed(2)} each step closes part of the gap, so prices creep up to 0.78.`:gain<2?`At speed ${s.k.toFixed(2)} each step overshoots the equilibrium, but by less each time, so the swings die away.`:`At speed ${s.k.toFixed(2)} each overshoot is larger than the last (the final swings span ${E2_n(swing,2)}). The equilibrium exists, but this process never reaches it.`};
+  return {svg:out,phase:gain<1?`At speed ${s.k.toFixed(2)} the price ${h[1]>E2_PSTAR?'jumps past 0.78 on the first step and then eases back down to it':'creeps up to 0.78'}: near the equilibrium each step closes part of the gap.`:gain<2?`At speed ${s.k.toFixed(2)} each step overshoots the equilibrium, but by less each time, so the swings die away.`:`At speed ${s.k.toFixed(2)} the overshoots no longer die away: the price keeps swinging either side of 0.78 (the final swings span ${E2_n(swing,2)}). The equilibrium exists, but this process never reaches it.`};
  }});
 
 /* ================================================================ externalities */
@@ -1933,7 +1933,7 @@ SCENE({id:'great-depression-banks',name:'Why was it so deep?',tag:'Four explanat
 
 // Leaving gold and recovery: industrial production in 1935 relative to 1929 (approximate, after
 // Eichengreen & Sachs 1985, their figure 1, rounded; illustrative positions).
-const E3_GOLD=[{c:'Sweden',y:1931,ip:123},{c:'Britain',y:1931,ip:106},{c:'Denmark',y:1931,ip:117},{c:'Norway',y:1931,ip:113},{c:'Finland',y:1931,ip:132},{c:'Germany',y:1931.6,ip:94},{c:'Belgium',y:1935,ip:83},{c:'Italy',y:1934.5,ip:93},{c:'France',y:1936,ip:72},{c:'Netherlands',y:1936,ip:86}];
+const E3_GOLD=[{c:'Sweden',y:1931,ip:123},{c:'Britain',y:1931,ip:106},{c:'Denmark',y:1931,ip:117},{c:'Norway',y:1931,ip:113},{c:'Finland',y:1931,ip:132},{c:'Germany',y:1931.6,ip:94,ctl:true},{c:'Belgium',y:1935,ip:83},{c:'Italy',y:1934.5,ip:93,ctl:true},{c:'France',y:1936,ip:72},{c:'Netherlands',y:1936,ip:86}];
 SCENE({id:'great-depression-gold',name:'Leaving gold',tag:'Who recovered first?',
  definition:'Under the gold standard each currency was worth a fixed weight of gold, so a country losing gold had to raise interest rates and squeeze its economy. Countries that left gold could cut rates and let prices rise again, and on the whole they recovered sooner.',
  example:'Sweden and Britain left gold in 1931; by 1935 their industry was above its 1929 level. France held on until 1936 and was still about 30% below.',
@@ -1954,10 +1954,10 @@ SCENE({id:'great-depression-gold',name:'Leaving gold',tag:'Who recovered first?'
   out+=L(pl.X(1931),pl.Y(a+b*1931),pl.X(1936),pl.Y(a+b*1936),C.purple,2,'stroke-dasharray="7 5"');
   E3_GOLD.forEach((d,i)=>{const on=i===s.k;out+=hit(X,'k',i,d.c,Ci(pl.X(d.y),pl.Y(d.ip),on?8:6,on?C.coral:C.blue,'#fff'))});
   const d=E3_GOLD[s.k];
-  out+=R(420,64,164,168,'#fff',C.grid,10)+TBF(502,88,d.c,16,C.coral)+TF(502,112,`left gold: ${Math.floor(d.y)}`,13,C.ink)+TF(502,132,`industry 1935: ${d.ip}`,13,C.ink);
+  out+=R(420,64,164,168,'#fff',C.grid,10)+TBF(502,88,d.c,16,C.coral)+TF(502,112,`${d.ctl?'controls':'left gold'}: ${Math.floor(d.y)}`,13,C.ink)+TF(502,132,`industry 1935: ${d.ip}`,13,C.ink);
   out+=E3_para(502,160,d.ip>=100?'Above its 1929 level.':'Still below its 1929 level.',22,13,d.ip>=100?C.green:C.coral,18,'middle');
   out+=TF(502,206,`trend: ${b.toFixed(1)} points a year`,13,C.purple)+TF(502,224,'later exit',13,C.purple);
-  return {svg:out,phase:`${d.c} left gold in ${Math.floor(d.y)}; by 1935 its industry stood at about ${d.ip}% of 1929. Across these countries each extra year on gold goes with about ${Math.abs(b).toFixed(0)} points less recovery. A correlation, but a strong and widely accepted one.`};
+  return {svg:out,phase:`${d.c} ${d.ctl?'imposed exchange controls':'left gold'} in ${Math.floor(d.y)}; by 1935 its industry stood at about ${d.ip}% of 1929. Across these countries each extra year on gold goes with about ${Math.abs(b).toFixed(0)} points less recovery. A correlation, but a strong and widely accepted one.`};
  }});
 
 /* ================================================================ national-accounts */
@@ -1991,7 +1991,7 @@ SCENE({id:'national-accounts',name:'Measuring the whole economy',tag:'Value adde
 // Expenditure approach: GDP = C + I + G + (X − M). Shares are rounded UK figures (ONS, early 2020s, approximate).
 SCENE({id:'national-accounts-expenditure',name:'Who buys the output?',tag:'C + I + G + (X − M)',
  definition:'GDP can be measured by adding up spending on final output: households’ consumption (C), firms’ investment (I), government purchases (G) and exports minus imports (X − M). Measured carefully, spending, output and incomes give the same total.',
- example:'In the UK in the early 2020s households’ spending was roughly 60% of GDP, government purchases about 20%, investment about 18%, and net trade a small negative.',
+ example:'In the UK in the early 2020s households’ spending was roughly 60% of GDP, government purchases about 21%, investment about 18%, and net trade a small negative.',
  desc:'A stacked bar of the four parts of spending, which the learner sets, with GDP as their sum, beside rounded UK shares.',
  research:'Keynes, J. M. (1936). The General Theory. Stone, R. (1984). The accounts of society (Nobel lecture). Office for National Statistics, UK National Accounts (Blue Book), GDP expenditure components (shares rounded; approximate).',
  dur:10,hint:'Set the four parts and watch GDP add up. Imports are subtracted because they were produced abroad, though households, firms and government all buy some.',
@@ -2253,7 +2253,7 @@ SCENE({id:'keynes-hayek-sim',name:'A slump, three ways',tag:'A toy model',
 
 // What later evidence says, and which side each finding leans towards.
 const E3_EVID=[
- {id:'mult',t:'Fiscal multipliers',lean:'Keynes',col:C.blue,body:'Estimates mostly lie between 0.5 and 2, larger in deep slumps and when interest rates are near zero (Ramey 2019; Auerbach & Gorodnichenko 2012).',cav:'Smaller in normal times, and smaller still if spending is expected to be reversed.'},
+ {id:'mult',t:'Fiscal multipliers',lean:'Keynes',col:C.blue,body:'Estimates mostly lie between 0.5 and 2, larger in deep slumps in some studies (Auerbach & Gorodnichenko 2012); Ramey (2019) finds that fragile, with firmer evidence when interest rates are near zero.',cav:'Smaller in normal times, and smaller still if spending is expected to be reversed.'},
  {id:'aust',t:'Austerity after 2010',lean:'Keynes',col:C.blue,body:'The IMF found that forecasters underestimated how much cutting budgets in 2010–11 would cut growth (Blanchard & Leigh 2013).',cav:'Some countries cut without a slump; the effect depends on monetary policy and trust in public finances.'},
  {id:'credit',t:'Credit booms and crises',lean:'Hayek',col:C.amber,body:'Across 14 countries over 140 years, rapid credit growth was the best single predictor of financial crises (Schularick & Taylor 2012).',cav:'This fits Minsky as well as Hayek, and does not show that stimulus after a crash is harmful.'},
  {id:'liq',t:'Liquidation in the 1930s',lean:'Keynes',col:C.blue,body:'Letting banks fail and prices fall in 1930–33 deepened the Depression rather than clearing it (Friedman & Schwartz 1963; Bernanke 1983).',cav:'Friedman’s reading is monetary rather than Keynesian, but it rejects liquidation too.'},
@@ -2449,7 +2449,7 @@ SCENE({id:'prisoners-dilemma',name:'The prisoner’s dilemma',tag:'Ten strangers
  definition:'In a prisoner’s dilemma each player does better by defecting whatever the other does, yet both do better if both cooperate than if both defect.',
  example:'Two firms can each hold prices or undercut. Undercutting wins customers whatever the rival does, but if both undercut, both earn less than if both had held their prices.',
  desc:'A payoff table with your points in blue and the other player’s in coral. You play ten one-off rounds, each against a different stranger, and see your score beside what always cooperating or always defecting would have earned against the same strangers.',
- research:'Flood (1958), Some experimental games, Management Science 5: the 1950 RAND experiments with Melvin Dresher. Albert Tucker (1950) gave the game its prisoners’ story. Sally (1995), Rationality and Society 7: across one-shot experiments from 1958 to 1992, roughly half of players cooperated.',
+ research:'Flood (1958), Some experimental games, Management Science 5: the 1950 RAND experiments with Melvin Dresher. Albert Tucker (1950) gave the game its prisoners’ story. Sally (1995), Rationality and Society 7: across social-dilemma experiments from 1958 to 1992, players cooperated roughly half the time on average.',
  dur:12,hint:'Choose Cooperate or Defect in each of ten one-off rounds. Each stranger’s move is fixed in advance by a seeded draw. Your choices stay in this page.',
  init:()=>({seed:4,hist:[]}),
  watch(p){const n=Math.min(10,Math.floor(p*11));return {seed:4,hist:E4_pdSim(4,n),sim:true}},
@@ -2595,10 +2595,10 @@ SCENE({id:'nash-equilibrium',name:'Nash equilibrium',tag:'Best replies that poin
  }});
 
 // Penalty kicks: scoring probabilities (%) from Palacios-Huerta (2003), rows = kicker, columns = keeper; N = natural side.
-const E4_PK=[[58.30,94.97],[92.91,69.92]];
+const E4_PK=[[69.92,92.91],[94.97,58.30]];
 SCENE({id:'nash-equilibrium-mixed',name:'Mixed strategies: penalty kicks',tag:'Be unpredictable in the right proportions',
  definition:'A mixed strategy chooses between actions at random with set probabilities. In a mixed equilibrium each player mixes so that the other is indifferent between their options.',
- example:'A kicker who always shoots to their natural side is easy to read. Shooting there about 39% of the time leaves the keeper no better dive.',
+ example:'A kicker who always shoots to their natural side is easy to read. Shooting there about 61% of the time leaves the keeper no better dive.',
  desc:'A graph of the chance of scoring against how often the kicker shoots to their natural side. One line is the keeper diving to that side, the other diving the other way; the keeper picks the lower, and the kicker’s best mix is where the lines cross.',
  research:'Palacios-Huerta (2003). Professionals play minimax. Review of Economic Studies 70, 395–415: 1,417 penalty kicks; scoring rates of 58.3, 95.0, 92.9 and 69.9%, and observed mixes within about 1.5 percentage points of the equilibrium. Chiappori, Levitt & Groseclose (2002), American Economic Review 92.',
  dur:10,hint:'Move the kicker’s mix. The keeper always chooses the dive that lowers your chance of scoring; find the mix that makes the keeper’s choice irrelevant.',
@@ -3189,7 +3189,7 @@ WORD(
  {key:'dominant-strategy',title:'Dominant strategy',aliases:['dominant strategy','dominates','dominated strategy'],linkContext:'prisoners-dilemma-dominance',scene:'prisoners-dilemma-dominance',here:'A strategy that is the best reply whatever the other players do.',contrast:'Most games have no dominant strategy; then your best move depends on what you expect others to do.',example:'Defecting in the one-shot prisoner’s dilemma; bidding your value in a second-price auction.'},
  {key:'best-response',title:'Best response',aliases:['best response','best reply','best replies','best-reply line'],linkContext:'nash-equilibrium',scene:'nash-equilibrium-cournot',here:'The strategy that gives a player the highest payoff, given what the others are doing.',contrast:'A best response is relative to others’ choices; a dominant strategy is a best response to every choice.',example:'Producing (90 − rival’s output) ÷ 2 in the Cournot example.'},
  {key:'nash-equilibrium-concept',title:'Nash equilibrium',aliases:['Nash equilibrium','Nash equilibria','equilibrium point'],linkContext:'nash-equilibrium',scene:'nash-equilibrium',here:'A set of strategies, one per player, in which nobody can do better by changing their own strategy alone.',contrast:'Not necessarily the best outcome for the group: in the prisoner’s dilemma the equilibrium is worse for both.',example:'Both hunters chasing hares in the stag hunt.'},
- {key:'mixed-strategy',title:'Mixed strategy',aliases:['mixed strategy','mixed strategies','randomising'],linkContext:'nash-equilibrium-mixed',scene:'nash-equilibrium-mixed',here:'Choosing between actions at random with set probabilities, so that opponents cannot exploit a pattern.',contrast:'Not careless: the probabilities are chosen precisely so the opponent is indifferent between their options.',example:'Kicking to your natural side about 39% of the time in penalties.'},
+ {key:'mixed-strategy',title:'Mixed strategy',aliases:['mixed strategy','mixed strategies','randomising'],linkContext:'nash-equilibrium-mixed',scene:'nash-equilibrium-mixed',here:'Choosing between actions at random with set probabilities, so that opponents cannot exploit a pattern.',contrast:'Not careless: the probabilities are chosen precisely so the opponent is indifferent between their options.',example:'Kicking to your natural side about 61% of the time in penalties.'},
  {key:'stag-hunt',title:'Stag hunt',aliases:['stag hunt'],linkContext:'prisoners-dilemma-dominance',scene:'nash-equilibrium',here:'A game where cooperating pays best if the other cooperates, but going it alone is safe: two equilibria, and the problem is trust.',contrast:'In a prisoner’s dilemma defecting is tempting even if the other cooperates; in a stag hunt it is not.',example:'Two hunters who can catch a stag only together, or a hare each alone.'},
  {key:'game-of-chicken',title:'Chicken',aliases:['game of chicken','snowdrift game'],linkContext:'prisoners-dilemma-dominance',scene:'nash-equilibrium',here:'A game where each player prefers to do the opposite of the other, so one gives way in each equilibrium.',contrast:'Unlike the prisoner’s dilemma, the worst outcome is both standing firm.',example:'Two drivers heading for each other: someone must swerve.'},
  {key:'cournot-competition',title:'Cournot competition',aliases:['Cournot competition','Cournot duopoly','Cournot equilibrium'],linkContext:'nash-equilibrium-cournot',scene:'nash-equilibrium-cournot',here:'Competition in which firms choose quantities, and the market price depends on their total output.',contrast:'In Bertrand competition firms choose prices instead, which can drive prices to cost even with two firms.',example:'Two firms each producing 30 units at a price of 60.'},
@@ -3358,7 +3358,7 @@ SCENE({id:'inflation-money',name:'Money, spending and prices',tag:'The quantity 
  }});
 
 SCENE({id:'inflation-money-erosion',name:'What inflation does to £100',tag:'Purchasing power and the rule of 70',
- definition:'Inflation erodes purchasing power: at inflation π, £100 today buys what about £100 ÷ (1 + π)ᵗ buys after t years. The time for prices to double is about 70 divided by the inflation rate in per cent.',
+ definition:'Inflation erodes purchasing power: at inflation π, £100 kept for t years buys only what about £100 ÷ (1 + π)ᵗ buys today. The time for prices to double is about 70 divided by the inflation rate in per cent.',
  example:'At 2% inflation prices double in about 35 years; at 10% they double in about 7 years, and £100 buys what £39 buys today after 10 years.',
  desc:'A curve shows what £100 is worth in today’s money year by year at your chosen inflation rate, with a dashed curve for the 2% target. Tiles give the value after your chosen number of years, the exact doubling time and the rule-of-70 estimate.',
  research:'The rule of 70 follows from ln 2 ≈ 0.693 and ln(1 + π) ≈ π for small π. UK inflation target of 2% (CPI) set by the government for the Bank of England since 2003; from 1997 the target was 2.5% on RPIX. Office for National Statistics, Consumer price inflation tables.',
@@ -3443,10 +3443,10 @@ SCENE({id:'central-banks',name:'Setting the interest rate',tag:'The Taylor rule'
   labs.forEach((l,k)=>out+=TF(pl.X(k+.5),298,l,12,C.muted));
   out+=counter(400,56,'inflation',s.pi+'%',C.coral,170)+counter(400,110,'output gap',(s.gap>0?'+':'')+s.gap+'%',C.purple,170);
   out+=R(400,166,170,64,i<0.25?C.amberp:C.pale,'none',8)+TF(485,186,'suggested rate',12,C.muted)+TBF(485,216,i.toFixed(2)+'%',22,i<0.25?C.amber:C.blue);
-  if(i<0.25)out+=E5_lines(404,252,['Below the floor: rates','cannot go far under zero,','so banks used QE instead.'],13,C.amber);
+  if(i<0.25)out+=E5_lines(404,252,['At or below the floor: rates','cannot go far under zero,','so banks used QE instead.'],13,C.amber);
   out+=T(300,336,'i = r* + π + ½(π − 2%) + ½ × output gap',15);
   out+=TF(300,360,'A rule of thumb that described US policy in 1987–92 (Taylor 1993), not a law.',13,C.muted);
-  return {svg:out,phase:i<0.25?'The rule asks for a negative rate, but cash pays zero, so rates cannot fall far below zero. After 2008 central banks met this floor and turned to quantitative easing and forward guidance.':`The rule raises rates by more than any rise in inflation (1.5 points per point), so real rates rise and cool demand. Here it suggests ${i.toFixed(2)}%. Central banks look at rules like this but decide by judgement.`};
+  return {svg:out,phase:i<0.25?'The rule asks for a rate of zero or less, but cash pays zero, so rates cannot fall far below zero. After 2008 central banks met this floor and turned to quantitative easing and forward guidance.':`The rule raises rates by more than any rise in inflation (1.5 points per point), so real rates rise and cool demand. Here it suggests ${i.toFixed(2)}%. Central banks look at rules like this but decide by judgement.`};
  }});
 
 const E5_STEPS=[['Bank Rate','changes'],['Market and','mortgage rates'],['Spending and','borrowing'],['Output','and jobs'],['Inflation','']];
@@ -3551,7 +3551,7 @@ SCENE({id:'compound-interest-frequency',name:'How often is interest added?',tag:
    out+=TF(x,288,q[1],12,on?C.ink:C.muted)});
   const v=val(E5_FREQ.find(q=>q[0]===s.n)[2]);
   out+=T(300,330,`Added ${E5_FREQ.find(q=>q[0]===s.n)[1]}: annual equivalent rate ${((v-1)*100).toFixed(2)}% (stated rate ${s.r}%)`,15);
-  out+=TF(300,354,s.r>=50?'The bars approach e^r: here '+top.toFixed(4)+'. With r = 100% that is e = 2.71828…':'At low rates the frequency barely matters: the bars differ in the third decimal place.',13,C.muted);
+  out+=TF(300,354,s.r>=50?'The bars approach e^r: here '+top.toFixed(4)+'. With r = 100% that is e = 2.71828…':'The lower the rate, the less the frequency matters: at 5% it adds only about 0.1p.',13,C.muted);
   return {svg:out,phase:'Each extra addition gives interest a little longer to earn interest. The gain shrinks as additions become more frequent, and the total approaches a limit: eʳ. Bernoulli asked this question in 1683, which is how the number e first appeared.'};
  }});
 
@@ -3624,7 +3624,7 @@ SCENE({id:'bank-runs',name:'A bank’s balance sheet',tag:'Why sound banks can f
   let thr=null;for(let w=0;w<=60;w+=.5)if(E5_sheet(s.res,w,s.hc).fail){thr=w;break}
   out+=T(300,338,a.fail?`The bank fails: ${a.illiquid?'it runs out of loans to sell':'fire-sale losses exceed its equity'}.`:`The bank survives with equity of ${a.eq.toFixed(1)} (of 8).`,15,a.fail?C.coral:C.green);
   out+=TF(300,358,thr!==null?`With these settings a run of ${thr}% of deposits is enough to sink it.`:'With these settings it survives even a 60% run.',13,C.muted);
-  return {svg:out,phase:'The bank was solvent before the run: its loans were worth more than its deposits. Selling them in a hurry destroys value, so a run can bring down a sound bank. That is why runs can be self-fulfilling.'};
+  return {svg:out,phase:'The bank was solvent before the run: its assets (reserves plus loans) were worth more than its deposits. Selling them in a hurry destroys value, so a run can bring down a sound bank. That is why runs can be self-fulfilling.'};
  }});
 
 // Diamond–Dybvig style game: 10 depositors with £1 each. The bank holds 3 in cash and 7 in loans that pay 1.5
@@ -3876,7 +3876,7 @@ WORD(
  {key:'fractional-reserve',title:'Fractional-reserve banking',aliases:['fractional-reserve banking','fractional reserve','reserves'],linkContext:'bank-runs',scene:'bank-runs',here:'Banks keep only part of their deposits as reserves and lend the rest, so they cannot repay everyone at once.',contrast:'A bank can be solvent (assets worth more than debts) yet illiquid (unable to pay quickly).',example:'A bank with 10% reserves can pay a tenth of its deposits on demand.'},
  {key:'bank-run',title:'Bank run',aliases:['bank run','bank runs','run on the bank'],linkContext:'bank-runs-game',scene:'bank-runs-game',here:'Many depositors withdrawing at once because they fear a bank will fail, which can make it fail.',contrast:'A run can be self-fulfilling: it can bring down a bank that was sound before it started.',example:'Northern Rock in 2007; Silicon Valley Bank in 2023.'},
  {key:'coordination-failure',title:'Coordination failure',aliases:['coordination failure','coordination game'],linkContext:'bank-runs-game',scene:'bank-runs-game',here:'A situation with more than one stable outcome, where people end up at a worse one because each acts on what they expect others to do.',contrast:'Unlike the prisoner’s dilemma, the good outcome is also stable if everyone expects it.',example:'Everyone waiting is best for all, but if enough expect a run, running becomes each person’s best choice.'},
- {key:'deposit-insurance',title:'Deposit insurance',aliases:['deposit insurance','deposit guarantee','FSCS'],linkContext:'bank-runs-insurance',scene:'bank-runs-insurance',here:'A guarantee that depositors will be repaid up to a limit if their bank fails, removing the reason to run.',contrast:'It creates moral hazard, so insured banks are regulated and must hold capital.',example:'UK deposits are protected up to £85,000 per person per bank by the FSCS.'},
+ {key:'deposit-insurance',title:'Deposit insurance',aliases:['deposit insurance','deposit guarantee','FSCS'],linkContext:'bank-runs-insurance',scene:'bank-runs-insurance',here:'A guarantee that depositors will be repaid up to a limit if their bank fails, removing the reason to run.',contrast:'It creates moral hazard, so insured banks are regulated and must hold capital.',example:'UK deposits are protected up to £120,000 per person per authorised bank by the FSCS (£85,000 before December 2025).'},
  {key:'purchasing-power-parity',title:'Purchasing power parity (PPP)',aliases:['purchasing power parity','PPP'],linkContext:'exchange-rates',scene:'exchange-rates',here:'The idea that exchange rates tend, in the long run, to equalise the price of the same goods in different countries.',contrast:'Holds poorly in the short run: deviations take years to halve.',example:'The Big Mac index compares one burger’s price across countries.'},
  {key:'exchange-rate',title:'Exchange rate',aliases:['exchange rate','exchange rates'],linkContext:'exchange-rates',scene:'exchange-rates',here:'The price of one currency in terms of another.',contrast:'A fixed (pegged) rate is held by the central bank; a floating rate is set by the market.',example:'£1 = $1.27 means a pound buys 1.27 dollars.'},
  {key:'depreciation',title:'Depreciation (of a currency)',aliases:['depreciation','depreciates','devaluation'],linkContext:'exchange-rates-depreciation',scene:'exchange-rates-depreciation',here:'A fall in a currency’s value against others; a devaluation is a deliberate cut in a fixed rate.',contrast:'Makes imports dearer and exports cheaper abroad.',example:'Sterling fell by around 15–20% after the 2016 referendum.'},
@@ -3935,7 +3935,7 @@ SCENE({id:'ultimatum-game',name:'The ultimatum game',tag:'You propose a split of
  definition:'In the ultimatum game one player proposes how to split a sum; the other can accept, and both get the split, or reject, and both get nothing.',
  example:'Offering £1 of £10 is the “rational” prediction if responders take any money; real responders often reject such offers, so real proposers offer £4 or £5.',
  desc:'You choose an offer out of £10 and play it against ten simulated responders whose rejection pattern follows published averages; a curve shows the expected earnings from every offer.',
- research:'Güth, Schmittberger & Schwarze (1982). An experimental analysis of ultimatum bargaining. J. Econ. Behav. Organ. 3. Camerer (2003). Behavioral Game Theory: offers average 40–50%; offers under 20% are rejected about half the time. Roth et al. (1991) on proposers’ offers near the earnings-maximising level. Widely replicated.',
+ research:'Güth, Schmittberger & Schwarze (1982). An experimental analysis of ultimatum bargaining. J. Econ. Behav. Organ. 3. Camerer (2003). Behavioral Game Theory: the most common offers are 40–50% and the mean is 30–40%; offers under 20% are rejected about half the time. Roth et al. (1991) on proposers’ offers near the earnings-maximising level. Widely replicated.',
  dur:10,hint:'Set your offer with the slider and press Make the offer. The responders are simulated; nothing you choose leaves this page.',
  init:()=>({offer:4,plays:[]}),
  watch(p){const o=[1,2,3,4,5][Math.min(4,Math.floor(p*5))];return {offer:o,plays:[1,2,3,4,5].filter(v=>v<=o).map(v=>({offer:v,acc:E6_UTH.filter(t=>v*10>=t).length})),sim:true}},
@@ -3996,7 +3996,7 @@ const E6_SOC=[
  {n:'Tsimane (Bolivia)',v:37,t:'Forager-horticulturalists of the Bolivian lowlands.'},
  {n:'Hadza (Tanzania)',v:40,t:'Foragers; offers and rejections varied with camp size.'},
  {n:'Au (Papua New Guinea)',v:43,t:'Some offers above 50% were rejected: in gift-giving cultures, accepting a large gift can create an unwanted obligation.'},
- {n:'Orma (Kenya)',v:44,t:'Pastoralists; offers resembled contributions to local public goods (harambee).'},
+ {n:'Orma (Kenya)',v:44,t:'Pastoralists. They likened the related public-goods game to harambee, their local fund-raising for community projects.'},
  {n:'US students (comparison)',v:44,t:'Typical of university-student samples in industrial societies.'},
  {n:'Aché (Paraguay)',v:51,t:'Foragers who share meat widely across the group.'},
  {n:'Lamalera (Indonesia)',v:58,t:'Whale hunters whose catch is divided by elaborate cooperative rules. The highest mean offers.'}];
@@ -4118,7 +4118,7 @@ SCENE({id:'public-goods-game',name:'The public-goods game',tag:'Play ten rounds 
  definition:'In a public-goods game each player chooses how much to put into a common pot that is multiplied and shared equally; contributing helps the group but costs the contributor.',
  example:'Each token you put in returns only 0.4 to you but 1.6 to the group, so the group does best if everyone gives everything, and each person does best by giving nothing.',
  desc:'Ten rounds with three simulated players who cooperate conditionally. Your contributions and theirs are plotted as a share of the 20-token endowment, beside the typical decline in lab experiments.',
- research:'Ledyard (1995). Public goods: a survey of experimental research. Handbook of Experimental Economics. Fischbacher, Gächter & Fehr (2001), Economics Letters 71: most people are conditional cooperators. Fehr & Gächter (2000), AER 90. Contributions start near half and decay, a robust pattern.',
+ research:'Ledyard (1995). Public goods: a survey of experimental research. Handbook of Experimental Economics. Fischbacher, Gächter & Fehr (2001), Economics Letters 71: about half of participants are conditional cooperators and about a third free ride. Fehr & Gächter (2000), AER 90. Contributions start near half and decay, a robust pattern.',
  dur:12,hint:'Set your contribution and press Contribute, ten times. The other three players are simulated.',
  init:()=>({seed:4,c:10,hist:[]}),
  watch(p){const n=Math.min(10,Math.floor(p*11)),hist=[];for(let t=0;t<n;t++){const o=E6_pgOthers(hist,4)[t];hist.push(clamp(Math.round(o.reduce((a,b)=>a+b,0)/3),0,20))}return {seed:4,c:10,hist,sim:true}},
@@ -4239,12 +4239,12 @@ SCENE({id:'nudges-shrinkage',name:'How big are nudge effects?',tag:'Publication 
  }});
 
 // Johnson & Goldstein (2003): effective consent rates.
-const E6_ORG=[['Denmark',4.25,'in'],['Germany',12,'in'],['UK',17.17,'in'],['Netherlands',27.5,'in'],['Sweden',85.9,'out'],['Belgium',98,'out'],['Portugal',99.64,'out'],['France',99.91,'out'],['Hungary',99.97,'out'],['Austria',99.98,'out']];
+const E6_ORG=[['Denmark',4.25,'in'],['Germany',12,'in'],['UK',17.17,'in'],['Netherlands',27.5,'in'],['Sweden',85.9,'out'],['Belgium',98,'out'],['Portugal',99.64,'out'],['France',99.91,'out'],['Hungary',99.997,'out'],['Austria',99.98,'out']];
 SCENE({id:'nudges-organ',name:'Organ donation defaults',tag:'Consent is not donation',
  definition:'Presumed consent (opt-out) treats everyone as an organ donor unless they register a refusal; explicit consent (opt-in) requires people to register.',
  example:'In Johnson and Goldstein’s 2003 comparison, Germany (opt-in) had about 12% effective consent; neighbouring Austria (opt-out) had over 99%, mostly people who had simply not opted out. Neither figure is a rate of actual donation.',
  desc:'Effective consent rates in ten European countries in the early 2000s, opt-in against opt-out. A second view says what happened to actual donations.',
- research:'Johnson, E. J. & Goldstein, D. (2003). Do defaults save lives? Science 302, 1338–1339. Abadie & Gay (2006), J. Health Econ. 25: presumed consent associated with roughly 25–30% higher donation rates, other things equal: much less than the consent gap. Arshad, Anderson & Sharif (2019): mixed evidence after Wales switched to opt-out in 2015.',
+ research:'Johnson, E. J. & Goldstein, D. (2003). Do defaults save lives? Science 302, 1338–1339. Abadie & Gay (2006), J. Health Econ. 25: presumed consent associated with roughly 25–30% higher donation rates, other things equal: much less than the consent gap. Arshad, Anderson & Sharif (2019), Kidney International 95: across 35 countries, no significant difference in deceased-donor rates between opt-out and opt-in systems, and fewer living donors under opt-out. Evidence from Wales, opt-out since December 2015, is mixed.',
  dur:9,hint:'Press a country, and switch to the view of what happened to actual donations.',
  init:()=>({view:'consent',pick:1}),
  watch(p){return {view:p<.6?'consent':'donation',pick:p<.6?1:9}},
@@ -4628,7 +4628,7 @@ SCENE({id:'solow-growth-convergence',name:'Do poor countries catch up?',tag:'Con
   out+=TF(400,80,'poor country',13,C.coral,'start')+TF(400,97,'rich country',13,C.blue,'start');
   const gap=yr[t]/yp[t];
   out+=counter(70,322,'poor: income',E7_n(yp[t],2),C.coral,130)+counter(210,322,'rich: income',E7_n(yr[t],2),C.blue,130)+counter(350,322,'rich ÷ poor',E7_n(gap,2)+'×',C.ink,120);
-  return {svg:out,phase:s.mode==='same'?`With the same saving rate both head for the same steady state, so the poor country grows faster and the gap shrinks to ${E7_n(gap,2)}× by year ${t}.`:`Saving only 12%, the poor country heads for a lower steady state: it still grows fast at first, but the gap settles near ${E7_n(Math.pow(E7_kstar(.25,.06)/E7_kstar(.12,.06),E7_A),2)}× and never closes. Convergence is conditional on saving, population growth and technology.`};
+  return {svg:out,phase:s.mode==='same'?`With the same saving rate both head for the same steady state, so the poor country grows faster and the gap shrinks to ${E7_n(gap,2)}× by year ${t}.`:`Saving only 12%, the poor country heads for a lower steady state: it grows only about 1% a year at first, and the gap settles near ${E7_n(Math.pow(E7_kstar(.25,.06)/E7_kstar(.12,.06),E7_A),2)}× and never closes. Convergence is conditional on saving, population growth and technology.`};
  }});
 
 // The production function itself, in 2D and 3D.
@@ -4702,7 +4702,7 @@ SCENE({id:'inequality-lorenz',name:'Drawing inequality',tag:'The Lorenz curve an
 // Ten incomes; redistribute and watch the Gini.
 const E7_INC0=[8,12,15,18,22,26,31,38,50,80];
 SCENE({id:'inequality-lorenz-build',name:'Moving money between ten people',tag:'What changes the Gini',
- definition:'The Gini depends only on relative incomes. Moving money from someone richer to someone poorer always lowers it (the Pigou–Dalton principle). Doubling every income leaves it unchanged; giving everyone the same extra amount lowers it.',
+ definition:'The Gini depends only on relative incomes. Moving money from someone richer to someone poorer, without reversing their order, always lowers it (the Pigou–Dalton principle). Doubling every income leaves it unchanged; giving everyone the same extra amount lowers it.',
  example:'Ten people earning £8k to £80k have a Gini of about 0.36. Moving £10k from the richest to the poorest drops it to about 0.30; doubling everyone’s income leaves it at 0.36.',
  desc:'Bars for ten incomes from poorest to richest, the step-shaped Lorenz curve they make, and the Gini, with buttons that transfer money or change everyone’s income.',
  research:'Dalton, H. (1920). The measurement of the inequality of incomes. Economic Journal 30, 348–361. Atkinson, A. B. (1970). On the measurement of inequality. Journal of Economic Theory 2, 244–263. Cowell, F. (2011). Measuring Inequality, 3rd edn.',
@@ -4711,8 +4711,8 @@ SCENE({id:'inequality-lorenz-build',name:'Moving money between ten people',tag:'
  watch(p){const steps=[['',E7_INC0],['rich→poor',[18,12,15,18,22,26,31,38,50,70]],['double',[36,24,30,36,44,52,62,76,100,140]],['+5 each',[41,29,35,41,49,57,67,81,105,145]]];const st=steps[Math.min(3,Math.floor(p*4))];return {inc:st[1].slice(),last:st[0]}},
  ui:[],
  on:{op(s,v){const a=s.inc.slice().sort((x,y)=>x-y);
-  if(v==='rp'){const g=Math.min(10,a[9]-a[0]);a[9]-=g;a[0]+=g;s.last='rich→poor'}
-  else if(v==='mp'){const g=Math.min(5,a[5]);a[5]-=g;a[0]+=g;s.last='middle→poor'}
+  if(v==='rp'){const g=Math.min(10,(a[9]-a[0])/2);a[9]-=g;a[0]+=g;s.last='rich→poor'}
+  else if(v==='mp'){const g=Math.min(5,(a[5]-a[0])/2);a[5]-=g;a[0]+=g;s.last='middle→poor'}
   else if(v==='pr'){const g=Math.min(5,a[0]-1);a[0]-=g;a[9]+=g;s.last='poor→rich'}
   else if(v==='dbl'){for(let i=0;i<10;i++)a[i]*=2;s.last='double'}
   else if(v==='add'){for(let i=0;i<10;i++)a[i]+=5;s.last='+5 each'}
@@ -4904,7 +4904,7 @@ SCENE({id:'randomised-trials-worms',name:'The worm wars',tag:'A famous trial and
  definition:'A 2004 study of school deworming in Kenya became one of the best-known randomised trials in development, and the basis for large programmes. A decade later its re-analysis started a public argument, the “worm wars”, about what the evidence shows.',
  example:'Supporters point to long-run earnings gains; critics point to reviews finding little effect on schooling. Both sides use randomised evidence; they disagree about which results to trust and how far they generalise.',
  desc:'Five cards from the original study to the twenty-year follow-up, each with what it found; the verdict is marked contested.',
- research:'Miguel, E. & Kremer, M. (2004). Worms. Econometrica 72, 159–217. Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). International Journal of Epidemiology 44, 1572–1597. Hicks, J. H., Kremer, M. & Miguel, E. (2015). IJE 44, 1593–1596. Taylor-Robinson, D. C. et al. (2019). Cochrane Database of Systematic Reviews CD000371. Hamory, J. et al. (2021). PNAS 118, e2023185118.',
+ research:'Miguel, E. & Kremer, M. (2004). Worms. Econometrica 72, 159–217. Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). International Journal of Epidemiology 44, 1572–1592. Hicks, J. H., Kremer, M. & Miguel, E. (2015). IJE 44, 1593–1596. Taylor-Robinson, D. C. et al. (2019). Cochrane Database of Systematic Reviews CD000371. Hamory, J. et al. (2021). PNAS 118, e2023185118.',
  dur:10,hint:'Press each card in turn. The point is not to pick a side: it is that even a randomised trial needs replication, re-analysis and long-run follow-up.',
  init:()=>({c:'2004'}),
  watch(p){return {c:E7_WORMS[Math.min(4,Math.floor(p*5))].k}},
@@ -5097,7 +5097,7 @@ SOURCE('e7-deaton-2010',{title:'Deaton, A. (2010). Instruments, randomization, a
 SOURCE('e7-nobel-2019',{title:'The Royal Swedish Academy of Sciences (2019). Understanding development and poverty alleviation: scientific background.',url:'https://www.nobelprize.org/prizes/economic-sciences/2019/'});
 SOURCE('e7-ioannidis-2017',{title:'Ioannidis, J. P. A., Stanley, T. D. & Doucouliagos, H. (2017). The power of bias in economics research. Economic Journal 127, F236–F265.'});
 SOURCE('e7-miguel-2004',{title:'Miguel, E. & Kremer, M. (2004). Worms: identifying impacts on education and health in the presence of treatment externalities. Econometrica 72, 159–217.'});
-SOURCE('e7-worms-2015',{title:'Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). Re-analysis of the Kenyan deworming trial. International Journal of Epidemiology 44, 1572–1597; reply by Hicks, Kremer & Miguel, 1593–1596.'});
+SOURCE('e7-worms-2015',{title:'Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). Re-analysis of the Kenyan deworming trial. International Journal of Epidemiology 44, 1572–1592; reply by Hicks, Kremer & Miguel, 1593–1596.'});
 SOURCE('e7-cochrane-2019',{title:'Taylor-Robinson, D. C. et al. (2019). Public health deworming programmes for soil-transmitted helminths in children living in endemic areas. Cochrane Database of Systematic Reviews CD000371.'});
 SOURCE('e7-hamory-2021',{title:'Hamory, J. et al. (2021). Twenty-year economic impacts of deworming. PNAS 118, e2023185118.'});
 SOURCE('e7-ajr-2001',{title:'Acemoglu, D., Johnson, S. & Robinson, J. A. (2001). The colonial origins of comparative development. American Economic Review 91, 1369–1401.'});
@@ -5175,7 +5175,7 @@ WORD(
  {key:'person-acemoglu',title:'Daron Acemoglu',aliases:['Daron Acemoglu','Acemoglu'],linkContext:'institutions',scene:'institutions',here:'Turkish-American economist (born 1967) who, with Simon Johnson and James A. Robinson, studied how institutions shape prosperity; Nobel prize 2024.',example:'Co-author of Why Nations Fail (2012).'},
  {key:'person-robinson-james',title:'James A. Robinson',aliases:['James A. Robinson','James Robinson'],linkContext:'institutions',scene:'institutions',here:'British political scientist and economist (born 1960), co-author of the colonial-origins and reversal-of-fortune studies; Nobel prize 2024.',contrast:'Not Joan Robinson, the Cambridge economist.',example:'Co-author of Why Nations Fail (2012).'},
  {key:'person-milanovic',title:'Branko Milanović',aliases:['Branko Milanović','Branko Milanovic','Milanović'],linkContext:'trade-globalisation',scene:'trade-globalisation',here:'Serbian-American economist (born 1953) who studies global inequality; with Christoph Lakner he drew the elephant curve.',example:'Author of Global Inequality (2016).'},
- {key:'person-autor',title:'David Autor',aliases:['David Autor','Autor'],linkContext:'trade-globalisation-china-shock',scene:'trade-globalisation-china-shock',here:'American labour economist (born 1964) who, with David Dorn and Gordon Hanson, measured the local effects of the China shock.',example:'Also known for task-based studies of automation and work.'}
+ {key:'person-autor',title:'David Autor',aliases:['David Autor','Autor'],linkContext:'trade-globalisation-china-shock',scene:'trade-globalisation-china-shock',here:'American labour economist who, with David Dorn and Gordon Hanson, measured the local effects of the China shock.',example:'Also known for task-based studies of automation and work.'}
 );
 
 /* Economics era 8 · Economies as systems: lessons, sources and connections. */
@@ -5331,7 +5331,7 @@ SCENE({id:'agent-based-markets-tails',name:'Fat tails',tag:'Big days are far too
   const r=E8_returns(E8_market(s.h,s.seed,4000).p),st=E8_rstats(r),z=r.map(x=>(x-st.m)/st.sd);
   const bw=.5,nb=24,cnt=new Array(nb).fill(0);z.forEach(v=>{const i=Math.floor((v+6)/bw);if(i>=0&&i<nb)cnt[i]++});
   let out=heading('How often are the big days?',26);
-  const A=E8_plot(70,50,330,250,[-6,6],[0,4],{xt:[[-6,'−6'],[-4,'−4'],[-2,'−2'],[0,'0'],[2,'2'],[4,'4'],[6,'6']],yt:[[0,'1'],[1,'10'],[2,'100'],[3,'1,000'],[4,'10,000']],xl:'return, in standard deviations',yl:'days (log scale)'});out+=A.svg;
+  const A=E8_plot(70,50,330,250,[-6,6],[0,4],{xt:[[-6,'−6'],[-4,'−4'],[-2,'−2'],[0,'0'],[2,'2'],[4,'4'],[6,'6']],yt:[[0,'0'],[Math.log10(2),'1'],[Math.log10(11),'10'],[Math.log10(101),'100'],[Math.log10(1001),'1,000'],[4,'10,000']],xl:'return, in standard deviations',yl:'days (log scale)'});out+=A.svg;
   cnt.forEach((c,i)=>{if(!c)return;const x0=A.X(-6+i*bw),x1=A.X(-6+(i+1)*bw),y=A.Y(Math.log10(1+c));const tail=Math.abs(-6+(i+.5)*bw)>=4;out+=R(x0+1,y,x1-x0-2,A.Y(0)-y,tail?C.coral:C.blue,'none',2)});
   const nrm=v=>r.length*bw*Math.exp(-v*v/2)/Math.sqrt(2*Math.PI);
   out+=P(E8_path(range(121).map(i=>{const v=-6+i*.1;return [A.X(v),A.Y(Math.log10(1+nrm(v)))]})),C.muted,2);
@@ -5446,7 +5446,7 @@ function E8_gkCurve(){if(E8_gkCache.c)return E8_gkCache.c;const out=[];
   out.push({z,freq:hits/M,ext:hits?ext/hits/100:0})}
  return E8_gkCache.c=out}
 SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links can help or hurt',
- definition:'In a network of banks, more connections spread each shock thinner, which makes small failures die out. But connections are also the paths a crisis travels along. Gai and Kapadia showed that over a middle range of connectivity, contagion is rare but, when it happens, it reaches almost everyone.',
+ definition:'In a network of banks, more connections spread each shock thinner, which makes small failures die out. But connections are also the paths a crisis travels along. Gai and Kapadia showed that at middling connectivity one failure often spreads widely, and that at higher connectivity contagion becomes rare but, when it happens, it reaches almost everyone.',
  example:'Andrew Haldane of the Bank of England called this “robust yet fragile”: the system that shrugged off shocks for years was the same one that failed all at once in 2008.',
  desc:'For each average number of links per bank, 60 random networks of 100 banks were shocked by one failure. Blue: how often the failure spread to at least five banks. Coral: when it did spread, the share of all banks that failed. Move the slider to read off a connectivity.',
  research:['Gai, P. & Kapadia, S. (2010). Contagion in financial networks. Proceedings of the Royal Society A 466, 2401–2423.','Haldane, A. G. (2009). Rethinking the financial network. Bank of England.','Battiston, S. et al. (2012). DebtRank: too central to fail? Scientific Reports 2, 541.'],
@@ -5463,7 +5463,7 @@ SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links 
   out+=P(E8_path(c.filter(q=>q.ext>0).map(q=>[A.X(q.z),A.Y(q.ext)])),C.coral,2.4);
   out+=L(A.X(s.z),A.Y(0),A.X(s.z),A.Y(1),C.ink,1.4,'stroke-dasharray="4 4"')+Ci(A.X(s.z),A.Y(pt.freq),5,C.blue)+(pt.ext?Ci(A.X(s.z),A.Y(pt.ext),5,C.coral):'');
   out+=counter(430,60,'chance it spreads',E8_pct(pt.freq),C.blue,150)+counter(430,116,'share failing if it does',pt.ext?E8_pct(pt.ext):'—',C.coral,150);
-  const zone=pt.freq===0&&s.z<1?'Too few links: shocks cannot travel far.':pt.freq<.2&&pt.ext>.6?'Robust yet fragile: rarely spreads, but total when it does.':pt.freq>=.2?'Fragile: a single failure often spreads widely.':'Well spread: each bank shrugs off one failure.';
+  const zone=s.z<1?'Too few links: shocks cannot travel far.':pt.freq<.2&&pt.ext>.6?'Robust yet fragile: rarely spreads, but total when it does.':pt.freq>=.2?'Fragile: a single failure often spreads widely.':'Well spread: each bank shrugs off one failure.';
   out+=E8_lines(430,190,E8_wrap(zone,24),C.ink,13,17);
   out+=TF(70,350,'Blue: chance one failure spreads to 5+ banks. Coral: share failing when it does.',12,C.muted,'start')+TF(70,368,'60 seeded networks of 100 banks per point.',12,C.muted,'start');
   return {svg:out,phase:`With ${Number(s.z).toFixed(1)} borrowers per bank on average, one failure spread in ${E8_pct(pt.freq)} of runs${pt.ext?`, and when it did, ${E8_pct(pt.ext)} of banks failed`:''}. ${zone}`};
@@ -5479,7 +5479,7 @@ function E8_fireSale(L0,shock){const lev=[.6,.8,1,1.2,1.4].map(m=>L0*m),q=lev.ma
  return {path,lev,eq,eq0:lev.map(l=>100/l),dead}}
 SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a falling market',
  definition:'Banks need not lend to each other to infect each other. If they hold the same assets, a price fall forces the most indebted to sell to keep their borrowing in line with their capital. Their selling pushes the price down further, which forces more selling.',
- example:'A bank with 100 of assets and leverage 20 has only 5 of its own capital. A 2% price fall wipes out 2 of that 5; to get back to leverage 20 it must sell 40% of what it holds.',
+ example:'A bank with 100 of assets and leverage 20 has only 5 of its own capital. A 2% price fall wipes out 2 of that 5; to get back to leverage 20 it must sell nearly 40% of what it holds.',
  desc:'Five banks hold the same asset, with leverage from 0.6 to 1.4 times the level you set. A first price shock starts a spiral of forced sales; the line shows the price after each round. Bars compare each bank’s capital before and after. The price impact of selling is illustrative.',
  research:['Shleifer, A. & Vishny, R. (2011). Fire sales in finance and macroeconomics. Journal of Economic Perspectives 25(1), 29–48.','Brunnermeier, M. K. & Pedersen, L. H. (2009). Market liquidity and funding liquidity. Review of Financial Studies 22, 2201–2238.','Greenwood, R., Landier, A. & Thesmar, D. (2015). Vulnerable banks. Journal of Financial Economics 115, 471–485.'],
  dur:10,hint:'Keep the shock small and raise leverage. Find where a 2% fall turns into a collapse.',
@@ -5504,7 +5504,7 @@ SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a fal
  }});
 
 /* ================================================================ climate economics */
-const E8_PRESETS={stern:{n:'Stern Review',rho:.1,eta:1,g:1.3},nordhaus:{n:'Nordhaus (DICE)',rho:1.5,eta:1.45,g:1.9},custom:{n:'Your own'}};
+const E8_PRESETS={stern:{n:'Stern Review',rho:.1,eta:1,g:1.3},nordhaus:{n:'Nordhaus (DICE)',rho:1.495,eta:1.45,g:1.9},custom:{n:'Your own'}};
 const E8_pv=(r,t)=>1000/Math.pow(1+r/100,t);
 SCENE({id:'climate-economics',name:'Discounting the future',tag:'How much is a harm in 2125 worth today?',
  definition:'Climate damage falls mostly on future people, so its cost depends on how much we discount the future. The Ramsey rule splits the discount rate r into pure time preference ρ (counting later people less just because they are later) plus η × g: if people will be richer (growth g), an extra pound matters less to them, by an amount set by η.',
@@ -5554,7 +5554,7 @@ SCENE({id:'climate-economics-scc',name:'The social cost of carbon',tag:'One numb
  example:'Nordhaus’s model gave about $31 a tonne; the US Environmental Protection Agency’s 2023 estimate was about $190. Both use the same idea but different discounting and damage evidence.',
  desc:'Published estimates of the social cost of carbon, in US dollars per tonne of CO₂ (rounded; their price years and settings differ, so this is not a like-for-like comparison). Press a bar to see its assumptions.',
  research:['Nordhaus, W. D. (2017). Revisiting the social cost of carbon. PNAS 114, 1518–1523.','Rennert, K. et al. (2022). Comprehensive evidence implies a higher social cost of CO₂. Nature 610, 687–692.','US EPA (2023). Report on the Social Cost of Greenhouse Gases: Estimates Incorporating Recent Scientific Advances.','Interagency Working Group on Social Cost of Greenhouse Gases (2021). Technical Support Document: interim estimates.'],
- dur:10,hint:'Press each bar. Notice how the lower discount rates sit with the higher costs.',
+ dur:10,hint:'Press each bar. Lower discount rates mostly go with higher costs, but not always: Stern’s rate is the lowest and his figure is not the highest.',
  init:()=>({pick:0}),
  watch(p){return {pick:Math.min(4,Math.floor(p*5))}},
  ui:[{choose:E8_SCC.map((e,i)=>[String(i),e.n]),label:'Estimate',get:s=>String(s.pick),act:'pick'}],
@@ -5653,7 +5653,7 @@ SCENE({id:'automation-labour-polarisation',name:'The hollowing middle',tag:'Rout
   return {svg:out,phase:`${b[0]} jobs (${b[1]}): ${b[2]} The pattern is a U: growth at both ends, a hollowing middle.`};
  }});
 
-// Acemoglu & Restrepo (2019): change in labour's share ≈ −displacement + reinstatement (per year).
+// Acemoglu & Restrepo (2019): displacement and reinstatement as per cent changes in labour demand a year.
 const E8_AR={early:{n:'1947–1987',d:.48,r:.47},late:{n:'1987–2017',d:.70,r:.35},custom:{n:'Your own'}};
 SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',tag:'Machines take tasks, people gain new ones',
  definition:'Automation displaces workers from tasks they used to do, which lowers labour’s share of income. But new tasks keep appearing that people do better (programmers, therapists, data analysts): reinstatement. Labour’s share depends on the race between the two.',
@@ -5666,7 +5666,7 @@ SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',ta
  ui:[{choose:Object.keys(E8_AR).map(k=>[k,E8_AR[k].n]),label:'Period',get:s=>s.pre,act:'pre'},{range:'d',label:'Displacement a year',min:0,max:1.5,step:.05,get:s=>s.d,act:'d',show:v=>Number(v).toFixed(2)+'%'},{range:'r',label:'Reinstatement a year',min:0,max:1.5,step:.05,get:s=>s.r,act:'r',show:v=>Number(v).toFixed(2)+'%'}],
  on:{pre(s,v){s.pre=v;if(v!=='custom'){s.d=E8_AR[v].d;s.r=E8_AR[v].r}},d(s,v){s.d=Number(v);s.pre='custom'},r(s,v){s.r=Number(v);s.pre='custom'}},
  draw(s){
-  const path=range(41).map(t=>62+(s.r-s.d)*t),end=path[40];
+  const path=range(41).map(t=>62*Math.pow(1+(s.r-s.d)/100,t)),end=path[40];
   let out=heading('The race between displacement and new tasks',26);
   const A=E8_plot(70,52,320,240,[0,40],[30,80],{xt:[[0,'year 0'],[20,'20'],[40,'40']],yt:[[30,'30%'],[50,'50%'],[62,'62%'],[80,'80%']],xl:'years',yl:'labour’s share of income'});out+=A.svg;
   out+=P(E8_path(path.map((v,t)=>[A.X(t),A.Y(clamp(v,30,80))])),end<62?C.coral:C.green,2.6);
@@ -5675,9 +5675,9 @@ SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',ta
   out+=R(bx,80,150*s.d/1.5,18,C.coral,'none',3)+TF(bx,114,'displacement −'+s.d.toFixed(2)+'%',13,C.coral,'start');
   out+=R(bx,126,150*s.r/1.5,18,C.green,'none',3)+TF(bx,160,'reinstatement +'+s.r.toFixed(2)+'%',13,C.green,'start');
   out+=counter(bx,180,'share after 40 years',end.toFixed(1)+'%',end<62?C.coral:C.green,150);
-  out+=E8_lines(bx,252,E8_wrap('Rates are percentage points of labour’s share a year (rounded).',22),C.muted,12,16);
+  out+=E8_lines(bx,252,E8_wrap('Rates are per cent changes in labour demand a year (rounded).',22),C.muted,12,16);
   out+=TF(70,350,'Accounting model only: wages, prices and new industries are left out.',13,C.muted,'start');
-  return {svg:out,phase:Math.abs(s.r-s.d)<.02?'Displacement and reinstatement balance: machines take tasks, new tasks arrive, and labour’s share holds steady.':s.r<s.d?`Displacement outruns new tasks by ${(s.d-s.r).toFixed(2)} points a year, so labour’s share falls to ${end.toFixed(1)}% over 40 years.`:`New tasks outrun displacement, so labour’s share rises to ${end.toFixed(1)}%.`};
+  return {svg:out,phase:Math.abs(s.r-s.d)<.02?'Displacement and reinstatement balance: machines take tasks, new tasks arrive, and labour’s share holds steady.':s.r<s.d?`Displacement outruns new tasks by ${(s.d-s.r).toFixed(2)}% a year, so labour’s share falls to ${end.toFixed(1)}% over 40 years.`:`New tasks outrun displacement, so labour’s share rises to ${end.toFixed(1)}%.`};
  }});
 
 /* ================================================================ platform economies */
@@ -5771,7 +5771,7 @@ SCENE({id:'measuring-wellbeing',name:'Does money buy happiness?',tag:'The Easter
  definition:'In 1974 Richard Easterlin found that richer people within a country were happier, but countries did not seem to get happier as they grew richer over time. Later work found that across countries life satisfaction rises steadily with the logarithm of income. Whether it rises over time within countries is still argued over.',
  example:'On a log scale, doubling income from $2,000 to $4,000 adds about as much life satisfaction as doubling from $40,000 to $80,000. On an ordinary scale, the curve looks flat at the top, which once looked like a satiation point.',
  desc:'Stylised countries, following the published pattern (not real country data): average life satisfaction on a 0–10 ladder against income per head. Switch between an ordinary and a logarithmic income axis, or view the long-run time series pattern in one rich country, which is where the paradox lives.',
- research:['Easterlin, R. A. (1974). Does economic growth improve the human lot? In David & Reder (eds), Nations and Households in Economic Growth. Academic Press.','Deaton, A. (2008). Income, health, and well-being around the world. Journal of Economic Perspectives 22(2), 53–72.','Stevenson, B. & Wolfers, J. (2008). Economic growth and subjective well-being: reassessing the Easterlin paradox. Brookings Papers on Economic Activity, 1–87.','Easterlin, R. A. & O’Connor, K. J. (2022). The Easterlin paradox. IZA Discussion Paper 13923.'],
+ research:['Easterlin, R. A. (1974). Does economic growth improve the human lot? In David & Reder (eds), Nations and Households in Economic Growth. Academic Press.','Deaton, A. (2008). Income, health, and well-being around the world. Journal of Economic Perspectives 22(2), 53–72.','Stevenson, B. & Wolfers, J. (2008). Economic growth and subjective well-being: reassessing the Easterlin paradox. Brookings Papers on Economic Activity, 1–87.','Easterlin, R. A. & O’Connor, K. J. The Easterlin paradox. IZA Discussion Paper 13923.'],
  dur:12,hint:'Compare the ordinary and log axes. Then look at the time view: is there a contradiction?',
  init:()=>({view:'linear'}),
  watch(p){return {view:p<.33?'linear':p<.66?'log':'time'}},
@@ -5885,11 +5885,11 @@ WORD(
  {key:'excess-kurtosis',title:'Excess kurtosis',aliases:['excess kurtosis','kurtosis'],linkContext:'agent-based-markets-tails',scene:'agent-based-markets-tails',here:'A measure of how heavy a distribution’s tails are compared with a bell curve, which has excess kurtosis 0.',contrast:'It says nothing about whether big moves are up or down.',example:'Daily returns on stock indices typically have excess kurtosis of 5 or more.'},
  {key:'volatility-clustering',title:'Volatility clustering',aliases:['volatility clustering'],linkContext:'agent-based-markets-tails',scene:'agent-based-markets-tails',here:'The tendency of large price moves to be followed by large moves, and calm days by calm days.',contrast:'The direction of moves is hard to predict; their size is partly predictable.',example:'Markets in 2008 had weeks of very large daily swings in both directions.'},
  {key:'stylised-facts',title:'Stylised facts',aliases:['stylised facts','stylized facts'],linkContext:'agent-based-markets-tails',scene:'agent-based-markets-tails',here:'Broad patterns found again and again in data, which any good model should reproduce.',contrast:'They are regularities, not laws, and their size varies across markets and periods.',example:'Fat tails and volatility clustering are stylised facts of asset returns.'},
- {key:'el-farol-problem',title:'El Farol problem',aliases:['El Farol','El Farol problem','minority game'],linkContext:'agent-based-markets-elfarol',scene:'agent-based-markets-elfarol',here:'Brian Arthur’s puzzle of people deciding whether to go to a bar that is fun only if it is not crowded, where no forecast can be right if everyone uses it.',contrast:'It has no rational-expectations solution, so it is a test case for learning with rules of thumb.',example:'Simulated attendance hovers around the threshold without settling.'},
+ {key:'el-farol-problem',title:'El Farol problem',aliases:['El Farol','El Farol problem','minority game'],linkContext:'agent-based-markets-elfarol',scene:'agent-based-markets-elfarol',here:'Brian Arthur’s puzzle of people deciding whether to go to a bar that is fun only if it is not crowded, where no forecast can be right if everyone uses it.',contrast:'Deduction alone gives no single forecast that everyone can share, so it is a test case for learning with rules of thumb.',example:'Simulated attendance hovers around the threshold without settling.'},
  {key:'bounded-rationality',title:'Bounded rationality',aliases:['bounded rationality','boundedly rational','rules of thumb'],linkContext:'agent-based-markets-elfarol',scene:'agent-based-markets-elfarol',here:'Decision-making that uses limited information, time and computing power, often through rules of thumb.',contrast:'Full rationality assumes people can work out the best choice given everything relevant.',example:'Herbert Simon coined the idea; Arthur’s bar-goers keep the forecasting rule that has worked lately.'},
  {key:'financial-contagion',title:'Financial contagion',aliases:['financial contagion','contagion'],linkContext:'network-contagion',scene:'network-contagion',here:'The spread of distress from one financial institution or market to others through loans, shared assets or loss of confidence.',contrast:'A common shock hits everyone at once; contagion spreads from one failure to the next.',example:'The failure of Lehman Brothers in 2008 spread losses to its creditors and froze lending between banks.'},
  {key:'systemic-risk',title:'Systemic risk',aliases:['systemic risk','systemically important'],linkContext:'network-contagion-fragile',scene:'network-contagion-fragile',here:'The risk that the financial system as a whole fails, not just one firm.',contrast:'A firm can look safe on its own and still add to systemic risk through its links.',example:'Since 2008 regulators have required extra capital from banks judged systemically important.'},
- {key:'robust-yet-fragile',title:'Robust yet fragile',aliases:['robust yet fragile','robust-yet-fragile'],linkContext:'network-contagion-fragile',scene:'network-contagion-fragile',here:'A system that absorbs most shocks but, rarely, fails almost completely, because the same links that spread small losses thin can carry a large one everywhere.',contrast:'Stability in normal times is not evidence of safety in a crisis.',example:'Gai and Kapadia’s model shows contagion that is rare but nearly total over a middle range of connectivity.'},
+ {key:'robust-yet-fragile',title:'Robust yet fragile',aliases:['robust yet fragile','robust-yet-fragile'],linkContext:'network-contagion-fragile',scene:'network-contagion-fragile',here:'A system that absorbs most shocks but, rarely, fails almost completely, because the same links that spread small losses thin can carry a large one everywhere.',contrast:'Stability in normal times is not evidence of safety in a crisis.',example:'Gai and Kapadia’s model shows contagion that is rare but nearly total when banks are quite highly connected.'},
  {key:'fire-sale',title:'Fire sale',aliases:['fire sale','fire sales','forced selling'],linkContext:'network-contagion-firesale',scene:'network-contagion-firesale',here:'Selling assets quickly at depressed prices because the seller has to, not because the price is right.',contrast:'In a fire sale the buyers who would pay full value are often in trouble too.',example:'In 2008 banks sold mortgage securities into a falling market to meet margin calls.'},
  {key:'leverage-ratio',title:'Leverage',aliases:['leverage','leveraged','deleveraging'],linkContext:'network-contagion-firesale',scene:'network-contagion-firesale',here:'Assets divided by the owner’s own capital: how much is financed by borrowing.',contrast:'Leverage multiplies gains and losses on the owner’s capital alike.',example:'At leverage 20, a 5% fall in asset values wipes out all of a bank’s capital.'},
  {key:'social-discount-rate',title:'Social discount rate',aliases:['social discount rate','discount rate','discounting'],linkContext:'climate-economics',scene:'climate-economics',here:'The rate used to convert future costs and benefits to today’s values when making public decisions.',contrast:'A market interest rate reflects private saving; the social rate also carries judgements about future generations.',example:'At 1.4% a year, £1,000 a century away is worth about £249 today; at 4.25%, about £16.'},

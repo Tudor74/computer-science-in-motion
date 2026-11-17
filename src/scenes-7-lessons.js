@@ -27,7 +27,7 @@ SOURCE('e7-deaton-2010',{title:'Deaton, A. (2010). Instruments, randomization, a
 SOURCE('e7-nobel-2019',{title:'The Royal Swedish Academy of Sciences (2019). Understanding development and poverty alleviation: scientific background.',url:'https://www.nobelprize.org/prizes/economic-sciences/2019/'});
 SOURCE('e7-ioannidis-2017',{title:'Ioannidis, J. P. A., Stanley, T. D. & Doucouliagos, H. (2017). The power of bias in economics research. Economic Journal 127, F236–F265.'});
 SOURCE('e7-miguel-2004',{title:'Miguel, E. & Kremer, M. (2004). Worms: identifying impacts on education and health in the presence of treatment externalities. Econometrica 72, 159–217.'});
-SOURCE('e7-worms-2015',{title:'Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). Re-analysis of the Kenyan deworming trial. International Journal of Epidemiology 44, 1572–1597; reply by Hicks, Kremer & Miguel, 1593–1596.'});
+SOURCE('e7-worms-2015',{title:'Aiken, A. M. et al. (2015) and Davey, C. et al. (2015). Re-analysis of the Kenyan deworming trial. International Journal of Epidemiology 44, 1572–1592; reply by Hicks, Kremer & Miguel, 1593–1596.'});
 SOURCE('e7-cochrane-2019',{title:'Taylor-Robinson, D. C. et al. (2019). Public health deworming programmes for soil-transmitted helminths in children living in endemic areas. Cochrane Database of Systematic Reviews CD000371.'});
 SOURCE('e7-hamory-2021',{title:'Hamory, J. et al. (2021). Twenty-year economic impacts of deworming. PNAS 118, e2023185118.'});
 SOURCE('e7-ajr-2001',{title:'Acemoglu, D., Johnson, S. & Robinson, J. A. (2001). The colonial origins of comparative development. American Economic Review 91, 1369–1401.'});

@@ -373,7 +373,7 @@ SCENE({id:'general-equilibrium',name:'Walras’s auctioneer',tag:'Every market c
   out+=g.svg+L(g.X(0),g.Y(E2_PSTAR),g.X(13),g.Y(E2_PSTAR),C.green,1.3,'stroke-dasharray="5 4"');
   const h=(s.hist&&s.hist.length?s.hist:[p]).slice(-14);out+=E2_poly(h.map((v,i)=>[g.X(i),g.Y(Math.min(2,v))]),C.ink,2)+h.map((v,i)=>Ci(g.X(i),g.Y(Math.min(2,v)),3.5,C.ink)).join('');
   out+=TF(475,272,'price × apple gap',13,C.muted)+TF(475,290,'+ bread gap = '+E2_n(p*za+zb,2),13,C.muted);
-  return {svg:out,phase:Math.abs(za)<.05?`At ${p.toFixed(2)} loaves an apple, both markets clear at once. That is a general equilibrium (exactly 0.78 here).`:`At ${p.toFixed(2)} loaves an apple, apples are ${za>0?'short':'in surplus'} by ${E2_n(Math.abs(za),1)} and bread is ${zb>0?'short':'in surplus'} by ${E2_n(Math.abs(zb),1)}. Walras’s law: the value of one market’s gap always balances the other’s, so raising the apple price ${za>0?'helps both':'is the wrong way'}.`};
+  return {svg:out,phase:Math.abs(za)<.05?`At ${p.toFixed(2)} loaves an apple, both markets clear at once. That is a general equilibrium (about 0.78 here).`:`At ${p.toFixed(2)} loaves an apple, apples are ${za>0?'short':'in surplus'} by ${E2_n(Math.abs(za),1)} and bread is ${zb>0?'short':'in surplus'} by ${E2_n(Math.abs(zb),1)}. Walras’s law: the value of one market’s gap always balances the other’s, so raising the apple price ${za>0?'helps both':'is the wrong way'}.`};
  }});
 
 // Edgeworth box: A's utility x^0.6 y^0.4, B's x^0.3 y^0.7, 10 apples and 10 loaves in total.
@@ -413,7 +413,7 @@ SCENE({id:'general-equilibrium-edgeworth',name:'The Edgeworth box',tag:'Trades t
 
 SCENE({id:'general-equilibrium-stability',name:'Can prices find their way?',tag:'Stability of tâtonnement',
  definition:'Proving that an equilibrium exists is not the same as showing that markets reach it. If the auctioneer reacts too strongly to excess demand, prices overshoot and swing back and forth; in some examples they cycle for ever, however gently they adjust.',
- example:'In the apple market here, adjusting by 0.06 per unit of excess demand settles smoothly; at 0.30 it swings back and forth; above about 0.34 the swings grow.',
+ example:'In the apple market here, adjusting by 0.06 per unit of excess demand settles smoothly; at 0.30 it swings back and forth; above about 0.34 the swings never die away.',
  desc:'Prices called round after round from the same start, for the chosen adjustment speed, against the equilibrium price.',
  research:'Walras, L. (1874). Éléments. Scarf, H. (1960). Some examples of global instability of the competitive equilibrium. International Economic Review 1, 157–172. Sonnenschein, H. (1973), Mantel, R. (1974), Debreu, G. (1974): aggregate excess demand can have almost any shape. The speeds here are an illustration with the two-trader economy, not Scarf’s three-good example.',
  dur:10,hint:'Change how strongly the auctioneer reacts. Small steps creep to the equilibrium; large ones overshoot. Scarf showed that with three goods, prices can circle for ever even with small steps.',
@@ -427,9 +427,9 @@ SCENE({id:'general-equilibrium-stability',name:'Can prices find their way?',tag:
   out+=pl.svg+L(pl.X(0),pl.Y(E2_PSTAR),pl.X(24),pl.Y(E2_PSTAR),C.green,1.4,'stroke-dasharray="6 4"')+TF(pl.X(24)-4,pl.Y(E2_PSTAR)-6,'equilibrium 0.78',13,C.green,'end');
   out+=E2_poly(h.map((v,i)=>[pl.X(i),pl.Y(Math.min(2,v))]),C.blue,2.4)+h.map((v,i)=>Ci(pl.X(i),pl.Y(Math.min(2,v)),3,C.blue)).join('');
   const last=h.slice(-4),swing=Math.max(...last)-Math.min(...last),gain=s.k*3.6/(E2_PSTAR*E2_PSTAR);
-  const verdict=gain<1?'settles smoothly':gain<2?'overshoots, then settles':'swings grow';
+  const verdict=gain<1?'settles smoothly':gain<2?'overshoots, then settles':'keeps swinging';
   out+=TF(300,336,`speed ${s.k.toFixed(2)}: ${verdict}`,15,gain<1?C.green:gain<2?C.amber:C.coral);
-  return {svg:out,phase:gain<1?`At speed ${s.k.toFixed(2)} each step closes part of the gap, so prices creep up to 0.78.`:gain<2?`At speed ${s.k.toFixed(2)} each step overshoots the equilibrium, but by less each time, so the swings die away.`:`At speed ${s.k.toFixed(2)} each overshoot is larger than the last (the final swings span ${E2_n(swing,2)}). The equilibrium exists, but this process never reaches it.`};
+  return {svg:out,phase:gain<1?`At speed ${s.k.toFixed(2)} the price ${h[1]>E2_PSTAR?'jumps past 0.78 on the first step and then eases back down to it':'creeps up to 0.78'}: near the equilibrium each step closes part of the gap.`:gain<2?`At speed ${s.k.toFixed(2)} each step overshoots the equilibrium, but by less each time, so the swings die away.`:`At speed ${s.k.toFixed(2)} the overshoots no longer die away: the price keeps swinging either side of 0.78 (the final swings span ${E2_n(swing,2)}). The equilibrium exists, but this process never reaches it.`};
  }});
 
 /* ================================================================ externalities */

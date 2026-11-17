@@ -82,7 +82,7 @@ SCENE({id:'agent-based-markets-tails',name:'Fat tails',tag:'Big days are far too
   const r=E8_returns(E8_market(s.h,s.seed,4000).p),st=E8_rstats(r),z=r.map(x=>(x-st.m)/st.sd);
   const bw=.5,nb=24,cnt=new Array(nb).fill(0);z.forEach(v=>{const i=Math.floor((v+6)/bw);if(i>=0&&i<nb)cnt[i]++});
   let out=heading('How often are the big days?',26);
-  const A=E8_plot(70,50,330,250,[-6,6],[0,4],{xt:[[-6,'−6'],[-4,'−4'],[-2,'−2'],[0,'0'],[2,'2'],[4,'4'],[6,'6']],yt:[[0,'1'],[1,'10'],[2,'100'],[3,'1,000'],[4,'10,000']],xl:'return, in standard deviations',yl:'days (log scale)'});out+=A.svg;
+  const A=E8_plot(70,50,330,250,[-6,6],[0,4],{xt:[[-6,'−6'],[-4,'−4'],[-2,'−2'],[0,'0'],[2,'2'],[4,'4'],[6,'6']],yt:[[0,'0'],[Math.log10(2),'1'],[Math.log10(11),'10'],[Math.log10(101),'100'],[Math.log10(1001),'1,000'],[4,'10,000']],xl:'return, in standard deviations',yl:'days (log scale)'});out+=A.svg;
   cnt.forEach((c,i)=>{if(!c)return;const x0=A.X(-6+i*bw),x1=A.X(-6+(i+1)*bw),y=A.Y(Math.log10(1+c));const tail=Math.abs(-6+(i+.5)*bw)>=4;out+=R(x0+1,y,x1-x0-2,A.Y(0)-y,tail?C.coral:C.blue,'none',2)});
   const nrm=v=>r.length*bw*Math.exp(-v*v/2)/Math.sqrt(2*Math.PI);
   out+=P(E8_path(range(121).map(i=>{const v=-6+i*.1;return [A.X(v),A.Y(Math.log10(1+nrm(v)))]})),C.muted,2);
@@ -197,7 +197,7 @@ function E8_gkCurve(){if(E8_gkCache.c)return E8_gkCache.c;const out=[];
   out.push({z,freq:hits/M,ext:hits?ext/hits/100:0})}
  return E8_gkCache.c=out}
 SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links can help or hurt',
- definition:'In a network of banks, more connections spread each shock thinner, which makes small failures die out. But connections are also the paths a crisis travels along. Gai and Kapadia showed that over a middle range of connectivity, contagion is rare but, when it happens, it reaches almost everyone.',
+ definition:'In a network of banks, more connections spread each shock thinner, which makes small failures die out. But connections are also the paths a crisis travels along. Gai and Kapadia showed that at middling connectivity one failure often spreads widely, and that at higher connectivity contagion becomes rare but, when it happens, it reaches almost everyone.',
  example:'Andrew Haldane of the Bank of England called this “robust yet fragile”: the system that shrugged off shocks for years was the same one that failed all at once in 2008.',
  desc:'For each average number of links per bank, 60 random networks of 100 banks were shocked by one failure. Blue: how often the failure spread to at least five banks. Coral: when it did spread, the share of all banks that failed. Move the slider to read off a connectivity.',
  research:['Gai, P. & Kapadia, S. (2010). Contagion in financial networks. Proceedings of the Royal Society A 466, 2401–2423.','Haldane, A. G. (2009). Rethinking the financial network. Bank of England.','Battiston, S. et al. (2012). DebtRank: too central to fail? Scientific Reports 2, 541.'],
@@ -214,7 +214,7 @@ SCENE({id:'network-contagion-fragile',name:'Robust yet fragile',tag:'More links 
   out+=P(E8_path(c.filter(q=>q.ext>0).map(q=>[A.X(q.z),A.Y(q.ext)])),C.coral,2.4);
   out+=L(A.X(s.z),A.Y(0),A.X(s.z),A.Y(1),C.ink,1.4,'stroke-dasharray="4 4"')+Ci(A.X(s.z),A.Y(pt.freq),5,C.blue)+(pt.ext?Ci(A.X(s.z),A.Y(pt.ext),5,C.coral):'');
   out+=counter(430,60,'chance it spreads',E8_pct(pt.freq),C.blue,150)+counter(430,116,'share failing if it does',pt.ext?E8_pct(pt.ext):'—',C.coral,150);
-  const zone=pt.freq===0&&s.z<1?'Too few links: shocks cannot travel far.':pt.freq<.2&&pt.ext>.6?'Robust yet fragile: rarely spreads, but total when it does.':pt.freq>=.2?'Fragile: a single failure often spreads widely.':'Well spread: each bank shrugs off one failure.';
+  const zone=s.z<1?'Too few links: shocks cannot travel far.':pt.freq<.2&&pt.ext>.6?'Robust yet fragile: rarely spreads, but total when it does.':pt.freq>=.2?'Fragile: a single failure often spreads widely.':'Well spread: each bank shrugs off one failure.';
   out+=E8_lines(430,190,E8_wrap(zone,24),C.ink,13,17);
   out+=TF(70,350,'Blue: chance one failure spreads to 5+ banks. Coral: share failing when it does.',12,C.muted,'start')+TF(70,368,'60 seeded networks of 100 banks per point.',12,C.muted,'start');
   return {svg:out,phase:`With ${Number(s.z).toFixed(1)} borrowers per bank on average, one failure spread in ${E8_pct(pt.freq)} of runs${pt.ext?`, and when it did, ${E8_pct(pt.ext)} of banks failed`:''}. ${zone}`};
@@ -230,7 +230,7 @@ function E8_fireSale(L0,shock){const lev=[.6,.8,1,1.2,1.4].map(m=>L0*m),q=lev.ma
  return {path,lev,eq,eq0:lev.map(l=>100/l),dead}}
 SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a falling market',
  definition:'Banks need not lend to each other to infect each other. If they hold the same assets, a price fall forces the most indebted to sell to keep their borrowing in line with their capital. Their selling pushes the price down further, which forces more selling.',
- example:'A bank with 100 of assets and leverage 20 has only 5 of its own capital. A 2% price fall wipes out 2 of that 5; to get back to leverage 20 it must sell 40% of what it holds.',
+ example:'A bank with 100 of assets and leverage 20 has only 5 of its own capital. A 2% price fall wipes out 2 of that 5; to get back to leverage 20 it must sell nearly 40% of what it holds.',
  desc:'Five banks hold the same asset, with leverage from 0.6 to 1.4 times the level you set. A first price shock starts a spiral of forced sales; the line shows the price after each round. Bars compare each bank’s capital before and after. The price impact of selling is illustrative.',
  research:['Shleifer, A. & Vishny, R. (2011). Fire sales in finance and macroeconomics. Journal of Economic Perspectives 25(1), 29–48.','Brunnermeier, M. K. & Pedersen, L. H. (2009). Market liquidity and funding liquidity. Review of Financial Studies 22, 2201–2238.','Greenwood, R., Landier, A. & Thesmar, D. (2015). Vulnerable banks. Journal of Financial Economics 115, 471–485.'],
  dur:10,hint:'Keep the shock small and raise leverage. Find where a 2% fall turns into a collapse.',
@@ -255,7 +255,7 @@ SCENE({id:'network-contagion-firesale',name:'Fire sales',tag:'Selling into a fal
  }});
 
 /* ================================================================ climate economics */
-const E8_PRESETS={stern:{n:'Stern Review',rho:.1,eta:1,g:1.3},nordhaus:{n:'Nordhaus (DICE)',rho:1.5,eta:1.45,g:1.9},custom:{n:'Your own'}};
+const E8_PRESETS={stern:{n:'Stern Review',rho:.1,eta:1,g:1.3},nordhaus:{n:'Nordhaus (DICE)',rho:1.495,eta:1.45,g:1.9},custom:{n:'Your own'}};
 const E8_pv=(r,t)=>1000/Math.pow(1+r/100,t);
 SCENE({id:'climate-economics',name:'Discounting the future',tag:'How much is a harm in 2125 worth today?',
  definition:'Climate damage falls mostly on future people, so its cost depends on how much we discount the future. The Ramsey rule splits the discount rate r into pure time preference ρ (counting later people less just because they are later) plus η × g: if people will be richer (growth g), an extra pound matters less to them, by an amount set by η.',
@@ -305,7 +305,7 @@ SCENE({id:'climate-economics-scc',name:'The social cost of carbon',tag:'One numb
  example:'Nordhaus’s model gave about $31 a tonne; the US Environmental Protection Agency’s 2023 estimate was about $190. Both use the same idea but different discounting and damage evidence.',
  desc:'Published estimates of the social cost of carbon, in US dollars per tonne of CO₂ (rounded; their price years and settings differ, so this is not a like-for-like comparison). Press a bar to see its assumptions.',
  research:['Nordhaus, W. D. (2017). Revisiting the social cost of carbon. PNAS 114, 1518–1523.','Rennert, K. et al. (2022). Comprehensive evidence implies a higher social cost of CO₂. Nature 610, 687–692.','US EPA (2023). Report on the Social Cost of Greenhouse Gases: Estimates Incorporating Recent Scientific Advances.','Interagency Working Group on Social Cost of Greenhouse Gases (2021). Technical Support Document: interim estimates.'],
- dur:10,hint:'Press each bar. Notice how the lower discount rates sit with the higher costs.',
+ dur:10,hint:'Press each bar. Lower discount rates mostly go with higher costs, but not always: Stern’s rate is the lowest and his figure is not the highest.',
  init:()=>({pick:0}),
  watch(p){return {pick:Math.min(4,Math.floor(p*5))}},
  ui:[{choose:E8_SCC.map((e,i)=>[String(i),e.n]),label:'Estimate',get:s=>String(s.pick),act:'pick'}],
@@ -404,7 +404,7 @@ SCENE({id:'automation-labour-polarisation',name:'The hollowing middle',tag:'Rout
   return {svg:out,phase:`${b[0]} jobs (${b[1]}): ${b[2]} The pattern is a U: growth at both ends, a hollowing middle.`};
  }});
 
-// Acemoglu & Restrepo (2019): change in labour's share ≈ −displacement + reinstatement (per year).
+// Acemoglu & Restrepo (2019): displacement and reinstatement as per cent changes in labour demand a year.
 const E8_AR={early:{n:'1947–1987',d:.48,r:.47},late:{n:'1987–2017',d:.70,r:.35},custom:{n:'Your own'}};
 SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',tag:'Machines take tasks, people gain new ones',
  definition:'Automation displaces workers from tasks they used to do, which lowers labour’s share of income. But new tasks keep appearing that people do better (programmers, therapists, data analysts): reinstatement. Labour’s share depends on the race between the two.',
@@ -417,7 +417,7 @@ SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',ta
  ui:[{choose:Object.keys(E8_AR).map(k=>[k,E8_AR[k].n]),label:'Period',get:s=>s.pre,act:'pre'},{range:'d',label:'Displacement a year',min:0,max:1.5,step:.05,get:s=>s.d,act:'d',show:v=>Number(v).toFixed(2)+'%'},{range:'r',label:'Reinstatement a year',min:0,max:1.5,step:.05,get:s=>s.r,act:'r',show:v=>Number(v).toFixed(2)+'%'}],
  on:{pre(s,v){s.pre=v;if(v!=='custom'){s.d=E8_AR[v].d;s.r=E8_AR[v].r}},d(s,v){s.d=Number(v);s.pre='custom'},r(s,v){s.r=Number(v);s.pre='custom'}},
  draw(s){
-  const path=range(41).map(t=>62+(s.r-s.d)*t),end=path[40];
+  const path=range(41).map(t=>62*Math.pow(1+(s.r-s.d)/100,t)),end=path[40];
   let out=heading('The race between displacement and new tasks',26);
   const A=E8_plot(70,52,320,240,[0,40],[30,80],{xt:[[0,'year 0'],[20,'20'],[40,'40']],yt:[[30,'30%'],[50,'50%'],[62,'62%'],[80,'80%']],xl:'years',yl:'labour’s share of income'});out+=A.svg;
   out+=P(E8_path(path.map((v,t)=>[A.X(t),A.Y(clamp(v,30,80))])),end<62?C.coral:C.green,2.6);
@@ -426,9 +426,9 @@ SCENE({id:'automation-labour-reinstatement',name:'Displacement and new tasks',ta
   out+=R(bx,80,150*s.d/1.5,18,C.coral,'none',3)+TF(bx,114,'displacement −'+s.d.toFixed(2)+'%',13,C.coral,'start');
   out+=R(bx,126,150*s.r/1.5,18,C.green,'none',3)+TF(bx,160,'reinstatement +'+s.r.toFixed(2)+'%',13,C.green,'start');
   out+=counter(bx,180,'share after 40 years',end.toFixed(1)+'%',end<62?C.coral:C.green,150);
-  out+=E8_lines(bx,252,E8_wrap('Rates are percentage points of labour’s share a year (rounded).',22),C.muted,12,16);
+  out+=E8_lines(bx,252,E8_wrap('Rates are per cent changes in labour demand a year (rounded).',22),C.muted,12,16);
   out+=TF(70,350,'Accounting model only: wages, prices and new industries are left out.',13,C.muted,'start');
-  return {svg:out,phase:Math.abs(s.r-s.d)<.02?'Displacement and reinstatement balance: machines take tasks, new tasks arrive, and labour’s share holds steady.':s.r<s.d?`Displacement outruns new tasks by ${(s.d-s.r).toFixed(2)} points a year, so labour’s share falls to ${end.toFixed(1)}% over 40 years.`:`New tasks outrun displacement, so labour’s share rises to ${end.toFixed(1)}%.`};
+  return {svg:out,phase:Math.abs(s.r-s.d)<.02?'Displacement and reinstatement balance: machines take tasks, new tasks arrive, and labour’s share holds steady.':s.r<s.d?`Displacement outruns new tasks by ${(s.d-s.r).toFixed(2)}% a year, so labour’s share falls to ${end.toFixed(1)}% over 40 years.`:`New tasks outrun displacement, so labour’s share rises to ${end.toFixed(1)}%.`};
  }});
 
 /* ================================================================ platform economies */
@@ -522,7 +522,7 @@ SCENE({id:'measuring-wellbeing',name:'Does money buy happiness?',tag:'The Easter
  definition:'In 1974 Richard Easterlin found that richer people within a country were happier, but countries did not seem to get happier as they grew richer over time. Later work found that across countries life satisfaction rises steadily with the logarithm of income. Whether it rises over time within countries is still argued over.',
  example:'On a log scale, doubling income from $2,000 to $4,000 adds about as much life satisfaction as doubling from $40,000 to $80,000. On an ordinary scale, the curve looks flat at the top, which once looked like a satiation point.',
  desc:'Stylised countries, following the published pattern (not real country data): average life satisfaction on a 0–10 ladder against income per head. Switch between an ordinary and a logarithmic income axis, or view the long-run time series pattern in one rich country, which is where the paradox lives.',
- research:['Easterlin, R. A. (1974). Does economic growth improve the human lot? In David & Reder (eds), Nations and Households in Economic Growth. Academic Press.','Deaton, A. (2008). Income, health, and well-being around the world. Journal of Economic Perspectives 22(2), 53–72.','Stevenson, B. & Wolfers, J. (2008). Economic growth and subjective well-being: reassessing the Easterlin paradox. Brookings Papers on Economic Activity, 1–87.','Easterlin, R. A. & O’Connor, K. J. (2022). The Easterlin paradox. IZA Discussion Paper 13923.'],
+ research:['Easterlin, R. A. (1974). Does economic growth improve the human lot? In David & Reder (eds), Nations and Households in Economic Growth. Academic Press.','Deaton, A. (2008). Income, health, and well-being around the world. Journal of Economic Perspectives 22(2), 53–72.','Stevenson, B. & Wolfers, J. (2008). Economic growth and subjective well-being: reassessing the Easterlin paradox. Brookings Papers on Economic Activity, 1–87.','Easterlin, R. A. & O’Connor, K. J. The Easterlin paradox. IZA Discussion Paper 13923.'],
  dur:12,hint:'Compare the ordinary and log axes. Then look at the time view: is there a contradiction?',
  init:()=>({view:'linear'}),
  watch(p){return {view:p<.33?'linear':p<.66?'log':'time'}},

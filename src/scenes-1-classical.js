@@ -89,7 +89,7 @@ SCENE({id:'division-of-labour-why',name:'Why dividing work helps',tag:'Smith’s
 // The extent of the market: a team only pays if it can sell what it makes.
 SCENE({id:'division-of-labour-market',name:'Limited by the market',tag:'The extent of the market',
  definition:'Smith’s third chapter argues that the division of labour is limited by the extent of the market: a specialist is only worth employing if enough buyers want what they make. He also warned that a lifetime of one simple task could stunt a worker, and proposed public schooling.',
- example:'A village that buys a few hundred pins a day cannot keep even two specialist pin-makers busy, so its smith does many jobs; a city market of tens of thousands can support a full team.',
+ example:'A village that buys fifty pins a day cannot keep even two specialist pin-makers busy, so its smith does many jobs; a city market of tens of thousands can support a full team.',
  desc:'A market-size slider on a log scale sets the largest pin team that can sell its whole output, with output per worker; a second view shows Smith’s own warning about repetitive work.',
  research:'Smith, A. (1776). The Wealth of Nations, Book I, chapter 3, and Book V, chapter 1, part III (on the effects of repetitive work and the case for parish schools). Stigler, G. J. (1951). The division of labor is limited by the extent of the market. Journal of Political Economy 59, 185–193.',
  dur:10,hint:'Slide the size of the market. Better roads, canals and ports widen markets, which is why Smith tied specialisation to trade.',
@@ -155,13 +155,13 @@ function E1_bakers(dB,weeks){
 }
 SCENE({id:'invisible-hand-prices',name:'Prices as signals',tag:'Coordination without a plan',
  definition:'When demand rises somewhere, its price rises; producers chasing the better price move resources there until prices even out. No one plans the move: the price carries the information. This is the idea later read into Smith’s phrase.',
- example:'If the people of town B start wanting 150 loaves a day instead of 100, bread there gets dearer, bakers drift from A to B, and within a few weeks the two prices meet again with about 12 or 13 bakers in B.',
+ example:'If the people of town B start wanting 160 loaves a day instead of 100, bread there gets dearer, bakers drift from A to B, and within three weeks the two prices meet again at £1.30 with 13 bakers in B.',
  desc:'Two towns with twenty bakers between them, the price of bread in each, and a chart of both prices week by week as bakers move to the dearer town.',
  research:'Smith, A. (1776). The Wealth of Nations, Book I, chapter 7 (natural and market price). Hayek, F. A. (1945). The use of knowledge in society. American Economic Review 35, 519–530. The adjustment rule here (one baker moves per week) is illustrative.',
  dur:10,hint:'Change how much bread town B wants and how many weeks pass. Bakers move one at a time towards the higher price.',
- init:()=>({dB:150,wk:12}),
- watch(p){return {dB:150,wk:Math.round(p*12)}},
- ui:[{range:'dB',label:'Loaves wanted in town B',min:40,max:200,step:10,get:s=>s.dB,act:'dB'},{range:'wk',label:'Weeks',min:0,max:12,step:1,get:s=>s.wk,act:'wk'}],
+ init:()=>({dB:160,wk:12}),
+ watch(p){return {dB:160,wk:Math.round(p*12)}},
+ ui:[{range:'dB',label:'Loaves wanted in town B',min:40,max:200,step:20,get:s=>s.dB,act:'dB'},{range:'wk',label:'Weeks',min:0,max:12,step:1,get:s=>s.wk,act:'wk'}],
  on:{dB(s,v){s.dB=Number(v);return 'keep'},wk(s,v){s.wk=Number(v);return 'keep'}},
  draw(s){
   const H=E1_bakers(s.dB,12),now=H[Math.min(12,s.wk)];let out=heading('Bread prices in two towns',28);
@@ -263,7 +263,7 @@ SCENE({id:'comparative-advantage-ppf',name:'Who gains, at what price',tag:'Terms
 
 SCENE({id:'comparative-advantage-limits',name:'Costs and losers',tag:'What the simple model leaves out',
  definition:'Ricardo’s example assumes no transport costs and workers who move freely between industries. Shipping costs eat into the gains, and inside each country some people lose even when the country as a whole gains.',
- example:'If a tenth of every shipment were lost on the way, Portugal’s gain in Ricardo’s example would vanish; England’s would survive until about a sixth was lost. And English wine-makers, or Portuguese weavers, lose their trade.',
+ example:'If a ninth of every shipment were lost on the way, Portugal’s gain in Ricardo’s example would vanish; England’s would survive until about a sixth was lost. And English wine-makers, or Portuguese weavers, lose their trade.',
  desc:'A transport-cost slider shows each country’s gain from trading one cloth for one wine shrinking to nothing; a second view lists who gains and who loses inside each country.',
  research:'Ricardo, D. (1817). Principles, chapter 7. Stolper, W. F. & Samuelson, P. A. (1941). Protection and real wages. Review of Economic Studies 9, 58–73. Samuelson, P. A. (1954) on “iceberg” transport costs. Autor, D., Dorn, D. & Hanson, G. (2013). The China syndrome. American Economic Review 103, 2121–2168.',
  dur:10,hint:'Raise the share lost in shipping and watch the gains disappear, or switch to see who wins and who loses inside each country.',
@@ -370,12 +370,12 @@ SCENE({id:'malthus-population-transition',name:'The demographic transition',tag:
   [0,.25,.5,.75].forEach((x,i)=>{out+=L(pl.X(x),62,pl.X(x),212,C.grid,1)+TF(pl.X(x+.125),228,'stage '+(i+1),12.5,C.muted)});
   out+=TF(80,80,'births',13,C.blue,'start')+TF(80,98,'deaths',13,C.coral,'start');
   // Population index from integrating the gap.
-  const pp=E1_plot(70,262,300,80,[0,1],[0,8],{yt:[[1,'1'],[4,'4'],[8,'8']],yl:'population (×)'});
-  out+=pp.svg;let P0=1;const pts=[[pp.X(0),pp.Y(1)]];for(let i=1;i<=N*s.t;i++){const t=i/N,r=E1_bd(t);P0*=Math.exp((r.b-r.d)/1000*2.6);pts.push([pp.X(t),pp.Y(Math.min(8,P0))])}
+  const pp=E1_plot(70,262,300,80,[0,1],[0,13],{yt:[[1,'1'],[6,'6'],[12,'12']],yl:'population (×)'});
+  out+=pp.svg;let P0=1;const pts=[[pp.X(0),pp.Y(1)]];for(let i=1;i<=N*s.t;i++){const t=i/N,r=E1_bd(t);P0*=Math.exp((r.b-r.d)/1000*2.6);pts.push([pp.X(t),pp.Y(Math.min(13,P0))])}
   out+=E1_poly(pts,C.ink,2.4);
   const r=E1_bd(s.t),st=1+Math.min(3,Math.floor(s.t*4));
   out+=counter(410,70,'birth rate',r.b.toFixed(0),C.blue,150)+counter(410,128,'death rate',r.d.toFixed(0),C.coral,150)+counter(410,186,'natural growth',((r.b-r.d)/10).toFixed(1)+'% a year',C.green,150)+counter(410,262,'population',`×${E1_f(P0,1)}`,C.ink,150);
-  return {svg:out,phase:`Stage ${st}: about ${r.b.toFixed(0)} births and ${r.d.toFixed(0)} deaths per 1,000 people a year, so the population grows ${((r.b-r.d)/10).toFixed(1)}% a year. ${st===2?'Deaths have fallen but births have not yet: the fastest growth.':st===4?'Both are low: growth has almost stopped without Malthus’s checks.':''}`};
+  return {svg:out,phase:`Stage ${st}: about ${r.b.toFixed(0)} births and ${r.d.toFixed(0)} deaths per 1,000 people a year, so the population grows ${((r.b-r.d)/10).toFixed(1)}% a year. ${st===2?'Deaths have fallen but births have not yet: the fastest growth.':st===4?'Both are now low, so growth is slowing towards a stop without Malthus’s checks.':''}`};
  }});
 
 /* ================================================================ diminishing-returns */

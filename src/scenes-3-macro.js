@@ -86,7 +86,7 @@ SCENE({id:'great-depression-banks',name:'Why was it so deep?',tag:'Four explanat
 
 // Leaving gold and recovery: industrial production in 1935 relative to 1929 (approximate, after
 // Eichengreen & Sachs 1985, their figure 1, rounded; illustrative positions).
-const E3_GOLD=[{c:'Sweden',y:1931,ip:123},{c:'Britain',y:1931,ip:106},{c:'Denmark',y:1931,ip:117},{c:'Norway',y:1931,ip:113},{c:'Finland',y:1931,ip:132},{c:'Germany',y:1931.6,ip:94},{c:'Belgium',y:1935,ip:83},{c:'Italy',y:1934.5,ip:93},{c:'France',y:1936,ip:72},{c:'Netherlands',y:1936,ip:86}];
+const E3_GOLD=[{c:'Sweden',y:1931,ip:123},{c:'Britain',y:1931,ip:106},{c:'Denmark',y:1931,ip:117},{c:'Norway',y:1931,ip:113},{c:'Finland',y:1931,ip:132},{c:'Germany',y:1931.6,ip:94,ctl:true},{c:'Belgium',y:1935,ip:83},{c:'Italy',y:1934.5,ip:93,ctl:true},{c:'France',y:1936,ip:72},{c:'Netherlands',y:1936,ip:86}];
 SCENE({id:'great-depression-gold',name:'Leaving gold',tag:'Who recovered first?',
  definition:'Under the gold standard each currency was worth a fixed weight of gold, so a country losing gold had to raise interest rates and squeeze its economy. Countries that left gold could cut rates and let prices rise again, and on the whole they recovered sooner.',
  example:'Sweden and Britain left gold in 1931; by 1935 their industry was above its 1929 level. France held on until 1936 and was still about 30% below.',
@@ -107,10 +107,10 @@ SCENE({id:'great-depression-gold',name:'Leaving gold',tag:'Who recovered first?'
   out+=L(pl.X(1931),pl.Y(a+b*1931),pl.X(1936),pl.Y(a+b*1936),C.purple,2,'stroke-dasharray="7 5"');
   E3_GOLD.forEach((d,i)=>{const on=i===s.k;out+=hit(X,'k',i,d.c,Ci(pl.X(d.y),pl.Y(d.ip),on?8:6,on?C.coral:C.blue,'#fff'))});
   const d=E3_GOLD[s.k];
-  out+=R(420,64,164,168,'#fff',C.grid,10)+TBF(502,88,d.c,16,C.coral)+TF(502,112,`left gold: ${Math.floor(d.y)}`,13,C.ink)+TF(502,132,`industry 1935: ${d.ip}`,13,C.ink);
+  out+=R(420,64,164,168,'#fff',C.grid,10)+TBF(502,88,d.c,16,C.coral)+TF(502,112,`${d.ctl?'controls':'left gold'}: ${Math.floor(d.y)}`,13,C.ink)+TF(502,132,`industry 1935: ${d.ip}`,13,C.ink);
   out+=E3_para(502,160,d.ip>=100?'Above its 1929 level.':'Still below its 1929 level.',22,13,d.ip>=100?C.green:C.coral,18,'middle');
   out+=TF(502,206,`trend: ${b.toFixed(1)} points a year`,13,C.purple)+TF(502,224,'later exit',13,C.purple);
-  return {svg:out,phase:`${d.c} left gold in ${Math.floor(d.y)}; by 1935 its industry stood at about ${d.ip}% of 1929. Across these countries each extra year on gold goes with about ${Math.abs(b).toFixed(0)} points less recovery. A correlation, but a strong and widely accepted one.`};
+  return {svg:out,phase:`${d.c} ${d.ctl?'imposed exchange controls':'left gold'} in ${Math.floor(d.y)}; by 1935 its industry stood at about ${d.ip}% of 1929. Across these countries each extra year on gold goes with about ${Math.abs(b).toFixed(0)} points less recovery. A correlation, but a strong and widely accepted one.`};
  }});
 
 /* ================================================================ national-accounts */
@@ -144,7 +144,7 @@ SCENE({id:'national-accounts',name:'Measuring the whole economy',tag:'Value adde
 // Expenditure approach: GDP = C + I + G + (X − M). Shares are rounded UK figures (ONS, early 2020s, approximate).
 SCENE({id:'national-accounts-expenditure',name:'Who buys the output?',tag:'C + I + G + (X − M)',
  definition:'GDP can be measured by adding up spending on final output: households’ consumption (C), firms’ investment (I), government purchases (G) and exports minus imports (X − M). Measured carefully, spending, output and incomes give the same total.',
- example:'In the UK in the early 2020s households’ spending was roughly 60% of GDP, government purchases about 20%, investment about 18%, and net trade a small negative.',
+ example:'In the UK in the early 2020s households’ spending was roughly 60% of GDP, government purchases about 21%, investment about 18%, and net trade a small negative.',
  desc:'A stacked bar of the four parts of spending, which the learner sets, with GDP as their sum, beside rounded UK shares.',
  research:'Keynes, J. M. (1936). The General Theory. Stone, R. (1984). The accounts of society (Nobel lecture). Office for National Statistics, UK National Accounts (Blue Book), GDP expenditure components (shares rounded; approximate).',
  dur:10,hint:'Set the four parts and watch GDP add up. Imports are subtracted because they were produced abroad, though households, firms and government all buy some.',
@@ -406,7 +406,7 @@ SCENE({id:'keynes-hayek-sim',name:'A slump, three ways',tag:'A toy model',
 
 // What later evidence says, and which side each finding leans towards.
 const E3_EVID=[
- {id:'mult',t:'Fiscal multipliers',lean:'Keynes',col:C.blue,body:'Estimates mostly lie between 0.5 and 2, larger in deep slumps and when interest rates are near zero (Ramey 2019; Auerbach & Gorodnichenko 2012).',cav:'Smaller in normal times, and smaller still if spending is expected to be reversed.'},
+ {id:'mult',t:'Fiscal multipliers',lean:'Keynes',col:C.blue,body:'Estimates mostly lie between 0.5 and 2, larger in deep slumps in some studies (Auerbach & Gorodnichenko 2012); Ramey (2019) finds that fragile, with firmer evidence when interest rates are near zero.',cav:'Smaller in normal times, and smaller still if spending is expected to be reversed.'},
  {id:'aust',t:'Austerity after 2010',lean:'Keynes',col:C.blue,body:'The IMF found that forecasters underestimated how much cutting budgets in 2010–11 would cut growth (Blanchard & Leigh 2013).',cav:'Some countries cut without a slump; the effect depends on monetary policy and trust in public finances.'},
  {id:'credit',t:'Credit booms and crises',lean:'Hayek',col:C.amber,body:'Across 14 countries over 140 years, rapid credit growth was the best single predictor of financial crises (Schularick & Taylor 2012).',cav:'This fits Minsky as well as Hayek, and does not show that stimulus after a crash is harmful.'},
  {id:'liq',t:'Liquidation in the 1930s',lean:'Keynes',col:C.blue,body:'Letting banks fail and prices fall in 1930–33 deepened the Depression rather than clearing it (Friedman & Schwartz 1963; Bernanke 1983).',cav:'Friedman’s reading is monetary rather than Keynesian, but it rejects liquidation too.'},

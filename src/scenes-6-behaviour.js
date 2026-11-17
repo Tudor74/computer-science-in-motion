@@ -37,7 +37,7 @@ SCENE({id:'ultimatum-game',name:'The ultimatum game',tag:'You propose a split of
  definition:'In the ultimatum game one player proposes how to split a sum; the other can accept, and both get the split, or reject, and both get nothing.',
  example:'Offering £1 of £10 is the “rational” prediction if responders take any money; real responders often reject such offers, so real proposers offer £4 or £5.',
  desc:'You choose an offer out of £10 and play it against ten simulated responders whose rejection pattern follows published averages; a curve shows the expected earnings from every offer.',
- research:'Güth, Schmittberger & Schwarze (1982). An experimental analysis of ultimatum bargaining. J. Econ. Behav. Organ. 3. Camerer (2003). Behavioral Game Theory: offers average 40–50%; offers under 20% are rejected about half the time. Roth et al. (1991) on proposers’ offers near the earnings-maximising level. Widely replicated.',
+ research:'Güth, Schmittberger & Schwarze (1982). An experimental analysis of ultimatum bargaining. J. Econ. Behav. Organ. 3. Camerer (2003). Behavioral Game Theory: the most common offers are 40–50% and the mean is 30–40%; offers under 20% are rejected about half the time. Roth et al. (1991) on proposers’ offers near the earnings-maximising level. Widely replicated.',
  dur:10,hint:'Set your offer with the slider and press Make the offer. The responders are simulated; nothing you choose leaves this page.',
  init:()=>({offer:4,plays:[]}),
  watch(p){const o=[1,2,3,4,5][Math.min(4,Math.floor(p*5))];return {offer:o,plays:[1,2,3,4,5].filter(v=>v<=o).map(v=>({offer:v,acc:E6_UTH.filter(t=>v*10>=t).length})),sim:true}},
@@ -98,7 +98,7 @@ const E6_SOC=[
  {n:'Tsimane (Bolivia)',v:37,t:'Forager-horticulturalists of the Bolivian lowlands.'},
  {n:'Hadza (Tanzania)',v:40,t:'Foragers; offers and rejections varied with camp size.'},
  {n:'Au (Papua New Guinea)',v:43,t:'Some offers above 50% were rejected: in gift-giving cultures, accepting a large gift can create an unwanted obligation.'},
- {n:'Orma (Kenya)',v:44,t:'Pastoralists; offers resembled contributions to local public goods (harambee).'},
+ {n:'Orma (Kenya)',v:44,t:'Pastoralists. They likened the related public-goods game to harambee, their local fund-raising for community projects.'},
  {n:'US students (comparison)',v:44,t:'Typical of university-student samples in industrial societies.'},
  {n:'Aché (Paraguay)',v:51,t:'Foragers who share meat widely across the group.'},
  {n:'Lamalera (Indonesia)',v:58,t:'Whale hunters whose catch is divided by elaborate cooperative rules. The highest mean offers.'}];
@@ -220,7 +220,7 @@ SCENE({id:'public-goods-game',name:'The public-goods game',tag:'Play ten rounds 
  definition:'In a public-goods game each player chooses how much to put into a common pot that is multiplied and shared equally; contributing helps the group but costs the contributor.',
  example:'Each token you put in returns only 0.4 to you but 1.6 to the group, so the group does best if everyone gives everything, and each person does best by giving nothing.',
  desc:'Ten rounds with three simulated players who cooperate conditionally. Your contributions and theirs are plotted as a share of the 20-token endowment, beside the typical decline in lab experiments.',
- research:'Ledyard (1995). Public goods: a survey of experimental research. Handbook of Experimental Economics. Fischbacher, Gächter & Fehr (2001), Economics Letters 71: most people are conditional cooperators. Fehr & Gächter (2000), AER 90. Contributions start near half and decay, a robust pattern.',
+ research:'Ledyard (1995). Public goods: a survey of experimental research. Handbook of Experimental Economics. Fischbacher, Gächter & Fehr (2001), Economics Letters 71: about half of participants are conditional cooperators and about a third free ride. Fehr & Gächter (2000), AER 90. Contributions start near half and decay, a robust pattern.',
  dur:12,hint:'Set your contribution and press Contribute, ten times. The other three players are simulated.',
  init:()=>({seed:4,c:10,hist:[]}),
  watch(p){const n=Math.min(10,Math.floor(p*11)),hist=[];for(let t=0;t<n;t++){const o=E6_pgOthers(hist,4)[t];hist.push(clamp(Math.round(o.reduce((a,b)=>a+b,0)/3),0,20))}return {seed:4,c:10,hist,sim:true}},
@@ -341,12 +341,12 @@ SCENE({id:'nudges-shrinkage',name:'How big are nudge effects?',tag:'Publication 
  }});
 
 // Johnson & Goldstein (2003): effective consent rates.
-const E6_ORG=[['Denmark',4.25,'in'],['Germany',12,'in'],['UK',17.17,'in'],['Netherlands',27.5,'in'],['Sweden',85.9,'out'],['Belgium',98,'out'],['Portugal',99.64,'out'],['France',99.91,'out'],['Hungary',99.97,'out'],['Austria',99.98,'out']];
+const E6_ORG=[['Denmark',4.25,'in'],['Germany',12,'in'],['UK',17.17,'in'],['Netherlands',27.5,'in'],['Sweden',85.9,'out'],['Belgium',98,'out'],['Portugal',99.64,'out'],['France',99.91,'out'],['Hungary',99.997,'out'],['Austria',99.98,'out']];
 SCENE({id:'nudges-organ',name:'Organ donation defaults',tag:'Consent is not donation',
  definition:'Presumed consent (opt-out) treats everyone as an organ donor unless they register a refusal; explicit consent (opt-in) requires people to register.',
  example:'In Johnson and Goldstein’s 2003 comparison, Germany (opt-in) had about 12% effective consent; neighbouring Austria (opt-out) had over 99%, mostly people who had simply not opted out. Neither figure is a rate of actual donation.',
  desc:'Effective consent rates in ten European countries in the early 2000s, opt-in against opt-out. A second view says what happened to actual donations.',
- research:'Johnson, E. J. & Goldstein, D. (2003). Do defaults save lives? Science 302, 1338–1339. Abadie & Gay (2006), J. Health Econ. 25: presumed consent associated with roughly 25–30% higher donation rates, other things equal: much less than the consent gap. Arshad, Anderson & Sharif (2019): mixed evidence after Wales switched to opt-out in 2015.',
+ research:'Johnson, E. J. & Goldstein, D. (2003). Do defaults save lives? Science 302, 1338–1339. Abadie & Gay (2006), J. Health Econ. 25: presumed consent associated with roughly 25–30% higher donation rates, other things equal: much less than the consent gap. Arshad, Anderson & Sharif (2019), Kidney International 95: across 35 countries, no significant difference in deceased-donor rates between opt-out and opt-in systems, and fewer living donors under opt-out. Evidence from Wales, opt-out since December 2015, is mixed.',
  dur:9,hint:'Press a country, and switch to the view of what happened to actual donations.',
  init:()=>({view:'consent',pick:1}),
  watch(p){return {view:p<.6?'consent':'donation',pick:p<.6?1:9}},

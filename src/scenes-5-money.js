@@ -71,7 +71,7 @@ SCENE({id:'inflation-money',name:'Money, spending and prices',tag:'The quantity 
  }});
 
 SCENE({id:'inflation-money-erosion',name:'What inflation does to £100',tag:'Purchasing power and the rule of 70',
- definition:'Inflation erodes purchasing power: at inflation π, £100 today buys what about £100 ÷ (1 + π)ᵗ buys after t years. The time for prices to double is about 70 divided by the inflation rate in per cent.',
+ definition:'Inflation erodes purchasing power: at inflation π, £100 kept for t years buys only what about £100 ÷ (1 + π)ᵗ buys today. The time for prices to double is about 70 divided by the inflation rate in per cent.',
  example:'At 2% inflation prices double in about 35 years; at 10% they double in about 7 years, and £100 buys what £39 buys today after 10 years.',
  desc:'A curve shows what £100 is worth in today’s money year by year at your chosen inflation rate, with a dashed curve for the 2% target. Tiles give the value after your chosen number of years, the exact doubling time and the rule-of-70 estimate.',
  research:'The rule of 70 follows from ln 2 ≈ 0.693 and ln(1 + π) ≈ π for small π. UK inflation target of 2% (CPI) set by the government for the Bank of England since 2003; from 1997 the target was 2.5% on RPIX. Office for National Statistics, Consumer price inflation tables.',
@@ -156,10 +156,10 @@ SCENE({id:'central-banks',name:'Setting the interest rate',tag:'The Taylor rule'
   labs.forEach((l,k)=>out+=TF(pl.X(k+.5),298,l,12,C.muted));
   out+=counter(400,56,'inflation',s.pi+'%',C.coral,170)+counter(400,110,'output gap',(s.gap>0?'+':'')+s.gap+'%',C.purple,170);
   out+=R(400,166,170,64,i<0.25?C.amberp:C.pale,'none',8)+TF(485,186,'suggested rate',12,C.muted)+TBF(485,216,i.toFixed(2)+'%',22,i<0.25?C.amber:C.blue);
-  if(i<0.25)out+=E5_lines(404,252,['Below the floor: rates','cannot go far under zero,','so banks used QE instead.'],13,C.amber);
+  if(i<0.25)out+=E5_lines(404,252,['At or below the floor: rates','cannot go far under zero,','so banks used QE instead.'],13,C.amber);
   out+=T(300,336,'i = r* + π + ½(π − 2%) + ½ × output gap',15);
   out+=TF(300,360,'A rule of thumb that described US policy in 1987–92 (Taylor 1993), not a law.',13,C.muted);
-  return {svg:out,phase:i<0.25?'The rule asks for a negative rate, but cash pays zero, so rates cannot fall far below zero. After 2008 central banks met this floor and turned to quantitative easing and forward guidance.':`The rule raises rates by more than any rise in inflation (1.5 points per point), so real rates rise and cool demand. Here it suggests ${i.toFixed(2)}%. Central banks look at rules like this but decide by judgement.`};
+  return {svg:out,phase:i<0.25?'The rule asks for a rate of zero or less, but cash pays zero, so rates cannot fall far below zero. After 2008 central banks met this floor and turned to quantitative easing and forward guidance.':`The rule raises rates by more than any rise in inflation (1.5 points per point), so real rates rise and cool demand. Here it suggests ${i.toFixed(2)}%. Central banks look at rules like this but decide by judgement.`};
  }});
 
 const E5_STEPS=[['Bank Rate','changes'],['Market and','mortgage rates'],['Spending and','borrowing'],['Output','and jobs'],['Inflation','']];
@@ -264,7 +264,7 @@ SCENE({id:'compound-interest-frequency',name:'How often is interest added?',tag:
    out+=TF(x,288,q[1],12,on?C.ink:C.muted)});
   const v=val(E5_FREQ.find(q=>q[0]===s.n)[2]);
   out+=T(300,330,`Added ${E5_FREQ.find(q=>q[0]===s.n)[1]}: annual equivalent rate ${((v-1)*100).toFixed(2)}% (stated rate ${s.r}%)`,15);
-  out+=TF(300,354,s.r>=50?'The bars approach e^r: here '+top.toFixed(4)+'. With r = 100% that is e = 2.71828…':'At low rates the frequency barely matters: the bars differ in the third decimal place.',13,C.muted);
+  out+=TF(300,354,s.r>=50?'The bars approach e^r: here '+top.toFixed(4)+'. With r = 100% that is e = 2.71828…':'The lower the rate, the less the frequency matters: at 5% it adds only about 0.1p.',13,C.muted);
   return {svg:out,phase:'Each extra addition gives interest a little longer to earn interest. The gain shrinks as additions become more frequent, and the total approaches a limit: eʳ. Bernoulli asked this question in 1683, which is how the number e first appeared.'};
  }});
 
@@ -337,7 +337,7 @@ SCENE({id:'bank-runs',name:'A bank’s balance sheet',tag:'Why sound banks can f
   let thr=null;for(let w=0;w<=60;w+=.5)if(E5_sheet(s.res,w,s.hc).fail){thr=w;break}
   out+=T(300,338,a.fail?`The bank fails: ${a.illiquid?'it runs out of loans to sell':'fire-sale losses exceed its equity'}.`:`The bank survives with equity of ${a.eq.toFixed(1)} (of 8).`,15,a.fail?C.coral:C.green);
   out+=TF(300,358,thr!==null?`With these settings a run of ${thr}% of deposits is enough to sink it.`:'With these settings it survives even a 60% run.',13,C.muted);
-  return {svg:out,phase:'The bank was solvent before the run: its loans were worth more than its deposits. Selling them in a hurry destroys value, so a run can bring down a sound bank. That is why runs can be self-fulfilling.'};
+  return {svg:out,phase:'The bank was solvent before the run: its assets (reserves plus loans) were worth more than its deposits. Selling them in a hurry destroys value, so a run can bring down a sound bank. That is why runs can be self-fulfilling.'};
  }});
 
 // Diamond–Dybvig style game: 10 depositors with £1 each. The bank holds 3 in cash and 7 in loans that pay 1.5
