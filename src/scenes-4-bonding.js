@@ -216,7 +216,7 @@ const C4_SUB=[
  {k:'H2O',n:'Ice, H₂O',b:'molecules with hydrogen bonds',mp:0,cond:['no','barely','—'],note:'Strong bonds inside each molecule, weaker attractions between them.'},
  {k:'CH4',n:'Methane, CH₄',b:'separate molecules',mp:-182,cond:['no','no','—'],note:'Only weak attractions between molecules, so very little energy separates them.'}];
 SCENE({id:'ionic-covalent-properties',name:'Bonds and properties',tag:'What the bond type predicts',
- definition:'The kind of bonding in a substance predicts much of how it behaves. Ionic solids melt high and conduct only when melted or dissolved; covalent networks melt very high and do not conduct; metals conduct as solids; molecular substances melt low because only weak forces hold the molecules together.',
+ definition:'The kind of bonding in a substance predicts much of how it behaves. Ionic solids melt high and conduct only when melted or dissolved; covalent networks melt very high and usually do not conduct (graphite is the classic exception); metals conduct as solids; molecular substances melt low because only weak forces hold the molecules together.',
  example:'Salt melts at 801 °C and conducts once melted. Methane, held by covalent bonds just as strong inside each molecule, melts at −182 °C because the molecules barely attract one another.',
  desc:'Melting points of six substances on one temperature scale, coloured by bond type, with a table of whether each conducts as a solid, as a liquid and in water.',
  research:['Pauling, L. (1960). The Nature of the Chemical Bond, 3rd edn. Cornell University Press.','Melting points: CRC Handbook of Chemistry and Physics (rounded).'],

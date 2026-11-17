@@ -63,7 +63,7 @@ SCENE({id:'chromatography',name:'Tsvet’s coloured bands',tag:'A leaf extract s
 const C7_TLC=[{n:'A',k:.4,col:C.purple},{n:'B',k:1.5,col:C.blue},{n:'C',k:4,col:C.coral}];
 const C7_rf=(k,pol)=>1/(1+k*Math.exp(-2.5*(pol-.5)));
 SCENE({id:'chromatography-tlc',name:'Thin-layer chromatography and Rf',tag:'Measure a spot, identify an unknown',
- definition:'In thin-layer chromatography (TLC) a solvent climbs a plate coated with silica, carrying the spots with it. The retardation factor Rf is the distance a spot travels divided by the distance the solvent front travels. Under the same conditions a compound always has the same Rf.',
+ definition:'In thin-layer chromatography (TLC) a solvent climbs a plate coated with silica, carrying the spots with it. The retardation factor Rf is the distance a spot travels divided by the distance the solvent front travels. Under closely matched conditions a compound gives a reproducible Rf, though a matching Rf supports an identification rather than proving it.',
  example:'Dye B moves 3.2 cm while the solvent front moves 8.0 cm, so its Rf is 0.40. An unknown spot with Rf 0.40 on the same plate is probably B.',
  desc:'A plate with four lanes: three known dyes and an unknown mixture. The solvent front climbs as you move the slider. Press a spot to measure it: the drawing marks its distance and the front’s, and gives the Rf.',
  research:'Izmailov, N. A. & Shraiber, M. S. (1938). Spot chromatographic adsorption analysis. Farmatsiya 3, 1–7 (early thin-layer separation on a glass slide). Stahl, E. (1956). Dünnschicht-Chromatographie. Pharmazie 11, 633–637 (standardised silica plates). Rf is constant for a given plate, solvent and temperature; the values here are illustrative.',
@@ -74,7 +74,7 @@ SCENE({id:'chromatography-tlc',name:'Thin-layer chromatography and Rf',tag:'Meas
   {range:'pol',label:'Solvent polarity',min:0,max:1,step:.05,get:s=>s.pol,act:'pol',show:v=>v<.35?'weak':v<.7?'medium':'strong'}],
  on:{h(s,v){s.h=Number(v)},pol(s,v){s.pol=Number(v)},pick(s,v){s.sel=v}},
  draw(s,f,X){
-  let out=heading('A TLC plate: same Rf, same compound',26);
+  let out=heading('A TLC plate: matching Rf values',26);
   const px=50,py=52,pw=240,ph=290,base=py+ph-30,run=ph-50,front=base-s.h*run;
   out+=R(px,py,pw,ph,'#fbfbf6',C.line,4,'stroke-width="2"');
   out+=R(px+1,front,pw-2,base-front+30,'#e8f1f7','none',0);
@@ -344,7 +344,7 @@ const C7_NE=[[20,90.48],[21,.27],[22,9.25]],C7_V=2000,C7_R0=.15,C7_E=1.602177e-1
 const C7_rad=(m,B)=>Math.sqrt(2*m*C7_AMU*C7_V/C7_E)/B;
 const C7_mzAt=B=>C7_E*Math.pow(B*C7_R0,2)/(2*C7_V)/C7_AMU;
 SCENE({id:'mass-spectrometry',name:'Weighing atoms with a magnet',tag:'Neon turns out to be two kinds of atom',
- definition:'A mass spectrometer turns molecules into ions, speeds them up with a voltage and bends them with a magnet. Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
+ definition:'A magnetic-sector mass spectrometer, the kind Thomson and Aston used, turns molecules into ions, speeds them up with a voltage and bends them with a magnet (other designs sort ions by flight time or oscillating electric fields). Heavier ions bend less, so each mass-to-charge ratio (m/z) follows its own curve. Tuning the field brings each m/z in turn onto the detector, and the signal at each m/z gives a mass spectrum.',
  example:'In 1913 J. J. Thomson saw neon split into two traces, at mass 20 and mass 22: the first proof that a stable element can have isotopes. About 90% of neon is neon-20 and about 9% is neon-22.',
  desc:'An ion source on the left, a magnetic field region, and curved paths for neon-20, -21 and -22, drawn thicker for the more common ions. A slit and detector sit where only one radius reaches. On the right, the mass spectrum built by sweeping the field, with a marker at the m/z now being detected.',
  research:'Thomson, J. J. (1913). Bakerian Lecture: Rays of positive electricity. Proceedings of the Royal Society A 89, 1–20. Aston, F. W. (1919). A positive ray spectrograph. Philosophical Magazine 38, 707–714 (Nobel Prize in Chemistry 1922). Dempster, A. J. (1918). A new method of positive ray analysis. Physical Review 11, 316–325. Natural neon abundances from IUPAC (90.48, 0.27, 9.25%). Ions accelerated through 2,000 V onto a 0.15 m radius.',

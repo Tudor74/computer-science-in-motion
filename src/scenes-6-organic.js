@@ -26,7 +26,7 @@ const C6_ALK=[['methane',-162],['ethane',-89],['propane',-42],['butane',-1],['pe
 function C6_zig(n,x0,dx,yA,yB){return range(n).map(i=>[x0+i*dx,i%2?yB:yA])}
 SCENE({id:'carbon-skeletons',name:'Chains of carbon',tag:'Kekulé and Couper, 1858',
  definition:'Carbon forms four bonds and bonds strongly to itself, so carbon atoms can link into chains of any length. In 1858 August Kekulé and Archibald Scott Couper independently proposed that carbon is tetravalent and that its atoms join to one another.',
- example:'Each extra CH₂ in the chain from methane to octane adds 14 to the molar mass and roughly 30 °C to the boiling point: butane boils at −1 °C, octane at 126 °C.',
+ example:'Each extra CH₂ in the chain from methane to octane adds 14 to the molar mass and raises the boiling point by a shrinking step, from about 73 °C (methane to ethane) to about 27 °C (heptane to octane): butane boils at −1 °C, octane at 126 °C.',
  desc:'A zigzag carbon chain whose length the learner sets, drawn with its hydrogens, beside the molecular formula CₙH₂ₙ₊₂, the name and the measured boiling point.',
  research:'Kekulé, A. (1858). Über die Constitution und die Metamorphosen der chemischen Verbindungen und über die chemische Natur des Kohlenstoffs. Annalen der Chemie 106, 129–159. Couper, A. S. (1858). On a new chemical theory. Philosophical Magazine 16, 104–116. Boiling points: CRC Handbook of Chemistry and Physics.',
  dur:10,hint:'Change the number of carbons and switch between the full drawing and the skeletal shorthand chemists use.',
