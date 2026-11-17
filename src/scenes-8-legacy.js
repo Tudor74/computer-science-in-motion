@@ -313,7 +313,7 @@ const T8_GROUPS={era:[['Before 1970',['memex','coining-hypertext']],['1970–199
  theme:[['Links',['memex','two-way-links','link-rot','backlinks']],['Content',['transclusion','content-addressing']],['Structure',['coining-hypertext','zigzag']]],
  person:[['Bush',['memex']],['Nelson',['coining-hypertext','transclusion','two-way-links','zigzag']],['Others',['link-rot','backlinks','content-addressing']]]};
 SCENE({id:'deep-interconnection-tree',name:'A tree cuts connections',tag:'Hierarchy against network',
- definition:'Sorting ideas into folders keeps the links inside each folder and cuts every link between folders. Whatever classification you choose, some connections are lost; Nelson argued that hierarchies are imposed on material that is really a network.',
+ definition:'Sorting ideas into folders keeps the links inside each folder and hides every link between folders, unless extra shortcuts are added. Whatever classification you choose, some connections are lost; Nelson argued that hierarchies are imposed on material that is really a network.',
  example:'Filed by date, transclusion and content addressing land in different folders, so the link between them disappears; filed by theme they stay together, but others are cut instead.',
  desc:'Eight lessons sorted into three folders by the chosen classification, with links inside a folder drawn solid and links cut by the hierarchy drawn dashed in coral, and a count of each.',
  research:['Nelson, T. H. (1974). Computer Lib/Dream Machines, on hierarchy as an imposed structure.','Alexander, C. (1965). A city is not a tree. Architectural Forum 122(1–2): real structures overlap and cannot be captured by a tree.'],

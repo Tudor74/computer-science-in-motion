@@ -30,6 +30,6 @@ LESSON({id:'tumblers',name:'Tumblers and permanent addresses',short:'Tumblers',s
  prior:['transclusion','two-way-links'],references:['t5-literary-machines','t5-udanax','t5-cs'],
  ids:['tumblers','tumblers-insert','tumblers-append']});
 
-THREAD({id:'t5-permanence',name:'Nothing is ever lost',ids:['version-history','transclusion-versions','tumblers','tumblers-append','link-rot','content-addressing']});
+THREAD({id:'t5-permanence',name:'Designed to keep everything',ids:['version-history','transclusion-versions','tumblers','tumblers-append','link-rot','content-addressing']});
 THREAD({id:'t5-links',name:'What a link should be',ids:['associative-trails','two-way-links','two-way-links-spans','embedded-markup-links','backlinks']});
 THREAD({id:'t5-quoting',name:'Quoting with credit',ids:['transclusion','transcopyright','transcopyright-compare','open-xanadu']});

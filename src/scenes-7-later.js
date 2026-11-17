@@ -374,7 +374,7 @@ const T7_SIM=[{c:'lines',ms:1150,ok:1},{c:'plain',ms:2850,ok:1},{c:'lines',ms:98
 const T7_mean=a=>a.length?sum(a)/a.length:0;
 SCENE({id:'parallel-documents-search',name:'Try it: find the matching sentence',tag:'A small demonstration on you',
  definition:'When related parts of two documents are joined by a visible connection, the reader follows it instead of searching. Without one, the reader must hold the sentence in mind and scan for its partner.',
- example:'With a connecting line, most people find the partner in about a second; without it, finding a reworded partner among eight takes two or three times as long.',
+ example:'With a connecting line you can go straight to the partner; without it you must scan eight reworded sentences, which usually takes longer. Your own times appear at the end.',
  desc:'Eight sentences on the left and their reworded partners shuffled on the right. In half the trials a line joins the highlighted sentence to its partner. Afterwards, bars compare your average times.',
  research:['Chandler, P. & Sweller, J. (1991). Cognitive load theory and the format of instruction. Cognition and Instruction 8(4), 293–332: the split-attention effect, the cost of searching between related sources.','Nelson, T. H. (1999). Xanalogical structure, needed now more than ever. ACM Computing Surveys 31(4es): visible connections between parallel documents. This page is a demonstration, not a controlled study.'],
  dur:10,hint:'Press Start, then press the sentence on the right that means the same as the highlighted one. Your times stay in this page.',

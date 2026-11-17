@@ -176,7 +176,7 @@ SCENE({id:'transcopyright',name:'Transcopyright',tag:'Permission to quote, paid 
  }});
 
 SCENE({id:'transcopyright-compare',name:'Three ways to quote',tag:'Credit, payment and integrity',
- definition:'Transcopyright aimed to make quoting easy, credited and paid at once. Copy and paste is easy but loses credit and payment; asking permission keeps them but is slow and often refused.',
+ definition:'Transcopyright aimed to make quoting easy, credited and paid at once. Copy and paste is easy but keeps no built-in credit or payment (credit depends on the copier citing the source); asking permission keeps them but is slow and often refused.',
  example:'A teacher building a course pack can copy articles (fast, unpaid, often unlawful), clear rights for each (slow, paid), or, in Nelson’s design, transclude them under a standing licence (fast, paid, credited).',
  research:'Nelson, T. H. (1997). Transcopyright: dealing with the dilemma of digital copyright. Educom Review 32(1). Lessig, L. (2004). Free Culture. Penguin Press. Creative Commons (2002) chose free licences instead of payment.',
  desc:'A table of three quoting methods against five properties, with ticks and crosses; choosing a method highlights its row and describes its trade-off.',
@@ -186,13 +186,13 @@ SCENE({id:'transcopyright-compare',name:'Three ways to quote',tag:'Credit, payme
  ui:[{choose:[[0,'Copy and paste'],[1,'Ask permission'],[2,'Transcopyright']],label:'Method',get:s=>s.m,act:'m'}],
  on:{m(s,v){s.m=Number(v);return 'keep'}},
  draw(s){
-  const cols=['Fast','Author credited','Author paid','Stays linked','Text intact'];
+  const cols=['Fast','Credit built in','Author paid','Stays linked','Text intact'];
   const rows=[['Copy and paste',[1,0,0,0,0]],['Ask permission',[0,1,1,0,0]],['Transcopyright',[1,1,1,1,1]]];
   let out=heading('What each way of quoting keeps');
   cols.forEach((c,j)=>out+=TBF(212+j*80,78,c.split(' ')[0],13,C.ink)+(c.split(' ')[1]?TBF(212+j*80,94,c.split(' ')[1],13,C.ink):''));
   rows.forEach(([n,v],i)=>{const y=114+i*56,on=i===s.m;out+=R(20,y,560,46,on?C.pale:'#fff',on?C.blue:C.grid,8)+TBF(32,y+28,n,14,C.ink,'start');
    v.forEach((ok,j)=>out+=TBF(212+j*80,y+30,ok?'✓':'✗',18,ok?C.green:C.coral))});
-  const say=['Fast and free to do, but the author is neither credited nor paid, the copy can drift, and it may be unlawful.','Lawful and paid, but slow: each request may take weeks or be refused, and the result is still a disconnected copy.','Nelson’s promise: instant permission, credit and payment, and the quote stays connected to its source. The catch is that it needs a whole system to exist.'];
+  const say=['Fast and free to do, but nothing credits or pays the author automatically, the copy can drift, and it may be unlawful.','Lawful and paid, but slow: each request may take weeks or be refused, and the result is still a disconnected copy.','Nelson’s promise: instant permission, credit and payment, and the quote stays connected to its source. The catch is that it needs a whole system to exist.'];
   const v=rows[s.m][1],keep=cols.filter((_,j)=>v[j]).join(', ')||'nothing',lose=cols.filter((_,j)=>!v[j]).join(', ')||'nothing';
   out+=R(20,290,560,72,'#f3f7fa','none',8)+TF(36,318,'Keeps: '+keep.toLowerCase(),13,C.green,'start')+TF(36,344,'Loses: '+lose.toLowerCase(),13,C.coral,'start');
   return {svg:out,phase:say[s.m]};

@@ -118,7 +118,7 @@ SCENE({id:'link-rot',name:'Link rot',tag:'Measured, not imagined',
 const T6_PAGES=[[90,90],[220,70],[350,100],[480,80],[130,200],[270,190],[410,210],[530,180],[100,300],[240,310],[380,300],[510,290]];
 const T6_LINKS=[[0,1],[0,4],[1,2],[1,5],[2,3],[2,6],[3,7],[4,5],[4,8],[5,6],[5,9],[6,7],[6,10],[7,11],[8,9],[9,10],[10,11],[11,3],[9,1],[10,2]];
 SCENE({id:'link-rot-sim',name:'Watch a web decay',tag:'And what archives and permanent addresses change',
- definition:'Each year some pages move or disappear. With plain web links, every link to them breaks. An archive such as the Wayback Machine can rescue some by keeping copies; permanent addresses, as in Xanadu, would mean nothing published is ever lost.',
+ definition:'Each year some pages move or disappear. With plain web links, every link to them breaks. An archive such as the Wayback Machine can rescue some by keeping copies; permanent addresses, as in Xanadu, aim to keep every published version reachable for good, though that still depends on someone storing and copying the data.',
  example:'A page that moved in year 3 breaks every link to it. If an archive captured it first, readers can still reach the old copy, but only if someone thinks to look there.',
  research:'Internet Archive (1996–): the Wayback Machine. Zittrain, J., Albert, K. & Lessig, L. (2014), on Perma.cc archiving for citations. Nelson, T. H. (1981). Literary Machines (permanence). Loss rates here are illustrative.',
  desc:'Twelve pages joined by twenty links. Stepping through years removes pages at random from a fixed seed; broken links turn red unless an archive copy or permanent addressing saves them.',

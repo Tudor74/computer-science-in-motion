@@ -2123,7 +2123,7 @@ LESSON({id:'tumblers',name:'Tumblers and permanent addresses',short:'Tumblers',s
  prior:['transclusion','two-way-links'],references:['t5-literary-machines','t5-udanax','t5-cs'],
  ids:['tumblers','tumblers-insert','tumblers-append']});
 
-THREAD({id:'t5-permanence',name:'Nothing is ever lost',ids:['version-history','transclusion-versions','tumblers','tumblers-append','link-rot','content-addressing']});
+THREAD({id:'t5-permanence',name:'Designed to keep everything',ids:['version-history','transclusion-versions','tumblers','tumblers-append','link-rot','content-addressing']});
 THREAD({id:'t5-links',name:'What a link should be',ids:['associative-trails','two-way-links','two-way-links-spans','embedded-markup-links','backlinks']});
 THREAD({id:'t5-quoting',name:'Quoting with credit',ids:['transclusion','transcopyright','transcopyright-compare','open-xanadu']});
 
@@ -2323,7 +2323,7 @@ SCENE({id:'transcopyright',name:'Transcopyright',tag:'Permission to quote, paid 
  }});
 
 SCENE({id:'transcopyright-compare',name:'Three ways to quote',tag:'Credit, payment and integrity',
- definition:'Transcopyright aimed to make quoting easy, credited and paid at once. Copy and paste is easy but loses credit and payment; asking permission keeps them but is slow and often refused.',
+ definition:'Transcopyright aimed to make quoting easy, credited and paid at once. Copy and paste is easy but keeps no built-in credit or payment (credit depends on the copier citing the source); asking permission keeps them but is slow and often refused.',
  example:'A teacher building a course pack can copy articles (fast, unpaid, often unlawful), clear rights for each (slow, paid), or, in Nelson’s design, transclude them under a standing licence (fast, paid, credited).',
  research:'Nelson, T. H. (1997). Transcopyright: dealing with the dilemma of digital copyright. Educom Review 32(1). Lessig, L. (2004). Free Culture. Penguin Press. Creative Commons (2002) chose free licences instead of payment.',
  desc:'A table of three quoting methods against five properties, with ticks and crosses; choosing a method highlights its row and describes its trade-off.',
@@ -2333,13 +2333,13 @@ SCENE({id:'transcopyright-compare',name:'Three ways to quote',tag:'Credit, payme
  ui:[{choose:[[0,'Copy and paste'],[1,'Ask permission'],[2,'Transcopyright']],label:'Method',get:s=>s.m,act:'m'}],
  on:{m(s,v){s.m=Number(v);return 'keep'}},
  draw(s){
-  const cols=['Fast','Author credited','Author paid','Stays linked','Text intact'];
+  const cols=['Fast','Credit built in','Author paid','Stays linked','Text intact'];
   const rows=[['Copy and paste',[1,0,0,0,0]],['Ask permission',[0,1,1,0,0]],['Transcopyright',[1,1,1,1,1]]];
   let out=heading('What each way of quoting keeps');
   cols.forEach((c,j)=>out+=TBF(212+j*80,78,c.split(' ')[0],13,C.ink)+(c.split(' ')[1]?TBF(212+j*80,94,c.split(' ')[1],13,C.ink):''));
   rows.forEach(([n,v],i)=>{const y=114+i*56,on=i===s.m;out+=R(20,y,560,46,on?C.pale:'#fff',on?C.blue:C.grid,8)+TBF(32,y+28,n,14,C.ink,'start');
    v.forEach((ok,j)=>out+=TBF(212+j*80,y+30,ok?'✓':'✗',18,ok?C.green:C.coral))});
-  const say=['Fast and free to do, but the author is neither credited nor paid, the copy can drift, and it may be unlawful.','Lawful and paid, but slow: each request may take weeks or be refused, and the result is still a disconnected copy.','Nelson’s promise: instant permission, credit and payment, and the quote stays connected to its source. The catch is that it needs a whole system to exist.'];
+  const say=['Fast and free to do, but nothing credits or pays the author automatically, the copy can drift, and it may be unlawful.','Lawful and paid, but slow: each request may take weeks or be refused, and the result is still a disconnected copy.','Nelson’s promise: instant permission, credit and payment, and the quote stays connected to its source. The catch is that it needs a whole system to exist.'];
   const v=rows[s.m][1],keep=cols.filter((_,j)=>v[j]).join(', ')||'nothing',lose=cols.filter((_,j)=>!v[j]).join(', ')||'nothing';
   out+=R(20,290,560,72,'#f3f7fa','none',8)+TF(36,318,'Keeps: '+keep.toLowerCase(),13,C.green,'start')+TF(36,344,'Loses: '+lose.toLowerCase(),13,C.coral,'start');
   return {svg:out,phase:say[s.m]};
@@ -2610,7 +2610,7 @@ SCENE({id:'link-rot',name:'Link rot',tag:'Measured, not imagined',
 const T6_PAGES=[[90,90],[220,70],[350,100],[480,80],[130,200],[270,190],[410,210],[530,180],[100,300],[240,310],[380,300],[510,290]];
 const T6_LINKS=[[0,1],[0,4],[1,2],[1,5],[2,3],[2,6],[3,7],[4,5],[4,8],[5,6],[5,9],[6,7],[6,10],[7,11],[8,9],[9,10],[10,11],[11,3],[9,1],[10,2]];
 SCENE({id:'link-rot-sim',name:'Watch a web decay',tag:'And what archives and permanent addresses change',
- definition:'Each year some pages move or disappear. With plain web links, every link to them breaks. An archive such as the Wayback Machine can rescue some by keeping copies; permanent addresses, as in Xanadu, would mean nothing published is ever lost.',
+ definition:'Each year some pages move or disappear. With plain web links, every link to them breaks. An archive such as the Wayback Machine can rescue some by keeping copies; permanent addresses, as in Xanadu, aim to keep every published version reachable for good, though that still depends on someone storing and copying the data.',
  example:'A page that moved in year 3 breaks every link to it. If an archive captured it first, readers can still reach the old copy, but only if someone thinks to look there.',
  research:'Internet Archive (1996–): the Wayback Machine. Zittrain, J., Albert, K. & Lessig, L. (2014), on Perma.cc archiving for citations. Nelson, T. H. (1981). Literary Machines (permanence). Loss rates here are illustrative.',
  desc:'Twelve pages joined by twenty links. Stepping through years removes pages at random from a fixed seed; broken links turn red unless an archive copy or permanent addressing saves them.',
@@ -3209,7 +3209,7 @@ const T7_SIM=[{c:'lines',ms:1150,ok:1},{c:'plain',ms:2850,ok:1},{c:'lines',ms:98
 const T7_mean=a=>a.length?sum(a)/a.length:0;
 SCENE({id:'parallel-documents-search',name:'Try it: find the matching sentence',tag:'A small demonstration on you',
  definition:'When related parts of two documents are joined by a visible connection, the reader follows it instead of searching. Without one, the reader must hold the sentence in mind and scan for its partner.',
- example:'With a connecting line, most people find the partner in about a second; without it, finding a reworded partner among eight takes two or three times as long.',
+ example:'With a connecting line you can go straight to the partner; without it you must scan eight reworded sentences, which usually takes longer. Your own times appear at the end.',
  desc:'Eight sentences on the left and their reworded partners shuffled on the right. In half the trials a line joins the highlighted sentence to its partner. Afterwards, bars compare your average times.',
  research:['Chandler, P. & Sweller, J. (1991). Cognitive load theory and the format of instruction. Cognition and Instruction 8(4), 293–332: the split-attention effect, the cost of searching between related sources.','Nelson, T. H. (1999). Xanalogical structure, needed now more than ever. ACM Computing Surveys 31(4es): visible connections between parallel documents. This page is a demonstration, not a controlled study.'],
  dur:10,hint:'Press Start, then press the sentence on the right that means the same as the highlighted one. Your times stay in this page.',
@@ -3616,7 +3616,7 @@ const T8_GROUPS={era:[['Before 1970',['memex','coining-hypertext']],['1970–199
  theme:[['Links',['memex','two-way-links','link-rot','backlinks']],['Content',['transclusion','content-addressing']],['Structure',['coining-hypertext','zigzag']]],
  person:[['Bush',['memex']],['Nelson',['coining-hypertext','transclusion','two-way-links','zigzag']],['Others',['link-rot','backlinks','content-addressing']]]};
 SCENE({id:'deep-interconnection-tree',name:'A tree cuts connections',tag:'Hierarchy against network',
- definition:'Sorting ideas into folders keeps the links inside each folder and cuts every link between folders. Whatever classification you choose, some connections are lost; Nelson argued that hierarchies are imposed on material that is really a network.',
+ definition:'Sorting ideas into folders keeps the links inside each folder and hides every link between folders, unless extra shortcuts are added. Whatever classification you choose, some connections are lost; Nelson argued that hierarchies are imposed on material that is really a network.',
  example:'Filed by date, transclusion and content addressing land in different folders, so the link between them disappears; filed by theme they stay together, but others are cut instead.',
  desc:'Eight lessons sorted into three folders by the chosen classification, with links inside a folder drawn solid and links cut by the hierarchy drawn dashed in coral, and a count of each.',
  research:['Nelson, T. H. (1974). Computer Lib/Dream Machines, on hierarchy as an imposed structure.','Alexander, C. (1965). A city is not a tree. Architectural Forum 122(1–2): real structures overlap and cannot be captured by a tree.'],
