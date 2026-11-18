@@ -473,7 +473,7 @@ SCENE({id:'illusionism-panpsychism',name:'Two radical answers',tag:'Choose which
   const mv=s.m>=0?K8_MOVES[s.m]:null,dA=mv&&mv.drop==='A',dB=mv&&mv.drop==='B';let out=heading('Two claims that seem to clash');
   out+=R(20,42,275,100,dA?'#f3f5f6':'#fff',dA?C.line:C.coral,8,dA?'stroke-dasharray="6 5"':'')+K8_para(32,64,'A. Experience has felt qualities over and above anything a system does.',252,13,dA?C.muted:C.ink);
   out+=R(305,42,275,100,dB?'#f3f5f6':'#fff',dB?C.line:C.coral,8,dB?'stroke-dasharray="6 5"':'')+K8_para(317,64,'B. Physical science describes what things do, and that leaves nothing out.',252,13,dB?C.muted:C.ink);
-  K8_MOVES.forEach((q,i)=>out+=K8_btn(X,'m',i,q.b,20+(i%2)*285,148+Math.floor(i/2)*48,275,44,q.b,{fill:s.m===i?C.pale:'#fff',stroke:q.c,bold:s.m===i}));
+  K8_MOVES.forEach((q,i)=>out+=K8_btn(X,'m',i,q.b,20+(i%2)*285,146+Math.floor(i/2)*46,275,42,q.b,{fill:s.m===i?C.pale:'#fff',stroke:q.c,bold:s.m===i}));
   if(!mv)return {svg:out+K8_para(300,290,'If A is true, a full account of what brains do would still leave the feeling out, which B denies. Choose a way out.',540,13,C.muted,'middle'),phase:'This is the hard problem as a pair of claims. Each response to it is defined by what it is prepared to give up.'};
   out+=TB(20,260,mv.n+(mv.drop?': gives up '+mv.drop:': keeps both'),15,mv.c,'start')+K8_para(20,282,mv.t,560,13,C.ink)+K8_para(20,350,mv.o,560,13,C.coral);
   return {svg:out,phase:mv.say};

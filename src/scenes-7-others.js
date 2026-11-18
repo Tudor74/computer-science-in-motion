@@ -263,7 +263,7 @@ SCENE({id:'bees-and-insects',name:'The pessimistic bee',tag:'You run a judgement
  research:['Bateson, M., Desire, S., Gartside, S. E. & Wright, G. A. (2011). Agitated honeybees exhibit pessimistic cognitive biases. Current Biology 21, 1070–1073.','Harding, E. J., Paul, E. S. & Mendl, M. (2004). Cognitive bias and affective state. Nature 427, 312 (the test, first used with rats).','The bees here are simulated from toy probabilities chosen to show the published pattern; they are not the paper’s data. That the behaviour reflects a feeling is contested.'],
  dur:12,hint:'Test 20 calm bees, then 20 shaken bees, and compare the bars. Run more batches to see how much chance moves them.',
  init:()=>({calm:{n:0,k:[0,0,0,0,0]},shaken:{n:0,k:[0,0,0,0,0]}}),
- watch(p){const nb=Math.floor(p*7.2);return {calm:K7_biasSim(Math.min(3,nb),K7_BIAS.calm,41),shaken:K7_biasSim(clamp(nb-3,0,3),K7_BIAS.shaken,97),sim:true}},
+ watch(p){const nb=Math.floor(p*7.2);return {calm:K7_biasSim(Math.min(3,nb),K7_BIAS.calm,8),shaken:K7_biasSim(clamp(nb-3,0,3),K7_BIAS.shaken,8),sim:true}},
  ui:[{b:'Test 20 calm bees',act:'calm'},{b:'Shake, then test 20 bees',act:'shaken'},{b:'Clear the results',act:'clear'}],
  on:{calm(s){if(s.calm.n<400)K7_batch(s.calm,K7_BIAS.calm,nextSeed());return 'keep'},shaken(s){if(s.shaken.n<400)K7_batch(s.shaken,K7_BIAS.shaken,nextSeed());return 'keep'},clear(s){s.calm={n:0,k:[0,0,0,0,0]};s.shaken={n:0,k:[0,0,0,0,0]};return 'keep'}},
  draw(s){
@@ -341,7 +341,7 @@ SCENE({id:'bees-and-insects-readings',name:'Play, and three sober readings',tag:
   else out+=TBF(32,248,'That reading is usually offered for another finding.',14,C.amber,'start')+K7_para(32,268,'It could be stretched to fit, which is part of the difficulty: sober readings are flexible. Try another.',84);
   const n=K7_FIND.filter((x,j)=>s.pick[j]===x.ex).length;
   out+=TF(300,346,`Matched ${n} of 3 · Contested: every finding has a reading with feeling and one without.`,13,C.ink)+TF(300,366,'Barron & Klein (2016) argue for insect experience; Adamo (2016) and others doubt it.',13,C.muted);
-  return {svg:out,phase:a===null?`${q.t} (${q.src}). The richer reading is ${q.feel}. Which explanation without feeling is usually set against it?`:ok?`${q.t}: set against “${q.feel}” is the reading that ${K7_EXPL[q.ex].charAt(0).toLowerCase()+K7_EXPL[q.ex].slice(1)} ${q.more}${n===3?' All three are matched. None of the three experiments rules its sober reading out, which is why insect emotion remains contested.':''}`:'That sober reading is usually offered for a different finding. Sober readings can often be stretched to fit, which is one reason the debate is hard to settle.'};
+  return {svg:out,phase:a===null?`${q.t}. Source: ${q.src}. The richer reading is ${q.feel}. Which explanation without feeling is usually set against it?`:ok?`${q.t}: set against “${q.feel}” is the reading that ${K7_EXPL[q.ex].charAt(0).toLowerCase()+K7_EXPL[q.ex].slice(1)} ${q.more}${n===3?' All three are matched. None of the three experiments rules its sober reading out, which is why insect emotion remains contested.':''}`:'That sober reading is usually offered for a different finding. Sober readings can often be stretched to fit, which is one reason the debate is hard to settle.'};
  }});
 
 /* =========================== infants =========================== */
@@ -422,7 +422,7 @@ SCENE({id:'infants-cradle',name:'When does experience begin?',tag:'It depends wh
  on:{m(s,v){s.m=Number(v);return 'keep'}},
  draw(s,f,X){
   const q=K7_MARK[s.m];let out=heading('Choose the marker; the date follows');
-  out+=L(40,128,580,128,C.line,3)+TF(576,56,'not to scale',13,C.muted,'end');
+  out+=L(40,128,580,128,C.line,3)+TF(190,108,'not to scale',13,C.muted);
   [[90,'24 weeks'],[200,'birth'],[290,'5 months'],[400,'18–24 months'],[520,'4 years']].forEach(([x,l])=>out+=L(x,122,x,134,C.muted,2)+TF(x,152,l,13,C.muted));
   K7_MARK.forEach((m,i)=>{const on=i===s.m;out+=hit(X,'m',i,`${m.t}: ${m.when}. Press to choose.`,Ci(m.x,128,on?11:8,on?C.coral:'#fff',on?C.coral:C.blue)+L(m.x,117,m.x,88,on?C.coral:C.line,2)+R(m.x-22,62,44,26,on?C.coralp:'#fff',on?C.coral:C.line,6)+TBF(m.x,80,String(i+1),13,on?C.coral:C.blue))});
   out+=R(q.x,162,580-q.x,16,C.coralp,'none',4)+L(q.x,158,q.x,182,C.coral,3)+TBF(300,197,`Marker ${s.m+1}: ${q.when}`,13,C.coral);
@@ -430,7 +430,7 @@ SCENE({id:'infants-cradle',name:'When does experience begin?',tag:'It depends wh
   out+=R(20,244,560,128,'#f6f9fb',C.grid)+TBF(32,264,`${s.m+1}. ${q.t}`,14,C.ink,'start')+TF(568,264,q.src,13,C.muted,'end');
   out+=TBF(32,286,'Assumes',13,C.blue,'start')+K7_para(100,286,q.assumes,72);
   out+=TBF(32,326,'Problem',13,C.coral,'start')+K7_para(100,326,q.problem,72);
-  return {svg:out,phase:`If the marker required is “${q.t.toLowerCase()}”, experience is credited ${q.when} (${q.src}). It assumes: ${q.assumes} Its problem: ${q.problem} No marker here has been checked against an infant’s own report, because there is none.`};
+  return {svg:out,phase:`If the marker required is “${q.t.toLowerCase()}”, experience is credited ${q.when}. Source: ${q.src}. It assumes: ${q.assumes} Its problem: ${q.problem} No marker here has been checked against an infant’s own report, because there is none.`};
  }});
 
 /* =========================== sentience-markers =========================== */
@@ -506,7 +506,7 @@ SCENE({id:'sentience-markers-fish',name:'Do fish feel pain?',tag:'Sneddon’s tr
  on:{k(s,v){s.k=Number(v);return 'keep'}},
  draw(s,f,X){
   const q=K7_KEY[s.k];let out=heading('The finding, and the argument against');
-  out+=P('M24 104 Q60 52 150 56 L226 62 L226 146 L150 152 Q60 156 24 104 Z','#dfeaf2','#6c8d9f',2,'#dfeaf2')+Ci(92,84,9,'#fff',C.ink)+Ci(93,84,4,C.ink)+P('M26 106 Q44 112 58 108',C.ink,2);
+  out+=P('M24 104 Q60 52 150 56 L226 62 L226 146 L150 152 Q60 156 24 104 Z','#6c8d9f',2,'#dfeaf2')+Ci(92,84,9,'#fff',C.ink)+Ci(93,84,4,C.ink)+P('M26 106 Q44 112 58 108',C.ink,2);
   K7_DOTS.forEach((d,i)=>out+=Ci(100+d[0]*66,104+d[1]*40,2.8,i<22?C.coral:C.blue));
   out+=Ci(250,66,4,C.coral)+TF(260,70,'22 nociceptors',13,C.coral,'start')+Ci(250,86,4,C.blue)+TF(260,90,'36 other receptors',13,C.blue,'start')+TBF(250,112,'58 recorded in all',13,C.ink,'start');
   out+=K7_para(396,62,'Injected lips: rocking, rubbing on gravel, slow return to feeding.',27,{fill:C.ink})+TF(396,134,'Sneddon et al. (2003)',13,C.muted,'start');
@@ -548,7 +548,7 @@ SCENE({id:'sentience-markers-grade',name:'Which criterion does it bear on?',tag:
   for(let c=1;c<=8;c++){const on=got.includes(c),x=124+(c-1)*45;out+=R(x,314,36,30,on?C.green:'#fff',on?C.green:C.line,6)+TBF(x+18,335,String(c),14,on?'#fff':C.muted)}
   out+=TF(300,366,'Criteria 2, 3 and 4 are untouched by these findings: other studies are needed for those.',13,C.muted);
   const n=s.ans.filter(x=>x!==null).length;
-  return {svg:out,phase:a===null?`${q.f} (${q.src}). Which of the three criteria does it bear on?`:`${q.f} It bears on criterion ${q.ans}, ${K7_CSHORT[q.ans-1].toLowerCase()}. ${q.why}${n===5?' All five are graded: they cover criteria 1, 5, 6, 7 and 8, spread over three kinds of animal. No animal here has been shown to meet all eight.':''}`};
+  return {svg:out,phase:a===null?`${q.f} Source: ${q.src}. Which of the three criteria does it bear on?`:`${q.f} It bears on criterion ${q.ans}, ${K7_CSHORT[q.ans-1].toLowerCase()}. ${q.why}${n===5?' All five are graded: they cover criteria 1, 5, 6, 7 and 8, spread over three kinds of animal. No animal here has been shown to meet all eight.':''}`};
  }});
 
 /* =========================== other-people =========================== */
@@ -569,10 +569,10 @@ SCENE({id:'other-people',name:'The argument from analogy',tag:'One case, general
  draw(s,f,X){
   const q=K7_BEINGS[s.b];let out=heading('Three links in you, two in everyone else');
   const row=(y,who,a,b,c,open)=>{let o=TBF(20,y+30,who,13,C.ink,'start');
-   o+=R(108,y,150,48,C.pale,C.blue)+K7_para(183,y+20,a,22,{anchor:'middle',lh:16})+arrow(262,y+24,296,y+24,C.muted,2.5);
+   o+=R(108,y,150,48,C.pale,C.blue)+K7_para(183,y+(a.length>22?20:29),a,22,{anchor:'middle',lh:16})+arrow(262,y+24,296,y+24,C.muted,2.5);
    const mid=R(300,y,130,48,open?C.coralp:'#fff',open?C.coral:C.muted,8,open?'':'stroke-dasharray="6 5"')+(open?K7_para(365,y+28,b,18,{anchor:'middle'}):TBF(365,y+31,'?',22,C.muted));
    o+=open?mid:hit(X,'look','','The feeling of the other. Press to try to look inside.',mid);
-   o+=arrow(434,y+24,468,y+24,C.muted,2.5)+R(472,y,112,48,C.pale,C.blue)+K7_para(528,y+20,c,16,{anchor:'middle',lh:16});return o};
+   o+=arrow(434,y+24,468,y+24,C.muted,2.5)+R(472,y,112,48,C.pale,C.blue)+K7_para(528,y+(c.length>16?20:29),c,16,{anchor:'middle',lh:16});return o};
   out+=TF(183,56,'body',13,C.muted)+TF(365,56,'feeling',13,C.muted)+TF(528,56,'behaviour',13,C.muted);
   out+=row(64,'You','you stub your toe','you feel pain','you wince',true);
   out+=row(132,s.b===0?'A friend':s.b===1?'A chimp':'An octopus',s.b===0?'stubs a toe':s.b===1?'hurts a hand':'hurts an arm','',s.b===0?'winces':s.b===1?'screams':'grooms it',false);
