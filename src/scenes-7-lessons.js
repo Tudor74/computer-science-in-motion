@@ -4,19 +4,19 @@
 LESSON({id:'stroke',name:'Stroke',short:'Stroke',stage:'disorder',year:'1995–today',level:'Introduction',
  why:'A blocked or burst vessel starves brain tissue within minutes, so recognising a stroke quickly matters more than anything else.',
  prior:['lesion-cases'],references:[],
- ids:['stroke']});
+ ids:['stroke','stroke-fast','stroke-time','stroke-treatment']});
 LESSON({id:'epilepsy',name:'Epilepsy',short:'Epilepsy',stage:'disorder',year:'1870–today',level:'Core',
  why:'Seizures are bursts of excessive, synchronised firing, and studying them has taught us a great deal about normal brain organisation.',
  prior:['excitation-inhibition','brain-imaging'],references:[],
- ids:['epilepsy']});
+ ids:['epilepsy','epilepsy-eeg','epilepsy-treatment','epilepsy-photosensitive']});
 LESSON({id:'parkinsons',name:'Parkinson’s disease',short:'Parkinson’s',stage:'disorder',year:'1817–today',level:'Core',
  why:'Loss of dopamine neurons in the substantia nigra explains the movement symptoms and the treatments that help, though not yet how to stop the loss.',
  prior:['basal-ganglia'],references:[],
- ids:['parkinsons']});
+ ids:['parkinsons','parkinsons-synuclein','parkinsons-loop','parkinsons-dbs']});
 LESSON({id:'alzheimers',name:'Alzheimer’s disease',short:'Alzheimer’s',stage:'disorder',year:'1906–today',level:'Core',
  why:'Plaques and tangles have defined the disease since 1906, yet how they cause it and how much removing amyloid helps is still debated.',
  prior:['lesion-cases'],references:[],
- ids:['alzheimers']});
+ ids:['alzheimers','alzheimers-amyloid','alzheimers-decades','alzheimers-antibodies']});
 LESSON({id:'depression-treatments',name:'Depression and its treatments',short:'Depression',stage:'disorder',year:'1938–today',level:'Advanced',
  why:'Antidepressants, ECT and ketamine each have evidence behind them, while the simple story that depression is a serotonin shortage does not.',
  prior:['neurotransmitters','receptors-drugs'],references:[],
