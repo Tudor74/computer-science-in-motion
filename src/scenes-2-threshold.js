@@ -39,7 +39,7 @@ const K2_MSOA=[17,33,67,133],K2_MN=12,K2_MLET=['H','K','N','X'];
 function K2_mTrial(seed,i){const order=shuffled(range(K2_MN).map(k=>K2_MSOA[k%4]),seed*7+3),r=rng(seed*131+i*17+5);r();return {soa:order[i],ch:K2_MLET[Math.floor(r()*4)]}}
 // Schematic pattern only: identification rises from chance (1 in 4) with the delay; "saw it" reports rise a little later.
 const K2_mAcc=soa=>.25+.72/(1+Math.exp(-(soa-45)/12)),K2_mSeen=soa=>1/(1+Math.exp(-(soa-60)/11));
-function K2_mSim(n){const r=rng(61),res=[];for(let i=0;i<n;i++){const t=K2_mTrial(4,i);res.push({soa:t.soa,ok:r()<K2_mAcc(t.soa),seen:r()<K2_mSeen(t.soa)})}return res}
+function K2_mSim(n){const r=rng(151),res=[];for(let i=0;i<n;i++){const t=K2_mTrial(4,i);res.push({soa:t.soa,ok:r()<K2_mAcc(t.soa),seen:r()<K2_mSeen(t.soa)})}return res}
 SCENE({id:'masking',name:'Backward masking',tag:'You take part: one letter, one mask',
  definition:'In backward masking a briefly shown target is followed by a pattern, the mask. If the mask comes soon enough, people say they did not see the target, although it reached the eye for just as long. Changing the delay moves the same letter across the threshold of awareness, which is why masking became a standard tool for comparing seen with unseen.',
  example:'A letter shown for about 17 ms and masked straight away is usually reported as not seen; the same letter masked 133 ms later is easy to read. The delay from target onset to mask onset is called the stimulus onset asynchrony, or SOA.',
@@ -59,26 +59,26 @@ SCENE({id:'masking',name:'Backward masking',tag:'You take part: one letter, one 
   out+=R(40,56,240,120,'#f4f7f9',C.line,6);
   const done=s.i>=K2_MN,t=done?null:K2_mTrial(s.seed,s.i);
   if(s.ph==='film'){[['letter','17 ms'],['gap','to the delay'],['mask','250 ms'],['answer','no time limit']].forEach(([l,d],k)=>{const x=48+k*57;out+=R(x,70,53,60,k===s.k?C.pale:'#fff',k===s.k?C.blue:C.line,4);
-    if(k===0)out+=TBF(x+26,108,'K',22,'#7d8d96');if(k===2)out+=K2_mask(x+26,100,40,40,12);if(k===3)out+=TBF(x+26,108,'?',22,C.blue);out+=TF(x+26,148,l,13,k===s.k?C.blue:C.muted)});
-   out+=TF(cx,168,'one trial, in order',13,C.muted)}
-  else if(s.ph==='target'&&t)out+=TBF(cx,cy+9,t.ch,26,'#7d8d96');
+    if(k===0)out+=TB(x+26,108,'K',22,'#7d8d96');if(k===2)out+=K2_mask(x+26,100,40,40,12);if(k===3)out+=TB(x+26,108,'?',22,C.blue);out+=T(x+26,148,l,13,k===s.k?C.blue:C.muted)});
+   out+=T(cx,168,'one trial, in order',13,C.muted)}
+  else if(s.ph==='target'&&t)out+=TB(cx,cy+9,t.ch,26,'#7d8d96');
   else if(s.ph==='mask')out+=K2_mask(cx,cy);
   else if(s.ph==='gap')out+='';
-  else if(s.ph==='ask')out+=TBF(cx,cy+5,'Which letter was it?',15,C.ink);
-  else if(s.ph==='rate')out+=TBF(cx,cy+5,'Did you see the letter?',15,C.ink);
-  else out+=Ci(cx,cy,3,C.muted)+TF(cx,cy+34,done?'all twelve trials done':'look at the dot, then press Flash',13,C.muted);
+  else if(s.ph==='ask')out+=TB(cx,cy+5,'Which letter was it?',15,C.ink);
+  else if(s.ph==='rate')out+=TB(cx,cy+5,'Did you see the letter?',15,C.ink);
+  else out+=Ci(cx,cy,3,C.muted)+T(cx,cy+34,done?'all twelve trials done':'look at the dot, then press Flash',13,C.muted);
   if(s.ph==='ask')K2_MLET.forEach((c,k)=>out+=K2_btn(X,'pick',c,'Letter '+c,40+k*62,192,54,42,c));
   else if(s.ph==='rate')out+=K2_btn(X,'rate','1','I saw the letter',40,192,115,42,'I saw it')+K2_btn(X,'rate','0','I did not see the letter',165,192,115,42,'Not seen',C.coral);
   else if(!s.sim)out+=TF(cx,218,done?'Press Start again for a new run.':'The answer buttons appear after the mask.',13,C.muted);
-  out+=TF(cx,256,done?'12 of 12 trials':`trial ${s.i+1} of ${K2_MN}`,13,C.muted);
+  out+=T(cx,256,done?'12 of 12 trials':`trial ${s.i+1} of ${K2_MN}`,13,C.muted);
   const un=s.res.filter(r=>!r.seen),unOk=un.filter(r=>r.ok).length;
-  if(un.length)out+=TBF(cx,290,`“Not seen” trials: ${unOk} of ${un.length} letters right`,13,C.ink)+TF(cx,308,'guessing alone gives about 1 in 4',13,C.muted);
+  if(un.length)out+=TB(cx,290,`“Not seen” trials: ${unOk} of ${un.length} letters right`,13,C.ink)+T(cx,308,'guessing alone gives about 1 in 4',13,C.muted);
   const pl=K2_plot(360,62,210,170,[0,150],[0,1],{xt:[[17,'17'],[67,'67'],[133,'133']],yt:[[0,'0'],[.25,'chance'],[1,'1']],xl:'delay from letter to mask (ms)',yl:'proportion of trials'});out+=pl.svg;
   out+=L(360,pl.Y(.25),570,pl.Y(.25),C.grid,1.5,'stroke-dasharray="3 4"');
   const ca=[],cs=[];for(let v=0;v<=150;v+=3){ca.push([pl.X(v),pl.Y(K2_mAcc(v))]);cs.push([pl.X(v),pl.Y(K2_mSeen(v))])}
   out+=K2_poly(ca,C.coral,1.8,'stroke-dasharray="6 4"')+K2_poly(cs,C.blue,1.8,'stroke-dasharray="2 4"');
   K2_MSOA.forEach(soa=>{const v=s.res.filter(r=>r.soa===soa);if(v.length){const a=v.filter(r=>r.ok).length/v.length,b=v.filter(r=>r.seen).length/v.length;out+=R(pl.X(soa)-11,pl.Y(b)-5,10,10,C.blue,'#fff',1)+Ci(pl.X(soa)+6,pl.Y(a),5.5,C.coral,'#fff')}});
-  out+=Ci(366,290,5.5,C.coral)+TF(378,294,`letter right (${s.sim?'simulated':'yours'})`,13,C.ink,'start')+R(361,304,10,10,C.blue,'none',1)+TF(378,314,'reported “saw it”',13,C.ink,'start');
+  out+=Ci(366,290,5.5,C.coral)+T(378,294,`letter right (${s.sim?'simulated':'yours'})`,13,C.ink,'start')+R(361,304,10,10,C.blue,'none',1)+T(378,314,'reported “saw it”',13,C.ink,'start');
   out+=TF(360,336,'dashed: the usual pattern, schematic',13,C.muted,'start');
   const phase=s.sim?'A simulated observer, following the usual pattern: at the shortest delays the letter is reported as not seen and naming is near chance; by 133 ms it is seen and named.':done?(un.length?`You said “not seen” on ${un.length} trials and named ${unOk} of those letters correctly. Twelve trials are far too few to show seeing without awareness; the next two scenes explain why that question is hard.`:'You reported seeing the letter on every trial. On a fast, bright screen the letter can survive the mask; a browser cannot hold the timing that a laboratory display can.'):s.ph==='idle'?'Each press shows one letter for about 17 ms, then a single mask after one of four delays.':s.ph==='ask'||s.ph==='rate'?'Answer even if you think you are guessing: the comparison between naming the letter and reporting that you saw it is the point.':'One letter, one mask.';
   return {svg:out,phase};
@@ -107,22 +107,22 @@ SCENE({id:'masking-priming',name:'Masked priming',tag:'You take part: does a hid
   out+=R(40,56,240,120,'#f4f7f9',C.line,6);
   const t=s.i<16?K2_pTrials(s.seed)[s.i]:null;
   if(s.ph==='film'){[['prime','33 ms'],['mask','100 ms'],['target','until you answer'],['answer','']].forEach(([l],k)=>{const x=48+k*57;out+=R(x,70,53,60,k===s.k?C.pale:'#fff',k===s.k?C.blue:C.line,4);
-    if(k===0)out+=TBF(x+26,108,'6',20,'#8b9aa3');if(k===1)out+=K2_mask(x+26,100,40,40,12);if(k===2)out+=TBF(x+26,110,'9',28,C.ink);if(k===3)out+=TBF(x+26,106,'> 5',15,C.blue);out+=TF(x+26,148,l,13,k===s.k?C.blue:C.muted)});
-   out+=TF(cx,168,'one trial: brief prime, mask, clear target',13,C.muted)}
-  else if(s.ph==='prime'&&t)out+=TBF(cx,cy+8,String(t.prime),22,'#8b9aa3');
+    if(k===0)out+=TB(x+26,108,'6',20,'#8b9aa3');if(k===1)out+=K2_mask(x+26,100,40,40,12);if(k===2)out+=TB(x+26,110,'9',28,C.ink);if(k===3)out+=TB(x+26,106,'> 5',15,C.blue);out+=T(x+26,148,l,13,k===s.k?C.blue:C.muted)});
+   out+=T(cx,168,'prime, one mask, then the target',13,C.muted)}
+  else if(s.ph==='prime'&&t)out+=TB(cx,cy+8,String(t.prime),22,'#8b9aa3');
   else if(s.ph==='mask')out+=K2_mask(cx,cy);
-  else if(s.ph==='target'&&t)out+=TBF(cx,cy+15,String(t.target),44,C.ink);
+  else if(s.ph==='target'&&t)out+=TB(cx,cy+15,String(t.target),44,C.ink);
   else if(s.ph==='fix')out+=TB(cx,cy+7,'+',22,C.muted);
-  else out+=Ci(cx,cy,3,C.muted)+TF(cx,cy+34,s.ph==='done'?'all sixteen trials done':'press Start, then watch the centre',13,C.muted);
+  else out+=Ci(cx,cy,3,C.muted)+T(cx,cy+34,s.ph==='done'?'all sixteen trials done':'press Start, then watch the centre',13,C.muted);
   if(!s.sim)out+=K2_btn(X,'ans','small','The number is smaller than 5',40,192,115,46,'Smaller')+K2_btn(X,'ans','big','The number is larger than 5',165,192,115,46,'Larger');
-  out+=TF(cx,262,s.i>=16?'16 of 16 trials':`trial ${s.i+1} of 16`,13,C.muted);
+  out+=T(cx,262,s.i>=16?'16 of 16 trials':`trial ${s.i+1} of 16`,13,C.muted);
   const st=K2_pStats(s.res),base=250,sc=h=>clamp((h-200)/600,0,1)*170;
-  out+=L(350,base,580,base,C.line,2)+TF(465,70,'mean response time (ms)',13,C.muted);
-  [['congruent',st.c,st.mc,C.green,380],['incongruent',st.n,st.mn,C.coral,490]].forEach(([l,a,m,col,x])=>{if(a.length)out+=R(x,base-sc(m),70,sc(m),col,'none',4)+TBF(x+35,base-sc(m)-7,String(Math.round(m)),14,C.ink);out+=TF(x+35,base+18,l,13,C.muted)+TF(x+35,base+35,a.length+' trials',13,C.muted)});
+  out+=L(350,base,580,base,C.line,2)+T(465,70,'mean response time (ms)',13,C.muted);
+  [['congruent',st.c,st.mc,C.green,380],['incongruent',st.n,st.mn,C.coral,490]].forEach(([l,a,m,col,x])=>{if(a.length)out+=R(x,base-sc(m),70,sc(m),col,'none',4)+TB(x+35,base-sc(m)-7,String(Math.round(m)),14,C.ink);out+=TF(x+35,base+18,l,13,C.muted)+TF(x+35,base+35,a.length+(a.length===1?' trial':' trials'),13,C.muted)});
   const d=st.mn-st.mc,have=st.c.length>0&&st.n.length>0;
-  if(have)out+=TBF(465,316,`${s.sim?'Simulated':'Your'} difference: ${d>=0?'+':'−'}${Math.abs(Math.round(d))} ms`,14,C.ink);
+  if(have)out+=TB(465,316,`${s.sim?'Simulated':'Your'} difference: ${d>=0?'+':'−'}${Math.abs(Math.round(d))} ms`,14,C.ink);
   out+=TF(465,338,'Dehaene et al. (1998): about +24 ms',13,C.muted)+TF(465,356,'(incongruent slower than congruent)',13,C.muted);
-  if(st.err&&!s.sim)out+=TF(cx,290,`${st.err} wrong answer${st.err>1?'s':''} left out of the means`,13,C.muted);
+  if(st.err&&!s.sim)out+=T(cx,290,`${st.err} wrong answer${st.err>1?'s':''} left out of the means`,13,C.muted);
   const phase=s.sim?'A simulated observer with the published effect built in. With only eight trials of each kind the difference between the bars is mostly noise, which is the difficulty with small effects.':s.ph==='done'&&have?`Your incongruent trials were ${Math.abs(Math.round(d))} ms ${d>=0?'slower':'faster'} than your congruent ones. Either result is normal: with eight trials of each kind, chance differences are larger than the published effect, which came from many trials and many people. Could you read the grey numbers? If so, any priming here was not unconscious.`:s.ph==='idle'?'A grey number appears very briefly, a mask covers it, then a clear number stays until you answer. Half the grey numbers fall on the same side of 5 as the clear one.':'Answer as soon as you can tell which side of 5 the clear number is on.';
   return {svg:out,phase};
  }});
@@ -130,7 +130,7 @@ SCENE({id:'masking-priming',name:'Masked priming',tag:'You take part: does a hid
 // Toy world for the awareness-check problem: priming depends only on how visible the prime truly was.
 const K2_AWN=200,K2_AWT=[10,20,40,80,160,320],K2_awCache={};
 function K2_aw(n){if(K2_awCache[n])return K2_awCache[n];const r=rng(977),out=[];
- for(let i=0;i<K2_AWN;i++){const a=r()*.2,eff=150*a+K2_gauss(r)*12,u=rng(i*7919+13);let k=0;for(let j=0;j<n;j++)if(u()<.5+a)k++;out.push({a,eff,score:k/n})}
+ for(let i=0;i<K2_AWN;i++){const a=r()*.2,eff=150*a+K2_gauss(r)*5,u=rng(i*7919+13);let k=0;for(let j=0;j<n;j++)if(u()<.5+a)k++;out.push({a,eff,score:k/n})}
  const sel=out.filter(p=>p.score<=.5);
  return K2_awCache[n]={out,sel,selA:K2_mean(sel.map(p=>p.a)),selEff:K2_mean(sel.map(p=>p.eff)),allEff:K2_mean(out.map(p=>p.eff))}}
 SCENE({id:'masking-awareness',name:'Was it really unseen?',tag:'The awareness check, and why it is contested',
@@ -146,15 +146,15 @@ SCENE({id:'masking-awareness',name:'Was it really unseen?',tag:'The awareness ch
  draw(s){
   const n=K2_AWT[s.ti],d=K2_aw(n);let out=heading('Toy model: who gets counted as “unaware”?');
   const pl=K2_plot(70,70,270,210,[.2,.9],[.5,.7],{xt:[[.3,'30%'],[.5,'50%'],[.7,'70%'],[.9,'90%']],yt:[[.5,'50%'],[.6,'60%'],[.7,'70%']],xl:'score on the awareness test',yl:'true accuracy on the prime'});
-  out+=R(70,70,pl.X(.5)-70,210,C.coralp,'none',0)+pl.svg+L(pl.X(.5),70,pl.X(.5),280,C.coral,1.5,'stroke-dasharray="4 4"')+TF(76,86,'counted unaware',13,C.coral,'start');
+  out+=R(70,70,pl.X(.5)-70,210,C.coralp,'none',0)+pl.svg+L(pl.X(.5),70,pl.X(.5),280,C.coral,1.5,'stroke-dasharray="4 4"')+T(76,86,'counted unaware',13,C.coral,'start');
   d.out.forEach(q=>out+=Ci(pl.X(clamp(q.score,.2,.9)),pl.Y(.5+q.a),3,q.score<=.5?C.coral:C.blue,'none','opacity=".65"'));
-  out+=TBF(372,84,'Toy simulation',14,C.amber,'start')+TF(372,102,'200 simulated people;',13,C.muted,'start')+TF(372,119,'no unconscious priming built in',13,C.muted,'start');
+  out+=TB(372,84,'Toy simulation',14,C.amber,'start')+TF(372,102,'200 simulated people;',13,C.muted,'start')+TF(372,119,'no unconscious priming built in',13,C.muted,'start');
   out+=counter(372,134,'counted “unaware”',`${d.sel.length} of ${K2_AWN}`,C.coral,200);
   out+=counter(372,188,'their true accuracy on the prime',d.sel.length?K2_pct(.5+d.selA):'none',C.ink,200);
   out+=counter(372,242,'their priming effect',d.sel.length?`${d.selEff>=0?'+':'−'}${Math.abs(d.selEff).toFixed(1)} ms`:'none',C.coral,200);
-  out+=TF(472,308,`everyone together: +${d.allEff.toFixed(1)} ms`,13,C.muted);
-  out+=TF(300,352,'Every dot above 50% on the vertical axis could see the prime a little.',13,C.muted);
-  return {svg:out,phase:`With a ${n}-trial awareness test, ${d.sel.length} people score at or below chance, yet their true accuracy averages ${d.sel.length?K2_pct(.5+d.selA):'no value'} and they show ${d.sel.length?Math.abs(d.selEff).toFixed(1):'0'} ms of priming. It looks unconscious and is not. ${s.ti<3?'Lengthen the test and the artefact shrinks.':'A longer test lets fewer aware people through, and the apparent effect shrinks.'}`};
+  out+=T(472,308,`everyone together: +${d.allEff.toFixed(1)} ms`,13,C.muted);
+  out+=T(300,352,'Every dot above 50% on the vertical axis could see the prime a little.',13,C.muted);
+  return {svg:out,phase:`With a ${n}-trial awareness test, ${d.sel.length} people score at or below chance, yet their true accuracy on the prime averages ${d.sel.length?K2_pct(.5+d.selA):'no value'} and their priming effect averages ${d.sel.length?(d.selEff<0?'−':'')+Math.abs(d.selEff).toFixed(1):'0'} ms. ${d.selEff>2?'It looks unconscious and is not.':'Little is left to explain.'} ${s.ti<3?'Lengthen the test and the artefact shrinks.':'A longer test lets fewer aware people through, and the apparent effect shrinks.'}`};
  }});
 
 /* =========================== blindsight =========================== */
@@ -175,20 +175,20 @@ SCENE({id:'blindsight',name:'Blindsight',tag:'Responding to what you say you can
  draw(s,f,X){
   let out=heading('A simulated patient points to a light');
   out+=R(20,46,560,104,'#fff',C.grid,8)+R(22,48,278,100,C.coralp,'none',0)+L(300,48,300,148,C.line,1.5,'stroke-dasharray="4 4"');
-  out+=TF(160,64,'blind field',13,C.coral)+TF(440,64,'sighted field',13,C.green)+TB(300,104,'+',18,C.ink);
+  out+=T(160,64,'blind field',13,C.coral)+T(440,64,'sighted field',13,C.green)+TB(300,104,'+',18,C.ink);
   const last=s.tr[s.tr.length-1],px=(e,blind)=>blind?300-e*4.2:300+e*4.2,blindNow=s.field==='blind';
   K2_BE.forEach((e,k)=>{const x=px(e,blindNow),lit=last&&last.e===e&&last.blind===blindNow;
-   out+=hit(X,'show',k,`Flash a light ${e} degrees into the ${blindNow?'blind':'sighted'} field`,Ci(x,100,10,lit?'#f4be3c':'#fff',C.blue))+TF(x,134,e+'°',13,C.muted)});
+   out+=hit(X,'show',k,`Flash a light ${e} degrees into the ${blindNow?'blind':'sighted'} field`,Ci(x,100,10,lit?'#f4be3c':'#fff',C.blue))+T(x,134,e+'°',13,C.muted)});
   if(last&&last.blind===blindNow){const x=px(last.p,last.blind);out+=`<polygon points="${fmt(x)},86 ${fmt(x-7)},72 ${fmt(x+7)},72" fill="${C.coral}"/>`}
   const say=!last?'Press a circle to flash a light at that position.':last.blind?'“I didn’t see anything. I’m only guessing.”':'“Yes, I saw the light.”';
-  out+=R(120,158,360,30,last?C.pale:'#fff',C.line,15)+TF(300,178,say,13,C.ink);
+  out+=R(120,158,360,30,last?C.pale:'#fff',C.line,15)+T(300,178,say,13,C.ink);
   const pl=K2_plot(70,222,150,110,[0,70],[0,70],{xt:[[10,'10'],[40,'40'],[70,'70']],yt:[[10,'10'],[40,'40'],[70,'70']],xl:'light was at (°)',yl:'pointed to (°)'});out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(70),pl.Y(70),C.grid,1.5,'stroke-dasharray="4 4"');
   s.tr.forEach(t=>out+=Ci(pl.X(t.e),pl.Y(t.p),4,t.blind?C.coral:C.green,'#fff'));
   const B=s.tr.filter(t=>t.blind),S=s.tr.filter(t=>!t.blind),rb=K2_corr(B),rs=K2_corr(S);
-  out+=TBF(270,232,'Simulated patient',14,C.amber,'start')+TF(270,250,'in the pattern reported for DB (1974)',13,C.muted,'start');
-  out+=Ci(276,276,5,C.coral)+TF(288,280,`blind field: ${B.length} trial${B.length===1?'':'s'}${rb===null?'':', r = '+rb.toFixed(2)}`,13,C.ink,'start');
-  out+=Ci(276,300,5,C.green)+TF(288,304,`sighted field: ${S.length} trial${S.length===1?'':'s'}${rs===null?'':', r = '+rs.toFixed(2)}`,13,C.ink,'start');
-  out+=TF(270,332,'r near 1: pointing follows the light.',13,C.muted,'start')+TF(270,350,'The arrow marks where he pointed.',13,C.muted,'start');
+  out+=TB(270,232,'Simulated patient',14,C.amber,'start')+T(270,250,'in the pattern reported for DB (1974)',13,C.muted,'start');
+  out+=Ci(276,276,5,C.coral)+T(288,280,`blind field: ${B.length} trial${B.length===1?'':'s'}${rb===null?'':', r = '+rb.toFixed(2)}`,13,C.ink,'start');
+  out+=Ci(276,300,5,C.green)+T(288,304,`sighted field: ${S.length} trial${S.length===1?'':'s'}${rs===null?'':', r = '+rs.toFixed(2)}`,13,C.ink,'start');
+  out+=T(270,332,'r near 1: pointing follows the light.',13,C.muted,'start')+T(270,350,'The arrow marks where he pointed.',13,C.muted,'start');
   const phase=!s.tr.length?'The left half of this patient’s visual field is blind. Flash a light there and see what he says and where he points.':rb!==null?`In the blind field he reports seeing nothing, yet his pointing tracks the light (r = ${rb.toFixed(2)} over ${B.length} trials). It is less exact than in the sighted field, and he calls every answer a guess.`:'A few more trials in the blind field will show whether his “guesses” follow the light.';
   return {svg:out,phase};
  }});
@@ -220,15 +220,15 @@ SCENE({id:'blindsight-pathways',name:'Routes around V1',tag:'Which pathway carri
   out+=seg('eye','lgn',true,C.blue)+seg('lgn','v1',lgnOn,C.blue)+seg('v1','hi',v1On,C.blue);
   out+=seg('eye','sc',true,C.green)+seg('sc','pul',scOn,C.green)+seg('pul','hi',scOn,C.green);
   out+=curveArrow(232,130,485,172,36,lgnOn?C.purple:C.grid,lgnOn?2.6:2);
-  out+=TF(285,90,'main route',13,v1On?C.blue:C.muted)+TF(300,196,'direct route',13,lgnOn?C.purple:C.muted)+TF(285,228,'collicular route',13,scOn?C.green:C.muted);
+  out+=T(285,90,'main route',13,v1On?C.blue:C.muted)+T(300,196,'direct route',13,lgnOn?C.purple:C.muted)+T(285,281,'collicular route',13,scOn?C.green:C.muted);
   const node=(k,lab,sub,off,tog)=>{const [x,y]=N[k];const inner=R(x-34,y-24,68,48,off?C.coralp:'#fff',off?C.coral:C.blue,10,off?'stroke-dasharray="5 4"':'')+TBF(x,y+(sub?-1:5),lab,15,off?C.coral:C.ink)+(sub?TF(x,y+16,off?'off':sub,13,off?C.coral:C.muted):'');
    return tog?hit(X,'tog',k,`${lab}: ${off?'off':'on'}. Press to switch.`,inner):inner};
   out+=Ci(60,170,28,'#fff',C.blue)+TBF(60,175,'eye',15,C.ink);
   out+=node('lgn','LGN','thalamus',s.lgn,true)+node('v1','V1','cortex',s.v1,true)+node('sc','SC','midbrain',s.sc,true)+node('pul','pulvinar','',false,false);
   out+=R(485,146,80,48,'#fff',C.blue,10)+TBF(525,166,'higher',14,C.ink)+TBF(525,183,'areas',14,C.ink);
-  if(s.p!==undefined){const u=(s.p*4)%1,dot=(a,b,col)=>Ci(lerp(N[a][0],N[b][0],u),lerp(N[a][1],N[b][1],u),5,col);
+  if(s.p!==undefined){const u=.25+.5*((s.p*4)%1),dot=(a,b,col)=>Ci(lerp(N[a][0],N[b][0],u),lerp(N[a][1],N[b][1],u),5,col);
    out+=dot('eye','lgn',C.blue)+dot('eye','sc',C.green)+(v1On?dot('v1','hi',C.blue):'')+(scOn?dot('sc','pul',C.green):'')}
-  out+=R(20,288,560,84,C.pale,'none',8)+K2_lines(34,308,K2_PATH_TXT[`${s.v1}${s.lgn}${s.sc}`],84,C.ink,'start',18,4);
+  out+=R(20,292,560,82,C.pale,'none',8)+K2_lines(34,312,K2_PATH_TXT[`${s.v1}${s.lgn}${s.sc}`],84,C.ink,'start',18,4);
   return {svg:out,phase:s.v1&&!s.lgn&&!s.sc?'With V1 out, two routes still reach higher visual areas. Switch off a second station to see which experiments implicate which route.':'Different experiments, with different tasks, have made each of the two bypass routes look necessary. Which carries blindsight is still argued over.'};
  }});
 
@@ -251,17 +251,17 @@ SCENE({id:'blindsight-criterion',name:'Blind, or cautious?',tag:'The criterion d
   const area=[[pl.X(s.k),pl.Y(0)]],cn=[],cs=[];for(let x=-3;x<=5.5;x+=.1){cn.push([pl.X(x),pl.Y(pdf(x,0))]);cs.push([pl.X(x),pl.Y(pdf(x,s.d))]);if(x>=s.k)area.push([pl.X(x),pl.Y(pdf(x,s.d))])}
   area.push([pl.X(5.5),pl.Y(0)]);
   out+=`<polygon points="${area.map(q=>fmt(q[0])+','+fmt(q[1])).join(' ')}" fill="${C.pale}"/>`+pl.svg+K2_poly(cn,C.muted,2,'stroke-dasharray="5 4"')+K2_poly(cs,C.blue,2.5);
-  out+=L(pl.X(s.k),58,pl.X(s.k),184,C.coral,2.5)+TBF(clamp(pl.X(s.k),70,300),52,'criterion',13,C.coral);
-  out+=TF(pl.X(0)-30,82,'no light',13,C.muted,'end')+TF(pl.X(Math.max(s.d,1.2))+34,82,'light',13,C.blue,'start');
-  out+=TBF(356,76,'Yes or no: “did you see it?”',14,C.ink,'start')+TF(356,98,`light shown, says yes: ${K2_pct(H)}`,13,C.blue,'start')+TF(356,117,`no light, says yes: ${K2_pct(F)}`,13,C.muted,'start');
-  out+=TBF(356,150,'Forced choice: “which one?”',14,C.ink,'start')+TF(356,172,`picks correctly: ${K2_pct(fc)}`,13,C.green,'start')+TF(356,191,'the criterion plays no part',13,C.muted,'start');
+  out+=L(pl.X(s.k),58,pl.X(s.k),184,C.coral,2.5)+TB(clamp(pl.X(s.k),70,300),52,'criterion',13,C.coral);
+  out+=T(pl.X(0)-30,82,'no light',13,C.muted,'end')+T(pl.X(Math.max(s.d,1.2))+34,82,'light',13,C.blue,'start');
+  out+=TBF(356,76,'Yes or no: “did you see it?”',14,C.ink,'start')+T(356,98,`light shown, says yes: ${K2_pct(H)}`,13,C.blue,'start')+T(356,117,`no light, says yes: ${K2_pct(F)}`,13,C.muted,'start');
+  out+=TBF(356,150,'Forced choice: “which one?”',14,C.ink,'start')+T(356,172,`picks correctly: ${K2_pct(fc)}`,13,C.green,'start')+T(356,191,'the criterion plays no part',13,C.muted,'start');
   const yes=K2_CZ.s.map(z=>s.d+z>s.k),right=K2_CZ.s2.map((z,i)=>s.d+z>K2_CZ.n2[i]);
-  out+=TF(40,250,'12 simulated trials with a light: does the patient say yes?',13,C.ink,'start');
-  yes.forEach((y,i)=>out+=R(40+i*31,258,27,27,y?C.blue:'#fff',y?C.blue:C.line,5)+TBF(53.5+i*31,276,y?'yes':'no',13,y?'#fff':C.muted));
-  out+=TBF(424,277,`yes on ${yes.filter(Boolean).length} of 12`,14,C.blue,'start');
-  out+=TF(40,312,'12 simulated forced-choice trials: is the pick right?',13,C.ink,'start');
-  right.forEach((y,i)=>out+=R(40+i*31,320,27,27,y?C.green:'#fff',y?C.green:C.line,5)+TBF(53.5+i*31,338,y?'✓':'×',14,y?'#fff':C.muted));
-  out+=TBF(424,339,`right on ${right.filter(Boolean).length} of 12`,14,C.green,'start');
+  out+=T(40,250,'12 simulated trials with a light: does the patient say yes?',13,C.ink,'start');
+  yes.forEach((y,i)=>out+=R(40+i*31,258,27,27,y?C.blue:'#fff',y?C.blue:C.line,5)+TB(53.5+i*31,276,y?'yes':'no',13,y?'#fff':C.muted));
+  out+=TB(424,277,`yes on ${yes.filter(Boolean).length} of 12`,14,C.blue,'start');
+  out+=T(40,312,'12 simulated forced-choice trials: is the pick right?',13,C.ink,'start');
+  right.forEach((y,i)=>out+=R(40+i*31,320,27,27,y?C.green:'#fff',y?C.green:C.line,5)+TB(53.5+i*31,338,y?'✓':'×',14,y?'#fff':C.muted));
+  out+=TB(424,339,`right on ${right.filter(Boolean).length} of 12`,14,C.green,'start');
   const phase=s.d<.15?'With no sensitivity at all, forced choice sits at 50% wherever the criterion is: caution cannot create blindsight on its own.':`Moving the criterion changes the yes rate (${K2_pct(H)} now) and leaves forced choice at ${K2_pct(fc)}. Critics say blindsight may be this. Azzopardi and Cowey (1997) tested patient GY both ways and found a difference that a shifted criterion alone does not predict; Phillips (2021) argues the case is still open.`;
   return {svg:out,phase};
  }});
@@ -299,9 +299,9 @@ SCENE({id:'binocular-rivalry',name:'One picture, two experiences',tag:'You take 
   const top=Math.max(4,...bins),pl=K2_plot(340,70,230,150,[0,11],[0,top],{xt:[[0,'0'],[5,'5'],[10,'10+']],yt:[[0,'0'],[top,String(top)]],xl:'length of each spell (s)',yl:'number of spells'});out+=pl.svg;
   bins.forEach((c,i)=>{if(c)out+=R(pl.X(i)+2,pl.Y(c),pl.X(1)-pl.X(0)-4,pl.Y(0)-pl.Y(c),s.sim?'#9cc3dd':C.blue,'none',2)});
   if(n>=5){const th=mean/3,pts=range(11).map(i=>[pl.X(i+.5),pl.Y(Math.min(top,n*((i===10?1:K2_gCdf3(i+1,th))-K2_gCdf3(i,th))))]);out+=K2_poly(pts,C.green,2.2,'stroke-dasharray="6 4"')}
-  out+=TF(455,284,n?`${n} spell${n===1?'':'s'} · mean ${mean.toFixed(1)} s · median ${K2_median(s.durs).toFixed(1)} s`:'no flips recorded yet',13,C.ink);
+  out+=T(455,284,n?`${n} spell${n===1?'':'s'} · mean ${mean.toFixed(1)} s · median ${K2_median(s.durs).toFixed(1)} s`:'no flips recorded yet',13,C.ink);
   out+=TF(455,306,'dashed: a skewed (gamma) curve with',13,C.muted)+TF(455,323,`${n>=5?'the same mean as these data':'your mean, after five flips'}`,13,C.muted);
-  out+=TF(300,352,s.sim?'The cube is tinted here only to show what the simulated observer sees.':'The drawing never changes. Only your reading of it does.',13,C.muted);
+  out+=T(300,352,s.sim?'The cube is tinted here only to show what the simulated observer sees.':'The drawing never changes. Only your reading of it does.',13,C.muted);
   const phase=s.sim?'A simulated observer’s 40 spells: most last two to five seconds and a few last much longer, the right-skewed shape found for both bistable figures and binocular rivalry.':n>=5?`Your ${n} spells average ${mean.toFixed(1)} s with a median of ${K2_median(s.durs).toFixed(1)} s. ${mean>K2_median(s.durs)?'A mean above the median is the long right tail reported since the 1960s.':'With more flips the long right tail usually appears.'} People differ widely in rate; no value is better.`:s.run?'Keep looking at the figure and press It flipped each time your view of it switches. If it does not flip for a while, that is normal too.':'Nothing on the screen will change. Press Start watching and report each switch as it happens.';
   return {svg:out,phase};
  },
@@ -336,14 +336,14 @@ SCENE({id:'binocular-rivalry-eyes',name:'Binocular rivalry',tag:'A different pic
   const m=K2_rTime(s.cl,s.cr),now=m.seg.find(q=>s.t>=q.t0&&s.t<q.t1)||m.seg[0];
   let out=heading('Each eye gets its own picture');
   out+=K2_grating(60,52,0,s.cl)+K2_grating(450,52,1,s.cr)+K2_grating(255,52,now.eye,now.eye?s.cr:s.cl);
-  out+=TF(105,160,'left eye’s picture',13,C.blue)+TF(495,160,'right eye’s picture',13,C.coral)+TBF(300,160,s.play?'what is seen now':'what is seen first',13,C.ink);
+  out+=T(105,160,'left eye’s picture',13,C.blue)+T(495,160,'right eye’s picture',13,C.coral)+TB(300,160,s.play?'what is seen now':'what is seen first',13,C.ink);
   out+=arrow(156,97,247,97,C.blue,2)+arrow(444,97,353,97,C.coral,2);
   out+=TBF(40,196,'Toy model',13,C.amber,'start')+TF(112,196,'which picture dominates over 30 seconds (direction from Levelt)',13,C.muted,'start');
   const x=t=>40+t/30*520;m.seg.forEach(q=>out+=R(x(q.t0),208,Math.max(1,x(q.t1)-x(q.t0)-1),28,q.eye?C.coral:C.blue,'none',2));
-  [0,10,20,30].forEach(t=>out+=L(x(t),238,x(t),244,C.line,1.5)+TF(x(t),258,t+' s',13,C.muted));
+  [0,10,20,30].forEach(t=>out+=L(x(t),238,x(t),244,C.line,1.5)+T(x(t),258,t+' s',13,C.muted));
   if(s.play)out+=L(x(s.t),202,x(s.t),242,C.ink,2.5);
   out+=counter(40,276,'left picture seen',K2_pct(m.left),C.blue,160)+counter(220,276,'switches in 30 s',String(m.sw),C.ink,160)+counter(400,276,'mean spell: left / right',`${m.TL.toFixed(1)} s / ${m.TR.toFixed(1)} s`,C.ink,160);
-  out+=TF(300,350,'The pictures never change; only the simulated experience alternates.',13,C.muted);
+  out+=T(300,350,'The pictures never change; only the simulated experience alternates.',13,C.muted);
   const phase=Math.abs(s.cl-s.cr)<.03?`With equal contrast the two pictures share the time about evenly, switching ${m.sw} times in 30 seconds. Raise both contrasts and the switches come faster.`:`The ${s.cl>s.cr?'left':'right'} eye’s picture is stronger, so it is seen for more of the time (left: ${K2_pct(m.left)}). The weaker picture still breaks through: stronger input shifts the balance without ending the rivalry.`;
   return {svg:out,phase};
  }});
@@ -362,16 +362,16 @@ SCENE({id:'binocular-rivalry-neurons',name:'Neurons that follow the percept',tag
  draw(s,f,X){
   const A=K2_AREAS[s.area],k=A[2],order=shuffled(range(20),97+s.area);let out=heading('The pictures stay put; the report changes');
   out+=K2_grating(40,48,0,.8,56)+K2_grating(104,48,1,.8,56)+TF(100,122,'in the eyes: both, unchanged',13,C.muted);
-  out+=arrow(172,76,216,76,C.line,2)+K2_grating(226,48,s.per,.8,56)+TBF(254,122,'reported',13,C.ink);
+  out+=arrow(172,76,216,76,C.line,2)+K2_grating(226,48,s.per,.8,56)+TB(254,122,'reported',13,C.ink);
   out+=K2_btn(X,'per','','Switch the reported percept',40,134,250,34,'Switch the percept',C.coral);
-  out+=TBF(40,190,`20 cells in ${A[0]}`,14,C.ink,'start');
+  out+=TB(40,190,`20 cells in ${A[0]}`,14,C.ink,'start');
   for(let i=0;i<20;i++){const x=58+(i%5)*52,y=216+Math.floor(i/5)*38,rank=order.indexOf(i),fol=rank<k,pref=rank%2,on=fol?pref===s.per:true;
-   out+=Ci(x,y,14,fol?(on?'#f4be3c':'#fff'):'#cfe0ec',fol?C.amber:C.line)+(fol?TBF(x,y+5,on?'↑':'↓',14,on?C.ink:C.muted):'')}
+   out+=Ci(x,y,14,fol?(on?'#f4be3c':'#fff'):'#cfe0ec',fol?C.amber:C.line)+(fol?TB(x,y+5,on?'↑':'↓',14,on?C.ink:C.muted):'')}
   out+=Ci(52,366,7,'#f4be3c',C.amber)+TF(64,370,'follows the percept',13,C.ink,'start')+Ci(196,366,7,'#cfe0ec',C.line)+TF(208,370,'follows the picture',13,C.ink,'start');
-  const base=290,bw=58;out+=L(340,base,580,base,C.line,2)+TF(460,62,'cells that follow the percept',13,C.muted);
+  const base=290,bw=58;out+=L(340,base,580,base,C.line,2)+T(460,62,'cells that follow the percept',13,C.muted);
   K2_AREAS.forEach((a,i)=>{const x=356+i*74,h=a[2]/20*190,sel=i===s.area;
-   out+=hit(X,'area',i,`${a[0]}: about ${a[2]*5}% of cells follow the percept`,R(x,base-h,bw,h,sel?C.amber:'#e8d9b5','none',4))+TBF(x+bw/2,base-h-7,`about ${a[2]*5}%`,13,C.ink)+TF(x+bw/2,base+18,a[0],13,sel?C.ink:C.muted)});
-  out+=TF(460,base+40,'earlier  →  later in the visual pathway',13,C.muted)+TBF(460,base+64,`here: ${k} of 20 change with the report`,13,C.amber);
+   out+=hit(X,'area',i,`${a[0]}: about ${a[2]*5}% of cells follow the percept`,R(x,base-h,bw,h,sel?C.amber:'#e8d9b5','none',4))+TB(x+bw/2,base-h-7,`about ${a[2]*5}%`,13,C.ink)+TF(x+bw/2,base+18,a[0],13,sel?C.ink:C.muted)});
+  out+=T(460,base+40,'earlier  →  later in the visual pathway',13,C.muted)+TBF(460,base+64,`here: ${k} of 20 change with the report`,13,C.amber);
   return {svg:out,phase:`In ${A[0]} (${A[1]}), about ${k*5}% of recorded cells changed with what the monkey reported. Two cautions: brain imaging in humans finds a clear rivalry signal in V1 as well, and a cell that follows the report may reflect deciding and reporting as much as seeing.`};
  }});
 
@@ -408,16 +408,16 @@ SCENE({id:'inattentional-blindness',name:'Counting bounces',tag:'You take part: 
   let out=heading(s.ph==='reveal'?'What crossed the box':'Count the bounces of the blue discs');
   const box=K2_ibBox(objs,t,crit&&s.ph==='run');out+=box.svg;
   const lastLog=s.log[s.log.length-1];
-  if(s.ph==='idle')out+=R(150,128,300,58,'#fff',C.line,8)+TF(300,152,'Count each time a blue disc',13,C.ink)+TF(300,170,'touches an edge of the box.',13,C.ink)+K2_btn(X,'start','','Start trial 1',210,282,180,44,'Start trial 1');
-  if(s.ph==='run')out+=s.sim?TBF(300,292,`Simulated observer’s count so far: ${box.b}`,14,C.ink)+TF(300,314,'(a learner sees no running count)',13,C.muted):TF(300,296,`trial ${s.trial+1}: keep counting`,13,C.muted);
-  if(s.ph==='count')out+=TBF(300,288,'How many bounces did you count?',14,C.ink)+K2_btn(X,'adj','-1','One fewer',180,302,50,44,'−')+R(240,302,120,44,'#fff',C.line,8)+TBF(300,332,String(s.guess),22,C.ink)+K2_btn(X,'adj','1','One more',370,302,50,44,'+')+K2_btn(X,'ok','','Confirm my count',440,302,90,44,'OK',C.green);
-  if(s.ph==='fb'&&lastLog)out+=TBF(300,290,`You counted ${lastLog.g}; the blue discs bounced ${lastLog.n} times.`,14,C.ink)+K2_btn(X,'start','','Start the next trial',210,306,180,44,`Start trial ${s.trial+2}`);
-  if(s.ph==='ask')out+=TBF(300,288,'Did you see anything other than discs and squares?',14,C.ink)+K2_btn(X,'seen','1','Yes, I saw something else',150,304,130,44,'Yes')+K2_btn(X,'seen','0','No, nothing else',320,304,130,44,'No',C.coral);
-  if(s.ph==='reveal'){out+=L(42,157,558,157,C.coral,2,'stroke-dasharray="7 6"')+K2_cross(300,157)+R(176,176,248,28,'#fff',C.coral,14)+TF(300,195,'a cross passed along this line for 4.7 s',13,C.coral);
-   out+=TBF(300,288,s.sim?'The simulated observer counted correctly and reported nothing else.':s.seen?'You noticed it. About half of observers do.':'You did not notice it. That is the usual result.',14,C.ink);
-   out+=TF(300,310,'In Simons & Chabris (1999), 46% of observers missed the unexpected event.',13,C.muted);
-   if(!s.sim&&lastLog)out+=TF(300,330,`Your count on that trial: ${lastLog.g}; true count: ${lastLog.n}.`,13,C.muted);
-   out+=TF(300,352,s.sim?'In Try it nothing is announced. The demonstration works only once.':'Nothing was announced, on purpose. Now that you know, it will not work again.',13,C.muted)}
+  if(s.ph==='idle')out+=R(150,128,300,58,'#fff',C.line,8)+T(300,152,'Count each time a blue disc',13,C.ink)+T(300,170,'touches an edge of the box.',13,C.ink)+K2_btn(X,'start','','Start trial 1',210,282,180,44,'Start trial 1');
+  if(s.ph==='run')out+=s.sim?TB(300,292,`Simulated observer’s count so far: ${box.b}`,14,C.ink)+T(300,314,'(a learner sees no running count)',13,C.muted):T(300,296,`trial ${s.trial+1}: keep counting`,13,C.muted);
+  if(s.ph==='count')out+=TB(300,288,'How many bounces did you count?',14,C.ink)+K2_btn(X,'adj','-1','One fewer',180,302,50,44,'−')+R(240,302,120,44,'#fff',C.line,8)+TB(300,332,String(s.guess),22,C.ink)+K2_btn(X,'adj','1','One more',370,302,50,44,'+')+K2_btn(X,'ok','','Confirm my count',440,302,90,44,'OK',C.green);
+  if(s.ph==='fb'&&lastLog)out+=TB(300,290,`You counted ${lastLog.g}; the blue discs bounced ${lastLog.n} times.`,14,C.ink)+K2_btn(X,'start','','Start the next trial',210,306,180,44,`Start trial ${s.trial+2}`);
+  if(s.ph==='ask')out+=TB(300,288,'Did you see anything other than discs and squares?',14,C.ink)+K2_btn(X,'seen','1','Yes, I saw something else',150,304,130,44,'Yes')+K2_btn(X,'seen','0','No, nothing else',320,304,130,44,'No',C.coral);
+  if(s.ph==='reveal'){out+=L(42,157,558,157,C.coral,2,'stroke-dasharray="7 6"')+K2_cross(300,157)+R(176,176,248,28,'#fff',C.coral,14)+T(300,195,'a cross passed along this line for 4.7 s',13,C.coral);
+   out+=TB(300,288,s.sim?'The simulated observer counted correctly and reported nothing else.':s.seen?'You noticed it. About half of observers do.':'You did not notice it. That is the usual result.',14,C.ink);
+   out+=T(300,310,'In Simons & Chabris (1999), 46% of observers missed the unexpected event.',13,C.muted);
+   if(!s.sim&&lastLog)out+=T(300,330,`Your count on that trial: ${lastLog.g}; true count: ${lastLog.n}.`,13,C.muted);
+   out+=T(300,352,s.sim?'In Try it nothing is announced. The demonstration works only once.':'Nothing was announced, on purpose. Now that you know, it will not work again.',13,C.muted)}
   const phase=s.ph==='reveal'?(s.sim?'A coral cross crossed the middle of the box in plain view for almost five seconds while the simulated observer counted. Many real observers miss it too.':`${s.seen?'You saw the cross.':'A coral cross crossed the middle of the box for almost five seconds and you did not report it.'} Either outcome is normal and says nothing about eyesight or intelligence: attention set for blue discs tends to pass over what it is not set for. The cross was left unannounced because expecting it removes the effect; that is the only thing this scene kept from you.`):s.ph==='idle'?'Three blue discs and three grey squares will move for eight seconds. Your job is the blue discs only.':s.ph==='count'?'Set your count with − and +, then press OK.':s.ph==='ask'?'One more question about that trial.':s.ph==='fb'?'Counts within one or two of the true number are typical. Ready for the next trial?':'Count the blue discs’ bounces.';
   return {svg:out,phase};
  }});
@@ -439,13 +439,13 @@ SCENE({id:'inattentional-blindness-gorilla',name:'How many noticed?',tag:'Guess 
  draw(s,f,X){
   const q=K2_STUD[s.st],truth=Math.round(q.fill/q.show*100);let out=heading(q.k);
   out+=K2_lines(300,58,q.what,80,C.ink,'middle',18,3);
-  const x=v=>70+v/100*460;out+=TF(300,128,'share of people who noticed the unexpected thing',13,C.muted);
-  out+=R(70,138,460,18,C.pale,'none',9)+[0,25,50,75,100].map(v=>L(x(v),158,x(v),164,C.line,1.5)+TF(x(v),178,v+'%',13,C.muted)).join('');
-  out+=Ci(x(s.guess),147,9,C.blue,'#fff')+TBF(clamp(x(s.guess),110,490),200,`${s.sim?'a typical guess':'your guess'}: ${s.guess}%`,13,C.blue);
-  if(s.shown){out+=L(x(truth),132,x(truth),162,C.coral,3)+TBF(clamp(x(truth),110,490),222,`published: ${truth}%`,13,C.coral);
+  const x=v=>70+v/100*460;out+=T(300,128,'share of people who noticed the unexpected thing',13,C.muted);
+  out+=R(70,138,460,18,C.pale,'none',9)+[0,25,50,75,100].map(v=>L(x(v),158,x(v),164,C.line,1.5)+T(x(v),178,v+'%',13,C.muted)).join('');
+  out+=Ci(x(s.guess),147,9,C.blue,'#fff')+TB(clamp(x(s.guess),110,490),200,`${s.sim?'a typical guess':'your guess'}: ${s.guess}%`,13,C.blue);
+  if(s.shown){out+=L(x(truth),132,x(truth),162,C.coral,3)+TB(clamp(x(truth),110,490),222,`published: ${truth}%`,13,C.coral);
    const w=(q.per-1)*22,x0=300-w/2;out+=K2_people(x0,252,q.show,q.fill,q.per,C.coral);
-   out+=TF(300,252+Math.ceil(q.show/q.per)*30+8,`filled = noticed: ${q.note}`,13,C.ink)}
-  else out+=s.sim?TF(300,270,'…',20,C.muted):K2_btn(X,'reveal','','Reveal the published result',210,250,180,44,'Reveal');
+   out+=T(300,252+Math.ceil(q.show/q.per)*30+8,`filled = noticed: ${q.note}`,13,C.ink)}
+  else out+=s.sim?T(300,270,'…',20,C.muted):K2_btn(X,'reveal','','Reveal the published result',210,250,180,44,'Reveal');
   const d=s.guess-truth;
   return {svg:out,phase:!s.shown?'Before you look: what share of people do you think noticed?':`${truth}% noticed. ${s.sim?'Most people guess far higher.':Math.abs(d)<=10?'Your guess was close.':d>0?`Your guess was ${d} points too high, which is the common direction: people expect to notice far more than they do.`:`Your guess was ${-d} points too low.`} ${s.st===2?'Expertise did not protect the radiologists; they were searching for nodules, not gorillas.':s.st===0?'Neisser’s films, made in the 1970s, were the model for the later gorilla study.':'The share who noticed fell when the counting task was made harder.'}`};
  }});
@@ -466,11 +466,11 @@ SCENE({id:'inattentional-blindness-set',name:'What gets through',tag:'Attentiona
   out+=R(30,50,330,200,'#9aa7ae','none',6);
   [[80,95,1],[250,110,1],[150,205,1],[310,200,0],[110,150,0],[215,70,0]].forEach(([x,y,light])=>{const tracked=(light===1)===(s.att==='light');
    out+=(light?Ci(x,y,13,g(1)):R(x-12,y-12,24,24,g(0),'none',3))+(tracked?Ci(x,y,21,'none',C.amber,'stroke-dasharray="4 4"'):'')});
-  out+=K2_cross(205,150,g(s.shade),13)+TF(195,268,'dashed rings: the shapes being tracked',13,C.muted);
-  out+=TBF(390,70,'Illustrative numbers',14,C.amber,'start')+TF(390,88,'only the direction comes',13,C.muted,'start')+TF(390,105,'from the studies',13,C.muted,'start');
-  out+=R(390,126,180,26,C.pale,'none',6)+R(390,126,180*rate/100,26,C.coral,'none',6)+TBF(390,176,`${rate}% would notice`,15,C.coral,'start');
-  out+=TF(390,200,`cross is ${sim>.75?'like the tracked shapes':sim<.25?'like the ignored shapes':'between the two sets'}`,13,C.ink,'start')+TF(390,220,`task: ${s.hard?'hard':'easy'}`,13,C.ink,'start');
-  out+=R(30,288,540,78,C.pale,'none',8)+TBF(44,308,'Two readings of a miss',13,C.ink,'start')+TF(44,328,'Blindness: without attention the cross was never consciously seen (Mack & Rock).',13,C.ink,'start')+TF(44,348,'Amnesia: it was seen for a moment and forgotten before the question (Wolfe).',13,C.ink,'start');
+  out+=K2_cross(205,150,g(s.shade),13)+T(195,268,'dashed rings: the shapes being tracked',13,C.muted);
+  out+=TB(390,70,'Illustrative numbers',14,C.amber,'start')+TF(390,88,'only the direction comes',13,C.muted,'start')+TF(390,105,'from the studies',13,C.muted,'start');
+  out+=R(390,126,180,26,C.pale,'none',6)+R(390,126,180*rate/100,26,C.coral,'none',6)+TB(390,176,`${rate}% would notice`,15,C.coral,'start');
+  out+=TF(390,200,`cross is ${sim>.75?'like the tracked shapes':sim<.25?'like the ignored shapes':'between the two sets'}`,13,C.ink,'start')+T(390,220,`task: ${s.hard?'hard':'easy'}`,13,C.ink,'start');
+  out+=R(30,288,540,78,C.pale,'none',8)+TB(44,308,'Two readings of a miss',13,C.ink,'start')+TF(44,328,'Blindness: without attention the cross was never consciously seen (Mack & Rock).',13,C.ink,'start')+TF(44,348,'Amnesia: it was seen for a moment and forgotten before the question (Wolfe).',13,C.ink,'start');
   return {svg:out,phase:`${sim>.75?'A cross that matches what the observer is tracking is picked up by the same setting of attention.':sim<.25?'A cross that matches the ignored shapes is filtered out along with them.':'A cross between the two sets is noticed by some observers and missed by others.'} A report after the event cannot tell blindness from rapid forgetting, which is one reason the meaning of these results is still argued over.`};
  }});
 
@@ -515,12 +515,12 @@ SCENE({id:'change-blindness',name:'Find the change',tag:'You take part: two pict
   let out=heading(s.sim?'Simulated observer: searching for the change':s.ph==='found'?'Found it':'Which shape changes?');
   out+=K2_cbDraw(X,pic,s.img,{pick:s.ph==='run'&&!s.sim,ring:ended,ov:s.ov});
   out+=TF(210,302,s.ph==='idle'?'Press Start. The picture will alternate with an altered copy.':ended?`The ringed shape ${K2_cbKind[pic.kind]}.`:`version ${s.img?'B':'A'} · ${s.swaps} alternation${s.swaps===1?'':'s'} so far`,13,C.muted);
-  out+=TBF(414,66,'Alternations needed',14,C.ink,'start');
+  out+=TB(414,66,'Alternations needed',14,C.ink,'start');
   const bar=(y,lab,v,col)=>TF(414,y,lab,13,C.muted,'start')+R(414,y+6,Math.max(2,Math.min(20,v)/20*150),14,col,'none',3)+TBF(420+Math.min(20,v)/20*150,y+18,String(v),13,C.ink,'start');
   out+=bar(90,s.sim?'simulated observer':'you',s.found?s.found.swaps:s.swaps,C.blue)+bar(140,'published: central interest',7.3,'#9cc3dd')+bar(190,'published: marginal interest',17.1,'#9cc3dd');
   out+=K2_lines(414,246,s.found?`${s.sim?'Search time':'Your time'}: ${s.found.t.toFixed(1)} s, with ${s.miss} wrong press${s.miss===1?'':'es'}.`:s.ph==='shown'?'Shown without being found. That happens to most people on some pictures.':'Published averages: Rensink et al. (1997).',27,C.ink,'start',17,3);
   out+=K2_lines(414,304,'Their pictures switched much faster: compare counts, not seconds.',27,C.muted,'start',17,3);
-  out+=TF(300,366,s.mode==='gap'?'Each version shows for 1.5 s; a soft grey fade hides the moment of change.':'With no gap, the change itself is visible as a sudden jump.',13,C.muted);
+  out+=T(300,366,s.mode==='gap'?'Each version shows for 1.5 s; a soft grey fade hides the moment of change.':'With no gap, the change itself is visible as a sudden jump.',13,C.muted);
   const phase=s.sim?'A simulated observer needs five alternations here. Until attention lands on the right shape, the change is not seen, although nothing hides the shape itself.':s.ph==='found'?`You needed ${s.found.swaps} alternation${s.found.swaps===1?'':'s'}${s.mode==='gap'?'. Taking several is normal: only the shapes you attend to are compared from one version to the next.':' with no gap: the jump draws attention straight to the place.'}`:s.ph==='run'?'Look for the one shape that differs between version A and version B, and press it.':'A picture of twelve shapes will alternate with a copy in which one shape is different.';
   return {svg:out,phase};
  }});
@@ -555,16 +555,16 @@ SCENE({id:'change-blindness-mudsplash',name:'Slow changes and mudsplashes',tag:'
   if(extra&&ended)out+=G(K2_cbShape(o,col),'id="k2chg"');
   if(!grad&&s.sp)out+=K2_splashes(pic);
   out+=TF(210,302,s.ph==='idle'?'Press Start, then press the shape that changes.':ended?`The ringed shape ${grad?'changed colour over 12 seconds':K2_cbKind[pic.kind]}.`:grad?'The change takes 12 seconds and happens only once.':'Patches appear every 2.4 s; the change happens with them.',13,C.muted);
-  out+=TBF(414,66,grad?'Gradual change':'Mudsplash',14,C.ink,'start');
+  out+=TB(414,66,grad?'Gradual change':'Mudsplash',14,C.ink,'start');
   out+=K2_lines(414,90,grad?'No blank, no blink, no cut: the colour drifts too slowly to make a signal that pulls attention.':'The patches never cover the changing shape. They make signals of their own elsewhere, and attention goes to them.',27,C.ink,'start',17,5);
   out+=K2_lines(414,196,s.found?`${s.sim?'Found':'You found it'} after ${s.found.t.toFixed(1)} s, with ${s.miss} wrong press${s.miss===1?'':'es'}.`:s.ph==='shown'?(s.sim?'The simulated observer did not find it in time.':'Shown without being found: a common result, not a failing.'):s.ph==='run'?`wrong presses so far: ${s.miss}`:'Your time will appear here.',27,C.blue,'start',17,3);
   out+=K2_lines(414,262,'Published: both kinds of change are often missed (1999, 2000).',27,C.muted,'start',17,3);
-  out+=TF(300,366,'Seeing a change seems to need attention at the right place at the right moment.',13,C.muted);
+  out+=T(300,366,'Seeing a change seems to need attention at the right place at the right moment.',13,C.muted);
   const phase=s.sim?'One shape drifts to a new colour over twelve seconds in full view. With nothing sudden to catch attention, a simulated observer, like many real ones, does not find it until it is pointed out.':ended?(s.found?'You caught it. People who do usually happened to be attending to that shape; those who miss it are no less observant.':'Missing it is the ordinary outcome. The shape was visible throughout; what was absent was a signal telling attention where to go.'):s.ph==='run'?'Press the shape you think is changing.':'In both versions the changing shape stays in plain view the whole time.';
   return {svg:out,phase};
  }});
 
-function K2_figure(x,y,col,label,hat){return Ci(x,y-74,13,'#f1d9c0',C.dark)+(hat?R(x-15,y-92,30,9,hat,'none',3):'')+R(x-16,y-58,32,46,col,'none',8)+L(x-8,y-12,x-8,y,C.dark,5)+L(x+8,y-12,x+8,y,C.dark,5)+(label?TF(x,y+18,label,13,C.muted):'')}
+function K2_figure(x,y,col,label,hat){return Ci(x,y-74,13,'#f1d9c0',C.dark)+(hat?R(x-15,y-92,30,9,hat,'none',3):'')+R(x-16,y-58,32,46,col,'none',8)+L(x-8,y-12,x-8,y,C.dark,5)+L(x+8,y-12,x+8,y,C.dark,5)+(label?T(x,y+18,label,13,C.muted):'')}
 const K2_DOOR=[
  {n:15,k:7,title:'Experiment 1',note:'15 pedestrians on a university campus',extra:'The seven who noticed were all about the experimenters’ own age.'},
  {n:12,k:4,title:'Experiment 2',note:'12 young pedestrians; experimenters dressed as builders',extra:'Seen as members of another group, the experimenters were swapped unnoticed more often.'}];
@@ -591,15 +591,15 @@ SCENE({id:'change-blindness-door',name:'The door study',tag:'A person swapped in
    const first=k<=1,second=k>=3;
    if(first)out+=K2_figure(290,g,C.blue,'experimenter A',hat)+R(308,g-52,26,20,'#fff',C.dark,2);
    if(second)out+=K2_figure(290,g,C.purple,'experimenter B',hat)+R(308,g-52,26,20,'#fff',C.dark,2);
-   const dx=[null,60,215,400,null][k];
+   const dx=[null,60,190,400,null][k];
    if(dx!==null&&k>=1&&k<=3){out+=K2_figure(dx-14,g,'#8a979f','')+K2_figure(dx+164,g,k===3?C.blue:'#8a979f',k===3?'A leaves':'',k===3?hat:null)+R(dx,g-150,150,150,'#b98d5a',C.dark,3)+Ci(dx+132,g-74,4,C.dark)}
-   if(k===2)out+=TF(290,g+18,'hidden by the door: A and B change places',13,C.coral);
-   out+=TF(300,60,['“Excuse me, how do I get to…?”','two people carrying a door approach','the door passes between them','the door moves on','“…then turn left at the corner.”'][k],13,C.ink);
-   out+=TF(300,306,'A and B differed in clothes, height and voice.',13,C.muted)+TF(300,328,`step ${k+1} of 6`,13,C.muted)}
-  else{const w=(d.n-1)*30,x0=300-w/2;out+=TF(300,70,d.note,13,C.ink)+K2_people(x0,120,d.n,d.k,d.n,C.coral,30);
-   out+=TBF(300,180,`${d.k} of ${d.n} noticed the swap (${Math.round(d.k/d.n*100)}%)`,15,C.coral)+TF(300,204,`${d.n-d.k} carried on as if nothing had happened`,13,C.ink);
+   if(k===2)out+=T(265,g+38,'hidden by the door: A and B change places',13,C.coral);
+   out+=T(300,60,['“Excuse me, how do I get to…?”','two people carrying a door approach','the door passes between them','the door moves on','“…then turn left at the corner.”'][k],13,C.ink);
+   out+=T(300,316,'A and B differed in clothes, height and voice.',13,C.muted)+T(300,338,`step ${k+1} of 6`,13,C.muted)}
+  else{const w=(d.n-1)*30,x0=300-w/2;out+=T(300,70,d.note,13,C.ink)+K2_people(x0,120,d.n,d.k,d.n,C.coral,30);
+   out+=TB(300,180,`${d.k} of ${d.n} noticed the swap (${Math.round(d.k/d.n*100)}%)`,15,C.coral)+T(300,204,`${d.n-d.k} carried on as if nothing had happened`,13,C.ink);
    out+=K2_lines(300,240,d.extra,70,C.ink,'middle',18,2);
-   out+=R(60,286,480,66,C.pale,'none',8)+TF(300,310,'Small samples: 15 and 12 people. The effect has been repeated,',13,C.muted)+TF(300,330,'but the exact percentages should not be leaned on.',13,C.muted)}
+   out+=R(60,286,480,66,C.pale,'none',8)+T(300,310,'Small samples: 15 and 12 people. The effect has been repeated,',13,C.muted)+T(300,330,'but the exact percentages should not be leaned on.',13,C.muted)}
   return {svg:out,phase:f?f.say:''};
  }});
 
@@ -610,7 +610,7 @@ function K2_poTrials(seed){const r=rng(seed*71+9);r();return shuffled(range(20).
 const K2_poInit=()=>({seed:6,i:0,ph:'idle',t0:0,res:[],run:0,gy:[],gcue:'sighted',gn:0});
 function K2_poStats(res){const ok=res.filter(r=>r.ok&&r.rt>150&&r.rt<1500),v=ok.filter(r=>r.valid).map(r=>r.rt),n=ok.filter(r=>!r.valid).map(r=>r.rt);return {v,n,mv:K2_mean(v),mn:K2_mean(n),have:v.length>0&&n.length>0}}
 function K2_poSim(n){const r=rng(47),tr=K2_poTrials(6),res=[];for(let i=0;i<n;i++)res.push({valid:tr[i].valid,rt:(tr[i].valid?330:372)+K2_gauss(r)*38,ok:true});return res}
-const K2_hbar=(y,lab,m,n,col,x0=190,w=300,max=700)=>TF(x0-10,y+11,lab,13,C.ink,'end')+R(x0,y,Math.max(0,Math.min(max,m)/max*w),15,col,'none',3)+(n?TBF(x0+6+Math.min(max,m)/max*w,y+12,`${Math.round(m)} ms`,13,C.ink,'start'):TF(x0+6,y+12,'no trials yet',13,C.muted,'start'));
+const K2_hbar=(y,lab,m,n,col,x0=190,w=300,max=700)=>T(x0-10,y+11,lab,13,C.ink,'end')+R(x0,y,Math.max(0,Math.min(max,m)/max*w),15,col,'none',3)+(n?TB(x0+6+Math.min(max,m)/max*w,y+12,`${Math.round(m)} ms`,13,C.ink,'start'):T(x0+6,y+12,'no trials yet',13,C.muted,'start'));
 SCENE({id:'attention-awareness',name:'Cueing attention',tag:'You take part: the Posner task',shared:'k2-posner',
  definition:'Attention is the selection of some information for fuller processing at the expense of the rest. Michael Posner (1980) measured it with a cue: an arrow says where a target will probably appear, and people respond faster there than at the other place, without moving their eyes. Attention and awareness usually go together. Christof Koch and Naotsugu Tsuchiya (2007) argued that they are nonetheless two processes, each of which can occur without the other; this lesson looks at the evidence and the objections.',
  example:'With an arrow that is right on four trials out of five, responses to targets at the cued side are typically some tens of milliseconds faster than responses at the uncued side. The eyes stay on the centre, so the advantage comes from where attention is, not from where the eyes point.',
@@ -630,14 +630,14 @@ SCENE({id:'attention-awareness',name:'Cueing attention',tag:'You take part: the 
   out+=R(70,52,110,84,'#f4f7f9',C.line,6)+R(420,52,110,84,'#f4f7f9',C.line,6);
   if(showCue)out+=t.cue?arrow(278,94,322,94,C.ink,4,12):arrow(322,94,278,94,C.ink,4,12);else out+=TB(300,101,'+',20,ph==='idle'||ph==='done'?C.muted:C.ink);
   if(showT)out+=Ci(t.side?475:125,94,13,C.ink);
-  if(s.sim)out+=TF(300,150,['eyes on the centre','the arrow says where the dot will probably be','dot: at the cued side on 16 of 20 trials'][s.k],13,C.muted);
+  if(s.sim)out+=T(300,150,['eyes on the centre','the arrow says where the dot will probably be','dot: at the cued side on 16 of 20 trials'][s.k],13,C.muted);
   else out+=K2_btn(X,'ans',0,'The dot is on the left',70,150,200,46,'Left')+K2_btn(X,'ans',1,'The dot is on the right',330,150,200,46,'Right');
-  out+=TF(300,222,ph==='done'?'20 of 20 trials. Press Start for a new run.':ph==='idle'?'Press Start, and keep your eyes on the +':`trial ${s.i+1} of 20`,13,C.muted);
+  out+=T(300,222,ph==='done'?'20 of 20 trials. Press Start for a new run.':ph==='idle'?'Press Start, and keep your eyes on the +':`trial ${s.i+1} of 20`,13,C.muted);
   const st=K2_poStats(s.res),d=st.mn-st.mv;
   out+=K2_hbar(244,'after a valid cue',st.mv,st.v.length,C.green)+K2_hbar(272,'after an invalid cue',st.mn,st.n.length,C.coral);
-  out+=st.have?TBF(300,322,`${s.sim?'Simulated':'Your'} cueing effect: ${d>=0?'+':'−'}${Math.abs(Math.round(d))} ms (invalid minus valid)`,14,C.ink):TF(300,322,'Your cueing effect appears when both kinds of trial are in.',13,C.muted);
-  out+=TF(300,344,'Published (Posner 1980): valid cues give faster responses, by tens of milliseconds.',13,C.muted);
-  out+=TF(300,364,`${st.v.length} valid and ${st.n.length} invalid correct trials counted`,13,C.muted);
+  out+=st.have?TB(300,322,`${s.sim?'Simulated':'Your'} cueing effect: ${d>=0?'+':'−'}${Math.abs(Math.round(d))} ms (invalid minus valid)`,14,C.ink):T(300,322,'Your cueing effect appears when both kinds of trial are in.',13,C.muted);
+  out+=T(300,344,'Published (Posner 1980): valid cues give faster responses, by tens of milliseconds.',13,C.muted);
+  out+=T(300,364,`${st.v.length} valid and ${st.n.length} invalid correct trials counted`,13,C.muted);
   const phase=s.sim?'A simulated observer with a typical cueing effect. The eyes never leave the centre; only attention moves to the cued side.':ph==='done'&&st.have?`Your responses after invalid cues were ${Math.abs(Math.round(d))} ms ${d>=0?'slower':'faster'} than after valid ones. With only four invalid trials one slow press can swing this either way; the published effect is an average over many trials. The next scene asks whether such cueing needs awareness of the target.`:ph==='idle'?'An arrow will point left or right, then a dot will appear in one of the boxes. The arrow is usually, but not always, right.':'Press Left or Right as soon as you see the dot.';
   return {svg:out,phase};
  }});
@@ -656,20 +656,20 @@ SCENE({id:'attention-awareness-blindsight',name:'Attention without awareness?',t
  on:{gcue(s,v){s.gcue=v;s.gy=[];return 'keep'},grun(s){s.gn=(s.gn||0)+1;s.gy=K2_gySim(s.gcue,s.gn);return 'keep'}},
  draw(s,f,X){
   let out=heading('Cueing a target that is not reported');
-  out+=R(30,50,250,150,'#fff',C.grid,8)+R(155,52,123,146,C.coralp,'none',0)+L(155,52,155,198,C.line,1.5,'stroke-dasharray="4 4"')+TF(92,68,'sighted field',13,C.green)+TF(217,68,'blind field',13,C.coral);
-  out+=Ci(225,100,9,'#fff',C.line)+Ci(225,160,9,C.ink)+TF(225,186,'target',13,C.muted);
-  if(s.gcue==='sighted')out+=TB(142,134,'+',16,C.ink)+arrow(118,150,140,168,C.ink,3,8)+TF(92,186,'arrow cue',13,C.muted);
-  else out+=TB(142,134,'+',16,C.ink)+R(190,148,12,24,C.muted,'none',3)+TF(92,186,'cue beside target',13,C.muted);
-  out+=R(30,208,250,28,C.pale,'none',14)+TF(155,227,'“I’m not aware of anything there.”',13,C.ink);
+  out+=R(30,50,250,150,'#fff',C.grid,8)+R(155,52,123,146,C.coralp,'none',0)+L(155,52,155,198,C.line,1.5,'stroke-dasharray="4 4"')+T(92,68,'sighted field',13,C.green)+T(217,68,'blind field',13,C.coral);
+  out+=Ci(225,100,9,'#fff',C.line)+Ci(225,160,9,C.ink)+T(225,186,'target',13,C.muted);
+  if(s.gcue==='sighted')out+=TB(142,134,'+',16,C.ink)+arrow(118,150,140,168,C.ink,3,8)+T(92,186,'arrow cue',13,C.muted);
+  else out+=TB(142,134,'+',16,C.ink)+R(190,148,12,24,C.muted,'none',3)+T(92,186,'cue beside target',13,C.muted);
+  out+=R(30,208,250,28,C.pale,'none',14)+T(155,227,'“I’m not aware of anything there.”',13,C.ink);
   const g=K2_poStats(s.gy),me=K2_poStats(s.res||[]);
-  out+=TBF(300,66,'Simulated patient',14,C.amber,'start')+TF(300,84,'direction as published; numbers illustrative',13,C.muted,'start');
+  out+=TB(300,66,'Simulated patient',14,C.amber,'start')+TF(300,84,'direction as published; numbers illustrative',13,C.muted,'start');
   out+=K2_hbar(96,'valid',g.mv,g.v.length,C.green,350,150,700)+K2_hbar(120,'invalid',g.mn,g.n.length,C.coral,350,150,700);
   out+=TBF(300,166,s.sim?'Simulated observer (seen targets)':'You (seen targets, previous scene)',14,C.blue,'start');
   out+=K2_hbar(178,'valid',me.mv,me.v.length,C.green,350,150,700)+K2_hbar(202,'invalid',me.mn,me.n.length,C.coral,350,150,700);
   if(!s.sim)out+=K2_btn(X,'grun','','Run 40 simulated trials',60,250,190,40,'Run 40 trials');
   const dg=g.mn-g.mv;
-  out+=TBF(440,262,g.have?`patient’s cueing effect: ${dg>=0?'+':'−'}${Math.abs(Math.round(dg))} ms`:'no simulated trials yet',13,C.ink)+(me.have?TF(440,282,`${s.sim?'observer’s':'yours'}: ${me.mn-me.mv>=0?'+':'−'}${Math.abs(Math.round(me.mn-me.mv))} ms`,13,C.blue):TF(440,282,'run the task in the previous scene to add yours',13,C.muted));
-  out+=R(30,304,540,64,C.pale,'none',8)+TF(300,324,'For: a cue speeds responses to targets the patient says he does not see.',13,C.ink)+TF(300,344,'Against: “not aware” may mean dimly aware and cautious, so awareness is not ruled out.',13,C.ink);
+  out+=TB(440,262,g.have?`patient’s cueing effect: ${dg>=0?'+':'−'}${Math.abs(Math.round(dg))} ms`:'no simulated trials yet',13,C.ink)+(me.have?T(440,282,`${s.sim?'observer’s':'yours'}: ${me.mn-me.mv>=0?'+':'−'}${Math.abs(Math.round(me.mn-me.mv))} ms`,13,C.blue):TF(440,282,'run the task in the previous scene to add yours',13,C.muted));
+  out+=R(30,304,540,64,C.pale,'none',8)+T(300,324,'For: a cue speeds responses to targets the patient says he does not see.',13,C.ink)+T(300,344,'Against: “not aware” may mean dimly aware and cautious, so awareness is not ruled out.',13,C.ink);
   return {svg:out,phase:g.have?`The simulated patient responds ${Math.abs(Math.round(dg))} ms ${dg>=0?'faster':'slower'} after a valid cue${s.gcue==='blind'?', even though the cue was in the blind field too':''}. If the targets really were unseen, attention was working without awareness. Whether they were is the point in dispute.`:'Press Run 40 simulated trials to see the pattern Kentridge and colleagues reported for GY.'};
  }});
 
@@ -690,14 +690,14 @@ SCENE({id:'attention-awareness-gist',name:'Awareness without attention?',tag:'Th
  draw(s){
   const q=K2_GIST[s.c];let out=heading(q.k);
   out+=R(30,50,250,170,'#f4f7f9',C.line,6);
-  if(s.c>0){['T','L','T','T','L'].forEach((ch,i)=>{const a=i*2*Math.PI/5,x=140+Math.cos(a)*26,y=132+Math.sin(a)*26;out+=`<g transform="rotate(${i*70} ${fmt(x)} ${fmt(y)})">`+TBF(x,y+5,ch,15,C.ink)+'</g>'});out+=Ci(140,132,48,'none',s.c===2?C.coral:C.amber,'stroke-dasharray="5 4"'+(s.c===2?' stroke-width="4"':''))}
+  if(s.c>0){['T','L','T','T','L'].forEach((ch,i)=>{const a=i*2*Math.PI/5,x=140+Math.cos(a)*26,y=132+Math.sin(a)*26;out+=`<g transform="rotate(${i*70} ${fmt(x)} ${fmt(y)})">`+TB(x,y+5,ch,15,C.ink)+'</g>'});out+=Ci(140,132,48,'none',s.c===2?C.coral:C.amber,'stroke-dasharray="5 4"'+(s.c===2?' stroke-width="4"':''))}
   else out+=TB(140,138,'+',18,C.muted);
   out+=R(222,60,48,38,'#cfe3d2',C.green,4)+`<polygon points="226,94 240,74 250,86 258,78 266,94" fill="${C.green}"/>`+Ci(236,70,4,'#d49a1c');
-  out+=TF(140,206,s.c===0?'attention free for the scene':s.c===1?'attention on the letters':'attention fully taken up',13,C.muted);out+=TF(214,84,'scene',13,C.green,'end');
-  out+=TBF(310,66,'Illustrative accuracy',14,C.amber,'start')+TF(310,84,'directions from the papers, not their data',13,C.muted,'start');
-  const base=220,sc=v=>(v-50)/50*110;out+=L(320,base,580,base,C.line,2)+TF(316,base+4,'50%',13,C.muted,'end')+TF(316,base-106,'100%',13,C.muted,'end')+TF(450,base+56,'50% is chance',13,C.muted);
-  out+=R(350,base-sc(q.scene),80,sc(q.scene),C.green,'none',4)+TBF(390,base-sc(q.scene)-7,q.scene+'%',14,C.ink)+TF(390,base+18,'animal or not?',13,C.muted)+TF(390,base+35,'(scene)',13,C.muted);
-  if(q.letter!==null)out+=R(470,base-sc(q.letter),80,Math.max(2,sc(q.letter)),C.purple,'none',4)+TBF(510,base-sc(q.letter)-7,q.letter+'%',14,C.ink);else out+=TF(510,base-10,'not tested',13,C.muted);
+  out+=T(140,206,s.c===0?'attention free for the scene':s.c===1?'attention on the letters':'attention fully taken up',13,C.muted);out+=T(214,84,'scene',13,C.green,'end');
+  out+=TB(310,66,'Illustrative accuracy',14,C.amber,'start')+TF(310,84,'directions from the papers, not their data',13,C.muted,'start');
+  const base=220,sc=v=>(v-50)/50*110;out+=L(320,base,580,base,C.line,2)+T(316,base+4,'50%',13,C.muted,'end')+T(316,base-106,'100%',13,C.muted,'end')+T(450,base+56,'50% is chance',13,C.muted);
+  out+=R(350,base-sc(q.scene),80,sc(q.scene),C.green,'none',4)+TB(390,base-sc(q.scene)-7,q.scene+'%',14,C.ink)+TF(390,base+18,'animal or not?',13,C.muted)+TF(390,base+35,'(scene)',13,C.muted);
+  if(q.letter!==null)out+=R(470,base-sc(q.letter),80,Math.max(2,sc(q.letter)),C.purple,'none',4)+TB(510,base-sc(q.letter)-7,q.letter+'%',14,C.ink);else out+=T(510,base-10,'not tested',13,C.muted);
   out+=TF(510,base+18,'T or L?',13,C.muted)+TF(510,base+35,'(rotated letter)',13,C.muted);
   out+=R(30,296,540,72,C.pale,'none',8)+K2_lines(44,318,q.note,84,C.ink,'start',18,3);
   return {svg:out,phase:s.c===1?'Li and colleagues read this as awareness of gist with almost no attention. The contrast with the letter task shows that the central task was demanding.':s.c===2?'Cohen and colleagues read this as showing that the gist needed attention all along, and that Li’s task simply left some to spare. The two sides agree on the data and disagree on what “no attention” would take.':'Start from the single-task level, then add a central task that competes for attention.'};
@@ -726,11 +726,11 @@ SCENE({id:'attention-awareness-grid',name:'Four possibilities',tag:'You sort the
  draw(s,f,X){
   const q=K2_FIND[s.i],ans=s.pick!==null;let out=K2_lines(300,34,q.t,78,C.ink,'middle',18,3);
   K2_CELLS.forEach((c,k)=>{const x=40+(k%2)*265,y=98+Math.floor(k/2)*84,right=ans&&k===q.a,wrong=ans&&k===s.pick&&k!==q.a;
-   const inner=R(x,y,255,74,right?C.greenp:wrong?C.coralp:'#fff',right?C.green:wrong?C.coral:C.blue,8)+TBF(x+127,y+34,c,14,right?C.green:wrong?C.coral:C.ink)+TF(x+127,y+56,right?'usual placement':wrong?'your choice':['attended and seen','attended, not reported','reported, barely attended','not attended, not reported'][k],13,C.muted);
+   const inner=R(x,y,255,74,right?C.greenp:wrong?C.coralp:'#fff',right?C.green:wrong?C.coral:C.blue,8)+TB(x+127,y+34,c,14,right?C.green:wrong?C.coral:C.ink)+T(x+127,y+56,right?'usual placement':wrong?'your choice':['attended and seen','attended, not reported','reported, barely attended','not attended, not reported'][k],13,C.muted);
    out+=ans?inner:hit(X,'pick',k,c,inner)});
   if(ans)out+=R(30,276,540,58,C.pale,'none',8)+K2_lines(44,298,q.n,84,C.ink,'start',18,2);
-  else out+=TF(300,304,s.sim?'A finding from this era, about to be placed.':'Press the cell where this finding is usually placed.',13,C.muted);
-  out+=TF(44,362,`finding ${s.i+1} of 6${s.sim?'':` · matched the usual placement on ${s.score} of ${s.done}`}`,13,C.muted,'start');
+  else out+=T(300,304,s.sim?'A finding from this era, about to be placed.':'Press the cell where this finding is usually placed.',13,C.muted);
+  out+=T(44,362,`finding ${s.i+1} of 6${s.sim?'':` · matched the usual placement on ${s.score} of ${s.done}`}`,13,C.muted,'start');
   if(ans&&s.i<5&&!s.sim)out+=K2_btn(X,'next','','Next finding',452,340,118,32,'Next finding');
-  return {svg:out,phase:!ans?'Four possibilities: attention and awareness together, either one without the other, or neither.':s.i===5?'Two of the four cells hold findings that are disputed. Whether attention is necessary for awareness, sufficient for it, or neither is still open; the theories in era 6 take different sides.':s.pick===q.a?'That is where it is usually placed. Read the note for the objection, where there is one.':'It is usually placed in the green cell. Your reading may match one of the critics’; the note says where the argument lies.'};
+  return {svg:out,phase:!ans?'Four possibilities: attention and awareness together, either one without the other, or neither.':s.i===5?'Two of the four cells hold findings that are disputed. Whether attention is necessary for awareness, sufficient for it, or neither is still open; the theories in era 6 take different sides.':s.sim?'The green cell is where this finding is usually placed; the note gives the objection, where there is one.':s.pick===q.a?'That is where it is usually placed. Read the note for the objection, where there is one.':'It is usually placed in the green cell. Your reading may match one of the critics’; the note says where the argument lies.'};
  }});
