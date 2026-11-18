@@ -736,4 +736,139 @@ SCENE({id:'receptors-drugs-caffeine',name:'Caffeine: an everyday antagonist',tag
    `After ${s.h} hours awake, adenosine occupies about ${Math.round(q.fa*100)}% of these receptors in this sketch. Adenosine is one signal of sleep pressure among several; the lesson on sleep stages takes that further.`};
  }});
 
-/*B2_END*/
+/* ===================== Lesson: neuromodulation ===================== */
+// Side view of a brain, front to the left. Positions are schematic.
+const B2_TGT={frontal:[120,120,'frontal cortex'],parietal:[290,52,'cortex'],occipital:[452,120,'visual cortex'],striatum:[236,138,'striatum'],thalamus:[300,150,'thalamus'],hippo:[352,172,'hippocampus'],cereb:[452,218,'cerebellum'],cord:[384,300,'spinal cord']};
+const B2_SYS={
+ na:{chip:'Noradrenaline',src:[366,232],from:'locus coeruleus, in the pons',col:C.amber,to:['frontal','parietal','occipital','thalamus','hippo','cereb','cord'],
+  l1:'A few tens of thousands of neurons in a human brain.',l2:'They reach almost every region, from cortex to spinal cord.',l3:'Linked with alertness and with reacting to the unexpected.'},
+ ht:{chip:'Serotonin',src:[352,246],from:'raphe nuclei, along the midline of the brainstem',col:C.purple,to:['frontal','parietal','occipital','striatum','thalamus','hippo','cereb','cord'],
+  l1:'Clusters of neurons along the middle of the brainstem.',l2:'Upper groups supply the forebrain, lower ones the spinal cord.',l3:'Linked with sleep and waking, mood, appetite: no single job.'},
+ da:{chip:'Dopamine',src:[330,210],from:'substantia nigra and the area beside it, in the midbrain',col:C.blue,to:['striatum','frontal'],
+  l1:'Two neighbouring groups of neurons in the midbrain.',l2:'They aim mainly at the striatum and the frontal cortex.',l3:'Linked with movement and with learning from reward.'},
+ ach:{chip:'Acetylcholine',src:[232,188],from:'basal forebrain, under the front of the brain',col:C.green,to:['frontal','parietal','occipital','hippo'],
+  l1:'Scattered groups of neurons at the base of the forebrain.',l2:'They supply the whole cortex and the hippocampus.',l3:'Linked with attention, waking and the readiness to learn.'}};
+const B2_SYS_KEYS=['na','ht','da','ach'];
+SCENE({id:'neuromodulation',name:'Small sources, wide reach',tag:'Four broadcasting systems',
+ definition:'Most neurons speak to a few neighbours or to one distant target. A few small groups do something different: their axons branch across much of the brain, and what they release changes how large numbers of other neurons respond. This is neuromodulation. The best-known systems use noradrenaline, serotonin, dopamine and acetylcholine, each from its own small cluster of cells.',
+ example:'The locus coeruleus holds a few tens of thousands of neurons in a brain of about 86 billion, yet its fibres reach the cortex, the hippocampus, the cerebellum and the spinal cord. It cannot be carrying detailed messages to all of them; it shifts their state.',
+ desc:'A side view of the brain with four small source nuclei. Choosing one draws its fibres fanning out to the regions it supplies, with a short description of what it is linked with.',
+ research:['Falck, Hillarp, Thieme & Torp (1962). Fluorescence of catechol amines and related compounds condensed with formaldehyde. Journal of Histochemistry and Cytochemistry 10, 348–354.','Dahlström & Fuxe (1964). Evidence for the existence of monoamine-containing neurons in the central nervous system. Acta Physiologica Scandinavica 62, Suppl. 232, 1–55.','Mesulam, Mufson, Wainer & Levey (1983). Central cholinergic pathways in the rat. Neuroscience 10, 1185–1201.','Aston-Jones & Cohen (2005). An integrative theory of locus coeruleus–norepinephrine function. Annual Review of Neuroscience 28, 403–450.'],
+ dur:14,hint:'Press each source to see where its fibres go. Compare how widely the four systems spread, then switch to the point-to-point pathway for contrast.',
+ init:()=>({sys:'na',cmp:0}),
+ watch(p){const k=Math.min(4,Math.floor(p*5));return k<4?{sys:B2_SYS_KEYS[k],cmp:0,u:clamp((p*5-k)*1.8,0,1)}:{sys:'na',cmp:1,u:clamp((p*5-4)*1.8,0,1)}},
+ ui:[{choose:B2_SYS_KEYS.map(k=>[k,B2_SYS[k].chip]),label:'System',get:s=>s.sys,act:'sys'},{choose:[[0,'Broadcast system'],[1,'Point-to-point pathway']],label:'Show',get:s=>s.cmp,act:'cmp'}],
+ on:{sys(s,v){s.sys=B2_SYS[v]?v:'na';s.cmp=0},cmp(s,v){s.cmp=+v?1:0}},
+ draw(s,f,X){
+  const y=B2_SYS[s.sys],u=s.u===undefined?1:s.u;
+  let out=heading(s.cmp?'For contrast: one place speaks to one place':`${y.chip}: from one small source to ${y.to.length>5?'most of the brain':y.to.length+' regions'}`);
+  // brain outline
+  out+=`<ellipse cx="290" cy="126" rx="212" ry="92" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+`<ellipse cx="452" cy="218" rx="54" ry="30" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316',C.line,26)+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316','#f4f8fb',21);
+  out+=TF(56,60,'front',13,C.muted)+TF(540,60,'back',13,C.muted);
+  for(const k in B2_TGT){const t=B2_TGT[k],on=!s.cmp&&y.to.includes(k)||s.cmp&&(k==='thalamus'||k==='occipital');out+=Ci(t[0],t[1],on?7:4,on?(s.cmp?C.ink:y.col):'#c9d6de')}
+  if(s.cmp){const a=B2_TGT.thalamus,b=B2_TGT.occipital;out+=arrow(a[0],a[1],lerp(a[0],b[0]-8,u),lerp(a[1],b[1]+2,u),C.ink,3)+TF(a[0],a[1]+22,'thalamus',13,C.ink)+TF(b[0],b[1]-14,'visual cortex',13,C.ink)}
+  else{
+   for(const k of y.to){const t=B2_TGT[k],mx=(y.src[0]+t[0])/2+(t[1]-y.src[1])*.12,my=(y.src[1]+t[1])/2-(t[0]-y.src[0])*.12;
+    const ex=lerp(y.src[0],t[0],u),ey=lerp(y.src[1],t[1],u),cx=lerp(y.src[0],mx,u),cy=lerp(y.src[1],my,u);out+=P(`M${y.src[0]} ${y.src[1]}Q${fmt(cx)} ${fmt(cy)} ${fmt(ex)} ${fmt(ey)}`,y.col,2.2)}
+   for(const k of y.to){const t=B2_TGT[k];if(k==='cord')out+=TF(t[0]+18,t[1]+4,t[2],13,C.muted,'start');else if(k==='cereb')out+=TF(t[0],t[1]+24,t[2],13,C.muted);else if(k==='hippo'||k==='thalamus'||k==='striatum')out+='';else out+=TF(t[0],t[1]-12,t[2],13,C.muted)}
+  }
+  B2_SYS_KEYS.forEach(k=>{const q=B2_SYS[k],on=k===s.sys&&!s.cmp;out+=hit(X,'sys',k,`${q.chip}: ${q.from}`,Ci(q.src[0],q.src[1],on?10:8,on?q.col:'#fff',q.col))});
+  out+=R(20,262,318,100,'#fff',C.grid,8);
+  if(s.cmp)out+=TBF(32,284,'A relay pathway',14,C.ink,'start')+TF(32,306,'The thalamus passes visual signals to one',13,C.ink,'start')+TF(32,324,'area of cortex, point for point. It carries the',13,C.ink,'start')+TF(32,342,'message; modulators change how it is received.',13,C.ink,'start');
+  else out+=TBF(32,284,y.chip,14,y.col,'start')+TF(32,306,y.l1,13,C.ink,'start')+TF(32,324,y.l2,13,C.ink,'start')+TF(32,342,y.l3,13,C.ink,'start');
+  out+=TF(470,300,'Sources drawn larger than',13,C.muted)+TF(470,318,'life; positions and fibre',13,C.muted)+TF(470,336,'paths are schematic.',13,C.muted);
+  return {svg:out,phase:s.cmp?'Most long pathways are like this one: a defined source, a defined target, and a signal that says something specific. The four modulatory systems are the exception, and they were mapped only in the 1960s, when Swedish anatomists made their transmitters glow under the microscope.':
+   `${y.chip} comes from the ${y.from}. ${y.l2} ${y.l3} Such links are broad tendencies seen across many experiments; none of these chemicals has a single function.`};
+ }});
+
+// A rate model with the main inhibitory connections of the crab's pyloric circuit. It is a sketch of the idea,
+// not a fit to the animal's neurons. PD stands for the pacemaker group; LP and PY follow.
+const B2_PYL_BASE={dPD:.62,self:.6,gPD:1.3,taPD:500,tPD:15,wLPPD:.15,dLP:1,wPDLP:1.5,wPYLP:.9,gLP:1.2,taLP:160,tLP:25,dPY:.85,wPDPY:1.5,wLPPY:.9,gPY:.2,taPY:300,tPY:60};
+const B2_PYL_CACHE={};
+function B2_pyl(mod,amt){
+ const key=mod+':'+amt;if(B2_PYL_CACHE[key])return B2_PYL_CACHE[key];
+ const m=mod==='none'?0:amt/100,o={...B2_PYL_BASE};
+ if(mod==='a'){o.dPD=.62-.1*m;o.taPD=500*(1-.5*m)}
+ if(mod==='b'){o.dLP=1+.25*m;o.gLP=1.2*(1-.6*m)}
+ if(mod==='c'){o.dPY=.85+.3*m;o.wLPPY=.9*(1-.5*m)}
+ const S=u=>1/(1+Math.exp(-(u-.5)/.08)),x=[.1,0,0],a=[0,0,0],rec=[],tau=[o.tPD,o.tLP,o.tPY],ta=[o.taPD,o.taLP,o.taPY];
+ for(let t=0;t<9000;t++){
+  const inp=[o.dPD+o.self*x[0]-o.gPD*a[0]-o.wLPPD*x[1],o.dLP-o.wPDLP*x[0]-o.wPYLP*x[2]-o.gLP*a[1],o.dPY-o.wPDPY*x[0]-o.wLPPY*x[1]-o.gPY*a[2]];
+  for(let i=0;i<3;i++){x[i]+=(-x[i]+S(inp[i]))/tau[i];a[i]+=(x[i]-a[i])/ta[i]}
+  if(t>=3000)rec.push([x[0]>.5,x[1]>.5,x[2]>.5]);
+ }
+ // bursts (ms from the first pacemaker onset in the record)
+ let t0=1;while(t0<rec.length&&!(rec[t0][0]&&!rec[t0-1][0]))t0++;
+ const bursts=[[],[],[]];for(let i=0;i<3;i++){let on=false,st=0;for(let t=t0;t<rec.length;t++){const v=rec[t][i];if(v&&!on){on=true;st=t}else if(!v&&on){on=false;bursts[i].push([st-t0,t-t0])}}}
+ const pd=bursts[0],period=pd.length>2?pd[2][0]-pd[1][0]:0;
+ return B2_PYL_CACHE[key]={bursts,period,active:bursts.map(b=>b.length>1)};
+}
+const B2_PYL_MOD={none:['No modulator',null],a:['On the pacemaker',0],b:['On LP',1],c:['On PY',2]};
+SCENE({id:'neuromodulation-marder',name:'One circuit, many rhythms',tag:'Eve Marder and the crab’s stomach',
+ definition:'In crabs and lobsters a ganglion of about 30 neurons drives the rhythmic movements of the stomach. Its wiring was mapped cell by cell in the 1970s. Eve Marder and others then found that the same wiring gives different rhythms depending on which modulators bathe it: faster, slower, with a neuron firing longer or dropping out. A wiring diagram says what a circuit could do; modulators choose among the possibilities.',
+ example:'In this model the pacemaker (PD) fires, then LP, then PY, about twice a second. A modulator acting on the pacemaker speeds the whole rhythm up. One acting on LP lengthens its bursts until PY falls silent, and slows the cycle. No connection has been added or removed.',
+ desc:'Burst patterns of three neurons, PD, LP and PY, over three seconds, with a diagram of their inhibitory connections and tiles for the cycle period and the firing order. A modulator can be applied to one of the three cells in adjustable amount.',
+ research:['Hooper & Marder (1987). Modulation of the lobster pyloric rhythm by the peptide proctolin. Journal of Neuroscience 7, 2097–2112.','Harris-Warrick & Marder (1991). Modulation of neural networks for behavior. Annual Review of Neuroscience 14, 39–57.','Marder & Bucher (2007). Understanding circuit dynamics using the stomatogastric nervous system of lobsters and crabs. Annual Review of Physiology 69, 291–316.','Marder (2012). Neuromodulation of neuronal circuits: back to the future. Neuron 76, 1–11.'],
+ dur:14,hint:'Apply a modulator to one cell and raise the amount. Watch the period, the length of each burst and whether all three cells still take part. The sound button plays three seconds of the rhythm as soft notes.',
+ init:()=>({mod:'none',amt:100}),
+ watch(p){const k=Math.min(3,Math.floor(p*4)),u=p*4-k;return {mod:['none','a','b','c'][k],amt:k?Math.round(clamp(u*1.5,0,1)*4)*25:100}},
+ ui:[{choose:Object.keys(B2_PYL_MOD).map(k=>[k,B2_PYL_MOD[k][0]]),label:'Modulator',get:s=>s.mod,act:'mod'},{range:'amt',label:'Amount',min:0,max:100,step:25,get:s=>s.amt,act:'amt',show:v=>v+'%'},{b:'Hear the rhythm ▶',act:'hear'}],
+ on:{mod(s,v){s.mod=B2_PYL_MOD[v]?v:'none'},amt(s,v){s.amt=clamp(Math.round(+v/25)*25,0,100)},
+  hear(s){const r=B2_pyl(s.mod,s.amt);[330,440,554].forEach((hz,i)=>{for(const b of r.bursts[i])if(b[0]<3000)AUDIO.tone(hz,{dur:Math.min(.25,(b[1]-b[0])/1000),gain:.07,at:b[0]/1000,attack:.01,release:.05})});return 'keep'}},
+ draw(s){
+  const r=B2_pyl(s.mod,s.amt),names=['PD','LP','PY'],cols=[C.blue,C.green,C.purple],tg=B2_PYL_MOD[s.mod][1],eff=s.mod!=='none'&&s.amt>0;
+  const order=names.filter((n,i)=>r.active[i]).join(' → '),silent=names.filter((n,i)=>!r.active[i]);
+  let out=heading(`${eff?B2_PYL_MOD[s.mod][0]+' modulator, '+s.amt+'%':'No modulator'} · one cycle every ${Math.round(r.period)} ms`);
+  const x0=96,w=484,TX=t=>x0+t/3000*w;out+=R(x0,48,w,174,'#fff',C.grid,6);
+  names.forEach((n,i)=>{const yb=96+i*56;out+=TBF(24,yb-8,n,15,cols[i],'start')+TF(24,yb+8,i?'follower':'pacemaker',13,C.muted,'start')+L(x0,yb,x0+w,yb,C.grid,1.2);
+   if(eff&&tg===i)out+=Ci(72,yb-12,6,C.amber,'#fff');
+   for(const b of r.bursts[i]){if(b[0]>=3000)break;const e=Math.min(b[1],3000);out+=R(TX(b[0]),yb-30,TX(e)-TX(b[0]),30,tint(cols[i],.8),'none',2);for(let t=b[0]+8;t<e;t+=22)out+=L(TX(t),yb-28,TX(t),yb-2,cols[i],1.6)}});
+  for(const v of [0,1,2,3])out+=TF(TX(v*1000),238,v+(v===3?' s':''),13,C.muted);
+  // circuit
+  const N={PD:[70,286],LP:[190,286],PY:[130,346]},inh=(a,b,bend)=>{const A=N[a],B=N[b],dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d,ox=-uy*bend,oy=ux*bend;const x1=A[0]+ux*18+ox,y1=A[1]+uy*18+oy,x2=B[0]-ux*21+ox,y2=B[1]-uy*21+oy;return L(x1,y1,x2,y2,C.muted,2)+Ci(x2,y2,4,C.muted)};
+  out+=inh('PD','LP',-5)+inh('LP','PD',-5)+inh('PD','PY',0)+inh('LP','PY',-5)+inh('PY','LP',-5);
+  names.forEach((n,i)=>{const q=N[n];out+=Ci(q[0],q[1],16,r.active[i]?tint(cols[i],.8):'#fff',eff&&tg===i?C.amber:cols[i])+TBF(q[0],q[1]+5,n,13,cols[i])});
+  out+=TF(20,262,'● ends: inhibition',13,C.muted,'start');
+  out+=B2_tile(262,252,150,'Cycle period',Math.round(r.period)+' ms')+B2_tile(424,252,156,'Cycles a second',r.period?fmt(B2_r1(1000/r.period)):'none')+B2_tile(262,304,318,'Firing order',order+(silent.length?` · ${silent.join(', ')} silent`:''),silent.length?C.coral:C.ink);
+  out+=B2_note('A simple rate model with this circuit’s main connections; not the crab’s own equations.',370);
+  return {svg:out,phase:!eff?'With no modulator the three cells fire in a fixed order, PD then LP then PY, because each silences the others in turn and then tires. This three-phase pattern is the pyloric rhythm.':
+   s.mod==='a'?`The modulator acts only on the pacemaker, which now recovers sooner between bursts, so the whole cycle shortens to ${Math.round(r.period)} ms and the followers keep step.`:
+   s.mod==='b'?`The modulator makes LP more excitable and slower to tire. Its bursts lengthen${silent.includes('PY')?', PY never gets its turn,':''} and, because LP inhibits the pacemaker, the cycle stretches to ${Math.round(r.period)} ms. Same wiring, a different rhythm.`:
+   `The modulator excites PY and weakens the hold LP has on it. PY starts earlier each cycle${silent.includes('LP')?' and LP drops out altogether':''}. Marder’s group found that each of the many modulators reaching this ganglion acts on its own subset of cells, giving many versions of the rhythm.`};
+ }});
+
+// A neuron with a slow potassium current that builds up with each spike (spike-frequency adaptation).
+// Leaky integrate-and-fire in millivolts above rest: threshold 20, reset 10, membrane time constant 20 ms.
+const B2_ADAPT_CACHE={};
+function B2_adapt(I,na){
+ const key=I+':'+na;if(B2_ADAPT_CACHE[key])return B2_ADAPT_CACHE[key];
+ const b=na?.12:1.2,tw=1200,dt=.1,spikes=[],vs=[],ws=[];let v=0,w=0;
+ for(let i=0;i<8000;i++){const t=i*dt,drive=t>=100&&t<700?I:0;v+=dt*(-v+drive-w)/20;w+=dt*(-w)/tw;if(v>=20){v=10;w+=b;spikes.push(t)}if(i%10===0){vs.push(v);ws.push(w)}}
+ return B2_ADAPT_CACHE[key]={spikes,vs,ws};
+}
+SCENE({id:'neuromodulation-gain',name:'Turning up a neuron’s response',tag:'Noradrenaline removes a brake',
+ definition:'A modulator often acts through a slow, G-protein-coupled receptor that changes one of the neuron’s own ion channels. Many cortical neurons have a potassium current that builds up with each spike and soon quietens them. Noradrenaline, and acetylcholine too, switch much of that current off. The cell is not excited directly; it now answers the same input with many more spikes.',
+ example:'Madison and Nicoll (1982) passed a steady current into pyramidal cells in slices of rat hippocampus. Alone, the cell fired a few spikes and stopped. With noradrenaline in the bath, the same current made it fire throughout.',
+ desc:'A neuron’s membrane potential during a steady current step, with spikes marked, and beneath it the slow potassium current that builds up. With noradrenaline the build-up is much smaller and the cell keeps firing.',
+ research:['Madison & Nicoll (1982). Noradrenaline blocks accommodation of pyramidal cell discharge in the hippocampus. Nature 299, 636–638.','Madison & Nicoll (1984). Control of the repetitive discharge of rat CA1 pyramidal neurones in vitro. Journal of Physiology 354, 319–331.','Marder (2012). Neuromodulation of neuronal circuits: back to the future. Neuron 76, 1–11.'],
+ dur:10,hint:'Pass the same current with and without noradrenaline and count the spikes. Then change the current. The sound button plays the spikes as clicks at half speed.',
+ init:()=>({I:23,na:0}),
+ watch(p){return {I:23,na:p<.5?0:1}},
+ ui:[{choose:[[0,'No modulator'],[1,'Noradrenaline']],label:'In the bath',get:s=>s.na,act:'na'},{range:'I',label:'Current passed in',min:16,max:28,get:s=>s.I,act:'I',show:v=>v+' (relative)'},{b:'Hear the spikes ▶',act:'hear'}],
+ on:{na(s,v){s.na=+v?1:0},I(s,v){s.I=clamp(Math.round(+v),16,28)},hear(s){B2_click(B2_adapt(s.I,s.na).spikes.map(t=>(t-100)/500),.12);return 'keep'}},
+ draw(s,f,X){
+  const r=B2_adapt(s.I,s.na),o=B2_adapt(s.I,s.na?0:1),n=r.spikes.length,show=X&&!X.try?clamp((X.p%.5)/.4,0,1)*800:800;
+  let out=heading(`${s.na?'With noradrenaline':'No modulator'}: ${n} spike${n===1?'':'s'} from the same current`);
+  const pl=B2_plot(70,56,500,150,[0,800],[-6,48],{yt:[[0,'rest'],[20,'threshold']],yl:'membrane potential'});out+=pl.svg;
+  out+=L(pl.X(0),pl.Y(20),pl.X(800),pl.Y(20),C.coral,1.2,'stroke-dasharray="5 4"');
+  const pts=[];r.vs.forEach((v,i)=>{if(i<=show)pts.push([pl.X(i),pl.Y(v)])});out+=B2_poly(pts,C.blue,1.8);
+  for(const t of r.spikes)if(t<=show)out+=L(pl.X(t),pl.Y(20),pl.X(t),pl.Y(44),C.blue,1.8);
+  out+=R(pl.X(100),212,pl.X(700)-pl.X(100),8,C.amber,'none',3)+TF(pl.X(400),236,'steady current on for 600 ms',13,C.amber);
+  const p2=B2_plot(70,262,500,60,[0,800],[0,8],{xt:[[0,'0'],[200,'200'],[400,'400'],[600,'600'],[800,'800 ms']],yl:'slow potassium current (the brake)'});out+=p2.svg;
+  const q=[];r.ws.forEach((w,i)=>{if(i<=show)q.push([p2.X(i),p2.Y(Math.min(8,w))])});out+=B2_poly(q,s.na?C.purple:C.coral,2.4);
+  out+=TBF(562,74,`${n} spikes`,14,C.blue,'end')+TF(562,92,`${s.na?'without':'with'} noradrenaline: ${o.spikes.length}`,13,C.muted,'end');
+  out+=B2_note('A simple model neuron (leaky integrate-and-fire with a spike-triggered slow current).',364);
+  return {svg:out,phase:s.na?`Each spike now adds only a tenth as much of the slow potassium current, so the brake never builds up and the cell fires ${n} times instead of ${o.spikes.length}. Noradrenaline reached this through a G-protein-coupled receptor and a chemical messenger inside the cell. The input was unchanged; the neuron’s responsiveness was turned up.`:
+   `The cell fires quickly at first, then each spike adds to a slow potassium current that holds the membrane away from threshold. After the first few spikes it fires rarely or not at all: ${n} spikes in 600 ms. This fading response is called adaptation, or accommodation.`};
+ }});
+
