@@ -174,7 +174,7 @@ function K7_armPts(rel){let a=0,x=K7_ARM.bx,y=K7_ARM.by;const pts=[[x,y]];for(le
 const K7_food=t=>{const a=K7_rad(K7_ARM.targets[t]),d=K7_ARM.n*K7_ARM.len;return [K7_ARM.bx+d*Math.cos(a),K7_ARM.by+d*Math.sin(a)]};
 // The arm’s own program at step j: joints nearer the base than the travelling bend are already straight.
 const K7_localRel=(j,t)=>j===0?K7_curled(K7_ARM.rest):[K7_ARM.targets[t]].concat(range(K7_ARM.n-1).map(i=>i+1<j?0:K7_ARM.curl));
-SCENE({id:'octopus-minds-arms',name:'An arm that does part of the work',tag:'You steer: two commands or seventeen',
+SCENE({id:'octopus-minds-arms',name:'An arm that does part of the work',tag:'You steer: two commands, or every joint',
  definition:'An octopus has about 500 million neurons, and roughly two-thirds of them lie in the nerve cords of its eight arms, not in its head. A reach is made by a bend that travels from the base of the arm to the tip. The pattern is produced by circuits in the arm itself: the brain starts the reach and sets its direction.',
  example:'Sumbre and colleagues (2001) cut the nerve link between an arm and the brain and stimulated the arm’s own nerve cord. The arm still produced a normal-looking reach. Later work showed the brain can also guide a single arm by sight through a maze (Gutnick et al. 2011), so control is shared, not handed over.',
  desc:'A toy octopus arm of eight segments reaching for one of three pieces of food, either by a bend that travels along the arm after two commands, or joint by joint as the learner taps; counters show commands sent by the brain and joints placed by the arm.',

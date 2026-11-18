@@ -50,9 +50,9 @@ function K3_cards(cfg){
    const it=cfg.items[s.i],a=s.ans[s.i],done=Object.keys(s.ans).length,right=cfg.items.filter((q,j)=>s.ans[j]===q.a).length;
    let out=heading(cfg.title);
    for(let j=0;j<n;j++){const x=300+(j-(n-1)/2)*26,aj=s.ans[j];out+=Ci(x,50,7,aj===undefined?'#fff':aj===cfg.items[j].a?C.green:C.amber,j===s.i?C.ink:C.line)}
-   out+=R(40,66,520,92,'#fff',C.grid,10)+K3_lines(300,94,it.t,50,15,C.ink,23);
+   out+=R(40,64,520,108,'#fff',C.grid,10)+K3_lines(300,90,it.t,50,15,C.ink,23);
    cfg.cats.forEach((c,j)=>{const x=40+j*180,isA=a!==undefined&&c[0]===it.a,picked=a===c[0];
-    out+=hit(X,'ans',c[0],'Sort as: '+c[1],R(x,172,160,40,isA?c[3]:'#fff',picked&&!isA?C.coral:isA?c[2]:C.line,10)+TB(x+80,198,c[1],14,isA?c[2]:C.ink))});
+    out+=hit(X,'ans',c[0],'Sort as: '+c[1],R(x,180,160,36,isA?c[3]:'#fff',picked&&!isA?C.coral:isA?c[2]:C.line,10)+TB(x+80,204,c[1],14,isA?c[2]:C.ink))});
    if(a!==undefined){
     out+=TB(300,242,(s.sim?'Simulated learner: ':a===it.a?'You agree: ':'You chose '+name(a).toLowerCase()+'. Usual answer: ')+name(it.a).toLowerCase(),14,a===it.a?C.green:C.amber);
     out+=K3_lines(300,266,it.why,56,14,C.ink,21);
@@ -209,7 +209,7 @@ SCENE({id:'contrastive-method-report',name:'The report confound',tag:'Seeing it,
 
 // A simulated eye trace: six 2-second windows; in each the slow drift follows the grating that is seen.
 function K3_okn(seed){const r=rng(seed),d=[];for(let k=0;k<6;k++)d.push(r()<.5?1:-1);if(Math.abs(sum(d))===6){d[1]*=-1;d[4]*=-1}
- const pts=[];for(let j=0;j<=240;j++){const t=j*.05,w=Math.min(5,Math.floor(t/2)),ph=(t%.5)/.5;pts.push([t,d[w]*(ph-.5)+(K3_h(j,seed)-.5)*.16])}return {d,pts}}
+ const pts=[];for(let j=0;j<=240;j++){const t=j*.05,w=Math.min(5,Math.floor(t/2)),ph=((t+1e-6)%1);pts.push([t,d[w]*(ph-.5)*.9+(K3_h(j,seed)-.5)*.08])}return {d,pts}}
 SCENE({id:'contrastive-method-noreport',name:'Reading the percept from the eyes',tag:'You take part: decode without a report',
  definition:'In binocular rivalry each eye is shown a different image and the one that is seen alternates. If the two images are gratings drifting in opposite directions, the eyes follow the one being seen with a slow reflex drift, reset by quick jumps. Stefan Frässle and colleagues used this reflex, and the pupil, to read the percept without asking. With no report, most of the frontal activity that had accompanied the switches was no longer found.',
  example:'The slow drift of the eyes runs rightwards for about two seconds, then leftwards. A decoder that reads only the direction of drift says “right, then left”, which is what the participant would have reported by button.',
@@ -248,7 +248,7 @@ let K3_IGNC=null;
 function K3_ignCurve(){if(!K3_IGNC){const pts=[];for(let k=0;k<=50;k++){const r=K3_ign(k/50);pts.push([k/50,r.early,r.late])}let lo=0,hi=1;for(let k=0;k<30;k++){const m=(lo+hi)/2;if(K3_ign(m).late>.5)hi=m;else lo=m}K3_IGNC={pts,th:hi}}return K3_IGNC}
 SCENE({id:'ignition',name:'Ignition',tag:'A toy model with a threshold',
  definition:'Stanislas Dehaene and colleagues propose that a stimulus becomes conscious when its activity crosses a threshold and ignites: a late, sudden, self-sustaining and widespread response, strongest across parietal and prefrontal cortex. The early sensory response grows smoothly with stimulus strength; the late response is predicted to be nearly all-or-none. In masking experiments by Antoine Del Cul and colleagues, late activity after about 270 ms followed that step-like pattern and tracked what people reported seeing.',
- example:'In the toy model, a stimulus of strength 0.50 gives an early response of 0.36 and almost no late response. At 0.60 the early response is only a little larger, 0.43, but the late unit ignites to 0.93.',
+ example:'In the toy model, a stimulus of strength 0.50 gives an early response of 0.36 and a late response of only 0.16. At 0.60 the early response is only a little larger, 0.43, but the late unit ignites to 0.93.',
  desc:'Left, the time course of a toy sensory unit and a toy self-exciting unit after a brief stimulus. Right, the peak of each unit against stimulus strength: a straight line for the early response and a step for the late one.',
  research:['Dehaene, S. & Naccache, L. (2001). Towards a cognitive neuroscience of consciousness: basic evidence and a workspace framework. Cognition 79, 1–37.','Sergent, C., Baillet, S. & Dehaene, S. (2005). Timing of the brain events underlying access to consciousness during the attentional blink. Nature Neuroscience 8, 1391–1400.','Del Cul, A., Baillet, S. & Dehaene, S. (2007). Brain dynamics underlying the nonlinear threshold for access to consciousness. PLoS Biology 5, e260.','The model here is a two-unit toy, not the authors’ simulation. Status: late nonlinear activity with report is well replicated; whether it marks experience or its report is contested (see The P3b).'],
  dur:12,hint:'Raise the stimulus strength slowly and find the point where the late response appears.',
@@ -277,7 +277,7 @@ function K3_igTrials(I,seed){const r=rng(seed),out=[];for(let k=0;k<40;k++){let 
 const K3_IGW=[.35,.5,.57,.65,.8];
 SCENE({id:'ignition-allornone',name:'All or none?',tag:'Run trials on the toy model',
  definition:'If conscious access is an ignition, then near threshold identical stimuli should give two kinds of trial, ignited and not, with little in between. Claire Sergent and Stanislas Dehaene found two-peaked visibility ratings of this kind in the attentional blink. Morten Overgaard and colleagues, using a four-step awareness scale, found graded reports instead. Whether experience comes in degrees is not settled.',
- example:'In the toy, the threshold is near 0.57 and each trial’s strength varies with a spread of 0.10. At a strength of 0.57 about half of 40 trials ignite; at 0.65 about four in five do. Hardly any trial ends half-ignited.',
+ example:'In the toy, the threshold is near 0.57 and each trial’s strength varies with a spread of 0.10. At a strength of 0.57 about half of 40 trials ignite; at 0.65 about four in five do. Most trials end either near zero or near the top.',
  desc:'Left, a histogram of the late response over 40 noisy trials of the toy model at the chosen strength. Right, the share of trials that ignited at each strength tried, against the curve the toy predicts.',
  research:['Sergent, C. & Dehaene, S. (2004). Is consciousness a gradual phenomenon? Evidence for an all-or-none bifurcation during the attentional blink. Psychological Science 15, 720–728.','Del Cul, A., Baillet, S. & Dehaene, S. (2007), as above: a sigmoid relation between masking delay and reported visibility.','Overgaard, M., Rote, J., Mouridsen, K. & Ramsøy, T. Z. (2006). Is conscious perception gradual or dichotomous? Consciousness and Cognition 15, 700–708. Status: contested; results depend on the task and the scale.'],
  dur:12,hint:'Set a strength and press Run 40 trials. Try several strengths around 0.57 and watch the points follow the curve.',
@@ -300,7 +300,7 @@ SCENE({id:'ignition-allornone',name:'All or none?',tag:'Run trials on the toy mo
   out+=TB(170,300,s.amps?`${ign} of 40 ignited (${Math.round(ign/40*100)}%)`:'Press Run 40 trials',15,s.amps?C.coral:C.muted);
   out+=TF(300,346,`Strength ${s.I.toFixed(2)}; each trial varies with a spread of ${K3_NS.toFixed(2)}; threshold near ${th.toFixed(2)}.`,13,C.muted);
   out+=TF(300,368,'Real visibility reports are two-peaked in some tasks and graded in others.',13,C.muted);
-  return {svg:out,phase:s.amps?`At strength ${s.I.toFixed(2)}, ${ign} of 40 trials ignited; the toy predicts about ${Math.round(K3_phi((s.I-th)/K3_NS)*100)}%. The histogram has two heaps and an empty middle, which is what an all-or-none threshold predicts. What counts against reading experience this way: with a graded awareness scale, people often report “a brief glimpse” or “an almost clear experience”, not just seen or unseen.`:'Each trial adds a little random variation to the stimulus strength, standing in for moment-to-moment changes in the brain. Near the threshold that variation decides whether the late response ignites.'};
+  return {svg:out,phase:s.amps?`At strength ${s.I.toFixed(2)}, ${ign} of 40 trials ignited; the toy predicts about ${Math.round(K3_phi((s.I-th)/K3_NS)*100)}%. The histogram has two heaps with little in between, which is what an all-or-none threshold predicts. What counts against reading experience this way: with a graded awareness scale, people often report “a brief glimpse” or “an almost clear experience”, not just seen or unseen.`:'Each trial adds a little random variation to the stimulus strength, standing in for moment-to-moment changes in the brain. Near the threshold that variation decides whether the late response ignites.'};
  }});
 
 const K3_ERP=(t,c)=>2*K3_gauss(t,100,22)-2.5*K3_gauss(t,170,25)+(c!=='un'?-1.8*K3_gauss(t,230,35):0)+(c==='rep'?6:c==='nor'?.4:0)*K3_gauss(t,450,90);
@@ -360,7 +360,7 @@ SCENE({id:'recurrent-processing',name:'Sweep and feedback',tag:'Two phases of vi
   const t=s.t,Pj=project([-1,5.4,0,3,0,4.2]);let faces=[];
   K3_AREAS.forEach(([nm,what,ff,fb],i)=>{faces=faces.concat(prism(0,0,i*1.2,4,3,.3,t>=ff?(fb!==null&&t>=fb?'#b79adf':C.blue):'#b9c8d2'))});
   let out=paintFaces(faces,Pj);
-  K3_AREAS.forEach(([nm,what,ff,fb],i)=>{const q=Pj([4.7,1.5,i*1.2+.15]);out+=label3(q[0],q[1]+5,nm,16,C.ink,'font-weight="650"');
+  K3_AREAS.forEach(([nm,what,ff,fb],i)=>{const q=Pj([5.3,1.5,i*1.2+.15]);out+=label3(q[0],q[1]+5,nm,16,C.ink,'font-weight="650"');
    if(i<3){out+=arrow3([-.5,0,i*1.2+.3],[-.5,0,(i+1)*1.2],Pj,t>=K3_AREAS[i+1][2]?C.blue:C.grid,3)+arrow3([-.5,3,(i+1)*1.2],[-.5,3,i*1.2+.3],Pj,t>=fb?C.coral:C.grid,3)}});
   return {svg:out,title:'The visual areas as a stack',caption:`At ${t} ms: ${K3_rpStage(t).toLowerCase()}. Blue arrows carry the sweep upwards; coral arrows carry feedback down. Layers turn purple once feedback has reached them.`};
  }});
@@ -378,11 +378,11 @@ SCENE({id:'recurrent-processing-cut',name:'Cutting the feedback',tag:'What the t
  on:{t(s,v){s.t=Number(v);return 'keep'}},
  draw(s){
   const t=s.t,z=K3_cutZone(t),X=v=>60+v/250*480;let out=heading('Disrupt V1 at a chosen moment');
-  out+=R(X(40),70,X(80)-X(40),26,C.pale,C.blue,6)+TF((X(40)+X(80))/2,60,'sweep passes V1',13,C.blue)+R(X(80)+3,70,X(140)-X(80)-3,26,C.coralp,C.coral,6)+TF((X(80)+X(140))/2+8,60,'feedback returns',13,C.coral);
+  out+=R(X(40),70,X(80)-X(40),26,C.pale,C.blue,6)+TF(X(78),60,'sweep passes V1',13,C.blue,'end')+R(X(80)+3,70,X(140)-X(80)-3,26,C.coralp,C.coral,6)+TF(X(84),60,'feedback returns',13,C.coral,'start');
   out+=L(60,104,540,104,C.line,2);[0,50,100,150,200,250].forEach(v=>out+=L(X(v),104,X(v),109,C.line,1.5)+TF(X(v),124,v+(v===250?' ms':''),13,C.muted));
-  out+=P(`M${fmt(X(t)+4)} 40L${fmt(X(t)-5)} 60L${fmt(X(t)+1)} 60L${fmt(X(t)-4)} 80`,C.amber,3.5)+L(X(t),82,X(t),104,C.amber,2,'stroke-dasharray="3 3"');
+  out+=P(`M${fmt(X(t)+4)} 66L${fmt(X(t)-5)} 84L${fmt(X(t)+2)} 84L${fmt(X(t)-3)} 102`,C.amber,3.5)+TBF(X(t),142,'pulse',13,C.amber);
   const rows=[['Signal reaches higher visual areas',z!=='sweep'],['Guesses about it stay above chance',z!=='sweep'],['The stimulus is experienced',z==='early'||z==='late']];
-  rows.forEach(([lab,yes],i)=>{const y=150+i*42;out+=R(60,y,480,34,'#fff',C.grid,8)+T(76,y+22,lab,14,C.ink,'start')+K3_pill(456,y+5,yes)});
+  rows.forEach(([lab,yes],i)=>{const y=156+i*40;out+=R(60,y,480,34,'#fff',C.grid,8)+T(76,y+22,lab,14,C.ink,'start')+K3_pill(456,y+5,yes)});
   out+=TB(300,300,z==='early'?'Too early: V1 has recovered before the signal arrives':z==='sweep'?'The input itself is blocked':z==='feedback'?'The sweep got through; the feedback is cut':'Too late: the feedback has already happened',14,z==='feedback'?C.coral:C.ink);
   out+=TF(300,330,'Predictions of the recurrent view, in schematic form; not data',13,C.muted)+TF(300,352,'Measured: visibility is suppressed by pulses near 80–100 ms.',13,C.muted);
   return {svg:out,phase:z==='feedback'?`A pulse at ${t} ms comes after the sweep has left V1. The recurrent view predicts processing without experience: the stimulus can still influence guesses, but is not seen. The timing fits, but a pulse at this moment might also be disrupting late feedforward input, and timing alone cannot tell the two apart.`:z==='sweep'?`A pulse at ${t} ms hits V1 while the signal is passing through, so nothing gets further. That shows V1 is needed as an entrance; it says nothing about feedback.`:z==='early'?`A pulse at ${t} ms is over before the signal arrives. In this schematic nothing is lost.`:`By ${t} ms the recurrent exchange has taken place, and on this view the stimulus has been experienced. A later pulse does not undo it.`};
@@ -461,7 +461,7 @@ SCENE({id:'front-or-back',name:'Front or back?',tag:'Two maps of the correlate',
   const reg=`<ellipse cx="80" cy="98" rx="46" ry="64" fill="${v==='front'?C.amber:C.amberp}" opacity="${v==='front'?.75:.7}"/><ellipse cx="236" cy="100" rx="60" ry="76" fill="${v==='back'||v==='both'?C.purple:C.purplep}" opacity="${v==='back'?.7:v==='both'?.4:.8}"/>`;
   out+=K3_brain(150,40,1,'k3fb',reg);
   out+=TBF(226,136,'prefrontal',13,v==='front'?'#fff':C.amber)+TBF(386,128,'posterior',13,v==='front'?C.purple:'#fff')+TBF(386,146,'hot zone',13,v==='front'?C.purple:'#fff');
-  out+=TF(130,150,'front',13,C.muted,'end')+TF(470,150,'back',13,C.muted,'start')+TF(404,236,'cerebellum',13,C.muted,'start')+TF(318,248,'brainstem',13,C.muted,'end');
+  out+=TF(130,150,'front',13,C.muted,'end')+TF(470,150,'back',13,C.muted,'start')+TF(430,226,'cerebellum',13,C.muted,'start')+TF(318,248,'brainstem',13,C.muted,'end');
   out+=TB(300,286,d[0],15,v==='back'?C.purple:v==='front'?C.amber:C.ink)+T(300,312,d[1],14,C.ink)+T(300,338,d[2],14,C.ink);
   out+=TF(300,368,'Unresolved: each side has evidence the other must explain.',13,C.muted);
   return {svg:out,phase:d[3]};
@@ -523,12 +523,12 @@ SCENE({id:'front-or-back-stimulation',name:'Stimulating the cortex',tag:'What ch
 // patches over about 300 ms. Deep sleep: a stronger response that stays at the stimulated site and dies away.
 const K3_WSITES=[[3,3,0],[6,2,1],[9,4,2],[2,6,3],[7,6,4],[10,1,5],[4,1,6],[8,3,7]];
 function K3_sheetAt(st,t,c,r){
- if(st==='sleep')return 1.3*Math.exp(-((c-3)*(c-3)+(r-3)*(r-3))/6.48)*Math.exp(-t/1.3);
+ if(st==='sleep')return 1.3*Math.exp(-((c-3)*(c-3)+(r-3)*(r-3))/6.48)*Math.exp(-t/2.2);
  let a=0;for(const [cx,cy,t0] of K3_WSITES)a+=Math.exp(-((c-cx)*(c-cx)+(r-cy)*(r-cy))/2.42)*Math.exp(-(t-t0)*(t-t0)/1.2);return a}
 function K3_sheetStats(st,t){let now=0,ever=0,last=0;for(let r=0;r<8;r++)for(let c=0;c<12;c++){let e=false;for(let q=0;q<=t;q++)if(K3_sheetAt(st,q,c,r)>.3){e=true;if(q>last)last=q}if(e)ever++;if(K3_sheetAt(st,t,c,r)>.3)now++}return {now,ever,last}}
 SCENE({id:'perturbational-complexity',name:'Zap the cortex',tag:'How far does the echo travel?',
  definition:'Marcello Massimini and colleagues stimulated the cortex with a magnetic pulse (TMS) and recorded the brain’s electrical response with EEG. In wakefulness the response spread from the stimulated site to a changing series of distant areas over about 300 ms. In deep non-REM sleep the same pulse gave a stronger local response that stayed where it was and died out quickly. The method asks the cortex a direct question and needs no stimulus, task or report.',
- example:'In the schematic, the awake response is still moving through new patches 280 ms after the pulse and has passed through more than half the sheet. The sleeping response never leaves the neighbourhood of the coil and is over within about 120 ms.',
+ example:'In the schematic, the awake response is still moving through new patches 280 ms after the pulse and has passed through more than half the sheet. The sleeping response never leaves the neighbourhood of the coil and has died away by about 160 ms.',
  desc:'A schematic sheet of cortex, 12 by 8 patches, showing activity at successive moments after a magnetic pulse in an awake and a deep-sleep condition, with counts of patches active now and reached so far. The 3D view shows the activity as a surface.',
  research:['Massimini, M., Ferrarelli, F., Huber, R., Esser, S. K., Singh, H. & Tononi, G. (2005). Breakdown of cortical effective connectivity during sleep. Science 309, 2228–2232.','The sheet is a schematic of the reported pattern (a spreading, changing response when awake; a strong, local, short one in deep sleep), not their data. Status: replicated across sleep, anaesthesia and brain injury by the same and other groups.'],
  dur:12,hint:'Choose a state and press Zap, or step through time with the slider. If sound is on you hear the coil’s click.',
@@ -615,11 +615,11 @@ SCENE({id:'perturbational-complexity-pci',name:'The perturbational complexity in
   for(let t=0;t<16;t++)for(let i=0;i<12;i++){const sh=t<s.t;out+=R(x0+t*cw,y0+i*ch,cw-2,ch-2,sh&&M[t][i]?C.blue:sh?'#eef3f6':'#fff',sh?'none':C.grid,3)}
   out+=TF(x0-8,y0+11,'1',13,C.muted,'end')+TF(x0-8,y0+11*ch+11,'12',13,C.muted,'end')+TF(x0-30,y0+92,'area',13,C.muted,'end')+TF(x0+160,y0+12*ch+18,'time after the zap →',13,C.muted);
   out+=Ci(x0-22,y0+6,6,'none',C.amber)+R(400,36,96,22,C.amberp,C.amber,6)+TBF(448,52,'TOY MODEL',13,C.amber);
-  const kind=sc.areas<=3?'stays local':sc.c>=15?'widespread and varied':'widespread but regular';
+  const kind=sc.areas<6?'stays local':sc.c>=15?'widespread and varied':'widespread but regular';
   out+=counter(400,66,'Lempel–Ziv phrases',full?String(sc.c):'…',C.blue,180)+counter(400,120,'toy score',full?sc.norm.toFixed(2):'…',sc.c>=15?C.green:C.coral,180)+counter(400,174,'areas that responded',full?sc.areas+' of 12':'…',C.ink,180);
   out+=TB(490,246,full?kind:'unfolding…',14,sc.c>=15&&full?C.green:C.coral);
   out+=TF(300,296,'Toy score = phrases × log₂(192) ÷ 192. It is not PCI.',13,C.ink);
   out+=TF(300,320,'Published PCI (Casali et al. 2013): 0.44–0.67 in wakefulness;',13,C.muted)+TF(300,340,'0.12–0.31 in deep sleep and under three anaesthetics.',13,C.muted);
   out+=TF(300,366,'A measure, not a theory; not a certainty for any one person.',13,C.muted);
-  return {svg:out,phase:!full?'The response is unfolding one time step at a time.':s.sleep?`Sleep-like, coupling ${s.g.toFixed(1)}: each area’s output is cut short and it then falls silent, so the response ${sc.areas<=3?'never leaves its starting point':'spreads once and stops'}. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}.`:sc.areas<=3?`Coupling ${s.g.toFixed(1)}: too weak for the response to spread. Only ${sc.areas} of 12 areas respond, giving ${sc.c} phrases and a toy score of ${sc.norm.toFixed(2)}. Local responses compress well.`:sc.c>=15?`Coupling ${s.g.toFixed(1)}: the response reaches ${sc.areas} areas, and because the areas differ, each responds in its own way. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}. Widespread and varied is what the index rewards.`:`Coupling ${s.g.toFixed(1)}: the response reaches ${sc.areas} areas, but they fire in a regular pattern. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}. Widespread is not enough; a response that repeats itself compresses well.`};
+  return {svg:out,phase:!full?'The response is unfolding one time step at a time.':s.sleep?`Sleep-like, coupling ${s.g.toFixed(1)}: each area’s output is cut short and it then falls silent, so the response ${sc.areas<6?'stays close to its starting point':'spreads once and stops'}. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}.`:sc.areas<6?`Coupling ${s.g.toFixed(1)}: too weak for the response to spread. Only ${sc.areas} of 12 areas respond, giving ${sc.c} phrases and a toy score of ${sc.norm.toFixed(2)}. Local responses compress well.`:sc.c>=15?`Coupling ${s.g.toFixed(1)}: the response reaches ${sc.areas} areas, and because the areas differ, each responds in its own way. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}. Widespread and varied is what the index rewards.`:`Coupling ${s.g.toFixed(1)}: the response reaches ${sc.areas} areas, but they fire in a regular pattern. ${sc.c} phrases, toy score ${sc.norm.toFixed(2)}. Widespread is not enough; a response that repeats itself compresses well.`};
  }});
