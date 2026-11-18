@@ -285,7 +285,7 @@ SCENE({id:'critical-periods-amblyopia',name:'Reversing it, and amblyopia',tag:'W
   out+=TF(153,308,`First eye drives ${fmt(won)}% of cells`,13,C.coral);
   out+=R(304,46,284,270,'#fff',C.grid,8)+TBF(316,66,'Children: % whose vision improved',13,C.ink,'start');
   B5_PEDIG.forEach((g,i)=>{const y=86+i*62,BX=v=>316+v/60*200;out+=TF(316,y+4,g[0],13,C.ink,'start')+R(316,y+10,BX(g[1])-316,14,C.green,'none',3)+TBF(BX(g[1])+6,y+22,g[1]+'%',13,C.green,'start')+R(316,y+28,BX(g[2])-316,14,C.line,'none',3)+TF(BX(g[2])+6,y+40,g[2]+'%',13,C.muted,'start')});
-  out+=R(316,276,12,12,C.green,'none',2)+TF(334,287,'glasses and patching',13,C.ink,'start')+R(316,294,12,12,C.line,'none',2)+TF(334,305,'glasses alone',13,C.ink,'start');
+  out+=R(316,276,12,12,C.green,'none',2)+TF(334,287,'glasses and added treatment',13,C.ink,'start')+R(316,294,12,12,C.line,'none',2)+TF(334,305,'glasses alone',13,C.ink,'start');
   out+=TF(300,336,'Trial: PEDIG 2005. “Improved” means 10 or more letters on the chart.',13,C.muted);
   out+=B5_note('Kitten bars are illustrative. Not a vision test and not medical advice.',358);
   return {svg:out,phase:rec>.7?`Swapped at ${s.age} weeks, well inside the sensitive period, the first-closed eye recovers nearly all the cortex and the newly closed eye loses it. The circuit is still open to revision in either direction.`:
@@ -324,4 +324,323 @@ SCENE({id:'critical-periods-window',name:'What opens and closes the window',tag:
    sh>.9?`The four days fall inside the window (${B5_WIN[s.inh][2].toLowerCase()}), so cells shift to the open eye. ${s.inh==='late'?'This mouse is an adult. Its critical period had simply never been started.':s.inh==='early'?'The window opened about four days early, because inhibition was strengthened early.':'In normal mice this is roughly days 19 to 32.'}`:
    sh>0?'The closure overlaps the edge of the window, so the shift is partial. Slide it fully inside the green band.':
    `No shift: the eye was closed ${s.day+4<=w[0]?'before the window opened':'after it had closed'}. Once started, the window runs for about two weeks and then shuts, whatever the animal’s age when it began.`};
+ }});
+
+/* ===================== Lesson: hebb-ltp ===================== */
+// Field-response size as % of baseline. A weak train gives only a brief boost; a strong train adds a lasting step
+// that saturates at +80%. Illustrative model of the kind of record Bliss and Lømo published.
+function B5_ltpAt(ev,t){let lt=0,ptp=0;for(const e of ev){if(e.t>t)continue;const dt=t-e.t;if(e.k==='tet'){lt+=(80-lt)*.55;ptp+=60*Math.exp(-dt/2.5)}else ptp+=35*Math.exp(-dt/2)}return {lt,ptp}}
+const B5_ltpResp=(ev,t)=>{const q=B5_ltpAt(ev,t);return 100+q.lt+q.ptp+3*B5_gauss(B5_rng(t*13+7))};
+SCENE({id:'hebb-ltp',name:'A synapse that stays stronger',tag:'Hebb 1949; Bliss and Lømo 1973',
+ definition:'In 1949 Donald Hebb proposed how experience could be stored: when one cell repeatedly takes part in firing another, the connection between them grows more effective. For two decades nobody had seen a synapse do this. In Oslo in 1966 Terje Lømo noticed that after a rapid train of stimuli to a pathway into a rabbit’s hippocampus, single test stimuli gave larger responses for a long time. He and Tim Bliss published the full study in 1973. It is now called long-term potentiation (LTP).',
+ example:'They stimulated the perforant path of anaesthetised rabbits and recorded from the dentate gyrus. After trains such as 100 pulses a second for a few seconds, responses stayed enlarged for between 30 minutes and 10 hours, as long as they recorded. A companion paper in animals that were awake followed it for days. Mind In Motion introduces Hebb’s rule itself.',
+ desc:'A graph of the size of the response to a test pulse, once a minute, as a percentage of its starting size. Vertical marks show when a weak or a strong train of stimuli was given. A small inset compares the shape of the response before and now.',
+ research:['Hebb (1949). The Organization of Behavior. Wiley.','Bliss & Lømo (1973). Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit following stimulation of the perforant path. Journal of Physiology 232, 331–356.','Bliss & Gardner-Medwin (1973). Journal of Physiology 232, 357–374 (unanaesthetised rabbits). Lømo (2003). The discovery of long-term potentiation. Philosophical Transactions of the Royal Society B 358, 617–620.'],
+ dur:12,hint:'Record a baseline, then give a weak or a strong train and keep recording. Give more strong trains to find where the response stops growing.',
+ init:()=>({ev:[],T:10}),
+ watch(p){const T=Math.round(p*90),ev=[{t:15,k:'weak'},{t:35,k:'tet'},{t:60,k:'tet'}].filter(e=>e.t<=T);return {ev,T:Math.max(5,T)}},
+ ui:[{b:'Record 10 more minutes',act:'rec'},{b:'Weak train',act:'weak'},{b:'Strong train',act:'tet'}],
+ on:{rec(s){s.T=Math.min(180,s.T+10)},weak(s){if(s.T<=170){s.ev.push({t:s.T,k:'weak'});s.T+=10}},tet(s){if(s.T<=170){s.ev.push({t:s.T,k:'tet'});s.T+=10}}},
+ draw(s,f,X){
+  const xmax=Math.max(60,Math.ceil(s.T/30)*30),now=B5_ltpAt(s.ev,s.T),nt=s.ev.filter(e=>e.k==='tet').length,last=s.ev[s.ev.length-1],val=Math.round(100+now.lt+now.ptp);
+  let out=heading(!s.ev.length?'A steady baseline':now.lt>70?'Close to its ceiling: about 180%':now.lt>0?'The response stays enlarged':'A brief boost that fades');
+  const pl=B5_plot(60,62,370,190,[0,xmax],[60,260],{xt:range(xmax/30+1).map(i=>[i*30,String(i*30)]),yt:[[100,'100'],[150,'150'],[200,'200'],[250,'250']],xl:'time (minutes)'});
+  out+=pl.svg+TF(60,54,'size of the response (% of baseline)',13,C.muted,'start')+L(pl.X(0),pl.Y(100),pl.X(xmax),pl.Y(100),C.line,1.2,'stroke-dasharray="4 4"');
+  for(const e of s.ev)out+=L(pl.X(e.t)-1,62,pl.X(e.t)-1,252,e.k==='tet'?C.coral:C.amber,1.6)+TF(pl.X(e.t)+3,76,e.k==='tet'?'strong':'weak',13,e.k==='tet'?C.coral:C.amber,'start');
+  for(let t=0;t<=s.T;t++)out+=Ci(pl.X(t),pl.Y(clamp(B5_ltpResp(s.ev,t),62,258)),xmax>90?1.8:2.4,C.blue);
+  // inset: shape of the response
+  out+=R(450,62,132,128,'#fff',C.grid,6)+TF(516,80,'one response',13,C.muted);
+  const shp=(a,col,w)=>{const pts=[];for(let i=0;i<=50;i++){const t=i/50*14,v=t<2?0:(Math.exp(-(t-2)/3.5)-Math.exp(-(t-2)/.8))/.6;pts.push([460+i*2.2,104+a*v*30])}return B5_poly(pts,col,w)};
+  out+=shp(1,C.muted,1.6)+shp(val/100,C.blue,2.4)+TF(516,182,'grey: before',13,C.muted);
+  out+=B5_tile(450,200,132,'Response now',val+'%',C.blue);
+  out+=B5_tile(60,300,170,'Strong trains given',String(nt),C.coral)+B5_tile(245,300,185,'Lasting part',now.lt>0?'+'+Math.round(now.lt)+'%':'none',C.green)+B5_tile(445,300,137,'Published',' 30 min to 10 h',C.ink);
+  out+=B5_note('Simulated record. Sizes are illustrative; the pattern is Bliss and Lømo’s.',364);
+  return {svg:out,phase:!s.ev.length?'Each dot is the response of many dentate cells to one test pulse on the perforant path. With a pulse a minute and nothing else, the size stays near 100%.':
+   last.k==='weak'&&now.lt===0?'A weak train gives a boost that is gone within minutes. This short-lived effect was already known. It is not what Lømo had noticed.':
+   now.lt>70?`After ${nt} strong trains the lasting part is +${Math.round(now.lt)}%. Each train adds less than the one before: the potentiation saturates, as Bliss and Lømo reported.`:
+   `After the strong train the response jumps, settles within a few minutes and then stays about ${Math.round(now.lt)}% above baseline. Nothing but the synapses’ own recent activity has changed. Keep recording to see that it holds.`};
+ }});
+
+// The NMDA receptor channel: fraction free of magnesium block (Jahr & Stevens 1990), with voltage in mV and Mg in mM.
+const B5_unblock=(v,mg)=>1/(1+mg/3.57*Math.exp(-.062*v));
+const B5_nmdaI=(v,mg,glu)=>glu?B5_unblock(v,mg)*v:0;     // relative current; reversal potential 0 mV
+const B5_pc=v=>Math.round(v*100);
+SCENE({id:'hebb-ltp-nmda',name:'A receptor that detects coincidence',tag:'The magnesium block, 1984',
+ definition:'Hebb’s rule needs a device that responds only when the sending cell and the receiving cell are active together. One kind of glutamate receptor does this. The NMDA receptor’s channel opens when glutamate binds, but at the resting potential a magnesium ion sits in its pore and blocks it. Only when the receiving cell is already depolarised is the magnesium driven out. Then the channel passes current, including calcium, which starts the strengthening of the synapse.',
+ example:`With 1 mM magnesium outside, about ${B5_pc(B5_unblock(-70,1))}% of open channels are unblocked at −70 mV, ${B5_pc(B5_unblock(-20,1))}% at −20 mV and ${B5_pc(B5_unblock(0,1))}% at 0 mV. In 1983 Graham Collingridge and colleagues showed that a drug blocking NMDA receptors stops LTP from being induced in hippocampal slices, while ordinary transmission carries on.`,
+ desc:'On the left, a channel in a membrane with glutamate above it and a magnesium ion that sits in the pore or is pushed out. On the right, a graph of the current through the channel against membrane voltage, with and without magnesium, and a marker at the chosen voltage.',
+ research:['Nowak, Bregestovski, Ascher, Herbet & Prochiantz (1984). Magnesium gates glutamate-activated channels in mouse central neurones. Nature 307, 462–465.','Mayer, Westbrook & Guthrie (1984). Voltage-dependent block by Mg²⁺ of NMDA responses in spinal cord neurones. Nature 309, 261–263.','Collingridge, Kehl & McLennan (1983). Journal of Physiology 334, 33–46. Block formula: Jahr & Stevens (1990). Journal of Neuroscience 10, 3178–3182.'],
+ dur:11,hint:'Try all four combinations: glutamate with the cell at rest, depolarisation without glutamate, both, and neither. Then remove the magnesium.',
+ init:()=>({v:-70,glu:1,mg:1}),
+ watch(p){const k=Math.min(3,Math.floor(p*4));return {v:[-70,-20,-20,-70][k],glu:[1,0,1,1][k],mg:k===3?0:1}},
+ ui:[{range:'v',label:'Voltage of the receiving cell (mV)',min:-90,max:40,step:5,get:s=>s.v,act:'v'},{choose:[['1','Glutamate bound'],['0','No glutamate']],label:'Sending cell',get:s=>String(s.glu),act:'glu'},{choose:[['1','Magnesium present'],['0','Magnesium removed']],label:'Magnesium',get:s=>String(s.mg),act:'mg'}],
+ on:{v(s,v){s.v=clamp(Math.round(+v/5)*5||0,-90,40)},glu(s,v){s.glu=v==='0'?0:1},mg(s,v){s.mg=v==='0'?0:1}},
+ draw(s,f,X){
+  const ub=B5_unblock(s.v,s.mg),I=B5_nmdaI(s.v,s.mg,s.glu),flow=s.glu&&ub>.3&&Math.abs(s.v)>2,dep=s.v>-45;
+  let out=heading(!s.glu?'No glutamate: the channel stays shut':s.mg&&ub<.2?'Glutamate alone: magnesium blocks the pore':flow?'Both together: current and calcium flow':'Open, with little current at this voltage');
+  out+=R(18,48,254,250,'#fff',C.grid,8)+TF(30,68,'outside the cell',13,C.muted,'start')+TF(30,286,'inside: '+(s.v<0?'−':s.v>0?'+':'')+Math.abs(s.v)+' mV',13,dep?C.coral:C.muted,'start');
+  out+=R(18,150,254,50,C.amberp,'none',0)+TF(232,180,'membrane',13,C.amber,'end');
+  const gap=s.glu?13:3;out+=R(145-gap-26,138,26,74,C.purple,'none',8)+R(145+gap,138,26,74,C.purple,'none',8)+TF(145,232,'NMDA receptor',13,C.purple);
+  if(s.glu)out+=Ci(106,128,7,C.green,'#fff')+Ci(184,128,7,C.green,'#fff')+TF(145,92,'glutamate',13,C.green);
+  if(s.mg){const blocked=ub<.5;out+=Ci(blocked&&s.glu?145:208,blocked&&s.glu?166:110,9,C.coral,'#fff')+TF(blocked&&s.glu?64:232,blocked&&s.glu?170:92,'Mg²⁺',13,C.coral)}
+  if(flow){out+=arrow(145,s.v<0?112:226,145,s.v<0?222:116,C.blue,3)+TF(145,s.v<0?250:108,s.v<0?'Na⁺ and Ca²⁺ in':'outward current',13,C.blue)}
+  const pl=B5_plot(318,62,254,190,[-90,40],[-45,45],{xt:[[-80,'−80'],[-40,'−40'],[0,'0'],[40,'+40']],xl:'voltage of the receiving cell (mV)'});
+  out+=pl.svg+TF(318,54,'current when glutamate is bound',13,C.muted,'start')+L(pl.X(-90),pl.Y(0),pl.X(40),pl.Y(0),C.line,1.2)+L(pl.X(0),62,pl.X(0),252,C.line,1.2);
+  const cur=mg=>{const pts=[];for(let v=-90;v<=40;v+=2)pts.push([pl.X(v),pl.Y(B5_unblock(v,mg)*v*.5)]);return pts};
+  out+=B5_poly(cur(0),C.muted,s.mg?1.6:2.8,s.mg?'stroke-dasharray="5 4"':'')+B5_poly(cur(1),C.coral,s.mg?2.8:1.6,s.mg?'':'stroke-dasharray="5 4"');
+  out+=TF(pl.X(-60),pl.Y(-34),'no Mg²⁺',13,C.muted)+TF(pl.X(-66),pl.Y(5),'with Mg²⁺',13,C.coral)+TF(pl.X(-86),pl.Y(-40),'inward',13,C.muted,'start');
+  out+=Ci(pl.X(s.v),pl.Y(I*.5),6,s.glu?C.blue:'#fff',C.blue);
+  out+=B5_tile(18,308,180,'Channels free of Mg²⁺',B5_pc(ub)+'%',C.coral)+B5_tile(208,308,180,'Inward current (relative)',I<0?fmt(B5_r1(-I)):'0',C.blue)+B5_tile(398,308,184,'Sender and receiver',s.glu&&dep?'active together':s.glu?'sender only':dep?'receiver only':'neither',s.glu&&dep?C.green:C.ink);
+  out+=B5_note('Block follows Jahr and Stevens’s formula with '+(s.mg?'1 mM':'no')+' magnesium. Current in relative units.',372);
+  return {svg:out,phase:!s.glu?'The sending cell is silent, so no glutamate is bound and the channel is closed, whatever the voltage. Depolarisation alone achieves nothing here.':
+   s.mg&&ub<.2?`Glutamate has opened the channel, but at ${s.v} mV the negative inside holds a magnesium ion in the pore. Only ${B5_pc(ub)}% of channels are clear, and the synapse’s ordinary AMPA receptors carry the signal.`:
+   !s.mg?'Without magnesium the current follows a straight line: the channel has lost its dependence on voltage. This is how Nowak and colleagues, and Mayer and colleagues, showed that magnesium is what makes it a coincidence detector.':
+   flow?`Glutamate is bound and the cell is depolarised to ${s.v} mV, which pushes the magnesium out of ${B5_pc(ub)}% of channels. Calcium enters, but only at synapses that were active while the cell was depolarised. That is Hebb’s condition, met by a single molecule.`:
+   'Near 0 mV the channel is clear, but there is almost no force driving ions through it, so the net current is small.'};
+ }});
+
+// Pairing. W1 and W2 are weak inputs, S is strong. Strengths are relative to baseline (1), rising by 0.5 per successful train to a ceiling of 2.
+const B5_PAIR_N={weak:'W1 alone',strong:'S alone',pair:'W1 with S',late:'W1, then S'};
+function B5_pairStep(s,act){
+ const w=s.w.slice(),seen={...s.seen};let res='none';
+ if(!s.apv){
+  if(act==='strong'||act==='pair'){w[2]=Math.min(2,w[2]+.5);res='s'}
+  if(act==='pair'){w[0]=Math.min(2,w[0]+.5);res='both';seen.assoc=1;seen.spec=1}
+  if(act==='strong'){seen.spec=seen.spec||0}
+  if(act==='weak')seen.coop=1;
+ }else res='apv';
+ const log=s.log.concat([act]);while(log.length>6)log.shift();
+ return {w,seen,log,last:act,res};
+}
+const B5_pairInit=()=>({w:[1,1,1],apv:0,seen:{},log:[],last:'',res:''});
+SCENE({id:'hebb-ltp-pairing',name:'Pairing a weak input with a strong one',tag:'Associative LTP, 1979–1986',
+ definition:'LTP has three properties that make it a candidate for learning. It is cooperative: a weak input, active alone, does not depolarise the cell enough to induce it. It is associative: the same weak input is strengthened if it is active at the moment a strong input depolarises the cell. And it is input-specific: other synapses on the same cell that were silent at that moment do not change.',
+ example:'William Levy and Oswald Steward found the associative effect in 1979 in rats, and Barrionuevo and Brown showed it in hippocampal slices in 1983. In 1986 Kelso, Ganong and Brown replaced the strong input with current injected into the receiving cell: weak input plus depolarisation was enough, and holding the cell negative prevented it. This fits the NMDA receptor exactly.',
+ desc:'A neuron with three inputs: W1, a weak input to be paired; W2, a weak input left alone as a control; and S, a strong input. Bars show the size of each input’s response as a percentage of baseline. A strip records the trains given, and three boxes tick off cooperativity, associativity and input specificity.',
+ research:['Levy & Steward (1979). Synapses as associative memory elements in the hippocampal formation. Brain Research 175, 233–245.','Barrionuevo & Brown (1983). Associative long-term potentiation in hippocampal slices. PNAS 80, 7347–7351.','Kelso, Ganong & Brown (1986). Hebbian synapses in hippocampus. PNAS 83, 5326–5330. Input specificity: Andersen, Sundberg, Sveen & Wigström (1977). Nature 266, 736–737.'],
+ dur:12,hint:'Give a train to W1 alone, then to W1 and S together, and watch which bars grow. W2 is never stimulated with a train. Try the pairing again with NMDA receptors blocked.',
+ init:B5_pairInit,
+ watch(p){let s=B5_pairInit();const seq=['weak','strong','pair','pair'],k=Math.min(seq.length,Math.floor(p*(seq.length+1)));for(let i=0;i<k;i++)s={...s,...B5_pairStep(s,seq[i])};return s},
+ ui:[{b:'Train W1 alone',act:'weak'},{b:'Train S alone',act:'strong'},{b:'Train W1 and S together',act:'pair'},{b:'W1 first, S a second later',act:'late'},{choose:[['0','Receptors working'],['1','NMDA receptors blocked']],label:'Drug',get:s=>String(s.apv),act:'apv'}],
+ on:{weak(s){Object.assign(s,B5_pairStep(s,'weak'))},strong(s){Object.assign(s,B5_pairStep(s,'strong'))},pair(s){Object.assign(s,B5_pairStep(s,'pair'))},late(s){Object.assign(s,B5_pairStep(s,'weak'),{last:'late'});s.log[s.log.length-1]='late';if(!s.apv){s.w[2]=Math.min(2,s.w[2]+.5);s.res='s'}},apv(s,v){s.apv=v==='1'?1:0;s.last='apv';s.res=''}},
+ draw(s,f,X){
+  const cols=[C.blue,C.muted,C.amber],names=['W1','W2','S'],ys=[92,162,232],on=[s.last==='weak'||s.last==='pair'||s.last==='late',false,s.last==='strong'||s.last==='pair'||s.last==='late'];
+  let out=heading(s.res==='both'?'Paired: the weak synapse grows':s.res==='apv'?'Receptors blocked: nothing changes':s.last==='weak'?'Alone, the weak input changes nothing':s.last==='late'?'A second apart is too late':s.res==='s'?'The strong input strengthens itself only':'Three inputs to one neuron');
+  out+=`<path d="M236 60L236 264" stroke="${C.ink}" stroke-width="7" stroke-linecap="round"/>`+Ci(262,162,26,C.pale,C.ink)+L(288,162,318,162,C.ink,4)+TF(262,208,'neuron',13,C.ink);
+  names.forEach((nm,i)=>{const y=ys[i];out+=L(40,y,222,y,cols[i],on[i]?4:2.4)+Ci(226,y,4+3.5*s.w[i],cols[i],'#fff')+TBF(40,y-10,nm,14,cols[i],'start')+TF(70,y-10,i===0?'weak, paired':i===1?'weak, control':'strong',13,C.muted,'start');if(on[i])out+=TF(150,y+18,'train of stimuli',13,cols[i])});
+  if(s.apv)out+=TBF(262,132,'blocked',13,C.coral);
+  // bars
+  const bx=350,BW=v=>v*96;out+=TF(bx,60,'response to one test pulse (% of baseline)',13,C.muted,'start');
+  names.forEach((nm,i)=>{const y=ys[i]-22;out+=TBF(bx,y+17,nm,14,cols[i],'start')+R(bx+34,y,BW(s.w[i]),24,cols[i],'none',4)+R(bx+34,y,BW(1),24,'none',C.ink,4,'stroke-dasharray="4 3" stroke-width="1.4"')+TBF(bx+40+BW(s.w[i]),y+17,Math.round(s.w[i]*100)+'%',13,s.w[i]>1?cols[i]:C.muted,'start')});
+  out+=TF(bx,ys[2]+22,'dashed: baseline (100%)',13,C.muted,'start');
+  // log
+  out+=TF(30,286,'Trains given:',13,C.muted,'start');s.log.forEach((a,i)=>{out+=R(118+i*78,271,74,22,a==='pair'?C.greenp:C.pale,'none',5)+TF(155+i*78,286,B5_PAIR_N[a],13,C.ink)});
+  const box3=(x,lab,done)=>R(x,304,180,40,done?C.greenp:'#fff',done?C.green:C.grid,8)+TF(x+90,329,(done?'✓ ':'')+lab,13,done?C.green:C.muted);
+  out+=box3(18,'Cooperativity',s.seen.coop)+box3(210,'Associativity',s.seen.assoc)+box3(402,'Input specificity',s.seen.spec);
+  out+=B5_note('Model of experiments in hippocampal slices. Sizes are illustrative.',366);
+  return {svg:out,phase:s.res==='apv'?'With NMDA receptors blocked, no train of any kind leaves a lasting change. Test pulses still give their usual responses, because ordinary transmission uses other glutamate receptors.':
+   s.res==='both'?`W1 was active while S held the cell depolarised, so W1’s synapse grew to ${Math.round(s.w[0]*100)}% of baseline. W2, on the same cell but silent during the pairing, is still at 100%. The cell has linked a weak input to a strong one.`:
+   s.last==='weak'?'W1 released glutamate, but on its own it barely moves the cell’s voltage, so magnesium stayed in the NMDA channels. One weak input cannot potentiate itself.':
+   s.last==='late'?'W1’s glutamate had gone by the time S depolarised the cell, so W1 is unchanged; S, strong enough on its own, still grew. The two must overlap within a fraction of a second.':
+   s.res==='s'?'S depolarises the cell enough to unblock its own NMDA channels, so S grows. W1 and W2 were silent and do not change: potentiation stays at the synapses that were active.':
+   s.last==='apv'?(s.apv?'A blocker of NMDA receptors is now in the bath. Repeat the pairing.':'The blocker has been washed out.'):'W1 and W2 are weak inputs: each gives a small response. S is strong. All three end on the same neuron. Choose which to stimulate with a train.'};
+ }});
+
+// Morris water maze, simulated. The rat's heading mixes a pull towards the platform (strength k, which grows with
+// training) with random turning. One step is one second; a trial ends at 120 s. All numbers are illustrative.
+const B5_POOL=[150,186,100],B5_PLAT=[190,148];
+const B5_mwmK=(drug,n)=>drug?.22*(1-Math.exp(-n/5)):1-Math.exp(-n/2.5);
+const B5_MWM_CACHE={};
+function B5_mwmPath(drug,trial,rat,probe){
+ const key=[drug,trial,rat,probe?1:0].join(':');if(B5_MWM_CACHE[key])return B5_MWM_CACHE[key];
+ const [cx,cy,rad]=B5_POOL,r=B5_rng(trial*31+rat*977+(drug?5003:0)+(probe?99:0)),k=B5_mwmK(drug,trial),a0=((trial+rat)%4)*Math.PI/2+2.4;
+ let x=cx+(rad-6)*Math.cos(a0),y=cy+(rad-6)*Math.sin(a0),h=a0+Math.PI,inq=0,lat=probe?60:120;const pts=[[x,y]],n=probe?60:120;
+ for(let i=0;i<n;i++){
+  const d=Math.atan2(B5_PLAT[1]-y,B5_PLAT[0]-x)-h,dd=Math.atan2(Math.sin(d),Math.cos(d));
+  h+=.6*k*dd+(1-.7*k)*.6*B5_gauss(r);x+=9*Math.cos(h);y+=9*Math.sin(h);
+  const q=Math.hypot(x-cx,y-cy);if(q>rad-5){x=cx+(x-cx)/q*(rad-5);y=cy+(y-cy)/q*(rad-5);h=Math.atan2(cy-y,cx-x)+1.1*(r()-.5)*2}
+  pts.push([x,y]);if(x>cx&&y<cy)inq++;
+  if(!probe&&Math.hypot(x-B5_PLAT[0],y-B5_PLAT[1])<12){lat=i+1;break}
+ }
+ return B5_MWM_CACHE[key]={pts,lat,frac:inq/n};
+}
+const B5_mwmLat=(drug,trial)=>sum(range(8).map(r=>B5_mwmPath(drug,trial,r,false).lat))/8;
+const B5_mwmProbe=(drug,trained)=>sum(range(8).map(r=>B5_mwmPath(drug,trained,r,true).frac))/8;
+SCENE({id:'hebb-ltp-morris',name:'Block the receptor, test the memory',tag:'Morris and colleagues, 1986',
+ definition:'If LTP is how the hippocampus stores memories, blocking LTP should block learning. In 1986 Richard Morris and colleagues tested this with his water maze: a rat swims in a pool of cloudy water to find a platform hidden just under the surface, and over several trials learns where it is from landmarks around the room. Rats given AP5, which blocks NMDA receptors, into the brain learned the place poorly, and LTP in their hippocampus was blocked too.',
+ example:'With the platform removed, trained control rats spent most of a minute searching the right quarter of the pool; AP5 rats searched all four quarters about equally, near the 25% expected by chance. The result supports the idea without proving it. In 1995 two groups found that rats trained beforehand in another pool could learn a new place under the drug. LTP is the leading candidate mechanism for memory, not a proven account of all of it.',
+ desc:'A round pool seen from above with a hidden platform and the swimming path of one simulated rat. A graph shows the average time to reach the platform on each trial for control rats and for rats with NMDA receptors blocked. Tiles give the share of time spent in the platform’s quarter after the platform is removed.',
+ research:['Morris, Anderson, Lynch & Baudry (1986). Selective impairment of learning and blockade of long-term potentiation by an N-methyl-D-aspartate receptor antagonist, AP5. Nature 319, 774–776.','Bannerman, Good, Butcher, Ramsay & Morris (1995). Nature 378, 182–186; Saucier & Cain (1995). Nature 378, 186–189: spatial learning despite NMDA receptor blockade after pretraining.','Martin, Grimwood & Morris (2000). Synaptic plasticity and memory: an evaluation of the hypothesis. Annual Review of Neuroscience 23, 649–711. Whitlock, Heynen, Shuler & Bear (2006). Learning induces long-term potentiation in the hippocampus. Science 313, 1093–1097.'],
+ dur:13,hint:'Run trials for the control rats, then for the AP5 rats, and compare the two learning curves. Then remove the platform to see where each group searches.',
+ init:()=>({drug:0,n:[0,0],pr:[0,0],last:'trial'}),
+ watch(p){const k=Math.floor(p*23);return {drug:k>10?1:0,n:[Math.min(10,k),clamp(k-11,0,10)],pr:[k>=22?1:0,k>=22?1:0],last:k>=22?'probe':'trial'}},
+ ui:[{choose:[['0','Control rats'],['1','AP5 rats']],label:'Group',get:s=>String(s.drug),act:'drug'},{b:'Run the next trial',act:'run'},{b:'Remove the platform (probe)',act:'probe'}],
+ on:{drug(s,v){s.drug=v==='1'?1:0;s.last='trial'},run(s){s.n[s.drug]=Math.min(10,s.n[s.drug]+1);s.last='trial'},probe(s){s.pr[s.drug]=1;s.last='probe'}},
+ draw(s,f,X){
+  const d=s.drug,[cx,cy,rad]=B5_POOL,n=s.n[d],probe=s.last==='probe',path=probe?B5_mwmPath(d,n,0,true):n?B5_mwmPath(d,n-1,0,false):null;
+  let out=heading(probe?(d?'AP5 rats search everywhere':'Control rats search the right quarter'):!n?'A hidden platform in cloudy water':d?'AP5 rats: little improvement':'Control rats: faster on each trial');
+  out+=Ci(cx,cy,rad,'#eef6fb',C.line)+L(cx-rad,cy,cx+rad,cy,C.line,1,'stroke-dasharray="4 4"')+L(cx,cy-rad,cx,cy+rad,C.line,1,'stroke-dasharray="4 4"');
+  if(probe)out+=`<path d="M${cx} ${cy}L${cx} ${cy-rad}A${rad} ${rad} 0 0 1 ${cx+rad} ${cy}Z" fill="${C.greenp}" fill-opacity=".7"/>`;
+  out+=Ci(B5_PLAT[0],B5_PLAT[1],10,probe?'none':'#fff',C.green,'stroke-dasharray="3 3"')+TF(B5_PLAT[0]+16,B5_PLAT[1]-12,probe?'platform was here':'platform',13,C.green,'start');
+  if(path){const show=X&&!X.try?path.pts:path.pts;out+=B5_poly(show,d?C.coral:C.blue,1.8)+Ci(path.pts[0][0],path.pts[0][1],5,C.ink)+TF(clamp(path.pts[0][0],60,240),path.pts[0][1]+(path.pts[0][1]>cy?20:-10),'start',13,C.ink)}
+  out+=TF(cx,cy+rad+20,probe?`one ${d?'AP5':'control'} rat, 60 s without the platform`:n?`one ${d?'AP5':'control'} rat, trial ${n}`:'the pool from above',13,C.muted);
+  const pl=B5_plot(322,62,250,170,[.5,10.5],[0,120],{xt:[[1,'1'],[4,'4'],[7,'7'],[10,'10']],yt:[[0,'0'],[60,'60'],[120,'120']],xl:'trial'});out+=pl.svg+TF(322,54,'seconds to reach the platform (8 rats)',13,C.muted,'start');
+  for(const g of [0,1]){const pts=range(s.n[g]).map(i=>[pl.X(i+1),pl.Y(B5_mwmLat(g,i))]);out+=B5_poly(pts,g?C.coral:C.blue,2.4);pts.forEach(q=>{out+=Ci(q[0],q[1],3.5,g?C.coral:C.blue)})}
+  out+=TF(566,78,'control',13,C.blue,'end')+TF(566,94,'AP5',13,C.coral,'end');
+  const pv=g=>s.pr[g]?Math.round(B5_mwmProbe(g,s.n[g])*100)+'%':'not tested';
+  out+=B5_tile(322,274,120,'Probe: control',pv(0),C.blue)+B5_tile(452,274,120,'Probe: AP5',pv(1),C.coral);
+  out+=TF(447,340,'Share of 60 s in the platform’s quarter. Chance is 25%.',13,C.muted);
+  out+=B5_note('Simulated rats; times are illustrative. The pattern is that of Morris et al. (1986).',366);
+  return {svg:out,phase:probe?(d?`These rats had ${n} trial${n===1?'':'s'} with NMDA receptors blocked. With the platform gone they spend ${pv(1)} of the time in its quarter, close to chance: they have not learned the place.`:`After ${n} trial${n===1?'':'s'} the control rats spend ${pv(0)} of the minute in the platform’s quarter${n>=4?', well above the 25% of chance. They know where it should be':'. With so little training this is still near chance'}.`):
+   !n?'The rat cannot see, smell or feel its way to the platform; it has to learn the place from the room around the pool. Run the first trial.':
+   d?`Trial ${n}: the AP5 rats took ${Math.round(B5_mwmLat(1,n-1))} s on average. They swim normally and can see, but their times fall slowly. In the real experiment LTP could not be induced in their hippocampus.`:
+   `Trial ${n}: the control rats took ${Math.round(B5_mwmLat(0,n-1))} s on average. ${n>=4?'They now head for the platform from any starting point, which is what makes this a test of place memory.':'Early paths wander around the pool until the rat bumps into the platform.'}`};
+ }});
+
+/* ===================== Lesson: map-plasticity ===================== */
+const B5_DCOL=[C.amber,C.blue,C.green,C.purple,C.coral],B5_DNAME=['thumb','index finger','middle finger','ring finger','little finger'];
+function B5_mapAct(s,i,mode){
+ if(!(s.w[i]>0)){s.last=i;s.act='gone';return s}
+ if(mode==='cut'){const pres=range(5).filter(j=>j!==i&&s.w[j]>0);if(!pres.length){s.act='gone';return s}
+  const l=pres.filter(j=>j<i).pop(),r=pres.find(j=>j>i);
+  if(l!==undefined&&r!==undefined){s.w[l]+=s.w[i]/2;s.w[r]+=s.w[i]/2}else s.w[l!==undefined?l:r]+=s.w[i];
+  s.w[i]=0;s.act='cut'}
+ else{s.w[i]=Math.min(2.6,s.w[i]+.4);s.act='train'}
+ s.last=i;return s;
+}
+const B5_mapInit=()=>({w:[1,1,1,1,1],mode:'train',last:-1,act:''});
+SCENE({id:'map-plasticity',name:'The finger map moves',tag:'Merzenich and colleagues, 1983–1990',
+ definition:'The touch map in an adult’s cortex was long thought to be fixed once development ended. In the early 1980s Michael Merzenich, Jon Kaas and colleagues mapped the hand area of adult owl monkeys with fine electrodes, before and after a change. When the input from a finger was lost, its patch of cortex did not fall silent: within weeks the neighbouring fingers’ territories had spread into it. And when monkeys were trained for months to use two fingertips on a task, those fingertips came to occupy more cortex.',
+ example:'The shifts were real but small: borders moved by about a millimetre at most in these studies. Far larger changes were later reported in monkeys many years after losing the input from a whole arm (Pons and colleagues, 1991). The map is held in place by the balance of its inputs, and it moves when that balance changes.',
+ desc:'A hand with five fingers in five colours, and two strips of cortex in the same colours: the map before, with equal shares, and the map now. Pressing a finger either trains it or removes its input.',
+ research:['Merzenich, Nelson, Stryker, Cynader, Schoppmann & Zook (1984). Somatosensory cortical map changes following digit amputation in adult monkeys. Journal of Comparative Neurology 224, 591–605.','Jenkins, Merzenich, Ochs, Allard & Guic-Robles (1990). Functional reorganization of primary somatosensory cortex in adult owl monkeys after behaviorally controlled tactile stimulation. Journal of Neurophysiology 63, 82–104.','Pons, Garraghty, Ommaya, Kaas, Taub & Mishkin (1991). Massive cortical reorganization after sensory deafferentation in adult macaques. Science 252, 1857–1860.'],
+ dur:11,hint:'Choose Train or Remove input, then press a finger on the hand. Compare the map now with the map before.',
+ init:B5_mapInit,
+ watch(p){const s=B5_mapInit(),k=Math.min(5,Math.floor(p*6));for(let i=0;i<Math.min(k,3);i++)B5_mapAct(s,1,'train');if(k>=4)B5_mapAct(s,3,'cut');if(k>=5)B5_mapAct(s,1,'train');return s},
+ ui:[{choose:[['train','Train a finger'],['cut','Remove a finger’s input']],label:'Pressing a finger will',get:s=>s.mode,act:'mode'},{b:'Start again',act:'reset'}],
+ on:{mode(s,v){s.mode=v==='cut'?'cut':'train'},finger(s,v){B5_mapAct(s,clamp(Math.round(+v)||0,0,4),s.mode)},reset(s){Object.assign(s,B5_mapInit())}},
+ draw(s,f,X){
+  const tot=sum(s.w),fr=s.w.map(v=>v/tot);
+  let out=heading(s.act==='cut'?'Neighbours move into the silent patch':s.act==='train'?'A trained finger gains cortex':'Five fingers, five patches of cortex');
+  // hand
+  out+=R(58,196,128,92,'#f4ece4',C.line,22);
+  const fx=[34,72,104,136,166],fy=[196,98,84,96,124],fh=[70,104,118,106,78];
+  for(let i=0;i<5;i++){const gone=!(s.w[i]>0),x=fx[i],y=fy[i],inner=(i===0?`<rect x="${x-12}" y="${y}" width="26" height="${fh[i]}" rx="13" fill="${gone?'#fff':B5_DCOL[i]}" stroke="${B5_DCOL[i]}" stroke-width="2" ${gone?'stroke-dasharray="4 3"':''} transform="rotate(-28 ${x} ${y+fh[i]})"/>`:R(x-12,y,26,fh[i],gone?'#fff':B5_DCOL[i],B5_DCOL[i],13,gone?'stroke-dasharray="4 3"':''))+TBF(i===0?x-16:x+1,y+(i===0?34:24),i+1,14,gone?B5_DCOL[i]:'#fff');
+   out+=hit(X,'finger',i,`${B5_DNAME[i]}: press to ${s.mode==='cut'?'remove its input':'train it'}`,inner)}
+  out+=TF(122,312,'1 thumb … 5 little finger',13,C.muted)+TF(122,330,'dashed: input lost',13,C.muted);
+  // strips
+  const sx=250,sw=320,strip=(y,frs,lab)=>{let o=TF(sx,y-8,lab,13,C.muted,'start'),x=sx;frs.forEach((v,i)=>{const w=v*sw;if(w>0){o+=R(x,y,w,48,B5_DCOL[i],'#fff',0);if(w>20)o+=TBF(x+w/2,y+29,i+1,14,'#fff')}x+=w});return o+R(sx,y,sw,48,'none',C.line,4)};
+  out+=strip(78,[.2,.2,.2,.2,.2],'Hand area of the cortex: before')+strip(170,fr,'Now');
+  const li=s.last>=0?s.last:1;
+  out+=B5_tile(250,240,150,'Finger '+(li+1)+': before','20%',C.muted)+B5_tile(420,240,150,'Finger '+(li+1)+': now',Math.round(fr[li]*100)+'%',B5_DCOL[li]);
+  out+=TF(410,312,'Shares of the strip. In the monkeys the borders',13,C.muted)+TF(410,328,'moved by about a millimetre at most.',13,C.muted);
+  out+=B5_note('Schematic of maps made with electrodes in adult owl monkeys. Shares are illustrative.',364);
+  return {svg:out,phase:s.act==='cut'?`The input from finger ${s.last+1} is gone. Its patch of cortex now responds to touch on the neighbouring fingers, which have spread across the old border. No neuron moved: weak connections that were already there became effective.`:
+   s.act==='train'?`Finger ${s.last+1} has been used intensively on a touch task, and now holds ${Math.round(fr[s.last]*100)}% of the strip, at its neighbours’ expense. In Jenkins and Merzenich’s monkeys the enlarged patch also had finer touch fields.`:
+   s.act==='gone'?'That finger no longer sends any input, so training it changes nothing.':'Each finger’s skin is represented in its own patch, in order across the cortex. Use the hand on the left to change the balance of inputs.'};
+ }});
+
+const B5_PH={face:{name:'Touch the cheek',z:[4],felt:'on the cheek, and also in the missing hand',ref:1},arm:{name:'Touch the upper arm',z:[2],felt:'on the arm, and also in the missing hand',ref:1},leg:{name:'Touch the leg',z:[0],felt:'on the leg only',ref:0},move:{name:'Move the phantom hand',z:[3],felt:'as the missing hand moving',ref:0}};
+const B5_PH_Z=['leg','trunk','arm','hand','face'];
+SCENE({id:'map-plasticity-phantom',name:'Phantom limbs and a contested explanation',tag:'Ramachandran 1992; Makin 2013',
+ definition:'Most people who lose a limb continue to feel it, and for many it is at times painful. In 1992 V. S. Ramachandran reported that touching the face of a man whose arm had been amputated produced sensations that he felt in particular fingers of the missing hand. In the cortex’s touch map the hand lies between the face and the upper arm, so Ramachandran proposed that the face’s input had spread into the silent hand area, and that such remapping causes phantom pain.',
+ example:'The evidence is disputed. Flor and colleagues (1995) found that people with more shift in the map had more pain. Makin and colleagues (2013) found the opposite pattern: the hand area was still there and still active when people moved the phantom hand, most strongly in those with the worst pain. The mirror box, introduced in 1996, eased pain in a small trial of 22 patients, but later reviews judge the evidence weak. This page describes research; it is not advice on treatment.',
+ desc:'A strip of the cortex’s touch map with zones for leg, trunk, arm, hand and face; the hand zone has lost its input. Choosing where the person is touched lights up zones of the strip. Below, two boxes set out the remapping account and the preserved-map account, each with the study that supports it.',
+ research:['Ramachandran, Rogers-Ramachandran & Stewart (1992). Perceptual correlates of massive cortical reorganization. Science 258, 1159–1160.','Flor et al. (1995). Phantom-limb pain as a perceptual correlate of cortical reorganization following arm amputation. Nature 375, 482–484. Makin et al. (2013). Phantom pain is associated with preserved structure and function in the former hand area. Nature Communications 4, 1570.','Ramachandran & Rogers-Ramachandran (1996). Synaesthesia in phantom limbs induced with mirrors. Proceedings of the Royal Society B 263, 377–386. Chan et al. (2007). Mirror therapy for phantom limb pain. New England Journal of Medicine 357, 2206–2207. Review: Barbin et al. (2016). Annals of Physical and Rehabilitation Medicine 59, 270–275.'],
+ dur:12,hint:'Choose what happens to the person and which account to look at. Notice which observations each account explains and which it does not.',
+ init:()=>({spot:'face',view:'remap'}),
+ watch(p){const k=Math.min(3,Math.floor(p*4));return {spot:['face','arm','leg','move'][k],view:k===3?'kept':'remap'}},
+ ui:[{choose:[['face','Touch the cheek'],['arm','Touch the upper arm'],['leg','Touch the leg'],['move','Move the phantom hand']],label:'Event',get:s=>s.spot,act:'spot'},{choose:[['remap','Remapping account'],['kept','Preserved-map account']],label:'Account',get:s=>s.view,act:'view'}],
+ on:{spot(s,v){s.spot=B5_PH[v]?v:'face'},view(s,v){s.view=v==='kept'?'kept':'remap'}},
+ draw(s,f,X){
+  const q=B5_PH[s.spot]||B5_PH.face,remap=s.view==='remap',zw=104,zx=i=>40+i*zw,handOn=s.spot==='move'||(q.ref&&remap);
+  let out=heading(s.spot==='move'?'The hand area still answers':q.ref?'A touch felt in the missing hand':'A touch felt only where it lands');
+  out+=TF(40,62,'The touch map along the cortex (schematic)',13,C.muted,'start');
+  B5_PH_Z.forEach((z,i)=>{const hand=i===3,on=q.z.includes(i)||(hand&&handOn);out+=R(zx(i),70,zw,56,on?(hand?C.coral:C.blue):(hand?'#fff':C.pale),hand?C.coral:C.line,0,hand&&!on?'stroke-dasharray="5 4"':'')+TBF(zx(i)+zw/2,96,z,14,on?'#fff':C.ink)+TF(zx(i)+zw/2,116,hand?'input lost':'',13,on?'#fff':C.coral)});
+  if(q.ref&&remap){const from=s.spot==='face'?zx(4)+10:zx(3)-10,to=s.spot==='face'?zx(4)-34:zx(3)+34;out+=arrow(from,140,to,140,C.coral,3)+TF(zx(3)+zw/2,158,'neighbour’s input spreads in',13,C.coral)}
+  if(q.ref&&!remap)out+=TF(300,150,'Why the touch is felt in the hand is not settled on this account.',13,C.muted);
+  if(s.spot==='move')out+=TF(300,150,'Trying to move the missing hand activates its old area.',13,C.coral);
+  out+=B5_tile(40,168,250,'Event',q.name,C.ink)+B5_tile(300,168,260,'Reported as felt',q.felt,q.ref?C.coral:C.ink);
+  const card=(x,on,title,l1,l2,l3)=>R(x,226,270,104,on?C.amberp:'#fff',on?C.amber:C.grid,8)+TBF(x+12,246,title,13,C.ink,'start')+TF(x+12,266,l1,13,C.ink,'start')+TF(x+12,284,l2,13,C.ink,'start')+TF(x+12,302,l3,13,C.muted,'start')+TF(x+12,320,on?'selected':'',13,C.amber,'start');
+  out+=card(22,remap,'Remapping account','Neighbours invade the hand area;','more invasion goes with more pain.','Flor et al. 1995, 13 people')+card(308,!remap,'Preserved-map account','The hand area persists; more pain','goes with more activity in it.','Makin et al. 2013, 18 people');
+  out+=TF(300,348,'Mirror therapy: one small positive trial (2007); reviews call the evidence weak.',13,C.muted);
+  out+=B5_note('Explains published research. Not a test, and not advice on treatment.',368);
+  return {svg:out,phase:s.spot==='move'?(remap?'On a pure remapping account the hand area has been taken over, so this activity is awkward to explain. It is the observation that led Makin and colleagues to challenge the account.':'Makin and colleagues scanned people while they moved their phantom hand. The old hand area responded, and its response was strongest in people with the most persistent pain. On this view pain goes with a map that is kept, not one that is overwritten.'):
+   q.ref?(remap?`Touch on the ${s.spot==='face'?'cheek':'upper arm'} activates its own zone. On the remapping account that input has also come to drive the neighbouring hand area, and activity there is felt as the missing hand. The ${s.spot==='face'?'face':'upper arm'} borders the hand in the map, which is why these two regions are the ones that refer.`:'The referred sensations are real reports, and both accounts must explain them. The preserved-map account does not deny some remapping; it denies that remapping is what causes the pain.'):
+   'The leg’s zone is far from the hand’s in the map. A touch here is felt on the leg and nowhere else, on either account.'};
+ }});
+
+// Taxi drivers: a simulated sample of 16 from a population in which the true correlation is 0.6.
+function B5_taxiSample(seed){const r=B5_rng(seed*53+1),pts=[];for(let i=0;i<16;i++){const x=2+38*r(),zx=(x-21)/10.97;pts.push([x,.6*zx+.8*B5_gauss(r)])}
+ const mx=sum(pts.map(q=>q[0]))/16,my=sum(pts.map(q=>q[1]))/16;let sxy=0,sxx=0,syy=0;for(const [x,y] of pts){sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2;syy+=(y-my)**2}
+ return {pts,r:sxy/Math.sqrt(sxx*syy),b:sxy/sxx,mx,my}}
+SCENE({id:'map-plasticity-taxi',name:'London taxi drivers',tag:'Maguire and colleagues, 2000 and 2011',
+ definition:'To be licensed, London taxi drivers must learn the layout of some 25,000 streets, which takes years. In 2000 Eleanor Maguire and colleagues compared brain scans of 16 male drivers with 50 other men. The drivers had a larger posterior hippocampus and a smaller anterior hippocampus, and the posterior part was larger the longer a man had been driving (a correlation of about 0.6).',
+ example:'The caveats matter. Sixteen is a small sample, the gain at the back came with a loss at the front, and a difference between groups cannot show how it arose: people with a larger posterior hippocampus might simply be the ones who qualify. A later study followed 79 trainees. The 39 who qualified had gained posterior hippocampal grey matter; the 20 who failed and 31 controls had not. That supports training as the cause.',
+ desc:'A scatter plot of years of taxi driving against the size of the posterior hippocampus for a simulated sample of 16 drivers, with the correlation it gives. A row of dots collects the correlations from every sample drawn so far, with the published value marked. A second view shows the design of the later study that followed trainees over time.',
+ research:['Maguire, Gadian, Johnsrude, Good, Ashburner, Frackowiak & Frith (2000). Navigation-related structural change in the hippocampi of taxi drivers. PNAS 97, 4398–4403.','Woollett & Maguire (2011). Acquiring “the Knowledge” of London’s layout drives structural brain changes. Current Biology 21, 2109–2114.','Mind In Motion has the basic finding (plasticity: taxi drivers). Here the question is how much a sample of 16 can show.'],
+ dur:12,hint:'Draw new samples of 16 drivers from the same imaginary population and watch the correlation move. Then switch to the 2011 study to see what following people over time adds.',
+ init:()=>({seed:1,rs:[B5_taxiSample(1).r],view:'a'}),
+ watch(p){const n=1+Math.min(6,Math.floor(p*9)),rs=range(n).map(i=>B5_taxiSample(i+1).r);return {seed:n,rs,view:p>.8?'b':'a'}},
+ ui:[{b:'Draw another 16 drivers',act:'again'},{choose:[['a','2000: one scan each'],['b','2011: before and after']],label:'Study',get:s=>s.view,act:'view'}],
+ on:{again(s){s.view='a';s.seed++;s.rs.push(B5_taxiSample(s.seed).r);if(s.rs.length>40)s.rs.shift()},view(s,v){s.view=v==='b'?'b':'a'}},
+ draw(s,f,X){
+  let out;
+  if(s.view==='b'){
+   out=heading('Following trainees shows the change itself');
+   out+=TF(300,60,'Posterior hippocampal grey matter, before and after 3 to 4 years',13,C.muted);
+   const grp=[['Qualified','39 trainees',1,C.green],['Did not qualify','20 trainees',0,C.muted],['Controls','31 non-trainees',0,C.muted]];
+   grp.forEach((g,i)=>{const x=60+i*176;out+=R(x,76,152,196,'#fff',C.grid,8)+TBF(x+76,98,g[0],14,C.ink)+TF(x+76,116,g[1],13,C.muted)+R(x+30,170,34,80,C.line,'none',3)+R(x+88,g[2]?146:170,34,g[2]?104:80,g[3],'none',3)+TF(x+47,264,'before',13,C.muted)+TF(x+105,264,'after',13,C.muted)+TBF(x+76,138,g[2]?'increased':'no change',13,g[3])});
+   out+=TF(300,296,'Before training the three groups did not differ.',13,C.ink)+TF(300,316,'Those who qualified did worse on one test of visual memory.',13,C.ink);
+   out+=B5_note('Bars show the direction of change only, not measured sizes. After Woollett & Maguire (2011).',350);
+   return {svg:out,phase:'A single scan cannot say whether driving enlarged the posterior hippocampus or whether people who start with a large one become drivers. Scanning the same people before and after answers that: the groups began alike, and only those who learned the streets changed. The change came with a cost on one other memory test.'};
+  }
+  const q=B5_taxiSample(s.seed),lo=Math.min(...s.rs),hi=Math.max(...s.rs);
+  out=heading(`This sample of 16: r = ${fmt(B5_r2(q.r))}`);
+  const pl=B5_plot(60,62,260,196,[0,42],[-3,3],{xt:[[0,'0'],[10,'10'],[20,'20'],[30,'30'],[40,'40']],xl:'years as a taxi driver'});out+=pl.svg+TF(60,54,'posterior hippocampus (relative size)',13,C.muted,'start');
+  out+=L(pl.X(0),pl.Y(clamp(q.my+q.b*(0-q.mx),-3,3)),pl.X(42),pl.Y(clamp(q.my+q.b*(42-q.mx),-3,3)),C.coral,2);
+  for(const [x,y] of q.pts)out+=Ci(pl.X(x),pl.Y(clamp(y,-2.9,2.9)),4.5,C.blue,'#fff');
+  // strip of correlations
+  const RX=v=>350+(v+.2)/1.2*222;out+=TF(350,74,'correlations from each sample so far',13,C.muted,'start')+L(350,150,572,150,C.line,2);
+  for(const v of [0,.5,1])out+=L(RX(v),150,RX(v),156,C.line,1.4)+TF(RX(v),172,v===0?'0':v===.5?'0.5':'1',13,C.muted);
+  out+=L(RX(.6),92,RX(.6),150,C.green,2,'stroke-dasharray="4 3"')+TF(RX(.6),88,'published: 0.6',13,C.green);
+  const cnt={};s.rs.forEach((v,i)=>{const b=Math.round(clamp(v,-.2,1)*20),k=cnt[b]=(cnt[b]||0)+1;if(k<=5)out+=Ci(RX(b/20),150-k*9,4,i===s.rs.length-1?C.coral:C.blue,'#fff')});
+  out+=B5_tile(350,190,105,'This sample',fmt(B5_r2(q.r)),C.coral)+B5_tile(467,190,105,'Samples drawn',String(s.rs.length),C.ink)+B5_tile(350,246,222,'Range so far',s.rs.length>1?`${fmt(B5_r2(lo))} to ${fmt(B5_r2(hi))}`:'draw more samples',C.blue);
+  out+=TF(300,318,'Every sample comes from the same population, where the true value is 0.6.',13,C.muted);
+  out+=B5_note('Simulated drivers, not the study’s data. Sizes are in standard units.',350);
+  return {svg:out,phase:s.rs.length<3?`These 16 simulated drivers give r = ${fmt(B5_r2(q.r))}. The population they were drawn from has a true correlation of 0.6, the value Maguire’s group reported. Draw more samples to see how far 16 people can stray from it.`:
+   `Across ${s.rs.length} samples of 16, the correlation has ranged from ${fmt(B5_r2(lo))} to ${fmt(B5_r2(hi))}, though nothing about the population changed. A single small study gives an estimate with wide error, which is why the finding needed the larger follow-up.`};
+ }});
+
+// Enriched and impoverished cages: each pair of littermates gives one difference in cortical thickness (%). Illustrative: mean 5, sd 4.
+const B5_enrDiff=i=>5+4*B5_gauss(B5_rng(i*17+211));
+SCENE({id:'map-plasticity-enriched',name:'Experience thickens the cortex',tag:'Marian Diamond and colleagues, 1964',
+ definition:'In the early 1960s at Berkeley, Mark Rosenzweig, David Krech and Edward Bennett found that rats raised in a large cage with companions and changing objects had heavier cortex, with different enzyme activity, than littermates raised alone in plain cages. Marian Diamond measured the tissue itself under the microscope: the cortex of the enriched rats was thicker, by a few per cent. It was the first anatomical evidence that experience changes the structure of the mammalian brain.',
+ example:'The difference is small, so it needs many pairs of littermates to see it clearly. Later work traced it to more branching of dendrites, more synapses per neuron and more glial cells, not to extra neurons. And a laboratory’s “enriched” cage is still plainer than a wild rat’s life, so the result may show the cost of an impoverished cage as much as a benefit of enrichment.',
+ desc:'Two cages, one with several rats and objects and one with a single rat. A dot plot shows, for each pair of littermates measured, how much thicker the enriched rat’s cortex was. A bar gives the running average and its margin of error against the zero line.',
+ research:['Diamond, Krech & Rosenzweig (1964). The effects of an enriched environment on the histology of the rat cerebral cortex. Journal of Comparative Neurology 123, 111–119.','Rosenzweig, Krech, Bennett & Diamond (1962). Effects of environmental complexity and training on brain chemistry and anatomy. Journal of Comparative and Physiological Psychology 55, 429–437.','Volkmar & Greenough (1972). Rearing complexity affects branching of dendrites in the visual cortex of the rat. Science 176, 1445–1447.'],
+ dur:11,hint:'Measure pairs of littermates one at a time, or five at a time. Watch when the margin of error first stays clear of zero.',
+ init:()=>({n:0}),
+ watch(p){return {n:Math.floor(p*20.5)}},
+ ui:[{b:'Measure 1 more pair',act:'one'},{b:'Measure 5 more pairs',act:'five'},{b:'Start again',act:'clear'}],
+ on:{one(s){s.n=Math.min(20,s.n+1)},five(s){s.n=Math.min(20,s.n+5)},clear(s){s.n=0}},
+ draw(s,f,X){
+  const d=range(s.n).map(B5_enrDiff),m=s.n?sum(d)/s.n:0,sd=s.n>1?Math.sqrt(sum(d.map(v=>(v-m)**2))/(s.n-1)):0,se=s.n>1?sd/Math.sqrt(s.n):0,lo=m-2*se,hi=m+2*se,clear=s.n>1&&lo>0;
+  let out=heading(!s.n?'Two cages, one litter':s.n<2?'One pair says little':clear?'Thicker, and clear of zero':'Not yet clear of zero');
+  const cage=(y,lab,rats,toys)=>{let o=R(18,y,200,100,'#fff',C.line,6)+TF(118,y+118,lab,13,C.ink);rats.forEach(([x,yy])=>{o+=`<ellipse cx="${18+x}" cy="${y+yy}" rx="13" ry="8" fill="${C.muted}"/>`+Ci(18+x+13,y+yy-3,5,C.muted)});if(toys)o+=R(40,y+16,30,10,C.amber,'none',3)+P(`M150 ${y+86}L166 ${y+58}L182 ${y+86}`,C.green,3)+Ci(110,y+26,9,'none',C.purple);return o};
+  out+=cage(52,'enriched: company and objects',[[40,70],[92,58],[128,80],[70,36],[160,34]],true)+cage(190,'impoverished: alone, plain cage',[[100,56]],false);
+  const pl=B5_plot(280,62,180,230,[0,21],[-6,16],{yt:[[-5,'−5'],[0,'0'],[5,'+5'],[10,'+10'],[15,'+15']],xt:[[1,'1'],[10,'10'],[20,'20']],xl:'pair of littermates'});
+  out+=pl.svg+TF(250,54,'enriched cortex thicker by (%)',13,C.muted,'start')+L(pl.X(0),pl.Y(0),pl.X(21),pl.Y(0),C.ink,1.4);
+  d.forEach((v,i)=>{out+=Ci(pl.X(i+1),pl.Y(clamp(v,-5.5,15.5)),4,C.blue,'#fff')});
+  // mean and interval
+  const bx=510,BY=v=>pl.Y(clamp(v,-6,16));out+=L(bx-34,pl.Y(0),bx+34,pl.Y(0),C.ink,1.4)+TF(bx,54,'average',13,C.muted);
+  if(s.n>1)out+=L(bx,BY(lo),bx,BY(hi),clear?C.green:C.coral,3)+L(bx-8,BY(lo),bx+8,BY(lo),clear?C.green:C.coral,3)+L(bx-8,BY(hi),bx+8,BY(hi),clear?C.green:C.coral,3);
+  if(s.n)out+=Ci(bx,BY(m),6,clear?C.green:C.coral,'#fff');
+  out+=TF(bx,pl.Y(0)+16,'no difference',13,C.muted);
+  out+=B5_tile(250,318,100,'Pairs',String(s.n),C.ink)+B5_tile(360,318,110,'Average',s.n?(m<0?'−':'+')+fmt(B5_r1(Math.abs(m)))+'%':'none yet',C.blue)+B5_tile(480,318,104,'Margin (±)',s.n>1?fmt(B5_r1(2*se))+'%':'needs 2',clear?C.green:C.coral);
+  out+=TF(118,338,'Simulated measurements;',13,C.muted)+TF(118,354,'the true difference is set at 5%.',13,C.muted);
+  return {svg:out,phase:!s.n?'Littermates are split at weaning: one joins a group in a large cage with objects that are changed often, the other lives alone in a plain cage. After about 80 days the thickness of the cortex is measured in each.':
+   s.n<2?`In the first pair the enriched rat’s cortex is ${d[0]<0?'thinner':'thicker'} by ${fmt(B5_r1(Math.abs(d[0])))}%. One pair cannot separate an effect of the cage from ordinary variation between two animals.`:
+   clear?`After ${s.n} pairs the average is +${fmt(B5_r1(m))}%, give or take ${fmt(B5_r1(2*se))}%. The whole margin lies above zero. A few per cent of thickness is a small effect, found only by measuring many animals carefully.`:
+   `After ${s.n} pairs the average is ${m<0?'−':'+'}${fmt(B5_r1(Math.abs(m)))}%, give or take ${fmt(B5_r1(2*se))}%. The margin still reaches zero, so more pairs are needed.`};
  }});
