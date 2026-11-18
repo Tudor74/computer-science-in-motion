@@ -31,14 +31,6 @@ from fim import log
 ATOM = "{http://www.w3.org/2005/Atom}"
 ARX = "{http://arxiv.org/schemas/atom}"
 
-ARXIV_CATS = {
-    "physics": ["cond-mat.str-el", "hep-ph", "quant-ph", "physics.optics", "cond-mat.supr-con", "hep-th", "physics.flu-dyn"],
-    "chemistry": ["physics.chem-ph", "cond-mat.mtrl-sci", "cond-mat.soft"],
-    "mathematics": ["math.AP", "math.CO", "math.NT", "math.PR", "stat.ME", "math.AG", "math.OC"],
-    "cs": ["cs.LG", "cs.CV", "cs.CL", "cs.DS", "cs.CR", "cs.RO", "cs.CC"],
-    "earthspace": ["astro-ph.GA", "astro-ph.CO", "astro-ph.SR", "astro-ph.EP", "physics.ao-ph", "physics.geo-ph", "astro-ph.HE"],
-    "biology": ["q-bio.NC", "q-bio.PE"],
-}
 YEARS = [2018, 2019, 2020, 2021]
 OUTCOME_YEAR = 2025
 
@@ -50,44 +42,46 @@ def rnd_day(rng, year):
     return d
 
 
-def arxiv_sample(field, per_field, rng):
+def arxiv_pool(n_ids, rng):
+    """Random arXiv identifiers spread evenly over 2018-2021 (YYMM.NNNNN),
+    looked up 100 at a time with id_list. arXiv numbers papers sequentially
+    within a month, so a random number below 10000 is a random paper of that
+    month (every month in 2018-21 had more than 10,000 submissions)."""
+    months = [f"{y % 100:02d}{m:02d}" for y in YEARS for m in range(1, 13)]
+    ids = sorted({f"{months[i % len(months)]}.{rng.randrange(1, 10000):05d}" for i in range(n_ids)})
+    rng.shuffle(ids)
     out = []
-    cats = ARXIV_CATS[field]
-    per_query = max(2, per_field // (len(YEARS) * 2))
-    for y in YEARS:
-        for k in range(2):
-            cat = cats[(y + k) % len(cats)]
-            d = rnd_day(rng, y)
-            d2 = d + dt.timedelta(days=6)
-            q = f"cat:{cat} AND submittedDate:[{d:%Y%m%d}0000 TO {d2:%Y%m%d}2359]"
-            url = ("https://export.arxiv.org/api/query?search_query=" + urllib.parse.quote(q)
-                   + "&sortBy=submittedDate&sortOrder=ascending&max_results=60")
-            body = fim.get(url, kind="text")
-            if not body:
+    for i in range(0, len(ids), 100):
+        url = "https://export.arxiv.org/api/query?id_list=" + ",".join(ids[i:i + 100]) + "&max_results=100"
+        body = fim.get(url, kind="text")
+        if not body:
+            continue
+        for e in ET.fromstring(body).findall(ATOM + "entry"):
+            m = re.search(r"abs/(.+?)(v\d+)?$", e.findtext(ATOM + "id") or "")
+            prim = e.find(ARX + "primary_category")
+            if not m or prim is None:
                 continue
-            entries = ET.fromstring(body).findall(ATOM + "entry")
-            rng.shuffle(entries)
-            got = 0
-            for e in entries:
-                m = re.search(r"abs/(.+?)(v\d+)?$", e.findtext(ATOM + "id") or "")
-                prim = e.find(ARX + "primary_category")
-                if not m or prim is None or fim.arxiv_field(prim.get("term")) != field:
-                    continue
-                aid = m.group(1)
-                out.append({
-                    "source": "arXiv", "id": aid, "field": field, "category": prim.get("term"),
-                    "title": " ".join((e.findtext(ATOM + "title") or "").split()),
-                    "abstract": " ".join((e.findtext(ATOM + "summary") or "").split()),
-                    "comment": e.findtext(ARX + "comment") or "",
-                    "posted": (e.findtext(ATOM + "published") or "")[:10],
-                    "doi": f"10.48550/arxiv.{aid}".lower(),
-                    "later_doi": (e.findtext(ARX + "doi") or "").lower(),
-                    "journal_ref": e.findtext(ARX + "journal_ref") or "",
-                })
-                got += 1
-                if got >= per_query:
-                    break
+            f = fim.arxiv_field(prim.get("term"))
+            if not f:
+                continue
+            aid = m.group(1)
+            out.append({
+                "source": "arXiv", "id": aid, "field": f, "category": prim.get("term"),
+                "title": " ".join((e.findtext(ATOM + "title") or "").split()),
+                "abstract": " ".join((e.findtext(ATOM + "summary") or "").split()),
+                "comment": e.findtext(ARX + "comment") or "",
+                "posted": (e.findtext(ATOM + "published") or "")[:10],
+                "doi": f"10.48550/arxiv.{aid}".lower(),
+                "later_doi": (e.findtext(ARX + "doi") or "").lower(),
+                "journal_ref": e.findtext(ARX + "journal_ref") or "",
+            })
     return out
+
+
+def arxiv_sample(pool, field, n, rng):
+    ps = [p for p in pool if p["field"] == field]
+    rng.shuffle(ps)
+    return ps[:n]
 
 
 def biorxiv_sample(server, field, n_target, years, rng):
@@ -212,15 +206,19 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-field", type=int, default=70)
     ap.add_argument("--seed", type=int, default=2026)
+    ap.add_argument("--arxiv-ids", type=int, default=3000)
     a = ap.parse_args()
     rng = random.Random(a.seed)
 
     log("Sampling 2018-2021 preprints")
     papers = []
+    pool = arxiv_pool(a.arxiv_ids, rng)
+    log(f"  arXiv pool: {len(pool)} papers")
     for f in ["physics", "chemistry", "mathematics", "cs", "earthspace"]:
-        papers += arxiv_sample(f, a.per_field, rng)
+        papers += arxiv_sample(pool, f, a.per_field, rng)
     papers += biorxiv_sample("biorxiv", "biology", a.per_field - 14, YEARS, rng)
-    papers += arxiv_sample("biology", 16, rng)
+    papers += arxiv_sample(pool, "biology", 14, rng)
+    papers += arxiv_sample(pool, "medicine", 6, rng)
     papers += biorxiv_sample("medrxiv", "medicine", a.per_field, [2019, 2020, 2021], rng)
     seen, uniq = set(), []
     for p in papers:

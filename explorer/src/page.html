@@ -187,7 +187,7 @@ footer.bottom{padding:10px 18px 18px;font-size:12.5px;line-height:1.6;color:var(
  <section class="panel" id="map-panel" aria-labelledby="map-h">
   <p class="eyebrow">1 · Frontier map</p>
   <h2 id="map-h">Where the preprints are this week</h2>
-  <p class="note">Each region is a field, sized by this week's count of new preprints. Landmarks are hard open problems; they glow with this week's activity. Choose a landmark (or a whole region) to open its lane.</p>
+  <p class="note">Each region is a field, sized by this week's count of new preprints (the smallest are drawn at a minimum size so they stay readable; the counts are exact). Landmarks are hard open problems; they glow with this week's activity. Choose a landmark (or a whole region) to open its lane.</p>
   <div class="map-wrap"><svg id="map" viewBox="0 0 1000 560" role="group" aria-label="Frontier map: fields sized by this week's preprints, with open problems as landmarks"></svg></div>
   <ul class="problem-list" id="problem-list" aria-label="Open problems"></ul>
  </section>
@@ -319,31 +319,45 @@ function laneCount(pid) { return S.papers.filter(p => p.problems.includes(pid)).
 function drawMap() {
   const svg = $("map");
   svg.textContent = "";
-  const narrow = svg.getBoundingClientRect().width < 560;
-  const H = narrow ? 900 : 560;
-  svg.setAttribute("viewBox", `0 0 1000 ${H}`);
+  // One SVG unit = one CSS pixel, so text stays readable at every width.
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width || 1000));
+  const narrow = W < 560;
+  const H = Math.round(narrow ? W * 1.45 : W * .56);
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const defs = el("defs", {}, svg);
-  const items = S.fields.map(f => ({id: f.id, v: Math.max(f.week_count, 1)}));
-  const rects = squarify(items, 0, 0, 1000, H);
+  // Area follows this week's count, but no region is drawn below 7% of the map, so small fields stay usable.
+  const tot = S.fields.reduce((a, f) => a + f.week_count, 0) || 1;
+  const items = S.fields.map(f => ({id: f.id, v: Math.max(f.week_count, tot * .07)}));
+  const rects = squarify(items, 0, 0, W, H);
   const maxAct = Math.max(1, ...S.problems.map(p => laneCount(p.id)));
   for (const r of rects) {
     const f = FIELD[r.id], col = fieldColour(r.id);
     const g = el("g", {class: "region", tabindex: 0, role: "button", "aria-label": `${f.name}: ${fmt(f.week_count)} new preprints this week. Open the field lane.`}, svg);
     el("rect", {x: r.x, y: r.y, width: r.w, height: r.h, fill: col, "fill-opacity": .13, rx: 6}, g);
-    const fs = narrow ? 1.5 : 1;
-    const t = el("text", {x: r.x + 12, y: r.y + 24 * fs, class: "rlabel", "font-size": 15 * fs}, g); t.textContent = f.name;
-    const c = el("text", {x: r.x + 12, y: r.y + 42 * fs, class: "rcount", "font-size": 12.5 * fs}, g); c.textContent = `${fmt(f.week_count)} this week`;
+    const fs = 1;
+    const SHORT = {cs: "Comp. sci.", earthspace: "Earth & space", mathematics: "Maths", chemistry: "Chemistry", medicine: "Medicine"};
+    const nm = r.w - 20 < f.name.length * 8.6 ? (SHORT[r.id] || f.name) : f.name;
+    const t = el("text", {x: r.x + 10, y: r.y + 24, class: "rlabel", "font-size": r.w - 20 < nm.length * 8.6 ? 13 : 15}, g); t.textContent = nm;
+    const c = el("text", {x: r.x + 10, y: r.y + 42, class: "rcount", "font-size": 12.5}, g); c.textContent = r.w < 130 ? fmt(f.week_count) : `${fmt(f.week_count)} this week`;
     g.addEventListener("click", () => openLane({field: r.id}));
     g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLane({field: r.id}); } });
     const probs = S.problems.filter(p => p.field === r.id);
     const n = probs.length;
     probs.forEach((p, i) => {
       // Spread landmarks inside the region, below its label.
-      const cols = Math.max(1, Math.min(n, Math.floor(r.w / 190) || 1));
-      const rows = Math.ceil(n / cols);
-      const cx = r.x + (i % cols + .5) * r.w / cols;
       const top = r.y + 56 * fs, avail = Math.max(r.h - 56 * fs, 40);
-      const cy = top + (Math.floor(i / cols) + .5) * avail / rows - 8;
+      // Prefer columns when the region is short; each landmark needs ~70 units of height.
+      // Fewest columns that leave each landmark ~64px of height (more if the region is short).
+      let cols = 1;
+      while (cols < n && Math.ceil(n / cols) * 64 > avail) cols++;
+      const rows = Math.ceil(n / cols);
+      let cx = r.x + (i % cols + .5) * r.w / cols;
+      const cy = top + (Math.floor(i / cols) + .5) * avail / rows - 14 * fs;
+      const room = r.w / cols, vroom = avail / rows;
+      let label = room < p.name.length * 6.8 + 12 && p.short ? p.short : p.name;
+      if (room < label.length * 6.8 + 4 || vroom < 44) label = "";
+      const half = label ? label.length * 3.4 + 6 : 14;
+      cx = Math.min(Math.max(cx, r.x + half), r.x + r.w - half);
       const act = laneCount(p.id), a = act / maxAct;
       const lg = el("g", {class: "lm", tabindex: 0, role: "button", "data-problem": p.id, "aria-label": `${p.name}: ${act} preprints this week. Open the lane.`}, svg);
       const gid = "g-" + p.id;
@@ -355,9 +369,10 @@ function drawMap() {
       el("circle", {cx, cy, r: 26 * fs, fill: "transparent"}, lg);
       el("circle", {cx, cy, r: (8 + 4 * Math.sqrt(a)) * fs, fill: act ? col : "#b9c6ce", class: "core"}, lg);
       const lt = el("text", {x: cx, y: cy + 26 * fs, "text-anchor": "middle", class: "lmlabel", "font-size": 12 * fs}, lg);
-      lt.textContent = p.name;
+      lt.textContent = label;
       const ct = el("text", {x: cx, y: cy + 40 * fs, "text-anchor": "middle", class: "lmcount", "font-size": 11 * fs}, lg);
       ct.textContent = act === 1 ? "1 preprint" : `${act} preprints`;
+      if (vroom < 58 || !label) ct.setAttribute("display", "none");
       lg.addEventListener("click", e => { e.stopPropagation(); openLane({problem: p.id}); });
       lg.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); openLane({problem: p.id}); } });
     });
@@ -411,10 +426,10 @@ function drawLane() {
   const newc = all.filter(p => p.newcomer);
   const none = all.filter(p => p.rank == null && !p.newcomer);
   const showNew = state.newcomers;
-  const narrow = svg.getBoundingClientRect().width < 560;
-  const fs = narrow ? 1.55 : 1;
-  const W = 1000, padL = 64 * (narrow ? 1.25 : 1), bandW = narrow ? 0 : 230, padR = 20 + bandW, top = 20;
-  const plotH = narrow ? 420 : 300, stripH = 46 * fs, gap = 26 * fs;
+  const W = Math.max(280, Math.round(svg.getBoundingClientRect().width || 1000));
+  const narrow = W < 700, fs = 1;
+  const padL = 48, bandW = narrow ? 0 : 200, padR = 14 + bandW, top = 34;
+  const plotH = narrow ? 280 : 300, stripH = 58 * fs, gap = 26 * fs;
   const H = top + plotH + 40 * fs + (showNew ? stripH + gap : 0) + (none.length ? stripH + gap : 0) + 10;
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const x0 = padL, x1 = W - padR, maxAge = 7;
@@ -427,10 +442,10 @@ function drawLane() {
     el("rect", {x: x0, y: y0, width: x1 - x0, height: y1 - y0, fill: "#1772b7", "fill-opacity": (0.03 + 0.16 * (b.published || 0)).toFixed(3)}, svg);
     if (!narrow) {
       const g = el("g", {}, svg);
-      el("rect", {x: x1 + 12, y: y0 + 3, width: 96 * (b.published || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#1772b7", "fill-opacity": .55, rx: 2}, g);
-      el("rect", {x: x1 + 12, y: y0 + (y1 - y0) / 2 + 1, width: 96 * (b.still_cited || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#2c776c", "fill-opacity": .55, rx: 2}, g);
-      const t = el("text", {x: x1 + 114, y: (y0 + y1) / 2 + 4, class: "band-label"}, g);
-      t.textContent = `${pct(b.published)} publ · ${pct(b.still_cited)} cited · n=${b.n}`;
+      el("rect", {x: x1 + 12, y: y0 + 3, width: 70 * (b.published || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#1772b7", "fill-opacity": .55, rx: 2}, g);
+      el("rect", {x: x1 + 12, y: y0 + (y1 - y0) / 2 + 1, width: 70 * (b.still_cited || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#2c776c", "fill-opacity": .55, rx: 2}, g);
+      const t = el("text", {x: x1 + 88, y: (y0 + y1) / 2 + 4, class: "band-label"}, g);
+      t.textContent = `${pct(b.published)} · ${pct(b.still_cited)} · n=${b.n}`;
     }
   }
   // Axes
@@ -441,15 +456,17 @@ function drawLane() {
   }
   for (let d = 0; d <= maxAge; d++) {
     const t = el("text", {x: X(d), y: top + plotH + 18 * fs, "text-anchor": "middle", "font-size": 12 * fs}, ax);
-    t.textContent = d === 0 ? "today" : d + "d";
+    t.textContent = d === 0 ? (narrow ? "0d" : "today") : d + "d";
   }
   const xl = el("text", {x: (x0 + x1) / 2, y: top + plotH + 36 * fs, "text-anchor": "middle", "font-size": 12 * fs}, ax);
-  xl.textContent = "age: days since posted (left = now, right = posted a week ago)";
+  xl.textContent = narrow ? "days since posted" : "age: days since posted (left = now, right = posted a week ago)";
   const yl = el("text", {x: 14, y: top + plotH / 2, transform: `rotate(-90 14 ${top + plotH / 2})`, "text-anchor": "middle", "font-size": 12 * fs}, ax);
   yl.textContent = "evidence signal";
   if (!narrow && B) {
     const bt = el("text", {x: x1 + 12, y: top - 6, class: "band-label", "font-weight": 700}, svg);
-    bt.textContent = "2018–21 papers with similar signals";
+    bt.textContent = "2018–21, similar signals:";
+    const b2 = el("text", {x: x1 + 12, y: top + 8, class: "band-label"}, svg);
+    b2.innerHTML = `<tspan fill="#1772b7" font-weight="700">published</tspan> · <tspan fill="#2c776c" font-weight="700">still cited</tspan>`;
   }
   // Points: x = age (posted → now), y = signal, size = boldness.
   const jit = p => ((parseInt(p.id.replace(/\D/g, "").slice(-4) || "0", 10) % 17) - 8) * 2.2;
@@ -472,13 +489,13 @@ function drawLane() {
   let yy = top + plotH + 40 * fs + gap;
   const strip = (label, ps) => {
     el("rect", {x: x0, y: yy - stripH / 2, width: x1 - x0, height: stripH, fill: "#ece7f6", "fill-opacity": .6, rx: 6}, svg);
-    const t = el("text", {x: x0 - 8, y: yy + 4, "text-anchor": "end", class: "band-label", "font-size": 11.5 * fs}, svg);
+    const t = el("text", {x: x0 + 8, y: yy - stripH / 2 + 14 * fs, class: "band-label", "font-size": 11.5 * fs, "font-weight": 700}, svg);
     t.textContent = label;
     ps.forEach(p => place(p, yy));
     yy += stripH + gap;
   };
-  if (showNew) strip("newcomers", newc);
-  if (none.length) strip("no record", none);
+  if (showNew) strip("Newcomer teams (not ranked)", newc);
+  if (none.length) strip("No track record found", none);
   const ranks = ranked.map(p => p.rank);
   $("lane-note").textContent = all.length
     ? `${all.length} preprint${all.length === 1 ? "" : "s"}: ${ranked.length} with an evidence signal, ${newc.length} from newcomer teams (shown in their own lane, not ranked), ${none.length} with no record found. ` +

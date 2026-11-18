@@ -24,7 +24,8 @@
     "ambient-pressure superconduct",
     "ambient pressure superconduct",
     "lk-99"
-   ]
+   ],
+   "short": "RT superconductors"
   },
   {
    "id": "dark-matter",
@@ -59,7 +60,8 @@
     "quantum ldpc",
     "qldpc",
     "magic state distillation"
-   ]
+   ],
+   "short": "Quantum error corr."
   },
   {
    "id": "riemann",
@@ -85,7 +87,8 @@
    ],
    "strong": [
     "riemann hypothesis"
-   ]
+   ],
+   "short": "Riemann hypothesis"
   },
   {
    "id": "p-vs-np",
@@ -156,7 +159,8 @@
     "protocell",
     "last universal common ancestor",
     "luca "
-   ]
+   ],
+   "short": "Origin of life"
   },
   {
    "id": "consciousness",
@@ -195,7 +199,8 @@
     "fusion reactor",
     "plasma confinement",
     "burning plasma"
-   ]
+   ],
+   "short": "Fusion"
   },
   {
    "id": "amr",
@@ -215,7 +220,8 @@
     "beta-lactamase",
     "β-lactamase",
     "colistin resist"
-   ]
+   ],
+   "short": "Antibiotic resistance"
   },
   {
    "id": "climate-sensitivity",
@@ -233,7 +239,8 @@
     "radiative forcing",
     "earth's energy imbalance",
     "climate feedback"
-   ]
+   ],
+   "short": "Climate sensitivity"
   }
  ]
 }
