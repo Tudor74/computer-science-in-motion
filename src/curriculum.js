@@ -1,17 +1,17 @@
 /* ===================== Curriculum: eras → lessons → scenes ===================== */
-// The human senses, two eras each for vision, hearing, smell and touch, then the senses together. Within each
-// sense the story runs from the organ to the brain, in the order it was discovered. Lessons, sources and
-// connections are registered by each era's files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
+// The brain in the order it was worked out: the neuron, the synapse, maps of the brain, movement, development and
+// plasticity, brain states, disorders, and the tools at the frontier. Lessons, sources and connections are
+// registered by each era’s files (LESSON, SOURCE, THREAD in src/scenes-N-lessons.js).
 const CURRICULUM={version:1,
 stages:[
- {id:'eye',name:'1 · The eye',years:'1604–1960',why:'Optics, rods and cones, the dark, three cone types, opponent colours and colour blindness.'},
- {id:'seeing',name:'2 · Seeing',years:'1865–today',why:'Edges, depth, motion, illusions and faces: what the brain makes of the light.'},
- {id:'ear',name:'3 · The ear',years:'1543–today',why:'Eardrum and ossicles, the cochlea’s map of pitch, hair cells, the limits of hearing, hearing loss and implants.'},
- {id:'listening',name:'4 · Listening',years:'1876–today',why:'Where a sound is, pulling one voice from a crowd, seeing speech, pitch and masking.'},
- {id:'smell',name:'5 · Smell',years:'1920–today',why:'Receptors and the olfactory bulb, how little we can smell, mixtures, memory and losing smell.'},
- {id:'flavour',name:'6 · Taste and flavour',years:'1901–today',why:'Five tastes and the tongue-map myth, smell from the inside, pheromones, emotion and training.'},
- {id:'touch',name:'7 · Touch',years:'1834–today',why:'Skin receptors, acuity, vibration, pain, temperature and the body’s own position.'},
- {id:'together',name:'8 · Senses together',years:'1976–today',why:'Combining senses, owning a rubber hand, synaesthesia, substituting one sense for another, ageing and gentle touch.'}
+ {id:'neuron',name:'1 · The neuron',years:'1780–today',why:'Animal electricity, separate nerve cells, the resting and action potentials, myelin and the glia around it all.'},
+ {id:'synapse',name:'2 · Synapses',years:'1897–today',why:'How one neuron speaks to the next: chemical messengers, packets of transmitter, excitation and inhibition, receptors and the drugs that act on them.'},
+ {id:'map',name:'3 · Mapping the brain',years:'1796–today',why:'Which part does what: phrenology’s false start, patients and lesions, maps of the cortex, divided hemispheres, imaging and wiring diagrams.'},
+ {id:'movement',name:'4 · Movement',years:'1870–today',why:'From intention to muscle: motor cortex, spinal reflexes, rhythm generators, the cerebellum, the basal ganglia and reading a reach from many neurons.'},
+ {id:'plasticity',name:'5 · Development and plasticity',years:'1890–today',why:'How a brain wires itself and keeps changing: growing axons, critical periods, strengthened synapses, shifting maps, new neurons and adolescence.'},
+ {id:'state',name:'6 · Brain states',years:'1936–today',why:'The body clock, sleep, wakefulness, reward, stress and hunger: the systems that set what state the whole brain is in.'},
+ {id:'disorder',name:'7 · When things go wrong',years:'1817–today',why:'Stroke, epilepsy, Parkinson’s, Alzheimer’s, depression and addiction: what is known, what is contested and what treatment can do. Not medical advice.'},
+ {id:'frontier',name:'8 · Tools and frontiers',years:'1943–today',why:'Single channels, light-switched neurons, the brain’s map of space, brain–computer interfaces, organoids and what brains and AI have taught each other.'}
 ],
 lessons:[]};
 const THREADS=[];
@@ -19,12 +19,12 @@ const THREADS=[];
 
 /* Header textures: a quiet era cue, not a difficulty rating. */
 const TEXTURES={
- eye:{w:48,h:32,tile:'<path d="M4 16Q24 2 44 16Q24 30 4 16Z" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="24" cy="16" r="5" fill="currentColor" opacity=".5"/>'},
- seeing:{w:40,h:40,tile:'<path d="M6 20H34M20 6V34" stroke="currentColor" stroke-width=".6"/><path d="M10 10L30 30" stroke="currentColor" stroke-width=".9"/>'},
- ear:{w:40,h:40,tile:'<path d="M20 34Q8 30 10 18Q12 6 22 6Q32 8 30 18Q28 24 22 24Q18 26 20 34Z" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- listening:{w:48,h:28,tile:'<path d="M6 14H10M14 8V20M20 4V24M26 8V20M32 11V17M38 13V15" stroke="currentColor" stroke-width="1.1"/>'},
- smell:{w:40,h:40,tile:'<path d="M10 34Q6 24 14 18Q22 12 16 4M22 34Q18 24 26 18Q34 12 28 4" fill="none" stroke="currentColor" stroke-width=".9"/>'},
- flavour:{w:40,h:36,tile:'<path d="M8 10H32L28 30H12Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M12 16H28" stroke="currentColor" stroke-width=".6"/>'},
- touch:{w:40,h:40,tile:'<circle cx="12" cy="12" r="2.5" fill="currentColor"/><circle cx="28" cy="12" r="2.5" fill="currentColor"/><circle cx="20" cy="28" r="2.5" fill="none" stroke="currentColor"/>'},
- together:{w:44,h:32,tile:'<circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="28" cy="16" r="9" fill="none" stroke="currentColor" stroke-width=".9"/>'}
+ neuron:{w:48,h:36,tile:'<circle cx="14" cy="18" r="4" fill="currentColor" opacity=".5"/><path d="M18 18H42M10 15L4 8M10 21L4 28M14 14V5" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ synapse:{w:44,h:32,tile:'<path d="M4 16H14Q20 8 20 16Q20 24 14 16" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M30 8V24H40" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="24" cy="13" r="1" fill="currentColor"/><circle cx="26" cy="18" r="1" fill="currentColor"/>'},
+ map:{w:44,h:40,tile:'<path d="M4 20Q4 6 22 6Q40 6 40 20Q40 30 26 32Q8 34 4 20Z" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M22 6Q18 18 24 32M6 16Q14 20 22 16M24 22Q32 18 40 22" fill="none" stroke="currentColor" stroke-width=".6"/>'},
+ movement:{w:48,h:32,tile:'<path d="M4 24Q10 6 16 24Q22 6 28 24Q34 6 40 24" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M40 24L44 20" stroke="currentColor" stroke-width=".9"/>'},
+ plasticity:{w:40,h:40,tile:'<path d="M20 36V22M20 22L10 10M20 22L30 10M10 10L6 4M10 10L14 4M30 10L34 4" fill="none" stroke="currentColor" stroke-width=".9"/>'},
+ state:{w:56,h:28,tile:'<path d="M2 14Q16 -4 28 14Q40 32 54 14" fill="none" stroke="currentColor" stroke-width=".9"/><circle cx="15" cy="20" r="3" fill="none" stroke="currentColor" stroke-width=".7"/><circle cx="41" cy="8" r="3" fill="currentColor" opacity=".5"/>'},
+ disorder:{w:52,h:28,tile:'<path d="M2 14H12L15 6L19 22L22 14H30" fill="none" stroke="currentColor" stroke-width=".9"/><path d="M36 14H50" stroke="currentColor" stroke-width=".9" stroke-dasharray="2 3"/>'},
+ frontier:{w:36,h:36,tile:'<rect x="6" y="6" width="24" height="24" rx="3" fill="none" stroke="currentColor" stroke-width=".8"/><circle cx="13" cy="13" r="1.6" fill="currentColor"/><circle cx="23" cy="13" r="1.6" fill="currentColor"/><circle cx="13" cy="23" r="1.6" fill="currentColor"/><circle cx="23" cy="23" r="1.6" fill="currentColor"/>'}
 };

@@ -37,15 +37,15 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE: the learner experiences each sense where a screen allows, and their results are drawn
-   beside the published ones. Eye: focus an image, mix three lights to match a colour, hold an afterimage,
-   simulate colour blindness. Seeing: Mach bands, a random-dot stereogram, the waterfall illusion, classic
-   illusions, your own blind spot. Ear: the cochlea's travelling wave, a relative hearing sweep, an implant
-   vocoder. Listening: headphone localisation, streaming, the McGurk effect, masking. Smell and flavour cannot
-   be delivered by a screen, so those eras use simulations and kitchen tests (hold your nose and taste).
-   Touch: two-point thresholds with paperclips, gate control, hot and cool channels. Together: cue combination,
-   the rubber hand, synaesthesia tests. Safety: no flicker above 3 per second, gentle sounds with ramped
-   onsets, and no screen test is a diagnosis. Myths (tongue map, pheromones, a trillion smells) are labelled.
+ INTERACTION DESIGN NOTE (Brain In Motion): the learner runs the classic preparation or reads the classic
+   record, and their result is drawn beside the published one. Neuron: change ion gradients, inject current
+   into an axon and hear the spikes as clicks. Synapse: count quanta, sum inputs, shift a dose–response curve.
+   Map: stimulate a cortical strip, test noise voxels and count the false positives. Movement: tap a reflex,
+   tune a pattern generator, adapt to prisms, decode a reach. Plasticity: steer a growth cone, pair inputs for
+   LTP. State: shift a body clock, build a hypnogram, follow a prediction error. Disorder and frontier scenes
+   explain; they never test the learner. Safety: nothing is medical advice and no on-screen test is a
+   diagnosis, no flicker above 3 per second, gentle sounds only from the learner's action. Contested claims
+   (adult human neurogenesis, the monoamine account of depression, amyloid, left/right-brain types) are labelled.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};

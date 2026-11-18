@@ -1,19 +1,21 @@
-# Senses In Motion
+# Brain In Motion
 
-A single-file, offline HTML page on how human vision, hearing, smell and touch work, two eras each, then the senses together. Within each sense the story follows the order of discovery from the organ to the brain. In Try it you take part where a screen allows it (illusions, colour matching, hearing and localisation with headphones, the McGurk effect, home smell and touch tests) and see your results beside the published ones. Safety rules apply throughout: no fast flicker, gentle volumes, and no screen test is a diagnosis.
+A single-file, offline HTML page on how the brain works and how that was found out, in the order of discovery: the neuron, the synapse, maps of the brain, movement, development and plasticity, brain states, disorders, and the tools at the frontier. In Try it you run the classic preparations as simulations (ion gradients, an axon, a reflex, prism adaptation), read the classic records, and see your results beside the published ones. Contested claims are labelled as contested. Safety rules apply throughout: nothing is medical advice, no on-screen test is a diagnosis, no fast flicker, and gentle volumes.
 
-This is the `senses` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `brain` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+
+**Status: scaffold.** The route, the era files and the brief are in place; each lesson currently shows one placeholder card until its era is written (see `docs/BRAIN-BRIEF.md`).
 
 ## Route
 
-1. **The eye**: optics, photoreceptors, dark adaptation, trichromacy, opponent colour, colour blindness
-2. **Seeing**: lateral inhibition, depth and stereo, motion, illusions, faces, the blind spot
-3. **The ear**: outer and middle ear, the cochlea, hair cells, the range of hearing, hearing loss, cochlear implants
-4. **Listening**: localisation, auditory scenes, speech perception, pitch, masking, hearing in noise
-5. **Smell**: odorant receptors, the olfactory bulb, thresholds, mixtures, smell and memory, smell loss
-6. **Taste and flavour**: five tastes, retronasal smell, pheromones, smell and emotion, smell training, how many smells
-7. **Touch**: skin receptors, acuity, vibration, pain, temperature, proprioception
-8. **Senses together**: multisensory integration, the rubber hand, synaesthesia, sensory substitution, ageing, affective touch
+1. **The neuron**: animal electricity, the neuron doctrine, the resting potential, the action potential, myelin and conduction, glia
+2. **Synapses**: the synapse, quantal release, excitation and inhibition, neurotransmitters, receptors and drugs, neuromodulation
+3. **Mapping the brain**: localisation, maps of the cortex, the split brain, brain imaging, lesion cases, the connectome
+4. **Movement**: the motor cortex, spinal reflexes, pattern generators, the cerebellum, the basal ganglia, population coding
+5. **Development and plasticity**: wiring up, critical periods, Hebb and LTP, changing maps, neurogenesis, the adolescent brain
+6. **Brain states**: the circadian clock, sleep stages, arousal systems, reward and dopamine, the stress response, hunger and homeostasis
+7. **When things go wrong**: stroke, epilepsy, Parkinson's disease, Alzheimer's disease, depression and its treatments, addiction
+8. **Tools and frontiers**: the patch clamp, optogenetics, place and grid cells, brain–computer interfaces, brain organoids, brains and AI
 
 ## Source layout
 
@@ -25,8 +27,8 @@ node test/check.js            # every scene in Watch and Try it: console errors,
 node test/three.js            # 2D/3D toggle on every 3D scene
 node test/slider.js           # time slider behaviour
 node test/text-layout.js 375  # phone text scale: labels stay inside the drawing and do not collide
-node test/timed.js            # timed experiments: delayed replies arrive, and stop when you leave
 node test/threads.js          # map connections: merged by name, "Other connection" switches
+node test/family.js           # In Motion family links in the header and footer
 ```
 
 | File | Contents |
@@ -38,4 +40,4 @@ node test/threads.js          # map connections: merged by name, "Other connecti
 | `src/scenes-N-words.js` | Era N's glossary entries, including the people |
 | `src/curriculum.js` | The eight eras and their header textures |
 | `src/app.js` | Runtime: clock, Watch/Try it, 2D/3D, controls, local map, glossary |
-| `docs/MUSIC-BRIEF.md` | The brief for era authors: fixed lesson ids, sound, notation and citation rules, test commands |
+| `docs/BRAIN-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, safety and honesty rules, test commands. It refers to the HCI, Mind and Music briefs beside it |
