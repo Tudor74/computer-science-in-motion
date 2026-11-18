@@ -307,7 +307,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <div class="speed-heading"><label for="speed">Speed</label><output id="speed-readout" for="speed">0 · Paused</output></div>
   <div class="range-wrap"><div class="track-rail" aria-hidden="true"></div><input type="range" id="speed" min="0" max="1000" step="1" value="170" aria-label="Playback speed" aria-describedby="speed-help" aria-valuetext="Paused"></div>
   <div class="scale" aria-hidden="true"><span class="start">−8×</span><span class="zero">0</span><span class="one">1×</span><span class="two">6×</span><span class="end">12×</span></div>
-  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind up to eight times speed; release to pause. Forward speed stays set up to twelve times. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
+  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind at up to eight times normal speed. Release to pause. A forward speed stays selected when you release the slider. The maximum is twelve times normal speed. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
  </div>
 </section>
 </div>
@@ -3072,7 +3072,7 @@ function OR_trieLay(root){const nodes=[];let leaf=0;(function lay(n,d,pre){n.d=d
 const OR_TRIE0=['car','cart','care','cat','cup','do','dog','dot'];
 SCENE({id:'trie',name:'Trie (prefix tree)',tag:'Words that share a beginning share a path',
  definition:'A trie stores words letter by letter down a tree: words with the same beginning share the same path, and a marked node says “a word ends here”. Finding every word with a given prefix means walking down the prefix, then collecting the subtree.',
- example:'car, cart and care share the path c → a → r. Typing “ca” on a phone keyboard walks two steps down and offers every word below. Search time depends on the word’s length, not on how many words are stored.',
+ example:'car, cart and care share the path c → a → r. Typing “ca” on a phone keyboard walks two steps down and offers every word below. Finding the prefix takes one step per letter. Listing its completions also takes time to visit the matching branches.',
  desc:'A tree of letters with word-ending nodes double-ringed; the path for the typed prefix is highlighted, and every word below it is shaded as a completion.',
  dur:12,hint:'Type a prefix to see its path and completions. Press Insert word to add what you typed (letters only, up to 6).',
  init:()=>({words:OR_TRIE0.slice(),text:'ca'}),
@@ -3088,7 +3088,7 @@ SCENE({id:'trie',name:'Trie (prefix tree)',tag:'Words that share a beginning sha
    out+=Ci(x.px,x.py,isRoot?8:15,isRoot?C.dark:inP?C.amberp:inS?C.greenp:'#fff',isRoot?C.dark:inP?C.amber:inS?C.green:C.blue);
    if(x.end)out+=Ci(x.px,x.py,11,'none',inS||inP?C.green:C.blue);if(!isRoot)out+=TBF(x.px,x.py+5,x.ch,14,C.ink)}
   out+=TF(580,58,s.text?(ok?`${comps.length} word${comps.length===1?'':'s'} start with “${s.text}”`:`no word starts with “${s.text}”`):`${s.words.length} words`,13,ok?C.green:C.coral,'end');
-  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===1?'':'s'}.`):'Each path from the root spells a word; double rings mark where a word ends.'};
+  return {svg:out,phase:s.text?(ok?`Walked ${s.text.length} step${s.text.length===1?'':'s'} down from the root. Completions: ${comps.join(', ')||'none'}. Double rings mark where a word ends, so “car” and “cart” can both be stored.`:`The path stops: no stored word starts with “${s.text}”. The search failed after reading just ${[...path].length} letter${[...path].length===1?'':'s'}.`):'Each path from the root spells a prefix. A double ring marks the end of a stored word.'};
  }});
 
 /* ---- Binary search trees ---- */
