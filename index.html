@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <title>Language In Motion — v0.1</title>
 <meta name="application-version" content="0.1">
-<meta name="description" content="An offline, animated and interactive history of music: ratios on a string, notation, harmony, form, timbre, rhythm, recording, electronic sound and the mind, with sound you can play.">
+<meta name="description" content="An offline, animated and interactive history of language: writing and decipherment, language families and sound laws, structure, grammar, how children learn, meaning and use, language in society, and language machines.">
 <style>
 :root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--word-blue:#163f70;--focus:#a44289;--deck:#f3f7fa;--thumb:46px;--zero:17%;--rewind:#f3e7e1}
 *{box-sizing:border-box}
@@ -240,7 +240,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  <div class="header-row">
   <div class="title-picker">
    <p class="brand"><a href="https://in-motion.puter.site/" title="All In Motion courses">In Motion</a> · Language</p>
-   <h1 id="topic-title">Pitch and frequency</h1>
+   <h1 id="topic-title">From tokens to tablets</h1>
    <span class="picker-chevron" aria-hidden="true"></span>
    <label class="sr-only" for="route-select">Choose any lesson</label>
    <select id="route-select" aria-label="Choose any lesson"></select>
@@ -287,8 +287,8 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  </div>
  <div class="explanation">
   <div class="copy" id="copy">
-   <p class="eyebrow" id="eyebrow">Represent</p>
-   <h2 id="term">Bit</h2>
+   <p class="eyebrow" id="eyebrow">1 · Writing · c. 8000–3100 BCE · Counting before writing</p>
+   <h2 id="term">From tokens to tablets</h2>
    <p class="definition" id="definition"></p>
    <p class="example" id="example"></p>
    <p class="research" id="research"></p>
@@ -301,7 +301,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
     <svg class="map-wires" viewBox="0 0 300 260" preserveAspectRatio="none" aria-hidden="true"><path id="wire-up" d="M150 130 L158 100 L150 39" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-down" d="M150 130 L142 170 L150 221" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-left" d="M150 130 L50 130" fill="none" stroke="#76949f" stroke-width="1.6"/><path id="wire-right" d="M150 130 L250 130" fill="none" stroke="#76949f" stroke-width="1.6"/></svg>
     <button type="button" class="map-node" id="map-up"></button>
     <button type="button" class="map-node" id="map-left"></button>
-    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>Bit</b></div>
+    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>From tokens to tablets</b></div>
     <button type="button" class="map-node" id="map-right"></button>
     <button type="button" class="map-node" id="map-down"></button>
    </div>
@@ -320,7 +320,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <div class="speed-heading"><label for="speed">Speed</label><output id="speed-readout" for="speed">0 · Paused</output></div>
   <div class="range-wrap"><div class="track-rail" aria-hidden="true"></div><input type="range" id="speed" min="0" max="1000" step="1" value="170" aria-label="Playback speed" aria-describedby="speed-help" aria-valuetext="Paused"></div>
   <div class="scale" aria-hidden="true"><span class="start">−8×</span><span class="zero">0</span><span class="one">1×</span><span class="two">6×</span><span class="end">12×</span></div>
-  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind up to eight times speed; release to pause. Forward speed stays set up to twelve times. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
+  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind at up to eight times normal speed. Release to pause. A forward speed stays selected when you release the slider. The maximum is twelve times normal speed. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
  </div>
 </section>
 </div>
@@ -347,7 +347,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <dt>Example</dt><dd id="word-example" class="example-word"></dd>
  </dl></div>
  <div id="word-browser" hidden>
-  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try octave, cadence, timbre…" autocomplete="off">
+  <label for="word-search">Find a word</label><input id="word-search" type="search" placeholder="Try clay token, bulla, cuneiform…" autocomplete="off">
   <p id="word-list-count" aria-live="polite"></p><div id="word-list"></div>
  </div>
  <div class="word-footer"><button type="button" id="word-goto" hidden>Go to this topic</button><button type="button" id="word-resume">Close and resume</button></div>
@@ -709,8 +709,8 @@ function L1_chip(X,act,arg,x,y,w,label,on,aria){return hit(X,act,arg,aria||label
 const L1_BARLEY=[[[50,92],[50,8]],[[50,22],[34,12]],[[50,22],[66,12]],[[50,42],[34,32]],[[50,42],[66,32]],[[50,62],[34,52]],[[50,62],[66,52]]];
 const L1_GOODS={
  sheep:{name:'sheep',token:'a disc with an incised cross',sign:[L1_circ(50,50,38),[[50,12],[50,88]],[[12,50],[88,50]]]},
- grain:{name:'measures of grain',token:'a cone',sign:L1_BARLEY},
- oil:{name:'jars of oil',token:'an ovoid with an incised line',sign:[[[36,12],[64,12]],[[38,12],[38,24],[22,44],[30,88],[70,88],[78,44],[62,24],[62,12]]]}};
+ grain:{name:'measures of grain',one:'measure of grain',token:'a cone',sign:L1_BARLEY},
+ oil:{name:'jars of oil',one:'jar of oil',token:'an ovoid with an incised line',sign:[[[36,12],[64,12]],[[38,12],[38,24],[22,44],[30,88],[70,88],[78,44],[62,24],[62,12]]]}};
 function L1_token(kind,x,y,r,imp){
  const fill=imp?'#c9a776':'#e3c48f',st=imp?L1_CLAYI:'#8f6a3c';
  if(kind==='sheep')return Ci(x,y,r,fill,st,'stroke-width="1.5"')+L(x-r*.6,y,x+r*.6,y,st,1.5)+L(x,y-r*.6,x,y+r*.6,st,1.5);
@@ -746,7 +746,8 @@ SCENE({id:'clay-tokens',name:'From tokens to tablets',tag:'Counting before writi
   else{out+=L1_tab(70,80,280,180);const nm=L1_numerals(s.n,100,170,1.3);out+=nm.svg+L1_sign(g.sign,Math.min(300,nm.end+50),170,80,{col:L1_CLAYI,w:3.5});
    out+=TF(210,250,`a number sign for ${s.n}, then one sign for “${g.name}”`,13,C.muted)}
   out+=L1_note(380,70,200,210,'What changed',[`Tokens are the objects themselves: ${g.token} for ${g.name}.`,'Marks on the envelope let anyone check its contents without breaking it.','The tablet keeps only the marks; the tokens are no longer needed.','Number and thing are now separate signs: counting has become abstract.'][s.stage],27);
-  return {svg:out,phase:[`${s.n} ${g.name}: one token for each.`,`The envelope records ${s.n} tokens twice: inside, and as impressions outside.`,`${s.n} impressions on a flat tablet: a record with no tokens at all.`,`One number sign and one word sign now say “${s.n} ${g.name}”. How directly tokens led to these signs is still debated.`][s.stage]};
+  const one=s.n===1,gn=one?(g.one||g.name):g.name;
+return {svg:out,phase:[`${s.n} ${gn}: one token for each.`,`The envelope records ${s.n} ${one?'token':'tokens'} twice: inside, and as ${one?'an impression':'impressions'} outside.`,`${s.n} ${one?'impression':'impressions'} on a flat tablet: a record with no tokens at all.`,`One number sign and one word sign now say “${s.n} ${gn}”. How directly tokens led to these signs is still debated.`][s.stage]};
  }});
 
 SCENE({id:'clay-tokens-counting',name:'Concrete and abstract counting',tag:'One mark per thing, or a number',
