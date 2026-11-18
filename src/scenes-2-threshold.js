@@ -90,7 +90,7 @@ function K2_pStats(res){const ok=res.filter(r=>r.ok&&r.rt>150&&r.rt<2000),c=ok.f
 function K2_pSim(n){const r=rng(29),tr=K2_pTrials(3),res=[];for(let i=0;i<n;i++)res.push({con:tr[i].con,rt:(tr[i].con?520:544)+K2_gauss(r)*45,ok:true});return res}
 SCENE({id:'masking-priming',name:'Masked priming',tag:'You take part: does a hidden number help?',
  definition:'In masked priming a word or number, the prime, is shown briefly and masked, and a clearly visible target follows. If the prime changes how fast people respond to the target, it was processed to some depth. Anthony Marcel (1983) reported that masked words speeded decisions about related words. Stanislas Dehaene and colleagues (1998) reported that a masked number speeds a larger-or-smaller-than-5 judgement when it falls on the same side of 5 as the target.',
- example:'Target 9, to be judged larger than 5. After a masked 6 (same side: congruent) answers came about 24 ms sooner than after a masked 4 (opposite side: incongruent) in Dehaene’s study, which also found activity in the motor cortex matching the prime. These effects are small, and whether the primes were truly unseen is contested (next scene).',
+ example:'Target 9, to be judged larger than 5. After a masked 6 (same side: congruent) answers came roughly 20 ms sooner than after a masked 4 (opposite side: incongruent) in Dehaene’s study, which also found activity in the motor cortex matching the prime. These effects are small, and whether the primes were truly unseen is contested (next scene).',
  desc:'A display that shows a brief grey number, one mask and then a clear number to classify, with two answer buttons and a bar chart of mean response time after congruent and incongruent primes.',
  research:['Marcel, A. J. (1983). Conscious and unconscious perception: experiments on visual masking and word recognition. Cognitive Psychology 15, 197–237.','Dehaene, S. et al. (1998). Imaging unconscious semantic priming. Nature 395, 597–600.','Van den Bussche, E., Van den Noortgate, W. & Reynvoet, B. (2009). Mechanisms of masked priming: a meta-analysis. Psychological Bulletin 135, 452–477. Status: contested; effects are small and depend on how awareness is checked.'],
  dur:12,hint:'Press Start, then judge each clear number as smaller or larger than 5, as fast as you can without mistakes. Each trial has one brief grey number and one mask. Sixteen trials; your times stay on this page.',
@@ -121,7 +121,7 @@ SCENE({id:'masking-priming',name:'Masked priming',tag:'You take part: does a hid
   [['congruent',st.c,st.mc,C.green,380],['incongruent',st.n,st.mn,C.coral,490]].forEach(([l,a,m,col,x])=>{if(a.length)out+=R(x,base-sc(m),70,sc(m),col,'none',4)+TB(x+35,base-sc(m)-7,String(Math.round(m)),14,C.ink);out+=TF(x+35,base+18,l,13,C.muted)+TF(x+35,base+35,a.length+(a.length===1?' trial':' trials'),13,C.muted)});
   const d=st.mn-st.mc,have=st.c.length>0&&st.n.length>0;
   if(have)out+=TB(465,316,`${s.sim?'Simulated':'Your'} difference: ${d>=0?'+':'−'}${Math.abs(Math.round(d))} ms`,14,C.ink);
-  out+=TF(465,338,'Dehaene et al. (1998): about +24 ms',13,C.muted)+TF(465,356,'(incongruent slower than congruent)',13,C.muted);
+  out+=TF(465,338,'Dehaene et al. (1998): roughly +20 ms',13,C.muted)+TF(465,356,'(incongruent slower than congruent)',13,C.muted);
   if(st.err&&!s.sim)out+=T(cx,290,`${st.err} wrong answer${st.err>1?'s':''} left out of the means`,13,C.muted);
   const phase=s.sim?'A simulated observer with the published effect built in. With only eight trials of each kind the difference between the bars is mostly noise, which is the difficulty with small effects.':s.ph==='done'&&have?`Your incongruent trials were ${Math.abs(Math.round(d))} ms ${d>=0?'slower':'faster'} than your congruent ones. Either result is normal: with eight trials of each kind, chance differences are larger than the published effect, which came from many trials and many people. Could you read the grey numbers? If so, any priming here was not unconscious.`:s.ph==='idle'?'A grey number appears very briefly, a mask covers it, then a clear number stays until you answer. Half the grey numbers fall on the same side of 5 as the clear one.':'Answer as soon as you can tell which side of 5 the clear number is on.';
   return {svg:out,phase};
@@ -146,7 +146,7 @@ SCENE({id:'masking-awareness',name:'Was it really unseen?',tag:'The awareness ch
  draw(s){
   const n=K2_AWT[s.ti],d=K2_aw(n);let out=heading('Toy model: who gets counted as “unaware”?');
   const pl=K2_plot(70,70,270,210,[.2,.9],[.5,.7],{xt:[[.3,'30%'],[.5,'50%'],[.7,'70%'],[.9,'90%']],yt:[[.5,'50%'],[.6,'60%'],[.7,'70%']],xl:'score on the awareness test',yl:'true accuracy on the prime'});
-  out+=R(70,70,pl.X(.5)-70,210,C.coralp,'none',0)+pl.svg+L(pl.X(.5),70,pl.X(.5),280,C.coral,1.5,'stroke-dasharray="4 4"')+T(76,86,'counted unaware',13,C.coral,'start');
+  out+=R(70,70,pl.X(.5)-70,210,C.coralp,'none',0)+pl.svg+L(pl.X(.5),70,pl.X(.5),280,C.coral,1.5,'stroke-dasharray="4 4"')+TF(76,86,'counted unaware',13,C.coral,'start');
   d.out.forEach(q=>out+=Ci(pl.X(clamp(q.score,.2,.9)),pl.Y(.5+q.a),3,q.score<=.5?C.coral:C.blue,'none','opacity=".65"'));
   out+=TB(372,84,'Toy simulation',14,C.amber,'start')+TF(372,102,'200 simulated people;',13,C.muted,'start')+TF(372,119,'no unconscious priming built in',13,C.muted,'start');
   out+=counter(372,134,'counted “unaware”',`${d.sel.length} of ${K2_AWN}`,C.coral,200);
@@ -353,7 +353,7 @@ SCENE({id:'binocular-rivalry-neurons',name:'Neurons that follow the percept',tag
  definition:'Nikos Logothetis and colleagues trained monkeys to report with levers which of two rival pictures they were seeing, and recorded single neurons meanwhile. The pictures stayed fixed, so a cell whose firing changed with the report was following the percept, not the stimulus. The share of such cells rose along the visual pathway.',
  example:'In rounded figures from these studies, about 20% of the cells tested in V1 and V2 changed with the reported percept, about 40% in V4 and MT, and about 90% in the temporal-lobe areas IT and STS. Most early cells kept firing to their preferred picture whether or not the monkey reported seeing it.',
  desc:'Twenty schematic cells from a chosen visual area. Pressing the switch flips the reported percept; cells that follow the percept change their firing and the rest do not. A bar chart shows the rounded share of percept-following cells in three groups of areas.',
- research:['Leopold, D. A. & Logothetis, N. K. (1996). Activity changes in early visual cortex reflect monkeys’ percepts during binocular rivalry. Nature 379, 549–553.','Sheinberg, D. L. & Logothetis, N. K. (1997). The role of temporal cortical areas in perceptual organization. PNAS 94, 3408–3413.','Polonsky, A., Blake, R., Braun, J. & Heeger, D. J. (2000). Neuronal activity in human primary visual cortex correlates with perception during binocular rivalry. Nature Neuroscience 3, 1153–1159. Single-cell and brain-imaging results disagree about V1.'],
+ research:['Logothetis, N. K. & Schall, J. D. (1989). Neuronal correlates of subjective visual perception. Science 245, 761–763.','Leopold, D. A. & Logothetis, N. K. (1996). Activity changes in early visual cortex reflect monkeys’ percepts during binocular rivalry. Nature 379, 549–553.','Sheinberg, D. L. & Logothetis, N. K. (1997). The role of temporal cortical areas in perceptual organization. PNAS 94, 3408–3413.','Polonsky, A., Blake, R., Braun, J. & Heeger, D. J. (2000). Neuronal activity in human primary visual cortex correlates with perception during binocular rivalry. Nature Neuroscience 3, 1153–1159. Single-cell and brain-imaging results disagree about V1.'],
  dur:12,hint:'Choose a group of areas, then press Switch the percept and count the cells that change. The cells are schematic; the shares are rounded from the monkey recordings.',
  init:()=>({area:0,per:0}),
  watch(p){return {area:Math.min(2,Math.floor(p*3)),per:Math.floor(p*9)%2}},
@@ -370,7 +370,7 @@ SCENE({id:'binocular-rivalry-neurons',name:'Neurons that follow the percept',tag
   out+=Ci(52,366,7,'#f4be3c',C.amber)+TF(64,370,'follows the percept',13,C.ink,'start')+Ci(196,366,7,'#cfe0ec',C.line)+TF(208,370,'follows the picture',13,C.ink,'start');
   const base=290,bw=58;out+=L(340,base,580,base,C.line,2)+T(460,62,'cells that follow the percept',13,C.muted);
   K2_AREAS.forEach((a,i)=>{const x=356+i*74,h=a[2]/20*190,sel=i===s.area;
-   out+=hit(X,'area',i,`${a[0]}: about ${a[2]*5}% of cells follow the percept`,R(x,base-h,bw,h,sel?C.amber:'#e8d9b5','none',4))+TB(x+bw/2,base-h-7,`about ${a[2]*5}%`,13,C.ink)+TF(x+bw/2,base+18,a[0],13,sel?C.ink:C.muted)});
+   out+=hit(X,'area',i,`${a[0]}: about ${a[2]*5}% of cells follow the percept`,R(x,base-h,bw,h,sel?C.amber:'#e8d9b5','none',4))+TBF(x+bw/2,base-h-7,`about ${a[2]*5}%`,13,C.ink)+TF(x+bw/2,base+18,a[0],13,sel?C.ink:C.muted)});
   out+=T(460,base+40,'earlier  →  later in the visual pathway',13,C.muted)+TBF(460,base+64,`here: ${k} of 20 change with the report`,13,C.amber);
   return {svg:out,phase:`In ${A[0]} (${A[1]}), about ${k*5}% of recorded cells changed with what the monkey reported. Two cautions: brain imaging in humans finds a clear rivalry signal in V1 as well, and a cell that follows the report may reflect deciding and reporting as much as seeing.`};
  }});
@@ -389,7 +389,7 @@ function K2_ibBox(objs,t,showCross){const a=K2_ibAt(objs,t);let out=R(30,52,540,
  return {svg:out,b:a.b}}
 const K2_ibCrit=seed=>1+seed%2;
 SCENE({id:'inattentional-blindness',name:'Counting bounces',tag:'You take part: an attention task',
- definition:'Inattentional blindness is the failure to notice something fully visible and unexpected while attention is busy with something else. Ulric Neisser’s selective-looking films of the 1970s first showed it; Arien Mack and Irvin Rock named it and studied it in thousands of observers (1998); Daniel Simons and Christopher Chabris made it famous in 1999.',
+ definition:'Inattentional blindness is the failure to notice something fully visible and unexpected while attention is busy with something else. Ulric Neisser’s selective-looking films of the 1970s first showed it; Arien Mack and Irvin Rock named it and studied it in a long series of experiments (1998); Daniel Simons and Christopher Chabris made it famous in 1999.',
  example:'In Simons and Chabris’s study, observers counted basketball passes while a person in a gorilla suit or a woman with an umbrella walked through the game. About half did not notice. In Mack and Rock’s experiments about a quarter of observers missed an unexpected shape near the cross they were judging, and more missed it when it appeared exactly where they were looking.',
  desc:'A box in which three blue discs and three grey squares bounce for eight seconds while the learner counts the bounces of the blue discs, followed by questions and an explanation of what happened.',
  research:['Mack, A. & Rock, I. (1998). Inattentional Blindness. MIT Press.','Simons, D. J. & Chabris, C. F. (1999). Gorillas in our midst: sustained inattentional blindness for dynamic events. Perception 28, 1059–1074.','Most, S. B. et al. (2001). How not to be seen: the contribution of similarity and selective ignoring to sustained inattentional blindness. Psychological Science 12, 9–17 (the moving-shapes version used here). Status: robust and often replicated.'],
@@ -413,7 +413,7 @@ SCENE({id:'inattentional-blindness',name:'Counting bounces',tag:'You take part: 
   if(s.ph==='count')out+=TB(300,288,'How many bounces did you count?',14,C.ink)+K2_btn(X,'adj','-1','One fewer',180,302,50,44,'−')+R(240,302,120,44,'#fff',C.line,8)+TB(300,332,String(s.guess),22,C.ink)+K2_btn(X,'adj','1','One more',370,302,50,44,'+')+K2_btn(X,'ok','','Confirm my count',440,302,90,44,'OK',C.green);
   if(s.ph==='fb'&&lastLog)out+=TB(300,290,`You counted ${lastLog.g}; the blue discs bounced ${lastLog.n} times.`,14,C.ink)+K2_btn(X,'start','','Start the next trial',210,306,180,44,`Start trial ${s.trial+2}`);
   if(s.ph==='ask')out+=TB(300,288,'Did you see anything other than discs and squares?',14,C.ink)+K2_btn(X,'seen','1','Yes, I saw something else',150,304,130,44,'Yes')+K2_btn(X,'seen','0','No, nothing else',320,304,130,44,'No',C.coral);
-  if(s.ph==='reveal'){out+=L(42,157,558,157,C.coral,2,'stroke-dasharray="7 6"')+K2_cross(300,157)+R(176,176,248,28,'#fff',C.coral,14)+T(300,195,'a cross passed along this line for 4.7 s',13,C.coral);
+  if(s.ph==='reveal'){out+=L(42,157,558,157,C.coral,2,'stroke-dasharray="7 6"')+K2_cross(300,157)+R(176,176,248,28,'#fff',C.coral,14)+TF(300,195,'a cross passed along this line for 4.7 s',13,C.coral);
    out+=TB(300,288,s.sim?'The simulated observer counted correctly and reported nothing else.':s.seen?'You noticed it. About half of observers do.':'You did not notice it. That is the usual result.',14,C.ink);
    out+=T(300,310,'In Simons & Chabris (1999), 46% of observers missed the unexpected event.',13,C.muted);
    if(!s.sim&&lastLog)out+=T(300,330,`Your count on that trial: ${lastLog.g}; true count: ${lastLog.n}.`,13,C.muted);
@@ -499,7 +499,8 @@ SCENE({id:'change-blindness',name:'Find the change',tag:'You take part: two pict
  research:['Rensink, R. A., O’Regan, J. K. & Clark, J. J. (1997). To see or not to see: the need for attention to perceive changes in scenes. Psychological Science 8, 368–373.','Simons, D. J. & Rensink, R. A. (2005). Change blindness: past, present, and future. Trends in Cognitive Sciences 9, 16–20. Status: robust. The grey fade here is slower and softer than the original flicker, for safety.'],
  dur:14,hint:'Press Start, then press the shape that changes between the two versions. Try it again with No gap to see why the interruption matters. Your times stay on this page.',
  init:()=>({seed:2,mode:'gap',ph:'idle',img:0,ov:0,t0:0,swaps:0,miss:0,found:null,run:0}),
- watch(p){const t=p*14,c=t%2.4,half=Math.floor(t/2.4),img=(half+(c>=1.95?1:0))%2,ov=c<1.5?0:c<1.8?(c-1.5)/.3:c<2.1?1:(2.4-c)/.3,done=t>12.2;return {seed:2,mode:'gap',ph:done?'found':'run',img:done?1:img,ov:done?0:ov,swaps:Math.min(5,half+(c>=1.95?1:0)),miss:0,found:done?{t:12.2,swaps:5}:null,sim:true}},
+ // Watch shows the two versions side by side with no fade, so that it cannot flicker at any playback speed.
+ watch(p){const i=Math.min(5,Math.floor(p*6)),k=K2_cbPic(2).k,seq=[7,10,5,2,k,k],done=i>=4;return {seed:2,mode:'gap',ph:done?'found':'run',img:0,ov:0,swaps:Math.min(5,i+1),miss:0,found:done?{t:12,swaps:5}:null,sim:true,att:seq[i]}},
  ui:[{choose:[['gap','Grey fade between'],['none','No gap']],label:'Between the two versions',get:s=>s.mode,act:'mode'},{b:'Start',act:'start'},{b:'Show me',act:'reveal'},{b:'New picture',act:'fresh'}],
  on:{mode(s,v){s.mode=v;s.ph='idle';s.ov=0;s.img=0;s.found=null;s.run++},
   start(s,a,ctx){s.run++;s.ph='run';s.img=0;s.ov=0;s.swaps=0;s.miss=0;s.found=null;s.t0=performance.now();ctx.later(s.mode==='gap'?1500:2400,'step',s.run+':0');return 'keep'},
@@ -513,15 +514,18 @@ SCENE({id:'change-blindness',name:'Find the change',tag:'You take part: two pict
  draw(s,f,X){
   const pic=K2_cbPic(s.seed),ended=s.ph==='found'||s.ph==='shown';
   let out=heading(s.sim?'Simulated observer: searching for the change':s.ph==='found'?'Found it':'Which shape changes?');
-  out+=K2_cbDraw(X,pic,s.img,{pick:s.ph==='run'&&!s.sim,ring:ended,ov:s.ov});
-  out+=TF(210,302,s.ph==='idle'?'Press Start. The picture will alternate with an altered copy.':ended?`The ringed shape ${K2_cbKind[pic.kind]}.`:`version ${s.img?'B':'A'} · ${s.swaps} alternation${s.swaps===1?'':'s'} so far`,13,C.muted);
+  if(s.sim){const o=pic.objs[s.att];[0,1].forEach(v=>{const tx=8+v*196;out+=G(K2_cbDraw(null,pic,v,{}),`transform="translate(${tx},40) scale(.5)"`)+Ci(tx+o.x/2,40+o.y/2,19,'none',ended?C.coral:C.amber,'stroke-dasharray="5 4"')+TF(tx+105,200,v?'version B':'version A',13,C.muted)});
+   out+=TF(210,226,`alternation ${s.swaps}: the ringed shape is compared`,13,C.ink)+TF(210,246,ended?'It differs between A and B: found.':'It is the same in A and B, so no change is seen.',13,ended?C.coral:C.muted);
+   out+=TF(210,276,'In Try it the two versions alternate in one place,',13,C.muted)+TF(210,294,'with a soft grey fade between them.',13,C.muted)}
+  else out+=K2_cbDraw(X,pic,s.img,{pick:s.ph==='run',ring:ended,ov:s.ov});
+  if(!s.sim)out+=TF(210,302,s.ph==='idle'?'Press Start. The picture will alternate with an altered copy.':ended?`The ringed shape ${K2_cbKind[pic.kind]}.`:`version ${s.img?'B':'A'} · ${s.swaps} alternation${s.swaps===1?'':'s'} so far`,13,C.muted);
   out+=TB(414,66,'Alternations needed',14,C.ink,'start');
   const bar=(y,lab,v,col)=>TF(414,y,lab,13,C.muted,'start')+R(414,y+6,Math.max(2,Math.min(20,v)/20*150),14,col,'none',3)+TBF(420+Math.min(20,v)/20*150,y+18,String(v),13,C.ink,'start');
   out+=bar(90,s.sim?'simulated observer':'you',s.found?s.found.swaps:s.swaps,C.blue)+bar(140,'published: central interest',7.3,'#9cc3dd')+bar(190,'published: marginal interest',17.1,'#9cc3dd');
   out+=K2_lines(414,246,s.found?`${s.sim?'Search time':'Your time'}: ${s.found.t.toFixed(1)} s, with ${s.miss} wrong press${s.miss===1?'':'es'}.`:s.ph==='shown'?'Shown without being found. That happens to most people on some pictures.':'Published averages: Rensink et al. (1997).',27,C.ink,'start',17,3);
   out+=K2_lines(414,304,'Their pictures switched much faster: compare counts, not seconds.',27,C.muted,'start',17,3);
   out+=T(300,366,s.mode==='gap'?'Each version shows for 1.5 s; a soft grey fade hides the moment of change.':'With no gap, the change itself is visible as a sudden jump.',13,C.muted);
-  const phase=s.sim?'A simulated observer needs five alternations here. Until attention lands on the right shape, the change is not seen, although nothing hides the shape itself.':s.ph==='found'?`You needed ${s.found.swaps} alternation${s.found.swaps===1?'':'s'}${s.mode==='gap'?'. Taking several is normal: only the shapes you attend to are compared from one version to the next.':' with no gap: the jump draws attention straight to the place.'}`:s.ph==='run'?'Look for the one shape that differs between version A and version B, and press it.':'A picture of twelve shapes will alternate with a copy in which one shape is different.';
+  const phase=s.sim?'A simulated observer compares one shape per alternation and needs five here. Until attention lands on the right shape the change is not seen, although nothing hides the shape itself.':s.ph==='found'?`You needed ${s.found.swaps} alternation${s.found.swaps===1?'':'s'}${s.mode==='gap'?'. Taking several is normal: only the shapes you attend to are compared from one version to the next.':' with no gap: the jump draws attention straight to the place.'}`:s.ph==='run'?'Look for the one shape that differs between version A and version B, and press it.':'A picture of twelve shapes will alternate with a copy in which one shape is different.';
   return {svg:out,phase};
  }});
 
@@ -630,7 +634,7 @@ SCENE({id:'attention-awareness',name:'Cueing attention',tag:'You take part: the 
   out+=R(70,52,110,84,'#f4f7f9',C.line,6)+R(420,52,110,84,'#f4f7f9',C.line,6);
   if(showCue)out+=t.cue?arrow(278,94,322,94,C.ink,4,12):arrow(322,94,278,94,C.ink,4,12);else out+=TB(300,101,'+',20,ph==='idle'||ph==='done'?C.muted:C.ink);
   if(showT)out+=Ci(t.side?475:125,94,13,C.ink);
-  if(s.sim)out+=T(300,150,['eyes on the centre','the arrow says where the dot will probably be','dot: at the cued side on 16 of 20 trials'][s.k],13,C.muted);
+  if(s.sim)out+=T(300,170,['eyes on the centre','the arrow says where the dot will probably be','dot: at the cued side on 16 of 20 trials'][s.k],13,C.muted);
   else out+=K2_btn(X,'ans',0,'The dot is on the left',70,150,200,46,'Left')+K2_btn(X,'ans',1,'The dot is on the right',330,150,200,46,'Right');
   out+=T(300,222,ph==='done'?'20 of 20 trials. Press Start for a new run.':ph==='idle'?'Press Start, and keep your eyes on the +':`trial ${s.i+1} of 20`,13,C.muted);
   const st=K2_poStats(s.res),d=st.mn-st.mv;
@@ -645,7 +649,7 @@ SCENE({id:'attention-awareness',name:'Cueing attention',tag:'You take part: the 
 // A simulated patient, in the direction reported by Kentridge et al. (1999); the numbers are not GY's own.
 function K2_gySim(cue,n0){const r=rng(n0*37+(cue==='blind'?501:211)),a=[];for(let i=0;i<40;i++){const valid=i%2===0;a.push({valid,ok:true,rt:(valid?(cue==='blind'?492:480):(cue==='blind'?528:532))+K2_gauss(r)*55})}return a}
 SCENE({id:'attention-awareness-blindsight',name:'Attention without awareness?',tag:'Cueing in a blind field',shared:'k2-posner',
- definition:'Robert Kentridge, Charles Heywood and Lawrence Weiskrantz (1999) ran a cueing task on GY, a man with blindsight in the right half of his visual field. Targets appeared in the blind field, where GY reported no awareness of them. He was nevertheless faster and more accurate at detecting them when a cue had pointed to the right place, and this held even when the cue itself was shown in the blind field. This is the best-known case offered for attention without awareness.',
+ definition:'Robert Kentridge, Charles Heywood and Lawrence Weiskrantz (1999) ran a cueing task on GY, a man with blindsight in the right half of his visual field. Targets appeared in the blind field, where GY reported no awareness of them. He nevertheless responded faster to them when a cue had pointed to the right place, and this held even when the cue itself was shown in the blind field. This is the best-known case offered for attention without awareness.',
  example:'The same pattern as the cueing task you just ran, a faster response at the cued place, but for targets the observer says he does not see. The objection: GY sometimes reported a feeling that something had happened, so his awareness may have been degraded, not absent (the criterion problem from the blindsight lesson).',
  desc:'A schematic display with a blind right field, a cue and two possible target places, beside bars of mean response time after valid and invalid cues for a simulated patient and, when available, for the learner’s own run from the previous scene.',
  research:['Kentridge, R. W., Heywood, C. A. & Weiskrantz, L. (1999). Attention without awareness in blindsight. Proceedings of the Royal Society B 266, 1805–1811.','Kentridge, R. W., Heywood, C. A. & Weiskrantz, L. (2004). Spatial attention speeds discrimination without awareness in blindsight. Neuropsychologia 42, 831–835.','Phillips, I. (2021). Blindsight is qualitatively degraded conscious vision. Psychological Review 128, 558–584. Status: the cueing result stands; whether the targets were truly unseen is contested.'],
@@ -658,9 +662,9 @@ SCENE({id:'attention-awareness-blindsight',name:'Attention without awareness?',t
   let out=heading('Cueing a target that is not reported');
   out+=R(30,50,250,150,'#fff',C.grid,8)+R(155,52,123,146,C.coralp,'none',0)+L(155,52,155,198,C.line,1.5,'stroke-dasharray="4 4"')+T(92,68,'sighted field',13,C.green)+T(217,68,'blind field',13,C.coral);
   out+=Ci(225,100,9,'#fff',C.line)+Ci(225,160,9,C.ink)+T(225,186,'target',13,C.muted);
-  if(s.gcue==='sighted')out+=TB(142,134,'+',16,C.ink)+arrow(118,150,140,168,C.ink,3,8)+T(92,186,'arrow cue',13,C.muted);
-  else out+=TB(142,134,'+',16,C.ink)+R(190,148,12,24,C.muted,'none',3)+T(92,186,'cue beside target',13,C.muted);
-  out+=R(30,208,250,28,C.pale,'none',14)+T(155,227,'“I’m not aware of anything there.”',13,C.ink);
+  if(s.gcue==='sighted')out+=TB(142,134,'+',16,C.ink)+arrow(118,150,140,168,C.ink,3,8)+TF(92,186,'arrow cue',13,C.muted);
+  else out+=TB(142,134,'+',16,C.ink)+R(190,148,12,24,C.muted,'none',3)+TF(92,186,'cue beside target',13,C.muted);
+  out+=R(30,208,250,28,C.pale,'none',14)+TF(155,227,'“I’m not aware of anything there.”',13,C.ink);
   const g=K2_poStats(s.gy),me=K2_poStats(s.res||[]);
   out+=TB(300,66,'Simulated patient',14,C.amber,'start')+TF(300,84,'direction as published; numbers illustrative',13,C.muted,'start');
   out+=K2_hbar(96,'valid',g.mv,g.v.length,C.green,350,150,700)+K2_hbar(120,'invalid',g.mn,g.n.length,C.coral,350,150,700);
@@ -695,7 +699,7 @@ SCENE({id:'attention-awareness-gist',name:'Awareness without attention?',tag:'Th
   out+=R(222,60,48,38,'#cfe3d2',C.green,4)+`<polygon points="226,94 240,74 250,86 258,78 266,94" fill="${C.green}"/>`+Ci(236,70,4,'#d49a1c');
   out+=T(140,206,s.c===0?'attention free for the scene':s.c===1?'attention on the letters':'attention fully taken up',13,C.muted);out+=T(214,84,'scene',13,C.green,'end');
   out+=TB(310,66,'Illustrative accuracy',14,C.amber,'start')+TF(310,84,'directions from the papers, not their data',13,C.muted,'start');
-  const base=220,sc=v=>(v-50)/50*110;out+=L(320,base,580,base,C.line,2)+T(316,base+4,'50%',13,C.muted,'end')+T(316,base-106,'100%',13,C.muted,'end')+T(450,base+56,'50% is chance',13,C.muted);
+  const base=220,sc=v=>(v-50)/50*110;out+=L(320,base,580,base,C.line,2)+TF(316,base+4,'50%',13,C.muted,'end')+TF(316,base-106,'100%',13,C.muted,'end')+T(450,base+56,'50% is chance',13,C.muted);
   out+=R(350,base-sc(q.scene),80,sc(q.scene),C.green,'none',4)+TB(390,base-sc(q.scene)-7,q.scene+'%',14,C.ink)+TF(390,base+18,'animal or not?',13,C.muted)+TF(390,base+35,'(scene)',13,C.muted);
   if(q.letter!==null)out+=R(470,base-sc(q.letter),80,Math.max(2,sc(q.letter)),C.purple,'none',4)+TB(510,base-sc(q.letter)-7,q.letter+'%',14,C.ink);else out+=T(510,base-10,'not tested',13,C.muted);
   out+=TF(510,base+18,'T or L?',13,C.muted)+TF(510,base+35,'(rotated letter)',13,C.muted);
@@ -730,7 +734,7 @@ SCENE({id:'attention-awareness-grid',name:'Four possibilities',tag:'You sort the
    out+=ans?inner:hit(X,'pick',k,c,inner)});
   if(ans)out+=R(30,276,540,58,C.pale,'none',8)+K2_lines(44,298,q.n,84,C.ink,'start',18,2);
   else out+=T(300,304,s.sim?'A finding from this era, about to be placed.':'Press the cell where this finding is usually placed.',13,C.muted);
-  out+=T(44,362,`finding ${s.i+1} of 6${s.sim?'':` · matched the usual placement on ${s.score} of ${s.done}`}`,13,C.muted,'start');
+  out+=TF(44,362,`finding ${s.i+1} of 6${s.sim?'':` · matched the usual placement on ${s.score} of ${s.done}`}`,13,C.muted,'start');
   if(ans&&s.i<5&&!s.sim)out+=K2_btn(X,'next','','Next finding',452,340,118,32,'Next finding');
   return {svg:out,phase:!ans?'Four possibilities: attention and awareness together, either one without the other, or neither.':s.i===5?'Two of the four cells hold findings that are disputed. Whether attention is necessary for awareness, sufficient for it, or neither is still open; the theories in era 6 take different sides.':s.sim?'The green cell is where this finding is usually placed; the note gives the objection, where there is one.':s.pick===q.a?'That is where it is usually placed. Read the note for the objection, where there is one.':'It is usually placed in the green cell. Your reading may match one of the critics’; the note says where the argument lies.'};
  }});
