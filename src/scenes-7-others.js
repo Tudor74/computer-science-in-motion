@@ -50,7 +50,7 @@ SCENE({id:'animal-consciousness',name:'Morgan’s canon and Griffin’s question
  research:['Morgan, C. L. (1894). An Introduction to Comparative Psychology. Walter Scott. The canon is a rule of method, not a finding.','Griffin, D. R. (1976). The Question of Animal Awareness. Rockefeller University Press.','Pfungst, O. (1907). Das Pferd des Herrn von Osten (Der Kluge Hans); Ristau, C. A. (1991), on piping plovers, in Cognitive Ethology: The Minds of Other Animals. Erlbaum. The Hans result is robust; how rich the plover’s behaviour is remains argued.'],
  dur:12,hint:'Choose a case, then pick the reading you would start from. The scene shows what the test found.',
  init:()=>({c:0,pick:{}}),
- watch(p){const c=Math.min(2,Math.floor(p*3)),u=p*3-c,pick={};for(let i=0;i<c;i++)pick[i]=K7_CASES[i].fits;if(u>.45)pick[c]=c===2?'low':'low';return {c,pick,sim:true}},
+ watch(p){const c=Math.min(2,Math.floor(p*3)),u=p*3-c,pick={};for(let i=0;i<c;i++)pick[i]=K7_CASES[i].fits;if(u>.45)pick[c]='low';return {c,pick,sim:true}},
  ui:[{choose:[[0,'Tony the dog'],[1,'Clever Hans'],[2,'Plover']],label:'Case',get:s=>s.c,act:'c'},{b:'Simpler reading',act:'pick',arg:'low'},{b:'Richer reading',act:'pick',arg:'high'}],
  on:{c(s,v){s.c=Number(v);return 'keep'},pick(s,v){s.pick[s.c]=v;return 'keep'}},
  draw(s,f,X){
@@ -83,11 +83,11 @@ SCENE({id:'animal-consciousness-declarations',name:'Two declarations',tag:'You t
  on:{sel(s,v){s.sel=Number(v);return 'keep'},v(s,v){s.v[s.sel]=Number(v);return 'keep'},show(s){s.shown=true;return 'keep'},hide(s){s.shown=false;return 'keep'}},
  draw(s,f,X){
   let out=heading(s.sim?'A simulated learner places the animals':'How confident are you that each has experiences?');
-  out+=TF(150,56,'surely not',13,C.muted,'start')+TF(380,56,'surely so',13,C.muted,'end')+TF(392,56,'New York 2024',13,C.muted,'start')+TF(552,56,'Cambridge 2012',13,C.muted);
+  out+=TF(150,56,'surely not',13,C.muted,'start')+TF(380,56,'surely so',13,C.muted,'end')+TF(392,56,'New York 2024',13,C.muted,'start')+TF(546,56,'Cambridge 2012',13,C.muted);
   K7_ANIMALS.forEach((a,i)=>{const y=64+i*31,x=150+s.v[i]*2.3,on=i===s.sel;
    let row=R(16,y,574,28,on?C.pale:'#fff',on?C.blue:'none',6)+(on?TBF:TF)(26,y+19,a[0],13,C.ink,'start')+L(150,y+14,380,y+14,C.line,3)+Ci(x,y+14,7,on?C.blue:C.muted,'#fff');
-   if(s.shown){const w=a[1]==='strong'?['strong support',C.green]:a[1]==='possible'?['realistic possibility',C.amber]:['not named',C.muted];row+=TBF(392,y+19,w[0],13,w[1],'start')+TF(552,y+19,a[2]?'named':'—',13,a[2]?C.green:C.muted)}
-   else row+=TF(392,y+19,'?',13,C.muted,'start')+TF(552,y+19,'?',13,C.muted);
+   if(s.shown){const w=a[1]==='strong'?['strong support',C.green]:a[1]==='possible'?['realistic possibility',C.amber]:['not named',C.muted];row+=TBF(392,y+19,w[0],13,w[1],'start')+TF(546,y+19,a[2]?'named':'—',13,a[2]?C.green:C.muted)}
+   else row+=TF(392,y+19,'?',13,C.muted,'start')+TF(546,y+19,'?',13,C.muted);
    out+=hit(X,'sel',i,`${a[0]}: your confidence ${s.v[i]} of 100. Press to choose.`,row)});
   out+=TF(300,336,'The declarations use words, not numbers: the sliders are yours alone.',13,C.muted);
   let ph;
@@ -133,7 +133,7 @@ SCENE({id:'animal-consciousness-evidence',name:'Opinion, rule or experiment?',ta
 /* =========================== octopus-minds =========================== */
 // [name, drawn split time in Myr, words, row y, note]
 const K7_TREE=[
- ['Chimpanzee',6.5,'about 6 to 7',100,'The closest living relatives of humans, with chimpanzees’ sister species the bonobo.'],
+ ['Chimpanzee',6.5,'about 6 to 7',100,'Chimpanzees and bonobos are our closest living relatives.'],
  ['Mouse',90,'about 90',130,'A mouse brain has about 70 million neurons.'],
  ['Crow',320,'about 320',160,'Birds and mammals each evolved large brains after this split, with differently arranged forebrains.'],
  ['Trout',430,'about 430',190,'Still a vertebrate: the same basic brain plan as ours, laid down before this split.'],
@@ -144,7 +144,7 @@ SCENE({id:'octopus-minds',name:'A separate road to a large brain',tag:'Our most 
  definition:'The line leading to octopuses and the line leading to vertebrates separated over 500 million years ago. Their last shared ancestor was probably a small, worm-like animal with a simple nervous system, so the octopus’s large brain and ours evolved independently. Peter Godfrey-Smith calls meeting an octopus the closest we are likely to come to meeting an intelligent alien.',
  example:'A crow’s line left ours about 320 million years ago and a trout’s about 430 million, but all three are vertebrates built on one brain plan. The octopus shares none of that plan: its brain is wrapped around its gullet, and most of its neurons are in its arms.',
  desc:'A family tree on a time axis from 600 million years ago to today, with branches to chimpanzee, mouse, crow, trout, octopus and honeybee; the chosen animal’s path back to its shared ancestor with humans is highlighted.',
- research:['Godfrey-Smith, P. (2016). Other Minds: The Octopus, the Sea, and the Deep Origins of Consciousness. Farrar, Straus and Giroux.','Split dates are molecular-clock estimates and vary between studies, the deepest ones most of all; the tree shows that split as a band, not a point. Neuron counts: Herculano-Houzel (2009) for mouse and human; Young (1963) for the octopus.'],
+ research:['Godfrey-Smith, P. (2016). Other Minds: The Octopus, the Sea, and the Deep Origins of Consciousness. Farrar, Straus and Giroux.','Split dates are molecular-clock estimates and vary between studies, the deepest ones most of all; the tree shows that split as a band, not a point. Neuron counts: Herculano-Houzel and colleagues (2006, 2009) for mouse and human; Young (1963) for the octopus.'],
  dur:12,hint:'Tap an animal to trace its line back to the ancestor it shares with us.',
  init:()=>({a:4}),
  watch(p){return {a:Math.min(5,Math.floor(p*6))}},
@@ -152,7 +152,7 @@ SCENE({id:'octopus-minds',name:'A separate road to a large brain',tag:'Our most 
  on:{a(s,v){s.a=Number(v);return 'keep'}},
  draw(s,f,X){
   const a=K7_TREE[s.a],x0=K7_tx(0),xr=K7_tx(560);let out=heading('How long ago did its line leave ours?');
-  out+=R(K7_tx(600),56,K7_tx(520)-K7_tx(600),238,C.amberp,'none',4)+TF(K7_tx(560),312-4,'date uncertain',13,C.amber);
+  out+=R(K7_tx(600),56,K7_tx(520)-K7_tx(600),238,C.amberp,'none',4)+TF(K7_tx(560)+4,290,'date uncertain',13,C.amber);
   out+=L(x0,70,xr,70,C.line,3)+TBF(x0+8,75,'Human',13,C.ink,'start');
   // The octopus and the bee share one branch from the root, then part inside the uncertain band.
   const xp=K7_tx(535);
@@ -162,7 +162,7 @@ SCENE({id:'octopus-minds',name:'A separate road to a large brain',tag:'Our most 
    out+=hit(X,'a',i,`${t[0]}: last shared ancestor with humans ${t[2]} million years ago.`,R(x0+4,t[3]-13,98,26,on?C.coralp:'#fff','none',6)+(on?TBF:TF)(x0+8,t[3]+5,t[0],13,on?C.coral:C.ink,'start'))});
   const xs=s.a<4?K7_tx(a[1]):xr;out+=L(x0,70,xs,70,C.coral,4)+Ci(xs,70,6,C.coral,'#fff');
   out+=L(K7_tx(600),300,x0,300,C.line,2);
-  [0,100,200,300,400,500,600].forEach(t=>out+=L(K7_tx(t),300,K7_tx(t),306,C.line,1.5)+TF(K7_tx(t),324-(t===600||t===500?0:0),t===0?'today':String(t),13,C.muted));
+  [0,100,200,300,400,500,600].forEach(t=>out+=L(K7_tx(t),300,K7_tx(t),306,C.line,1.5)+TF(K7_tx(t),324,t===0?'today':String(t),13,C.muted));
   out+=TF(280,344,'million years ago',13,C.muted)+TBF(300,368,`Human and ${a[0].toLowerCase()}: last shared ancestor ${a[2]} million years ago`,13,C.coral);
   return {svg:out,phase:`The line to the ${a[0].toLowerCase()} and the line to humans separated ${a[2]} million years ago. ${a[4]}`};
  }});
@@ -308,8 +308,8 @@ SCENE({id:'bees-and-insects-optimism',name:'A sweet surprise',tag:'Optimism-like
    out+=TF(408,y+14,q.label,13,on?C.ink:C.muted,'start')+R(408,y+20,tot*20,16,'#e8eef2','none',4)+R(408,y+20,shown*20,16,on?(key==='sugar'?C.green:C.blue):'#c8d7e1','none',4)+TBF(408+tot*20+8,y+33,on?`${shown}`:`${tot}`,13,on?C.ink:C.muted,'start')});
   out+=K7_badge(408,212,'Schematic steps');
   out+=R(20,240,560,132,'#f6f9fb',C.grid)+TBF(32,260,c.label,14,C.ink,'start')+K7_para(32,280,c.txt,84);
-  out+=K7_para(32,306,'Published pattern: sugared bees entered the in-between flower sooner; with a dopamine blocker they did not.',84,{fill:C.ink});
-  out+=K7_para(32,346,'The authors reported checks that the sugar had not simply made the bees faster or more active.',84,{fill:C.muted});
+  out+=K7_para(32,318,'Published pattern: sugared bees entered the in-between flower sooner; with a dopamine blocker they did not.',84,{fill:C.ink});
+  out+=TF(32,360,'The authors reported checks that sugar had not simply made the bees more active.',13,C.muted,'start');
   return {svg:out,phase:(f&&f.say)||''};
  }});
 
@@ -333,7 +333,7 @@ SCENE({id:'bees-and-insects-readings',name:'Play, and three sober readings',tag:
  on:{i(s,v){s.i=Number(v);return 'keep'},ex(s,v){s.pick[s.i]=Number(v);return 'keep'}},
  draw(s,f,X){
   const q=K7_FIND[s.i],a=s.pick[s.i],ok=a===q.ex;let out=heading('Which sober reading answers this finding?');
-  out+=R(20,44,560,72,'#fff',C.grid)+TBF(32,64,q.t,14,C.ink,'start')+TF(568,64,q.src,13,C.muted,'end')+TF(32,86,'Richer reading: '+q.feel+'.',13,C.purple,'start')+TF(32,106,s.sim?'A simulated learner is matching.':'Tap one of the three sober readings below.',13,C.muted,'start');
+  out+=R(20,44,560,72,'#fff',C.grid)+TBF(32,64,q.t,14,C.ink,'start')+TF(568,106,q.src,13,C.muted,'end')+TF(32,86,'Richer reading: '+q.feel+'.',13,C.purple,'start')+TF(32,106,s.sim?'A simulated learner is matching.':'Tap one of the three sober readings below.',13,C.muted,'start');
   K7_EXPL.forEach((e,j)=>{const x=20+j*190,sel=a===j;out+=hit(X,'ex',j,'Sober reading: '+e,R(x,126,180,92,sel?(ok?C.greenp:C.amberp):'#fff',sel?(ok?C.green:C.amber):C.blue)+TBF(x+12,146,'No feeling needed',13,C.blue,'start')+K7_para(x+12,166,e,25))});
   out+=R(20,228,560,96,'#f6f9fb',C.grid);
   if(a===null)out+=TF(300,280,'Nothing matched yet.',13,C.muted);
@@ -342,4 +342,310 @@ SCENE({id:'bees-and-insects-readings',name:'Play, and three sober readings',tag:
   const n=K7_FIND.filter((x,j)=>s.pick[j]===x.ex).length;
   out+=TF(300,346,`Matched ${n} of 3 · Contested: every finding has a reading with feeling and one without.`,13,C.ink)+TF(300,366,'Barron & Klein (2016) argue for insect experience; Adamo (2016) and others doubt it.',13,C.muted);
   return {svg:out,phase:a===null?`${q.t} (${q.src}). The richer reading is ${q.feel}. Which explanation without feeling is usually set against it?`:ok?`${q.t}: set against “${q.feel}” is the reading that ${K7_EXPL[q.ex].charAt(0).toLowerCase()+K7_EXPL[q.ex].slice(1)} ${q.more}${n===3?' All three are matched. None of the three experiments rules its sober reading out, which is why insect emotion remains contested.':''}`:'That sober reading is usually offered for a different finding. Sober readings can often be stretched to fit, which is one reason the debate is hard to settle.'};
+ }});
+
+/* =========================== infants =========================== */
+const K7_PAIN=[
+ {t:'Pathways',s:'Pain nerves and routes to the brain',found:'Thin or missing insulation (myelin) on a newborn’s nerves had been taken to mean no pain. The review noted that adult pain signals also travel in thin and uninsulated fibres, and that a baby’s nerves are short.',cannot:'Wiring shows that a signal can travel. It does not show that it is felt.'},
+ {t:'Body',s:'Heart rate, blood pressure, sweating',found:'During procedures such as heel pricks and circumcision done without pain relief, heart rate and blood pressure rose and the palms sweated.',cannot:'These are automatic responses, and they can occur without awareness.'},
+ {t:'Hormones',s:'Stress hormones during surgery',found:'In a 1987 trial, preterm babies given the opioid fentanyl during surgery had much smaller surges of stress hormones than babies given the lighter anaesthesia then usual.',cannot:'A hormone surge is a response of the body. It is not a report.'},
+ {t:'Behaviour',s:'Cry, grimace, pulling away',found:'Newborns showed a distinct cry, a characteristic grimace and withdrawal of the limb.',cannot:'Withdrawal can be a spinal reflex. A cry and a grimace are harder to explain that way, but are still behaviour.'},
+ {t:'Cortex (2006)',s:'A response over sensory cortex',found:'Slater and colleagues later recorded a response over the sensory cortex of preterm babies during a clinically required heel prick.',cannot:'It shows that the signal reaches the cortex. It still is not a report.'}];
+SCENE({id:'infants',name:'Do newborns feel pain?',tag:'The 1987 review of the evidence',
+ definition:'A newborn cannot say what it feels. Until the 1980s many newborns had operations with little or no anaesthesia, partly because it was doubted that they felt pain and partly because the drugs were thought too risky. In 1987 Anand and Hickey reviewed the anatomical, hormonal and behavioural evidence and concluded that newborns have what is needed to feel pain.',
+ example:'In a trial published the same year, preterm babies having heart surgery were given either the light anaesthesia then usual or the same with the opioid fentanyl added. The babies given fentanyl had smaller stress-hormone surges and fewer complications afterwards. Practice changed in the following years.',
+ desc:'Five lines of evidence about newborn pain as rows the learner adds one at a time, with a panel stating what each line found and what it cannot show, and a count of lines added.',
+ research:['Anand, K. J. S. & Hickey, P. R. (1987). Pain and its effects in the human neonate and fetus. New England Journal of Medicine 317, 1321–1329.','Anand, K. J. S., Sippell, W. G. & Aynsley-Green, A. (1987). Randomised trial of fentanyl anaesthesia in preterm babies undergoing surgery: effects on the stress response. Lancet 329, 243–248.','Slater, R. et al. (2006). Cortical pain responses in human infants. Journal of Neuroscience 26, 3662–3666. History and science only: nothing here is medical or ethical advice.'],
+ dur:12,hint:'Tap each line of evidence to add it to the case, and read what it can and cannot show.',
+ init:()=>({on:[0,0,0,0,0],sel:0}),
+ watch(p){const n=Math.min(5,Math.floor(p*5.5)+1);return {on:range(5).map(i=>i<n?1:0),sel:n-1}},
+ ui:[{b:'Add all five lines',act:'all'},{b:'Clear',act:'clear'}],
+ on:{row(s,v){const i=Number(v);s.sel=i;s.on[i]=1;return 'keep'},all(s){s.on=[1,1,1,1,1];return 'keep'},clear(s){s.on=[0,0,0,0,0];return 'keep'}},
+ draw(s,f,X){
+  const q=K7_PAIN[s.sel],n=sum(s.on);let out=heading('Five lines of evidence, and what each can show');
+  K7_PAIN.forEach((r,i)=>{const y=46+i*50,on=s.on[i],sel=i===s.sel;
+   out+=hit(X,'row',i,`${r.t}: ${r.s}. Press to add and read.`,R(20,y,300,44,on?C.greenp:'#fff',sel?C.blue:on?C.green:C.line)+Ci(42,y+22,11,on?C.green:'#fff',on?C.green:C.line)+TBF(42,y+27,on?'✓':String(i+1),13,on?'#fff':C.muted)+TBF(62,y+19,r.t,13,C.ink,'start')+TF(62,y+36,r.s,13,C.muted,'start'))});
+  out+=R(332,46,248,244,'#f6f9fb',C.grid)+TBF(344,66,q.t+': what was found',13,C.ink,'start')+K7_para(344,85,q.found,35);
+  const fl=K7_lines(q.found,35).length,y2=85+fl*17+10;
+  out+=TBF(344,y2,'What it cannot show',13,C.coral,'start')+K7_para(344,y2+19,q.cannot,35,{fill:C.ink});
+  out+=TBF(300,318,`Lines of evidence added: ${n} of 5`,14,n===5?C.green:C.ink);
+  out+=TF(300,340,'No line is a report, and each alone has a simpler reading. Together they are',13,C.muted)+TF(300,357,'the kinds of evidence relied on for anyone who cannot speak.',13,C.muted)+TF(300,375,'Not medical advice.',13,C.muted);
+  return {svg:out,phase:`${q.t}. ${q.found} ${q.cannot} ${n===5?'All five lines are in. None is a report; the conclusion that newborns feel pain is an inference from all of them together, and it is now the accepted one.':`Lines added: ${n} of 5.`}`};
+ }});
+
+// [label, onset drawn (ms), words, amplitude of late wave]
+const K7_AGES={adult:['Adult',300,'from about 300 ms',60],m12:['12 to 15 months',900,'at about 900 ms',55],m5:['5 months',1100,'later than 1,000 ms',30]};
+const K7_tms=t=>60+t*.3125;
+function K7_erp(age,vis,t){const A=K7_AGES[age],early=40*vis*Math.exp(-Math.pow((t-180)/55,2)),g=1/(1+Math.exp(-(vis-.5)/.06)),u=(t-A[1])/450;return early+(u>0&&u<1?A[3]*g*Math.sin(Math.PI*u):0)}
+SCENE({id:'infants-timing',name:'A late wave, three times later',tag:'Kouider’s infant brain marker',
+ definition:'In adults, a picture that is reported as seen is followed by an early brain response that grows steadily with how long the picture was shown, and by a late, slow response that appears only once the picture is shown long enough. Kouider and colleagues (2013) looked for the same two-stage pattern in infants of 5, 12 and 15 months who were shown faces for varying brief durations.',
+ example:'They found the late, all-or-none response in all three age groups, but slower: beginning around 900 ms in 12- to 15-month-olds, against roughly 300 ms in adults, and later and weaker still at 5 months.',
+ desc:'A schematic brain response over time after a face appears, with an early bump and a late slow wave whose onset depends on the chosen age group, above bars comparing the onset of the late wave at three ages.',
+ research:['Kouider, S., Stahlhut, C., Gelskov, S. V., Barbosa, L. S., Dutat, M., de Gardelle, V., Christophe, A., Dehaene, S. & Dehaene-Lambertz, G. (2013). A neural marker of perceptual consciousness in infants. Science 340, 376–380.','The traces are schematic, not recordings, and the onsets are rounded. Limits: the marker was validated in adults who can report, and whether such a late wave marks experience or only its consequences is itself disputed (see the lesson on ignition).'],
+ dur:12,hint:'Choose an age, then lengthen the time the face is shown and watch for the late wave.',
+ init:()=>({age:'m12',vis:.8}),
+ watch(p){return {age:p<.34?'adult':p<.67?'m12':'m5',vis:clamp(.25+((p*3)%1)*.9,0,1)}},
+ ui:[{choose:[['adult','Adult'],['m12','12–15 months'],['m5','5 months']],label:'Age',get:s=>s.age,act:'age'},{range:'vis',label:'How long the face is shown',min:0,max:1,step:.05,get:s=>s.vis,act:'vis',show:v=>v<.35?'very brief':v<.5?'brief':v<.7?'a little longer':'longer'}],
+ on:{age(s,v){s.age=v;return 'keep'},vis(s,v){s.vis=Number(v);return 'keep'}},
+ draw(s){
+  const A=K7_AGES[s.age],late=s.vis>=.5;let out=heading('When does the late wave arrive?');
+  out+=K7_badge(60,42,'Schematic traces, not recordings');
+  const base=200;out+=L(60,base,560,base,C.line,2);
+  [0,400,800,1200,1600].forEach(t=>out+=L(K7_tms(t),base,K7_tms(t),base+5,C.line,1.5)+TF(K7_tms(t),base+20,t===0?'face on':String(t),13,C.muted));
+  out+=TF(560,base+38,'milliseconds after the face appears',13,C.muted,'end');
+  const pts=[];for(let t=0;t<=1600;t+=10)pts.push(fmt(K7_tms(t))+' '+fmt(base-K7_erp(s.age,s.vis,t)));
+  out+=P('M'+pts.join(' L'),C.blue,3);
+  out+=TF(K7_tms(180),base-48-(s.vis>.9?4:0),'early response',13,C.muted);
+  if(late)out+=L(K7_tms(A[1]),base-84,K7_tms(A[1]),base,C.coral,2,'stroke-dasharray="5 4"')+TBF(Math.min(K7_tms(A[1])+6,430),base-88,'late wave '+A[2],13,C.coral,'start');
+  else out+=TF(400,base-40,'no late wave: shown too briefly',13,C.muted);
+  out+=TBF(60,262,'Onset of the late wave',13,C.ink,'start');
+  Object.keys(K7_AGES).forEach((k,i)=>{const q=K7_AGES[k],y=272+i*30,on=k===s.age,lim=k==='m5'?1000:q[1];
+   out+=TF(60,y+17,q[0],13,on?C.ink:C.muted,'start')+R(190,y+4,lim*.25,18,on?C.coral:'#e3c9c1','none',4)+(k==='m5'?TBF(190+lim*.25+4,y+18,'→',14,on?C.coral:'#b99b92','start'):'')+TF(190+lim*.25+(k==='m5'?24:8),y+18,k==='adult'?'about 300 ms':k==='m12'?'about 900 ms':'later than 1,000 ms',13,on?C.ink:C.muted,'start')});
+  out+=TF(300,374,'900 ÷ 300 = 3: about three times later at 12 to 15 months than in adults.',13,C.muted);
+  return {svg:out,phase:late?`${A[0]}: the face is shown long enough, and after the early response a late slow wave appears ${A[2]}${s.age==='m5'?', and it is weaker than in older infants':s.age==='m12'?', about three times later than an adult’s':''}. In adults this late wave goes with reporting the face as seen. In infants there is no report to check it against.`:`${A[0]}: with the face shown this briefly there is only the early response, which grows smoothly with duration. In adults such trials are usually reported as unseen. Lengthen the display.`};
+ }});
+
+const K7_MARK=[
+ {t:'Thalamus wired to cortex',x:90,when:'from about 24 weeks of pregnancy',src:'Lagercrantz & Changeux (2009)',assumes:'Experience needs the cortex to be connected to the thalamus, as it is in conscious adults.',problem:'The wiring may be needed without being enough. Lagercrantz and Changeux add that the fetus is kept in a sedated, sleep-like state.'},
+ {t:'Late wave to a seen face',x:290,when:'recorded at 5 months, the youngest tested',src:'Kouider et al. (2013)',assumes:'The late slow wave that goes with reported seeing in adults means the same thing in a baby.',problem:'Five months was the youngest age tested, so this is a latest date, not a start. The adult marker is itself disputed.'},
+ {t:'Knows itself in a mirror',x:400,when:'from about 18 to 24 months',src:'Amsterdam (1972)',assumes:'Experience needs a sense of oneself as an object among others.',problem:'The mirror test measures self-recognition. A baby who fails it still cries, looks and learns.'},
+ {t:'Reports a false belief',x:520,when:'at about 4 years',src:'Wimmer & Perner (1983)',assumes:'Experience needs thoughts about mental states, which critics say some higher-order theories imply.',problem:'Few accept the result: it would deny experience to three-year-olds who can tell you what hurts.'}];
+SCENE({id:'infants-cradle',name:'When does experience begin?',tag:'It depends which marker you ask for',
+ definition:'Proposed dates for the start of experience run from late pregnancy to well after the first birthday, because they rest on different markers. Bayne, Frohlich, Cusack, Moser and Naci (2023) reviewed several markers together and argued that consciousness is probably in place by early infancy and may begin before birth. Late-onset views ask for more, such as self-awareness.',
+ example:'Ask for the wiring that carries signals to the cortex, and the date is around 24 weeks of pregnancy. Ask for the brain wave that goes with reported seeing in adults, and it has been recorded at 5 months. Ask for mirror self-recognition, and it is 18 to 24 months.',
+ desc:'A timeline from 24 weeks of pregnancy to 4 years, not to scale, with four markers; the learner chooses a marker and sees from when experience would be credited, what the marker assumes and its main problem.',
+ research:['Bayne, T., Frohlich, J., Cusack, R., Moser, J. & Naci, L. (2023). Consciousness in the cradle: on the emergence of infant experience. Trends in Cognitive Sciences 27, 1135–1149.','Lagercrantz, H. & Changeux, J.-P. (2009). The emergence of human consciousness: from fetal to neonatal life. Pediatric Research 65, 255–260.','Limits: every marker was validated on adults or older children who can report. Unsettled, and not medical or ethical advice.'],
+ dur:12,hint:'Tap a marker to see when experience would begin if that marker were the test.',
+ init:()=>({m:1}),
+ watch(p){return {m:Math.min(3,Math.floor(p*4))}},
+ ui:[{choose:[[0,'Wiring'],[1,'Late wave'],[2,'Mirror'],[3,'False belief']],label:'Marker required',get:s=>s.m,act:'m'}],
+ on:{m(s,v){s.m=Number(v);return 'keep'}},
+ draw(s,f,X){
+  const q=K7_MARK[s.m];let out=heading('Choose the marker; the date follows');
+  out+=L(40,128,580,128,C.line,3)+TF(576,56,'not to scale',13,C.muted,'end');
+  [[90,'24 weeks'],[200,'birth'],[290,'5 months'],[400,'18–24 months'],[520,'4 years']].forEach(([x,l])=>out+=L(x,122,x,134,C.muted,2)+TF(x,152,l,13,C.muted));
+  K7_MARK.forEach((m,i)=>{const on=i===s.m;out+=hit(X,'m',i,`${m.t}: ${m.when}. Press to choose.`,Ci(m.x,128,on?11:8,on?C.coral:'#fff',on?C.coral:C.blue)+L(m.x,117,m.x,88,on?C.coral:C.line,2)+R(m.x-22,62,44,26,on?C.coralp:'#fff',on?C.coral:C.line,6)+TBF(m.x,80,String(i+1),13,on?C.coral:C.blue))});
+  out+=R(q.x,162,580-q.x,16,C.coralp,'none',4)+L(q.x,158,q.x,182,C.coral,3)+TBF(300,197,`Marker ${s.m+1}: ${q.when}`,13,C.coral);
+  out+=L(150,214,200,214,C.green,3,'stroke-dasharray="5 5"')+L(200,214,580,214,C.green,3)+TF(300,232,'Bayne et al. (2023): probably by early infancy, perhaps before birth',13,C.green);
+  out+=R(20,244,560,128,'#f6f9fb',C.grid)+TBF(32,264,`${s.m+1}. ${q.t}`,14,C.ink,'start')+TF(568,264,q.src,13,C.muted,'end');
+  out+=TBF(32,286,'Assumes',13,C.blue,'start')+K7_para(100,286,q.assumes,72);
+  out+=TBF(32,326,'Problem',13,C.coral,'start')+K7_para(100,326,q.problem,72);
+  return {svg:out,phase:`If the marker required is “${q.t.toLowerCase()}”, experience is credited ${q.when} (${q.src}). It assumes: ${q.assumes} Its problem: ${q.problem} No marker here has been checked against an infant’s own report, because there is none.`};
+ }});
+
+/* =========================== sentience-markers =========================== */
+const K7_CRIT=[['Has nociceptors','(damage sensors)'],['Brain regions that','integrate the senses'],['Nociceptors wired','to those regions'],['Painkillers change','its responses'],['Trades threat','against reward'],['Protects a wound','in flexible ways'],['Learns to link','harm with a cue'],['Values pain relief','when injured']];
+const K7_grade=n=>n>=7?['very strong evidence',0]:n>=5?['strong evidence',1]:n>=3?['substantial evidence',2]:['weaker, or not yet studied',3];
+SCENE({id:'sentience-markers',name:'Eight criteria for sentience',tag:'Birch’s framework, and a law',
+ definition:'Sentience is the capacity to have feelings such as pain, pleasure or distress. In 2021 a team led by Jonathan Birch reviewed over 300 studies of cephalopod molluscs and decapod crustaceans against eight criteria, four about the nervous system and four about behaviour, and rated its confidence that each group meets each criterion.',
+ example:'The review reported high or very high confidence for 7 of the 8 criteria in octopods, which it called very strong evidence, and for 5 of 8 in true crabs, strong evidence. It recommended that both groups be covered by the UK’s Animal Welfare (Sentience) Act, which became law in 2022 with decapods and cephalopods included.',
+ desc:'Eight criterion tiles the learner switches on or off, beside a four-step scale that turns the number of criteria met with high confidence into a grade of evidence, with the report’s findings for octopods and true crabs.',
+ research:['Birch, J., Burn, C., Schnell, A., Browning, H. & Crump, A. (2021). Review of the Evidence of Sentience in Cephalopod Molluscs and Decapod Crustaceans. LSE Consulting, London School of Economics.','Animal Welfare (Sentience) Act 2022 (UK), c. 22.','The criteria are markers that raise the probability of sentience, not proofs. The grading is the report’s own convention.'],
+ dur:12,hint:'Tap a criterion to mark it as met with high confidence, and watch the grade of evidence change.',
+ init:()=>({on:[1,1,0,0,0,0,0,0]}),
+ watch(p){const n=Math.min(8,Math.floor(p*9));return {on:range(8).map(i=>i<n?1:0)}},
+ ui:[{b:'Octopods in the report: 7',act:'set',arg:7},{b:'True crabs: 5',act:'set',arg:5},{b:'Clear',act:'set',arg:0}],
+ on:{tog(s,v){const i=Number(v);s.on[i]=s.on[i]?0:1;return 'keep'},set(s,v){const n=Number(v);s.on=range(8).map(i=>i<n?1:0);s.preset=n;return 'keep'}},
+ draw(s,f,X){
+  const n=sum(s.on),g=K7_grade(n);let out=heading('How many criteria are met with high confidence?');
+  K7_CRIT.forEach((c,i)=>{const x=20+(i%2)*182,y=46+Math.floor(i/2)*60,on=s.on[i];
+   out+=hit(X,'tog',i,`Criterion ${i+1}: ${c[0]} ${c[1]}. ${on?'Met':'Not met'}. Press to change.`,R(x,y,174,52,on?C.greenp:'#fff',on?C.green:C.line)+Ci(x+20,y+26,12,on?C.green:'#fff',on?C.green:C.line)+TBF(x+20,y+31,String(i+1),13,on?'#fff':C.muted)+TF(x+40,y+22,c[0],13,C.ink,'start')+TF(x+40,y+39,c[1],13,C.ink,'start'))});
+  out+=TF(111,298,'1–4: nervous system',13,C.muted)+TF(293,298,'5–8: behaviour',13,C.muted);
+  [['7–8','very strong'],['5–6','strong'],['3–4','substantial'],['0–2','weaker or unstudied']].forEach((r,i)=>{const on=i===g[1],y=46+i*38;out+=R(396,y,184,32,on?C.blue:'#fff',C.blue,6)+TBF(408,y+21,r[0],13,on?'#fff':C.blue,'start')+TF(444,y+21,r[1],13,on?'#fff':C.ink,'start')});
+  out+=TBF(488,218,`Met: ${n} of 8`,15,C.ink)+TF(396,244,'The 2021 report found:',13,C.muted,'start')+TF(396,262,'octopods 7 of 8: very strong',13,C.ink,'start')+TF(396,280,'true crabs 5 of 8: strong',13,C.ink,'start');
+  out+=TF(300,326,'A low count can mean that nobody has looked yet, not that the feature is absent.',13,C.muted);
+  out+=TF(300,348,'UK Animal Welfare (Sentience) Act 2022: covers vertebrates,',13,C.ink)+TF(300,366,'decapod crustaceans and cephalopod molluscs.',13,C.ink);
+  return {svg:out,phase:`${n} of 8 criteria marked as met with high confidence: on the report’s scale that is ${g[0]}. ${n===7?'This is the count the report gave for octopods; the tiles lit here are not necessarily the seven it listed.':n===5?'This is the count the report gave for true crabs; the tiles lit here are not necessarily the five it listed.':'The report gave 7 for octopods and 5 for true crabs.'} A marker raises the probability of sentience; none proves it.`};
+ }});
+
+const K7_shellAt=(model,shell)=>model==='reflex'?5:shell==='good'?7:4;
+SCENE({id:'sentience-markers-tradeoff',name:'The hermit crab’s bargain',tag:'A trade-off is not a reflex',
+ definition:'A reflex gives the same response to the same stimulus, whatever else is at stake. A motivational trade-off is different: the animal weighs a harm against something it values, so its response changes with what it stands to lose. Elwood and Appel (2009) tested this by giving hermit crabs small electric shocks inside shells of a kind they prefer or a kind they like less.',
+ example:'Crabs in the less-preferred kind of shell were more likely to abandon it after shocks than crabs in the preferred kind. Crabs that had been shocked but stayed were later quicker to move into a new shell when one was offered, so the experience had a lasting effect.',
+ desc:'A toy hermit crab in a preferred or a less-liked shell receiving a shock of adjustable strength; it leaves the shell at a threshold that depends on shell quality for a trade-off animal and does not for a pure reflex, shown beside bars for the two thresholds.',
+ research:['Elwood, R. W. & Appel, M. (2009). Pain experience in hermit crabs? Animal Behaviour 77, 1243–1246.','Thresholds here are toy numbers chosen to show the difference between a trade-off and a reflex, not the paper’s voltages. A trade-off is one of the eight criteria; it shows flexible weighing, and felt pain remains an inference.'],
+ dur:12,hint:'Raise the shock in each kind of shell and note when the crab leaves. Then switch to a pure reflex and repeat.',
+ init:()=>({shell:'poor',v:3,model:'trade'}),
+ watch(p){return p<.5?{shell:'poor',v:Math.round(p*2*10),model:'trade'}:{shell:'good',v:Math.round((p-.5)*2*10),model:'trade'}},
+ ui:[{choose:[['good','Preferred shell'],['poor','Less-liked shell']],label:'Shell',get:s=>s.shell,act:'shell'},{range:'v',label:'Shock strength (toy units)',min:0,max:10,step:1,get:s=>s.v,act:'v'},{choose:[['trade','Weighs it up'],['reflex','Pure reflex']],label:'Kind of animal',get:s=>s.model,act:'model'}],
+ on:{shell(s,v){s.shell=v;return 'keep'},v(s,v){s.v=Number(v);return 'keep'},model(s,v){s.model=v;return 'keep'}},
+ draw(s){
+  const th=K7_shellAt(s.model,s.shell),out_=s.v>=th,good=s.shell==='good',sc=good?'#c9a36a':'#9aa7ad';
+  let out=heading(s.model==='trade'?'An animal that weighs harm against value':'An animal that only reacts');
+  out+=R(20,250,340,20,'#ead9b8','none',4);
+  out+=Ci(140,208,46,sc,C.ink)+P('M140 208 m-26 0 a26 26 0 1 1 26 26 a16 16 0 1 1 -16 -16',C.ink,2.5)+TBF(140,288,good?'preferred shell':'less-liked shell',13,C.ink);
+  const cx=out_?280:186,cy=232;
+  out+=K7_ell(cx,cy,out_?22:12,out_?12:9,C.coral)+L(cx+10,cy-6,cx+26,cy-18,C.coral,4)+L(cx+10,cy+2,cx+28,cy+2,C.coral,4)+Ci(cx+28,cy-20,5,C.coral)+Ci(cx+31,cy+2,5,C.coral)+Ci(cx+4,cy-12,2.5,C.ink);
+  if(out_)out+=P(`M${cx-22} ${cy} q-10 6 -18 2`,C.coral,4)+TBF(268,200,'leaves the shell',13,C.coral);else out+=TBF(232,200,'stays in',13,C.green,'start');
+  if(s.v>0)out+=P('M92 150 l12 20 l-10 0 l12 22','#d1a11a',3+s.v*.25)+TBF(84,142,`shock ${s.v}`,13,C.amber);
+  else out+=TF(84,142,'no shock',13,C.muted);
+  out+=TBF(480,62,'Leaves at shock level',13,C.ink);
+  [['good','preferred'],['poor','less-liked']].forEach(([k,l],i)=>{const t=K7_shellAt(s.model,k),x=420+i*84,on=k===s.shell;out+=R(x,230-t*16,52,t*16,on?C.blue:'#cfe0ec','none',4)+TBF(x+26,230-t*16-7,String(t),14,on?C.blue:C.muted)+TF(x+26,248,l,13,on?C.ink:C.muted)});
+  out+=L(404,230,572,230,C.line,2)+L(404,230-s.v*16,572,230-s.v*16,C.amber,2,'stroke-dasharray="5 4"')+TF(398,230-s.v*16+4,'now',13,C.amber,'end');
+  out+=K7_badge(404,262,'Toy thresholds');
+  out+=K7_para(300,312,s.model==='trade'?'Leaving costs more when the shell is a good one, so this animal puts up with more before it goes.':'A reflex has one threshold. What the shell is worth makes no difference to it.',84,{anchor:'middle'});
+  out+=K7_para(300,352,'Published finding: crabs in the less-preferred kind of shell were more likely to leave after shocks (Elwood & Appel 2009).',84,{anchor:'middle',fill:C.muted});
+  return {svg:out,phase:`Toy model. ${s.model==='trade'?'Weighing animal':'Pure reflex'}, ${good?'preferred':'less-liked'} shell, shock ${s.v}: the crab ${out_?'leaves':'stays'} (it leaves at ${th}). ${s.model==='trade'?'In the preferred shell it holds on until 7, in the less-liked one only until 4. That dependence on what is at stake is what a trade-off means.':'The threshold is 5 in either shell. If real crabs behaved like this, shell quality would not have mattered; it did.'}`};
+ }});
+
+const K7_KEY=[
+ {t:'In humans, feeling pain depends on the cortex.',reply:'Human cases show what is enough in a human. They do not show what is needed in every animal.',back:'Key answers that the human case is the only one where we know which structures matter, so it is the only firm starting point.'},
+ {t:'Fish have no layered cortex and lack the circuits that do this job.',reply:'A different structure might do the same job. Birds have no layered cortex either, yet both declarations include them, and fish have a forebrain region (the pallium) of their own.',back:'Key answers that what counts is the type of circuit, which he argues bird brains have and fish brains lack.'},
+ {t:'So the trout’s reactions are reflexes that nothing is felt behind.',reply:'Sneddon’s trout rubbed their lips on the gravel, rocked from side to side and were slow to start feeding again, which is prolonged and unlike a reflex. Morphine reduced these behaviours.',back:'Key answers that complex behaviour can run without awareness, as much human behaviour does.'}];
+// 58 receptor positions on the trout’s face, 22 of them nociceptors.
+const K7_DOTS=(()=>{const pts=[];let i=0;while(pts.length<58){const a=K7_h(i,3),b=K7_h(i,8);i++;const x=-1+2*a,y=-1+2*b;if(x*x+y*y<1&&!(x<-.35&&x>-.75&&y<-.05&&y>-.6))pts.push([x,y])}return pts})();
+SCENE({id:'sentience-markers-fish',name:'Do fish feel pain?',tag:'Sneddon’s trout, Key’s objection',
+ definition:'Lynne Sneddon and colleagues (2003) found nociceptors, nerve endings that respond to damage, on the face of the rainbow trout, and showed that a harmful injection to the lips changed the fish’s behaviour for a long time. Brian Key (2016) argued that fish nevertheless cannot feel pain, because they lack the cortical circuits that pain depends on in humans.',
+ example:'Of 58 receptors Sneddon’s team recorded on the trout’s face and head, 22 were classed as nociceptors. Trout injected in the lips with bee venom or acetic acid rocked from side to side, rubbed their lips on the gravel and took much longer to start feeding again than fish injected with saline.',
+ desc:'A trout’s head with 58 receptor dots, 22 of them marked as nociceptors, above the three steps of Key’s argument; the learner taps a step to read the reply to it and Key’s answer.',
+ research:['Sneddon, L. U., Braithwaite, V. A. & Gentle, M. J. (2003). Do fishes have nociceptors? Evidence for the evolution of a vertebrate sensory system. Proceedings of the Royal Society B 270, 1115–1121.','Sneddon, L. U. (2003). The evidence for pain in fish: the use of morphine as an analgesic. Applied Animal Behaviour Science 83, 153–162.','Key, B. (2016). Why fish do not feel pain. Animal Sentience 3(1). Unresolved: the nociceptors and behaviour are robust findings; what they show about feeling is contested. Most of the published commentaries on Key’s paper disagreed with him.'],
+ dur:12,hint:'Tap each step of Key’s argument to see the reply and his answer. Decide which step you would question.',
+ init:()=>({k:0}),
+ watch(p){return {k:Math.min(2,Math.floor(p*3))}},
+ ui:[{choose:[[0,'Step 1'],[1,'Step 2'],[2,'Conclusion']],label:'Step of the argument',get:s=>s.k,act:'k'}],
+ on:{k(s,v){s.k=Number(v);return 'keep'}},
+ draw(s,f,X){
+  const q=K7_KEY[s.k];let out=heading('The finding, and the argument against');
+  out+=P('M24 104 Q60 52 150 56 L226 62 L226 146 L150 152 Q60 156 24 104 Z','#dfeaf2','#6c8d9f',2,'#dfeaf2')+Ci(92,84,9,'#fff',C.ink)+Ci(93,84,4,C.ink)+P('M26 106 Q44 112 58 108',C.ink,2);
+  K7_DOTS.forEach((d,i)=>out+=Ci(100+d[0]*66,104+d[1]*40,2.8,i<22?C.coral:C.blue));
+  out+=Ci(250,66,4,C.coral)+TF(260,70,'22 nociceptors',13,C.coral,'start')+Ci(250,86,4,C.blue)+TF(260,90,'36 other receptors',13,C.blue,'start')+TBF(250,112,'58 recorded in all',13,C.ink,'start');
+  out+=K7_para(396,62,'Injected lips: rocking, rubbing on gravel, slow return to feeding.',27,{fill:C.ink})+TF(396,134,'Sneddon et al. (2003)',13,C.muted,'start');
+  out+=TBF(20,176,'Key (2016):',13,C.ink,'start');
+  K7_KEY.forEach((k,i)=>{const x=20+i*190,on=i===s.k;out+=hit(X,'k',i,`${i<2?'Step '+(i+1):'Conclusion'}: ${k.t}`,R(x,184,180,70,on?C.pale:'#fff',on?C.blue:C.line)+TBF(x+10,202,i<2?`Step ${i+1}`:'Conclusion',13,C.blue,'start')+K7_para(x+10,219,k.t,26,{lh:15}))});
+  out+=R(20,262,560,112,'#f6f9fb',C.grid)+TBF(30,281,'Reply',13,C.green,'start')+K7_para(78,281,q.reply,76,{lh:16});
+  const rl=K7_lines(q.reply,76).length,y2=281+rl*16+8;
+  out+=TBF(30,y2,'Key',13,C.coral,'start')+K7_para(78,y2,q.back,76,{lh:16});
+  return {svg:out,phase:`${s.k<2?'Step '+(s.k+1):'The conclusion'} of Key’s argument: ${q.t} Reply: ${q.reply} ${q.back} The question is unresolved.`};
+ }});
+
+const K7_GRADE=[
+ {f:'22 of the 58 receptors on a trout’s face respond to damaging heat, pressure or acid.',src:'Sneddon et al. (2003)',opts:[1,5,8],ans:1,why:'This is anatomy: the damage sensors exist. It says nothing yet about what the brain does with their signals.'},
+ {f:'Shocked hermit crabs are more likely to quit a less-preferred shell than a preferred one.',src:'Elwood & Appel (2009)',opts:[2,5,7],ans:5,why:'The response depends on what the crab would lose, so harm is being weighed against value.'},
+ {f:'An octopus avoids a chamber where it earlier felt the effects of an acid injection.',src:'Crook (2021)',opts:[1,6,7],ans:7,why:'A neutral place has become linked with harm, which is more than getting used to a stimulus or jumpier after one.'},
+ {f:'An injured octopus comes to prefer a chamber where it was given a local anaesthetic.',src:'Crook (2021)',opts:[4,7,8],ans:8,why:'The animal seeks out the place of relief, which shows that the relief matters to it. Criterion 4 asks only whether the drug changes its responses.'},
+ {f:'An octopus injected in one arm grooms that spot with its beak.',src:'Crook (2021)',opts:[3,6,8],ans:6,why:'The behaviour is directed at the site of the injury and is not a fixed withdrawal.'}];
+const K7_CSHORT=['Nociceptors','Integrative brain regions','Nociceptors wired to them','Painkillers change responses','Trade-off','Flexible self-protection','Learning about harm','Values pain relief'];
+SCENE({id:'sentience-markers-grade',name:'Which criterion does it bear on?',tag:'You grade five findings',
+ definition:'A finding counts towards sentience only through a particular criterion, and the same animal can be strong on one and unstudied on another. Grading means asking of each finding exactly which criterion it supports, and noticing which criteria are left with nothing.',
+ example:'Crook’s octopus experiments bear on three behavioural criteria at once: grooming the wound (flexible self-protection), avoiding the chamber (learning about harm) and preferring the chamber with anaesthetic (valuing pain relief). Sneddon’s receptor recordings bear on one anatomical criterion.',
+ desc:'Five published findings shown one at a time with three candidate criteria each; the learner picks the criterion the finding bears on, and a row of eight numbered squares fills in as criteria are matched.',
+ research:['Birch, J. et al. (2021). Review of the Evidence of Sentience in Cephalopod Molluscs and Decapod Crustaceans. LSE Consulting.','Sneddon et al. (2003); Elwood & Appel (2009); Crook (2021), as cited in this lesson. The trout is used here for practice: the 2021 review covered cephalopods and decapods, not fish.'],
+ dur:12,hint:'Read the finding and tap the criterion it bears on. Press Next finding to move on.',
+ init:()=>({i:0,ans:[null,null,null,null,null]}),
+ watch(p){const i=Math.min(4,Math.floor(p*5)),u=p*5-i;return {i,ans:K7_GRADE.map((q,j)=>j<i||(j===i&&u>.5)?q.ans:null),sim:true}},
+ ui:[{b:'Next finding',act:'next'},{b:'Start again',act:'again'}],
+ on:{opt(s,v){s.ans[s.i]=Number(v);return 'keep'},next(s){s.i=(s.i+1)%5;return 'keep'},again(s){s.i=0;s.ans=[null,null,null,null,null];return 'keep'}},
+ draw(s,f,X){
+  const q=K7_GRADE[s.i],a=s.ans[s.i],ok=a===q.ans;let out=heading('Which criterion does this finding bear on?');
+  out+=R(20,44,560,74,'#fff',C.grid)+TBF(32,64,`Finding ${s.i+1} of 5`,14,C.ink,'start')+TF(568,64,q.src,13,C.muted,'end')+K7_para(32,86,q.f,84);
+  q.opts.forEach((c,j)=>{const x=20+j*190,sel=a===c;out+=hit(X,'opt',c,`Criterion ${c}: ${K7_CSHORT[c-1]}`,R(x,128,180,58,sel?(ok?C.greenp:C.amberp):'#fff',sel?(ok?C.green:C.amber):C.blue)+TBF(x+12,148,`Criterion ${c}`,13,C.blue,'start')+K7_para(x+12,166,K7_CSHORT[c-1],26))});
+  out+=R(20,196,560,84,'#f6f9fb',C.grid);
+  if(a===null)out+=TF(300,242,s.sim?'A simulated learner is deciding.':'Tap one of the three criteria.',13,C.muted);
+  else if(ok)out+=TBF(32,216,`Criterion ${q.ans}: ${K7_CSHORT[q.ans-1].toLowerCase()}.`,14,C.green,'start')+K7_para(32,236,q.why,84);
+  else out+=TBF(32,216,`The review would file it under criterion ${q.ans}: ${K7_CSHORT[q.ans-1].toLowerCase()}.`,13,C.amber,'start')+K7_para(32,236,q.why,84);
+  const got=K7_GRADE.filter((g,j)=>s.ans[j]!==null).map(g=>g.ans);
+  out+=TF(300,304,'Criteria these five findings bear on',13,C.muted);
+  for(let c=1;c<=8;c++){const on=got.includes(c),x=124+(c-1)*45;out+=R(x,314,36,30,on?C.green:'#fff',on?C.green:C.line,6)+TBF(x+18,335,String(c),14,on?'#fff':C.muted)}
+  out+=TF(300,366,'Criteria 2, 3 and 4 are untouched by these findings: other studies are needed for those.',13,C.muted);
+  const n=s.ans.filter(x=>x!==null).length;
+  return {svg:out,phase:a===null?`${q.f} (${q.src}). Which of the three criteria does it bear on?`:`${q.f} It bears on criterion ${q.ans}, ${K7_CSHORT[q.ans-1].toLowerCase()}. ${q.why}${n===5?' All five are graded: they cover criteria 1, 5, 6, 7 and 8, spread over three kinds of animal. No animal here has been shown to meet all eight.':''}`};
+ }});
+
+/* =========================== other-people =========================== */
+const K7_BEINGS=[
+ {n:'Another person',body:'same species, same kind of brain',beh:'says “that hurts”, winces, rubs the toe',lik:'Likeness in body and in behaviour is as high as it gets. This is the case Mill had in mind.'},
+ {n:'A chimpanzee',body:'close relative, similar brain',beh:'screams, guards the limb; no words',lik:'Body and behaviour are still much like yours, without speech. The analogy stretches, and most people let it.'},
+ {n:'An octopus',body:'distant relative, differently built brain',beh:'grooms the wound, avoids the place',lik:'Little likeness in body is left, so the argument leans almost wholly on behaviour.'}];
+SCENE({id:'other-people',name:'The argument from analogy',tag:'One case, generalised',
+ definition:'The problem of other minds asks how anyone can know that others have experiences at all. John Stuart Mill’s answer (1865) was an argument from analogy: in my own case I observe that what happens to my body causes feelings, and feelings cause my behaviour. Other people have bodies like mine and behave as I do, so I infer the same middle link in them.',
+ example:'You stub your toe, feel pain and wince. A friend stubs a toe and winces. You saw the first link and the last; the feeling in between you supply from your own case. The weakness is that the whole inference rests on a single observed case, your own.',
+ desc:'Two rows of three boxes linked by arrows, body, feeling and behaviour: all three are observed for you, while the middle box for another being stays shut however often the learner presses it; counters show cases fully observed and looks inside.',
+ research:['Mill, J. S. (1865). An Examination of Sir William Hamilton’s Philosophy, chapter 12.','Wittgenstein, L. (1953). Philosophical Investigations, §293: “how can I generalise the one case so irresponsibly?” Later writers recast the argument as an inference to the best explanation of behaviour. A philosophical argument, not an experiment.'],
+ dur:12,hint:'Choose another being, then press its “feeling” box to try to look inside.',
+ init:()=>({b:0,tries:0}),
+ watch(p){return {b:Math.min(2,Math.floor(p*3)),tries:Math.floor(p*9),sim:true}},
+ ui:[{choose:[[0,'Another person'],[1,'A chimpanzee'],[2,'An octopus']],label:'The other',get:s=>s.b,act:'b'},{b:'Look inside',act:'look'}],
+ on:{b(s,v){s.b=Number(v);return 'keep'},look(s){s.tries++;return 'keep'}},
+ draw(s,f,X){
+  const q=K7_BEINGS[s.b];let out=heading('Three links in you, two in everyone else');
+  const row=(y,who,a,b,c,open)=>{let o=TBF(20,y+30,who,13,C.ink,'start');
+   o+=R(108,y,150,48,C.pale,C.blue)+K7_para(183,y+20,a,22,{anchor:'middle',lh:16})+arrow(262,y+24,296,y+24,C.muted,2.5);
+   const mid=R(300,y,130,48,open?C.coralp:'#fff',open?C.coral:C.muted,8,open?'':'stroke-dasharray="6 5"')+(open?K7_para(365,y+28,b,18,{anchor:'middle'}):TBF(365,y+31,'?',22,C.muted));
+   o+=open?mid:hit(X,'look','','The feeling of the other. Press to try to look inside.',mid);
+   o+=arrow(434,y+24,468,y+24,C.muted,2.5)+R(472,y,112,48,C.pale,C.blue)+K7_para(528,y+20,c,16,{anchor:'middle',lh:16});return o};
+  out+=TF(183,56,'body',13,C.muted)+TF(365,56,'feeling',13,C.muted)+TF(528,56,'behaviour',13,C.muted);
+  out+=row(64,'You','you stub your toe','you feel pain','you wince',true);
+  out+=row(132,s.b===0?'A friend':s.b===1?'A chimp':'An octopus',s.b===0?'stubs a toe':s.b===1?'hurts a hand':'hurts an arm','',s.b===0?'winces':s.b===1?'screams':'grooms it',false);
+  out+=R(20,196,560,68,'#f6f9fb',C.grid)+TBF(32,216,q.n,14,C.ink,'start')+TF(32,236,'Body: '+q.body,13,C.ink,'start')+TF(32,254,'Behaviour: '+q.beh,13,C.ink,'start');
+  out+=counter(20,274,'Cases with all three links observed','1 (your own)',C.coral,270)+counter(310,274,'Looks inside another · feelings seen',`${s.tries} · 0`,C.blue,270);
+  out+=K7_para(300,338,q.lik,84,{anchor:'middle'})+TF(300,375,'An argument, not an experiment: its weak point is the sample of one.',13,C.muted);
+  return {svg:out,phase:`${s.sim?'Simulated learner. ':''}${q.n}: ${q.lik} ${s.tries?`You have looked ${s.tries} time${s.tries===1?'':'s'} and seen no feeling: only body and behaviour can be observed from outside.`:'Press the shut box to try to observe the feeling directly.'} However many others you meet, the number of cases in which you observed all three links stays at 1.`};
+ }});
+
+const K7_BOX=['a beetle','a pebble','nothing','something that keeps changing'];
+SCENE({id:'other-people-beetle',name:'The beetle in the box',tag:'Wittgenstein’s thought experiment',
+ definition:'Wittgenstein imagined that everyone has a box with something in it that they call a “beetle”. No one can look into anyone else’s box, and each says they know what a beetle is only from their own. The word still has a use in their shared language, he argued, so its meaning cannot come from the hidden thing, which could be different in every box, or absent.',
+ example:'If your box held a pebble and mine held nothing, we would still agree in every conversation about “beetles”. Wittgenstein’s target was the idea that words such as “pain” get their meaning by each person pointing inwardly at a private object. He did not deny that people feel pain.',
+ desc:'Four people, each with a box whose contents the learner can change between a beetle, a pebble, nothing and something that keeps changing; a short conversation about beetles is stepped through and comes out the same whatever is in the boxes.',
+ research:['Wittgenstein, L. (1953). Philosophical Investigations, §293 (the beetle) and §304 (a sensation “is not a something, but not a nothing either”). Blackwell.','A thought experiment about meaning. Best objection: many philosophers hold that it leaves out the very thing in question, what the experience is like for its owner.'],
+ dur:12,hint:'Tap a box to change what is in it, then step through the conversation and see whether anything changes.',
+ init:()=>({box:[0,1,2,3],changes:0}),
+ trace(s){return [
+  {k:0,say:'Four people, four boxes. Only you can see inside all of them; each of them sees only their own. In Try it, tap a box to change its contents.'},
+  {k:1,say:'Ana says: “I have a beetle.” She is talking about whatever is in her box.'},
+  {k:2,say:'Ben says: “So have I.” He cannot compare his with hers, and does not need to.'},
+  {k:3,say:'Cy and Di agree. All four use the word in the same way, on the same occasions.'},
+  {k:4,say:`The conversation runs without a hitch, although the boxes hold ${[...new Set(s.box)].length===1?'the same thing':[...new Set(s.box)].length+' different things'}. Wittgenstein’s conclusion: whatever is in the box plays no part in what the word means.`}]},
+ ui:[{b:'Put a beetle in every box',act:'same'},{b:'Mix the boxes',act:'mix'}],
+ on:{box(s,v){const i=Number(v);s.box[i]=(s.box[i]+1)%4;s.changes++;return 'keep'},same(s){s.box=[0,0,0,0];s.changes++;return 'keep'},mix(s){s.box=shuffled([0,1,2,3],nextSeed());s.changes++;return 'keep'}},
+ draw(s,f,X){
+  const k=f?f.k:0,names=['Ana','Ben','Cy','Di'],says=['“I have a beetle.”','“So have I.”','“Mine is in my box.”','“Mine too.”'];
+  let out=heading('Does it matter what is in the box?');
+  names.forEach((nm,i)=>{const x=90+i*140,c=s.box[i],spoke=k>=4||(i===0&&k>=1)||(i===1&&k>=2)||(i>=2&&k>=3);
+   if(spoke)out+=R(x-64,46,128,28,'#fff',C.blue,12)+TF(x,65,says[i],13,C.ink);
+   out+=Ci(x,104,16,'#f1d6c3',C.ink)+P(`M${x-22} 150 Q${x} 112 ${x+22} 150`,C.ink,2.5,C.pale)+TBF(x,170,nm,13,C.ink);
+   let inner=R(x-34,182,68,52,'#fff',C.ink,6)+L(x-34,182,x+34,182,C.ink,4);
+   if(c===0)inner+=K7_ell(x,210,13,9,C.dark)+L(x,201,x,219,'#fff',1.5)+Ci(x+14,210,4,C.dark)+L(x-8,202,x-14,196,C.dark,2)+L(x-8,218,x-14,224,C.dark,2)+L(x+4,202,x+8,196,C.dark,2)+L(x+4,218,x+8,224,C.dark,2);
+   else if(c===1)inner+=K7_ell(x,212,14,10,'#9aa7ad','#6c7f88');
+   else if(c===3)inner+=Ci(x-10,212,6,C.purple)+R(x-2,205,13,13,C.amber,'none',2)+P(`M${x+16} 218 l7 -13 l7 13 Z`,C.green,2,C.green);
+   out+=hit(X,'box',i,`${nm}’s box holds ${K7_BOX[c]}. Press to change it.`,inner)+K7_para(x,252,c===3?'keeps changing':K7_BOX[c],16,{anchor:'middle',fill:C.muted})});
+  out+=TF(300,280,'Only you can see into all four boxes. Each of them sees only their own.',13,C.muted);
+  out+=counter(20,292,'Times you changed a box',s.changes,C.blue,270)+counter(310,292,'Conversations that came out differently','0',C.coral,270);
+  out+=TF(300,358,k>=4?'Same words, same agreement, whatever the boxes hold.':'Step through the conversation.',13,k>=4?C.green:C.muted);
+  return {svg:out,phase:(f&&f.say)||''};
+ }});
+
+const K7_COL={red:'#c8452f',green:'#3b8f4a',yellow:'#e8c62c',blue:'#2f5fb0'};
+const K7_OBJ=[['tomato','red'],['leaf','green'],['lemon','yellow'],['blueberry','blue']];
+const K7_MAP={same:{},rg:{red:'green',green:'red'},yb:{yellow:'blue',blue:'yellow'}};
+const K7_TESTS=[
+ {t:'Name it',q:'“What colour is a tomato?”',same:'Both say “red”. Each learned that word for whatever tomatoes look like to them.'},
+ {t:'Match a chip',q:'“Which paint chip matches the lemon?”',same:'Both pick the same chip. Matching compares two outside things, and a swap changes both alike.'},
+ {t:'Pick the ripe one',q:'“Which tomato is ripe?”',same:'Both pick the same fruit. Ripe and unripe still look different to each of them.'},
+ {t:'Order by lightness',q:'“Put the four in order, lightest first.”',same:'Both give the same order.',diff:'The orders differ. To you a lemon is lightest; to Sam, who sees lemons as you see blueberries, it comes out dark. In this toy the swap shows.'}];
+const K7_differs=(m,i)=>m==='yb'&&i===3;
+SCENE({id:'other-people-spectrum',name:'The inverted spectrum',tag:'You swap the colours and test',
+ definition:'John Locke (1690) asked whether the idea a violet produces in one person’s mind might be the same as the idea a marigold produces in another’s. If two people’s colour experiences were swapped from birth, each would have learned the same words for the same things, so no question about colour would tell them apart. The case is used to argue that what an experience is like goes beyond what it does.',
+ example:'Suppose that tomatoes look to Sam the way leaves look to you, and always have. Sam calls tomatoes “red”, stops at red lights and matches paint as you do. Critics reply that real colour experience is lopsided, for example strong yellow is lighter than strong blue, so some swaps would show up in behaviour after all.',
+ desc:'Four objects with their outer colour, your inner colour and Sam’s inner colour under a chosen swap, above four behavioural tests the learner runs; each test reports whether you and Sam give the same answer.',
+ research:['Locke, J. (1690). An Essay Concerning Human Understanding, book II, chapter 32, §15.','Hardin, C. L. (1988). Color for Philosophers. Hackett; Palmer, S. E. (1999). Color, consciousness, and the isomorphism constraint. Behavioral and Brain Sciences 22, 923–943. They argue that asymmetries in colour experience make most swaps detectable; Palmer treats a red–green reversal as the likeliest to escape detection.','A thought experiment with a toy of four tests. Whether any undetectable inversion is really possible is disputed.'],
+ dur:12,hint:'Choose a swap for Sam, then tap each test. Try all three settings.',
+ init:()=>({m:'rg',ran:[0,0,0,0],last:-1}),
+ watch(p){const m=p<.5?'rg':'yb',u=(p<.5?p:p-.5)*2,n=Math.min(4,Math.floor(u*5));return {m,ran:range(4).map(i=>i<n?1:0),last:n-1}},
+ ui:[{choose:[['same','No swap'],['rg','Red ↔ green'],['yb','Yellow ↔ blue']],label:'Sam’s inner colours',get:s=>s.m,act:'m'},{b:'Run all four tests',act:'all'}],
+ on:{m(s,v){s.m=v;s.ran=[0,0,0,0];s.last=-1;return 'keep'},test(s,v){const i=Number(v);s.ran[i]=1;s.last=i;return 'keep'},all(s){s.ran=[1,1,1,1];s.last=3;return 'keep'}},
+ draw(s,f,X){
+  let out=heading('Same words, same choices: same experience?');
+  out+=TF(20,76,'The object',13,C.muted,'start')+TF(20,120,'Looks to you',13,C.muted,'start')+TF(20,164,'Looks to Sam',13,C.muted,'start')+TF(20,200,'Both call it',13,C.muted,'start');
+  K7_OBJ.forEach((o,i)=>{const x=150+i*112,inner=K7_MAP[s.m][o[1]]||o[1],sw=inner!==o[1];
+   out+=TBF(x+35,54,o[0],13,C.ink)+R(x,60,70,26,K7_COL[o[1]],'none',6)+R(x,104,70,26,K7_COL[o[1]],'none',6)+R(x,148,70,26,K7_COL[inner],sw?C.ink:'none',6)+TBF(x+35,200,'“'+o[1]+'”',13,C.ink)});
+  K7_TESTS.forEach((t,i)=>{const x=20+i*142,ran=s.ran[i],d=K7_differs(s.m,i);
+   out+=hit(X,'test',i,`Test: ${t.t}. ${ran?(d?'Different answers':'Same answer'):'Press to run.'}`,R(x,214,134,50,ran?(d?C.coralp:C.greenp):'#fff',ran?(d?C.coral:C.green):C.blue)+TBF(x+67,234,t.t,13,C.ink)+TF(x+67,253,ran?(d?'different answers':'same answer'):'tap to run',13,ran?(d?C.coral:C.green):C.muted))});
+  const n=sum(s.ran),same=range(4).filter(i=>s.ran[i]&&!K7_differs(s.m,i)).length;
+  out+=R(20,272,560,66,'#f6f9fb',C.grid);
+  if(s.last>=0){const t=K7_TESTS[s.last],d=K7_differs(s.m,s.last);out+=TBF(32,291,t.q,13,C.ink,'start')+K7_para(32,310,d?t.diff:t.same,84,{fill:d?C.coral:C.ink})}
+  else out+=TF(300,310,'Tap a test to ask you and Sam the same question.',13,C.muted);
+  out+=K7_badge(20,348,'Toy: four tests only')+TBF(590,364,n?`Same answer on ${same} of ${n} tests run`:'No tests run yet',13,same===n?C.green:C.coral,'end');
+  const mm=s.m==='same'?'Sam’s colours are not swapped':s.m==='rg'?'Sam’s red and green are swapped':'Sam’s yellow and blue are swapped';
+  return {svg:out,phase:`Toy. ${mm}. ${n?`Tests run: ${n}; same answer on ${same}.`:'Run the tests.'} ${n===4?(s.m==='yb'?'The lightness test catches this swap, because experienced yellow is lighter than experienced blue: Hardin and Palmer argue that such asymmetries make most inversions detectable.':s.m==='rg'?'No test here separates you from Sam, although every tomato looks to Sam as a leaf looks to you. Whether a finer test would is disputed.':'With no swap every answer agrees, exactly as with the red–green swap. Behaviour alone does not tell those two cases apart.'):''}`};
  }});

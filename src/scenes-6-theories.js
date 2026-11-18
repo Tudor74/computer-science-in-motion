@@ -163,12 +163,15 @@ SCENE({id:'integrated-information',name:'A whole that is more than its parts',ta
   cuts.forEach((c,i)=>{const y=76+i*26,min=c.c===phi;out+=(min?R(314,y,262,24,C.coralp,'none',6):'')+TF(322,y+17,`${c.P.join(', ')}  →  ${c.Q.join(', ')}`,13,C.ink,'start')+TBF(566,y+17,c.c,14,min?C.coral:C.ink,'end')});
   out+=TBF(322,256,`Toy score: the smallest count = ${phi}`,15,phi?C.green:C.coral,'start');
   out+=TF(322,278,cx.v>0?`Most integrated part: ${cx.sub.join(', ')} (score ${cx.v})`:'No part is integrated: nothing loops back',13,cx.v>0?C.green:C.muted,'start');
-  out+=TF(322,298,'Green nodes belong to that part.',13,C.muted,'start');
+  if(cx.v>0)out+=TF(322,298,'Green nodes belong to that part.',13,C.muted,'start');
   out+=R(24,334,552,28,C.amberp,C.amber,8)+TBF(300,353,'A toy in the spirit of Φ, not IIT’s measure: it counts wires, not information',13,C.amber);
   return {svg:out,phase:phi===0?(cx.v>0?`Some cut severs nothing, so the three nodes are not one integrated whole and the toy score is 0. The pair ${cx.sub.join(' and ')} is integrated on its own (score ${cx.v}); the theory would say the experience, if any, belongs to that part.`:'Some cut severs nothing: no signal ever returns to where it started. A purely one-way system scores 0, however much it computes.'):`Every one-way cut severs at least ${phi} connection${phi>1?'s':''}, so the three nodes hang together as a whole. On IIT, integration of this kind, measured properly, is what consciousness is.`};
  }});
 
 const K6_ARCH={chain:['Forward chain','Signals only ever move left to right, as in a purely feedforward network.'],modules:['Separate modules','Many small one-way circuits side by side that do not talk to one another: IIT’s picture of the cerebellum.'],lattice:['Two-way lattice','Each unit both drives and is driven by its neighbours: IIT’s picture of the back of the cortex.']};
+// A link between two units of radius 14 with small arrowheads (one-way, or both ways).
+function K6_link(a,b,col,two){const dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d,x1=a[0]+ux*16,y1=a[1]+uy*16,x2=b[0]-ux*16,y2=b[1]-uy*16,mx=(x1+x2)/2,my=(y1+y2)/2;
+ return two?arrow(mx,my,x2,y2,col,2,6)+arrow(mx,my,x1,y1,col,2,6):arrow(x1,y1,x2,y2,col,2,6)}
 function K6_archNet(arch,n){const nodes=[],edges=[],id=(r,c)=>r+'_'+c;for(let c=0;c<n;c++)for(let r=0;r<2;r++)nodes.push(id(r,c));
  for(let c=0;c<n;c++){
   if(arch==='modules')edges.push([id(0,c),id(1,c)]);
@@ -189,7 +192,7 @@ SCENE({id:'integrated-information-predictions',name:'Wiring, not numbers',tag:'W
   const net=K6_archNet(s.arch,s.n),phi=K6_phi(net.nodes,net.edges),pos=id=>{const [r,c]=id.split('_').map(Number);return [56+c*52,r?206:112]};
   let out=heading(K6_ARCH[s.arch][0]+': more units, same wiring');
   const seen=new Set();for(const e of net.edges){const a=pos(e[0]),b=pos(e[1]),two=net.edges.some(x=>x[0]===e[1]&&x[1]===e[0]);
-   if(two){const key=[e[0],e[1]].sort().join('|');if(seen.has(key))continue;seen.add(key);out+=arrowR(a,b,15,17,C.blue,2.2,7)+arrowR(b,a,15,17,C.blue,2.2,7)}else out+=arrowR(a,b,15,17,C.muted,2,7)}
+   if(two){const key=[e[0],e[1]].sort().join('|');if(seen.has(key))continue;seen.add(key);out+=K6_link(a,b,C.blue,true)}else out+=K6_link(a,b,C.muted,false)}
   for(const id of net.nodes){const [x,y]=pos(id);out+=Ci(x,y,14,phi?C.greenp:'#fff',phi?C.green:C.blue)}
   out+=counter(36,246,'units',String(2*s.n),C.ink,120)+counter(170,246,'toy score',String(phi),phi?C.green:C.coral,150);
   out+=K6_para(36,312,K6_ARCH[s.arch][1],50,C.muted);
@@ -207,7 +210,7 @@ function K6_duration(lgSec){const sec=Math.pow(10,Math.min(lgSec,300));
  const lgY=lgSec-Math.log10(31557600);if(lgY<0)return Math.round(sec/86400)+' days';if(lgY<3)return Math.round(Math.pow(10,lgY)).toLocaleString('en-GB')+' years';return K6_sci(lgY)+' years'}
 SCENE({id:'integrated-information-partitions',name:'Too many ways to cut',tag:'Against it: Φ cannot be computed for a brain',
  definition:'To find Φ you must find the cut that does the least damage, which means trying the cuts. The number of ways to split a system in two doubles with every element added: for n elements it is 2ⁿ⁻¹ − 1. IIT’s full recipe is far heavier still, since it also considers every subset of elements and every state. In practice Φ has been calculated exactly only for systems of a handful of elements.',
- example:'With 10 elements there are 511 two-part splits. With 302, the number of neurons in the worm C. elegans, there are about 4 × 10⁹⁰, more than the roughly 10⁸⁰ atoms in the observable universe. So IIT’s predictions about real brains rest on approximations and on arguments about anatomy, not on measured values of Φ. Supporters reply that a quantity can be real though hard to compute; critics reply that a theory whose central quantity cannot be measured is hard to test.',
+ example:'With 10 elements there are 511 two-part splits. With 302, the number of neurons in the worm C. elegans, there are about 4 × 10⁹⁰, more than the roughly 10⁸⁰ atoms in the observable universe. This is the practical objection to the theory: its predictions about real brains rest on approximations and on arguments about anatomy, not on measured values of Φ. Supporters reply that a quantity can be real though hard to compute; critics reply that a theory whose central quantity cannot be measured is hard to test.',
  desc:'A slider for the number of elements, a graph of the number of two-part splits on a logarithmic scale with a line for the number of atoms in the observable universe, and the time needed to try every split at a billion a second.',
  research:['Oizumi, M., Albantakis, L. & Tononi, G. (2014). PLoS Computational Biology 10, e1003588.','Mayner, W. G. P. et al. (2018). PyPhi: a toolbox for integrated information theory. PLoS Computational Biology 14, e1006343.','Status: the combinatorial explosion is arithmetic and not disputed; what follows from it for the theory is.'],
  dur:10,hint:'Slide the number of elements up from 2. Find where trying every split would take longer than the age of the universe, about 14 billion years.',
@@ -254,17 +257,17 @@ SCENE({id:'integrated-information-against',name:'Same behaviour, different verdi
   out+=R(308,88,268,218,'#fff',C.grid,8)+TBF(442,110,'Unfolded: 4 units, no loop',14,C.ink);
   [0,1,2,3].forEach(i=>{const x=346+i*64;out+=arrow(x,124,x,154,C.muted,2)+(i<3?arrow(x+19,176,x+45,176,C.muted,2.2):'')+Ci(x,176,18,'#fff',C.blue)+TF(x,181,i+1,14,C.ink)+cell(x,238,y[i],C.blue)});
   out+=TF(442,226,'each unit handles one time step',13,C.muted)+TBF(442,292,`toy score ${chain}`,14,C.coral);
-  out+=TBF(300,326,`Outputs agree: ${y.join(' ')} and ${y.join(' ')}`,14,C.ink);
+  out+=TBF(300,326,`Outputs agree: ${y.join(', ')} and ${y.join(', ')}`,14,C.ink);
   out+=R(24,338,552,28,C.amberp,C.amber,8)+TBF(300,357,'Toy scores in the spirit of Φ, not IIT’s measure',13,C.amber);
-  return {svg:out,phase:`For the input ${s.x.join(' ')} both networks output ${y.join(' ')}: a 1 whenever the number of 1s so far is odd. No test of behaviour can tell them apart, yet only the loop is integrated. Critics call that untestable; supporters say behaviour was never the measure.`};
+  return {svg:out,phase:`For the input ${s.x.join(', ')} both networks output ${y.join(', ')}: a 1 whenever the number of 1s so far is odd. No test of behaviour can tell them apart, yet only the loop is integrated. Critics call that untestable; supporters say behaviour was never the measure.`};
  },
  three(s,f,X,project){
-  const y=K6_parity(s.x),P=project([[0,-.6,-.4],[6.6,2.2,2.2]]),H=t=>[t*2,0,0],M=t=>[t*2+1,1.6,0],I=t=>[t*2,0,1.8];let out='';
-  for(let t=0;t<4;t++){out+=arrow3(I(t),[t*2,0,.42],P,C.muted,2)+arrow3([t*2+.2,.3,0],[t*2+.85,1.35,0],P,C.blue,2.4);if(t<3)out+=arrow3([t*2+1.2,1.35,0],[t*2+1.85,.3,0],P,C.coral,2.4)}
+  const y=K6_parity(s.x),H=t=>[t*3,0,0],M=t=>[t*3+1.5,0,2.4],I=t=>[t*3,-3,0],mix=(a,b,u)=>a.map((v,i)=>v+(b[i]-v)*u),P=project([[-.8,-3.6,-.5],[11.6,.6,3]]);let out='';
+  for(let t=0;t<4;t++){out+=arrow3(mix(I(t),H(t),.1),mix(I(t),H(t),.72),P,C.muted,2)+arrow3(mix(H(t),M(t),.2),mix(H(t),M(t),.8),P,C.blue,2.6);if(t<3)out+=arrow3(mix(M(t),H(t+1),.2),mix(M(t),H(t+1),.8),P,C.coral,2.6)}
   out+=sortedItems([0,1,2,3].flatMap(t=>[{at:H(t),svg:Q=>{const q=Q(H(t));return Ci(q[0],q[1],17,y[t]?C.green:'#fff',C.green)+TBF(q[0],q[1]+5,'H',14,y[t]?'#fff':C.ink)}},
    {at:M(t),svg:Q=>{const q=Q(M(t));return Ci(q[0],q[1],15,'#fff',C.blue)+TBF(q[0],q[1]+5,'M',13,C.ink)}},
-   {at:I(t),svg:Q=>{const q=Q(I(t));return TBF(q[0],q[1]-6,`step ${t+1}: ${s.x[t]}`,13,C.muted)}}]),P);
-  return {svg:out,title:'The loop, stretched out through time',caption:'Each step of the loop is drawn as its own layer. H passes its value to M (blue), and M hands it to H at the next step (coral). Build every layer as separate units and the result has no loop at all, yet gives the same outputs. Filled H units are outputting 1.'};
+   {at:I(t),svg:Q=>{const q=Q(I(t));return TBF(q[0],q[1]+16,`step ${t+1}: ${s.x[t]}`,13,C.muted)}}]),P);
+  return {svg:out,title:'The loop, stretched out through time',caption:'Each step of the loop is drawn as its own layer. H passes its value to M (blue), and M hands it to H at the next step (coral). Build every layer as separate units and the result has no loop at all, yet gives the same outputs. Grey arrows are the inputs; filled H units are outputting 1.'};
  }});
 
 /* =========================== higher-order =========================== */
@@ -318,7 +321,7 @@ SCENE({id:'higher-order-matched',name:'Same accuracy, different awareness',tag:'
   out+=TF(X(0),276,'0',13,C.muted)+TF(X(-3.4),276,'wrong',13,C.coral)+TF(X(4.6),276,'right, with strong evidence',13,C.blue);
   out+=TF(392,160,'red: errors · blue: “seen”',13,C.muted,'start');
   out+=match?TBF(300,306,`Matched at ${K6_pct(A.pc)} correct, yet “seen” on ${K6_pct(A.seen)} of trials in A and ${K6_pct(B.seen)} in B`,13,C.green):TF(300,306,`B is ${K6_pct(B.pc)} correct. Move its signal until it matches A’s ${K6_pct(A.pc)}.`,13,C.ink);
-  out+=K6_toy(24,326,'Toy signal-detection sketch')+TF(238,341.5,'Published result: Lau & Passingham (2006), in text',13,C.muted,'start');
+  out+=K6_toy(24,326,'Toy signal-detection sketch')+TF(250,341.5,'The published result is described in the text.',13,C.muted,'start');
   return {svg:out,phase:match?`Accuracy is now equal, ${K6_pct(A.pc)} in both, but B says “seen” on ${K6_pct(B.seen)} of trials and A on ${K6_pct(A.seen)}. Performance and reported awareness have come apart, as higher-order theories predict they can.`:B.pc<A.pc?`B is less accurate than A (${K6_pct(B.pc)} against ${K6_pct(A.pc)}) and yet already says “seen” on ${K6_pct(B.seen)} of trials. Raise the signal to match accuracy.`:`B is now more accurate than A. Lower the signal until both are at ${K6_pct(A.pc)}.`};
  }});
 
@@ -364,7 +367,7 @@ SCENE({id:'predictive-processing',name:'The brain’s best guess',tag:'The claim
  ui:[{range:'pm',label:'Where the light is expected',min:-4,max:4,step:.5,get:s=>s.pm,act:'pm',show:v=>Number(v).toFixed(1)},{range:'ps',label:'Doubt about the prediction',min:.5,max:3,step:.1,get:s=>s.ps,act:'ps',show:v=>Number(v).toFixed(1)},{range:'ss',label:'Sensory noise',min:.5,max:3,step:.1,get:s=>s.ss,act:'ss',show:v=>Number(v).toFixed(1)}],
  on:{pm(s,v){s.pm=Number(v);return 'keep'},ps(s,v){s.ps=Number(v);return 'keep'},ss(s,v){s.ss=Number(v);return 'keep'}},
  draw(s){
-  const po=K6_post(s.pm,s.ps,s.ss),X=v=>50+(v+6)/12*500,y0=252,sc=126;let out=heading('What you see lies between prediction and signal');
+  const po=K6_post(s.pm,s.ps,s.ss),X=v=>50+(v+6)/12*500,y0=252,sc=160/Math.max(K6_pdf(0,0,s.ps),K6_pdf(0,0,s.ss),K6_pdf(0,0,po.sd));let out=heading('What you see lies between prediction and signal');
   [[C.purple,'prediction',70,'stroke-dasharray="7 5"'],[C.amber,'sensory signal (at +2)',210,''],[C.blue,'percept',420,'']].forEach(([c,l,x,e])=>out+=L(x,56,x+26,56,c,3,e)+TF(x+32,60,l,13,c,'start'));
   out+=K6_area(v=>K6_pdf(v,po.mean,po.sd),-6,6,X,y0,sc,C.blue,.18)+L(50,y0,550,y0,C.line,2);
   for(let v=-6;v<=6;v+=2)out+=L(X(v),y0,X(v),y0+5,C.line,1.5)+TF(X(v),y0+19,v>0?'+'+v:v,13,C.muted);
@@ -457,7 +460,7 @@ SCENE({id:'attention-schema',name:'A sketch of attention',tag:'The claim: awaren
   out+=Ci(352,150,24,'#fff',C.purple)+TF(352,155,'me',14,C.ink)+arrow(380,150,450,150,C.purple,3)+R(454,130,106,40,'#fff',C.purple,8)+TF(507,155,'the '+ob,14,C.ink);
   out+=TBF(441,206,`“I am aware of the ${ob}.”`,14,C.ink);
   out+=s.ask?TF(441,236,'“How?”',13,C.muted)+TBF(441,256,'“I just am. I grasp it directly.”',13,C.purple)+TF(441,278,'no neurons, no competition in the sketch',13,C.muted):TF(441,246,'no mention of signals or neurons',13,C.muted);
-  out+=TF(300,318,'The sketch is useful for control because it is simple, and wrong in detail for the same reason.',13,C.ink);
+  out+=TF(300,318,'The sketch is simple: that makes it useful for control, and wrong in detail.',13,C.ink);
   out+=K6_toy(24,340,'Schematic');
   return {svg:out,phase:s.ask?'Asked how it is aware, the system can only consult its sketch, which contains no mechanism. So it reports a direct, inner awareness that is not a physical process. On the theory, that report is what needs explaining, and this is the explanation.':`The signal for the ${ob} is boosted and its rivals are held down. The schema compresses all of that into one simple claim: I am aware of the ${ob}.`};
  }});
@@ -480,7 +483,7 @@ SCENE({id:'attention-schema-control',name:'Steering with and without a map',tag:
   const a=K6_track(s.m,s.D),b=K6_track(1-s.m,s.D),x0=56,y0=60,w=500,h=190,X=t=>x0+t/120*w,Y=v=>y0+h/2-clamp(v,-9,9)/9*h/2;
   let out=heading('Three tugs on the spotlight');
   [[15,25],[50,60],[85,95]].forEach(([p,q])=>out+=R(X(p),y0,X(q)-X(p),h,C.amberp,'none',0)+TF((X(p)+X(q))/2,y0+h+16,'distractor',13,C.amber));
-  out+=L(x0,y0,x0,y0+h,C.line,2)+L(x0,Y(0),x0+w,Y(0),C.green,2,'stroke-dasharray="6 4"')+TF(x0+w,Y(0)-6,'target',13,C.green,'end')+TF(x0-6,y0+10,'off',13,C.muted,'end')+TF(x0-6,y0+h,'off',13,C.muted,'end');
+  out+=L(x0,y0,x0,y0+h,C.line,2)+L(x0,Y(0),x0+w,Y(0),C.green,2,'stroke-dasharray="6 4"')+TF(x0+8,Y(0)-7,'target',13,C.green,'start')+TF(x0-6,y0+10,'off',13,C.muted,'end')+TF(x0-6,y0+h,'off',13,C.muted,'end');
   out+=K6_poly(b.xs.map((v,t)=>[X(t),Y(v)]),'#b7c6d0',2)+K6_poly(a.xs.map((v,t)=>[X(t),Y(v)]),s.m?C.blue:C.coral,3);
   out+=TF(x0+w/2,y0+h+34,'time →',13,C.muted);
   out+=counter(56,292,s.m?'with a model (shown)':'without a model (shown)',a.err.toFixed(2),s.m?C.blue:C.coral,200)+counter(270,292,s.m?'without a model (grey)':'with a model (grey)',b.err.toFixed(2),C.muted,200);
@@ -533,7 +536,7 @@ SCENE({id:'adversarial-collaboration',name:'Rivals design the test together',tag
   out+=R(X(0),48,X(d)-X(0),16,C.dark,'none',4)+TF(X(d)+8,61,`picture on screen: ${d} s`,13,C.ink,'start');
   const panel=(y0,f,col,title)=>{const pts=[];for(let i=0;i<=260;i++){const t=-.2+i/100;pts.push([X(t),y0-f(t,d)*58])}
    return TBF(70,y0-70,title,13,col,'start')+L(70,y0,550,y0,C.line,2)+K6_poly(pts,col,3)};
-  out+=L(X(0),70,X(0),296,C.muted,1.2,'stroke-dasharray="3 4"')+L(X(d),70,X(d),296,C.muted,1.2,'stroke-dasharray="3 4"');
+  [X(0),X(d)].forEach(x=>out+=L(x,66,x,90,C.muted,1.2,'stroke-dasharray="3 4"')+L(x,108,x,202,C.muted,1.2,'stroke-dasharray="3 4"')+L(x,222,x,296,C.muted,1.2,'stroke-dasharray="3 4"'));
   out+=panel(170,K6_iitTrace,C.purple,'IIT: the back of the cortex stays active while the picture lasts');
   out+=panel(284,K6_gnwTrace,C.blue,'GNWT: a prefrontal burst at the start, and again at the end');
   [0,.5,1,1.5,2].forEach(t=>out+=L(X(t),296,X(t),301,C.line,1.5)+TF(X(t),316,t+' s',13,C.muted));
@@ -541,10 +544,10 @@ SCENE({id:'adversarial-collaboration',name:'Rivals design the test together',tag
   return {svg:out,phase:`With the picture shown for ${d} s, IIT expects about ${d} s of sustained activity at the back, and GNWT expects two brief prefrontal bursts ${d} s apart. Lengthen the picture and one prediction stretches while the other only moves its second burst.`};
  }});
 
-const K6_PRED=[['IIT','Activity at the back of the cortex lasts','as long as the picture does','found','Largely found, in parts of visual cortex.'],
- ['IIT','Areas at the back stay synchronised','for as long as the picture lasts','not','Not found: synchrony was brief, not sustained.'],
- ['GNWT','A burst of prefrontal activity when','the picture disappears','not','Not found, though the burst at onset was.'],
- ['GNWT','Prefrontal activity carries what is','seen, in all its aspects','partly','Partly: its category, but not its orientation.']];
+const K6_PRED=[['IIT','Activity at the back of the cortex lasts','as long as the picture does','found','Largely found, in parts of visual cortex.','activity at the back lasts as long as the picture'],
+ ['IIT','Areas at the back stay synchronised','for as long as the picture lasts','not','Not found: synchrony was brief, not sustained.','areas at the back stay synchronised throughout'],
+ ['GNWT','A burst of prefrontal activity when','the picture disappears','not','Not found, though the burst at onset was.','a prefrontal burst when the picture goes off'],
+ ['GNWT','Prefrontal activity carries what is','seen, in all its aspects','partly','Partly: its category, but not its orientation.','prefrontal activity carries all that is seen']];
 const K6_RES={found:['Found',C.green,C.greenp],partly:['Partly',C.amber,C.amberp],not:['Not found',C.coral,C.coralp]};
 SCENE({id:'adversarial-collaboration-predictions',name:'Mark your card first',tag:'You take part: predict, then see the results',
  definition:'The first Cogitate experiment recorded brain activity in more than 250 people with three methods (fMRI, MEG and electrodes placed in the brain for medical reasons) while they looked at clearly visible faces, objects, letters and meaningless symbols. Each theory’s supporters had signed up to specific predictions. Four of them are listed here. Before looking at the results, mark what you expect.',
@@ -559,12 +562,12 @@ SCENE({id:'adversarial-collaboration-predictions',name:'Mark your card first',ta
  draw(s,f,X){
   let out=heading(s.shown?'What the experiment reported':'What do you expect the experiment found?',26);
   K6_PRED.forEach((q,i)=>{const y=42+i*64;out+=R(24,y,552,56,'#fff',C.grid,8)+R(32,y+15,52,26,q[0]==='IIT'?C.purplep:C.pale,'none',13)+TBF(58,y+33,q[0],13,q[0]==='IIT'?C.purple:C.blue);
-   out+=TF(94,y+24,q[1],13,C.ink,'start')+TF(94,y+42,s.shown?q[4]:q[2],13,s.shown?K6_RES[q[3]][1]:C.ink,'start');
-   [['found',356,60],['partly',420,60],['not',484,84]].forEach(([k,x,w])=>{const r=K6_RES[k],mine=s.g[i]===k,truth=s.shown&&q[3]===k;
-    const inner=R(x,y+14,w,28,truth?r[1]:mine?r[2]:'#fff',mine?C.ink:truth?r[1]:C.line,14)+TBF(x+w/2,y+33,r[0],13,truth?'#fff':mine?C.ink:C.muted);
-    out+=s.shown?inner:hit(X,'mark',i+':'+k,`${q[0]} prediction ${i+1}: mark as ${r[0]}`,inner)})});
+   if(s.shown){const r=K6_RES[q[3]],ok=s.g[i]===q[3];out+=TF(94,y+24,q[5],13,C.ink,'start')+TF(94,y+42,q[4],13,r[1],'start')+R(476,y+6,92,24,r[1],'none',12)+TBF(522,y+23,r[0],13,'#fff')+TF(522,y+47,s.g[i]?(ok?'as you marked':'you: '+K6_RES[s.g[i]][0].toLowerCase()):'not marked',13,C.muted);return}
+   out+=TF(94,y+24,q[1],13,C.ink,'start')+TF(94,y+42,q[2],13,C.ink,'start');
+   [['found',356,60],['partly',420,60],['not',484,84]].forEach(([k,x,w])=>{const r=K6_RES[k],mine=s.g[i]===k;
+    out+=hit(X,'mark',i+':'+k,`${q[0]} prediction ${i+1}: mark as ${r[0]}`,R(x,y+14,w,28,mine?r[2]:'#fff',mine?C.ink:C.line,14)+TBF(x+w/2,y+33,r[0],13,mine?C.ink:C.muted))})});
   const marked=s.g.filter(Boolean).length,right=s.g.filter((g,i)=>g===K6_PRED[i][3]).length;
-  if(s.shown)out+=TBF(300,318,s.sim?`Simulated learner (Watch): ${right} of 4 called correctly`:marked?`You called ${right} of the ${marked} you marked.`:'You marked none, so there is nothing to score.',14,C.ink)+TF(300,340,'Filled: the result. Dark outline: your mark.',13,C.muted)+TF(300,360,'Each theory’s supporters had expected their own two to be found.',13,C.muted);
+  if(s.shown)out+=TBF(300,318,s.sim?`Simulated learner (Watch): ${right} of 4 called correctly`:marked?`You called ${right} of the ${marked} you marked.`:'You marked none, so there is nothing to score.',14,C.ink)+TF(300,342,'Each theory’s supporters had expected their own two to be found.',13,C.muted);
   else out+=TF(300,322,`${marked} of 4 marked${s.sim?' · simulated learner (Watch)':''}`,13,C.muted)+TF(300,344,'Mark all four before you look. That is what the theories had to do.',13,C.ink);
   return {svg:out,phase:s.shown?'IIT: posterior activity tracked how long the picture lasted, but the sustained synchrony it predicted was missing. GNWT: prefrontal cortex carried the category of the picture but not, for example, its orientation, and showed no burst when the picture went off. Each theory was challenged on a point it had agreed to.':'Fixing predictions before the data arrive is what makes a result informative. Afterwards, almost any outcome can be explained.'};
  }});
@@ -585,7 +588,7 @@ SCENE({id:'adversarial-collaboration-headlines',name:'What the results do and do
  on:{v(s,v){s.v=Number(v);return 'keep'}},
  draw(s,f,X){
   let out=heading('Four headlines, one fair',26);
-  K6_PRED.forEach((q,i)=>{const y=40+i*29,r=K6_RES[q[3]];out+=R(24,y,552,25,'#fff',C.grid,6)+TBF(36,y+17.5,q[0],13,q[0]==='IIT'?C.purple:C.blue,'start')+TF(84,y+17.5,['activity at the back lasts as long as the picture','areas at the back stay synchronised throughout','a prefrontal burst when the picture goes off','prefrontal activity carries all that is seen'][i],13,C.ink,'start')+R(478,y+2.5,90,20,r[2],'none',10)+TBF(523,y+17,r[0],13,r[1])});
+  K6_PRED.forEach((q,i)=>{const y=40+i*29,r=K6_RES[q[3]];out+=R(24,y,552,25,'#fff',C.grid,6)+TBF(36,y+17.5,q[0],13,q[0]==='IIT'?C.purple:C.blue,'start')+TF(84,y+17.5,q[5],13,C.ink,'start')+R(478,y+2.5,90,20,r[2],'none',10)+TBF(523,y+17,r[0],13,r[1])});
   K6_HEAD.forEach((h,i)=>{const x=24+(i%2)*280,y=164+Math.floor(i/2)*46,on=i===s.v;out+=hit(X,'v',i,'Headline: '+h[0],R(x,y,272,38,on?C.dark:'#fff',C.dark,6)+TBF(x+136,y+24,h[0],13,on?'#fff':C.ink))});
   out+=s.v<0?TF(300,300,'Which headline would you run? Press one.',13,C.muted):K6_para(32,280,K6_HEAD[s.v][1],82,s.v===3?C.green:C.ink);
   return {svg:out,phase:s.v<0?'Each theory had one prediction that failed outright. The question is what that licenses anyone to say.':s.v===3?'The fair headline is the dull one. A single study, however large, moves the balance of evidence; it rarely ends a theory.':'This headline says more than the results support. Look at the scoreboard: the theory in question both passed and failed.'};
