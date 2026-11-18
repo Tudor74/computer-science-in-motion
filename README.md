@@ -4,7 +4,7 @@ A single-file, offline HTML page on how the brain works and how that was found o
 
 This is the `brain` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
-**Status: scaffold.** The route, the era files and the brief are in place; each lesson currently shows one placeholder card until its era is written (see `docs/BRAIN-BRIEF.md`).
+**Status:** all eight eras are written: 48 lessons, 173 scenes. A correctness review is still to come.
 
 ## Route
 
