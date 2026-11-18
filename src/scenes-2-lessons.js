@@ -1,5 +1,5 @@
 /* Brain era 2 · Synapses: lessons, sources and connections. */
-SOURCE('b2-sherrington',{title:'Charles Sherrington (1906). The Integrative Action of the Nervous System. Yale University Press.',url:'https://archive.org/details/integrativeactio00sheruoft'});
+SOURCE('b2-sherrington',{title:'Charles Sherrington (1906). The Integrative Action of the Nervous System. Yale University Press.'});
 SOURCE('b2-loewi',{title:'Otto Loewi (1921). Über humorale Übertragbarkeit der Herznervenwirkung. Pflügers Archiv 189, 239–242.',url:'https://doi.org/10.1007/BF01738910'});
 SOURCE('b2-nobel1936',{title:'The Nobel Prize in Physiology or Medicine 1936: Henry Dale and Otto Loewi, for chemical transmission of nerve impulses.',url:'https://www.nobelprize.org/prizes/medicine/1936/summary/'});
 SOURCE('b2-dfv',{title:'Dale, Feldberg & Vogt (1936). Release of acetylcholine at voluntary motor nerve endings. Journal of Physiology 86, 353–380.'});
