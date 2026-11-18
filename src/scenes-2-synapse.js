@@ -111,22 +111,22 @@ SCENE({id:'synapse-discovery-loewi',name:'Loewi’s two frog hearts',tag:'A chem
   const heart=(x,y,r,lab)=>`<path d="M${x} ${y+16}C${x-26} ${y-4} ${x-18} ${y-24} ${x} ${y-10}C${x+18} ${y-24} ${x+26} ${y-4} ${x} ${y+16}Z" fill="${C.coralp}" stroke="${C.coral}" stroke-width="2.5"/>`+TF(x,y+50,lab,13,C.muted);
   const beaker=(x,y,tint)=>R(x,y,96,74,tint?C.purplep:'#eef6fb',C.line,10);
   out+=beaker(26,60,s.vs)+heart(74,96,cur.r1,'heart 1')+beaker(26,214,s.r2<1)+heart(74,250,cur.r2,'heart 2');
-  out+=P('M150 48C132 52 112 62 92 82',C.amber,3)+TF(152,44,'vagus nerve',13,C.amber,'start');
+  out+=P('M150 62C132 64 112 70 92 84',C.amber,3)+TF(156,60,'vagus nerve',13,C.amber,'start');
   if(s.last==='stim')out+=TB(128,78,'⚡',17,C.amber);
   out+=curveArrow(132,128,132,214,-26,s.last==='move'?C.purple:C.line,s.last==='move'?3:2)+TF(166,176,'fluid',13,s.last==='move'?C.purple:C.muted,'start');
   if(s.vs)out+=TF(74,152,'holds Vagusstoff',13,C.purple);
   if(s.atr)out+=TF(74,306,'atropine added',13,C.green);
   // drum record
-  const x0=222,w=50,rows=[[92,'r1','Heart 1'],[226,'r2','Heart 2']];
+  const x0=222,w=50,rows=[[104,'r1','Heart 1'],[232,'r2','Heart 2']];
   out+=R(x0-6,48,362,286,'#fff',C.grid,8);
   for(const [yb,key,lab] of rows){
-   out+=TBF(x0,yb-52,lab,13,C.ink,'start')+L(x0,yb,x0+350,yb,C.grid,1.2);
+   out+=TBF(x0,yb-46,lab,13,C.ink,'start')+L(x0,yb,x0+350,yb,C.grid,1.2);
    s.segs.forEach((g,i)=>{const r=g[key],nb=Math.max(1,Math.round(8*r)),amp=r<.6?24:r<1?32:40,xa=x0+i*w,pts=[];
     for(let b=0;b<nb;b++){const xb=xa+(b+.1)*w/nb,ww=w/nb;pts.push([xb,yb],[xb+Math.min(3,ww*.3),yb-amp],[xb+Math.min(9,ww*.7),yb])}
     pts.push([xa+w,yb]);out+=B2_poly(pts,r<1?C.coral:C.blue,1.8)});
-   const r=cur[key];out+=TBF(x0+350,yb-52,`${Math.round(40*r)} beats a minute`,13,r<1?C.coral:C.blue,'end');
+   const r=cur[key];out+=TBF(x0+350,yb-46,`${Math.round(40*r)} beats a minute`,13,r<1?C.coral:C.blue,'end');
   }
-  s.segs.forEach((g,i)=>{out+=L(x0+i*w,150,x0+i*w,162,C.line,1.2)+TF(x0+i*w+w/2,165,B2_LW_LABEL[g.a],13,g.a==='stim'?C.amber:g.a==='move'?C.purple:C.muted)});
+  s.segs.forEach((g,i)=>{out+=L(x0+i*w,150,x0+i*w,162,C.line,1.2)+TF(x0+i*w+w/2,168,B2_LW_LABEL[g.a],13,g.a==='stim'?C.amber:g.a==='move'?C.purple:C.muted)});
   out+=TF(x0+175,262,'time →  each block is one action',13,C.muted);
   out+=TF(x0+175,296,s.atr?'Atropine is on heart 2.':'Rates are illustrative; the pattern is Loewi’s.',13,s.atr?C.green:C.muted)+TF(x0+175,318,'Slower beats are also weaker, as on his records.',13,C.muted);
   out+=B2_note('Frog hearts, removed from the animals and kept beating in salt solution.',358);
@@ -451,8 +451,8 @@ SCENE({id:'excitation-inhibition-reversal',name:'What makes a synapse excitatory
  draw(s){
   const c=B2_CH[s.ch],dv=c.k*(c.E-s.v),zero=Math.abs(dv)<.01;
   let out=heading(zero?`No potential at ${B2_mv(s.v)} mV: this is the reversal potential`:`At ${B2_mv(s.v)} mV the potential is ${B2_mv(dv)} mV`);
-  const pl=B2_plot(70,60,270,230,[-100,20],[-12,12],{xt:[[-100,'−100'],[-70,'−70'],[-40,'−40'],[0,'0'],[20,'+20']],yt:[[-10,'−10'],[0,'0'],[10,'+10']],xl:'voltage the cell is held at (mV)',yl:'synaptic potential (mV)'});out+=pl.svg;
-  out+=L(pl.X(-100),pl.Y(0),pl.X(20),pl.Y(0),C.line,1.4)+L(pl.X(B2_THR),60,pl.X(B2_THR),290,C.amber,1.2,'stroke-dasharray="4 4"')+TF(pl.X(B2_THR)+4,74,'threshold',13,C.amber,'start');
+  const pl=B2_plot(70,60,270,220,[-100,20],[-12,12],{xt:[[-100,'−100'],[-70,'−70'],[-40,'−40'],[0,'0'],[20,'+20']],yt:[[-10,'−10'],[0,'0'],[10,'+10']],xl:'voltage the cell is held at (mV)',yl:'synaptic potential (mV)'});out+=pl.svg;
+  out+=L(pl.X(-100),pl.Y(0),pl.X(20),pl.Y(0),C.line,1.4)+L(pl.X(B2_THR),60,pl.X(B2_THR),280,C.amber,1.2,'stroke-dasharray="4 4"')+TF(pl.X(B2_THR)+4,74,'threshold',13,C.amber,'start');
   const yA=clamp(c.k*(c.E+100),-12,12),yB=clamp(c.k*(c.E-20),-12,12),xA=c.E-yA/c.k,xB=c.E-yB/c.k;
   out+=L(pl.X(xA),pl.Y(yA),pl.X(xB),pl.Y(yB),c.col,2.6)+Ci(pl.X(c.E),pl.Y(0),6,'#fff',c.col)+TF(pl.X(c.E)+(s.ch==='glu'?-8:8),pl.Y(0)+(s.ch==='glu'?22:-10),`reverses at ${B2_mv(c.E)||'0'} mV`,13,c.col,s.ch==='glu'?'end':'start');
   out+=Ci(pl.X(s.v),pl.Y(clamp(dv,-12,12)),7,C.ink,'#fff');
@@ -460,8 +460,8 @@ SCENE({id:'excitation-inhibition-reversal',name:'What makes a synapse excitatory
   out+=R(370,60,210,130,'#fff',C.grid,8)+TF(380,78,'what the electrode sees',13,C.muted,'start')+L(382,128,568,128,C.grid,1.2);
   const pts=[];for(let i=0;i<=90;i++){const t=i/90*20;pts.push([382+i/90*186,128-clamp(dv,-12,12)*3.6*B2_psp(t-3)])}out+=B2_poly(pts,c.col,2.6);
   out+=B2_tile(370,202,210,c.name+' passes',c.ions,c.col)+B2_tile(370,254,210,'Pull: reversal − membrane',`${B2_mv(c.E)||'0'} − (${B2_mv(s.v)||'0'}) = ${B2_mv(c.E-s.v)||'0'} mV`,C.ink);
-  out+=T(300,340,dv>0&&c.E>B2_THR?'Pulled upwards, towards a point above threshold: excitatory.':dv>0?'Upwards, but only towards −80 mV, which is below threshold.':zero?'Channels open, yet no net current flows.':c.E>B2_THR?'Above 0 mV the same channel pushes downwards.':'Pulled downwards, away from threshold: inhibitory.',15,c.col);
-  out+=B2_note('Straight-line sketch: potential = constant × (reversal − membrane voltage).',364);
+  out+=T(300,344,dv>0&&c.E>B2_THR?'Pulled upwards, towards a point above threshold: excitatory.':dv>0?'Upwards, but only towards −80 mV, which is below threshold.':zero?'Channels open, yet no net current flows.':c.E>B2_THR?'Above 0 mV the same channel pushes downwards.':'Pulled downwards, away from threshold: inhibitory.',15,c.col);
+  out+=B2_note('Straight-line sketch: potential = constant × (reversal − membrane voltage).',370);
   return {svg:out,phase:s.ch==='glu'?'Glutamate’s fast channels pull the membrane towards about 0 mV. From anywhere near rest that is upwards and past threshold, so glutamate synapses excite. Curtis and Watkins showed in 1960 that glutamate excites spinal neurons, but because it is found in every cell it took until the 1970s and 80s to be accepted as a transmitter.':
    (zero?'At the reversal potential the open channels move no net charge. They still inhibit: any excitatory current now leaks out through them, which is called shunting. ':dv>0?'Held below the reversal potential, the cell is pulled up towards −80 mV. The potential has reversed, as Coombs, Eccles and Fatt saw, yet the pull is still towards a voltage below threshold. ':'Chloride enters and the inside becomes more negative. ')+'In the brain these channels are opened mostly by GABA, shown to act like cortical inhibition by Krnjević and Schwartz in 1967; in the spinal cord, where Eccles worked, often by glycine.'};
  }});
