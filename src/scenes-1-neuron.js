@@ -134,7 +134,7 @@ SCENE({id:'animal-electricity-speed',name:'Timing the nerve signal',tag:'Helmhol
   let out=heading(fit&&fit.v?`Your measurements give ${fmt(B1_r1(fit.v))} m/s`:'Stimulate at two different distances');
   // preparation
   const mx=40,nx=d=>112+d*3;
-  out+=`<ellipse cx="76" cy="92" rx="38" ry="20" fill="#b7d3bf" stroke="${C.green}" stroke-width="2"/>`+TF(76,97,'muscle',13,C.green)+L(112,92,nx(62),92,C.amber,5)+TF(nx(62)-2,74,'nerve',13,C.amber,'end');
+  out+=`<ellipse cx="76" cy="92" rx="38" ry="20" fill="#b7d3bf" stroke="${C.green}" stroke-width="2"/>`+TF(76,97,'muscle',13,C.green)+L(112,92,nx(62),92,C.amber,5)+TF(nx(35),120,'nerve',13,C.amber);
   for(const d of [10,60]){out+=L(nx(d),98,nx(d),106,C.muted,1.4)+TF(nx(d),120,d+' mm',13,C.muted)}
   out+=arrow(nx(s.d),58,nx(s.d),86,C.blue,2.5)+TF(nx(s.d),52,'shock',13,C.blue);
   // twitch record
@@ -228,7 +228,7 @@ SCENE({id:'neuron-doctrine-trace',name:'Do the fibres join or end?',tag:'Cajal a
    out+=hit(X,'follow',i,`Axon branch ${i+1}${s.seen[i]?': followed, ends freely':': press to follow it'}`,inner)});
   if(golgi)out+=P('M396 104 C404 120 408 130 414 142M414 142 C426 146 436 148 447 150M410 250 C404 266 400 280 398 292M410 250 C426 256 440 260 452 262M414 142 C412 180 410 215 410 250',C.purple,1.6,'none','stroke-dasharray="5 4"');
   out+=B1_panel(30,298,364,74);
-  out+=B1_wrap(42,319,golgi?'Golgi drew the fine branches running into one another, so that the whole grey matter worked as a single web. The same slides could be read this way.':n===6?'Every branch ends in a small swelling next to a dendrite or cell body. Contact, Cajal argued, not continuity.':n?'Ringed endings stop short of the next cell. Keep going: is there any branch that fuses?':'Each branch is a target. In the stain, a fibre is black right to where it stops.',50,13,golgi?C.purple:C.ink).svg;
+  out+=B1_wrap(42,319,golgi?'Golgi drew the fine branches running into one another, so that the grey matter worked as a single web.':n===6?'Every branch ends in a small swelling next to a dendrite or cell body. Contact, Cajal argued, not continuity.':n?'Ringed endings stop short of the next cell. Keep going: is there any branch that fuses?':'Each branch is a target. In the stain, a fibre is black right to where it stops.',50,13,golgi?C.purple:C.ink).svg;
   return {svg:out,phase:golgi?'On Golgi’s reading, signals spread through a continuous net and individual cells matter little. The dashed links are what he believed was there; nobody could see them.':n===6?'Six out of six end freely. Neither man could see the space between an ending and the next cell, because it is far smaller than a light microscope can show. Cajal’s case was an inference from many preparations, and it was right.':'A stained fibre can be followed until the black stops. The question is what the stopping means: an end, or a join too fine to stain?'};
  }});
 
@@ -628,12 +628,12 @@ SCENE({id:'action-potential-clamp',name:'The voltage clamp',tag:'Holding the vol
  }});
 
 /* ===================== Lesson: myelin-conduction ===================== */
-// A myelinated fibre with nine nodes. The current from an active node falls by half per internode and is
+// A myelinated fibre with nine nodes. The current from an active node falls to 0.4 of its value per extra internode and is
 // six times threshold at the next node (a safety factor of the size Tasaki measured; values illustrative).
 const B1_NODES=9,B1_SF=6;
 function B1_jump(blocked){const fr=[{at:0,t:0,fired:[0]}];let at=0,t=0;const fired=[0];
  while(at<B1_NODES-1){let j=at+1;while(j<B1_NODES&&blocked[j])j++;const gap=j-at;
-  if(j>=B1_NODES||B1_SF*Math.pow(.5,gap-1)<1){fr.push({at,t,fired:fired.slice(),fail:true,gap});return fr}
+  if(j>=B1_NODES||B1_SF*Math.pow(.4,gap-1)<1){fr.push({at,t,fired:fired.slice(),fail:true,gap});return fr}
   t+=.1*gap+(gap>1?.08:0);at=j;fired.push(j);fr.push({at,t,fired:fired.slice(),gap})}
  fr.push({at,t,fired:fired.slice(),done:true});return fr}
 SCENE({id:'myelin-conduction',name:'Jumping from node to node',tag:'Saltatory conduction',
@@ -656,11 +656,11 @@ SCENE({id:'myelin-conduction',name:'Jumping from node to node',tag:'Saltatory co
    const inner=Ci(nx(i),y,12,'#fff','none','opacity="0"')+Ci(nx(i),y,now&&!f.fail?9:7,bl?C.coralp:fired?C.green:'#fff',bl?C.coral:fired?C.green:C.blue)+(bl?L(nx(i)-6,y-6,nx(i)+6,y+6,C.coral,2.5)+L(nx(i)+6,y-6,nx(i)-6,y+6,C.coral,2.5):'')+TF(nx(i),y+40,i+1,13,bl?C.coral:C.muted);
    out+=i>0&&i<B1_NODES-1?hit(X,'node',i,`Node ${i+1}: ${bl?'blocked. Press to unblock':'working. Press to block'}`,inner):inner;
    if(now&&!f.fail)out+=arrow(nx(i)-9,y-46,nx(i)-3,y-14,C.coral,2.2)+arrow(nx(i)+9,y-46,nx(i)+3,y-14,C.coral,2.2)+TF(nx(i),y-52,'Na⁺ in',13,C.coral)}
-  if(!f.done){let j=f.at+1;while(j<B1_NODES&&s.blocked[j])j++;const reach=Math.min(j,B1_NODES-1),cur=B1_SF*Math.pow(.5,j-f.at-1);
-   if(f.at<B1_NODES-1)out+=curveArrow(nx(f.at)+10,y+16,nx(reach)-10,y+16,-26-8*(reach-f.at),f.fail?C.muted:C.blue,2.2)+TF(clamp((nx(f.at)+nx(reach))/2,120,480),y+78+6*(reach-f.at),j<B1_NODES?`current there: ${fmt(Math.round(cur*10)/10)} × threshold`:'',13,f.fail?C.coral:C.blue)}
+  if(!f.done){let j=f.at+1;while(j<B1_NODES&&s.blocked[j])j++;const reach=Math.min(j,B1_NODES-1),cur=B1_SF*Math.pow(.4,j-f.at-1);
+   if(f.at<B1_NODES-1)out+=curveArrow(nx(f.at)+10,y+16,nx(reach)-10,y+16,-26-8*(reach-f.at),f.fail?C.muted:C.blue,2.2)+TF(clamp((nx(f.at)+nx(reach))/2,120,480),y+78+6*(reach-f.at),j<B1_NODES?`current there: ${fmt(Math.round(cur*100)/100)} × threshold`:'',13,f.fail?C.coral:C.blue)}
   out+=B1_panel(40,262,520,84);
-  out+=B1_wrap(54,286,f.fail?'Each blocked node halves the current reaching the next. Past two blocked nodes only 0.75 of threshold is left, so nothing fires.':f.done?(s.blocked.some(b=>b)?'The impulse crossed every blocked node it met, a little late each time: the weaker current takes longer to bring the next node to threshold.':'Nine nodes in 0.8 ms. Only the nodes had to fire; the myelinated stretches cost almost no time.'):'Sodium enters only at the active node. The current runs forward inside the axon and out at the next node, which fires in turn.',70,13,C.ink).svg;
-  return {svg:out,phase:f.fail?'With two neighbouring nodes out of action the current arriving at the next working node is below threshold and the impulse stops. Conduction has a safety margin, but not an unlimited one.':f.done?'Because the impulse is regenerated at each node it arrives at full size however long the fibre. Myelin lets the nodes be far apart, so there are far fewer regenerations per millimetre.':f.gap>1?`The impulse skipped a blocked node: ${fmt(B1_SF*Math.pow(.5,f.gap-1))} times threshold still arrived at node ${f.at+1}.`:'The active node’s current is about six times what the next node needs to fire. That margin is the safety factor.'};
+  out+=B1_wrap(54,286,f.fail?'Each blocked node cuts the current reaching the next to 0.4 of its value. Past two blocked nodes only 0.96 of threshold is left, so nothing fires.':f.done?(s.blocked.some(b=>b)?'The impulse crossed every blocked node it met, a little late each time: the weaker current takes longer to bring the next node to threshold.':'Nine nodes in 0.8 ms. Only the nodes had to fire; the myelinated stretches cost almost no time.'):'Sodium enters only at the active node. The current runs forward inside the axon and out at the next node, which fires in turn.',70,13,C.ink).svg;
+  return {svg:out,phase:f.fail?'With two neighbouring nodes out of action the current arriving at the next working node is below threshold and the impulse stops. Conduction has a safety margin, but not an unlimited one.':f.done?'Because the impulse is regenerated at each node it arrives at full size however long the fibre. Myelin lets the nodes be far apart, so there are far fewer regenerations per millimetre.':f.gap>1?`The impulse skipped a blocked node: ${fmt(Math.round(B1_SF*Math.pow(.4,f.gap-1)*100)/100)} times threshold still arrived at node ${f.at+1}.`:'The active node’s current is about six times what the next node needs to fire. That margin is the safety factor.'};
  }});
 
 // Rules of thumb: unmyelinated v ≈ √d m/s (d in µm; about 1 m/s at 1 µm, about 22 m/s for a 500 µm squid axon);

@@ -573,12 +573,12 @@ SCENE({id:'basal-ganglia-dopamine',name:'The missing dopamine',tag:'Hornykiewicz
   // barrier
   out+=R(290,134,296,220,'#fff',C.grid,10)+R(300,168,112,150,'#fdeeee','none',8)+R(444,168,132,150,'#eef5fb','none',8)+TF(356,160,'blood',12,C.muted)+TF(510,160,'brain',12,C.muted);
   for(let i=0;i<5;i++)out+=R(416,170+i*30,24,26,'#e6d9cd','#b9a898',5);
-  out+=TF(428,334,'blood–brain barrier',12,C.muted);
+  out+=TF(428,160,'barrier',12,C.muted);
   for(let i=0;i<5;i++){const y=186+i*28,u=clamp(a*1.3-i*.06,0,1),xs=312+(i%2)*14;let x,col=ld?C.amber:C.coral;
    if(ld){x=xs+u*(470+(i%3)*30-xs);if(x>462)col=C.coral}else{x=xs+Math.min(u,.42)*210;if(u>.42)x-=(Math.min(u,.6)-.42)*120}
    out+=Ci(x,y,7,col,'#fff')}
   out+=Ci(306,344,6,C.amber,'#fff')+TF(316,348,'L-DOPA',12,C.muted,'start')+Ci(380,344,6,C.coral,'#fff')+TF(390,348,'dopamine',12,C.muted,'start');
-  if(done)out+=ld?TB(510,306,'converted here',12,C.coral):TB(356,306,'turned back',12,C.coral);
+  if(done)out+=ld?TB(510,334,'converted here',12,C.coral):TB(356,334,'turned back',12,C.coral);
   return {svg:out,phase:done?(ld?'L-DOPA is an amino acid, and the barrier’s amino-acid carriers take it across. Inside the brain an enzyme removes one small group and it becomes dopamine. That is why the precursor works as a medicine where dopamine itself cannot. It replaces what is missing for a time; it does not protect the cells.':'Dopamine in the blood does not cross the wall of tightly joined cells that lines the brain’s blood vessels, so giving dopamine cannot refill the striatum. Try L-DOPA.'):`${ev.y}: ${ev.a} ${ev.b} Choose a molecule and press Give.`};
  }});
 
@@ -604,7 +604,7 @@ SCENE({id:'population-coding',name:'One cell, eight directions',tag:'Georgopoulo
   if(s.last){const a=B4_rad(s.last.j*45);out+=L(cx,cy,cx+R0*Math.cos(a),cy-R0*Math.sin(a),C.coral,3)}
   for(let j=0;j<8;j++){const a=B4_rad(j*45),x=cx+R0*Math.cos(a),y=cy-R0*Math.sin(a),on=s.last&&s.last.j===j;out+=hit(X,'reach',j,`Reach towards ${j*45} degrees`,Ci(x,y,17,on?C.coral:rows[j].length?C.pale:'#fff',on?C.coral:C.blue)+TF(x,y+4,j*45+'°',12,on?'#fff':C.ink))}
   out+=Ci(cx,cy,9,C.dark)+TF(cx,cy+R0+40,'0° is to the right; angles go anticlockwise',12,C.muted);
-  out+=R(24,300,214,58,'#fff',C.grid,10)+(s.last?TF(36,318,`last reach, ${s.last.j*45}°: ${s.last.times.length} spikes in 0.5 s`,12,C.ink,'start')+L(36,346,226,346,C.grid,1.2)+B4_ticks(36,338,190,s.last.times,.5,C.ink,14,1.5):TF(131,334,'press a target',12,C.muted));
+  out+=R(24,300,214,58,'#fff',C.grid,10)+(s.last?TF(36,318,`last reach, ${s.last.j*45}°: ${s.last.times.length} spike${s.last.times.length===1?'':'s'} in 0.5 s`,12,C.ink,'start')+L(36,346,226,346,C.grid,1.2)+B4_ticks(36,338,190,s.last.times,.5,C.ink,14,1.5):TF(131,334,'press a target',12,C.muted));
   // graph
   const x0=300,w=262,yb=300,h=210,xx=d=>x0+d/360*w,yy=v=>yb-clamp(v,0,50)/50*h;
   out+=R(258,48,328,310,'#fff',C.grid,10)+L(x0,yb,x0+w,yb,C.line,1.4)+L(x0,yb,x0,yb-h,C.line,1.4);
@@ -614,7 +614,7 @@ SCENE({id:'population-coding',name:'One cell, eight directions',tag:'Georgopoulo
   if(fit){let d='';for(let a=0;a<=360;a+=6)d+=(a?'L':'M')+fmt(xx(a))+' '+fmt(yy(fit.b+fit.k*Math.cos(B4_rad(a-fit.pd))));out+=P(d,C.coral,2.4)+L(xx(fit.pd),yb,xx(fit.pd),yy(fit.b+fit.k),C.coral,1.2,'stroke-dasharray="4 3"')+TF(x0+w,66,'cosine fitted to your data',12,C.coral,'end')}
   rows.forEach((a,j)=>{for(const v of a)out+=Ci(xx(j*45),yy(v),2.6,'#9fb9c9');if(a.length)out+=Ci(xx(j*45),yy(sum(a)/a.length),5.5,C.blue,'#fff')});
   out+=Ci(x0+8,yb+48,5,C.blue,'#fff')+TF(x0+18,yb+52,'mean',12,C.muted,'start')+Ci(x0+70,yb+48,2.6,'#9fb9c9')+TF(x0+78,yb+52,'single reaches',12,C.muted,'start')+TF(x0+w,yb+52,nTot+(nTot===1?' reach':' reaches'),12,C.muted,'end');
-  return {svg:out,phase:fit?`Cell ${s.cell+1} fires most, about ${Math.round(fit.b+fit.k)} spikes a second, for reaches near ${Math.round(fit.pd)}°, and least, about ${Math.round(Math.max(0,fit.b-fit.k))}, for the opposite direction. In between the rate falls off smoothly, so the cell “votes” for a wide range of directions. More reaches make the estimate steadier. Try another cell: each has its own preferred direction.`:s.last?`The cell fired ${s.last.times.length} spikes in the half second around a reach to ${s.last.j*45}°, a rate of ${s.last.times.length*2} a second. Repeat the same reach and the count changes. Sample every direction to see the shape of the tuning.`:'Each press is one reach by the monkey from the centre to a target, with the cell’s spikes counted for half a second.'};
+  return {svg:out,phase:fit?`Cell ${s.cell+1} fires most, about ${Math.round(fit.b+fit.k)} spikes a second, for reaches near ${Math.round(fit.pd)}°, and least, about ${Math.round(Math.max(0,fit.b-fit.k))}, for the opposite direction. In between the rate falls off smoothly, so the cell “votes” for a wide range of directions. More reaches make the estimate steadier. Try another cell: each has its own preferred direction.`:s.last?`The cell fired ${s.last.times.length} spike${s.last.times.length===1?'':'s'} in the half second around a reach to ${s.last.j*45}°, a rate of ${s.last.times.length*2} a second. Repeat the same reach and the count changes. Sample every direction to see the shape of the tuning.`:'Each press is one reach by the monkey from the centre to a target, with the cell’s spikes counted for half a second.'};
  }});
 
 // Population vector: each cell votes along its preferred direction, weighted by how far its rate is from its mean rate.
