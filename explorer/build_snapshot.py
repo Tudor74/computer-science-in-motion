@@ -39,19 +39,23 @@ def h(s):
 
 # ------------------------------------------------------------ 1. preprints
 OAI = "{http://www.openarchives.org/OAI/2.0/}"
-ARXIV_OAI = "{http://arxiv.org/OAI/arXiv/}"
+RAW = "{http://arxiv.org/OAI/arXivRaw/}"
 
 
-def fetch_arxiv(start, end):
-    """New arXiv submissions via OAI-PMH (arXiv's bulk interface).
+def split_authors(s):
+    s = " ".join((s or "").split())
+    parts = re.split(r",\s*(?:and\s+)?|\s+and\s+", s)
+    return [p.strip() for p in parts if p.strip()]
 
-    OAI returns every record modified in the window; new papers are those whose
-    identifier is from this month or last (YYMM) and whose created date is in
-    the window."""
-    months = {f"{start:%y%m}", f"{end:%y%m}"}
-    url = (f"https://oaipmh.arxiv.org/oai?verb=ListRecords&metadataPrefix=arXiv"
-           f"&from={start:%Y-%m-%d}&until={end:%Y-%m-%d}")
-    out, seen_records = [], 0
+
+def fetch_arxiv(start, end, until):
+    """New arXiv submissions via OAI-PMH (arXiv's bulk interface), arXivRaw format.
+
+    OAI returns every record modified since `start`; a paper is new this week
+    when its first version (v1) is dated inside the window."""
+    url = (f"https://oaipmh.arxiv.org/oai?verb=ListRecords&metadataPrefix=arXivRaw"
+           f"&from={start:%Y-%m-%d}&until={until:%Y-%m-%d}")
+    out, seen_records, seen = [], 0, set()
     while url:
         body = fim.get(url, kind="text")
         if not body:
@@ -63,28 +67,36 @@ def fetch_arxiv(start, end):
             break
         for rec in lr.findall(OAI + "record"):
             seen_records += 1
-            m = rec.find(OAI + "metadata/" + ARXIV_OAI + "arXiv")
+            m = rec.find(OAI + "metadata/" + RAW + "arXivRaw")
             if m is None:
                 continue
-            aid = m.findtext(ARXIV_OAI + "id") or ""
-            created = m.findtext(ARXIV_OAI + "created") or ""
-            if aid[:4] not in months or not (start.isoformat() <= created <= end.isoformat()):
+            aid = m.findtext(RAW + "id") or ""
+            vers = []
+            for v in m.findall(RAW + "version"):
+                try:
+                    d = dt.datetime.strptime((v.findtext(RAW + "date") or "").strip(), "%a, %d %b %Y %H:%M:%S %Z").date()
+                except ValueError:
+                    continue
+                vers.append((v.get("version"), d))
+            if not vers or aid in seen:
                 continue
-            cats = (m.findtext(ARXIV_OAI + "categories") or "").split()
-            authors = []
-            for au in m.findall(ARXIV_OAI + "authors/" + ARXIV_OAI + "author"):
-                nm = " ".join(x for x in [au.findtext(ARXIV_OAI + "forenames"), au.findtext(ARXIV_OAI + "keyname")] if x)
-                authors.append(nm)
-            updated = m.findtext(ARXIV_OAI + "updated") or ""
+            v1 = vers[0][1]
+            if not (start <= v1 <= end):
+                continue
+            seen.add(aid)
+            cats = (m.findtext(RAW + "categories") or "").split()
+            comment = m.findtext(RAW + "comments") or ""
             out.append({
-                "source": "arXiv", "id": aid, "version": 2 if updated and updated != created else 1,
-                "title": " ".join((m.findtext(ARXIV_OAI + "title") or "").split()),
-                "abstract": " ".join((m.findtext(ARXIV_OAI + "abstract") or "").split()),
-                "posted": created, "updated": updated or created,
-                "authors": authors, "category": cats[0] if cats else "", "categories": cats,
-                "comment": m.findtext(ARXIV_OAI + "comments") or "",
-                "journal_ref": m.findtext(ARXIV_OAI + "journal-ref") or "",
-                "published_doi": (m.findtext(ARXIV_OAI + "doi") or "").lower(),
+                "source": "arXiv", "id": aid, "version": len(vers),
+                "versions": [{"v": v, "date": d.isoformat()} for v, d in vers],
+                "title": " ".join((m.findtext(RAW + "title") or "").split()),
+                "abstract": " ".join((m.findtext(RAW + "abstract") or "").split()),
+                "posted": v1.isoformat(), "updated": vers[-1][1].isoformat(),
+                "authors": split_authors(m.findtext(RAW + "authors")),
+                "category": cats[0] if cats else "", "categories": cats,
+                "comment": comment,
+                "journal_ref": m.findtext(RAW + "journal-ref") or "",
+                "published_doi": (m.findtext(RAW + "doi") or "").lower(),
                 "doi": f"10.48550/arxiv.{aid}".lower(),
                 "url": f"https://arxiv.org/abs/{aid}",
             })
@@ -92,7 +104,7 @@ def fetch_arxiv(start, end):
         url = None
         if tok is not None and (tok.text or "").strip():
             url = "https://oaipmh.arxiv.org/oai?verb=ListRecords&resumptionToken=" + urllib.parse.quote(tok.text.strip())
-            log(f"  OAI: {seen_records} records read, {len(out)} new so far (of {tok.get('completeListSize')})")
+            log(f"  OAI: {seen_records} records read, {len(out)} new so far")
     return out, len(out)
 
 
@@ -215,7 +227,7 @@ def main():
     log(f"Window {start}..{end}; track-record cutoff {cutoff}")
 
     log("1. arXiv")
-    arx, arx_total = fetch_arxiv(start, end)
+    arx, arx_total = fetch_arxiv(start, end, today)
     log("1. bioRxiv / medRxiv")
     bio, bio_total, bio_dois = fetch_biorxiv("biorxiv", start, end)
     med, med_total, med_dois = fetch_biorxiv("medrxiv", start, end)
@@ -297,7 +309,9 @@ def main():
                     pub_venue = (l.get("source") or {}).get("display_name")
                     break
         timeline = [{"date": p["posted"], "event": "posted (v1)"}]
-        if p["version"] > 1 and p["updated"] != p["posted"]:
+        for v in p.get("versions", [])[1:]:
+            timeline.append({"date": v["date"], "event": f"revised ({v['v']})"})
+        if not p.get("versions") and p["version"] > 1:
             timeline.append({"date": p["updated"], "event": f"revised (v{p['version']})"})
         if st == "published":
             timeline.append({"date": None, "event": "published: " + (p.get("journal_ref") or pub_venue or p.get("published_doi") or "journal record")})
@@ -352,7 +366,7 @@ def main():
 
     snap = {
         "snapshot_date": snap_date.isoformat(), "window": [start.isoformat(), end.isoformat()],
-        "built_at": dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+        "built_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "previous_snapshot": prev_name, "status_changes": len(changes),
         "fields": [{"id": f, "name": n, "week_count": week_counts[f], "sampled": quota.get(f, 0)} for f, n in fim.FIELDS],
         "week_totals": {"arxiv_reported": arx_total, "arxiv_new": len(arx), "arxiv_outside_regions": excluded,

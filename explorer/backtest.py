@@ -42,38 +42,56 @@ def rnd_day(rng, year):
     return d
 
 
+OA_FIELD = {
+    "Physics and Astronomy": "physics", "Chemistry": "chemistry", "Materials Science": "chemistry",
+    "Chemical Engineering": "chemistry", "Mathematics": "mathematics", "Computer Science": "cs",
+    "Engineering": "cs", "Earth and Planetary Sciences": "earthspace", "Environmental Science": "earthspace",
+    "Medicine": "medicine", "Health Professions": "medicine", "Nursing": "medicine",
+    "Pharmacology, Toxicology and Pharmaceutics": "medicine", "Neuroscience": "biology",
+    "Biochemistry, Genetics and Molecular Biology": "biology", "Agricultural and Biological Sciences": "biology",
+    "Immunology and Microbiology": "biology",
+}
+
+
+def oa_field(w):
+    t = w.get("primary_topic") or {}
+    if (t.get("subfield") or {}).get("display_name") == "Astronomy and Astrophysics":
+        return "earthspace"
+    return OA_FIELD.get((t.get("field") or {}).get("display_name"))
+
+
+def abstract_of(w):
+    inv = w.get("abstract_inverted_index") or {}
+    pos = sorted((i, word) for word, idx in inv.items() for i in idx)
+    return " ".join(word for _, word in pos)
+
+
 def arxiv_pool(n_ids, rng):
-    """Random arXiv identifiers spread evenly over 2018-2021 (YYMM.NNNNN),
-    looked up 100 at a time with id_list. arXiv numbers papers sequentially
-    within a month, so a random number below 10000 is a random paper of that
-    month (every month in 2018-21 had more than 10,000 submissions)."""
+    """Random arXiv identifiers spread evenly over 2018-2021 (YYMM.NNNNN).
+    arXiv numbers papers sequentially within a month, so a random number below
+    10000 is a random paper of that month (every month in 2018-21 had more
+    than 10,000). They are looked up in OpenAlex by arXiv DOI, 50 at a time;
+    OpenAlex keeps the arXiv record separate from any journal version, so the
+    lookup is not biased towards unpublished papers. Field = OpenAlex topic."""
     months = [f"{y % 100:02d}{m:02d}" for y in YEARS for m in range(1, 13)]
     ids = sorted({f"{months[i % len(months)]}.{rng.randrange(1, 10000):05d}" for i in range(n_ids)})
     rng.shuffle(ids)
+    sel = fim.WORK_SELECT + ",primary_topic,abstract_inverted_index"
     out = []
-    for i in range(0, len(ids), 100):
-        url = "https://export.arxiv.org/api/query?id_list=" + ",".join(ids[i:i + 100]) + "&max_results=100"
-        body = fim.get(url, kind="text")
-        if not body:
-            continue
-        for e in ET.fromstring(body).findall(ATOM + "entry"):
-            m = re.search(r"abs/(.+?)(v\d+)?$", e.findtext(ATOM + "id") or "")
-            prim = e.find(ARX + "primary_category")
-            if not m or prim is None:
+    for i in range(0, len(ids), 50):
+        chunk = [f"10.48550/arxiv.{x}" for x in ids[i:i + 50]]
+        r = fim.get(f"{fim.OA}/works?filter=doi:{'|'.join(chunk)}&per_page=50&select={sel}")
+        for w in (r or {}).get("results", []):
+            f = oa_field(w)
+            doi = (w.get("doi") or "").lower().replace("https://doi.org/", "")
+            if not f or not doi.startswith("10.48550/arxiv."):
                 continue
-            f = fim.arxiv_field(prim.get("term"))
-            if not f:
-                continue
-            aid = m.group(1)
+            aid = doi[len("10.48550/arxiv."):]
             out.append({
-                "source": "arXiv", "id": aid, "field": f, "category": prim.get("term"),
-                "title": " ".join((e.findtext(ATOM + "title") or "").split()),
-                "abstract": " ".join((e.findtext(ATOM + "summary") or "").split()),
-                "comment": e.findtext(ARX + "comment") or "",
-                "posted": (e.findtext(ATOM + "published") or "")[:10],
-                "doi": f"10.48550/arxiv.{aid}".lower(),
-                "later_doi": (e.findtext(ARX + "doi") or "").lower(),
-                "journal_ref": e.findtext(ARX + "journal_ref") or "",
+                "source": "arXiv", "id": aid, "field": f, "category": ((w.get("primary_topic") or {}).get("subfield") or {}).get("display_name", ""),
+                "title": w.get("title") or "", "abstract": abstract_of(w), "comment": "",
+                "posted": w.get("publication_date") or "", "doi": doi, "later_doi": "", "journal_ref": "",
+                "_w": w,
             })
     return out
 
@@ -218,7 +236,7 @@ def main():
         papers += arxiv_sample(pool, f, a.per_field, rng)
     papers += biorxiv_sample("biorxiv", "biology", a.per_field - 14, YEARS, rng)
     papers += arxiv_sample(pool, "biology", 14, rng)
-    papers += arxiv_sample(pool, "medicine", 6, rng)
+    papers += arxiv_sample(pool, "medicine", 6, rng)  # physics.med-ph-like arXiv papers
     papers += biorxiv_sample("medrxiv", "medicine", a.per_field, [2019, 2020, 2021], rng)
     seen, uniq = set(), []
     for p in papers:
@@ -229,9 +247,9 @@ def main():
     log(f"  {len(papers)} papers")
 
     log("OpenAlex: resolve")
-    found = fim.oa_works_by_doi([p["doi"] for p in papers])
+    found = fim.oa_works_by_doi([p["doi"] for p in papers if not p.get("_w")])
     for p in papers:
-        p["_w"] = found.get(p["doi"]) or fim.oa_title_search(p["title"])
+        p["_w"] = p.get("_w") or found.get(p["doi"]) or fim.oa_title_search(p["title"])
     later = fim.oa_works_by_doi([p["later_doi"] for p in papers if p["later_doi"]])
 
     log("OpenAlex: lead authors' records at posting time")
@@ -326,7 +344,7 @@ def main():
         band.append({"lo": lo, "hi": min(hi, 1), **rates(b)})
 
     res = {
-        "built_at": dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+        "built_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "years": YEARS, "outcome_year": OUTCOME_YEAR, "seed": a.seed,
         "n_papers": len(rows), "n_resolved": sum(r["resolved"] for r in rows), "n_scored": len(scored),
         "n_newcomers": sum(r["newcomer"] for r in rows),

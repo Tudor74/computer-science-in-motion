@@ -229,7 +229,8 @@
    "field": "earthspace",
    "fields": [
     "earthspace",
-    "physics"
+    "physics",
+    "biology"
    ],
    "keywords": [
     "climate sensitivity",
@@ -238,7 +239,16 @@
     "cloud feedback",
     "radiative forcing",
     "earth's energy imbalance",
-    "climate feedback"
+    "climate feedback",
+    "climate model",
+    "cmip",
+    "global warming",
+    "aerosol forcing",
+    "climate projection",
+    "warming level",
+    "ice sheet",
+    "sea-level rise",
+    "sea level rise"
    ],
    "short": "Climate sensitivity"
   }
