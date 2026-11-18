@@ -40,7 +40,7 @@ h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute
 .open svg{width:18px;height:18px}
 .secondary{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;border-radius:9px;border:1px solid #aec3cf;color:var(--ink);text-decoration:none;font-weight:600}
 .secondary:hover{background:#edf5fa}
-.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}.chemistry{--accent:#4f7a1c}.senses{--accent:#9a3f5c}.tripitaka{--accent:#8a5a14}.techno{--accent:#c2410c}.frontier{--accent:#4a5f8c}
+.math{--accent:#1772b7}.cs{--accent:#2c776c}.hci{--accent:#7156a6}.therapy{--accent:#ad472a}.thinkers{--accent:#2f6e8e}.physics{--accent:#9a6200}.electronic{--accent:#b0337a}.philosophy{--accent:#5a5f9e}.rashid{--accent:#1f6f5c}.future{--accent:#c45238}.music{--accent:#6b3fa0}.mind{--accent:#1d6b8f}.nelson{--accent:#a35a00}.biology{--accent:#2c6e49}.language{--accent:#8a3b6e}.abiogenesis{--accent:#a24a1c}.economics{--accent:#1f5f7a}.chemistry{--accent:#4f7a1c}.senses{--accent:#9a3f5c}.tripitaka{--accent:#8a5a14}.techno{--accent:#c2410c}.brain{--accent:#b03a48}.consciousness{--accent:#0f6e78}.frontier{--accent:#4a5f8c}
 /* Five courses: the last card spans both columns, with its motif beside the text. */
 .course.wide{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 .course.wide .motif{height:100%;aspect-ratio:auto;min-height:220px}
@@ -328,6 +328,37 @@ footer p{margin:0 0 4px}
     <p class="desc">Measuring sensation, learning, the mind as information, memory, the brain at work, judgement and reasoning, minds among others, and today’s models of mind. In Try it you are the participant in classic experiments (reaction time, Stroop, mental rotation, false memories, the Wason cards) and your results are drawn beside the published ones. Studies that failed to replicate are labelled, and unethical ones are shown only as reconstructions.</p>
     <ul class="facts" aria-label="Course size"><li>8 eras</li><li>48 lessons</li><li>148 scenes</li><li>Be the participant</li></ul>
     <div class="links"><a class="open" href="https://mind-in-motion.puter.site/">Open Mind <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
+  <li class="course brain">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="An action potential jumping from node to node along a myelinated axon">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <path d="M40 130H560" stroke="#c7d8e3" stroke-width="10" stroke-linecap="round"/><path d="M40 58H210L228 22L246 76L262 58H560" fill="none" stroke="#546873" stroke-width="2.5" stroke-linejoin="round"/><g class="step" style="animation-delay:0.0s"><rect x="123" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g><g class="step" style="animation-delay:0.3s"><rect x="203" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g><g class="step" style="animation-delay:0.6s"><rect x="283" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g><g class="step" style="animation-delay:0.9s"><rect x="363" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g><g class="step" style="animation-delay:1.2s"><rect x="443" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g><g class="step" style="animation-delay:1.5s"><rect x="523" y="118" width="14" height="24" rx="4" fill="#b03a48"/></g>
+    <text x="300" y="190" text-anchor="middle" font-size="14" fill="#546873">The spike leaps from node to node along the axon</text>
+   </svg>
+   <div class="body">
+    <h3>Brain In Motion</h3>
+    <p class="tag">How the brain works and how that was found out, in the order of discovery</p>
+    <p class="desc">The neuron, the synapse, maps of the brain, movement, development and plasticity, brain states, disorders, and the tools at the frontier. In Try it you run the classic preparations as simulations (ion gradients, an axon, a reflex, prism adaptation), read the classic records, and see your results beside the published ones. Contested claims are labelled, and nothing is medical advice.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>48 lessons</li><li>BRAINSCENES scenes</li><li>Run the classic experiments</li></ul>
+    <div class="links"><a class="open" href="https://brain-in-motion.puter.site/">Open Brain <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+   </div>
+  </li>
+
+  <li class="course consciousness">
+   <svg class="motif" viewBox="0 0 600 220" role="img" aria-label="A Necker cube whose front face switches back and forth">
+    <rect width="600" height="220" fill="#f3f7fa"/>
+    <g fill="none" stroke="#c7d8e3" stroke-width="3" stroke-linejoin="round"><rect x="250" y="70" width="90" height="90"/><rect x="290" y="40" width="90" height="90"/><path d="M250 70L290 40M340 70L380 40M250 160L290 130M340 160L380 130"/></g>
+    <g class="step" style="animation-delay:0s"><rect x="250" y="70" width="90" height="90" fill="#0f6e78" fill-opacity=".18" stroke="#0f6e78" stroke-width="3"/></g><g class="step" style="animation-delay:1s"><rect x="290" y="40" width="90" height="90" fill="#0f6e78" fill-opacity=".18" stroke="#0f6e78" stroke-width="3"/></g>
+    <text x="300" y="200" text-anchor="middle" font-size="14" fill="#546873">The image stays the same; what you see flips</text>
+   </svg>
+   <div class="body">
+    <h3>Consciousness In Motion</h3>
+    <p class="tag">The science and philosophy of experience, with no theory crowned</p>
+    <p class="desc">The hard problem, the threshold of awareness, neural correlates, sleep, dreams and anaesthesia, the self, the rival theories, other minds, and machines. In Try it you take part in masking, bistable figures, inattentional and change blindness and confidence tasks, with your results beside the published ones. Each theory is shown with what it predicts and what counts against it.</p>
+    <ul class="facts" aria-label="Course size"><li>8 eras</li><li>48 lessons</li><li>156 scenes</li><li>Watch your own awareness</li></ul>
+    <div class="links"><a class="open" href="https://consciousness-in-motion.puter.site/">Open Consciousness <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12H20M13 5L20 12L13 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
    </div>
   </li>
 
