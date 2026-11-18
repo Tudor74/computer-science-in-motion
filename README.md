@@ -4,7 +4,7 @@ A single-file, offline HTML page on the science and philosophy of consciousness:
 
 This is the `consciousness` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
-**Status: scaffold.** The route, lesson ids and brief are fixed. Each lesson currently has one placeholder scene; the era files in `src/` are to be replaced by the era authors following `docs/CONSCIOUSNESS-BRIEF.md`.
+**Status:** all eight eras are written: 48 lessons, 156 scenes. A correctness review is still to come.
 
 ## Route
 
