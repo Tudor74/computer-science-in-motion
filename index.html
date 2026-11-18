@@ -287,8 +287,8 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
  </div>
  <div class="explanation">
   <div class="copy" id="copy">
-   <p class="eyebrow" id="eyebrow">Represent</p>
-   <h2 id="term">Bit</h2>
+   <p class="eyebrow" id="eyebrow">1 · Sound and number · 1636 · How fast it shakes</p>
+   <h2 id="term">Pitch and frequency</h2>
    <p class="definition" id="definition"></p>
    <p class="example" id="example"></p>
    <p class="research" id="research"></p>
@@ -301,7 +301,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
     <svg class="map-wires" viewBox="0 0 300 260" preserveAspectRatio="none" aria-hidden="true"><path id="wire-up" d="M150 130 L158 100 L150 39" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-down" d="M150 130 L142 170 L150 221" fill="none" stroke="#76949f" stroke-width="1.6" stroke-dasharray="4 3"/><path id="wire-left" d="M150 130 L50 130" fill="none" stroke="#76949f" stroke-width="1.6"/><path id="wire-right" d="M150 130 L250 130" fill="none" stroke="#76949f" stroke-width="1.6"/></svg>
     <button type="button" class="map-node" id="map-up"></button>
     <button type="button" class="map-node" id="map-left"></button>
-    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>Bit</b></div>
+    <div class="map-node" id="map-current" aria-current="step"><small>You are here</small><b>Pitch and frequency</b></div>
     <button type="button" class="map-node" id="map-right"></button>
     <button type="button" class="map-node" id="map-down"></button>
    </div>
@@ -320,7 +320,7 @@ button.word:hover,button.word:focus-visible{background:#dcecf5;color:#144f78}
   <div class="speed-heading"><label for="speed">Speed</label><output id="speed-readout" for="speed">0 · Paused</output></div>
   <div class="range-wrap"><div class="track-rail" aria-hidden="true"></div><input type="range" id="speed" min="0" max="1000" step="1" value="170" aria-label="Playback speed" aria-describedby="speed-help" aria-valuetext="Paused"></div>
   <div class="scale" aria-hidden="true"><span class="start">−8×</span><span class="zero">0</span><span class="one">1×</span><span class="two">6×</span><span class="end">12×</span></div>
-  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind up to eight times speed; release to pause. Forward speed stays set up to twelve times. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
+  <p class="sr-only" id="speed-help">The slider changes speed only. Hold left to rewind at up to eight times normal speed. Release to pause. A forward speed stays selected when you release the slider. The maximum is twelve times normal speed. Use the separate Play and Pause button to pause and resume. Arrow keys adjust speed; Home holds full rewind and End selects full forward speed.</p>
  </div>
 </section>
 </div>
@@ -739,7 +739,7 @@ SCENE({id:'monochord',name:'The monochord',tag:'One string, many intervals',
   out+=TF((x1+xb)/2,176,`${Math.round(s.r*100)}% of the length`,13,C.blue)+TF(xb+8,222,'bridge',13,C.coral,'start');
   out+=counter(60,292,'open string',M1_f2(M1_F0)+' Hz',C.ink,150)+counter(225,292,'stopped part',M1_f2(hz)+' Hz',C.blue,150)+counter(390,292,'interval',Math.round(M1_cents(1/s.r))+' cents',C.coral,150);
   out+=T(300,362,nm?`${nm.l} of the length: a ${nm.n}`:'Not a simple ratio: the two notes clash more',15,nm?C.green:C.muted);
-  return {svg:out,phase:`Half the length vibrates twice as fast. Here the stopped part is ${Math.round(s.r*100)}% of the string, so its frequency is ${(1/s.r).toFixed(3)} times higher.${nm?' That is the '+nm.n+'.':''}`};
+  return {svg:out,phase:`At half the length, the stopped string vibrates at twice the frequency of the open string. Here the stopped part is ${Math.round(s.r*100)}% of the string, so its frequency is ${(1/s.r).toFixed(3)} times the open string’s frequency.${nm?' That is the '+nm.n+'.':''}`};
  }});
 
 SCENE({id:'monochord-ratios',name:'Six, eight, nine, twelve',tag:'The Pythagorean numbers',
@@ -806,7 +806,7 @@ SCENE({id:'harmonic-series',name:'The harmonic series',tag:'One string, many fre
   for(let k=1;k<=8;k++){const x=60+(k-1)*61,on=k===s.n;out+=R(x,236,56,62,on?C.blue:'#fff',on?C.blue:C.grid,8)+TB(x+28,260,String(k),17,on?'#fff':C.ink)+TF(x+28,284,110*k+' Hz',13,on?'#fff':C.muted)}
   out+=T(300,334,'Frequencies 1×, 2×, 3×, 4×… the lowest: the series is evenly spaced in hertz',14,C.ink);
   out+=T(300,358,'(so the musical gaps between harmonics shrink as you go up)',13,C.muted);
-  return {svg:out,phase:`Harmonic ${s.n} fits ${s.n} half-waves on the string, so its wavelength is 1/${s.n} as long and its frequency ${s.n} times higher: ${110*s.n} Hz.`};
+  return {svg:out,phase:s.n===1?'The first harmonic fits one half-wave on the string. Its frequency is the fundamental, 110 Hz.':`Harmonic ${s.n} fits ${s.n} half-waves on the string, so its wavelength is 1/${s.n} as long and its frequency is ${s.n} times the fundamental: ${110*s.n} Hz.`};
  }});
 
 SCENE({id:'harmonic-series-notes',name:'Harmonics as notes',tag:'Close to the keyboard, but not exactly',
