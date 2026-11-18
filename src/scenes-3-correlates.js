@@ -357,10 +357,10 @@ SCENE({id:'recurrent-processing',name:'Sweep and feedback',tag:'Two phases of vi
   return {svg:out,phase:t<50?'The picture is on the screen but the signal is still on its way from the eye.':t<105?`At ${t} ms the feedforward sweep is under way. It is fast enough to drive quick responses, and on Lamme’s view everything it does is unconscious.`:`At ${t} ms higher areas are feeding back. In monkeys the late part of the V1 response, which depends on this feedback, is missing on trials where the animal fails to detect the figure, and under anaesthesia. That is the theory’s best evidence; what counts against it comes in the next scenes.`};
  },
  three(s,f,X,project){
-  const t=s.t,Pj=project([-1,5.4,0,3,0,4.2]);let faces=[];
+  const t=s.t,Pj=project([-1,6.2,0,3,0,4.2]);let faces=[];
   K3_AREAS.forEach(([nm,what,ff,fb],i)=>{faces=faces.concat(prism(0,0,i*1.2,4,3,.3,t>=ff?(fb!==null&&t>=fb?'#b79adf':C.blue):'#b9c8d2'))});
   let out=paintFaces(faces,Pj);
-  K3_AREAS.forEach(([nm,what,ff,fb],i)=>{const q=Pj([5.3,1.5,i*1.2+.15]);out+=label3(q[0],q[1]+5,nm,16,C.ink,'font-weight="650"');
+  K3_AREAS.forEach(([nm,what,ff,fb],i)=>{const q=Pj([5.9,1.5,i*1.2+.15]);out+=label3(q[0],q[1]+5,nm,16,C.ink,'font-weight="650"');
    if(i<3){out+=arrow3([-.5,0,i*1.2+.3],[-.5,0,(i+1)*1.2],Pj,t>=K3_AREAS[i+1][2]?C.blue:C.grid,3)+arrow3([-.5,3,(i+1)*1.2],[-.5,3,i*1.2+.3],Pj,t>=fb?C.coral:C.grid,3)}});
   return {svg:out,title:'The visual areas as a stack',caption:`At ${t} ms: ${K3_rpStage(t).toLowerCase()}. Blue arrows carry the sweep upwards; coral arrows carry feedback down. Layers turn purple once feedback has reached them.`};
  }});
