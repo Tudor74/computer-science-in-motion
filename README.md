@@ -1,19 +1,21 @@
-# Senses In Motion
+# Consciousness In Motion
 
-A single-file, offline HTML page on how human vision, hearing, smell and touch work, two eras each, then the senses together. Within each sense the story follows the order of discovery from the organ to the brain. In Try it you take part where a screen allows it (illusions, colour matching, hearing and localisation with headphones, the McGurk effect, home smell and touch tests) and see your results beside the published ones. Safety rules apply throughout: no fast flicker, gentle volumes, and no screen test is a diagnosis.
+A single-file, offline HTML page on the science and philosophy of consciousness: the question, the threshold of awareness, neural correlates, sleep and anaesthesia, the self, the rival theories, other minds, and machines. The field has no settled theory, so each theory is shown with what it predicts and what counts against it, and none is presented as the answer. In Try it you take part where a screen allows it (masking, bistable figures, inattentional and change blindness, attention and confidence tasks) and see your results beside the published ones. Safety rules apply throughout: no fast flicker, nothing is medical advice, and no data leaves the page.
 
-This is the `senses` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `consciousness` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+
+**Status: scaffold.** The route, lesson ids and brief are fixed. Each lesson currently has one placeholder scene; the era files in `src/` are to be replaced by the era authors following `docs/CONSCIOUSNESS-BRIEF.md`.
 
 ## Route
 
-1. **The eye**: optics, photoreceptors, dark adaptation, trichromacy, opponent colour, colour blindness
-2. **Seeing**: lateral inhibition, depth and stereo, motion, illusions, faces, the blind spot
-3. **The ear**: outer and middle ear, the cochlea, hair cells, the range of hearing, hearing loss, cochlear implants
-4. **Listening**: localisation, auditory scenes, speech perception, pitch, masking, hearing in noise
-5. **Smell**: odorant receptors, the olfactory bulb, thresholds, mixtures, smell and memory, smell loss
-6. **Taste and flavour**: five tastes, retronasal smell, pheromones, smell and emotion, smell training, how many smells
-7. **Touch**: skin receptors, acuity, vibration, pain, temperature, proprioception
-8. **Senses together**: multisensory integration, the rubber hand, synaesthesia, sensory substitution, ageing, affective touch
+1. **The question**: mind and body, what it is like, the easy and hard problems, the knowledge argument, zombies and functionalism, trusting reports
+2. **At the threshold**: masking, blindsight, rivalry and bistable figures, inattentional blindness, change blindness, attention and awareness
+3. **Neural correlates**: the search for correlates, the contrastive method, global ignition, recurrent processing, front or back of the brain, zap and zip
+4. **Sleep, dreams and anaesthesia**: dreaming, lucid dreaming, anaesthesia, disorders of consciousness, split brains and unity, psychedelics
+5. **The self**: body ownership, agency and will, the interpreter, mirror self-recognition, interoception, the self over time
+6. **Theories**: global workspace, integrated information, higher-order theories, predictive processing, attention schema, adversarial collaboration
+7. **Other minds**: animal consciousness, octopus minds, bees and insects, infants, markers of sentience, other people
+8. **Machines and open questions**: the Turing test, the Chinese room, indicators for machines, machine self-report, illusionism and panpsychism, open questions
 
 ## Source layout
 
@@ -27,6 +29,7 @@ node test/slider.js           # time slider behaviour
 node test/text-layout.js 375  # phone text scale: labels stay inside the drawing and do not collide
 node test/timed.js            # timed experiments: delayed replies arrive, and stop when you leave
 node test/threads.js          # map connections: merged by name, "Other connection" switches
+node test/family.js           # In Motion family links in the header and footer
 ```
 
 | File | Contents |
@@ -38,4 +41,5 @@ node test/threads.js          # map connections: merged by name, "Other connecti
 | `src/scenes-N-words.js` | Era N's glossary entries, including the people |
 | `src/curriculum.js` | The eight eras and their header textures |
 | `src/app.js` | Runtime: clock, Watch/Try it, 2D/3D, controls, local map, glossary |
-| `docs/MUSIC-BRIEF.md` | The brief for era authors: fixed lesson ids, sound, notation and citation rules, test commands |
+| `docs/CONSCIOUSNESS-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, course rules, test commands |
+| `docs/*-BRIEF.md` | Briefs of earlier courses; the HCI, Mind and Music briefs hold the general, participant and sound rules |
