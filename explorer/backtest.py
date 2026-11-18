@@ -81,16 +81,30 @@ def arxiv_pool(n_ids, rng):
     for i in range(0, len(ids), 50):
         chunk = [f"10.48550/arxiv.{x}" for x in ids[i:i + 50]]
         r = fim.get(f"{fim.OA}/works?filter=doi:{'|'.join(chunk)}&per_page=50&select={sel}")
+        wanted = {x for x in ids[i:i + 50]}
         for w in (r or {}).get("results", []):
             f = oa_field(w)
-            doi = (w.get("doi") or "").lower().replace("https://doi.org/", "")
-            if not f or not doi.startswith("10.48550/arxiv."):
+            if not f:
                 continue
-            aid = doi[len("10.48550/arxiv."):]
+            # OpenAlex often merges the arXiv record into the journal version, whose
+            # canonical DOI is the journal's. Recover the arXiv id from its locations.
+            aid = None
+            cands = [(w.get("doi") or "")] + [l.get("landing_page_url") or "" for l in w.get("locations") or []]
+            for c in cands:
+                m = re.search(r"(?:arxiv\.org/abs/|10\.48550/arxiv\.)(\d{4}\.\d{5})", c.lower())
+                if m and m.group(1) in wanted:
+                    aid = m.group(1)
+                    break
+            if not aid:
+                continue
+            yymm = aid[:4]
+            doi = (w.get("doi") or "").lower().replace("https://doi.org/", "")
             out.append({
                 "source": "arXiv", "id": aid, "field": f, "category": ((w.get("primary_topic") or {}).get("subfield") or {}).get("display_name", ""),
                 "title": w.get("title") or "", "abstract": abstract_of(w), "comment": "",
-                "posted": w.get("publication_date") or "", "doi": doi, "later_doi": "", "journal_ref": "",
+                # v1 month from the identifier (the merged record's date may be the journal's)
+                "posted": f"20{yymm[:2]}-{yymm[2:]}-15", "doi": f"10.48550/arxiv.{aid}",
+                "later_doi": "" if doi.startswith("10.48550") else doi, "journal_ref": "",
                 "_w": w,
             })
     return out

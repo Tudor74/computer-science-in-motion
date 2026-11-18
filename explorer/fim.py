@@ -233,8 +233,13 @@ def oa_works_by_doi(dois):
         url = f"{OA}/works?filter=doi:{'|'.join(urllib.parse.quote(d, safe='/.') for d in chunk)}&per_page=50&select={WORK_SELECT}"
         r = get(url)
         for w in (r or {}).get("results", []):
-            if w.get("doi"):
-                out[w["doi"].lower().replace("https://doi.org/", "")] = w
+            # A merged record may carry the journal DOI; map it back to every
+            # requested DOI that appears in its DOI or its locations.
+            hay = " ".join([(w.get("doi") or "")] + [(l.get("landing_page_url") or "") + " " + (l.get("pdf_url") or "")
+                                                     for l in w.get("locations") or []]).lower()
+            for d in chunk:
+                if d in hay or d.replace("10.48550/arxiv.", "arxiv.org/abs/") in hay:
+                    out.setdefault(d, w)
     return out
 
 
