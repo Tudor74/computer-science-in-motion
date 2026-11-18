@@ -1,0 +1,239 @@
+{
+ "_about": "Hard open problems shown as landmarks on the frontier map. Edit freely and re-run build_snapshot.py. A preprint maps to a problem when its title or abstract contains one of `keywords` (lower-case substrings) AND, if `categories` is given, its arXiv/bioRxiv category is in that list. `strong` keywords match in any category. `exclude` phrases veto a match. `fields` limits the regions it can come from; `field` is where the landmark sits.",
+ "problems": [
+  {
+   "id": "rt-superconductivity",
+   "name": "Room-temperature superconductivity",
+   "field": "physics",
+   "fields": [
+    "physics",
+    "chemistry"
+   ],
+   "keywords": [
+    "high-temperature superconduct",
+    "high-tc",
+    "high t_c",
+    "cuprate",
+    "nickelate",
+    "hydride superconduct",
+    "superconducting transition temperature"
+   ],
+   "strong": [
+    "room-temperature superconduct",
+    "room temperature superconduct",
+    "ambient-pressure superconduct",
+    "ambient pressure superconduct",
+    "lk-99"
+   ]
+  },
+  {
+   "id": "dark-matter",
+   "name": "Dark matter",
+   "field": "earthspace",
+   "fields": [
+    "physics",
+    "earthspace"
+   ],
+   "keywords": [
+    "dark matter",
+    "wimp",
+    "axion dark",
+    "sterile neutrino dark",
+    "primordial black holes as dark"
+   ]
+  },
+  {
+   "id": "qec",
+   "name": "Quantum error correction",
+   "field": "physics",
+   "fields": [
+    "physics",
+    "cs"
+   ],
+   "keywords": [
+    "quantum error correct",
+    "surface code",
+    "logical qubit",
+    "fault-tolerant quantum",
+    "fault tolerant quantum",
+    "quantum ldpc",
+    "qldpc",
+    "magic state distillation"
+   ]
+  },
+  {
+   "id": "riemann",
+   "name": "The Riemann hypothesis",
+   "field": "mathematics",
+   "fields": [
+    "mathematics"
+   ],
+   "keywords": [
+    "riemann hypothesis",
+    "riemann zeta",
+    "zeros of the zeta",
+    "generalized riemann",
+    "generalised riemann",
+    "zeta function",
+    "l-functions"
+   ],
+   "categories": [
+    "math.NT",
+    "math.CV",
+    "math-ph",
+    "math.GM"
+   ],
+   "strong": [
+    "riemann hypothesis"
+   ]
+  },
+  {
+   "id": "p-vs-np",
+   "name": "P vs NP",
+   "field": "cs",
+   "fields": [
+    "cs",
+    "mathematics"
+   ],
+   "keywords": [
+    "np-hard",
+    "np-complete",
+    "circuit lower bound",
+    "computational complexity",
+    "hardness of approximation",
+    "complexity class",
+    "polynomial hierarchy",
+    "lower bound"
+   ],
+   "categories": [
+    "cs.CC",
+    "cs.DS",
+    "cs.LO",
+    "cs.DM"
+   ],
+   "strong": [
+    "p vs np",
+    "p versus np",
+    "p != np",
+    "p ≠ np",
+    "p = np"
+   ]
+  },
+  {
+   "id": "protein-design",
+   "name": "Protein design",
+   "field": "biology",
+   "fields": [
+    "biology",
+    "chemistry",
+    "cs"
+   ],
+   "keywords": [
+    "protein design",
+    "de novo protein",
+    "designed protein",
+    "protein structure prediction",
+    "alphafold",
+    "protein language model",
+    "binder design",
+    "enzyme design"
+   ]
+  },
+  {
+   "id": "origin-of-life",
+   "name": "The origin of life",
+   "field": "biology",
+   "fields": [
+    "biology",
+    "chemistry",
+    "earthspace"
+   ],
+   "keywords": [
+    "origin of life",
+    "abiogenesis",
+    "prebiotic",
+    "rna world",
+    "protocell",
+    "last universal common ancestor",
+    "luca "
+   ]
+  },
+  {
+   "id": "consciousness",
+   "name": "Consciousness",
+   "field": "biology",
+   "fields": [
+    "biology",
+    "medicine",
+    "cs"
+   ],
+   "keywords": [
+    "consciousness",
+    "conscious experience",
+    "integrated information theory",
+    "global workspace",
+    "neural correlates of conscious",
+    "disorders of conscious"
+   ],
+   "exclude": [
+    "conscious sedation"
+   ]
+  },
+  {
+   "id": "fusion",
+   "name": "Fusion confinement",
+   "field": "physics",
+   "fields": [
+    "physics"
+   ],
+   "keywords": [
+    "tokamak",
+    "stellarator",
+    "fusion plasma",
+    "magnetic confinement",
+    "inertial confinement",
+    "fusion reactor",
+    "plasma confinement",
+    "burning plasma"
+   ]
+  },
+  {
+   "id": "amr",
+   "name": "Antibiotic resistance",
+   "field": "medicine",
+   "fields": [
+    "biology",
+    "medicine"
+   ],
+   "keywords": [
+    "antibiotic resist",
+    "antimicrobial resist",
+    "multidrug-resistant",
+    "multidrug resistant",
+    "carbapenem",
+    "mrsa",
+    "beta-lactamase",
+    "β-lactamase",
+    "colistin resist"
+   ]
+  },
+  {
+   "id": "climate-sensitivity",
+   "name": "Climate sensitivity",
+   "field": "earthspace",
+   "fields": [
+    "earthspace",
+    "physics"
+   ],
+   "keywords": [
+    "climate sensitivity",
+    "equilibrium climate",
+    "transient climate response",
+    "cloud feedback",
+    "radiative forcing",
+    "earth's energy imbalance",
+    "climate feedback"
+   ]
+  }
+ ]
+}

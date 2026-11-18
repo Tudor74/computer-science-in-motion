@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Frontier In Motion — this week's preprints and their evidence signals</title>
+<meta name="description" content="A weekly, offline map of new preprints across the sciences, with transparent evidence signals for how likely each claim is to hold up, and an honest backtest.">
+<style>
+:root{--ink:#192c37;--muted:#546873;--blue:#1772b7;--pale:#e8f2f8;--line:#c7d8e3;--paper:#fff;--bg:#f3f6f7;--warm:#ad472a;--focus:#a44289;--deck:#f3f7fa;
+--physics:#1772b7;--chemistry:#9a6200;--biology:#2c776c;--mathematics:#7156a6;--cs:#2f6e8e;--medicine:#ad472a;--earthspace:#4a5f8c}
+*{box-sizing:border-box}
+html{background:var(--bg);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);-webkit-text-size-adjust:100%}
+body{margin:0;padding:14px;background:var(--bg)}
+a{color:var(--blue)}
+button,select,input{font:inherit;color:inherit}
+button{background:#fff;border:1px solid #aec3cf;border-radius:8px;padding:7px 12px;cursor:pointer;color:var(--ink);font-weight:600;min-height:44px;min-width:44px}
+button:hover{background:#edf5fa}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.frame{max-width:1040px;margin:0 auto;background:var(--paper);border-radius:13px;box-shadow:0 3px 18px #192c3709;overflow:hidden}
+
+/* Header: as in the In Motion courses; brand links to the hub. */
+.topic-header{position:relative;isolation:isolate;min-height:58px;padding:10px 18px;display:flex;align-items:center;background:#222;color:#f2f2f2;overflow:hidden}
+.topic-texture{position:absolute;inset:0;width:100%;height:100%;color:#4a4a4a;opacity:.75;pointer-events:none;z-index:0}
+.topic-header::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(34,34,34,.82),rgba(34,34,34,.35) 50%,rgba(34,34,34,0) 85%)}
+.header-row{position:relative;z-index:1;width:100%;min-width:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c9d2d6;font-weight:650;margin:0 0 1px}
+.brand a{color:inherit;text-decoration:underline;text-decoration-color:#ffffff66;text-underline-offset:3px;display:inline-block;min-height:24px;line-height:24px}
+.brand a:hover{color:#fff}
+.brand a:focus-visible{outline:2px solid #acd4ef;outline-offset:2px}
+.topic-header h1{margin:0;font-size:23px;line-height:1.22;font-weight:580;letter-spacing:-.02em}
+.title-block{flex:1 1 260px;min-width:0}
+.snapdate{flex:0 0 auto;text-align:right;font-size:13px;color:#d0d6d9;line-height:1.35}
+.snapdate b{display:block;font-size:17px;color:#fff;font-variant-numeric:tabular-nums}
+
+main{padding:12px 18px 6px}
+.lede{font-size:17px;line-height:1.5;margin:6px 0 4px;max-width:72ch}
+.note{font-size:13.5px;color:var(--muted);line-height:1.5;margin:4px 0 10px;max-width:80ch}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:18px 0 6px}
+h2{font-size:22px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.25}
+h3{font-size:17px;margin:14px 0 6px}
+.crumbs{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:10px 0 4px;font-size:14px}
+.crumbs button{min-height:40px;padding:4px 10px;font-size:14px;border-color:#c9d8e2}
+.crumbs button[aria-current]{background:var(--pale);border-color:#84b5d4}
+.crumbs span{color:var(--muted)}
+section.panel{border-top:1px solid #e3ebef;padding:6px 0 14px;scroll-margin-top:8px}
+
+/* 1. Frontier map */
+.map-wrap{background:var(--deck);border-radius:10px;overflow:hidden}
+#map{display:block;width:100%;height:auto}
+#map text{font-family:inherit}
+.region rect{stroke:#fff;stroke-width:3}
+.region .rlabel{font-size:15px;font-weight:700;fill:var(--ink)}
+.region .rcount{font-size:12.5px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.region{cursor:pointer}
+.region:hover rect{filter:brightness(.97)}
+.region:focus{outline:none}
+.region:focus-visible rect{stroke:var(--focus);stroke-width:4}
+.lm{cursor:pointer}
+.lm:focus{outline:none}
+.lm .core{stroke:#fff;stroke-width:2}
+.lm:focus-visible .core,.lm:hover .core{stroke:var(--focus);stroke-width:3}
+.lm .lmlabel{font-size:12px;font-weight:650;fill:var(--ink);paint-order:stroke;stroke:#ffffffd9;stroke-width:3.5px;stroke-linejoin:round}
+.lm .lmcount{font-size:11px;fill:var(--muted);paint-order:stroke;stroke:#ffffffd9;stroke-width:3px}
+.glow{animation:glow 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes glow{0%,100%{opacity:.25;transform:scale(.85)}50%{opacity:.75;transform:scale(1.15)}}
+.problem-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.problem-list button{width:100%;text-align:left;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:6px 10px}
+.problem-list .dot{flex:0 0 12px;height:12px;border-radius:50%}
+.problem-list .n{margin-left:auto;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px}
+.problem-list button[aria-pressed="true"]{background:var(--pale);border-color:#5f93b6}
+
+/* 2. Problem lane */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.filters button{font-size:14px;padding:6px 11px}
+.filters button[aria-pressed="true"]{background:#dcecf6;border-color:#5f93b6;color:#123f63}
+.lane-wrap{background:var(--deck);border-radius:10px;overflow:hidden}
+#lane{display:block;width:100%;height:auto}
+#lane text{font-family:inherit}
+.axis text{font-size:12px;fill:var(--muted)}
+.axis line{stroke:#c9d6de}
+.pt{cursor:pointer}
+.pt:focus{outline:none}
+.pt:focus-visible circle,.pt:hover circle{stroke:var(--focus);stroke-width:3}
+.pt[data-sel="true"] circle{stroke:var(--ink);stroke-width:3}
+.band-label{font-size:11.5px;fill:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--muted);margin:6px 2px}
+.legend i{display:inline-block;vertical-align:middle;margin-right:5px;border-radius:50%;background:#7d93a1}
+.paper-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;max-height:460px;overflow:auto}
+.paper-list button{width:100%;text-align:left;display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:center;font-weight:550;font-size:14px;line-height:1.35;padding:7px 10px}
+.paper-list button[aria-pressed="true"]{background:var(--pale);border-color:#5f93b6}
+.paper-list .score{font-variant-numeric:tabular-nums;font-weight:700;text-align:center;border-radius:6px;padding:4px 0;background:#eef3f6}
+.paper-list .ptitle{overflow-wrap:anywhere}
+.paper-list small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;margin-top:2px}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:20px;padding:1px 8px;margin-right:4px;background:#f1f5f7;color:var(--muted)}
+.tag.bold{background:#f8e7e1;color:#8a3317}
+.tag.new{background:#ece7f6;color:#55408a}
+.tag.chg{background:#fff1cc;color:#6b4a00}
+.empty{font-size:14px;color:var(--muted);padding:10px;background:#f6f9fb;border-radius:8px}
+
+/* 3. Claim card */
+.card{border:1px solid #dce7ee;border-radius:12px;padding:14px 16px;background:#fff}
+.card h3{font-size:20px;line-height:1.3;margin:2px 0 6px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.card .who{font-size:14px;color:var(--muted);margin:0 0 8px}
+.card .abs{font-size:14.5px;line-height:1.55;color:#2c414d;margin:6px 0 10px;padding-left:10px;border-left:2px solid #bdd3e1;overflow-wrap:anywhere}
+.timeline{display:flex;flex-wrap:wrap;gap:0;margin:8px 0 12px;padding:0;list-style:none}
+.timeline li{position:relative;padding:4px 14px 4px 18px;font-size:13.5px}
+.timeline li::before{content:"";position:absolute;left:4px;top:10px;width:9px;height:9px;border-radius:50%;background:var(--blue)}
+.timeline li.now::before{background:#fff;border:2px solid var(--ink)}
+.timeline time{display:block;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sig{display:grid;grid-template-columns:minmax(130px,190px) minmax(0,1fr);gap:4px 14px;align-items:start;padding:9px 0;border-top:1px solid #edf2f5}
+.sig .name{font-weight:700;font-size:14.5px}
+.sig .name small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.sig .reason{font-size:14px;line-height:1.5;color:#2c414d}
+.bar{position:relative;height:16px;background:#edf2f5;border-radius:8px;margin:3px 0 4px;max-width:360px}
+.bar .ci{position:absolute;top:3px;bottom:3px;background:#9cc3dd;border-radius:5px}
+.bar .est{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:var(--blue);border-radius:2px}
+.bar .prior{position:absolute;top:-2px;bottom:-2px;width:0;border-left:2px dashed #7d93a1}
+.links-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.links-row a{display:inline-flex;align-items:center;min-height:44px;padding:8px 14px;border-radius:9px;border:1px solid #aec3cf;text-decoration:none;font-weight:600;color:var(--ink)}
+.links-row a:hover{background:#edf5fa}
+
+/* Backtest + case studies + ethics */
+.verdict{border-left:4px solid var(--warm);background:#fbf3f0;padding:10px 14px;border-radius:0 8px 8px 0;font-size:15px;line-height:1.55;margin:8px 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:8px 0;padding:0;list-style:none}
+.stats li{background:#f6f9fb;border-radius:9px;padding:9px 11px;font-size:13px;color:var(--muted);line-height:1.35}
+.stats b{display:block;font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
+#calib{display:block;width:100%;max-width:520px;height:auto;background:var(--deck);border-radius:10px}
+#calib text{font-family:inherit}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:5px 6px;border-bottom:1px solid #e6eef2}
+th{font-size:12px;color:var(--muted);font-weight:700}
+.table-wrap{overflow-x:auto}
+.cases{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0;padding:0;list-style:none}
+.cases li{border:1px solid #e0e9ee;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.55}
+.cases h4{margin:0 0 4px;font-size:16px}
+.cases .lesson{background:#f6f9fb;border-radius:8px;padding:7px 10px;margin:8px 0 6px}
+.cases ul{margin:4px 0 0;padding-left:18px}
+.ethics{background:#f6f9fb;border-radius:12px;padding:12px 16px}
+.ethics dl{margin:0}
+.ethics dt{font-weight:700;margin-top:9px}
+.ethics dd{margin:2px 0 0;line-height:1.55;font-size:14.5px}
+pre{background:#192c37;color:#e8f0f4;padding:10px 12px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.5}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+
+footer.bottom{padding:10px 18px 18px;font-size:12.5px;line-height:1.6;color:var(--muted);border-top:1px solid #e3ebef}
+.family{margin:0 0 6px;font-size:13px;line-height:1.9}
+.family a{margin-right:2px;display:inline-block;min-height:24px}
+.family [aria-current]{font-weight:700;color:var(--ink);text-decoration:none}
+
+@media (max-width:720px){
+ body{padding:0}
+ .frame{border-radius:0}
+ main{padding:10px 12px 4px}
+ .topic-header{padding:10px 12px}
+ .snapdate{text-align:left}
+ .two,.cases{grid-template-columns:minmax(0,1fr)}
+ .sig{grid-template-columns:minmax(0,1fr)}
+ footer.bottom{padding:10px 12px 16px}
+}
+@media (prefers-reduced-motion:reduce){
+ .glow{animation:none;opacity:.55}
+ html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="frame">
+<header class="topic-header">
+ <svg class="topic-texture" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 600 80"><g fill="none" stroke="currentColor" stroke-width="1"><path d="M0 60 Q60 20 120 50 T240 40 T360 55 T480 30 T600 50"/><path d="M0 70 Q80 40 160 62 T320 48 T480 66 T600 40"/><circle cx="420" cy="30" r="14"/><circle cx="420" cy="30" r="26"/><circle cx="520" cy="56" r="9"/><circle cx="520" cy="56" r="19"/></g></svg>
+ <div class="header-row">
+  <div class="title-block">
+   <p class="brand"><a href="https://in-motion.puter.site/" title="All In Motion courses">In Motion</a> · Frontier</p>
+   <h1>Frontier In Motion</h1>
+  </div>
+  <div class="snapdate" id="snapdate">Snapshot<b>—</b></div>
+ </div>
+</header>
+<main>
+ <p class="lede">New preprints across the sciences this week, mapped onto hard open problems, with <strong>evidence signals</strong>: transparent clues, from the public record, about how claims like these have tended to fare. They are not a verdict on any paper, and never a “truth score”.</p>
+ <p class="note" id="coverage-note"></p>
+ <nav class="crumbs" aria-label="Where you are"><button type="button" id="crumb-map">1 · Frontier map</button><span aria-hidden="true">›</span><button type="button" id="crumb-lane" disabled>2 · Problem lane</button><span aria-hidden="true">›</span><button type="button" id="crumb-card" disabled>3 · Claim card</button></nav>
+
+ <section class="panel" id="map-panel" aria-labelledby="map-h">
+  <p class="eyebrow">1 · Frontier map</p>
+  <h2 id="map-h">Where the preprints are this week</h2>
+  <p class="note">Each region is a field, sized by this week's count of new preprints. Landmarks are hard open problems; they glow with this week's activity. Choose a landmark (or a whole region) to open its lane.</p>
+  <div class="map-wrap"><svg id="map" viewBox="0 0 1000 560" role="group" aria-label="Frontier map: fields sized by this week's preprints, with open problems as landmarks"></svg></div>
+  <ul class="problem-list" id="problem-list" aria-label="Open problems"></ul>
+ </section>
+
+ <section class="panel" id="lane-panel" aria-labelledby="lane-h" hidden>
+  <p class="eyebrow">2 · Problem lane</p>
+  <h2 id="lane-h">—</h2>
+  <p class="note" id="lane-note"></p>
+  <div class="filters" role="group" aria-label="Filters">
+   <button type="button" id="f-new" aria-pressed="true">Newcomers lane</button>
+   <button type="button" id="f-bold" aria-pressed="false">Bold claims only</button>
+   <button type="button" id="f-chg" aria-pressed="false">Status changed since last snapshot</button>
+  </div>
+  <div class="lane-wrap"><svg id="lane" viewBox="0 0 1000 470" role="group" aria-label="Problem lane"></svg></div>
+  <div class="legend" id="lane-legend"></div>
+  <ul class="paper-list" id="paper-list" aria-label="Preprints in this lane"></ul>
+ </section>
+
+ <section class="panel" id="card-panel" aria-labelledby="card-h" hidden>
+  <p class="eyebrow">3 · Claim card</p>
+  <h2 id="card-h" class="sr-only">Claim card</h2>
+  <div class="card" id="card" tabindex="-1"></div>
+ </section>
+
+ <section class="panel" id="backtest" aria-labelledby="bt-h">
+  <p class="eyebrow">Backtest</p>
+  <h2 id="bt-h">Did these signals predict anything?</h2>
+  <div id="bt-body"></div>
+ </section>
+
+ <section class="panel" id="cases-panel" aria-labelledby="cs-h">
+  <p class="eyebrow">Case studies</p>
+  <h2 id="cs-h">Four famous claims, read against the record</h2>
+  <ul class="cases" id="cases"></ul>
+ </section>
+
+ <section class="panel" id="ethics" aria-labelledby="eth-h">
+  <p class="eyebrow">Ethics and limits</p>
+  <h2 id="eth-h">What these signals cannot do</h2>
+  <div class="ethics"><dl>
+   <dt>Matthew effect</dt><dd>Track record favours established labs. A strong record raises a paper's signal, so well-known groups gain and new voices start lower. That is why newcomers sit in their own lane and are never ranked.</dd>
+   <dt>Bias</dt><dd>Publication and citation are shaped by field, gender and geography. Some fields publish far less in journals, citation gaps by gender are well documented, and authors outside North America and Europe are under-indexed. These signals inherit all of it; field averages only partly correct for it.</dd>
+   <dt>Correlation, not truth</dt><dd>The signals correlate (weakly, see the backtest) with later outcomes: being published, not retracted, still cited. Those outcomes are not truth. BICEP2 was published and is still cited; OPERA came from a superb collaboration and was wrong.</dd>
+   <dt>Missing records</dt><dd>Many good papers are never formally published: mathematics and computer science often stop at arXiv or a conference, and some results are simply complete as preprints. “Not published” is not “wrong”.</dd>
+   <dt>Data gaps</dt><dd id="gaps-dd">OpenAlex and Crossref are incomplete: preprint and journal versions are not always linked, author identities are sometimes split or merged, retractions are recorded late, and very new preprints may not be indexed yet.</dd>
+   <dt>No naming and shaming</dt><dd>Individuals are never ranked. Author track records appear only as pooled, aggregate signals on a paper's card (first and last authors together), never as an author leaderboard, and no author-level numbers are published here.</dd>
+  </dl></div>
+ </section>
+
+ <section class="panel" id="method" aria-labelledby="m-h">
+  <p class="eyebrow">Method and weekly re-run</p>
+  <h2 id="m-h">How the snapshot is built</h2>
+  <div id="method-body"></div>
+  <pre><code>python3 explorer/build_snapshot.py   # past 7 days → explorer/data/snapshot-YYYY-MM-DD.json
+python3 explorer/backtest.py         # optional: refresh the 2018–21 backtest
+python3 explorer/build_page.py       # embeds the newest snapshot → explorer/index.html
+node explorer/test/check.js          # Playwright checks and screenshots</code></pre>
+  <p class="note">Run it once a week (for example every Tuesday). Keep the previous snapshot file in <code>explorer/data/</code>: the “status changed” filter compares against it. Responses are cached in <code>explorer/cache/</code>, which is not committed. Problems and their keyword rules live in <code>explorer/problems.json</code>.</p>
+ </section>
+</main>
+<footer class="bottom">
+ <nav class="family" aria-label="In Motion courses">Part of <a href="https://in-motion.puter.site/">In Motion</a>: <a href="https://mathematics-in-motion.puter.site/">Mathematics</a> · <a href="https://physics-in-motion.puter.site/">Physics</a> · <a href="https://chemistry-in-motion.puter.site/">Chemistry</a> · <a href="https://biology-in-motion.puter.site/">Biology</a> · <a href="https://abiogenesis-in-motion.puter.site/">Abiogenesis</a> · <a href="https://computer-science-in-motion.puter.site/">Computer Science</a> · <a href="https://economics-in-motion.puter.site/">Economics</a> · <a href="https://hci-in-motion.puter.site/">HCI</a> · <a href="https://therapies-in-motion.puter.site/">Therapies</a> · <a href="https://music-in-motion.puter.site/">Music</a> · <a href="https://senses-in-motion.puter.site/">Senses</a> · <a href="https://language-in-motion.puter.site/">Language</a> · <a href="https://mind-in-motion.puter.site/">Mind</a> · <a href="https://techno-in-motion.puter.site/">Techno</a> · <a href="https://electronic-music-in-motion.puter.site/">Electronic Music</a> · <a href="https://philosophy-in-motion.puter.site/">Philosophy</a> · <a href="https://ted-nelson-in-motion.puter.site/">Ted Nelson</a> · <a href="https://tripitaka-in-motion.puter.site/">Tripitaka</a> · <a href="https://thinkers-in-motion.puter.site/">Thinkers</a> · <a href="https://awais-rashid-in-motion.puter.site/">Awais Rashid</a> · <a href="https://the-future-in-motion.puter.site/">The Future</a> · <a href="https://frontier-in-motion.puter.site/" aria-current="page">Frontier</a></nav>
+ <p>Data: <a href="https://arxiv.org/">arXiv</a> (thank you to arXiv for use of its open access interoperability), <a href="https://www.biorxiv.org/">bioRxiv</a>, <a href="https://www.medrxiv.org/">medRxiv</a>, <a href="https://openalex.org/">OpenAlex</a> and <a href="https://www.crossref.org/">Crossref</a>. Source: <a href="https://github.com/Tudor74/computer-science-in-motion/tree/explorer/explorer">explorer branch</a>.</p>
+</footer>
+</div>
+<script>
+const DATA = /*__DATA__*/null;
+</script>
+<script>
+"use strict";
+const S = DATA.snapshot, B = DATA.backtest;
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const FIELD = Object.fromEntries(S.fields.map(f => [f.id, f]));
+const PROB = Object.fromEntries(S.problems.map(p => [p.id, p]));
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const fmt = n => n.toLocaleString("en-GB");
+const pct = x => x == null ? "—" : Math.round(x * 100) + "%";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dayMs = 864e5;
+const snapDay = new Date(S.snapshot_date + "T00:00:00Z");
+const longDate = d => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const fieldColour = f => getComputedStyle(document.documentElement).getPropertyValue("--" + f).trim() || "#1772b7";
+const state = {lane: null, paper: null, newcomers: true, bold: false, changed: false};
+
+/* ---------- header and coverage ---------- */
+$("snapdate").innerHTML = `Snapshot<b>${esc(longDate(S.snapshot_date))}</b>preprints posted ${esc(longDate(S.window[0]))} – ${esc(longDate(S.window[1]))}`;
+(function coverage() {
+  const total = S.fields.reduce((a, f) => a + f.week_count, 0);
+  const t = S.week_totals, c = S.coverage;
+  const sampled = S.sampled < total;
+  $("coverage-note").innerHTML = `This week: <b>${fmt(total)}</b> new preprints in the seven regions (arXiv ${fmt(t.arxiv_new - t.arxiv_outside_regions)}, bioRxiv ${fmt(t.biorxiv_new)}, medRxiv ${fmt(t.medrxiv_new)}). ` +
+    (sampled ? `<b>Sampled:</b> the full week is too large to look up, so ${fmt(S.sampled - S.landmark_extra)} papers were sampled evenly per field (cap ${fmt(S.cap)}), plus all ${fmt(S.landmark_extra)} other papers that match a landmark, ${fmt(S.sampled)} in all. ` : "") +
+    `${fmt(c.with_signals)} have a team track record; ${fmt(c.newcomers)} are from newcomer teams; ${fmt(c.unresolved)} could not be found in OpenAlex yet. ${t.arxiv_outside_regions ? fmt(t.arxiv_outside_regions) + " arXiv papers in economics and quantitative finance fall outside the seven regions and are not shown." : ""}`;
+})();
+
+/* ---------- 1. frontier map (squarified treemap) ---------- */
+function squarify(items, x, y, w, h) {
+  const out = [], total = items.reduce((a, i) => a + i.v, 0);
+  let rest = items.slice().sort((a, b) => b.v - a.v).map(i => ({...i, a: i.v / total * w * h}));
+  while (rest.length) {
+    const horiz = w >= h, side = horiz ? h : w;
+    let row = [], best = Infinity;
+    for (const it of rest) {
+      const r = row.concat(it), s = r.reduce((a, i) => a + i.a, 0);
+      const worst = Math.max(...r.map(i => Math.max(side * side * i.a / (s * s), s * s / (side * side * i.a))));
+      if (worst > best) break;
+      best = worst; row = r;
+    }
+    const s = row.reduce((a, i) => a + i.a, 0), thick = s / side;
+    let off = 0;
+    for (const it of row) {
+      const len = it.a / thick;
+      out.push(horiz ? {...it, x, y: y + off, w: thick, h: len} : {...it, x: x + off, y, w: len, h: thick});
+      off += len;
+    }
+    if (horiz) { x += thick; w -= thick; } else { y += thick; h -= thick; }
+    rest = rest.slice(row.length);
+  }
+  return out;
+}
+function laneCount(pid) { return S.papers.filter(p => p.problems.includes(pid)).length; }
+function drawMap() {
+  const svg = $("map");
+  svg.textContent = "";
+  const narrow = svg.getBoundingClientRect().width < 560;
+  const H = narrow ? 900 : 560;
+  svg.setAttribute("viewBox", `0 0 1000 ${H}`);
+  const defs = el("defs", {}, svg);
+  const items = S.fields.map(f => ({id: f.id, v: Math.max(f.week_count, 1)}));
+  const rects = squarify(items, 0, 0, 1000, H);
+  const maxAct = Math.max(1, ...S.problems.map(p => laneCount(p.id)));
+  for (const r of rects) {
+    const f = FIELD[r.id], col = fieldColour(r.id);
+    const g = el("g", {class: "region", tabindex: 0, role: "button", "aria-label": `${f.name}: ${fmt(f.week_count)} new preprints this week. Open the field lane.`}, svg);
+    el("rect", {x: r.x, y: r.y, width: r.w, height: r.h, fill: col, "fill-opacity": .13, rx: 6}, g);
+    const fs = narrow ? 1.5 : 1;
+    const t = el("text", {x: r.x + 12, y: r.y + 24 * fs, class: "rlabel", "font-size": 15 * fs}, g); t.textContent = f.name;
+    const c = el("text", {x: r.x + 12, y: r.y + 42 * fs, class: "rcount", "font-size": 12.5 * fs}, g); c.textContent = `${fmt(f.week_count)} this week`;
+    g.addEventListener("click", () => openLane({field: r.id}));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLane({field: r.id}); } });
+    const probs = S.problems.filter(p => p.field === r.id);
+    const n = probs.length;
+    probs.forEach((p, i) => {
+      // Spread landmarks inside the region, below its label.
+      const cols = Math.max(1, Math.min(n, Math.floor(r.w / 190) || 1));
+      const rows = Math.ceil(n / cols);
+      const cx = r.x + (i % cols + .5) * r.w / cols;
+      const top = r.y + 56 * fs, avail = Math.max(r.h - 56 * fs, 40);
+      const cy = top + (Math.floor(i / cols) + .5) * avail / rows - 8;
+      const act = laneCount(p.id), a = act / maxAct;
+      const lg = el("g", {class: "lm", tabindex: 0, role: "button", "data-problem": p.id, "aria-label": `${p.name}: ${act} preprints this week. Open the lane.`}, svg);
+      const gid = "g-" + p.id;
+      const rg = el("radialGradient", {id: gid}, defs);
+      el("stop", {offset: "0%", "stop-color": col, "stop-opacity": .85}, rg);
+      el("stop", {offset: "100%", "stop-color": col, "stop-opacity": 0}, rg);
+      const gr = (18 + 34 * Math.sqrt(a)) * fs;
+      if (act) el("circle", {cx, cy, r: gr, fill: `url(#${gid})`, class: "glow", style: `animation-duration:${(4.2 - 2.4 * a).toFixed(2)}s`}, lg);
+      el("circle", {cx, cy, r: 26 * fs, fill: "transparent"}, lg);
+      el("circle", {cx, cy, r: (8 + 4 * Math.sqrt(a)) * fs, fill: act ? col : "#b9c6ce", class: "core"}, lg);
+      const lt = el("text", {x: cx, y: cy + 26 * fs, "text-anchor": "middle", class: "lmlabel", "font-size": 12 * fs}, lg);
+      lt.textContent = p.name;
+      const ct = el("text", {x: cx, y: cy + 40 * fs, "text-anchor": "middle", class: "lmcount", "font-size": 11 * fs}, lg);
+      ct.textContent = act === 1 ? "1 preprint" : `${act} preprints`;
+      lg.addEventListener("click", e => { e.stopPropagation(); openLane({problem: p.id}); });
+      lg.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); openLane({problem: p.id}); } });
+    });
+  }
+  const list = $("problem-list");
+  list.textContent = "";
+  for (const p of S.problems) {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button"; b.dataset.problem = p.id;
+    b.setAttribute("aria-pressed", state.lane && state.lane.problem === p.id ? "true" : "false");
+    b.innerHTML = `<span class="dot" style="background:${fieldColour(p.field)}"></span>${esc(p.name)}<span class="n">${laneCount(p.id)}</span>`;
+    b.addEventListener("click", () => openLane({problem: p.id}));
+    li.appendChild(b); list.appendChild(li);
+  }
+}
+
+/* ---------- 2. problem lane ---------- */
+function lanePapers() {
+  const L = state.lane;
+  let ps = S.papers.filter(p => L.problem ? p.problems.includes(L.problem) : p.field === L.field);
+  if (state.bold) ps = ps.filter(p => p.features.bold.length);
+  if (state.changed) ps = ps.filter(p => p.status_changed);
+  return ps;
+}
+function bandFor(rank) {
+  if (!B || rank == null) return null;
+  return B.rank_band.find(b => rank >= b.lo && rank < b.hi + (b.hi >= 1 ? 1e-9 : 0)) || null;
+}
+function ageDays(p) { return Math.max(0, Math.round((snapDay - new Date(p.posted + "T00:00:00Z")) / dayMs)); }
+const STATUS = {posted: "posted", revised: "revised", published: "published", retracted: "retracted", withdrawn: "withdrawn"};
+function openLane(L, keepPaper) {
+  state.lane = L;
+  if (!keepPaper) state.paper = null;
+  $("lane-panel").hidden = false;
+  $("crumb-lane").disabled = false;
+  const title = L.problem ? PROB[L.problem].name : FIELD[L.field].name + " — all sampled preprints";
+  $("lane-h").textContent = title;
+  $("crumb-lane").textContent = "2 · " + (L.problem ? PROB[L.problem].name : FIELD[L.field].name);
+  document.querySelectorAll("#problem-list button").forEach(b => b.setAttribute("aria-pressed", b.dataset.problem === L.problem ? "true" : "false"));
+  drawLane();
+  setCrumb("lane");
+  if (!keepPaper) { $("card-panel").hidden = true; $("crumb-card").disabled = true; }
+  writeHash();
+  if (!keepPaper) scrollTo("lane-panel");
+}
+function drawLane() {
+  const svg = $("lane"); svg.textContent = "";
+  const all = lanePapers();
+  const ranked = all.filter(p => p.rank != null && !p.newcomer);
+  const newc = all.filter(p => p.newcomer);
+  const none = all.filter(p => p.rank == null && !p.newcomer);
+  const showNew = state.newcomers;
+  const narrow = svg.getBoundingClientRect().width < 560;
+  const fs = narrow ? 1.55 : 1;
+  const W = 1000, padL = 64 * (narrow ? 1.25 : 1), bandW = narrow ? 0 : 230, padR = 20 + bandW, top = 20;
+  const plotH = narrow ? 420 : 300, stripH = 46 * fs, gap = 26 * fs;
+  const H = top + plotH + 40 * fs + (showNew ? stripH + gap : 0) + (none.length ? stripH + gap : 0) + 10;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const x0 = padL, x1 = W - padR, maxAge = 7;
+  const X = d => x0 + (x1 - x0) * Math.min(d, maxAge) / maxAge;
+  const Y = s => top + plotH * (1 - s);
+  // Backtest band: outcome rates for similar signals, tinted behind the plot.
+  if (B) for (const b of B.rank_band) {
+    if (!b.n) continue;
+    const y0 = Y(Math.min(b.hi, 1)), y1 = Y(b.lo);
+    el("rect", {x: x0, y: y0, width: x1 - x0, height: y1 - y0, fill: "#1772b7", "fill-opacity": (0.03 + 0.16 * (b.published || 0)).toFixed(3)}, svg);
+    if (!narrow) {
+      const g = el("g", {}, svg);
+      el("rect", {x: x1 + 12, y: y0 + 3, width: 96 * (b.published || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#1772b7", "fill-opacity": .55, rx: 2}, g);
+      el("rect", {x: x1 + 12, y: y0 + (y1 - y0) / 2 + 1, width: 96 * (b.still_cited || 0), height: Math.max(4, (y1 - y0) / 2 - 4), fill: "#2c776c", "fill-opacity": .55, rx: 2}, g);
+      const t = el("text", {x: x1 + 114, y: (y0 + y1) / 2 + 4, class: "band-label"}, g);
+      t.textContent = `${pct(b.published)} publ · ${pct(b.still_cited)} cited · n=${b.n}`;
+    }
+  }
+  // Axes
+  const ax = el("g", {class: "axis"}, svg);
+  for (const s of [0, .25, .5, .75, 1]) {
+    el("line", {x1: x0, x2: x1, y1: Y(s), y2: Y(s), "stroke-dasharray": "3 4"}, ax);
+    const t = el("text", {x: x0 - 8, y: Y(s) + 4, "text-anchor": "end", "font-size": 12 * fs}, ax); t.textContent = s.toFixed(2);
+  }
+  for (let d = 0; d <= maxAge; d++) {
+    const t = el("text", {x: X(d), y: top + plotH + 18 * fs, "text-anchor": "middle", "font-size": 12 * fs}, ax);
+    t.textContent = d === 0 ? "today" : d + "d";
+  }
+  const xl = el("text", {x: (x0 + x1) / 2, y: top + plotH + 36 * fs, "text-anchor": "middle", "font-size": 12 * fs}, ax);
+  xl.textContent = "age: days since posted (left = now, right = posted a week ago)";
+  const yl = el("text", {x: 14, y: top + plotH / 2, transform: `rotate(-90 14 ${top + plotH / 2})`, "text-anchor": "middle", "font-size": 12 * fs}, ax);
+  yl.textContent = "evidence signal";
+  if (!narrow && B) {
+    const bt = el("text", {x: x1 + 12, y: top - 6, class: "band-label", "font-weight": 700}, svg);
+    bt.textContent = "2018–21 papers with similar signals";
+  }
+  // Points: x = age (posted → now), y = signal, size = boldness.
+  const jit = p => ((parseInt(p.id.replace(/\D/g, "").slice(-4) || "0", 10) % 17) - 8) * 2.2;
+  const pts = [];
+  const place = (p, y) => {
+    const age = ageDays(p);
+    const bold = p.features.bold.length;
+    const r = (6 + 5 * Math.min(bold, 3)) * fs;
+    const g = el("g", {class: "pt", tabindex: 0, role: "button", "data-id": p.id, "data-sel": state.paper === p.id ? "true" : "false",
+      "aria-label": `${p.title}. ${p.rank != null ? "Signal " + p.rank.toFixed(2) : p.newcomer ? "Newcomer team, not ranked" : "No track record found"}. ${bold ? "Bold claim. " : ""}Status: ${STATUS[p.status]}. Open the claim card.`}, svg);
+    const col = fieldColour(p.field);
+    el("circle", {cx: X(age) + jit(p), cy: y, r, fill: col, "fill-opacity": bold ? .55 : .8, stroke: bold ? "#ad472a" : "#fff", "stroke-width": bold ? 2.5 : 1.5}, g);
+    if (p.status !== "posted") el("circle", {cx: X(age) + jit(p), cy: y, r: 3 * fs, fill: "#fff"}, g);
+    el("circle", {cx: X(age) + jit(p), cy: y, r: Math.max(r, 22 * fs), fill: "transparent"}, g);
+    g.addEventListener("click", () => openCard(p.id));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCard(p.id); } });
+    pts.push(g);
+  };
+  ranked.forEach(p => place(p, Y(p.rank)));
+  let yy = top + plotH + 40 * fs + gap;
+  const strip = (label, ps) => {
+    el("rect", {x: x0, y: yy - stripH / 2, width: x1 - x0, height: stripH, fill: "#ece7f6", "fill-opacity": .6, rx: 6}, svg);
+    const t = el("text", {x: x0 - 8, y: yy + 4, "text-anchor": "end", class: "band-label", "font-size": 11.5 * fs}, svg);
+    t.textContent = label;
+    ps.forEach(p => place(p, yy));
+    yy += stripH + gap;
+  };
+  if (showNew) strip("newcomers", newc);
+  if (none.length) strip("no record", none);
+  const ranks = ranked.map(p => p.rank);
+  $("lane-note").textContent = all.length
+    ? `${all.length} preprint${all.length === 1 ? "" : "s"}: ${ranked.length} with an evidence signal, ${newc.length} from newcomer teams (shown in their own lane, not ranked), ${none.length} with no record found. ` +
+      (ranks.length ? `Signals range ${Math.min(...ranks).toFixed(2)}–${Math.max(...ranks).toFixed(2)}.` : "")
+    : "No preprints in this lane with the current filters.";
+  $("lane-legend").innerHTML = `<span><i style="width:10px;height:10px"></i>small dot: no bold phrases</span><span><i style="width:18px;height:18px;border:2px solid #ad472a;background:#ad472a88"></i>large, outlined: bold-claim phrases (flagged, not penalised)</span><span><i style="width:10px;height:10px;box-shadow:inset 0 0 0 3px #7d93a1;background:#fff"></i>white centre: status changed from “posted” (revised or published)</span>` +
+    (B ? `<span>Blue tint behind the plot: share of 2018–21 preprints with similar signals that were published by ${B.outcome_year}.</span>` : "");
+  // Accessible list, best signal first; newcomers and unranked after.
+  const list = $("paper-list"); list.textContent = "";
+  const order = ranked.slice().sort((a, b) => b.rank - a.rank).concat(showNew ? newc : [], none);
+  if (!order.length) { const li = document.createElement("li"); li.className = "empty"; li.textContent = state.changed ? (S.previous_snapshot ? "No status changes since the last snapshot in this lane." : "This is the first snapshot, so there is nothing earlier to compare with yet. Next week's run will fill this filter.") : "Nothing here with these filters."; list.appendChild(li); }
+  for (const p of order) {
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button"; b.dataset.id = p.id; b.setAttribute("aria-pressed", state.paper === p.id ? "true" : "false");
+    const tags = (p.features.bold.length ? `<span class="tag bold">bold claim</span>` : "") + (p.newcomer ? `<span class="tag new">newcomer team</span>` : "") + (p.status_changed ? `<span class="tag chg">status changed</span>` : "") + (p.status !== "posted" ? `<span class="tag">${esc(STATUS[p.status])}</span>` : "");
+    b.innerHTML = `<span class="score">${p.rank != null ? p.rank.toFixed(2) : "—"}</span><span class="ptitle">${esc(p.title)}<small>${tags}${esc(FIELD[p.field].name)} · ${esc(p.source)} · posted ${esc(p.posted)}</small></span>`;
+    b.addEventListener("click", () => openCard(p.id));
+    li.appendChild(b); list.appendChild(li);
+  }
+}
+
+/* ---------- 3. claim card ---------- */
+const COMP = {
+  published: {name: "Later published", what: "were later published in a journal or proceedings"},
+  cited: {name: "Cited", what: `were cited at least ${S.cite_n} times`},
+  not_retracted: {name: "Not retracted", what: "have not been retracted"},
+};
+function bar(s, prior) {
+  return `<div class="bar" aria-hidden="true"><span class="ci" style="left:${s.lo * 100}%;width:${(s.hi - s.lo) * 100}%"></span><span class="prior" style="left:${prior * 100}%"></span><span class="est" style="left:${s.est * 100}%"></span></div>`;
+}
+function openCard(id) {
+  const p = S.papers.find(q => q.id === id);
+  if (!p) return;
+  state.paper = id;
+  const pr = S.priors[p.field];
+  const c = $("card");
+  const tl = p.timeline.map(t => `<li><time>${t.date ? esc(t.date) : "date not recorded"}</time>${esc(t.event)}</li>`).join("") +
+    `<li class="now"><time>${esc(S.snapshot_date)}</time>status now: <b>${esc(STATUS[p.status])}</b>${p.status_changed ? ` (was ${esc(p.status_changed.from)})` : ""}</li>`;
+  let sigs = "";
+  if (p.signals) {
+    for (const k of ["published", "cited", "not_retracted"]) {
+      const s = p.signals[k];
+      sigs += `<div class="sig"><div class="name">${COMP[k].name}<small>${pct(s.est)} (80%: ${pct(s.lo)}–${pct(s.hi)})</small></div><div>${bar(s, pr[k].mean)}<div class="reason">${s.k} of ${s.n} earlier preprints by the first and last authors (posted before ${esc(S.cutoff)}) ${COMP[k].what}. Pulled towards the ${esc(FIELD[p.field].name.toLowerCase())} average of ${pct(pr[k].mean)} (dashed line), as if we had also seen ${Math.round(pr[k].strength)} typical preprints.</div></div></div>`;
+    }
+  } else if (p.newcomer) {
+    sigs += `<div class="sig"><div class="name">Track record<small>newcomer team</small></div><div class="reason">The first and last authors have fewer than 3 preprints older than two years between them (${p.team.eligible}). A newcomer is not ranked: absence of a record says nothing about the work.</div></div>`;
+  } else {
+    sigs += `<div class="sig"><div class="name">Track record<small>not found</small></div><div class="reason">${p.openalex ? "OpenAlex has this paper but no identified authors yet." : "OpenAlex has not indexed this preprint yet (common in its first days), so its authors could not be resolved."}</div></div>`;
+  }
+  const f = p.features;
+  sigs += `<div class="sig"><div class="name">Code or data<small>${f.code_data.length ? "linked" : "none detected"}</small></div><div class="reason">${f.code_data.length ? "The abstract or comments link to " + esc(f.code_data.join(", ")) + "." : "No GitHub, Zenodo, OSF or Figshare link in the abstract or comments (the full text may still have one)."}</div></div>`;
+  sigs += `<div class="sig"><div class="name">Preregistration<small>${f.prereg ? "stated" : "not stated"}</small></div><div class="reason">${f.prereg ? "The abstract mentions “" + esc(f.prereg) + "”." : "No mention of preregistration, a registered report or a trial registration in the abstract."}</div></div>`;
+  if (p.field === "medicine" || p.field === "biology") sigs += `<div class="sig"><div class="name">Sample size<small>${f.sample_n ? "n = " + fmt(f.sample_n) : "not stated"}</small></div><div class="reason">${f.sample_n ? "Largest sample size stated in the abstract. Shown for context; not part of the signal." : "No sample size found in the abstract."}</div></div>`;
+  sigs += `<div class="sig"><div class="name">Bold claims<small>${f.bold.length ? "flagged" : "none"}</small></div><div class="reason">${f.bold.length ? "Uses " + f.bold.map(b => "“" + esc(b) + "”").join(", ") + ". Flagged so you can read it carefully; it does not lower the signal. Extraordinary claims are sometimes right." : "No phrases from the bold-claims list."}</div></div>`;
+  let rank = "";
+  if (p.rank != null) {
+    const b = bandFor(p.rank);
+    const W = S.weights;
+    rank = `<div class="sig"><div class="name">Evidence signal<small>${p.rank.toFixed(2)} (for sorting only)</small></div><div class="reason">${W.published} × published + ${W.cited} × cited + ${W.not_retracted} × not retracted + ${W.openness} × (code, data or preregistration) = ${W.published} × ${p.signals.published.est} + ${W.cited} × ${p.signals.cited.est} + ${W.not_retracted} × ${p.signals.not_retracted.est} + ${W.openness} × ${f.code_data.length || f.prereg ? 1 : 0}.` +
+      (b && b.n ? ` In the backtest, ${b.n} preprints from 2018–21 with a signal of ${b.lo.toFixed(1)}–${Math.min(b.hi, 1).toFixed(1)}: ${pct(b.published)} published, ${pct(b.retracted)} retracted, ${pct(b.still_cited)} still cited by ${B.outcome_year}.` : "") + `</div></div>`;
+  }
+  const oa = p.openalex ? `<a href="${esc(p.openalex.replace("https://openalex.org/", "https://openalex.org/works/"))}" rel="noopener">OpenAlex record</a>` : "";
+  c.innerHTML = `<p class="eyebrow" style="margin-top:0">${esc(FIELD[p.field].name)} · ${esc(p.source)} ${esc(p.category)}${p.problems.length ? " · " + p.problems.map(x => esc(PROB[x].name)).join(", ") : ""}</p>
+   <h3>${esc(p.title)}</h3><p class="who">${esc(p.authors.join(", "))}</p>
+   <ol class="timeline" aria-label="Timeline">${tl}</ol>
+   <p class="abs">${esc(p.abstract)}</p>${rank}${sigs}
+   <div class="links-row"><a href="${esc(p.url)}" rel="noopener">${esc(p.source)} page</a>${oa}${p.published_doi ? `<a href="https://doi.org/${esc(p.published_doi)}" rel="noopener">Published version</a>` : ""}</div>`;
+  $("card-panel").hidden = false;
+  $("crumb-card").disabled = false;
+  $("crumb-card").textContent = "3 · Claim card";
+  document.querySelectorAll("#lane .pt").forEach(g => g.setAttribute("data-sel", g.dataset.id === id ? "true" : "false"));
+  document.querySelectorAll("#paper-list button").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === id ? "true" : "false"));
+  setCrumb("card");
+  writeHash();
+  scrollTo("card-panel");
+  c.focus({preventScroll: true});
+}
+
+/* ---------- navigation ---------- */
+function setCrumb(which) {
+  for (const k of ["map", "lane", "card"]) $("crumb-" + k).toggleAttribute("aria-current", k === which);
+}
+function scrollTo(id) { $(id).scrollIntoView({behavior: RM.matches ? "auto" : "smooth", block: "start"}); }
+function writeHash() {
+  const L = state.lane, h = [];
+  if (L) h.push(L.problem ? "problem=" + L.problem : "field=" + L.field);
+  if (state.paper) h.push("paper=" + encodeURIComponent(state.paper));
+  history.replaceState(null, "", h.length ? "#" + h.join("&") : location.pathname);
+}
+function readHash() {
+  const q = new URLSearchParams(location.hash.slice(1));
+  if (q.get("problem") && PROB[q.get("problem")]) openLane({problem: q.get("problem")});
+  else if (q.get("field") && FIELD[q.get("field")]) openLane({field: q.get("field")});
+  if (q.get("paper") && state.lane) openCard(q.get("paper"));
+}
+$("crumb-map").addEventListener("click", () => { setCrumb("map"); scrollTo("map-panel"); });
+$("crumb-lane").addEventListener("click", () => { setCrumb("lane"); scrollTo("lane-panel"); });
+$("crumb-card").addEventListener("click", () => { setCrumb("card"); scrollTo("card-panel"); });
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (!$("card-panel").hidden && state.paper) { const id = state.paper; scrollTo("lane-panel"); const b = document.querySelector(`#paper-list button[data-id="${CSS.escape(id)}"]`); if (b) b.focus({preventScroll: true}); setCrumb("lane"); }
+  else if (state.lane) { scrollTo("map-panel"); const b = document.querySelector(`#problem-list button[data-problem="${state.lane.problem}"]`); if (b) b.focus({preventScroll: true}); setCrumb("map"); }
+});
+function toggle(id, key) {
+  $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); if (state.lane) drawLane(); });
+}
+toggle("f-new", "newcomers"); toggle("f-bold", "bold"); toggle("f-chg", "changed");
+$("f-chg").textContent = `Status changed since last snapshot (${S.status_changes || 0})`;
+if (!S.previous_snapshot) $("f-chg").title = "First snapshot: nothing earlier to compare with yet";
+
+/* ---------- backtest ---------- */
+function drawBacktest() {
+  const box = $("bt-body");
+  if (!B) { box.innerHTML = `<p class="verdict">The backtest has not been run for this build.</p>`; return; }
+  const auc = B.auc_published, aucR = B.auc_rank_still_cited;
+  const strength = a => a == null ? "unknown" : a < 0.55 ? "no better than chance" : a < 0.62 ? "weak" : a < 0.7 ? "modest" : "moderate";
+  const better = B.brier_signal != null && B.brier_signal < B.brier_field_base;
+  box.innerHTML = `
+   <p class="verdict"><b>Plainly: the signals are ${strength(auc)} at telling which preprints will be published</b> (AUC ${auc ?? "—"}, where 0.5 is a coin toss and 1 is perfect)${aucR != null ? `, and ${strength(aucR)} for “still cited” (AUC ${aucR})` : ""}. ` +
+   (better ? `Track record beats simply using the field average, but only slightly (Brier score ${B.brier_signal} against ${B.brier_field_base}; lower is better).` : `Track record does <b>not</b> beat simply using the field average (Brier score ${B.brier_signal} against ${B.brier_field_base}; lower is better).`) +
+   ` Read every signal on this page with that in mind.</p>
+   <ul class="stats">
+    <li><b>${fmt(B.n_papers)}</b>preprints sampled from ${B.years[0]}–${B.years[B.years.length - 1]}</li>
+    <li><b>${fmt(B.n_scored)}</b>had a team track record at the time</li>
+    <li><b>${pct(B.overall.published)}</b>of those were published by ${B.outcome_year}</li>
+    <li><b>${pct(B.newcomers.published)}</b>newcomer teams' papers published (n=${B.newcomers.n})</li>
+    <li><b>${pct(B.overall.retracted)}</b>retracted (scored papers)</li>
+    <li><b>${pct(B.overall.still_cited)}</b>still cited in 2024–25</li>
+   </ul>
+   <div class="two">
+    <div><h3>Calibration: predicted against observed</h3><svg id="calib" viewBox="0 0 520 340" role="img" aria-label="Calibration chart"></svg>
+     <p class="note">Dots: preprints grouped by their “later published” estimate at posting time; height = share actually published by ${B.outcome_year}. On the dashed line, predictions would be perfectly calibrated. Dot area shows how many papers are in the bin.</p></div>
+    <div><h3>Bins</h3><div class="table-wrap"><table><thead><tr><th>Predicted</th><th>n</th><th>Mean predicted</th><th>Observed published</th></tr></thead><tbody>${
+      B.calibration_published.map(b => `<tr><td>${pct(b.lo)}–${pct(Math.min(b.hi, 1))}</td><td>${b.n}</td><td>${b.n ? pct(b.mean_pred) : "—"}</td><td>${b.n ? pct(b.observed) : "—"}</td></tr>`).join("")
+    }</tbody></table></div>
+     <h3>Cited ${S.cite_n}+ times</h3><div class="table-wrap"><table><thead><tr><th>Predicted</th><th>n</th><th>Mean predicted</th><th>Observed</th></tr></thead><tbody>${
+      B.calibration_cited.map(b => `<tr><td>${pct(b.lo)}–${pct(Math.min(b.hi, 1))}</td><td>${b.n}</td><td>${b.n ? pct(b.mean_pred) : "—"}</td><td>${b.n ? pct(b.observed) : "—"}</td></tr>`).join("")
+    }</tbody></table></div>
+     <p class="note">Bold-claim papers: ${pct(B.bold.published)} published (n=${B.bold.n}) against ${pct(B.not_bold.published)} (n=${B.not_bold.n}). With code, data or preregistration: ${pct(B.open.published)} (n=${B.open.n}) against ${pct(B.not_open.published)} (n=${B.not_open.n}). Small groups: treat as anecdote.</p></div>
+   </div>
+   <p class="note"><b>How it was done.</b> Preprints were sampled at random days in ${B.years.join(", ")} across the seven fields (arXiv, bioRxiv, medRxiv). For each, the first and last authors' preprints older than two years at the posting date were pooled, with citations counted only up to the year before posting. Outcomes were read from OpenAlex, arXiv, bioRxiv/medRxiv and Crossref (retraction notices). <b>Known leak:</b> whether those earlier preprints were published is read from today's records, which slightly flatters the signals. ${B.n_resolved < B.n_papers ? `${B.n_papers - B.n_resolved} sampled preprints could not be found in OpenAlex.` : ""}</p>`;
+  const svg = $("calib");
+  const X = v => 50 + v * 440, Y = v => 300 - v * 270;
+  const ax = el("g", {class: "axis"}, svg);
+  for (const v of [0, .25, .5, .75, 1]) {
+    el("line", {x1: X(0), x2: X(1), y1: Y(v), y2: Y(v), "stroke-dasharray": "2 4"}, ax);
+    const t = el("text", {x: X(0) - 8, y: Y(v) + 4, "text-anchor": "end"}, ax); t.textContent = pct(v);
+    const t2 = el("text", {x: X(v), y: Y(0) + 18, "text-anchor": "middle"}, ax); t2.textContent = pct(v);
+  }
+  el("line", {x1: X(0), y1: Y(0), x2: X(1), y2: Y(1), stroke: "#7d93a1", "stroke-dasharray": "6 5"}, svg);
+  const xl = el("text", {x: X(.5), y: 336, "text-anchor": "middle", class: "band-label"}, svg); xl.textContent = "predicted chance of publication";
+  const yl = el("text", {x: 12, y: Y(.5), transform: `rotate(-90 12 ${Y(.5)})`, "text-anchor": "middle", class: "band-label"}, svg); yl.textContent = "observed share published";
+  const maxN = Math.max(1, ...B.calibration_published.map(b => b.n));
+  for (const b of B.calibration_published) {
+    if (!b.n) continue;
+    el("circle", {cx: X(b.mean_pred), cy: Y(b.observed), r: 4 + 14 * Math.sqrt(b.n / maxN), fill: "#1772b7", "fill-opacity": .7, stroke: "#fff", "stroke-width": 1.5}, svg);
+    const t = el("text", {x: X(b.mean_pred) + 6, y: Y(b.observed) - 10 - 14 * Math.sqrt(b.n / maxN), class: "band-label"}, svg); t.textContent = "n=" + b.n;
+  }
+  const base = B.overall.published;
+  el("line", {x1: X(0), x2: X(1), y1: Y(base), y2: Y(base), stroke: "#ad472a", "stroke-width": 1.5}, svg);
+  const bl = el("text", {x: X(1), y: Y(base) - 6, "text-anchor": "end", class: "band-label"}, svg); bl.textContent = "average: " + pct(base);
+}
+
+/* ---------- case studies ---------- */
+function drawCases() {
+  const ul = $("cases");
+  if (!B || !B.cases) return;
+  for (const c of B.cases) {
+    const li = document.createElement("li");
+    const rec = c.record || {};
+    const doiLink = d => d.startsWith("10.48550/arxiv.") ? `https://arxiv.org/abs/${d.slice(15)}` : `https://doi.org/${d}`;
+    const facts = [];
+    if (rec.ok) facts.push(`Record: “${esc(rec.title)}”${rec.date ? ", " + esc(rec.date) : ""}${rec.container ? ", " + esc(rec.container) : ""}; cited ${fmt(rec.cited_by || 0)} times; ${rec.retracted ? "<b>retracted</b>" : "not retracted"} (${c.doi.startsWith("10.48550") ? "OpenAlex" : "Crossref"}).`);
+    const st = c.signals_then;
+    if (st) facts.push(st.eligible >= 3 ? `Signals then: the first and last authors had ${st.eligible} preprints older than two years; ${st.record.published} later published, ${st.record.cited} cited ${S.cite_n}+ times.` : `Signals then: newcomer team by our rule (${st.eligible} eligible earlier preprints for the first and last authors), so it would not have been ranked.`);
+    if (st && st.title_bold && st.title_bold.length) facts.push(`Bold-claims flag: fires on the title (${st.title_bold.map(b => "“" + esc(b) + "”").join(", ")}).`);
+    li.innerHTML = `<h4>${esc(c.name)} (${c.year})</h4><p style="margin:0 0 6px;color:var(--muted);font-size:13px">${esc(c.kind)} · <a href="${esc(doiLink(c.doi))}" rel="noopener">${esc(c.doi.startsWith("10.48550/arxiv.") ? "arXiv:" + c.doi.slice(15) : c.doi)}</a></p>
+     <p style="margin:0">${esc(c.summary)}</p><ul>${facts.map(f => `<li>${f}</li>`).join("")}${c.related.map(r => `<li><a href="${esc(doiLink(r.doi))}" rel="noopener">${esc(r.label)}</a>${r.record && r.record.ok ? ` — cited ${fmt(r.record.cited_by || 0)} times` : r.record ? " — not verified in the record" : ""}</li>`).join("")}</ul>
+     <p class="lesson">${esc(c.lesson)}</p>`;
+    ul.appendChild(li);
+  }
+}
+
+/* ---------- method ---------- */
+function drawMethod() {
+  const W = S.weights, t = S.week_totals;
+  $("method-body").innerHTML = `<ol style="line-height:1.6;font-size:14.5px;padding-left:20px;margin:6px 0">
+   <li><b>New preprints.</b> arXiv (all categories) and bioRxiv/medRxiv, first versions posted ${esc(S.window[0])} to ${esc(S.window[1])}. ${S.sampled < S.fields.reduce((a, f) => a + f.week_count, 0) ? `Sampled evenly per field, capped at ${fmt(S.cap)}, plus every landmark match.` : ""}</li>
+   <li><b>Authors.</b> Each paper is looked up in OpenAlex by DOI, else by exact title. Its first and last authors are used.</li>
+   <li><b>Team track record.</b> Their preprints posted before ${esc(S.cutoff)} (older than two years) are pooled. We count the share later published (a journal or proceedings location in OpenAlex, or a published record with the same title), not retracted (OpenAlex), and cited at least ${S.cite_n} times. Each share is pulled towards the field average with a beta–binomial prior whose strength is estimated from the field's spread, and shown with an 80% interval. Teams with fewer than 3 such preprints are <b>newcomers</b>: shown separately, not ranked.</li>
+   <li><b>Paper features.</b> Only what metadata and the abstract show honestly: code or data links (GitHub, Zenodo, OSF, Figshare), “preregistered” or “registered report” (and trial registrations), a stated sample size in biology and medicine, and bold-claim phrases (flagged, never penalised).</li>
+   <li><b>One sort order.</b> Every component is shown on the card with its reason; nothing is hidden. To sort a lane we use a documented weighted rank: ${W.published} × published + ${W.cited} × cited + ${W.not_retracted} × not retracted + ${W.openness} × openness.</li>
+  </ol>
+  <p class="note">Built ${esc(S.built_at)}. Landmarks match by keyword and category rules (${S.problems.length} problems). arXiv reported ${fmt(t.arxiv_reported)} submissions in the window.</p>`;
+}
+
+drawMap(); drawBacktest(); drawCases(); drawMethod();
+readHash();
+let rz;
+addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { drawMap(); if (state.lane) drawLane(); }, 150); });
+</script>
+</body>
+</html>
