@@ -140,8 +140,8 @@ function K1_batPic(X){
  out+=P(`M${bx-8} ${by-4} Q${bx-52} ${by-46} ${bx-84} ${by-12} Q${bx-66} ${by-8} ${bx-58} ${by+10} Q${bx-40} ${by-2} ${bx-30} ${by+14} Q${bx-18} ${by+2} ${bx-8} ${by+8} Z`,C.dark,2,'#5d717c');
  out+=`<ellipse cx="${bx}" cy="${by}" rx="15" ry="20" fill="${C.dark}"/>`+Ci(bx+10,by-22,10,C.dark)+P(`M${bx+4} ${by-30} L${bx+2} ${by-44} L${bx+11} ${by-33} Z`,C.dark,1,C.dark)+P(`M${bx+13} ${by-31} L${bx+18} ${by-44} L${bx+20} ${by-29} Z`,C.dark,1,C.dark);
  // Outgoing calls (blue) and returning echoes (coral): slow, thin arcs.
- for(let i=0;i<4;i++){const r=40+(i+ph)*70,a=.42;if(r>330)continue;out+=P(`M${fmt(bx+20+r*Math.cos(-a))} ${fmt(by-22+r*Math.sin(-a))} A${fmt(r)} ${fmt(r)} 0 0 1 ${fmt(bx+20+r*Math.cos(a))} ${fmt(by-22+r*Math.sin(a))}`,C.blue,2,'none',`opacity="${fmt(1-r/380)}"`)}
- for(let i=0;i<3;i++){const r=24+(i+ph)*60,a=.5;out+=P(`M${fmt(490-r*Math.cos(-a))} ${fmt(82-r*Math.sin(-a))} A${fmt(r)} ${fmt(r)} 0 0 0 ${fmt(490-r*Math.cos(a))} ${fmt(82-r*Math.sin(a))}`,C.coral,1.6,'none',`opacity="${fmt(.8-r/300)}"`)}
+ for(let i=0;i<4;i++){const r=40+(i+ph)*70,a=Math.asin(Math.min(1,30/r));if(r>320)continue;out+=P(`M${fmt(bx+20+r*Math.cos(-a))} ${fmt(by-22+r*Math.sin(-a))} A${fmt(r)} ${fmt(r)} 0 0 1 ${fmt(bx+20+r*Math.cos(a))} ${fmt(by-22+r*Math.sin(a))}`,C.blue,2,'none',`opacity="${fmt(1-r/380)}"`)}
+ for(let i=0;i<3;i++){const r=30+(i+ph)*60,a=Math.asin(Math.min(1,24/r));out+=P(`M${fmt(490-r*Math.cos(-a))} ${fmt(82-r*Math.sin(-a))} A${fmt(r)} ${fmt(r)} 0 0 0 ${fmt(490-r*Math.cos(a))} ${fmt(82-r*Math.sin(a))}`,C.coral,1.6,'none',`opacity="${fmt(.8-r/300)}"`)}
  out+=P('M490 82 L474 68 L478 86 Z',C.amber,1.5,C.amberp)+P('M490 82 L506 68 L502 86 Z',C.amber,1.5,C.amberp)+L(490,74,490,92,C.amber,3);
  out+=TF(110,156,'bat',13,C.muted)+TF(490,112,'moth',13,C.muted)+TF(300,150,'call out (blue) · echo back (coral)',13,C.muted);
  return out;
@@ -231,7 +231,7 @@ SCENE({id:'what-it-is-like-access',name:'Phenomenal and access',tag:'You take pa
    out+=TF(x0-8,y+15,b[0],13,C.ink,'end')+R(x0,y,300,20,'#f3f6f8','none',4)+(b[1]===null?TF(x0+8,y+15,'after your first round',13,C.muted,'start'):R(x0,y,b[1]*sc,20,b[2],'none',4)+TBF(x0+b[1]*sc+(b[1]>10?-8:8),y+15,fmt(Math.round(b[1]*10)/10),13,b[1]>10?'#fff':C.ink,b[1]>10?'end':'start'))});
   [0,4,8,12].forEach(v=>out+=L(x0+v*sc,342,x0+v*sc,347,C.line,1.5)+TF(x0+v*sc,362,String(v),13,C.muted));
   const who=s.sim?'The simulated viewer':'You';
-  return {svg:out,phase:s.phase==='idle'?'Sperling’s question: is more seen in a glance than can be reported afterwards?':s.phase==='show'?'Twelve letters, once, with no time to read them all.':s.phase==='pick'?'The arrow came after the letters had gone, so the row had to be read from a fading memory of the whole display.':`${who} got ${fmt(Math.round(mean*10)/10)} of 4 on average from a row cued after the display, which implies about ${fmt(Math.round(est*10)/10)} of 12 were briefly available. Block reads this as more experienced than accessed. Cohen and Dennett reply that the unreported letters may not have been experienced until the cue picked them out. The result is solid; its reading is disputed.`};
+  return {svg:out,phase:s.phase==='idle'?'Sperling’s question: is more seen in a glance than can be reported afterwards?':s.phase==='show'?'Twelve letters, once, with no time to read them all.':s.phase==='pick'?'The arrow came after the letters had gone, so the row had to be read from a fading memory of the whole display.':`${who} got ${fmt(Math.round(mean*10)/10)} of 4 on average from a row cued after the display, which implies about ${fmt(Math.round(est*10)/10)} of 12 were briefly available${est<5?' (picking at random would give about 4, so try another set of rounds)':''}. Sperling’s observers reached about 9, against about 4 when asked to name everything. Block reads that difference as more experienced than accessed. Cohen and Dennett reply that the unreported letters may not have been experienced until the cue picked them out. The result is solid; its reading is disputed.`};
  }});
 
 /* =========================== easy-hard-problems =========================== */
@@ -314,7 +314,7 @@ SCENE({id:'easy-hard-problems-objection',name:'Is the hard problem real?',tag:'W
  }});
 
 /* =========================== knowledge-argument =========================== */
-const K1_BOOKS=[['Light','the physics of light and wavelength'],['The eye','the cells of the retina'],['The brain','the colour pathways of the brain'],['Colour words','how people use colour words']];
+const K1_BOOKS=[['Light','the physics of light and wavelength'],['The eye','the cells of the retina'],['The brain','the colour pathways of the brain'],['Words','how people use colour words']];
 SCENE({id:'knowledge-argument',name:'Mary’s room',tag:'A thought experiment',
  definition:'Frank Jackson’s knowledge argument (1982). Mary is a brilliant scientist who has lived in a black-and-white room and learned every physical fact about colour vision from books and a black-and-white screen. One day she leaves the room and sees a ripe tomato. Does she learn anything new?',
  example:'Jackson argued in 1982 that she does: she learns what it is like to see red. Since she already knew all the physical facts, there must be facts that are not physical facts, and physicalism is false. He called the felt qualities she discovers qualia.',
@@ -331,7 +331,7 @@ SCENE({id:'knowledge-argument',name:'Mary’s room',tag:'A thought experiment',
   out+=R(176,104,74,50,'#fdfdfd','#555',4)+[0,1,2,3].map(i=>R(182+i*16,110,14,38,['#2b2b2b','#6b6b6b','#a5a5a5','#d6d6d6'][i],'none',0)).join('')+R(156,160,120,8,'#8f8f8f','none',2)+L(170,168,170,214,'#8f8f8f',3)+L(262,168,262,214,'#8f8f8f',3);
   out+=R(292,84,116,8,'#8f8f8f','none',2)+range(4).map(i=>R(300+i*26,52,18,32,s.read[i]?'#4a4a4a':'#fff','#666',2)).join('');
   out+=Ci(mx,128,15,'#c9c9c9','#555')+P(`M${mx} 143 L${mx} 186 M${mx} 156 L${mx-16} 172 M${mx} 156 L${mx+16} 172 M${mx} 186 L${mx-12} 214 M${mx} 186 L${mx+12} 214`,'#555',3);
-  out+=TF(120,232,'Mary',13,'#555')+TF(260,232,'black-and-white room',13,'#555');
+  out+=TF(mx,232,'Mary',13,'#555')+TF(s.out?200:260,232,'black-and-white room',13,'#555');
   out+=R(440,46,140,196,s.out?'#fff':'#cfcfcf','#8c8c8c',6)+(s.out?R(424,84,14,130,'#fff','#8c8c8c',0)+Ci(510,146,34,'#d0342c','#9c241e')+P('M510 114 Q500 100 486 104 Q498 112 510 114 Q522 100 536 106 Q522 114 510 114',C.green,1.5,C.green)+TF(510,206,'a ripe tomato',13,C.ink):R(424,84,14,130,'#777','#555',0)+TF(510,150,'outside',13,'#555')+TF(510,170,'(door closed)',13,'#555'));
   K1_BOOKS.forEach((b,i)=>out+=K1_key(X,'book',i,`Book: ${b[1]}${s.read[i]?', read':''}`,22+i*140,252,132,38,b[0]+(s.read[i]?' ✓':''),!!s.read[i],C.blue,13));
   out+=T(300,318,`Mary has read ${n} of 4 books`,13,C.muted);
@@ -438,7 +438,7 @@ SCENE({id:'zombies-functionalism-realisers',name:'Functionalism',tag:'One table,
   const m=K1_vendRun(s.coins);let out=heading('A state is what it does');
   out+=R(20,46,220,200,'#fff',C.grid,8)+K1_machine(s.made,m.st)+TF(130,236,'made of '+s.made,13,C.muted);
   out+=K1_key(X,'coin',5,'Insert a 5p coin',20,254,105,38,'Insert 5p',false,C.blue,13)+K1_key(X,'coin',10,'Insert a 10p coin',135,254,105,38,'Insert 10p',false,C.blue,13);
-  const cx=[256,352,462],cw=[96,110,118];
+  const cx=[256,362,468],cw=[106,106,112];
   ['state','5p in','10p in'].forEach((h,i)=>out+=R(cx[i],46,cw[i]-4,28,C.pale,'none',4)+TBF(cx[i]+cw[i]/2-2,65,h,13,C.ink));
   [['S0: owes 10p','→ S5','drink → S0'],['S5: owes 5p','drink → S0','drink + 5p → S0']].forEach((row,r)=>{const y=78+r*46,now=m.st===r*5;
    row.forEach((t,i)=>{const used=m.last&&m.last.from===r*5&&i===(m.last.coin===5?1:2);out+=R(cx[i],y,cw[i]-4,42,used?C.amberp:now&&i===0?C.greenp:'#fff',used?C.amber:now&&i===0?C.green:C.grid,4)+TF(cx[i]+cw[i]/2-2,y+26,t,13,C.ink)})});
@@ -499,7 +499,7 @@ SCENE({id:'zombies-functionalism-fading',name:'Fading qualia',tag:'Replace neuro
   out+=TF(gx+gw/2,gy+gh+35,'neurons replaced',13,C.muted)+TF(gx+gw/2,gy+gh+54,'thought experiment: no data',13,C.muted);
   out+=L(Xg(0),Yg(1)-5,Xg(100),Yg(1)-5,C.green,2.5,'stroke-dasharray="6 4"')+TF(gx+gw,gy-8,'behaviour: unchanged',13,C.green,'end');
   const e=v=>s.ans==='stay'?1:s.ans==='fade'?1-v/100:v<s.at?1:0;
-  if(s.ans){out+=K1_poly(s.ans==='gone'?[[Xg(0),Yg(1)],[Xg(s.at),Yg(1)],[Xg(s.at),Yg(0)],[Xg(100),Yg(0)]]:[[Xg(0),Yg(1)],[Xg(100),Yg(e(100))]],C.coral,3)+Ci(Xg(s.r),Yg(e(s.r)),6,C.coral,'#fff')+TF(gx+8,Yg(.5)+(s.ans==='fade'?30:4),'experience: your answer',13,C.coral,'start')}
+  if(s.ans){out+=K1_poly(s.ans==='gone'?[[Xg(0),Yg(1)],[Xg(s.at),Yg(1)],[Xg(s.at),Yg(0)],[Xg(100),Yg(0)]]:[[Xg(0),Yg(1)],[Xg(100),Yg(e(100))]],C.coral,3)+Ci(Xg(s.r),Yg(e(s.r)),6,C.coral,'#fff')+TF(gx+2,gy-8,'your answer',13,C.coral,'start')}
   else out+=TF(gx+gw/2,Yg(.5),'experience: your answer?',13,C.muted);
   [['stay','Never fades'],['fade','Fades slowly'],['gone','Vanishes here']].forEach((q,i)=>out+=K1_key(X,'ans',q[0],'Experience: '+q[1],20+i*190,292,180,36,q[1],s.ans===q[0],C.coral,13));
   out+=TB(300,356,s.ans==='stay'?'Then organisation, not material, carries experience':s.ans==='fade'?`At ${s.r}%: dimmer experience, the same words`:s.ans==='gone'?`Chip number ${s.at} switches experience off`:'Three answers, each with a cost',14,C.ink);
@@ -523,7 +523,7 @@ SCENE({id:'trusting-reports',name:'Telling more than we can know',tag:'Reasons t
   const c=K1_shop(s.seed,s.n);let out=heading('Four identical pairs: which is best?');
   out+=L(40,196,560,196,C.line,2)+L(40,58,66,58,C.blue,6)+TF(72,62,'simulated shoppers',13,C.blue,'start')+L(40,78,66,78,C.muted,2,'stroke-dasharray="5 4"')+TF(72,82,'published share',13,C.muted,'start');
   K1_PUB.forEach((pub,i)=>{const xc=105+i*130,pct=s.n?c[i]/s.n*100:0,h=Math.min(pct,48)*3;
-   out+=R(xc-30,196-h,60,h,C.blue,'none',4)+(s.n?TBF(xc,190-h,Math.round(pct)+'%',13,C.blue):'')+L(xc-36,196-pub*3,xc+36,196-pub*3,C.muted,2,'stroke-dasharray="5 4"')+TF(xc+40,200-pub*3,pub+'%',13,C.muted,'start');
+   out+=R(xc-30,196-h,60,h,C.blue,'none',4)+(s.n?(h>=22?TBF(xc,190,Math.round(pct)+'%',13,'#fff'):TBF(xc+2,190-h,Math.round(pct)+'%',13,C.blue)):'')+L(xc-36,196-pub*3,xc+36,196-pub*3,C.muted,2,'stroke-dasharray="5 4"')+TF(xc+40,200-pub*3,pub+'%',13,C.muted,'start');
    out+=R(xc-24,204,22,26,'#dcc7ab','#a58c6a',6)+R(xc+2,204,22,26,'#dcc7ab','#a58c6a',6)+TB(xc,250,'ABCD'[i],14,C.ink)});
   out+=TF(105,268,'left',13,C.muted)+TF(495,268,'right',13,C.muted)+TF(300,268,'the pairs are identical',13,C.muted);
   out+=R(20,278,560,96,'#fff',C.grid,8);
@@ -577,7 +577,7 @@ SCENE({id:'trusting-reports-measures',name:'Four ways to ask',tag:'A toy observe
  draw(s){
   const o=K1_toy(s.e,s.c,s.lam),Xe=v=>80+v/3*440;let out=heading('One trial, five verdicts');
   out+=L(80,100,520,100,C.line,3);[0,1,2,3].forEach(v=>out+=L(Xe(v),96,Xe(v),104,C.line,2)+TF(Xe(v),122,String(v),13,C.muted));
-  out+=TF(300,56,'internal evidence on this trial (toy units)',13,C.muted)+L(Xe(s.c),70,Xe(s.c),112,C.amber,3)+TF(clamp(Xe(s.c),130,470),78,'says “yes” above this line',13,C.amber)+Ci(Xe(s.e),100,9,C.coral,'#fff');
+  out+=TF(300,52,'internal evidence on this trial (toy units)',13,C.muted)+L(Xe(s.c),78,Xe(s.c),112,C.amber,3)+TF(clamp(Xe(s.c),130,470),72,'says “yes” to the right of this line',13,C.amber)+Ci(Xe(s.e),100,9,C.coral,'#fff');
   const pc=Math.round(o.fc*100),rows=[['Yes/no report',o.yes?'Yes':'No',o.yes],['Confidence, 1 to 4',String(o.conf),o.conf>=3],['Awareness scale (PAS)',K1_PAS[o.pas],o.pas>0],['Bet on own answer',o.high?'High stake':'Low stake',o.high],['Forced-choice accuracy',pc+'%',pc>=60]];
   rows.forEach((r,i)=>{const y=134+i*38;out+=R(20,y,560,32,'#fff',C.grid,8)+T(34,y+21,r[0],13,C.ink,'start')+TB(566,y+21,r[1],13,r[2]?C.green:C.muted,'end')});
   out+=TB(300,350,'A toy observer: the thresholds are illustrative, not data',13,C.muted);
