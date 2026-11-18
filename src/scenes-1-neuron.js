@@ -355,7 +355,7 @@ SCENE({id:'resting-potential',name:'Nernst’s balance',tag:'One ion, one voltag
   let out=heading(`Equilibrium potential for ${I.sym}: ${B1_mV(E,0)}`);
   const bx=40,bw=190,by=62,bh=176;
   out+=R(bx,by,bw,bh,'#f3f7fa',C.line,8)+R(bx+bw+22,by,bw,bh,'#f3f7fa',C.line,8)+R(bx+bw,by,22,bh,C.amberp,C.amber,2)+R(bx+bw-1,by+74,24,28,'#fff','none',0);
-  out+=TB(bx+bw/2,by-8,'inside the cell',14,C.ink)+TB(bx+bw+22+bw/2,by-8,'outside',14,C.ink)+TF(bx+bw+11,by+bh+36,'membrane',13,C.amber);
+  out+=TB(bx+bw/2,by-8,'inside the cell',14,C.ink)+TB(bx+bw+22+bw/2,by-8,'outside',14,C.ink)+TF(bx+bw+11,by-8,'membrane',13,C.amber);
   const dots=(c,x)=>{let o='';const n=clamp(Math.round(c/200*70),1,70);for(let i=0;i<n;i++)o+=Ci(x+10+B1_DOTS[i][0]*(bw-20),by+10+B1_DOTS[i][1]*(bh-20),4,I.col);return o};
   out+=dots(s.inn,bx)+dots(s.out,bx+bw+22);
   out+=TB(bx+bw/2,by+bh+18,s.inn+' mM',14,I.col)+TB(bx+bw+22+bw/2+24,by+bh+18,s.out+' mM',14,I.col);

@@ -159,7 +159,7 @@ SCENE({id:'spinal-reflexes',name:'The knee jerk, timed',tag:'A reflex arc with o
  research:['Erb (1875) and Westphal (1875), independently, in Archiv für Psychiatrie und Nervenkrankheiten 5: the first descriptions of the knee jerk.','Sherrington (1906). The Integrative Action of the Nervous System. Yale University Press. (Nobel Prize 1932, with Edgar Adrian.)','Lloyd (1943). Conduction and synaptic transmission of the reflex response to stretch in spinal cats. Journal of Neurophysiology 6, 317–326: the delay inside the cord leaves time for only one synapse.'],
  dur:12,hint:'Press the hammer (or Tap) and read the delay on the recording. Change the length of the nerve path and the conduction speed to see what the delay is made of. A simulation: not a medical test.',
  init:()=>({d:50,v:55,a:1,n:0,taps:[]}),
- watch(p){const a=clamp((p%.5)/.4,0,1);return {d:p<.5?50:35,v:55,a,n:a>=1?1:0,taps:[]}},
+ watch(p){const a=clamp((p%.5)/.4,0,1);return {d:p<.5?50:35,v:55,a,n:1,taps:[]}},
  ui:[{b:'Tap the tendon',act:'tap'},{range:'d',label:'Nerve path, each way',min:30,max:70,get:s=>s.d,act:'d',show:v=>v+' cm'},{range:'v',label:'Conduction speed',min:30,max:70,get:s=>s.v,act:'v',show:v=>v+' m/s'}],
  on:{d(s,v){s.d=+v;s.n=0;s.a=1},v(s,v){s.v=+v;s.n=0;s.a=1},
   tap(s,v,ctx){s.n++;const r=B4_rng(s.n*17+s.d),lat=B4_r1(B4_kneeDelay(s)+(r()*2-1)*.8);s.lat=lat;s.taps.push(lat);if(s.taps.length>10)s.taps.shift();B4_start(s,ctx,50);return 'keep'},tick:B4_tick(.07)},
@@ -674,7 +674,7 @@ SCENE({id:'population-coding-decode',name:'Few cells or many',tag:'Decoding erro
   out+=TF(x0+4,66,'average error',12,C.muted,'start')+TF(x0+w,yb+34,'number of cells (log scale)',12,C.muted,'end');
   out+=P(B4_NS.map((n,i)=>(i?'L':'M')+fmt(lx(n))+' '+fmt(yy(B4_REF[n]))).join(''),C.muted,2,'none','stroke-dasharray="6 4"');
   for(const n of B4_NS)out+=Ci(lx(n),yy(B4_REF[n]),3,C.muted);
-  out+=TF(x0+w,yb+52,'dashed: expected for this model',12,C.muted,'end');
+  out+=TF(x0+w,66,'dashed: this model',12,C.muted,'end');
   for(const n of B4_NS){const mu=mean(n);if(mu!==null)out+=Ci(lx(n),yy(mu),n===s.n?7:5.5,C.blue,'#fff')+TF(lx(n)+(n===300?-10:10),yy(mu)-8,fmt(B4_r1(mu))+'°',12,C.blue,n===300?'end':'start')}
   out+=Ci(x0+8,yb+48,5.5,C.blue,'#fff')+TF(x0+18,yb+52,'your averages',12,C.muted,'start');
   const done=B4_NS.filter(n=>s.res[n].length).length;
@@ -705,14 +705,14 @@ SCENE({id:'population-coding-debate',name:'What does motor cortex encode?',tag:'
   B4_POST.forEach((q,i)=>{const x=60+i*70;out+=hit(X,'post',i,`Forearm ${q[1]}`,R(x-30,300,60,26,i===s.post?C.amber:'#fff',i===s.post?C.amber:C.line,8)+TF(x,318,q[0]+'°',12,i===s.post?'#fff':C.ink))});
   out+=TF(130,346,'dark band: back of the hand',12,C.muted);
   // dial
-  const cx=400,cy=188,R0=82;out+=TBF(cx,70,'Preferred direction in space',12,C.ink)+Ci(cx,cy,R0,'#fbfcfd',C.grid);
+  const cx=378,cy=188,R0=82;out+=TBF(cx,70,'Preferred direction in space',12,C.ink)+Ci(cx,cy,R0,'#fbfcfd',C.grid);
   for(const d of [0,90,180,270])out+=TF(cx+(R0+15)*Math.cos(B4_rad(d)),cy-(R0+15)*Math.sin(B4_rad(d))+4,d+'°',12,C.muted);
   for(let i=0;i<3;i++)if(i!==s.post&&s.seen[s.cell+':'+i]){const a=B4_rad(pdOf(i)),len=R0*c.peak[i]/36;out+=L(cx,cy,cx+len*Math.cos(a),cy-len*Math.sin(a),'#e3b3a6',3,'stroke-dasharray="6 4"')}
   const a=B4_rad(pd),len=R0*c.peak[s.post]/36;out+=arrow(cx,cy,cx+len*Math.cos(a),cy-len*Math.sin(a),C.coral,4)+Ci(cx,cy,5,C.dark);
   out+=TF(cx,cy+R0+36,`best direction ${Math.round(pd)}° · peak ${c.peak[s.post]} spikes a second`,12,C.ink)+TF(cx,cy+R0+52,'dashed: the other postures you have tried',12,C.muted);
-  out+=R(500,96,86,150,'#fff',C.grid,10)+TBF(543,116,'Verdict',12,C.ink);
+  out+=R(484,96,102,150,'#fff',C.grid,10)+TBF(535,116,'Verdict',12,C.ink);
   const vd=c.kind==='muscle'?['turns with','the arm:','muscle-like']:c.kind==='space'?['fixed in','space:','extrinsic-like']:['fixed in space,','but its rate','depends on posture'];
-  out+=all?TF(543,142,vd[0],12,C.ink)+TF(543,158,vd[1],12,C.ink)+TBF(543,180,vd[2].length>14?vd[2].slice(0,vd[2].indexOf(' ',6)):vd[2],12,c.kind==='muscle'?C.purple:C.green)+(vd[2].length>14?TBF(543,196,vd[2].slice(vd[2].indexOf(' ',6)+1),12,C.green):''):TF(543,150,'see all three',12,C.muted)+TF(543,166,'postures first',12,C.muted);
+  out+=all?TF(535,142,vd[0],12,C.ink)+TF(535,158,vd[1],12,C.ink)+TBF(543,180,vd[2].length>14?vd[2].slice(0,vd[2].indexOf(' ',6)):vd[2],12,c.kind==='muscle'?C.purple:C.green)+(vd[2].length>14?TBF(543,196,vd[2].slice(vd[2].indexOf(' ',6)+1),12,C.green):''):TF(535,150,'see all three',12,C.muted)+TF(535,166,'postures first',12,C.muted);
   out+=TBF(543,232,'Both exist.',12,C.amber);
   return {svg:out,phase:all?(c.kind==='muscle'?`Turning the forearm 180° swung this cell’s preferred direction by ${shift}°, part of the way round, as the wrist muscles’ own preferred directions do. It behaves like a controller of muscles.`:c.kind==='space'?`This cell’s preferred direction barely moved (${shift}°) although the muscles needed for that movement changed completely. It behaves as if it coded the direction of movement in space.`:`The preferred direction stayed put (${shift}°), but the peak rate fell from ${c.peak[0]} to ${c.peak[2]} spikes a second. Space-like in direction, yet not blind to posture: cells like this do not fit either simple reading.`)+' Kakei and colleagues found such kinds mixed together in primary motor cortex, which is one reason the question of what it “encodes” has no agreed answer.':'The task: the monkey moves its wrist in eight directions with the forearm held palm down, thumb up or palm up. The direction in space is the same each time, but the muscles that produce it are not. Turn the forearm and watch the arrow.'};
  }});
