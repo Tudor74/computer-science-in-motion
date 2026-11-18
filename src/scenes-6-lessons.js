@@ -43,29 +43,52 @@ SOURCE('b6-considine',{title:'Considine, Sinha, Heiman and others (1996). Serum 
 SOURCE('b6-leibel',{title:'Leibel, Rosenbaum & Hirsch (1995). Changes in energy expenditure resulting from altered body weight. New England Journal of Medicine 332, 621–628.'});
 SOURCE('b6-speakman',{title:'Speakman, Levitsky, Allison and others (2011). Set points, settling points and some alternative models: theoretical options to understand how genes and environments combine to regulate body adiposity. Disease Models & Mechanisms 4, 733–745.'});
 
+SOURCE('b6-reddy',{title:'Reddy, Zehring, Wheeler, Pirrotta, Hadfield, Hall & Rosbash (1984). Molecular analysis of the period locus in Drosophila melanogaster and identification of a transcript involved in biological rhythms. Cell 38, 701–710.'});
+SOURCE('b6-bargiello',{title:'Bargiello, Jackson & Young (1984). Restoration of circadian behavioural rhythms by gene transfer in Drosophila. Nature 312, 752–754.'});
+SOURCE('b6-sehgal',{title:'Sehgal, Price, Man & Young (1994). Loss of circadian behavioral rhythms and per RNA oscillations in the Drosophila mutant timeless. Science 263, 1603–1606.'});
+SOURCE('b6-vitaterna',{title:'Vitaterna, King, Chang and others (1994). Mutagenesis and mapping of a mouse gene, Clock, essential for circadian behavior. Science 264, 719–725.'});
+SOURCE('b6-waterhouse',{title:'Waterhouse, Reilly, Atkinson & Edwards (2007). Jet lag: trends and coping strategies. Lancet 369, 1117–1129.'});
+SOURCE('b6-rosenberg',{title:'Rosenberg & Van Hout (2013). The American Academy of Sleep Medicine inter-scorer reliability program: sleep stage scoring. Journal of Clinical Sleep Medicine 9, 81–87.'});
+SOURCE('b6-ohayon',{title:'Ohayon, Carskadon, Guilleminault & Vitiello (2004). Meta-analysis of quantitative sleep parameters from childhood to old age in healthy individuals. Sleep 27, 1255–1273.'});
+SOURCE('b6-astonjones',{title:'Aston-Jones & Bloom (1981). Activity of norepinephrine-containing locus coeruleus neurons in behaving rats anticipates fluctuations in the sleep-waking cycle. Journal of Neuroscience 1, 876–886.'});
+SOURCE('b6-sherin',{title:'Sherin, Shiromani, McCarley & Saper (1996). Activation of ventrolateral preoptic neurons during sleep. Science 271, 216–219.'});
+SOURCE('b6-peyron',{title:'Peyron, Faraco, Rogers and others (2000). A mutation in a case of early onset narcolepsy and a generalized absence of hypocretin peptides in human narcoleptic brains. Nature Medicine 6, 991–997.'});
+SOURCE('b6-delgado',{title:'Delgado, Roberts & Miller (1954). Learning motivated by electrical stimulation of the brain. American Journal of Physiology 179, 587–593.'});
+SOURCE('b6-schultz93',{title:'Schultz, Apicella & Ljungberg (1993). Responses of monkey dopamine neurons to reward and conditioned stimuli during successive steps of learning a delayed response task. Journal of Neuroscience 13, 900–913.'});
+SOURCE('b6-steinberg',{title:'Steinberg, Keiflin, Boivin, Witten, Deisseroth & Janak (2013). A causal link between prediction errors, dopamine neurons and learning. Nature Neuroscience 16, 966–973.'});
+SOURCE('b6-pecina',{title:'Peciña, Cagniard, Berridge, Aldridge & Zhuang (2003). Hyperdopaminergic mutant mice have higher “wanting” but not “liking” for sweet rewards. Journal of Neuroscience 23, 9395–9402.'});
+SOURCE('b6-cannon1911',{title:'Cannon & de la Paz (1911). Emotional stimulation of adrenal secretion. American Journal of Physiology 28, 64–70.'});
+SOURCE('b6-harris',{title:'Harris (1948). Neural control of the pituitary gland. Physiological Reviews 28, 139–179.'});
+SOURCE('b6-dickerson',{title:'Dickerson & Kemeny (2004). Acute stressors and cortisol responses: a theoretical integration and synthesis of laboratory research. Psychological Bulletin 130, 355–391.'});
+SOURCE('b6-watanabe',{title:'Watanabe, Gould & McEwen (1992). Stress induces atrophy of apical dendrites of hippocampal CA3 pyramidal neurons. Brain Research 588, 341–345.'});
+SOURCE('b6-mcewen',{title:'McEwen (1999). Stress and hippocampal plasticity. Annual Review of Neuroscience 22, 105–122.'});
+SOURCE('b6-brobeck',{title:'Brobeck, Tepperman & Long (1943). Experimental hypothalamic hyperphagia in the albino rat. Yale Journal of Biology and Medicine 15, 831–853.'});
+SOURCE('b6-teitelbaum',{title:'Teitelbaum & Stellar (1954). Recovery from the failure to eat produced by hypothalamic lesions. Science 120, 894–895.'});
+SOURCE('b6-halaas',{title:'Halaas, Gajiwala, Maffei and others (1995). Weight-reducing effects of the plasma protein encoded by the obese gene. Science 269, 543–546.'});
+SOURCE('b6-montague',{title:'Montague, Farooqi, Whitehead and others (1997). Congenital leptin deficiency is associated with severe early-onset obesity in humans. Nature 387, 903–908.'});
 LESSON({id:'circadian-clock',name:'The circadian clock',short:'Body clock',stage:'state',year:'1971–2017',level:'Introduction',
  why:'A small nucleus keeps roughly 24-hour time using a loop of genes and proteins, and light resets it each day.',
- prior:[],references:['b6-konopka','b6-stephan','b6-moore','b6-ralph','b6-hardin','b6-nobel2017','b6-czeisler','b6-khalsa','b6-berson','b6-senses-eye'],
+ prior:[],references:['b6-konopka','b6-reddy','b6-bargiello','b6-stephan','b6-moore','b6-ralph','b6-hardin','b6-sehgal','b6-vitaterna','b6-nobel2017','b6-czeisler','b6-khalsa','b6-berson','b6-waterhouse','b6-senses-eye'],
  ids:['circadian-clock','circadian-clock-scn','circadian-clock-loop','circadian-clock-light']});
 LESSON({id:'sleep-stages',name:'Sleep stages',short:'Sleep stages',stage:'state',year:'1953–1982',level:'Core',
  why:'Sleep is not one state: the EEG shows a cycle of stages through the night, including the rapid-eye-movement sleep found in 1953.',
- prior:['brain-imaging','circadian-clock'],references:['b6-aserinsky','b6-dement','b6-rk','b6-borbely','b6-daan','b6-porkka'],
+ prior:['brain-imaging','circadian-clock'],references:['b6-aserinsky','b6-dement','b6-rk','b6-rosenberg','b6-ohayon','b6-borbely','b6-daan','b6-porkka'],
  ids:['sleep-stages','sleep-stages-score','sleep-stages-night','sleep-stages-pressure']});
-LESSON({id:'arousal-systems',name:'Arousal systems',short:'Arousal',stage:'state',year:'1949–2000',level:'Core',
+LESSON({id:'arousal-systems',name:'Arousal systems',short:'Arousal',stage:'state',year:'1935–2000',level:'Core',
  why:'Small groups of neurons in the brainstem and hypothalamus keep the cortex awake, and losing one of them causes narcolepsy.',
- prior:['neuromodulation','sleep-stages'],references:['b6-moruzzi','b6-lindsley','b6-saper','b6-delecea','b6-sakurai','b6-lin','b6-chemelli','b6-thannickal'],
+ prior:['neuromodulation','sleep-stages'],references:['b6-moruzzi','b6-lindsley','b6-astonjones','b6-sherin','b6-saper','b6-delecea','b6-sakurai','b6-lin','b6-chemelli','b6-thannickal','b6-peyron'],
  ids:['arousal-systems','arousal-systems-nuclei','arousal-systems-orexin']});
-LESSON({id:'reward-dopamine',name:'Reward and dopamine',short:'Reward',stage:'state',year:'1954–1997',level:'Core',
+LESSON({id:'reward-dopamine',name:'Reward and dopamine',short:'Reward',stage:'state',year:'1954–2003',level:'Core',
  why:'Dopamine neurons signal the difference between the reward expected and the reward received, a teaching signal and not simply pleasure.',
- prior:['neuromodulation','basal-ganglia'],references:['b6-olds','b6-schultz','b6-berridge89','b6-berridge98','b6-mind-error'],
+ prior:['neuromodulation','basal-ganglia'],references:['b6-olds','b6-delgado','b6-schultz93','b6-schultz','b6-steinberg','b6-berridge89','b6-pecina','b6-berridge98','b6-mind-error'],
  ids:['reward-dopamine','reward-dopamine-error','reward-dopamine-wanting']});
-LESSON({id:'stress-response',name:'The stress response',short:'Stress',stage:'state',year:'1936–today',level:'Core',
+LESSON({id:'stress-response',name:'The stress response',short:'Stress',stage:'state',year:'1911–2002',level:'Core',
  why:'The brain drives a hormone chain that readies the body for a challenge, useful for minutes and harmful when it stays switched on.',
- prior:[],references:['b6-cannon','b6-cannon1929','b6-selye','b6-mason','b6-vale','b6-sapolsky','b6-gilbertson'],
+ prior:[],references:['b6-cannon1911','b6-cannon','b6-cannon1929','b6-selye','b6-mason','b6-harris','b6-vale','b6-dickerson','b6-sapolsky','b6-watanabe','b6-mcewen','b6-gilbertson'],
  ids:['stress-response','stress-response-selye','stress-response-axis','stress-response-chronic']});
 LESSON({id:'hunger-homeostasis',name:'Hunger and homeostasis',short:'Hunger',stage:'state',year:'1940–1994',level:'Core',
  why:'The hypothalamus reads hormones such as leptin to balance eating against the body’s stores, which makes appetite physiology and not just willpower.',
- prior:['stress-response'],references:['b6-hetherington','b6-anand','b6-coleman','b6-zhang','b6-considine','b6-leibel','b6-speakman'],
+ prior:['stress-response'],references:['b6-hetherington','b6-brobeck','b6-anand','b6-teitelbaum','b6-coleman','b6-zhang','b6-halaas','b6-considine','b6-montague','b6-leibel','b6-speakman'],
  ids:['hunger-homeostasis','hunger-homeostasis-parabiosis','hunger-homeostasis-leptin','hunger-homeostasis-setpoint']});
 
 THREAD({id:'b6-hypothalamus',name:'The hypothalamus at work',ids:['circadian-clock-scn','arousal-systems-orexin','stress-response-axis','hunger-homeostasis','hunger-homeostasis-leptin']});

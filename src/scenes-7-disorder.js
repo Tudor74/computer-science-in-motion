@@ -9,7 +9,6 @@
 /* ---- shared helpers ---- */
 const B7_r1=v=>Math.round(v*10)/10;
 const B7_r2=v=>Math.round(v*100)/100;
-const B7_pc=v=>Math.round(v*100)+'%';
 const B7_poly=(pts,col,w=2.2,extra='')=>pts.length?P('M'+pts.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L'),col,w,'none',extra):'';
 const B7_note=(s,y=368)=>TF(300,y,s,13,C.muted);
 const B7_mix=n=>{let x=(n+0x9e3779b9)>>>0;x=Math.imul(x^(x>>>16),0x85ebca6b)>>>0;x=Math.imul(x^(x>>>13),0xc2b2ae35)>>>0;return ((x^(x>>>16))>>>0)||1};
@@ -33,8 +32,6 @@ function B7_tile(x,y,w,label,value,col=C.blue){return R(x,y,w,46,'#fff',C.grid,8
 function B7_wrap(x,y,s,n,size=13,fill=C.ink,anchor='start',lh=17){const lines=[];let cur='';for(const w of String(s).split(' ')){if(cur&&(cur+' '+w).length>n){lines.push(cur);cur=w}else cur=cur?cur+' '+w:w}if(cur)lines.push(cur);return lines.map((l,i)=>TF(x,y+i*lh,l,size,fill,anchor)).join('')}
 // A coloured strip with one centred line, for safety messages.
 const B7_banner=(s,y,col=C.coral,fill=C.coralp)=>R(20,y,560,26,fill,'none',8)+TBF(300,y+18,s,13,col);
-// A segmented control drawn inside the picture: options [[value,label]], one chosen; presses call act.
-function B7_tabs(X,x,y,w,opts,cur,act,col=C.blue){const bw=w/opts.length;return opts.map(([v,l],i)=>{const on=String(v)===String(cur);return hit(X,act,v,l,R(x+i*bw+2,y,bw-4,28,on?col:'#fff',on?col:C.line,8)+TBF(x+i*bw+bw/2,y+19,l,13,on?'#fff':C.ink))}).join('')}
 // An inhibitory connection: a line ending in a bar.
 function B7_inh(x1,y1,x2,y2,col=C.coral,w=2.4){const dx=x2-x1,dy=y2-y1,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;return L(x1,y1,x2,y2,col,w)+L(x2-uy*7,y2+ux*7,x2+uy*7,y2-ux*7,col,w+1.5)}
 // A grid of 100 people (10 × 10 dots); colours from fn(i).
@@ -172,7 +169,7 @@ SCENE({id:'stroke-time',name:'Time is brain',tag:'The penumbra · Saver, 2006',
   out+=L(pl.X(0),pl.Y(0),pl.X(600),pl.Y(54),C.coral,2.4)+L(pl.X(s.t),58,pl.X(s.t),208,C.ink,1.4,'stroke-dasharray="3 3"')+Ci(pl.X(s.t),pl.Y(core),6,C.coral,'#fff');
   out+=R(320,258,12,12,C.greenp,C.green,2)+TF(338,269,'drug, to 4.5 h',13,C.green,'start')+R(452,258,12,12,C.pale,C.blue,2)+TF(470,269,'clot removal, 6 h',13,C.blue,'start');
   out+=B7_tile(20,290,180,'Neurons lost (average)',s.t?B7_neurons(lost):'none yet',C.coral)+B7_tile(210,290,180,'Still saveable',fmt(B7_r1(pen))+' mL',C.amber)+B7_tile(400,290,180,'Like normal ageing of',fmt(B7_r1(B7_SAVER.agePerHour*s.t/60))+' years',C.ink);
-  out+=B7_note(`1.9 million a minute × ${s.t} min. Saver’s averages; schematic slice. Not a guide to any one person.`,360);
+  out+=B7_note(`1.9 million a minute × ${s.t} min (Saver’s averages). Not a guide to any one person.`,360);
   return {svg:out,phase:!s.t?'The blocked artery has left a region at risk. Its centre is already failing; the rim, the penumbra, is silent but alive, kept going by blood from neighbouring vessels.':
    u<1?`After ${B7_hm(s.t)} the core has, on Saver’s average, taken ${fmt(B7_r1(core))} mL and about ${B7_neurons(lost)} neurons. ${fmt(B7_r1(pen))} mL of penumbra could still recover if blood flow returned now. Every 15 minutes sooner saves, on average, about ${Math.round(S.perMin*15/1e6)} million neurons.`:
    `By about 10 hours the whole region at risk has, on average, become core: about ${B7_neurons(lost)} neurons, as many as about ${fmt(B7_r1(B7_SAVER.agePerHour*10))} years of normal ageing. Real strokes vary: in some people the penumbra survives much longer, which is why scans are used to select people for later treatment.`};
@@ -195,9 +192,9 @@ SCENE({id:'stroke-treatment',name:'Clearing the blockage',tag:'The NINDS trial, 
   let out=heading(tpa?`Drug given at ${fmt(s.h)} h: odds of a good outcome × ${B.or}`:'Clot removal: independent at three months');
   if(tpa){
    const pl=B7_plot(150,56,400,160,[.8,2.4],[0,3],{xt:[[.8,'0.8'],[1,'1'],[1.5,'1.5'],[2,'2'],[2.4,'2.4']],xl:'odds ratio for a good outcome (1 = no difference)'});out+=pl.svg;
-   out+=L(pl.X(1),56,pl.X(1),216,C.ink,1.6,'stroke-dasharray="4 4"')+TF(pl.X(1)-6,72,'no benefit',13,C.muted,'end');
+   out+=L(pl.X(1),56,pl.X(1),216,C.ink,1.6,'stroke-dasharray="4 4"')+TF(pl.X(1)+6,210,'1 = no benefit',13,C.muted,'start');
    B7_EMB.forEach((b,i)=>{const y=pl.Y(2.5-i),on=i===band,col=on?(b.lo>1?C.green:C.amber):C.line;
-    out+=TF(140,y+5,b.lab,13,on?C.ink:C.muted,'end')+L(pl.X(b.lo),y,pl.X(b.hi),y,col,on?3.4:2.4)+Ci(pl.X(b.or),y,on?8:6,col,'#fff')+TF(pl.X(b.or),y-12,`${b.or.toFixed(2)} (range ${b.lo.toFixed(2)}–${b.hi.toFixed(2)})`,13,on?C.ink:C.muted)});
+    out+=TF(140,y+5,b.lab,13,on?C.ink:C.muted,'end')+L(pl.X(b.lo),y,pl.X(b.hi),y,col,on?3.4:2.4)+Ci(pl.X(b.or),y,on?8:6,col,'#fff')+TF(pl.X(Math.max(b.or,1.32)),y-12,`${b.or.toFixed(2)} (range ${b.lo.toFixed(2)}–${b.hi.toFixed(2)})`,13,on?C.ink:C.muted)});
    out+=B7_tile(24,262,270,'Bleeding into the brain (NINDS)','6.4% drug · 0.6% placebo',C.coral)+B7_tile(306,262,270,'Pooled trials (Emberson 2014)','9 trials · 6,756 people',C.ink);
   }else{
    const pl=B7_plot(150,56,400,160,[0,60],[0,2],{xt:[[0,'0'],[20,'20%'],[40,'40%'],[60,'60%']],xl:'people independent at three months'});out+=pl.svg;
@@ -207,7 +204,7 @@ SCENE({id:'stroke-treatment',name:'Clearing the blockage',tag:'The NINDS trial, 
   out+=TF(300,328,'Who is treated, and how, is decided by the stroke team after a brain scan.',13,C.ink);
   out+=B7_banner(B7_EMERG,340);
   return {svg:out,phase:tpa?(band<2?`At ${fmt(s.h)} hours the pooled trials put the odds of recovering with little or no disability at about ${B.or} times those without the drug (range ${B.lo.toFixed(2)}–${B.hi.toFixed(2)}). The earlier the drug is given, the larger the benefit, which is why stroke services work to shorten every step.`:`Beyond 4.5 hours the pooled estimate, ${B.or.toFixed(2)} (range ${B.lo.toFixed(2)}–${B.hi.toFixed(2)}), has a range that crosses 1: no clear benefit, while the bleeding risk remains. This is why alteplase is given within a time window, unless scans show tissue still worth saving.`):
-   'For a blockage in a large artery, removing the clot through a catheter roughly doubled the share of people who were independent three months later. In 2018 two trials (DAWN and DEFUSE 3) found benefit up to 16–24 hours in people whose scans still showed a large saveable penumbra.'};
+   'For a blockage in a large artery, removing the clot through a catheter roughly doubled the share of people who were independent three months later. In 2018 two trials (DAWN and DEFUSE 3) found benefit up to 16–24 hours after onset in people selected by brain scans showing tissue still worth saving.'};
  }});
 
 /* ===================== Lesson: epilepsy ===================== */
@@ -244,7 +241,7 @@ SCENE({id:'epilepsy',name:'A march along the cortex',tag:'Hughlings Jackson, fro
   out+=TF(168,316,`${f.hi-f.lo+1} of ${n} areas involved`,13,C.coral);
   // the unrolled strip
   B7_STRIP.forEach((l,i)=>{const y=58+i*17.5,on=i>=f.lo&&i<=f.hi;out+=R(334,y,150,16,i===i0?C.coral:on?C.coralp:'#f4f7f9','none',4)+TF(342,y+12.5,l,13,i===i0?'#fff':on?C.coral:C.muted,'start')});
-  out+=TF(494,72,'top of the',13,C.muted,'start')+TF(494,88,'strip',13,C.muted,'start')+TF(494,310,'bottom',13,C.muted,'start')+TF(494,326,'(near the ear)',13,C.muted,'start');
+  out+=(i0>1?TF(494,72,'top of the',13,C.muted,'start')+TF(494,88,'strip',13,C.muted,'start'):'')+TF(494,310,'bottom',13,C.muted,'start')+TF(494,326,'(near the ear)',13,C.muted,'start');
   if(!f.end)out+=TBF(494,58+i0*17.5+12.5,'← start',13,C.coral,'start');
   out+=B7_note(B7_EPI_NOTE,356);
   return {svg:out,phase:f.say};
@@ -338,7 +335,7 @@ SCENE({id:'epilepsy-photosensitive',name:'Light-sensitive seizures, without ligh
   out+=R(pl.X(15),62,pl.X(25)-pl.X(15),170,C.coralp,'none',0,'fill-opacity=".6"')+TF(pl.X(20),196,'most provoking',13,C.coral)+TF(pl.X(20),212,'about 15–25',13,C.coral);
   const pts=[];for(let i=0;i<=300;i++){const f=i/5;pts.push([pl.X(f),pl.Y(B7_sens(f))])}out+=B7_poly(pts,C.coral,2.4);
   out+=L(pl.X(s.r),62,pl.X(s.r),232,C.ink,1.4,'stroke-dasharray="3 3"')+Ci(pl.X(s.r),pl.Y(v),6,ok?C.green:C.coral,'#fff');
-  out+=TF(pl.X(3)+6,130,'guideline: up to 3',13,C.green,'start');
+  out+=R(70,257,12,12,C.greenp,C.green,2)+TF(88,268,'guideline: up to 3',13,C.green,'start');
   // one second of flashes as still ticks
   const x0=70,w=500;out+=TF(x0,290,'one second of this stimulus, drawn as still marks:',13,C.muted,'start')+L(x0,314,x0+w,314,C.line,1.4);
   for(let i=0;i<s.r;i++){const x=x0+(i+.5)/s.r*w;out+=L(x,302,x,326,ok?C.green:C.ink,1.6)}
@@ -376,7 +373,7 @@ SCENE({id:'parkinsons',name:'An essay on the shaking palsy',tag:'James Parkinson
   out+=TF(138,246,'substantia nigra: dark cells',13,C.ink)+TF(138,262,'pale dots: cells lost',13,C.muted);
   // dopamine curve
   const pl=B7_plot(300,64,276,150,[0,100],[0,100],{yt:[[0,'0'],[20,'20'],[50,'50'],[100,'100%']],xl:'time (schematic, no years)',yl:'dopamine left in the striatum'});out+=pl.svg;
-  out+=R(pl.X(0),pl.Y(20),276,pl.Y(0)-pl.Y(20),C.coralp,'none',0,'fill-opacity=".7"')+TF(pl.X(100)-6,pl.Y(6),'movement symptoms',13,C.coral,'end');
+  out+=R(pl.X(0),pl.Y(20),276,pl.Y(0)-pl.Y(20),C.coralp,'none',0,'fill-opacity=".7"')+TF(pl.X(2),pl.Y(6),'movement symptoms below 20%',13,C.coral,'start');
   const pts=[];for(let i=0;i<=100;i++)pts.push([pl.X(i),pl.Y(B7_pdDa(i))]);out+=B7_poly(pts,C.blue,2.4);
   B7_PD_EARLY.forEach(([t,l],i)=>{const on=s.t>=t;out+=Ci(pl.X(t),pl.Y(B7_pdDa(t)),4,on?C.purple:'#fff',C.purple)});
   out+=L(pl.X(s.t),64,pl.X(s.t),214,C.ink,1.3,'stroke-dasharray="3 3"')+Ci(pl.X(s.t),pl.Y(da),6,motor?C.coral:C.blue,'#fff');
@@ -462,7 +459,7 @@ SCENE({id:'parkinsons-loop',name:'The loop with and without dopamine',tag:'Medic
    const lo=s.later?.4:.3,hi=s.later?.75:.95;out+=R(392,pl.Y(hi),184,pl.Y(lo)-pl.Y(hi),C.greenp,'none',0,'fill-opacity=".8"');
    const pts=[];for(let i=0;i<=160;i++){const t=i/10;pts.push([pl.X(t),pl.Y(Math.min(1.38,B7_ldopa(t,s.later)))])}out+=B7_poly(pts,C.amber,2.2);
    for(const d of [0,4,8,12])out+=L(pl.X(d),286,pl.X(d),280,C.ink,2);
-   out+=TF(392,176,s.later?'later: swings out of the band':'early: steady, inside the band',13,s.later?C.coral:C.green,'start')+TF(484,320,'green: good movement; above: dyskinesia',13,C.muted)+TF(484,336,'below: “off”. Schematic, not doses.',13,C.muted)}
+   out+=TF(392,176,s.later?'later: swings out of the band':'early: steady, inside the band',13,s.later?C.coral:C.green,'start')+TF(382,318,'green band: good movement',13,C.muted,'start')+TF(382,334,'above: dyskinesia · below: “off”',13,C.muted,'start')}
   else out+=TF(392,190,s.c==='dbs'?'The electrode sits in the':'Choose “With L-DOPA” to',13,C.muted,'start')+TF(392,208,s.c==='dbs'?'subthalamic nucleus.':'see a schematic day.',13,C.muted,'start');
   out+=B7_note('A model and a simplification. Eases symptoms; does not stop the disease. Not medical advice.',360);
   const ph={healthy:`With normal dopamine the direct pathway (D1, ${Math.round(m.D1*100)}) and the indirect pathway (D2, ${Math.round(m.D2*100)}) balance, the output nuclei sit at ${Math.round(m.GPi*100)} and the thalamus passes ${mv}.`,
@@ -488,7 +485,7 @@ SCENE({id:'parkinsons-dbs',name:'Deep brain stimulation',tag:'Benabid and collea
   const e=B7_dbsEff(s.f),amp=1-e;
   let out=heading(!s.f?'Stimulator off: tremor at rest':e>.9?`${s.f} a second: the tremor stops`:e<.2?`${s.f} a second: too slow to help`:`${s.f} a second: partly suppressed`);
   // coronal sketch
-  out+=R(20,46,230,226,'#fff',C.grid,10)+TF(135,66,'slice from front to back',13,C.muted);
+  out+=R(20,46,230,226,'#fff',C.grid,10)+TF(135,66,'slice seen from the front',13,C.muted);
   out+=P('M40 190 C30 120 70 76 135 74 C200 76 240 120 230 190 C220 236 180 256 135 256 C90 256 50 236 40 190 Z','#a99a8c',2.2,'#f3eee9');
   out+=`<ellipse cx="112" cy="172" rx="22" ry="16" fill="#e4dcd2"/><ellipse cx="158" cy="172" rx="22" ry="16" fill="#e4dcd2"/>`+TF(135,152,'thalamus',13,C.muted);
   out+=`<ellipse cx="168" cy="204" rx="11" ry="6" fill="${C.purplep}" stroke="${C.purple}" stroke-width="1.6"/>`+TF(150,226,'subthalamic',13,C.purple,'end')+TF(150,242,'nucleus',13,C.purple,'end');
@@ -513,9 +510,9 @@ SCENE({id:'parkinsons-dbs',name:'Deep brain stimulation',tag:'Benabid and collea
 
 /* ===================== Lesson: alzheimers ===================== */
 // A schematic microscope field: neurons (some holding a tangle) and plaques between them.
-const B7_FIELD={c:[150,196],r:118,
- plaques:[[104,140],[206,232],[138,262],[214,128]],
- neurons:[[76,206,1],[128,186,0],[176,170,1],[186,276,0],[232,186,1],[94,258,1],[156,112,0]]};
+const B7_FIELD={c:[150,172],r:102,
+ plaques:[[111,123],[199,203],[144,228],[206,115]],
+ neurons:[[89,181,1],[133,165,0],[174,151,1],[182,244,0],[221,165,1],[103,225,1],[160,101,0]]};
 const B7_STAINS={silver:'Silver stain (Alzheimer’s method)',abeta:'Label for amyloid-β',tau:'Label for tau'};
 const B7_AD_HIST=[['1901','admitted, aged 51'],['1906','she dies; lecture'],['1907','paper published'],['1910','Kraepelin names it'],['1995','records found']];
 function B7_adPick(s,i){s.sel=i;s.found[i]=1}
@@ -589,7 +586,7 @@ SCENE({id:'alzheimers-amyloid',name:'The amyloid hypothesis',tag:'Hardy & Higgin
  }});
 
 // Bateman et al. (2012), DIAN: years before expected onset at which each change was first detected.
-const B7_DIAN=[['CSF amyloid-β falls',-25,'#b8562e'],['Amyloid on PET',-15,'#d0763f'],['CSF tau rises',-15,C.purple],['Brain shrinkage',-15,C.blue],['Glucose use falls',-10,'#4f9e8e'],['Memory for events',-10,C.green],['Overall cognition',-5,C.ink]];
+const B7_DIAN=[['CSF amyloid-β falls',-25,'#b8562e','amyloid-β in the spinal fluid falls'],['Amyloid on PET',-15,'#d0763f','amyloid shows on PET scans'],['CSF tau rises',-15,C.purple,'tau in the spinal fluid rises'],['Brain shrinkage',-15,C.blue,'the brain begins to shrink'],['Glucose use falls',-10,'#4f9e8e','the brain uses less glucose'],['Memory for events',-10,C.green,'memory for events weakens'],['Overall cognition',-5,C.ink,'overall thinking declines']];
 const B7_sig=(y,d)=>1/(1+Math.exp(-(y-d-6.6)/3));
 SCENE({id:'alzheimers-decades',name:'Changes decades before symptoms',tag:'Bateman et al., 2012 (DIAN)',
  definition:'People in families with an inherited APP or presenilin mutation tend to develop symptoms at about the age their affected parent did, which lets researchers line up measurements against the expected age of onset. The Dominantly Inherited Alzheimer Network (Bateman and colleagues, 2012) found amyloid-β in the spinal fluid falling about 25 years before expected onset; amyloid on PET scans, rising tau and brain shrinkage about 15 years before; reduced glucose use and poorer memory for events about 10 years before; and impairment of overall thinking about 5 years before.',
@@ -605,13 +602,13 @@ SCENE({id:'alzheimers-decades',name:'Changes decades before symptoms',tag:'Batem
   const n=B7_DIAN.filter(d=>s.y>=d[1]).length;
   let out=heading(n?`${s.y} years: ${n} of 7 changes under way`:`${s.y} years: no change detected yet`);
   const pl=B7_plot(40,64,296,220,[-30,5],[0,1.05],{xt:[[-30,'−30'],[-25,'−25'],[-20,'−20'],[-15,'−15'],[-10,'−10'],[-5,'−5'],[0,'0'],[5,'+5']],xl:'years from expected onset of symptoms',yl:'how abnormal (schematic)'});out+=pl.svg;
-  out+=L(pl.X(0),64,pl.X(0),284,C.coral,1.4,'stroke-dasharray="4 4"')+TF(pl.X(0)-4,80,'onset',13,C.coral,'end');
+  out+=L(pl.X(0),64,pl.X(0),284,C.coral,1.4,'stroke-dasharray="4 4"')+TF(pl.X(0),58,'onset',13,C.coral);
   B7_DIAN.forEach(([l,d,c])=>{const pts=[];for(let i=0;i<=140;i++){const y=-30+i/4;pts.push([pl.X(y),pl.Y(B7_sig(y,d))])}out+=B7_poly(pts,c,s.y>=d?2.4:1.4,s.y>=d?'':'stroke-opacity=".35"')});
-  out+=L(pl.X(s.y),64,pl.X(s.y),284,C.ink,1.4)+TF(pl.X(s.y),58,`${s.y>0?'+':''}${s.y}`,13,C.ink);
+  out+=L(pl.X(s.y),64,pl.X(s.y),284,C.ink,1.4);
   B7_DIAN.forEach(([l,d,c],i)=>{const y=58+i*38,on=s.y>=d;out+=R(352,y,228,32,on?'#fff':'#f7f9fa',on?c:C.line,8)+L(362,y+16,384,y+16,c,on?3:1.5)+TF(392,y+21,l,13,on?C.ink:C.muted,'start')+TBF(572,y+21,`${d}`,13,on?c:C.muted,'end')});
   out+=TF(466,338,'years first detected (Bateman 2012)',13,C.muted);
   out+=B7_note('128 people in rare inherited families. Curves schematic. Not a prediction for anyone.',360);
-  const just=B7_DIAN.filter(d=>d[1]<=s.y).map(d=>d[0].toLowerCase());
+  const just=B7_DIAN.filter(d=>d[1]<=s.y).map(d=>d[3]);
   return {svg:out,phase:!n?'Nothing measurable has changed yet in these averages.':s.y<0?`${-s.y} years before expected onset, on average: ${just.join('; ')}. The person feels and functions as before; only measurements show the change.`:`At and after expected onset, symptoms appear. On average every measure had begun to change years before, amyloid first, which fits the amyloid hypothesis’s order without proving that amyloid causes the rest.`};
  }});
 
@@ -627,27 +624,286 @@ SCENE({id:'alzheimers-antibodies',name:'Clearing plaques: how much does it help?
  init:()=>({b:B7_CDR0.slice()}),
  watch(p){const b=B7_CDR0.slice();if(p>.3)b[0]=2;if(p>.6)b[3]=1;return {b}},
  ui:[{b:'Raise memory one step',act:'raise',arg:0},{b:'Raise home and hobbies one step',act:'raise',arg:4},{b:'Back to the start',act:'reset0'}],
- on:{raise(s,v){const i=clamp(Math.round(+v),0,5),st=B7_CDR[i][1],k=st.indexOf(s.b[i]);if(k<st.length-1)s.b[i]=st[k+1];return 'keep'},set(s,v){const [i,val]=String(v).split(':').map(Number);if(B7_CDR[i]&&B7_CDR[i][1].includes(val))s.b[i]=val;return 'keep'},reset0(s){s.b=B7_CDR0.slice()}},
+ on:{raise(s,v){const i=clamp(Math.round(+v),0,5),st=B7_CDR[i][1],k=st.indexOf(s.b[i]);if(k<st.length-1)s.b[i]=st[k+1];return 'keep'},set(s,v){const [i,val]=String(v).split(':').map(Number);if(B7_CDR[i]&&B7_CDR[i][1].includes(val)&&val>=B7_CDR0[i])s.b[i]=val;return 'keep'},reset0(s){s.b=B7_CDR0.slice()}},
  draw(s,f,X){
   const tot=sum(s.b),t0=sum(B7_CDR0),d=tot-t0;
-  let out=heading(d?`Your example: up ${fmt(d)} point${d===1?'':'s'}; the trial gap was 0.45`:'How big is the trial’s 0.45-point difference?');
+  let out=heading(d?`Your example rose ${fmt(d)} point${d===1?'':'s'}; the trial gap was 0.45`:'How big is the trial’s 0.45-point difference?');
   // trial
   const pl=B7_plot(56,64,200,150,[0,18],[0,2],{xt:[[0,'0'],[6,'6'],[12,'12'],[18,'18 mo']],yt:[[0,'0'],[1,'1'],[2,'2']],yl:'rise in CDR-SB (worse)'});out+=pl.svg;
   out+=L(pl.X(0),pl.Y(0),pl.X(18),pl.Y(1.66),C.muted,2.4)+L(pl.X(0),pl.Y(0),pl.X(18),pl.Y(1.21),C.blue,2.4);
-  out+=TBF(pl.X(18)-4,pl.Y(1.66)-8,'placebo 1.66',13,C.muted,'end')+TBF(pl.X(18)-4,pl.Y(1.21)+18,'lecanemab 1.21',13,C.blue,'end');
-  out+=TF(156,240,'drawn straight from 0 to month 18',13,C.muted)+B7_tile(30,252,232,'Swelling on MRI (ARIA-E)','12.6% drug · 1.7% placebo',C.coral);
+  out+=TBF(pl.X(8),pl.Y(.74)-10,'placebo: 1.66',13,C.muted,'end')+TBF(pl.X(10),pl.Y(.67)+20,'lecanemab: 1.21',13,C.blue,'start');
+  out+=TF(156,250,'drawn straight from 0 to month 18',13,C.muted)+B7_tile(30,262,232,'Swelling on MRI (ARIA-E)','12.6% drug · 1.7% placebo',C.coral);
   // boxes
   out+=TF(300,62,'An invented example person (start: '+fmt(t0)+' points)',13,C.muted,'start');
   B7_CDR.forEach(([l,st],i)=>{const y=72+i*36;out+=TF(300,y+19,l,13,C.ink,'start');
-   st.forEach((v,j)=>{const x=430+j*30,on=s.b[i]===v,was=B7_CDR0[i]===v;out+=hit(X,'set',i+':'+v,`${l}: ${v}`,R(x,y+2,26,24,on?C.blue:'#fff',on?C.blue:was?C.amber:C.line,6)+TF(x+13,y+19,v===.5?'½':String(v),13,on?'#fff':C.ink))})});
-  out+=TF(300,296,'0 none · ½ questionable · 1 mild · 2 moderate · 3 severe',13,C.muted,'start');
-  const W=258,x0=300,TX=v=>x0+v/4*W;out+=L(x0,322,x0+W,322,C.line,2)+R(TX(t0),314,Math.max(0,TX(Math.min(4,tot))-TX(t0)),16,C.pale,'none',3);
-  out+=L(TX(t0),310,TX(t0),334,C.amber,2)+L(TX(t0+.45),310,TX(t0+.45),334,C.coral,2.4)+Ci(TX(Math.min(4,tot)),322,6,C.blue,'#fff');
-  out+=TF(TX(t0),348,fmt(t0),13,C.amber)+TF(TX(t0+.45)+4,306,'+0.45',13,C.coral,'start')+TF(x0+W,348,'4 of 18',13,C.muted,'end');
-  out+=B7_note('Trial averages; the example person is invented. Not medical advice.',370);
+   st.forEach((v,j)=>{const x=430+j*30,on=s.b[i]===v,was=B7_CDR0[i]===v,below=v<B7_CDR0[i],cell=R(x,y+2,26,24,on?C.blue:below?'#f1f4f6':'#fff',on?C.blue:was?C.amber:C.line,6)+TF(x+13,y+19,v===.5?'½':String(v),13,on?'#fff':below?C.muted:C.ink);out+=below?cell:hit(X,'set',i+':'+v,`${l}: ${v}`,cell)})});
+  out+=TF(300,292,'0 none · ½ questionable · 1 mild',13,C.muted,'start')+TF(300,306,'2 moderate · 3 severe · amber: start',13,C.muted,'start');
+  out+=B7_tile(300,314,88,'Total',fmt(tot)+' / 18',C.blue)+B7_tile(396,314,88,'Change',(d>0?'+':'')+fmt(d),d?C.blue:C.muted)+B7_tile(492,314,88,'Trial gap','0.45',C.coral);
+  out+=B7_note('Trial averages; the example person is invented. Not medical advice.',375);
   return {svg:out,phase:!d?'The example person starts at '+fmt(t0)+' points, about where people entered the trial. The scale adds six boxes. Half a point is a single box moving one step, from none to questionable or from questionable to mild.':
    `Your changes add ${fmt(d)} point${d===1?'':'s'}. The trial’s average difference, 0.45, is less than one box moving one half-step. Averaged over 18 months it reflects slower decline for many people, but whether it is noticeable in daily life is debated, and the gap may or may not widen with longer treatment.`};
  }});
 
-/* TEMP-PLACEHOLDERS (removed when the lessons are written) */
-for(const id of ['epilepsy','parkinsons','alzheimers','depression-treatments','addiction'])if(!SCENES[id])SCENE({id,name:id,definition:'To be written.',example:'',desc:'',init:()=>({}),draw:()=>({svg:T(300,190,id,20),phase:'To be written.'})});
+/* ===================== Lesson: depression-treatments ===================== */
+// No mood test, no self-assessment and nothing that could be read as advice to start, stop or change a treatment.
+const B7_DEP_CRISIS='In crisis? Call your local emergency number or a crisis line now.';
+const B7_DEP_NOTE='Not medical advice. Never start, stop or change a treatment because of this page.';
+const B7_depFoot=()=>B7_banner(B7_DEP_CRISIS,330)+B7_note(B7_DEP_NOTE,372);
+const B7_CHAIN=[
+ ['Drugs raise monoamines','Observed. Iproniazid blocks the enzyme that breaks down noradrenaline and serotonin; imipramine blocks their reuptake into nerve endings. Either way, more transmitter stays at the synapse, within hours.','obs'],
+ ['The drugs help many people','Observed in trials: on average they beat placebo, by a modest margin (next scene).','obs'],
+ ['So depression is a shortage','An inference, and the weak link. A treatment can work without reversing the cause: a painkiller eases a headache that was never caused by a lack of painkiller.','inf'],
+ ['Direct tests of low serotonin','Inconsistent. Moncrieff and colleagues (2022) reviewed measurements of serotonin and its receptors, depletion experiments and genetic studies, and found no consistent evidence that depression is caused by low serotonin.','dis']];
+SCENE({id:'depression-treatments',name:'A theory from chance discoveries',tag:'The monoamine account, 1950s–1965, and why it is disputed',
+ definition:'In the 1950s two drugs developed for other purposes seemed to lift depression: iproniazid, a tuberculosis drug, and imipramine, tested by Roland Kuhn in Switzerland. Both turned out to raise the levels of monoamine transmitters, chiefly noradrenaline and serotonin, at synapses. In 1965 Joseph Schildkraut proposed that depression is linked to too little noradrenaline; others proposed serotonin. This grew into the popular story that depression is a “chemical imbalance”.',
+ example:'The story is disputed. An umbrella review by Joanna Moncrieff and colleagues (2022) found no consistent evidence that depression is caused by low serotonin. That does not show the medicines do not work: a treatment can help without correcting a cause. There is also a timing puzzle: the drugs change transmitter levels within hours, but their full effect usually builds over weeks. If you are struggling, talk to a doctor.',
+ desc:'A chain of four steps from “drugs raise monoamines” to “depression is a shortage”, each marked as observed, inferred or inconsistent, and a schematic timeline comparing how fast transmitter levels change with how slowly symptoms usually improve.',
+ research:['Kuhn (1958). The treatment of depressive states with G 22355 (imipramine hydrochloride). American Journal of Psychiatry 115, 459–464.','Schildkraut (1965). The catecholamine hypothesis of affective disorders: a review of supporting evidence. American Journal of Psychiatry 122, 509–522.','Moncrieff et al. (2022). The serotonin theory of depression: a systematic umbrella review of the evidence. Molecular Psychiatry 28, 3243–3256 (disputed account; the review itself has been debated).'],
+ dur:16,hint:'Press each step of the argument to see how strong it is, then switch to the timing view. This explains a scientific argument; it is not medical advice. If you are struggling, talk to a doctor.',
+ init:()=>({view:'chain',i:0}),
+ watch(p){return p<.8?{view:'chain',i:Math.min(3,Math.floor(p/.2))}:{view:'time',i:3}},
+ ui:[{choose:[['chain','The argument'],['time','The timing puzzle']],label:'View',get:s=>s.view,act:'view'},{b:'Next step',act:'next'}],
+ on:{view(s,v){s.view=v==='time'?'time':'chain'},pick(s,v){s.view='chain';s.i=clamp(Math.round(+v),0,3)},next(s){s.view='chain';s.i=(s.i+1)%4}},
+ draw(s,f,X){
+  let out='';
+  if(s.view==='chain'){const C0=B7_CHAIN[s.i],col={obs:C.green,inf:C.amber,dis:C.coral},lab={obs:'observed',inf:'inference',dis:'inconsistent'};
+   out+=heading(`Step ${s.i+1}: ${lab[C0[2]]}`);
+   B7_CHAIN.forEach((c,i)=>{const x=20+i*144,on=i===s.i,k=c[2];out+=hit(X,'pick',i,c[0],R(x,50,132,78,on?(k==='obs'?C.greenp:k==='inf'?C.amberp:C.coralp):'#fff',col[k],10,k==='obs'?'':'stroke-dasharray="6 4"')+B7_wrap(x+66,74,c[0],16,13,C.ink,'middle',17)+TBF(x+66,120,lab[k],13,col[k]));
+    if(i<3)out+=arrow(x+132,89,x+144,89,i===1?C.amber:C.line,2,6)});
+   out+=R(20,146,560,108,'#fff',col[C0[2]],10)+TBF(36,170,C0[0],14,col[C0[2]],'start')+B7_wrap(36,192,C0[1],80,13,C.ink);
+   out+=TF(300,282,'Schildkraut 1965 → “chemical imbalance” → disputed (Moncrieff 2022)',13,C.muted)+TF(300,302,'Whether the medicines help is a separate question, asked by trials.',13,C.ink);
+  }else{
+   out+=heading('Hours for the chemistry, weeks for the mood');
+   const pl=B7_plot(80,62,480,190,[0,42],[0,1.1],{xt:[[0,'0'],[7,'1 wk'],[14,'2'],[21,'3'],[28,'4'],[35,'5'],[42,'6 wk']],xl:'time after starting a typical antidepressant (schematic)'});out+=pl.svg;
+   const a=[],b=[];for(let i=0;i<=210;i++){const t=i/5;a.push([pl.X(t),pl.Y(t<.2?t/.2:1)]);b.push([pl.X(t),pl.Y(1-Math.exp(-t/12))])}
+   out+=B7_poly(a,C.purple,2.6)+B7_poly(b,C.blue,2.6,'stroke-dasharray="6 4"');
+   out+=TF(pl.X(9),pl.Y(1)-8,'transmitter at the synapse: up within hours',13,C.purple,'start')+TF(pl.X(20),pl.Y(.62)+22,'average improvement: builds over weeks',13,C.blue,'start');
+   out+=TF(300,302,'A slow change downstream, not the level itself, may matter. Schematic shapes.',13,C.ink);
+  }
+  out+=B7_depFoot();
+  return {svg:out,phase:s.view==='time'?'Drugs that block reuptake raise transmitter levels within hours, but the average improvement in trials builds over weeks. If a simple shortage were the cause, the gap would be hard to explain; slower changes in receptors, in plasticity or in how people process emotional information have been proposed instead.':`${B7_CHAIN[s.i][0]}. ${B7_CHAIN[s.i][1]}`};
+ }});
+
+// Two normal distributions of improvement, one standard deviation wide, separated by an effect size d.
+const B7_ovl=d=>2*B7_Phi(-Math.abs(d)/2);            // shared area of the two curves
+const B7_sup=d=>B7_Phi(d/Math.SQRT2);                // chance a random treated person improves more than a random control
+function B7_twoCurves(x0,y0,w,h,d,colA,colB,labA,labB){
+ const X=z=>x0+(z+3.2)/(7.4)*w,pdf=z=>Math.exp(-z*z/2),Y=v=>y0+h-v*(h-14);
+ let o=L(x0,y0+h,x0+w,y0+h,C.line,1.4),A=[],B=[],O=[];
+ for(let i=0;i<=200;i++){const z=-3.2+i/200*7.4;A.push([X(z),Y(pdf(z))]);B.push([X(z),Y(pdf(z-d))]);O.push([X(z),Y(Math.min(pdf(z),pdf(z-d)))])}
+ o+=P('M'+O.map(p=>fmt(p[0])+' '+fmt(p[1])).join(' L')+` L${fmt(X(4.2))} ${fmt(y0+h)} L${fmt(X(-3.2))} ${fmt(y0+h)} Z`,'none',0,C.purplep);
+ o+=B7_poly(A,colA,2.4)+B7_poly(B,colB,2.6)+L(X(0),Y(1),X(0),y0+h,colA,1.2,'stroke-dasharray="3 3"')+L(X(d),Y(1),X(d),y0+h,colB,1.2,'stroke-dasharray="3 3"');
+ o+=TF(X(0)-8,Y(1)-6,labA,13,colA,'end')+TF(X(d)+8,Y(1)-6,labB,13,colB,'start')+TF(x0+w,y0+h+16,'more improvement →',13,C.muted,'end');
+ return o}
+const B7_ES=[[.31,'Regulator’s files'],[.41,'Published papers'],[.8,'A large effect']];
+SCENE({id:'depression-treatments-trials',name:'How much better than placebo?',tag:'Turner et al., 2008 · Cipriani et al., 2018',
+ definition:'In 2018 Andrea Cipriani and colleagues pooled 522 randomised trials of 21 antidepressants, with more than 116,000 adults with major depression. Every one of the 21 did better than placebo on average, by a modest margin. Many people improve on placebo too, so the medicine’s extra effect is the gap between two groups that overlap a great deal.',
+ example:'Erick Turner and colleagues (2008) compared published trials with the full files held by the US regulator: the published papers gave an average effect size of 0.41, the full set 0.31, because trials with weak results were less often published. Talking therapies such as cognitive behavioural therapy have evidence of a similar size, and combining therapy with medicine does better on average than either alone (Cuijpers and colleagues, 2020).',
+ desc:'Two bell curves of improvement, for placebo and for medicine, separated by an effect size the learner can set, with the shared area shaded and the chance that a treated person improves more than an untreated one.',
+ research:['Cipriani et al. (2018). Comparative efficacy and acceptability of 21 antidepressant drugs for the acute treatment of adults with major depressive disorder: a systematic review and network meta-analysis. Lancet 391, 1357–1366.','Turner, Matthews, Linardatos, Tell & Rosenthal (2008). Selective publication of antidepressant trials and its influence on apparent efficacy. New England Journal of Medicine 358, 252–260.','Cuijpers et al. (2020). A network meta-analysis of the effects of psychotherapies, pharmacotherapies and their combination in the treatment of adult depression. World Psychiatry 19, 92–107.','Leucht, Hierl, Kissling, Dold & Davis (2012). Putting the efficacy of psychiatric and general medicine medication into perspective. British Journal of Psychiatry 200, 97–106.'],
+ dur:12,hint:'Set the effect size, or choose a published value, and read the overlap. These are group averages: they cannot say how any one person will respond. Not medical advice; if you are struggling, talk to a doctor.',
+ init:()=>({d:.31}),
+ watch(p){return {d:[.31,.41,.8][Math.min(2,Math.floor(p*3))]}},
+ ui:[{range:'d',label:'Effect size (standard deviations)',min:0,max:100,get:s=>Math.round(s.d*100),act:'d',show:v=>fmt(+v/100)},{choose:B7_ES.map(e=>[e[0],e[1]]),label:'Published values',get:s=>s.d,act:'pre'}],
+ on:{d(s,v){s.d=clamp(Math.round(+v),0,100)/100},pre(s,v){s.d=clamp(+v,0,1)}},
+ draw(s){
+  const ov=B7_ovl(s.d),sp=B7_sup(s.d),pre=B7_ES.find(e=>Math.abs(e[0]-s.d)<.005);
+  let out=heading(`Effect size ${fmt(s.d)}: the groups overlap by ${Math.round(ov*100)}%`);
+  out+=B7_twoCurves(40,56,520,170,s.d,C.muted,C.blue,'placebo','medicine');
+  out+=TF(300,262,pre?`${pre[1]}: ${fmt(pre[0])}`:'shaded: the area the two groups share',13,pre?C.ink:C.purple);
+  out+=B7_tile(30,272,170,'Overlap',Math.round(ov*100)+'%',C.purple)+B7_tile(215,272,170,'Treated does better',Math.round(sp*100)+' in 100 pairs',C.blue)+B7_tile(400,272,170,'Cipriani 2018','522 trials, 21 drugs',C.ink);
+  out+=B7_depFoot();
+  return {svg:out,phase:`With an effect size of ${fmt(s.d)}, the two groups share ${Math.round(ov*100)}% of their spread. Pick one person at random from each group, and the one given medicine improves more in about ${Math.round(sp*100)} pairs out of 100, against 50 if there were no effect. ${s.d<.5?'A real but modest average benefit, as the meta-analyses found; individual responses vary widely. Leucht and colleagues (2012) found that many drugs in general medicine have average effects of a similar size.':'Even an effect this large leaves the two groups overlapping a great deal.'}`};
+ }});
+
+// UK ECT Review Group (2003): standardised effect sizes.
+const B7_ECT={sham:[.91,'Real against simulated ECT','6 trials, 256 people'],drugs:[.80,'ECT against medicines','18 trials, 1,144 people'],bil:[.32,'Both sides against one side','22 trials, 1,408 people']};
+const B7_ECT_HIST=[['1938','first use, Rome'],['1950s','anaesthesia, relaxant'],['1980s–90s','brief pulses, one side'],['today','severe depression']];
+SCENE({id:'depression-treatments-ect',name:'Electroconvulsive therapy',tag:'Cerletti & Bini, 1938 · given under anaesthesia today',
+ definition:'In 1938 Ugo Cerletti and Lucio Bini in Rome first used an electric current to induce a seizure as a treatment. Early ECT was given without anaesthesia and the convulsions could cause injuries. Since the 1950s it has been given under a brief general anaesthetic with a muscle relaxant, so the body barely moves, and the current and the placing of the electrodes have been refined since. Today it is used mainly for severe depression, especially when other treatments have not helped or a person’s life is at risk.',
+ example:'A meta-analysis by the UK ECT Review Group (2003) found real ECT clearly more effective than simulated ECT, in which only the anaesthetic is given; many of the trials were small and old. The main side effect is on memory: confusion just after treatment, and gaps in memory for events around the course, which for some people last. Electrodes on one side of the head cause fewer memory effects than on both sides, with somewhat less effect on mood.',
+ desc:'Two bell curves, as in the previous scene, for three comparisons from the UK ECT Review Group, and a timeline of how the treatment has changed since 1938.',
+ research:['Cerletti & Bini (1938), Rome: the first report of treatment by electrically induced seizures.','UK ECT Review Group (2003). Efficacy and safety of electroconvulsive therapy in depressive disorders: a systematic review and meta-analysis. Lancet 361, 799–808.','Sackeim et al. (2007). The cognitive effects of electroconvulsive therapy in community settings. Neuropsychopharmacology 32, 244–254.'],
+ dur:12,hint:'Choose a comparison and compare the overlap with the medicines scene. These are group results; decisions about ECT are made by specialists with the person. Not medical advice.',
+ init:()=>({c:'sham'}),
+ watch(p){return {c:['sham','drugs','bil'][Math.min(2,Math.floor(p*3))]}},
+ ui:[{choose:[['sham','Real or simulated'],['drugs','ECT or medicines'],['bil','Both sides or one']],label:'Comparison',get:s=>s.c,act:'c'}],
+ on:{c(s,v){s.c=B7_ECT[v]?v:'sham'}},
+ draw(s){
+  const E=B7_ECT[s.c],d=E[0],ov=B7_ovl(d);
+  let out=heading(`${E[1]}: effect size ${E[0]}`);
+  out+=B7_twoCurves(40,52,520,150,d,C.muted,C.green,s.c==='sham'?'simulated':s.c==='drugs'?'medicines':'one side',s.c==='bil'?'both sides':'ECT');
+  out+=TF(300,232,`${E[2]} · overlap ${Math.round(ov*100)}% · shaded: shared area`,13,C.ink);
+  out+=L(60,258,540,258,C.line,2);B7_ECT_HIST.forEach(([y,l],i)=>{const x=90+i*140;out+=Ci(x,258,5,C.blue)+TBF(x,280,y,13,C.ink)+TF(x,298,l,13,C.muted)});
+  out+=TF(300,318,s.c==='bil'?'Both sides: a little more effect on mood, more effect on memory.':'Memory effects are the main cost; see the research line.',13,s.c==='bil'?C.amber:C.ink);
+  out+=B7_depFoot();
+  return {svg:out,phase:s.c==='sham'?'Against simulated ECT, where people received the anaesthetic but no current, real ECT gave an effect size of 0.91, larger than most medicines achieve against placebo. The trials were few and mostly from the 1970s and 1980s.':
+   s.c==='drugs'?'Against medicines the effect size was 0.80, though many of the medicine treatments in those trials would now be considered inadequate. ECT is usually reserved for severe depression because of its memory effects and the need for anaesthesia.':
+   'Placing electrodes on both sides of the head was somewhat more effective than one side (effect size 0.32) but caused more memory problems. Much of the later refinement of ECT has been about this trade-off.'};
+ }});
+
+// Zarate et al. (2006): 18 people with treatment-resistant depression; one ketamine infusion.
+const B7_KET=[[24,71,'1 day'],[168,35,'1 week']];
+const B7_hrs=h=>h<24?`${Math.round(h)} h`:h<168?`${fmt(B7_r1(h/24))} days`:`${fmt(B7_r1(h/168))} weeks`;
+SCENE({id:'depression-treatments-ketamine',name:'Ketamine: hours, not weeks',tag:'Berman et al., 2000 · Zarate et al., 2006',
+ definition:'Ketamine is an anaesthetic that blocks NMDA receptors, a kind of glutamate receptor. In 2000 Robert Berman, John Krystal and colleagues gave a single low dose, by slow infusion, to a small group of people with depression and found that symptoms eased within hours to days, far faster than with conventional antidepressants. Later trials confirmed a rapid effect that usually fades within about a week after one dose.',
+ example:'In a trial of 18 people whose depression had not improved with other treatments (Zarate and colleagues, 2006), 71% met the criterion for response the day after the infusion, and 35% still did a week later. A nasal spray of esketamine, one form of the molecule, was approved in the United States in 2019 for use under medical supervision. How ketamine affects mood is not settled, and it can cause dissociation and be misused.',
+ desc:'A time axis from one hour to six weeks on a log scale. Two published points show the share of people responding one day and one week after a single ketamine infusion, joined by a schematic curve, with the usual weeks-long build-up of conventional antidepressants shaded for comparison.',
+ research:['Berman et al. (2000). Antidepressant effects of ketamine in depressed patients. Biological Psychiatry 47, 351–354.','Zarate et al. (2006). A randomized trial of an N-methyl-D-aspartate antagonist in treatment-resistant major depression. Archives of General Psychiatry 63, 856–864.'],
+ dur:12,hint:'Move along the time after one infusion and compare with the slower build-up of conventional antidepressants. Group results from small trials; not medical advice.',
+ init:()=>({h:24}),
+ watch(p){return {h:Math.round(Math.pow(10,lerp(0,3,p)))}},
+ ui:[{range:'h',label:'Time after one infusion',min:0,max:300,get:s=>Math.round(Math.log10(s.h)*100),act:'h',show:v=>B7_hrs(Math.pow(10,+v/100))}],
+ on:{h(s,v){s.h=Math.pow(10,clamp(+v,0,300)/100)}},
+ draw(s){
+  const lg=Math.log10(s.h),pl=B7_plot(70,62,500,180,[0,3.05],[0,100],{xt:[[0,'1 h'],[Math.log10(6),'6 h'],[Math.log10(24),'1 day'],[Math.log10(72),'3 d'],[Math.log10(168),'1 wk'],[Math.log10(1008),'6 wk']],yt:[[0,'0'],[50,'50'],[100,'100%']],xl:'time after the infusion (log scale)',yl:'people responding (ketamine)'});
+  let out=heading(s.h<2?'During and just after the infusion':s.h<=36?'Within a day: the rapid effect':s.h<=200?'Over the first week the effect fades':'Weeks later: the time conventional drugs need');
+  out+=R(pl.X(Math.log10(336)),62,pl.X(3.05)-pl.X(Math.log10(336)),180,C.pale,'none',0)+pl.svg.replace(/fill="#fff"/,'fill="none"');
+  out+=TF(pl.X(2.78),84,'usual build-up of',13,C.blue)+TF(pl.X(2.78),100,'other antidepressants',13,C.blue);
+  out+=R(pl.X(0),62,pl.X(Math.log10(2))-pl.X(0),180,C.amberp,'none',0,'fill-opacity=".8"')+TF(pl.X(.15),230,'dissociation',13,C.amber,'start');
+  const k=lgv=>{const t=Math.pow(10,lgv);return t<2?10*t:t<=24?lerp(20,71,(lgv-Math.log10(2))/(Math.log10(24)-Math.log10(2))):t<=168?lerp(71,35,(lgv-Math.log10(24))/(Math.log10(168)-Math.log10(24))):Math.max(10,35-30*(lgv-Math.log10(168)))};
+  const pts=[];for(let i=0;i<=150;i++){const g=i/150*3;pts.push([pl.X(g),pl.Y(k(g))])}out+=B7_poly(pts,C.purple,2,'stroke-dasharray="5 4"');
+  B7_KET.forEach(([h,v,l])=>{out+=Ci(pl.X(Math.log10(h)),pl.Y(v),7,C.purple,'#fff')+TBF(pl.X(Math.log10(h))+10,pl.Y(v)-8,`${v}% at ${l}`,13,C.purple,'start')});
+  out+=L(pl.X(lg),62,pl.X(lg),242,C.ink,1.4);
+  out+=TF(300,296,'dots: Zarate et al. (2006), 18 people · dashed line: schematic',13,C.muted);
+  out+=B7_depFoot();
+  return {svg:out,phase:s.h<2?'During and just after the infusion many people feel detached or dreamlike (dissociation). This passes within a couple of hours and is one reason it is given under supervision.':
+   s.h<=36?'By the next day 71% of the people in Zarate’s trial met the criterion for response, a speed no conventional antidepressant matches. The trial was small, and people can often tell ketamine from placebo, which complicates blinding.':
+   s.h<=200?'The effect of a single dose fades over days: a week after the infusion 35% still met the criterion. Repeated doses, and how safe they are over the long term, are still being studied.':
+   'By this time a single infusion has usually worn off, while conventional antidepressants are only reaching their full effect. Ketamine’s speed is what made researchers look beyond monoamines, towards glutamate and plasticity.'};
+ }});
+
+/* ===================== Lesson: addiction ===================== */
+const B7_ADD_HELP='Worried about drug use? A doctor or a local support service can help.';
+// Microdialysis after Di Chiara & Imperato (1988): illustrative peak sizes, relative to baseline, by site.
+const B7_MD={saline:['Salt solution only',1,1],amph:['Amphetamine',4,2.4],coc:['Cocaine',3.2,2],morph:['Morphine',1.9,1.25],nic:['Nicotine',1.8,1.2],eth:['Alcohol',1.7,1.15],non:['A drug not misused',1,1]};
+const B7_mdCurve=(t,peak)=>t<0?1:1+(peak-1)*(t/40)*Math.exp(1-t/40);
+SCENE({id:'addiction',name:'Drugs and dopamine in the accumbens',tag:'Di Chiara & Imperato, 1988',
+ definition:'Gaetano Di Chiara and Assunta Imperato used microdialysis in freely moving rats: a fine tube with a permeable tip, placed in the brain, collects samples of the surrounding fluid every few minutes so that dopamine can be measured. They found that drugs that humans misuse, including amphetamine, cocaine, morphine, nicotine and alcohol, raised dopamine more in the nucleus accumbens, part of the ventral striatum, than in the dorsal striatum, while drugs that people do not misuse did not raise it.',
+ example:'Food raises accumbens dopamine too, but the response weakens as a food becomes familiar (Bassareo and Di Chiara, 1997), while the response to drugs tends not to. A surge of dopamine helps explain why drugs are learned about so strongly. It is not the same as pleasure, and it does not by itself explain why only some people who use drugs become addicted.',
+ desc:'A rat’s brain with a microdialysis probe in either the nucleus accumbens or the dorsal striatum, and a plot of dopamine in successive samples before and after a drug or a salt-solution control.',
+ research:['Di Chiara & Imperato (1988). Drugs abused by humans preferentially increase synaptic dopamine concentrations in the mesolimbic system of freely moving rats. PNAS 85, 5274–5278.','Bassareo & Di Chiara (1997). Journal of Neuroscience 17, 851–861 (accumbens responses to a familiar food habituate).','Peak sizes here are illustrative; the ordering by site follows the 1988 paper.'],
+ dur:14,hint:'Choose a drug and a probe site, and compare the samples with the salt-solution control. Peak sizes are illustrative. Not medical advice.',
+ init:()=>({d:'amph',site:'acc'}),
+ watch(p){const k=Math.min(5,Math.floor(p*6));return {d:['saline','amph','amph','morph','nic','non'][k],site:k===2?'dors':'acc'}},
+ ui:[{choose:Object.keys(B7_MD).map(k=>[k,B7_MD[k][0]]),label:'Injected',get:s=>s.d,act:'d'},{choose:[['acc','Nucleus accumbens'],['dors','Dorsal striatum']],label:'Probe in',get:s=>s.site,act:'site'}],
+ on:{d(s,v){s.d=B7_MD[v]?v:'saline'},site(s,v){s.site=v==='dors'?'dors':'acc'}},
+ draw(s,f,X){
+  const M=B7_MD[s.d],acc=s.site==='acc',peak=acc?M[1]:M[2],other=acc?M[2]:M[1];
+  let out=heading(peak<1.05?`${M[0]}: no change in dopamine`:`${M[0]}: dopamine rises ${acc?'in the accumbens':'in the dorsal striatum'}`);
+  // rat brain, side view
+  out+=R(20,46,230,250,'#fff',C.grid,10)+TF(135,66,'rat brain, side view',13,C.muted);
+  out+=P('M40 170 C40 120 90 92 150 96 C200 98 232 128 230 166 C228 200 196 214 150 212 C100 212 40 210 40 170 Z','#a99a8c',2,'#f3eee9');
+  out+=`<ellipse cx="206" cy="196" rx="28" ry="18" fill="#f3eee9" stroke="#a99a8c" stroke-width="1.8"/><ellipse cx="46" cy="186" rx="14" ry="9" fill="#f3eee9" stroke="#a99a8c" stroke-width="1.6"/>`;
+  const tgt=acc?[104,180]:[112,146];
+  out+=`<ellipse cx="104" cy="180" rx="16" ry="11" fill="${acc?C.coralp:'#ede4da'}" stroke="${acc?C.coral:'#c3b4a5'}" stroke-width="1.6"/><ellipse cx="112" cy="144" rx="22" ry="14" fill="${!acc?C.coralp:'#ede4da'}" stroke="${!acc?C.coral:'#c3b4a5'}" stroke-width="1.6"/>`;
+  out+=L(tgt[0],66+14,tgt[0],tgt[1],C.ink,3)+Ci(tgt[0],tgt[1],3,C.ink);
+  out+=P('M176 176 C150 186 128 186 112 182',C.amber,2,'none','stroke-dasharray="4 3"')+TF(178,236,'dopamine cells',13,C.amber)+TF(178,252,'(midbrain)',13,C.amber);
+  out+=TF(56,262,'accumbens',13,acc?C.coral:C.muted,'start')+TF(56,280,'dorsal striatum',13,!acc?C.coral:C.muted,'start');
+  // samples
+  const pl=B7_plot(300,66,276,190,[-60,180],[0,4.4],{xt:[[-60,'−60'],[0,'0'],[60,'60'],[120,'120'],[180,'180 min']],yt:[[1,'baseline']],xl:'time from injection, one sample every 20 min',yl:'dopamine in each sample (illustrative)'});out+=pl.svg;
+  out+=L(pl.X(0),66,pl.X(0),256,C.ink,1.2,'stroke-dasharray="3 3"')+L(pl.X(-60),pl.Y(1),pl.X(180),pl.Y(1),C.line,1.2);
+  const pts=[],ghost=[];for(let t=-60;t<=180;t+=20){pts.push([pl.X(t),pl.Y(B7_mdCurve(t,peak))]);ghost.push([pl.X(t),pl.Y(B7_mdCurve(t,other))])}
+  out+=B7_poly(ghost,C.line,1.6,'stroke-dasharray="5 4"')+B7_poly(pts,C.coral,2.4)+pts.map(p=>Ci(p[0],p[1],4.5,C.coral,'#fff')).join('');
+  out+=TF(576,90,`solid: ${acc?'accumbens':'dorsal'}`,13,C.coral,'end')+TF(576,108,`dashed: ${acc?'dorsal':'accumbens'}`,13,C.muted,'end');
+  out+=B7_banner(B7_ADD_HELP,312)+B7_note('Rats, from published microdialysis work; values illustrative. Not medical advice.',360);
+  return {svg:out,phase:peak<1.05&&other<1.05?(s.d==='saline'?'The control: an injection of salt solution leaves dopamine at baseline in every sample. Any change with a drug can then be put down to the drug, not to handling or injection.':'A drug that people do not seek out for itself leaves dopamine at baseline, which is what made the result with misused drugs stand out.'):
+   acc?`After ${M[0].toLowerCase()} dopamine in the accumbens climbs over the next samples and returns to baseline within a few hours. The dashed line shows the dorsal striatum, which rises less: the accumbens is where the drugs had their most consistent effect.`:
+   `In the dorsal striatum the rise after ${M[0].toLowerCase()} is smaller than in the accumbens (dashed). The accumbens, a hub between the systems of motivation and of action, became the focus of addiction research.`};
+ }});
+
+// Opponent processes (Solomon & Corbit 1974): a fast drug effect a(t) and a slower opposing response b(t) that grows
+// with each repetition. Part of b is learned and cued by the usual setting (Siegel). Units are schematic.
+const B7_a=t=>t<=0?0:(t/1)*Math.exp(1-t/1);
+const B7_bShape=t=>t<=0?0:(t/3)*Math.exp(1-t/3);
+const B7_bSize=(n,set)=>{const g=.85*(1-Math.exp(-n/3));return set==='new'?g*.35:g};
+SCENE({id:'addiction-tolerance',name:'Tolerance and withdrawal',tag:'Solomon & Corbit, 1974 · Siegel, 1982',
+ definition:'With repeated use, the same amount of a drug often has less effect: tolerance. When it wears off, the body may swing the other way: withdrawal. Richard Solomon and John Corbit (1974) described this as two processes: the drug’s direct effect, and a slower opposing response that the body mounts against it. With repetition the opposing response grows larger and lasts longer, so the net effect shrinks and the after-effect deepens.',
+ example:'Part of the opposing response is learned and tied to the setting. In experiments by Shepard Siegel and colleagues (1982), rats given a large dose of heroin in an unfamiliar setting were more likely to die than rats given the same dose where they usually received it: the cues that trigger the learned counter-response were missing. Withdrawal differs a great deal between drugs, and tolerance and withdrawal are not the whole of addiction.',
+ desc:'Curves of the drug’s direct effect, the opposing response and the net effect after one dose, which change as the same dose is repeated; a row of bars for the peak and the after-dip of each dose; and a switch between the usual setting and a new one.',
+ research:['Solomon & Corbit (1974). An opponent-process theory of motivation: I. Temporal dynamics of affect. Psychological Review 81, 119–145.','Siegel, Hinson, Krank & McCully (1982). Heroin “overdose” death: contribution of drug-associated environmental cues. Science 216, 436–437.','The curves are a schematic model, not measurements of any drug.'],
+ dur:14,hint:'Repeat the same dose and watch the opposing response grow. Then switch to a new setting. Schematic units; not medical advice.',
+ init:()=>({n:0,set:'usual',hist:[0]}),
+ watch(p){const n=Math.min(8,Math.floor(p*9)),hist=[];for(let i=0;i<=n;i++)hist.push(i);return {n,set:p>.9?'new':'usual',hist}},
+ ui:[{b:'Take the same dose again',act:'dose'},{choose:[['usual','Usual setting'],['new','A new setting']],label:'Where',get:s=>s.set,act:'set'},{b:'Start again',act:'clear'}],
+ on:{dose(s){if(s.hist.length<10){s.n=s.hist.length;s.hist.push(s.n)}else s.n=9;return 'keep'},set(s,v){s.set=v==='new'?'new':'usual';return 'keep'},clear(s){s.n=0;s.hist=[0]}},
+ draw(s){
+  const B=B7_bSize(s.n,s.set),net=t=>B7_a(t)-B*B7_bShape(t);
+  let pk=0,dip=0;for(let i=0;i<=240;i++){const t=i/20,v=net(t);pk=Math.max(pk,v);dip=Math.min(dip,v)}
+  let out=heading(s.set==='new'?`Dose ${s.n+1} in a new setting: the learned brake is missing`:s.n?`Dose ${s.n+1}: net effect ${Math.round(pk*100)}% of the first`:'The first dose');
+  const pl=B7_plot(60,60,310,170,[0,12],[-.8,1.1],{xt:[[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],yt:[[1,'+1'],[0,'0'],[-.5,'−0.5']],xl:'time after the dose (schematic units)'});out+=pl.svg;
+  out+=L(pl.X(0),pl.Y(0),pl.X(12),pl.Y(0),C.line,1.2);
+  const A=[],Bp=[],N=[];for(let i=0;i<=240;i++){const t=i/20;A.push([pl.X(t),pl.Y(B7_a(t))]);Bp.push([pl.X(t),pl.Y(-B*B7_bShape(t))]);N.push([pl.X(t),pl.Y(net(t))])}
+  out+=B7_poly(A,C.blue,1.6,'stroke-dasharray="5 4"')+B7_poly(Bp,C.purple,1.6,'stroke-dasharray="5 4"')+B7_poly(N,C.coral,2.8);
+  out+=TF(pl.X(1.2)+6,pl.Y(1)+4,'drug’s direct effect',13,C.blue,'start')+TF(pl.X(12)-4,pl.Y(-.62),'opposing response',13,C.purple,'end')+TF(pl.X(12)-4,pl.Y(.25),'net: what is felt',13,C.coral,'end');
+  // per-dose bars
+  out+=R(390,60,190,196,'#fff',C.grid,8)+TF(485,80,'each dose: peak and dip',13,C.muted);
+  const bx=i=>404+i*17.5,yb=160;out+=L(396,yb,574,yb,C.line,1.2);
+  s.hist.forEach((n,i)=>{const b=B7_bSize(n,i===s.hist.length-1?s.set:'usual');let p=0,d=0;for(let j=0;j<=240;j++){const t=j/20,v=B7_a(t)-b*B7_bShape(t);p=Math.max(p,v);d=Math.min(d,v)}
+   out+=R(bx(i),yb-p*70,12,p*70,i===s.hist.length-1&&s.set==='new'?C.amber:C.coral,'none',2)+R(bx(i),yb,12,-d*70,C.purple,'none',2)});
+  out+=TF(485,248,`${s.hist.length} dose${s.hist.length===1?'':'s'} so far`,13,C.muted);
+  out+=B7_tile(60,280,150,'Peak of net effect',Math.round(pk*100)+'%',C.coral)+B7_tile(220,280,150,'After-dip',Math.round(-dip*100)+'%',C.purple)+B7_tile(380,280,200,'Opposing response',Math.round(B*100)+'% of full size',C.purple);
+  out+=B7_banner(B7_ADD_HELP,334)+B7_note('Schematic model. Not medical advice.',374);
+  return {svg:out,phase:s.set==='new'?'In a new setting the cues that normally trigger the learned part of the opposing response are absent, so the same dose has a much larger net effect. This is the logic of Siegel’s experiments with rats, and one reason doses that were tolerated before can be dangerous in a new place.':
+   !s.n?'After a first dose the direct effect dominates and the opposing response is small, so there is little after-dip.':
+   `By dose ${s.n+1} the opposing response has grown, so the same dose produces a smaller peak (tolerance) and a deeper dip as it wears off (the seed of withdrawal). To get the first dose’s effect, more would be needed.`};
+ }});
+
+// Incentive sensitisation (Robinson & Berridge 1993): schematic. Wanting grows with exposure and responds to cues;
+// liking does not grow.
+const B7_want=n=>1+2*(1-Math.exp(-n/4));
+const B7_like=n=>1-.25*(1-Math.exp(-n/5));
+SCENE({id:'addiction-wanting',name:'Wanting grows, liking does not',tag:'Robinson & Berridge, 1993',
+ definition:'Terry Robinson and Kent Berridge proposed the incentive-sensitisation theory in 1993. Repeated drug use can make the brain’s dopamine-related systems more reactive, in some people and some circumstances, so that the drug, and cues linked to it, trigger intense wanting. Liking, the pleasure the drug gives, does not grow in the same way and may fall. The theory explains how craving can be strong, and set off by cues, long after use has stopped and when the drug is no longer much enjoyed.',
+ example:'In rats, repeated amphetamine makes later doses produce larger increases in movement and in dopamine release, a sensitisation that can last for months. The wanting–liking distinction itself is described in the lesson on reward and dopamine; here it changes with experience. The theory is influential, and how much of human addiction it explains is still argued.',
+ desc:'Two lines across repeated uses, one for wanting and one for liking, with a bar chart for the current moment: after a use, after seeing a cue alone, or after months without use.',
+ research:['Robinson & Berridge (1993). The neural basis of drug craving: an incentive-sensitization theory of addiction. Brain Research Reviews 18, 247–291.','Robinson & Becker (1986). Enduring changes in brain and behavior produced by chronic amphetamine administration. Brain Research Reviews 11, 157–198.','Robinson & Berridge (2008). The incentive sensitization theory of addiction: some current issues. Philosophical Transactions of the Royal Society B 363, 3137–3146.'],
+ dur:14,hint:'Repeat use, then show a cue alone, then let months pass without use. Watch wanting and liking separate. A schematic picture of a theory; not medical advice.',
+ init:()=>({n:0,ev:'use',away:0}),
+ watch(p){const n=Math.min(10,Math.floor(p*12));return {n,ev:p>.85?'cue':'use',away:p>.92?1:0}},
+ ui:[{b:'Use again',act:'use'},{b:'A cue only (no drug)',act:'cue'},{b:'Months without use',act:'away'},{b:'Start again',act:'clear'}],
+ on:{use(s){s.n=Math.min(12,s.n+1);s.ev='use';s.away=0;return 'keep'},cue(s){s.ev='cue';return 'keep'},away(s){s.away=1;s.ev='cue';return 'keep'},clear(s){s.n=0;s.ev='use';s.away=0}},
+ draw(s){
+  const w=B7_want(s.n)*(s.away?.85:1),l=B7_like(s.n),cue=s.ev==='cue';
+  let out=heading(cue?(s.away?'Months later, a cue still triggers wanting':'A cue alone triggers wanting'):s.n?`After ${s.n} use${s.n===1?'':'s'}: wanting ${fmt(B7_r1(w))}, liking ${fmt(B7_r1(l))}`:'Before repeated use');
+  const pl=B7_plot(60,62,320,200,[0,12],[0,3.3],{xt:[[0,'0'],[4,'4'],[8,'8'],[12,'12']],yt:[[1,'1'],[2,'2'],[3,'3']],xl:'number of past uses',yl:'relative size (first use = 1, schematic)'});out+=pl.svg;
+  const W=[],Lk=[];for(let i=0;i<=120;i++){const n=i/10;W.push([pl.X(n),pl.Y(B7_want(n))]);Lk.push([pl.X(n),pl.Y(B7_like(n))])}
+  out+=B7_poly(W,C.coral,2.6)+B7_poly(Lk,C.blue,2.6)+TF(pl.X(12)-4,pl.Y(B7_want(12))+20,'wanting',13,C.coral,'end')+TF(pl.X(12)-4,pl.Y(B7_like(12))-8,'liking',13,C.blue,'end');
+  out+=Ci(pl.X(s.n),pl.Y(B7_want(s.n)),6,C.coral,'#fff')+Ci(pl.X(s.n),pl.Y(l),6,C.blue,'#fff');
+  // bars for this moment
+  out+=R(400,62,180,200,'#fff',C.grid,8)+TF(490,82,cue?(s.away?'cue, after months away':'cue only, no drug'):'just after a use',13,C.muted);
+  const yb=236,h=v=>v/3.3*130;out+=L(410,yb,570,yb,C.line,1.2);
+  const wb=cue?w*.9:w,lb=cue?0:l;out+=R(430,yb-h(wb),50,h(wb),C.coral,'none',4)+R(510,yb-h(lb),50,h(lb),C.blue,'none',4);
+  out+=TF(455,254,'wanting',13,C.coral)+TF(535,254,'liking',13,C.blue)+TBF(455,yb-h(wb)-6,fmt(B7_r1(wb)),13,C.coral)+TBF(535,yb-h(lb)-6,cue?'none':fmt(B7_r1(lb)),13,C.blue);
+  out+=B7_banner(B7_ADD_HELP,316)+B7_note('Use person-first words: a person with addiction. Not medical advice.',364);
+  return {svg:out,phase:cue?(s.away?'Even after months without use, a cue linked to the drug still sets off strong wanting in this picture, which fits the long-lasting sensitisation seen in animals and the cue-triggered craving people describe. It is not a failure of will to feel it.':'A cue alone, with no drug at all, triggers wanting but brings no liking. In the theory, the sensitised system attaches “incentive salience” to the cue itself.'):
+   !s.n?'At first, wanting and liking are matched.':`After ${s.n} uses, wanting has grown to ${fmt(B7_r1(w))} times its first size while liking has drifted to ${fmt(B7_r1(l))}. In the theory the two separate because they rest on different brain systems: dopamine-related systems for wanting, smaller “hotspots” for liking.`};
+ }});
+
+// Anthony, Warner & Kessler (1994), US National Comorbidity Survey: of people who had ever used each drug,
+// the share who had ever been dependent on it.
+const B7_AWK={tob:['Tobacco',32],her:['Heroin',23],coc:['Cocaine',17],alc:['Alcohol',15],can:['Cannabis',9]};
+const B7_VIEWS={disease:['A brain disease','Leshner (1997): lasting brain changes justify treating addiction as a chronic illness, which counters blame and supports treatment.'],
+ learn:['Learning and development','Lewis (2015): the changes are those of deep learning, like other strong habits, and can be outgrown.'],
+ choice:['Choices shaped by circumstance','Heyman (2009): most people quit eventually, often as their circumstances change, which fits a disorder of choice.']};
+SCENE({id:'addiction-recovery',name:'Most do not, and many recover',tag:'Who becomes addicted, and the “brain disease” debate',
+ definition:'Most people who use a drug do not become addicted to it. In a large US survey (Anthony, Warner and Kessler, 1994), of the people who had ever used each drug, the share who had ever been dependent on it was about 32% for tobacco, 23% for heroin, 17% for cocaine, 15% for alcohol and 9% for cannabis. Many people with addiction recover: a later US survey estimated that, over a lifetime, the chance of remitting from dependence was over 80% for each of nicotine, alcohol, cannabis and cocaine (Lopez-Quintero and colleagues, 2011).',
+ example:'In 1997 Alan Leshner, director of the US National Institute on Drug Abuse, argued that addiction is a brain disease, to counter blame and to support treatment. Critics such as Gene Heyman and Marc Lewis see it instead as choices shaped by circumstances, or as deep learning that can be outgrown; others defend the disease view (Heilig and colleagues, 2021). The framing is debated. Treatment helps: for opioid addiction, methadone and buprenorphine are linked to much lower death rates while people take them (Sordo and colleagues, 2017).',
+ desc:'A grid of 100 people who have ever used a drug, with those who ever became dependent coloured, for five drugs; and three cards setting out views of what addiction is, with what each emphasises.',
+ research:['Anthony, Warner & Kessler (1994). Comparative epidemiology of dependence on tobacco, alcohol, controlled substances, and inhalants: basic findings from the National Comorbidity Survey. Experimental and Clinical Psychopharmacology 2, 244–268.','Lopez-Quintero et al. (2011). Probability and predictors of remission from life-time nicotine, alcohol, cannabis or cocaine dependence. Addiction 106, 657–669.','Leshner (1997). Addiction is a brain disease, and it matters. Science 278, 45–47. · Heyman (2009). Addiction: A Disorder of Choice. Harvard University Press. · Lewis (2015). The Biology of Desire. PublicAffairs. · Heilig et al. (2021). Neuropsychopharmacology 46, 1715–1723. · Sordo et al. (2017). BMJ 357, j1550.'],
+ dur:14,hint:'Choose a drug to see how many of every 100 people who ever used it became dependent. Then read the three views of what addiction is. Survey figures from one country; not medical advice.',
+ init:()=>({d:'tob',v:'disease'}),
+ watch(p){const k=Math.min(7,Math.floor(p*8));return {d:['tob','her','coc','alc','can','can','can','can'][k],v:['disease','disease','disease','disease','disease','disease','learn','choice'][k]}},
+ ui:[{choose:Object.keys(B7_AWK).map(k=>[k,B7_AWK[k][0]]),label:'Ever used',get:s=>s.d,act:'d'},{choose:Object.keys(B7_VIEWS).map(k=>[k,B7_VIEWS[k][0]]),label:'View',get:s=>s.v,act:'v'}],
+ on:{d(s,v){s.d=B7_AWK[v]?v:'tob';return 'keep'},v(s,v){s.v=B7_VIEWS[v]?v:'disease';return 'keep'}},
+ draw(s,f,X){
+  const A=B7_AWK[s.d],V=B7_VIEWS[s.v];
+  let out=heading(`${A[0]}: ${A[1]} in 100 who ever used it became dependent`);
+  out+=R(20,46,260,250,'#fff',C.grid,10)+B7_people(50,72,21.5,i=>i<A[1]?C.coral:'#e3ebf0',8);
+  out+=TF(150,292,'Anthony, Warner & Kessler (1994), US',13,C.muted);
+  Object.keys(B7_VIEWS).forEach((k,i)=>{const y=46+i*44,on=k===s.v;out+=hit(X,'v',k,B7_VIEWS[k][0],R(296,y,284,38,on?C.purplep:'#fff',on?C.purple:C.line,8)+TBF(308,y+24,B7_VIEWS[k][0],13,on?C.purple:C.ink,'start'))});
+  out+=R(296,180,284,80,'#fff',C.purple,8)+B7_wrap(308,200,V[1],40,13,C.ink);
+  out+=R(296,266,284,30,C.greenp,'none',8)+TBF(438,286,'Recovery is common: over 80% remit',13,C.green);
+  out+=B7_banner(B7_ADD_HELP,308)+B7_note('Survey estimates for groups, not predictions for a person. Not medical advice.',356);
+  return {svg:out,phase:`${A[1]} of every 100 people who had ever used ${A[0].toLowerCase()} had ever been dependent on it; the other ${100-A[1]} had not. ${V[0]}. ${V[1]}`};
+ }});

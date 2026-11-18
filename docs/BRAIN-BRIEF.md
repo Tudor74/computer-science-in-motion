@@ -35,7 +35,7 @@ Each lesson id is also the id of the lesson's first scene. `prior` and `THREAD` 
 | 5 `plasticity` | wiring-up, critical-periods, hebb-ltp, map-plasticity, neurogenesis, adolescent-brain |
 | 6 `state` | circadian-clock, sleep-stages, arousal-systems, reward-dopamine, stress-response, hunger-homeostasis |
 | 7 `disorder` | stroke, epilepsy, parkinsons, alzheimers, depression-treatments, addiction |
-| 8 `frontier` | patch-clamp, optogenetics, place-grid-cells, brain-computer-interfaces, organoids, brains-and-ai |
+| 8 `frontier` | patch-clamp, optogenetics, place-grid-cells, brain-computer-interfaces, recording-many, brains-and-ai |
 
 Five ids also exist in Mind In Motion (`neuron-doctrine`, `localisation`, `action-potential`, `split-brain`, `brain-imaging`). The courses are separate pages, so the ids do not clash, but the Mind lessons already cover the basics: go further here, and point to Mind for what it has done.
 
@@ -104,7 +104,7 @@ Five ids also exist in Mind In Motion (`neuron-doctrine`, `localisation`, `actio
 - `optogenetics`: channelrhodopsin, a light-gated channel from a green alga (Nagel, Hegemann, Bamberg and colleagues, 2002–03); Boyden, Zhang, Bamberg, Nagel & Deisseroth (2005) use it to drive spikes in neurons with millisecond flashes. The learner places light pulses and sees a spike for each. Draw the light as markers on a timeline, not as flashes of the screen. Say that it is a research tool, with human use at an early stage.
 - `place-grid-cells`: O'Keefe & Dostrovsky (1971) find hippocampal cells that fire in one place; Hafting, Fyhn, Molden, Moser & Moser (2005) find grid cells in the entorhinal cortex (Nobel Prize 2014: John O'Keefe, May-Britt Moser and Edvard Moser). The learner moves a rat around a box; spikes click as it crosses the field, and the firing map builds up. Link to Mind's `cognitive-maps`.
 - `brain-computer-interfaces`: Fetz (1969) trains monkeys to control a single neuron's firing; BrainGate lets a person with paralysis move a cursor (Hochberg et al. 2006) and a robotic arm (2012); intracortical decoding of attempted handwriting (Willett et al. 2021) and of attempted speech (two studies in Nature, 2023). The learner decodes a cursor movement, building on `population-coding`. Be cautious: the studies involve very few participants, surgery, and systems that need recalibration; leave out company announcements and anything not in a peer-reviewed paper. It is decoding of attempted movement, not "mind reading". Link to HCI In Motion's `brain-computer`.
-- `organoids`: Lancaster, Knoblich and colleagues (2013) grow cerebral organoids from human stem cells. Say what they are (millimetre-sized, self-organised tissue resembling parts of an early developing brain) and what they are not ("mini-brains": they have no blood supply, no body and no sensory input, and lack the brain's overall organisation). There is no evidence that they are conscious. Cover the ethics plainly: donor consent, transplanting into animals, and how to act under uncertainty.
+- `recording-many`: calcium indicators, from Tsien's fura-2 (1985) to the protein GCaMP (Nakai, Ohkura & Imoto 2001; GCaMP6, Chen et al. 2013), which cells make from a gene; two-photon microscopy (Denk, Strickler & Webb 1990), which excites only the focus; dense silicon probes (Neuropixels, Jun et al. 2017: 960 sites, 384 recorded at once). Then why thousands of cells change the questions: much of mouse visual cortex activity tracks the animal's own movements (Stringer et al. 2019). Say that spikes are estimated from calcium signals and that spike sorting makes mistakes. The learner places spikes and recovers them from a calcium trace, moves a two-photon focus, separates two cells by their footprints on a probe, and predicts movement from more and more cells.
 - `brains-and-ai`: McCulloch & Pitts's logical neuron (1943); Rosenblatt's perceptron (link to Mind's `perceptron`); the visual cortex as the model for convolutional networks (Fukushima 1980); temporal-difference learning (Sutton & Barto) meeting dopamine in 1997. Then the limits of the analogy: backpropagation has no agreed counterpart in the brain, real neurons are far richer than units, and the brain runs on about 20 watts. The learner trains a TD learner and compares its error signal with the dopamine recordings from `reward-dopamine`. Make no claims about machine understanding or consciousness.
 
 ## Files and naming
@@ -146,7 +146,7 @@ Mark these as contested, weak or overstated:
 - "left-brained" and "right-brained" personalities
 - "we use only 10% of our brain", "ten glia for every neuron", "the brain is finished at 25"
 - dopamine as "the pleasure chemical", serotonin as "the happiness chemical"
-- organoids as "mini-brains", and brain–computer interfaces as "mind reading"
+- brain–computer interfaces as "mind reading"
 - any fMRI result presented as showing where a complex trait "lives"
 
 Claims from 2025–2026: include them only if you are certain of the source; otherwise leave them out. Cite only real, checkable work in `research` lines and `SOURCE` entries, and prefer the original paper.

@@ -1,5 +1,5 @@
 /* ===================== Brain In Motion · Era 8 · Tools and frontiers ===================== */
-// The patch clamp, optogenetics, place and grid cells, brain–computer interfaces, organoids, brains and AI.
+// The patch clamp, optogenetics, place and grid cells, brain–computer interfaces, recording many neurons, brains and AI.
 // Every picture is a pure function of state, frame and X. Sound (soft clicks) plays only from on() handlers.
 // Simulated records use seeded generators (B8_rng) and are labelled as simulated, schematic or illustrative.
 // Light pulses are drawn as marks on a time axis; nothing on screen flashes.
@@ -584,13 +584,380 @@ SCENE({id:'brain-computer-interfaces-limits',name:'What a BCI is, and is not',ta
   return {svg:out,phase:c.why};
  }});
 
-/* Lessons not yet written: the original placeholder cards, kept so the build and tests run. */
-const B8_placeholder=(id,name,definition)=>SCENE({id,name,tag:'To be written',definition,
- example:'This lesson has not been written yet. Its animated scenes and its Try it activity will replace this card.',
- desc:'A placeholder card showing the name of the lesson.',dur:6,hint:'There is nothing to change yet.',
- init:()=>({}),
- draw:()=>({svg:R(60,110,480,160,C.pale,C.line,12)+TB(300,175,name,20)+T(300,210,'Lesson to be written',15,C.muted)+TM(300,244,id,13,C.muted),phase:'Placeholder: this lesson is not written yet.'})});
-B8_placeholder('organoids','Brain organoids',
- 'A brain organoid is a small three-dimensional cluster of brain cells grown from stem cells, which organises itself in ways that resemble parts of an early developing brain.');
-B8_placeholder('brains-and-ai','Brains and AI',
- 'An artificial neural network is a computing system of simple connected units, loosely inspired by neurons.');
+/* ===================== Lesson: recording-many ===================== */
+// Calcium imaging, simulated. Each spike adds a fluorescence transient that rises with time constant tr and decays with
+// td, scaled so that one spike's peak is A (a fraction of the resting brightness, ΔF/F). Frames at 30 a second over 4 s;
+// spikes sit on 100 ms slots (every third frame). Spikes are then estimated back from the noisy trace by greedy template
+// matching. Illustrative values; the GCaMP6 variants were named f, m and s for fast, medium and slow.
+const B8_IND={f:{name:'Faster indicator',A:.2,tr:.02,td:.25},s:{name:'Slower, brighter',A:.35,tr:.07,td:.9}};
+const B8_FPS=30,B8_CAN=120,B8_NCA=40;
+function B8_caKernel(ind){const raw=u=>(1-Math.exp(-u/ind.tr))*Math.exp(-u/ind.td);let pk=0;for(let u=0;u<2;u+=.0005)pk=Math.max(pk,raw(u));const K=Math.min(B8_CAN,Math.ceil(6*ind.td*B8_FPS));return range(K).map(j=>ind.A*raw(j/B8_FPS)/pk)}
+const B8_CAK={f:B8_caKernel(B8_IND.f),s:B8_caKernel(B8_IND.s)};
+const B8_CANOISE={low:.03,high:.08};
+function B8_caTrace(slots,ind,noise,seed){const k=B8_CAK[ind],F=new Array(B8_CAN).fill(0),r=B8_rng(seed*53+7);for(const sl of slots){const j0=sl*3;for(let u=0;u<k.length&&j0+u<B8_CAN;u++)F[j0+u]+=k[u]}return F.map(v=>v+B8_CANOISE[noise]*B8_gauss(r))}
+function B8_caInfer(F,ind){const k=B8_CAK[ind],res=F.slice(),out=[],full=sum(k.map(v=>v*v));
+ for(let it=0;it<40;it++){let best=0,bj=-1;
+  for(let j=0;j<B8_CAN;j++){let num=0,den=0;for(let u=0;u<k.length&&j+u<B8_CAN;u++){num+=res[j+u]*k[u];den+=k[u]*k[u]}if(den<.25*full)continue;const c=num/den;if(c>best){best=c;bj=j}}
+  if(bj<0||best<.55)break;const m=Math.max(1,Math.round(best));for(let u=0;u<k.length&&bj+u<B8_CAN;u++)res[bj+u]-=m*k[u];out.push({j:bj,m})}
+ const merged={};for(const e of out)merged[e.j]=(merged[e.j]||0)+e.m;return Object.keys(merged).map(j=>({j:+j,m:merged[j]})).sort((a,b)=>a.j-b.j)}
+// Count true spikes matched by an estimated one at most 2 frames (67 ms) away.
+function B8_caMatch(slots,inf){const pool=[];for(const e of inf)for(let i=0;i<e.m;i++)pool.push(e.j);let hit=0;for(const sl of slots.slice().sort((a,b)=>a-b)){const j=sl*3,i=pool.findIndex(q=>Math.abs(q-j)<=2);if(i>=0){hit++;pool.splice(i,1)}}return hit}
+const B8_CACACHE={};
+function B8_caRun(s){const key=[s.slots.slice().sort((a,b)=>a-b).join('.'),s.ind,s.noise,s.seed].join('|');if(!B8_CACACHE[key]){const F=B8_caTrace(s.slots,s.ind,s.noise,s.seed),inf=B8_caInfer(F,s.ind);B8_CACACHE[key]={F,inf,found:sum(inf.map(e=>e.m)),hit:B8_caMatch(s.slots,inf)}}return B8_CACACHE[key]}
+const B8_CAPRE={spaced:[2,10,18,26,34],burst:[5,6,7,20,21,31],mixed:[3,4,12,22,23,24,25,33]};
+SCENE({id:'recording-many',name:'Neurons that light up',tag:'Calcium indicators, 1985–2013',
+ definition:'When a neuron fires, calcium flows in through voltage-gated channels and the calcium level inside rises for a fraction of a second. In 1985 Roger Tsien’s group made fura-2, a dye whose fluorescence changes when it binds calcium. In 2001 Junichi Nakai, Masamichi Ohkura and Keiji Imoto made GCaMP: green fluorescent protein joined to calmodulin, a calcium-binding protein, so that it glows brighter when calcium rises. Because it is a protein, a gene can make chosen cells produce it for weeks.',
+ example:`Here each spike adds a brief rise in brightness of ${Math.round(100*B8_IND.f.A)}% or ${Math.round(100*B8_IND.s.A)}% of the resting level, which fades over about ${B8_IND.f.td} s or ${B8_IND.s.td} s. Spikes closer together than that pile up into one larger bump, so the microscope sees a slowed, smoothed copy of the spike train. The GCaMP6 proteins (Chen and colleagues, 2013) came in fast and slow versions: the slow ones give bigger signals, the fast ones keep spikes apart. Working back from brightness to spikes is always an estimate.`,
+ desc:'A four-second timeline of spikes the learner places, the simulated brightness of one cell carrying a calcium indicator, and marks for the spikes estimated back from that brightness, with counts of spikes fired, spikes found and spikes found at the right moment.',
+ research:['Grynkiewicz, Poenie & Tsien (1985). A new generation of Ca²⁺ indicators with greatly improved fluorescence properties. Journal of Biological Chemistry 260, 3440–3450 (fura-2).','Nakai, Ohkura & Imoto (2001). A high signal-to-noise Ca²⁺ probe composed of a single green fluorescent protein. Nature Biotechnology 19, 137–141 (GCaMP).','Chen, Wardill, Sun, … , Svoboda & Kim (2013). Ultrasensitive fluorescent proteins for imaging neuronal activity. Nature 499, 295–300 (GCaMP6).','The cell, indicator values, noise and spike estimate here are simulated and illustrative.'],
+ dur:12,hint:'Press the slots to add or remove spikes, or pick a pattern. Switch between the faster and the slower indicator and raise the noise: when are two spikes still seen as two? New noise records the same spikes again. Hear plays the spikes as clicks. Simulated.',
+ init:()=>({slots:B8_CAPRE.mixed.slice(),ind:'f',noise:'low',seed:1}),
+ watch(p){const seq=[['spaced','f'],['burst','f'],['burst','s'],['mixed','s']],k=Math.min(3,Math.floor(p*4));return {slots:B8_CAPRE[seq[k][0]].slice(),ind:seq[k][1],noise:'low',seed:1}},
+ ui:[{choose:[['f','Faster indicator'],['s','Slower, brighter']],label:'Indicator',get:s=>s.ind,act:'ind'},{choose:[['low','Low noise'],['high','High noise']],label:'Noise',get:s=>s.noise,act:'noise'},{choose:[['spaced','Spaced'],['burst','Bursts'],['mixed','Mixed'],['none','None']],label:'Spike pattern',get:s=>'',act:'preset'},{b:'New noise',act:'seed'},{b:'Hear the spikes ▶',act:'hear'}],
+ on:{ind(s,v){s.ind=v==='s'?'s':'f'},noise(s,v){s.noise=v==='high'?'high':'low'},preset(s,v){s.slots=B8_CAPRE[v]?B8_CAPRE[v].slice():[]},seed(s){s.seed++},
+  slot(s,v){const i=clamp(Math.round(+v),0,B8_NCA-1),k=s.slots.indexOf(i);if(k>=0)s.slots.splice(k,1);else s.slots.push(i)},
+  hear(s){B8_click(s.slots.map(i=>i*.1),.12);return 'keep'}},
+ draw(s,f,X){
+  const ind=B8_IND[s.ind],run=B8_caRun(s),n=s.slots.length,TX=t=>50+t/4*500;
+  let out=heading(!n?'No spikes: the cell stays dim':`${n} spike${n===1?'':'s'} fired, ${run.found} estimated from the light`);
+  out+=TF(50,54,'spikes fired: press a slot to add or remove one',13,C.muted,'start');
+  for(let i=0;i<B8_NCA;i++){const on=s.slots.includes(i),x=TX(i*.1);out+=hit(X,'slot',i,`Spike at ${i*100} ms: ${on?'on':'off'}`,R(x-4,60,8,22,on?C.blue:'#fff',on?C.blue:C.grid,2))}
+  for(const e of run.inf){const x=TX(e.j/B8_FPS);out+=`<polygon points="${fmt(x)},86 ${fmt(x-5)},96 ${fmt(x+5)},96" fill="${C.coral}"/>`;if(e.m>1)out+=TF(x+7,96,'×'+e.m,13,C.coral,'start')}
+  const pl=B8_plot(50,104,500,136,[0,4],[-.25,1.6],{xt:[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4 s']],yt:[[0,'0'],[.5,'50%'],[1,'100%'],[1.5,'150%']]});
+  out+=pl.svg+L(pl.X(0),pl.Y(0),pl.X(4),pl.Y(0),C.grid,1)+TF(58,120,'brightness change (ΔF/F)',13,C.muted,'start');
+  out+=B8_poly(run.F.map((v,j)=>[pl.X(j/B8_FPS),pl.Y(clamp(v,-.25,1.6))]),C.green,2);
+  out+=B8_tile(45,268,120,'Spikes fired',String(n),C.blue)+B8_tile(175,268,120,'Estimated',String(run.found),C.coral)+B8_tile(305,268,120,'At the right time',n?`${run.hit} of ${n}`:'none',run.hit===n?C.green:C.coral)+B8_tile(435,268,120,'Fades over',ind.td+' s',C.ink);
+  out+=TF(300,336,'blue: spikes fired · coral ▲: spikes estimated from the green trace',13,C.muted);
+  out+=B8_note(`Simulated cell. ${ind.name}: each spike adds about ${Math.round(100*ind.A)}% brightness.`,362);
+  const missed=n-run.hit;
+  return {svg:out,phase:!n?'With no spikes the trace is only noise. Press the slots along the top to make the cell fire.':missed===0&&run.found===n?`All ${n} spikes were recovered at the right moments: each left a bump in the green trace that stood out from the noise and from its neighbours. Now try spikes closer together, or more noise.`:
+   `${run.hit} of ${n} spikes were found at the right moment${run.found!==n?`, and ${run.found} were estimated in all`:''}. Where spikes come closer together than the ${ind.td} s fade, their bumps merge, and noise hides small steps. ${s.ind==='s'?'The slower indicator gives bigger bumps but blurs neighbours together.':'The faster indicator keeps spikes apart but its smaller bumps are harder to see in noise.'}`};
+ }});
+
+// Two-photon excitation, schematic. Beam radius w(z) = w0·√(1+(z/zR)²) with w0 = 0.5 µm and zR = 1 µm (z from the focus).
+// Each depth slice passes the whole beam, so one-photon excitation per slice is the same at every depth; two-photon
+// excitation goes with intensity squared, so per slice it falls as 1/(1+(z/zR)²). Cells are discs of radius 6 µm on the
+// beam's axis, 12 µm thick. Tissue 400 µm deep, uniformly labelled for the "share of light" tiles.
+const B8_W0=.5,B8_ZR=1,B8_TIS=400,B8_RC=6,B8_TPCELLS=[80,140,200,260,320];
+const B8_wz=z=>B8_W0*Math.sqrt(1+(z/B8_ZR)**2);
+const B8_tpShare=(f,half)=>{const a=z=>Math.atan(z/B8_ZR);return (a(half)-a(-half))/(a(B8_TIS-f)-a(-f))};
+const B8_opShare=half=>2*half/B8_TIS;
+function B8_cellExc(mode,dz){let t=0;for(let i=0;i<=12;i++){const z=dz-6+i,w=B8_wz(z);t+=mode==='one'?1-Math.exp(-2*B8_RC**2/w**2):(1-Math.exp(-4*B8_RC**2/w**2))/w**2}return t/13}
+const B8_cellGlow=(mode,dz)=>B8_cellExc(mode,dz)/B8_cellExc(mode,0);
+SCENE({id:'recording-many-twophoton',name:'Light only at the focus',tag:'Denk, Strickler and Webb, 1990',
+ definition:'In ordinary fluorescence, one photon of blue light excites a molecule, and every depth the beam passes through glows, so cells above and below the focus blur the image. In 1990 Winfried Denk, James Strickler and Watt Webb showed a way round this. A molecule can also be excited by two photons of infrared light arriving together, an effect predicted by Maria Göppert-Mayer in 1931. That needs very intense light, so with short laser pulses it happens almost only at the focus.',
+ example:`Two-photon excitation grows with the square of the intensity, and the intensity is highest at the focus. In this schematic tissue 400 µm deep, ${Math.round(100*B8_opShare(2))}% of one-photon fluorescence comes from within 2 µm of the focus, against ${Math.round(100*B8_tpShare(200,2))}% for two-photon excitation focused 200 µm down. Infrared light also scatters less than blue, so it reaches cells several hundred micrometres into the cortex of a living animal, and all the light that comes back can be credited to the focal spot.`,
+ desc:'A slab of tissue with a column of five cells and a focused beam, an hourglass of light, beside a graph of how much excitation each depth receives for one-photon and two-photon light, with tiles for the share of light from the focus and the glow of the nearest other cell.',
+ research:['Denk, Strickler & Webb (1990). Two-photon laser scanning fluorescence microscopy. Science 248, 73–76.','Göppert-Mayer (1931). Über Elementarakte mit zwei Quantensprüngen. Annalen der Physik 401, 273–294 (the prediction of two-photon absorption).','Helmchen & Denk (2005). Deep tissue two-photon microscopy. Nature Methods 2, 932–940.','The beam and cells are schematic: focal depth about 1 µm, cells 12 µm across.'],
+ dur:12,hint:'Move the focus down through the tissue and switch between one-photon and two-photon light. Watch how brightly the cells that are not in focus glow, and how much of the light comes from the focus itself. Schematic values.',
+ init:()=>({mode:'one',f:200}),
+ watch(p){return p<.5?{mode:'one',f:Math.round(lerp(80,320,p/.5)/10)*10}:{mode:'two',f:Math.round(lerp(80,320,(p-.5)/.5)/10)*10}},
+ ui:[{choose:[['one','One-photon (blue)'],['two','Two-photon (infrared)']],label:'Light',get:s=>s.mode,act:'mode'},{range:'f',label:'Focus depth',min:60,max:340,step:10,get:s=>s.f,act:'f',show:v=>v+' µm'}],
+ on:{mode(s,v){s.mode=v==='two'?'two':'one'},f(s,v){s.f=clamp(Math.round(+v/10)*10,60,340)}},
+ draw(s){
+  const two=s.mode==='two',Y=d=>62+d/B8_TIS*280,cx=160,fy=Y(s.f),half=dz=>Math.min(118,.35*Math.abs(dz));
+  const share=two?B8_tpShare(s.f,2):B8_opShare(2);
+  const others=B8_TPCELLS.map(d=>({d,g:B8_cellGlow(s.mode,d-s.f)})),inF=others.filter(c=>Math.abs(c.d-s.f)<=6),near=others.filter(c=>Math.abs(c.d-s.f)>6).sort((a,b)=>Math.abs(a.d-s.f)-Math.abs(b.d-s.f))[0];
+  let out=heading(`${two?'Two-photon':'One-photon'} light focused ${s.f} µm deep: ${Math.round(100*share)}% from the focus`);
+  // tissue, objective, beam
+  out+=R(30,62,260,280,'#f7f3ee',C.grid,4)+`<polygon points="105,40 215,40 200,58 120,58" fill="${C.muted}"/>`+TF(222,52,'objective',13,C.muted,'start');
+  const top=half(s.f),bot=half(B8_TIS-s.f),beam=two?'#b0413e':'#2f6fd6';
+  const hg=`${fmt(cx-top)},62 ${fmt(cx+top)},62 ${cx},${fmt(fy)} ${fmt(cx+bot)},342 ${fmt(cx-bot)},342 ${cx},${fmt(fy)}`;
+  out+=`<polygon points="${hg}" fill="${two?beam:C.green}" fill-opacity="${two?.06:.22}" stroke="${beam}" stroke-opacity=".5" stroke-width="1.2"/>`;
+  if(two)out+=`<ellipse cx="${cx}" cy="${fmt(fy)}" rx="9" ry="4" fill="${C.green}"/>`;
+  for(const c of others){const y=Y(c.d);out+=Ci(cx,y,10,tint(C.green,1-.9*clamp(c.g,0,1)),C.green,'stroke-width="1.5"')}
+  out+=L(40,fy,62,fy,C.ink,1.5)+TF(44,fy-5,'focus',13,C.ink,'start');
+  out+=TF(40,78,'surface',13,C.muted,'start')+TF(40,336,`${B8_TIS} µm`,13,C.muted,'start');
+  out+=TF(282,336,two?'infrared beam':'blue beam',13,beam,'end');
+  // excitation per depth slice
+  const pl=B8_plot(340,78,230,120,[0,B8_TIS],[0,1.15],{xt:[[0,'0'],[200,'200'],[400,'400 µm']],yt:[[0,'0'],[1,'1']],xl:'depth',xlDy:32,yl:'excitation per depth slice'});out+=pl.svg;
+  out+=L(pl.X(0),pl.Y(1),pl.X(B8_TIS),pl.Y(1),C.blue,two?1.6:3,two?'stroke-dasharray="5 4"':'');
+  const tp=[];for(let i=0;i<=400;i++){const d=i;tp.push([pl.X(d),pl.Y(1/(1+((d-s.f)/B8_ZR)**2))])}out+=B8_poly(tp,'#b0413e',two?3:1.6,two?'':'stroke-dasharray="5 4"');
+  out+=TF(pl.X(8),pl.Y(1)-6,'one-photon',13,C.blue,'start')+TF(pl.X(s.f>200?s.f-8:s.f+8),pl.Y(.55),'two-photon',13,'#b0413e',s.f>200?'end':'start');
+  out+=B8_tile(330,240,120,'From the focus',Math.round(100*share)+'%',two?C.green:C.coral)+B8_tile(458,240,120,`Cell ${near?Math.abs(near.d-s.f):0} µm away`,near?(near.g>=.01?Math.round(100*near.g)+'%':'<1%'):'none',near&&near.g>=.05?C.coral:C.green);
+  out+=TF(454,306,'tiles: share of light from within',13,C.muted)+TF(454,322,'2 µm of the focus; nearest other',13,C.muted)+TF(454,338,'cell’s glow, focused cell = 100%',13,C.muted);
+  out+=B8_note('Schematic beam, cells and tissue; not to scale.',366);
+  return {svg:out,phase:two?`With two-photon light only the slice within a micrometre or two of the focus is excited, so ${Math.round(100*share)}% of the light comes from there. ${inF.length?'The cell in focus glows':'No cell is exactly in focus'}, and the nearest other cell, ${near?Math.abs(near.d-s.f):0} µm away, glows at ${near&&near.g>=.01?Math.round(100*near.g)+'%':'under 1%'} of that. Moving the focus picks out one depth at a time.`:
+   `With one-photon light every depth along the beam absorbs about the same total light, so only ${Math.round(100*share)}% of the fluorescence comes from within 2 µm of the focus. ${near?`The cell ${Math.abs(near.d-s.f)} µm away still glows at ${Math.round(100*near.g)}% of the focused cell, and the labelled tissue all around adds a haze.`:''} Switch to two-photon light.`};
+ }});
+
+// Spike sorting on a probe, simulated. Sites in one column, 20 µm apart. Spike amplitude at distance d falls as
+// A0/(1+(d/r0)²), with A0 = 300 µV and r0 = 30 µm (illustrative). Each spike's size varies by 8%, and each site adds
+// 15 µV of noise. Two cells are told apart by the distance between their mean footprints across sites.
+const B8_SITES={one:[0],four:[-30,-10,10,30],dense:range(15).map(i=>-140+i*20)};
+const B8_N2={same:[15,20],above:[25,60],far:[60,0],high:[25,120]};
+const B8_N1=[25,0],B8_A0=300,B8_R0=30,B8_SN=15,B8_JIT=.08;
+const B8_amp2=(n,y)=>B8_A0/(1+(Math.hypot(n[0],n[1]-y)/B8_R0)**2);
+const B8_Phi=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2),p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
+function B8_sortStats(cfg,pos){const sites=B8_SITES[cfg],n2=B8_N2[pos],m1=sites.map(y=>B8_amp2(B8_N1,y)),m2=sites.map(y=>B8_amp2(n2,y));
+ const dist=Math.sqrt(sum(m1.map((v,i)=>(v-m2[i])**2))),sd=Math.sqrt(B8_SN**2+(B8_JIT*(Math.max(...m1)+Math.max(...m2))/2)**2),dp=dist/sd;return {sites,n2,m1,m2,dp,err:B8_Phi(-dp/2)}}
+SCENE({id:'recording-many-probes',name:'Hundreds of sites on one shank',tag:'Neuropixels: Jun and colleagues, 2017',
+ definition:'A wire in the brain picks up spikes from several nearby cells at once. Silicon probes with many recording sites have been made since about 1970 (Wise, Starr and Angell). In 2017 James Jun, Timothy Harris and a large team from several institutes, with the chip maker imec, described Neuropixels: a shank 10 mm long and 70 × 20 µm in cross-section, carrying 960 sites, of which 384 can be recorded at once. One probe recorded hundreds of neurons in several brain regions of a mouse.',
+ example:'Each spike reaches several neighbouring sites, smaller on the sites further away. That pattern across sites, the footprint, is what tells cells apart: two cells the same distance from one wire give spikes of the same size, but dense sites see them from different angles. Sorting spikes into cells is done by software (for example Kilosort) and still makes mistakes, so studies report how well each unit is isolated.',
+ desc:'A probe shank with its recording sites and two nearby cells, bars at each site for the size of each cell’s spikes, and a scatter plot of spike sizes on the sites nearest each cell, with an estimate of how many spikes would be put in the wrong cell.',
+ research:['Jun, Steinmetz, Siegle, … , Harris, Koch, O’Keefe & Harris (2017). Fully integrated silicon probes for high-density recording of neural activity. Nature 551, 232–236.','Wise, Starr & Angell (1970). An integrated-circuit approach to extracellular microelectrodes. IEEE Transactions on Biomedical Engineering 17, 238–247.','Wilson & McNaughton (1993). Science 261, 1055–1058: tetrodes, four wires together, let many place cells be told apart by their spike sizes.','Spike sizes, fall-off with distance and noise here are simulated and illustrative.'],
+ dur:12,hint:'Choose one site, four sites close together, or a dense column, and move the second cell. When are the two cells’ spikes mixed up? Simulated spikes and noise.',
+ init:()=>({cfg:'one',pos:'same'}),
+ watch(p){const seq=[['one','same'],['four','same'],['dense','same'],['one','far'],['dense','high']],k=Math.min(4,Math.floor(p*5));return {cfg:seq[k][0],pos:seq[k][1]}},
+ ui:[{choose:[['one','One site'],['four','Four close sites'],['dense','Dense column (15)']],label:'Probe',get:s=>s.cfg,act:'cfg'},{choose:[['same','Same distance'],['above','40 µm higher'],['far','Further out'],['high','120 µm higher']],label:'Second cell',get:s=>s.pos,act:'pos'}],
+ on:{cfg(s,v){s.cfg=B8_SITES[v]?v:'one'},pos(s,v){s.pos=B8_N2[v]?v:'same'}},
+ draw(s){
+  const st=B8_sortStats(s.cfg,s.pos),yc=200,sx=150,Yp=y=>yc-y,ok=st.err<.01;
+  let out=heading(`${st.sites.length} site${st.sites.length===1?'':'s'}: about ${st.err<.001?'0.1% or fewer':Math.round(100*st.err)+'%'} of spikes put in the wrong cell`);
+  // shank and cells (1 px = 1 µm)
+  out+=R(30,46,270,306,'#fbfcfd',C.grid,8)+`<polygon points="${sx-6},46 ${sx+6},46 ${sx+6},340 ${sx},352 ${sx-6},340" fill="#c9d3da"/>`;
+  st.sites.forEach((y,i)=>{const py=Yp(y);out+=R(sx-4,py-4,8,8,C.dark,'none',1)+R(sx-10-st.m1[i]/300*90,py-5,st.m1[i]/300*90,4,C.coral,'none',1)+R(sx-10-st.m2[i]/300*90,py+1,st.m2[i]/300*90,4,C.blue,'none',1)});
+  const tri=(x,y,col)=>`<polygon points="${fmt(x)},${fmt(y-9)} ${fmt(x-7)},${fmt(y+6)} ${fmt(x+7)},${fmt(y+6)}" fill="${col}"/>`;
+  out+=tri(sx+B8_N1[0],Yp(B8_N1[1]),C.coral)+tri(sx+st.n2[0],Yp(st.n2[1]),C.blue);
+  out+=TF(sx+B8_N1[0]+12,Yp(B8_N1[1])+5,'cell 1',13,C.coral,'start')+TF(sx+st.n2[0]+12,Yp(st.n2[1])+5,'cell 2',13,C.blue,'start');
+  out+=TF(40,64,'bars: spike size',13,C.muted,'start')+TF(40,80,'at each site',13,C.muted,'start');
+  out+=L(250,330,250,310,C.ink,2)+TF(256,324,'20 µm',13,C.ink,'start');
+  // scatter of spike sizes
+  const iA=st.m1.indexOf(Math.max(...st.m1)),iB=st.m2.indexOf(Math.max(...st.m2)),one=st.sites.length===1;
+  const pl=B8_plot(370,62,200,170,[0,360],[0,360],{xt:[[0,'0'],[150,'150'],[300,'300 µV']],yt:one?[]:[[0,'0'],[150,'150'],[300,'300']],xl:one?'spike size on the one site':'size on the site nearest cell 1',xlDy:32,yl:one?'(only one number per spike)':'size nearest cell 2'});out+=pl.svg;
+  const r=B8_rng(4321);for(let k=0;k<2;k++){const m=k?st.m2:st.m1,col=k?C.blue:C.coral;for(let q=0;q<40;q++){const g=1+B8_JIT*B8_gauss(r),a=m[iA]*g+B8_SN*B8_gauss(r),b=m[iB]*g+B8_SN*B8_gauss(r),jy=one?120+k*90+30*(r()-.5):b;out+=Ci(pl.X(clamp(a,0,360)),pl.Y(clamp(jy,0,360)),2.6,col)}}
+  out+=B8_tile(330,282,120,'Separation (d′)',fmt(B8_r1(st.dp)),ok?C.green:C.coral)+B8_tile(458,282,120,'Mis-sorted',st.err<.001?'<0.1%':fmt(B8_r1(100*st.err))+'%',ok?C.green:C.coral);
+  out+=B8_note('Simulated spike sizes and noise; illustrative fall-off with distance.',366);
+  return {svg:out,phase:one&&s.pos==='same'?'Both cells sit 25 µm from the only site, so their spikes are the same size and their dots fall on top of each other. No software can sort them from this record alone. Add sites.':
+   ok&&one?'Cell 2 is further from the site, so its spikes are smaller and the two clouds of dots separate. One site can tell apart cells of different sizes, but not two cells at the same distance.':
+   ok?`Seen from ${st.sites.length} sites, the two cells leave different footprints: cell 1 is largest on one site, cell 2 on another. Their spikes form two separate clouds, and fewer than 1 spike in 100 would be put in the wrong cell.`:
+   `The footprints overlap enough that about ${Math.round(100*st.err)}% of spikes would be put in the wrong cell. ${st.sites.length<15?'More sites, closer together, would separate them.':'Even a dense column has limits when two cells sit close together.'}`};
+ }});
+
+// A simulated population and a behaviour. Each cell's activity = a·behaviour + b·(a second shared signal) + its own
+// noise (sd 1), with a and b drawn from normal distributions (sd 0.3 and 0.25). A readout is fitted on the first half of
+// the session (each cell weighted by its covariance with the behaviour) and tested on the second half.
+const B8_PT=240;
+const B8_smoothSig=seed=>{const r=B8_rng(seed),x=[];let v=0,u=0;for(let t=0;t<B8_PT;t++){u=.9*u+.45*B8_gauss(r);v=.92*v+.25*u;x.push(v)}const m=sum(x)/B8_PT,sd=Math.sqrt(sum(x.map(q=>(q-m)**2))/B8_PT)||1;return x.map(q=>(q-m)/sd)};
+const B8_BEH=B8_smoothSig(606),B8_HID=B8_smoothSig(707);
+const B8_POPCACHE={};
+function B8_pop(N){if(B8_POPCACHE[N])return B8_POPCACHE[N];const r=B8_rng(9001),cells=[];
+ for(let i=0;i<N;i++){const a=.3*B8_gauss(r),b=.25*B8_gauss(r),x=new Array(B8_PT);for(let t=0;t<B8_PT;t++)x[t]=a*B8_BEH[t]+b*B8_HID[t]+B8_gauss(r);cells.push({a,x})}
+ const H=B8_PT/2,w=cells.map(c=>{let s=0;for(let t=0;t<H;t++)s+=c.x[t]*B8_BEH[t];return s/H}),pred=range(B8_PT).map(t=>sum(cells.map((c,i)=>w[i]*c.x[t])));
+ const test=range(H).map(t=>t+H),rTest=B8_corr(test.map(t=>pred[t]),test.map(t=>B8_BEH[t]));
+ const single=cells.map(c=>B8_corr(c.x,B8_BEH)),med=single.map(Math.abs).sort((a,b)=>a-b)[Math.floor(N/2)];
+ return (B8_POPCACHE[N]={cells,w,pred,rTest,single,med})}
+SCENE({id:'recording-many-questions',name:'What thousands of cells reveal',tag:'Stringer and colleagues, 2019',
+ definition:'With one electrode a neuron’s response is studied trial by trial, and what varies from trial to trial is usually treated as noise. Recording thousands of cells at once lets that variation be compared across cells. In 2019 Carsen Stringer, Marius Pachitariu, Nicholas Steinmetz, Charu Reddy, Matteo Carandini and Kenneth Harris imaged about 10,000 neurons at once in the visual cortex of mice. Much of the activity, even in darkness, tracked the mouse’s own movements, such as whisking and running.',
+ example:'Each cell on its own looks mostly random, but many cells share the same slow fluctuations, and together they predict the movements well. So part of what looked like noise is a signal shared across the brain: Neuropixels recordings in the same study found movement-related activity in many regions. The number of neurons recorded at once doubled about every seven years for decades (Stevenson and Kording, 2011), and questions about single cells became questions about populations.',
+ desc:'A behaviour trace, a grid of activity for up to sixty cells over a session that can be sorted by each cell’s link with the behaviour, and the behaviour predicted from all the recorded cells in the second half of the session, with correlations for one typical cell and for the whole population.',
+ research:['Stringer, Pachitariu, Steinmetz, Reddy, Carandini & Harris (2019). Spontaneous behaviors drive multidimensional, brainwide activity. Science 364, eaav7893.','Steinmetz, Zatka-Haas, Carandini & Harris (2019). Distributed coding of choice, action and engagement across the mouse brain. Nature 576, 266–273 (about 30,000 neurons in 42 brain regions).','Stevenson & Kording (2011). How advances in neural recording affect data analysis. Nature Neuroscience 14, 139–142.','The population here is simulated: each cell mixes a little of the behaviour and of another shared signal with its own noise.'],
+ dur:12,hint:'Record more cells and see how well the movements can be predicted from them in the half of the session the readout never saw. Sort the cells to see the shared signal hidden in each noisy row. Simulated cells.',
+ init:()=>({N:10,sort:0}),
+ watch(p){const k=Math.min(4,Math.floor(p*5));return {N:[1,10,100,1000,1000][k],sort:k===4?1:0}},
+ ui:[{choose:[[1,'1 cell'],[10,'10'],[100,'100'],[1000,'1,000']],label:'Cells recorded',get:s=>s.N,act:'N'},{choose:[[0,'Unsorted'],[1,'Sorted by link to movement']],label:'Rows',get:s=>s.sort,act:'sort'}],
+ on:{N(s,v){s.N=[1,10,100,1000].includes(+v)?+v:10},sort(s,v){s.sort=+v?1:0}},
+ draw(s){
+  const P=B8_pop(s.N),H=B8_PT/2,x0=110,w=450,TX=t=>x0+t/B8_PT*w;
+  let rows=range(Math.min(60,s.N));if(s.sort)rows=range(s.N).sort((a,b)=>P.single[b]-P.single[a]).filter((_,i,arr)=>s.N<=60||i%Math.ceil(s.N/60)===0).slice(0,60);
+  let out=heading(`${s.N===1000?'1,000':s.N} cell${s.N===1?'':'s'}: movement predicted with r = ${fmt(B8_r2(P.rTest))}`);
+  // behaviour
+  out+=TF(x0-8,62,'movement',13,C.amber,'end')+B8_poly(range(B8_PT).map(t=>[TX(t),62-10*B8_BEH[t]]),C.amber,1.6);
+  // raster grid
+  const gy=86,gh=160,rh=gh/Math.max(1,rows.length);out+=R(x0,gy,w,gh,'#fff',C.grid,0);
+  rows.forEach((ci,k)=>{const c=P.cells[ci];for(let t=0;t<B8_PT;t+=2){const v=(c.x[t]+c.x[t+1])/2,g=clamp((v+.4)/2.2,0,1);if(g>.08)out+=R(TX(t),gy+k*rh,w/B8_PT*2+.3,Math.max(1,rh-.3),tint(C.dark,1-g),'none',0)}});
+  out+=TF(x0-8,gy+14,s.N<=60?`${rows.length} cell${rows.length===1?'':'s'}`:'60 of',13,C.muted,'end')+TF(x0-8,gy+30,s.N<=60?'':`${s.N===1000?'1,000':s.N}`,13,C.muted,'end');
+  if(s.sort)out+=TF(x0-8,gy+gh-18,'top: most',13,C.muted,'end')+TF(x0-8,gy+gh-2,'linked',13,C.muted,'end');
+  // prediction on test half
+  const py=290,ps=11;out+=L(TX(H),gy-6,TX(H),py+30,C.line,1.5,'stroke-dasharray="4 4"')+TF(TX(H/2),gy+gh+16,'readout fitted here',13,C.muted)+TF(TX(1.5*H),gy+gh+16,'tested here',13,C.muted);
+  const m=sum(P.pred.slice(H))/H,sd=Math.sqrt(sum(P.pred.slice(H).map(v=>(v-m)**2))/H)||1;
+  out+=B8_poly(range(H).map(t=>[TX(t+H),py-ps*B8_BEH[t+H]]),C.amber,1.8)+B8_poly(range(H).map(t=>[TX(t+H),py-ps*(P.pred[t+H]-m)/sd]),C.blue,1.6);
+  out+=TF(TX(H)-8,py-8,'amber: movement',13,C.amber,'end')+TF(TX(H)-8,py+10,'blue: predicted',13,C.blue,'end');
+  out+=B8_tile(30,322,170,'One typical cell, r',fmt(B8_r2(P.med)),C.muted)+B8_tile(215,322,170,'All cells, test half, r',fmt(B8_r2(P.rTest)),P.rTest>.8?C.green:C.coral);
+  out+=TF(570,340,'simulated cells',13,C.muted,'end');
+  return {svg:out,phase:s.N===1?`One cell’s activity is linked to the movement only weakly (r = ${fmt(B8_r2(P.med))}): on its own it looks like noise. Record more cells.`:
+   P.rTest<.8?`With ${s.N} cells the readout predicts the movement in the unseen half of the session with r = ${fmt(B8_r2(P.rTest))}. Each row still looks noisy, but the weak shared signal adds up across cells.`:
+   `With ${s.N===1000?'1,000':s.N} cells the movement is predicted with r = ${fmt(B8_r2(P.rTest))} in the half of the session the readout never saw, although a typical cell alone gives only ${fmt(B8_r2(P.med))}. ${s.sort?'Sorted, the shared slow stripes stand out in the rows.':'Sort the rows to see the shared pattern.'} What looked like private noise is partly a signal shared by many cells.`};
+ }});
+
+/* ===================== Lesson: brains-and-ai ===================== */
+// A threshold unit with two inputs: it fires when w1·x1 + w2·x2 reaches θ. The perceptron rule (rate 0.5) changes the
+// weights after each wrong answer: w += 0.5·(target − output)·x, θ −= 0.5·(target − output). At most 25 passes.
+const B8_GATES={and:{name:'AND',t:[0,0,0,1]},or:{name:'OR',t:[0,1,1,1]},nand:{name:'NOT-AND',t:[1,1,1,0]},xor:{name:'XOR',t:[0,1,1,0]}};
+const B8_PATS=[[0,0],[0,1],[1,0],[1,1]];
+const B8_fire=(s,x)=>s.w1*x[0]+s.w2*x[1]>=s.th-1e-9?1:0;
+function B8_learn(s){const q={w1:s.w1,w2:s.w2,th:s.th},t=B8_GATES[s.gate].t;let up=0,ep=0,ok=false;
+ for(ep=1;ep<=25;ep++){let wrong=0;B8_PATS.forEach((x,i)=>{const e=t[i]-B8_fire(q,x);if(e){wrong++;up++;q.w1+=.5*e*x[0];q.w2+=.5*e*x[1];q.th-=.5*e}});if(!wrong){ok=true;break}}
+ return {w1:q.w1,w2:q.w2,th:q.th,log:{ep:Math.min(ep,25),up,ok}}}
+const B8_aiInit=()=>({gate:'and',w1:1,w2:1,th:2,x:[1,1],log:null});
+SCENE({id:'brains-and-ai',name:'A neuron as a logic gate',tag:'McCulloch and Pitts, 1943; Rosenblatt, 1958',
+ definition:'In 1943 Warren McCulloch, a neurophysiologist, and Walter Pitts, a young logician, described an idealised neuron: it adds up its inputs and fires if the total reaches a threshold. Networks of such units could compute any logical expression. Their connections were fixed. In 1958 Frank Rosenblatt’s perceptron made the weights adjustable: after each wrong answer, every active input’s weight is nudged towards the right one.',
+ example:'With both weights at 1, a threshold of 2 gives AND (both inputs needed) and a threshold of 1 gives OR. The perceptron rule finds such weights by itself whenever a single straight line can separate the inputs that should fire from those that should not. For XOR no line can, so one unit never learns it, a limit stressed by Minsky and Papert in 1969. Mind In Motion trains a perceptron step by step.',
+ desc:'A unit with two inputs, two weights and a threshold, the table of its answers for all four input patterns against the chosen logic gate, and the square of input patterns with the unit’s dividing line.',
+ research:['McCulloch & Pitts (1943). A logical calculus of the ideas immanent in nervous activity. Bulletin of Mathematical Biophysics 5, 115–133.','Rosenblatt (1958). The perceptron: a probabilistic model for information storage and organization in the brain. Psychological Review 65, 386–408.','Minsky & Papert (1969). Perceptrons. MIT Press.'],
+ dur:12,hint:'Choose a gate and set the two weights and the threshold until all four rows are right, or press Learn to let the perceptron rule find them. Press an input on the diagram to switch it. Try XOR.',
+ init:B8_aiInit,
+ watch(p){const k=Math.min(3,Math.floor(p*4)),seq=[{gate:'and',w1:1,w2:1,th:2},{gate:'or',w1:1,w2:1,th:1},{gate:'nand',w1:-1,w2:-1,th:-1.5},{gate:'xor',w1:0,w2:0,th:0}];const s={...seq[k],x:[1,k%2],log:null};if(k===3)Object.assign(s,B8_learn(s));return s},
+ ui:[{choose:Object.keys(B8_GATES).map(k=>[k,B8_GATES[k].name]),label:'Gate',get:s=>s.gate,act:'gate'},{range:'w1',label:'Weight 1',min:-3,max:3,step:.5,get:s=>s.w1,act:'w1',show:v=>B8_sg(+v)},{range:'w2',label:'Weight 2',min:-3,max:3,step:.5,get:s=>s.w2,act:'w2',show:v=>B8_sg(+v)},{range:'th',label:'Threshold',min:-3,max:4,step:.5,get:s=>s.th,act:'th',show:v=>B8_sg(+v)},{b:'Learn (perceptron rule)',act:'learn'},{b:'Weights to zero',act:'zero'}],
+ on:{gate(s,v){s.gate=B8_GATES[v]?v:'and';s.log=null},w1(s,v){s.w1=clamp(Math.round(+v*2)/2,-3,3);s.log=null},w2(s,v){s.w2=clamp(Math.round(+v*2)/2,-3,3);s.log=null},th(s,v){s.th=clamp(Math.round(+v*2)/2,-3,4);s.log=null},
+  learn(s){Object.assign(s,B8_learn(s))},zero(s){s.w1=0;s.w2=0;s.th=0;s.log=null},inp(s,v){const i=+v?1:0;s.x[i]=s.x[i]?0:1;return 'keep'}},
+ draw(s,f,X){
+  const g=B8_GATES[s.gate],outs=B8_PATS.map(x=>B8_fire(s,x)),right=outs.filter((o,i)=>o===g.t[i]).length,y=B8_fire(s,s.x),tot=s.w1*s.x[0]+s.w2*s.x[1];
+  let out=heading(`${g.name}: ${right} of 4 rows right${right===4?'':s.log&&!s.log.ok?', and learning cannot fix it':''}`);
+  // the unit
+  const ins=[[64,92],[64,192]],body=[200,142];
+  ins.forEach((q,i)=>{const on=s.x[i],w=i?s.w2:s.w1;out+=arrow(q[0]+22,q[1],body[0]-34*Math.cos(Math.atan2(body[1]-q[1],body[0]-q[0])),body[1]-34*Math.sin(Math.atan2(body[1]-q[1],body[0]-q[0])),w<0?C.coral:C.blue,1.5+Math.abs(w));
+   out+=hit(X,'inp',i,`Input ${i+1} is ${on}. Press to switch.`,Ci(q[0],q[1],20,on?C.blue:'#fff',C.blue)+TBF(q[0],q[1]+5,String(on),15,on?'#fff':C.blue));
+   out+=TF(q[0],q[1]+(i?36:-28),`input ${i+1}`,13,C.muted)+R(116,(q[1]+body[1])/2-12+(i?6:-6),44,22,'#fff',C.grid,6)+TBF(138,(q[1]+body[1])/2+3+(i?6:-6),B8_sg(w),13,w<0?C.coral:C.blue)});
+  out+=Ci(body[0],body[1],34,y?C.amberp:'#fff',C.amber)+TBF(body[0],body[1]-2,'Σ ≥ θ',14,C.ink)+TF(body[0],body[1]+16,'θ = '+B8_sg(s.th),13,C.ink);
+  out+=arrow(234,142,262,142,C.amber,2.5)+Ci(278,142,14,y?C.amber:'#fff',C.amber)+TBF(278,147,String(y),13,y?'#fff':C.amber);
+  out+=TF(170,240,`sum ${B8_sg(tot)} ${tot>=s.th-1e-9?'≥':'<'} θ ${B8_sg(s.th)}: ${y?'fires':'silent'}`,13,C.ink);
+  // truth table
+  const cx=[340,380,450,510,560];out+=R(318,46,264,138,'#fff',C.grid,8);
+  ['in 1','in 2','sum','fires','want'].forEach((h,i)=>out+=TBF(cx[i],64,h,13,C.muted));
+  B8_PATS.forEach((x,i)=>{const yy=88+i*24,ok=outs[i]===g.t[i],sm=s.w1*x[0]+s.w2*x[1];out+=TF(cx[0],yy,x[0],13,C.ink)+TF(cx[1],yy,x[1],13,C.ink)+TF(cx[2],yy,B8_sg(sm),13,C.ink)+TBF(cx[3],yy,outs[i],13,ok?C.green:C.coral)+TF(cx[4],yy,g.t[i]+(ok?' ✓':' ✕'),13,ok?C.green:C.coral)});
+  // input square with the dividing line
+  const pl=B8_plot(380,214,120,110,[-.4,1.4],[-.4,1.4],{xt:[[0,'0'],[1,'1']],yt:[[0,'0'],[1,'1']],xl:'input 1',xlDy:32});out+=pl.svg+TF(372,207,'input 2',13,C.muted,'end');
+  const lo=-.4,hi=1.4,pts=[];
+  if(Math.abs(s.w2)>1e-9){for(const xv of [lo,hi])pts.push([xv,(s.th-s.w1*xv)/s.w2])}else if(Math.abs(s.w1)>1e-9){for(const yv of [lo,hi])pts.push([s.th/s.w1,yv])}
+  if(pts.length){const cl=pts.map(q=>[clamp(q[0],lo-1,hi+1),q[1]]);out+=`<clipPath id="b8clip"><rect x="380" y="214" width="120" height="110"/></clipPath>`+G(L(pl.X(cl[0][0]),pl.Y(cl[0][1]),pl.X(cl[1][0]),pl.Y(cl[1][1]),C.amber,2.5),'clip-path="url(#b8clip)"')}
+  B8_PATS.forEach((x,i)=>out+=Ci(pl.X(x[0]),pl.Y(x[1]),8,g.t[i]?C.ink:'#fff',outs[i]===g.t[i]?C.green:C.coral,'stroke-width="3"'));
+  out+=TF(512,236,'filled: should fire',13,C.muted,'start')+TF(512,254,'ring: green if right',13,C.muted,'start')+TF(512,272,'line: sum = θ',13,C.amber,'start');
+  out+=B8_tile(30,276,150,'Perceptron rule',s.log?`${s.log.up} change${s.log.up===1?'':'s'}`:'not run',s.log?(s.log.ok?C.green:C.coral):C.muted)+B8_tile(190,276,150,'Passes',s.log?(s.log.ok?String(s.log.ep):'25, no fit'):'none',s.log?(s.log.ok?C.green:C.coral):C.muted);
+  out+=B8_note('A McCulloch–Pitts-style unit with adjustable weights, as in Rosenblatt’s perceptron.',362);
+  return {svg:out,phase:s.log&&!s.log.ok?`After 25 passes and ${s.log.up} weight changes the unit still gets XOR wrong. No single line separates (0,1) and (1,0) from (0,0) and (1,1), so one threshold unit cannot compute it; a second layer of units can.`:
+   s.log?`The perceptron rule found weights ${B8_sg(s.w1)} and ${B8_sg(s.w2)} with threshold ${B8_sg(s.th)} after ${s.log.up} change${s.log.up===1?'':'s'}. All four rows are now right: the line divides the patterns that should fire from those that should not.`:
+   right===4?`All four rows match ${g.name}. A unit that only adds and compares with a threshold computes a logical function, which is the step McCulloch and Pitts took in 1943.`:
+   `${right} of 4 rows are right. Change a weight or the threshold to move the line in the square, or press Learn. ${s.gate==='xor'?'Can any line do XOR?':''}`.trim()};
+ }});
+
+// Convolution and pooling on a 9 × 9 image. The "simple cell" filter is 3 × 3: +1 down its middle and −0.5 on either side
+// (or the same turned 90°). S units: the filter at every position (7 × 7), negative values set to zero. C units: the largest
+// S response in each 3 × 3 patch of S units, with patches starting every 2 (3 × 3 C units).
+const B8_FILT={v:[[-.5,1,-.5],[-.5,1,-.5],[-.5,1,-.5]],h:[[-.5,-.5,-.5],[1,1,1],[-.5,-.5,-.5]]};
+function B8_img(s){const im=range(9).map(()=>new Array(9).fill(0));for(let d=-1;d<=1;d++){const x=s.o==='v'?s.bx:s.o==='h'?s.bx+d:s.bx+d,y=s.o==='v'?s.by+d:s.o==='h'?s.by:s.by-d;if(x>=0&&x<9&&y>=0&&y<9)im[y][x]=1}return im}
+function B8_conv(im,f){return range(7).map(y=>range(7).map(x=>{let v=0;for(let j=0;j<3;j++)for(let i=0;i<3;i++)v+=f[j][i]*im[y+j][x+i];return Math.max(0,v)}))}
+const B8_pool=S=>range(3).map(y=>range(3).map(x=>{let m=0;for(let j=0;j<3;j++)for(let i=0;i<3;i++)m=Math.max(m,S[2*y+j][2*x+i]);return m}));
+SCENE({id:'brains-and-ai-features',name:'From simple cells to convolution',tag:'Hubel and Wiesel, 1962; Fukushima, 1980',
+ definition:'David Hubel and Torsten Wiesel found that many cells in the cat’s primary visual cortex respond to a bar or edge at one orientation. Simple cells respond only when it falls on one spot; complex cells respond to the same orientation anywhere within a larger patch. They proposed that complex cells pool simple cells. In 1980 Kunihiko Fukushima built the neocognitron from layers of “S-cells” and “C-cells” named after them, each layer copying one detector across the whole image.',
+ example:'Copying one detector to every position is a convolution; taking the strongest response in each patch is pooling. Here a filter with +1 down its middle and −0.5 on each side gives 3 for a bar lying exactly along it and 0 for a bar across it. In 1989 Yann LeCun and colleagues trained a network built this way to read handwritten postcodes, learning the filters by backpropagation. Convolutional networks descend from this line, and are loose models of vision, not copies of it.',
+ desc:'A 9 × 9 image with a short bar, the map of simple-cell responses made by sliding one oriented filter over it, and the smaller map of complex cells that each take the strongest simple cell in a patch, with the central units outlined.',
+ research:['Hubel & Wiesel (1959). Receptive fields of single neurones in the cat’s striate cortex. Journal of Physiology 148, 574–591.','Hubel & Wiesel (1962). Receptive fields, binocular interaction and functional architecture in the cat’s visual cortex. Journal of Physiology 160, 106–154.','Fukushima (1980). Neocognitron: a self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position. Biological Cybernetics 36, 193–202.','LeCun, Boser, Denker, Henderson, Howard, Hubbard & Jackel (1989). Backpropagation applied to handwritten zip code recognition. Neural Computation 1, 541–551.'],
+ dur:12,hint:'Press the image to move the bar, and change its orientation or the filter’s. Watch the outlined simple cell and complex cell: which keeps responding as the bar moves a little? The filter is a fixed illustration.',
+ init:()=>({bx:4,by:4,o:'v',f:'v'}),
+ watch(p){if(p<.75){const bx=1+Math.min(6,Math.floor(p/.75*7));return {bx,by:4,o:'v',f:'v'}}return {bx:4,by:4,o:p<.88?'h':'d',f:'v'}},
+ ui:[{choose:[['v','Vertical bar'],['h','Horizontal'],['d','Diagonal']],label:'Bar',get:s=>s.o,act:'o'},{choose:[['v','Vertical filter'],['h','Horizontal filter']],label:'Simple cells prefer',get:s=>s.f,act:'f'},{b:'Centre the bar',act:'centre'}],
+ on:{o(s,v){s.o=['v','h','d'].includes(v)?v:'v'},f(s,v){s.f=v==='h'?'h':'v'},centre(s){s.bx=4;s.by=4},px(s,v){const i=clamp(Math.round(+v),0,80);s.bx=clamp(i%9,1,7);s.by=clamp(Math.floor(i/9),1,7)}},
+ draw(s,f,X){
+  const im=B8_img(s),S=B8_conv(im,B8_FILT[s.f]),Cm=B8_pool(S),sC=S[3][3],cC=Cm[1][1],nS=sum(S.map(r=>r.filter(v=>v>.01).length)),nC=sum(Cm.map(r=>r.filter(v=>v>.01).length));
+  const shade=v=>tint(C.coral,1-.92*clamp(v/3,0,1));
+  let out=heading(`Simple cell at the centre: ${fmt(sC)} · complex cell over it: ${fmt(cC)}`);
+  // image
+  const ix=30,iy=70,ic=22;out+=TF(ix,60,'image (press to move the bar)',13,C.muted,'start');
+  for(let y=0;y<9;y++)for(let x=0;x<9;x++)out+=hit(X,'px',y*9+x,`Put the bar’s centre at ${x+1}, ${y+1}`,R(ix+x*ic,iy+y*ic,ic,ic,im[y][x]?C.ink:'#fff',C.grid,0,'stroke-width="1"'));
+  out+=R(ix+3*ic,iy+3*ic,3*ic,3*ic,'none',C.blue,0,'stroke-dasharray="4 3"');
+  // filter
+  const fx=ix,fy=iy+9*ic+22,fc=14;out+=TF(fx,fy-6,'filter',13,C.muted,'start');
+  B8_FILT[s.f].forEach((row,j)=>row.forEach((v,i)=>out+=R(fx+i*fc,fy+j*fc,fc,fc,v>0?C.blue:C.pale,'#fff',0,'stroke-width="1"')));
+  out+=TF(fx+3*fc+8,fy+16,'+1 dark blue, −0.5 pale',13,C.muted,'start')+TF(fx+3*fc+8,fy+34,'blue dashes: the centre cell’s window',13,C.blue,'start');
+  // S map
+  const sx=262,sy=82,sc=17;out+=TBF(sx,62,'simple cells (S)',13,C.ink,'start')+TF(sx,76,'one filter at every position',13,C.muted,'start');
+  for(let y=0;y<7;y++)for(let x=0;x<7;x++)out+=R(sx+x*sc,sy+y*sc,sc,sc,S[y][x]>.01?shade(S[y][x]):'#fff',C.grid,0,'stroke-width="1"');
+  out+=R(sx+3*sc,sy+3*sc,sc,sc,'none',C.blue,0,'stroke-width="2.5"')+R(sx+2*sc,sy+2*sc,3*sc,3*sc,'none',C.purple,0,'stroke-dasharray="4 3"');
+  // C map
+  const cx=440,cy=96,cc=30;out+=TBF(cx,62,'complex cells (C)',13,C.ink,'start')+TF(cx,76,'strongest S in each patch',13,C.muted,'start');
+  for(let y=0;y<3;y++)for(let x=0;x<3;x++)out+=R(cx+x*cc,cy+y*cc,cc,cc,Cm[y][x]>.01?shade(Cm[y][x]):'#fff',C.grid,0,'stroke-width="1"')+TF(cx+x*cc+cc/2,cy+y*cc+cc/2+5,fmt(Cm[y][x]),13,Cm[y][x]>1.5?'#fff':C.ink);
+  out+=R(cx+cc,cy+cc,cc,cc,'none',C.purple,0,'stroke-width="2.5"')+curveArrow(sx+5*sc+4,sy+3.5*sc,cx+cc-4,cy+1.5*cc,-18,C.purple,1.6);
+  out+=TF(cx,cy+3*cc+18,'purple: this C cell pools',13,C.purple,'start')+TF(cx,cy+3*cc+34,'the dashed patch of S cells',13,C.purple,'start');
+  out+=B8_tile(262,246,150,'Simple cell, centre',fmt(sC),sC>.01?C.coral:C.muted)+B8_tile(422,246,150,'Complex cell, centre',fmt(cC),cC>.01?C.coral:C.muted);
+  out+=B8_tile(262,300,150,'S cells responding',`${nS} of 49`,C.ink)+B8_tile(422,300,150,'C cells responding',`${nC} of 9`,C.ink);
+  out+=B8_note('Illustrative filter and image; responses are computed, negative sums shown as 0.',368);
+  const along=s.o===s.f;
+  return {svg:out,phase:!along&&cC<.01?`The bar lies ${s.o==='d'?'diagonally':'across the filter'}, so the filter’s +1 and −0.5 parts cancel and no cell responds. Orientation selectivity comes from the filter’s shape.`:
+   !along?`A diagonal bar only partly matches the ${s.f==='v'?'vertical':'horizontal'} filter: the best any cell gives is ${fmt(cC)}, against 3 for a bar lying along it. Like a simple cell, the filter is tuned to an orientation, not merely to brightness.`:
+   sC>.01?`The bar sits exactly on the centre simple cell’s window, giving ${fmt(sC)}, and the complex cell above it takes that value. Now move the bar one square to the side.`:
+   cC>.01?`The bar has moved off the centre simple cell’s window, so it falls silent, but a neighbouring simple cell in the same patch responds and the complex cell still reports ${fmt(cC)}. Pooling gives a response that tolerates small shifts, as Hubel and Wiesel saw in complex cells.`:
+   'The bar is outside the patch the centre complex cell pools, so both outlined cells are silent; other cells respond where the bar now lies.'};
+ }});
+
+// Representational similarity, simulated. Eight images, four animate and four inanimate. Each image has its own
+// low-level pattern (random) and a category pattern shared by its group. A representation at "depth" α mixes them:
+// (1 − α)·low-level + α·category, plus noise. Model layers 1–5 have α = 0.05, 0.25, 0.45, 0.65, 0.85; the simulated
+// brain areas V1, V4 and IT have α = 0.03, 0.45 and 0.88 with their own noise. A dissimilarity matrix holds 1 − r for each
+// pair of images; matrices are compared by correlating their 28 entries.
+const B8_IMGS=['face','hand','dog','bird','car','chair','hammer','house'];
+const B8_LAYA=[.05,.25,.45,.65,.85],B8_AREAS={V1:.03,V4:.45,IT:.88},B8_D=40;
+const B8_FEAT=(()=>{const r=B8_rng(2014),low=B8_IMGS.map(()=>range(B8_D).map(()=>B8_gauss(r))),cat=[0,1].map(()=>range(B8_D).map(()=>B8_gauss(r)));return {low,cat}})();
+function B8_rep(alpha,seed,noise){const r=B8_rng(seed);return B8_IMGS.map((_,i)=>range(B8_D).map(d=>(1-alpha)*B8_FEAT.low[i][d]+alpha*B8_FEAT.cat[i<4?0:1][d]+noise*B8_gauss(r)))}
+const B8_rdm=rep=>rep.map(a=>rep.map(b=>1-B8_corr(a,b)));
+const B8_tri=M=>{const v=[];for(let i=0;i<8;i++)for(let j=i+1;j<8;j++)v.push(M[i][j]);return v};
+const B8_RSA=(()=>{const lay=B8_LAYA.map((a,i)=>B8_rdm(B8_rep(a,100+i,.15))),area={};Object.keys(B8_AREAS).forEach((k,i)=>area[k]=B8_rdm(B8_rep(B8_AREAS[k],500+i,.4)));
+ const match={};for(const k in area)match[k]=lay.map(M=>B8_corr(B8_tri(M),B8_tri(area[k])));return {lay,area,match}})();
+SCENE({id:'brains-and-ai-ventral',name:'Deep networks and the ventral stream',tag:'Yamins and colleagues, 2014',
+ definition:'Visual signals pass from V1 through areas such as V4 to the inferior temporal cortex (IT), where many cells respond to whole objects. Around 2012 deep convolutional networks trained on large sets of labelled photographs began to recognise objects far better than earlier programs. In 2014 Daniel Yamins, James DiCarlo and colleagues found that a network trained only to recognise objects predicted the responses of IT neurons in monkeys better than earlier models, and its middle layers best matched V4.',
+ example:'One way to compare a network with a brain is representational similarity analysis (Kriegeskorte and colleagues, 2008): for every pair of images, how differently does each respond? In the same year Khaligh-Razavi and Kriegeskorte found that the deep network’s top layers best matched human and monkey IT. The match is a resemblance in pattern, not proof that the brain works the same way, and the brain does this on about 20 watts.',
+ desc:'Two eight-by-eight grids of how differently a chosen network layer and a chosen brain area respond to each pair of eight images, beside a graph of how well each of five layers matches each of three visual areas.',
+ research:['Yamins, Hong, Cadieu, Solomon, Seibert & DiCarlo (2014). Performance-optimized hierarchical models predict neural responses in higher visual cortex. PNAS 111, 8619–8624.','Khaligh-Razavi & Kriegeskorte (2014). Deep supervised, but not unsupervised, models may explain IT cortical representation. PLoS Computational Biology 10, e1003915.','Kriegeskorte, Mur & Bandettini (2008). Representational similarity analysis: connecting the branches of systems neuroscience. Frontiers in Systems Neuroscience 2, 4.','Krizhevsky, Sutskever & Hinton (2012). ImageNet classification with deep convolutional neural networks. Advances in Neural Information Processing Systems 25.','The responses here are simulated to show the method; they are not the published data.'],
+ dur:12,hint:'Choose a brain area and step through the network’s layers. Which layer’s grid looks most like the area’s? All responses here are simulated.',
+ init:()=>({area:'IT',L:3}),
+ watch(p){return p<.6?{area:'IT',L:1+Math.min(4,Math.floor(p/.6*5))}:{area:'V1',L:1+Math.min(4,Math.floor((p-.6)/.4*5))}},
+ ui:[{choose:[['V1','V1'],['V4','V4'],['IT','IT']],label:'Brain area',get:s=>s.area,act:'area'},{range:'L',label:'Network layer',min:1,max:5,step:1,get:s=>s.L,act:'L',show:v=>'layer '+v}],
+ on:{area(s,v){s.area=B8_AREAS[v]!==undefined?v:'IT'},L(s,v){s.L=clamp(Math.round(+v),1,5)}},
+ draw(s){
+  const m=B8_RSA.match[s.area],r=m[s.L-1],best=m.indexOf(Math.max(...m))+1;
+  let out=heading(`Layer ${s.L} against ${s.area}: match r = ${fmt(B8_r2(r))}${best===s.L?' (best)':''}`);
+  const grid=(x0,y0,M,title)=>{let o=TBF(x0,y0-30,title,13,C.ink,'start');const c=15;for(let i=0;i<8;i++)for(let j=0;j<8;j++)o+=R(x0+j*c,y0+i*c,c,c,tint(C.blue,clamp(M[i][j]/1.6,0,1)*.95),'#fff',0,'stroke-width="0.6"');
+   o+=L(x0+4*c,y0,x0+4*c,y0+8*c,C.coral,1.4)+L(x0,y0+4*c,x0+8*c,y0+4*c,C.coral,1.4);return o};
+  out+=grid(40,92,B8_RSA.lay[s.L-1],`network layer ${s.L}`)+grid(190,92,B8_RSA.area[s.area],`${s.area} (simulated)`);
+  out+=TF(40,78,'4 animate | 4 objects',13,C.muted,'start')+TF(190,78,'4 animate | 4 objects',13,C.muted,'start');
+  out+=TF(40,232,'dark: the two images give',13,C.muted,'start')+TF(40,248,'similar responses; pale: different',13,C.muted,'start');
+  // match by layer
+  const pl=B8_plot(372,70,190,150,[.6,5.4],[-.2,1],{xt:[[1,'1'],[2,'2'],[3,'3'],[4,'4'],[5,'5']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'network layer',xlDy:32,yl:'match with the area (r)'});out+=pl.svg+L(pl.X(.6),pl.Y(0),pl.X(5.4),pl.Y(0),C.grid,1);
+  const col={V1:C.green,V4:C.purple,IT:C.coral};
+  for(const k in B8_RSA.match){const mm=B8_RSA.match[k],on=k===s.area;out+=B8_poly(mm.map((v,i)=>[pl.X(i+1),pl.Y(v)]),col[k],on?3:1.4,on?'':'stroke-opacity=".55"');mm.forEach((v,i)=>out+=Ci(pl.X(i+1),pl.Y(v),on?4.5:3,col[k]));out+=TF(pl.X(5.4)+4,pl.Y(mm[4])+4,k,13,col[k],'start')}
+  out+=Ci(pl.X(s.L),pl.Y(r),8,'none',C.ink);
+  out+=B8_tile(40,284,160,'Match, this layer',fmt(B8_r2(r)),C.ink)+B8_tile(210,284,160,`Best layer for ${s.area}`,'layer '+best,col[s.area]);
+  out+=B8_lines(390,290,'Pattern built in to echo the published result: early layers resemble V1, late layers IT.',28,13,C.muted);
+  out+=B8_note('Simulated responses to eight images; the method is real, the numbers are illustrative.',368);
+  return {svg:out,phase:s.area==='IT'?`IT’s grid has two dark blocks: it responds alike to the four animate things and alike to the four objects. Layer ${s.L} ${best===s.L?'matches this best':s.L<best-1?'still sorts the images mostly by their low-level look':'is close'} (r = ${fmt(B8_r2(r))}); the top layers, which have learned categories, match best.`:
+   s.area==='V1'?`V1 responds to the images’ local features, not their category, so its grid has no blocks. The first layers match it best (layer ${best}); at layer ${s.L} the match is r = ${fmt(B8_r2(r))}.`:
+   `V4 sits between: its best match is layer ${best}, a middle layer, as Yamins and colleagues reported for real V4 recordings. At layer ${s.L} the match is r = ${fmt(B8_r2(r))}.`};
+ }});
+
+// Weight transport, simulated. A linear network 6 → 3 → 3 learns a target mapping T (3 × 6). Error e = W2·W1 − T on the
+// expected squared error over standard normal inputs. Backpropagation updates W1 with W2ᵀ·e; feedback alignment with a
+// fixed random matrix B·e (Lillicrap and colleagues, 2016); "output only" leaves W1 at its random start. Rate 0.012.
+// Error is shown as a fraction of the error before training.
+const B8_mm=(A,B)=>A.map(r=>B[0].map((_,j)=>sum(r.map((v,k)=>v*B[k][j]))));
+const B8_tr=A=>A[0].map((_,j)=>A.map(r=>r[j]));
+const B8_mat=(n,m,sd,r)=>range(n).map(()=>range(m).map(()=>sd*B8_gauss(r)));
+const B8_frob=A=>sum(A.map(r=>sum(r.map(v=>v*v))));
+const B8_BP=(()=>{const r=B8_rng(1986),T=B8_mat(3,6,1/Math.sqrt(2),r),W1=B8_mat(3,6,.3,r),W2=B8_mat(3,3,.3,r),B=B8_mat(3,3,.6,r),out={},l0=B8_frob(B8_mm(W2,W1).map((row,i)=>row.map((v,j)=>v-T[i][j])));
+ for(const rule of ['bp','fa','none']){let a=W1.map(x=>x.slice()),b=W2.map(x=>x.slice());const loss=[],ang=[];
+  for(let t=0;t<=1000;t++){const M=B8_mm(b,a),E=M.map((row,i)=>row.map((v,j)=>v-T[i][j]));loss.push(B8_frob(E)/l0);
+   const fv=B8_tr(b).flat(),bv=B.flat(),cs=sum(fv.map((v,i)=>v*bv[i]))/Math.sqrt(B8_frob([fv])*B8_frob([bv]));ang.push(Math.acos(clamp(cs,-1,1))*180/Math.PI);
+   const g2=B8_mm(E,B8_tr(a)),back=rule==='bp'?B8_tr(b):B,g1=B8_mm(back,E);b=b.map((row,i)=>row.map((v,j)=>v-.012*g2[i][j]));if(rule!=='none')a=a.map((row,i)=>row.map((v,j)=>v-.012*g1[i][j]))}
+  out[rule]={loss,ang}}return out})();
+const B8_RULES={bp:{name:'Backpropagation',col:C.blue},fa:{name:'Random feedback',col:C.green},none:{name:'Output layer only',col:C.coral}};
+SCENE({id:'brains-and-ai-backprop',name:'Who carries the error back?',tag:'Backpropagation and the brain: a debated question',
+ definition:'Deep networks learn by backpropagation, popularised in 1986 by David Rumelhart, Geoffrey Hinton and Ronald Williams: the error at the output is sent back through the network to tell every hidden weight how to change. To do this exactly, the backward pass must use the same weights as the forward pass. Francis Crick argued in 1989 that real synapses cannot do that. Whether the brain does anything like backpropagation is still debated.',
+ example:'In 2016 Timothy Lillicrap and colleagues showed that fixed random feedback weights also work: the forward weights come to line up with them. Ideas from AI have also explained the brain: temporal-difference learning (Sutton, 1988) predicted how dopamine neurons respond to reward (Schultz, Dayan and Montague, 1997). Other differences are clear: neurons send spikes and do much computing in their dendrites, and the brain runs on about 20 watts, about a fifth of the body’s resting energy.',
+ desc:'A graph of the remaining error, as a percentage of the starting error, over training steps for a small network trained by backpropagation, by random feedback, or with only its output layer learning, with the angle between the forward and feedback weights.',
+ research:['Rumelhart, Hinton & Williams (1986). Learning representations by back-propagating errors. Nature 323, 533–536.','Crick (1989). The recent excitement about neural networks. Nature 337, 129–132.','Lillicrap, Cownden, Tweed & Akerman (2016). Random synaptic feedback weights support error backpropagation for deep learning. Nature Communications 7, 13276.','Lillicrap, Santoro, Marris, Akerman & Hinton (2020). Backpropagation and the brain. Nature Reviews Neuroscience 21, 335–346.','Schultz, Dayan & Montague (1997). A neural substrate of prediction and reward. Science 275, 1593–1599.','Attwell & Laughlin (2001). An energy budget for signaling in the grey matter of the brain. Journal of Cerebral Blood Flow and Metabolism 21, 1133–1145.'],
+ dur:12,hint:'Train the small network a hundred steps at a time and switch between the three ways of sending the error back. Which ones learn, and how fast? The network is a tiny simulated example.',
+ init:()=>({rule:'fa',steps:100}),
+ watch(p){return {rule:p<.33?'bp':p<.66?'fa':'none',steps:Math.max(20,Math.round(1000*smooth(Math.min(1,p*1.3))))}},
+ ui:[{choose:[['bp','Backpropagation'],['fa','Random feedback'],['none','Output only']],label:'Error sent back by',get:s=>s.rule,act:'rule'},{b:'Train 100 steps',act:'train'},{b:'Start again',act:'again'}],
+ on:{rule(s,v){s.rule=B8_RULES[v]?v:'fa';return 'keep'},train(s){s.steps=Math.min(1000,s.steps+100)},again(s){s.steps=0}},
+ draw(s){
+  const R0=B8_BP[s.rule],k=s.steps,err=R0.loss[k],ang=R0.ang[k];
+  let out=heading(`${B8_RULES[s.rule].name}, ${k} steps: ${Math.round(100*err)}% of the error left`);
+  // network sketch
+  const lx=[60,130,200],ny=[6,3,3],pos=(l,i)=>[lx[l],96+(i-(ny[l]-1)/2)*30];
+  for(let l=0;l<2;l++)for(let i=0;i<ny[l];i++)for(let j=0;j<ny[l+1];j++){const a=pos(l,i),b=pos(l+1,j);out+=L(a[0],a[1],b[0],b[1],C.grid,1.2)}
+  for(let l=0;l<3;l++)for(let i=0;i<ny[l];i++){const q=pos(l,i);out+=Ci(q[0],q[1],8,'#fff',C.ink,'stroke-width="1.5"')}
+  out+=curveArrow(206,150,128,150,-22,B8_RULES[s.rule].col,2)+TF(166,192,s.rule==='bp'?'error back, same weights':s.rule==='fa'?'error back, random weights':'no error to hidden layer',13,B8_RULES[s.rule].col);
+  out+=TF(60,200,'input',13,C.muted)+TF(130,60,'hidden',13,C.muted)+TF(200,60,'output',13,C.muted);
+  // loss curves
+  const pl=B8_plot(300,60,270,170,[0,1000],[0,1.05],{xt:[[0,'0'],[500,'500'],[1000,'1000 steps']],yt:[[0,'0%'],[.5,'50%'],[1,'100%']],xl:'training steps',xlDy:32,yl:'error left'});out+=pl.svg;
+  for(const rk of ['bp','fa','none']){const on=rk===s.rule,lo=B8_BP[rk].loss;out+=B8_poly(range(Math.floor(k/5)+1).map(i=>[pl.X(i*5),pl.Y(clamp(lo[i*5],0,1.05))]),B8_RULES[rk].col,on?3:1.4,on?'':'stroke-opacity=".55"')}
+  out+=Ci(pl.X(k),pl.Y(clamp(err,0,1.05)),5,B8_RULES[s.rule].col,'#fff');
+  out+=TF(570,292,'blue: backpropagation',13,C.blue,'end')+TF(570,310,'green: random feedback',13,C.green,'end')+TF(570,328,'coral: output layer only',13,C.coral,'end');
+  out+=B8_tile(30,236,150,'Error left',Math.round(100*err)+'%',err<.05?C.green:C.coral)+B8_tile(30,290,150,'Forward vs feedback',s.rule==='bp'?'0° (same)':Math.round(ang)+'°',C.ink);
+  out+=B8_lines(196,256,'The angle compares the output weights with the weights that carry the error back.',24,13,C.muted);
+  out+=B8_note('A tiny linear network, simulated. Brains do not run this algorithm as far as anyone knows.',368);
+  return {svg:out,phase:k===0?'Before training the network’s output is unrelated to the target. Press Train.':s.rule==='bp'?`Backpropagation sends the error back through the forward weights themselves, and after ${k} steps ${Math.round(100*err)}% of the error is left. It works well, but needs each synapse’s strength to be known on the way back, which is the part that is hard to picture in the brain.`:
+   s.rule==='fa'?`With fixed random feedback weights the network still learns: ${Math.round(100*err)}% of the error is left after ${k} steps. The output weights have turned to within ${Math.round(ang)}° of the feedback weights, so the random signal has become useful. This is one of several proposals for how a brain might learn without exact weight transport.`:
+   `When only the output layer learns, the error stalls at about ${Math.round(100*err)}%: the hidden layer keeps its random start and cannot pass on everything the target needs. Getting the error to the hidden layer is what lets deep networks learn.`};
+ }});
+

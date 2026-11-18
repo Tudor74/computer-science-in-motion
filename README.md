@@ -15,7 +15,7 @@ This is the `brain` branch of the [Computer Science In Motion](https://github.co
 5. **Development and plasticity**: wiring up, critical periods, Hebb and LTP, changing maps, neurogenesis, the adolescent brain
 6. **Brain states**: the circadian clock, sleep stages, arousal systems, reward and dopamine, the stress response, hunger and homeostasis
 7. **When things go wrong**: stroke, epilepsy, Parkinson's disease, Alzheimer's disease, depression and its treatments, addiction
-8. **Tools and frontiers**: the patch clamp, optogenetics, place and grid cells, brain–computer interfaces, brain organoids, brains and AI
+8. **Tools and frontiers**: the patch clamp, optogenetics, place and grid cells, brain–computer interfaces, recording many neurons, brains and AI
 
 ## Source layout
 
