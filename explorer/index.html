@@ -622,7 +622,7 @@ if (!S.previous_snapshot) $("f-chg").title = "First snapshot: nothing earlier to
 /* ---------- backtest ---------- */
 function drawBacktest() {
   const box = $("bt-body");
-  if (!B) { box.innerHTML = `<p class="verdict">The backtest has not been run for this build.</p>`; return; }
+  if (!B) { box.innerHTML = `<p class="verdict"><b>Not run yet for this snapshot.</b> The backtest scores preprints from 2018–21 with only what was known at the time and compares with what happened by 2025. It needs more OpenAlex lookups than this week's daily allowance left, so it will be added in the next build. Until then, treat every signal on this page as untested.</p>`; return; }
   const auc = B.auc_published, aucR = B.auc_rank_still_cited;
   const strength = a => a == null ? "unknown" : a < 0.55 ? "no better than chance" : a < 0.62 ? "weak" : a < 0.7 ? "modest" : "moderate";
   const better = B.brier_signal != null && B.brier_signal < B.brier_field_base;
@@ -675,7 +675,10 @@ function drawBacktest() {
 /* ---------- case studies ---------- */
 function drawCases() {
   const ul = $("cases");
-  if (!B || !B.cases) return;
+  if (!B || !B.cases) {
+    ul.innerHTML = `<li><h4>Coming with the backtest</h4><p style="margin:0">OPERA's faster-than-light neutrinos (2011), BICEP2 (2014), arsenic-based life (2010, a journal paper) and LK-99 (2023), each read against the record and against what these signals would have said at the time.</p></li>`;
+    return;
+  }
   for (const c of B.cases) {
     const li = document.createElement("li");
     const rec = c.record || {};
