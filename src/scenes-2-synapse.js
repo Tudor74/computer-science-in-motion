@@ -66,7 +66,7 @@ SCENE({id:'synapse-discovery',name:'A junction that behaves like a valve',tag:'S
   // the impulse
   let px=sx(0),col=C.coral;
   if(f.kind==='axon')px=lerp(sx(f.cell),tx(f.cell),u);else if(f.kind==='gap')px=tx(f.cell)+lerp(0,22,u);else if(f.kind==='done')px=tx(N-1);
-  else if(f.kind==='back')px=lerp(tx(N-1),sx(N-1),u);else if(f.kind==='blocked'){px=sx(N-1);out+=TB(sx(N-1)-34,y-34,'✕',22,C.coral)+TF(sx(N-1)-34,y-58,'no crossing',13,C.coral)}
+  else if(f.kind==='back')px=lerp(tx(N-1),sx(N-1),u);else if(f.kind==='blocked'){px=sx(N-1);out+=TB(tx(N-2)+12,y-42,'✕',20,C.coral)+TF(tx(N-2)+12,y-62,'no crossing',13,C.coral)}
   out+=Ci(px,y,9,col,'#fff');
   // time bar
   const bx=70,bw=460,by=232,tmax=4,TX=t=>bx+t/tmax*bw,per=B2_COND_MS/N;
@@ -102,7 +102,7 @@ SCENE({id:'synapse-discovery-loewi',name:'Loewi’s two frog hearts',tag:'A chem
  dur:14,hint:'First move fluid without stimulating (the control). Then stimulate the vagus and move fluid again. Try it once more with atropine on heart 2. The sound button plays heart 2 as soft beats.',
  init:B2_loewiInit,
  watch(p){let s=B2_loewiInit();const k=Math.min(B2_LW_WATCH.length,Math.floor(p*(B2_LW_WATCH.length+1)));for(let i=0;i<k;i++)s={...s,...B2_loewiStep(s,B2_LW_WATCH[i])};return s},
- ui:[{b:'Stimulate the vagus of heart 1',act:'stim'},{b:'Move fluid from 1 to 2',act:'move'},{b:'Fresh fluid for both',act:'wash'},{b:'Atropine on heart 2: on/off',act:'atr'},{b:'Hear heart 2 ▶',act:'hear'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Stimulate the vagus of heart 1',act:'stim'},{b:'Move fluid from 1 to 2',act:'move'},{b:'Fresh fluid for both',act:'wash'},{b:'Atropine on heart 2: on/off',act:'atr'},{b:'Hear heart 2 ▶',act:'hear'}],
  on:{stim(s){Object.assign(s,B2_loewiStep(s,'stim'))},move(s){Object.assign(s,B2_loewiStep(s,'move'))},wash(s){Object.assign(s,B2_loewiStep(s,'wash'))},atr(s){Object.assign(s,B2_loewiStep(s,'atr'))},reset(s){Object.assign(s,B2_loewiInit())},
   hear(s){const gap=60/(40*s.r2);for(let i=0;i<Math.floor(4.5/gap);i++){AUDIO.tone(70,{dur:.11,gain:.14,at:i*gap,attack:.01,release:.08});AUDIO.tone(55,{dur:.09,gain:.09,at:i*gap+.16,attack:.01,release:.06})}return 'keep'}},
  draw(s){
@@ -111,7 +111,7 @@ SCENE({id:'synapse-discovery-loewi',name:'Loewi’s two frog hearts',tag:'A chem
   const heart=(x,y,r,lab)=>`<path d="M${x} ${y+16}C${x-26} ${y-4} ${x-18} ${y-24} ${x} ${y-10}C${x+18} ${y-24} ${x+26} ${y-4} ${x} ${y+16}Z" fill="${C.coralp}" stroke="${C.coral}" stroke-width="2.5"/>`+TF(x,y+50,lab,13,C.muted);
   const beaker=(x,y,tint)=>R(x,y,96,74,tint?C.purplep:'#eef6fb',C.line,10);
   out+=beaker(26,60,s.vs)+heart(74,96,cur.r1,'heart 1')+beaker(26,214,s.r2<1)+heart(74,250,cur.r2,'heart 2');
-  out+=P('M150 62C132 64 112 70 92 84',C.amber,3)+TF(156,60,'vagus nerve',13,C.amber,'start');
+  out+=P('M150 62C132 64 112 70 92 84',C.amber,3)+TF(144,56,'vagus nerve',13,C.amber,'end');
   if(s.last==='stim')out+=TB(128,78,'⚡',17,C.amber);
   out+=curveArrow(132,128,132,214,-26,s.last==='move'?C.purple:C.line,s.last==='move'?3:2)+TF(166,176,'fluid',13,s.last==='move'?C.purple:C.muted,'start');
   if(s.vs)out+=TF(74,152,'holds Vagusstoff',13,C.purple);
@@ -121,7 +121,7 @@ SCENE({id:'synapse-discovery-loewi',name:'Loewi’s two frog hearts',tag:'A chem
   out+=R(x0-6,48,362,286,'#fff',C.grid,8);
   for(const [yb,key,lab] of rows){
    out+=TBF(x0,yb-46,lab,13,C.ink,'start')+L(x0,yb,x0+350,yb,C.grid,1.2);
-   s.segs.forEach((g,i)=>{const r=g[key],nb=Math.max(1,Math.round(8*r)),amp=r<.6?24:r<1?32:40,xa=x0+i*w,pts=[];
+   s.segs.forEach((g,i)=>{const r=g[key],nb=Math.max(1,Math.round(8*r)),amp=r<.6?20:r<1?27:34,xa=x0+i*w,pts=[];
     for(let b=0;b<nb;b++){const xb=xa+(b+.1)*w/nb,ww=w/nb;pts.push([xb,yb],[xb+Math.min(3,ww*.3),yb-amp],[xb+Math.min(9,ww*.7),yb])}
     pts.push([xa+w,yb]);out+=B2_poly(pts,r<1?C.coral:C.blue,1.8)});
    const r=cur[key];out+=TBF(x0+350,yb-46,`${Math.round(40*r)} beats a minute`,13,r<1?C.coral:C.blue,'end');
@@ -197,12 +197,12 @@ SCENE({id:'synapse-discovery-electrical',name:'Electrical synapses exist too',ta
    out+=TF(150,70,'gap: about 3 nm, bridged by channels',13,C.coral)+TF(84,216,'cell A',13,C.blue)+TF(226,216,'cell B',13,C.green);
   }
   // traces
-  const tr=(yb,lab,col,fn)=>{let o=TBF(302,yb-44,lab,13,col,'start')+L(300,yb,580,yb,C.grid,1.2);const pts=[];for(let i=0;i<=140;i++){const t=i/140*4;pts.push([300+i*2,yb-fn(t)])}return o+B2_poly(pts,col,2.4)};
-  const spike=t=>t<1?0:t<1.25?46*(t-1)/.25:t<1.7?46*(1-(t-1.25)/.45*1.15):-7*Math.exp(-(t-1.7)/.6);
-  const post=t=>!pass?0:ch?16*B2_psp(t-1.5,1.6,.25):.35*Math.max(0,spike(t-.03))+(.35*Math.min(0,spike(t-.03)));
+  const tr=(yb,lab,col,fn)=>{let o=TBF(302,yb-50,lab,13,col,'start')+L(300,yb,580,yb,C.grid,1.2);const pts=[];for(let i=0;i<=140;i++){const t=i/140*4;pts.push([300+i*2,yb-fn(t)])}return o+B2_poly(pts,col,2.4)};
+  const spike=t=>t<1?0:t<1.25?40*(t-1)/.25:t<1.7?40*(1-(t-1.25)/.45*1.15):-7*Math.exp(-(t-1.7)/.6);
+  const post=t=>!pass?0:ch?16*B2_psp(t-1.5,1.6,.25):.35*spike(t-.03);
   out+=tr(110,fa?'Cell A: stimulated, fires':'Cell A',C.blue,fa?spike:post)+tr(200,fa?'Cell B':'Cell B: stimulated, fires',C.green,fa?post:spike);
-  for(const v of [0,1,2,3,4])out+=TF(300+v*70,222,v+(v===4?' ms':''),13,C.muted);
-  if(pass&&ch)out+=L(370,214,405,214,C.coral,3)+TF(388,244,'delay about 0.5 ms',13,C.coral);
+  for(const v of [0,1,2,3,4])out+=TF(300+v*70,244,v+(v===4?' ms':''),13,C.muted);
+  if(pass&&ch)out+=L(370,212,405,212,C.coral,3)+TF(412,224,'delay about 0.5 ms',13,C.coral,'start');
   if(!pass)out+=TF(440,(fa?200:110)-14,'no response',13,C.coral);
   // table
   const rows=[['Gap between cells','about 20 nm','about 3 nm'],['Delay','about 0.5 ms','almost none'],['Direction','one way','usually both ways']];
@@ -227,7 +227,7 @@ SCENE({id:'quantal-release',name:'Miniature potentials',tag:'Fatt and Katz, 1952
  research:['Fatt & Katz (1952). Spontaneous subthreshold activity at motor nerve endings. Journal of Physiology 117, 109–128.','Katz (1969). The Release of Neural Transmitter Substances. Liverpool University Press. (Nobel Prize 1970, with von Euler and Axelrod.)'],
  dur:10,hint:'Record more strips to fill the histogram, add a drug to see the blips shrink or grow, and play a strip to hear each blip as a soft click. The data are simulated.',
  init:()=>({seed:3,drug:'none',strips:1}),
- ui:[{b:'Record another 10 s',act:'more'},{choose:[['none','No drug'],['cur','A little curare'],['neo','Neostigmine']],label:'In the bath',get:s=>s.drug,act:'drug'},{b:'Hear this strip ▶',act:'hear'},{b:'Clear',act:'clear'}],
+ ui:[{b:'Record another 10 s',act:'more'},{choose:[['none','No drug'],['cur','A little curare'],['neo','Neostigmine']],label:'In the bath',get:s=>s.drug,act:'drug'},{b:'Hear this strip ▶',act:'hear'}],
  on:{more(s){s.strips=Math.min(30,s.strips+1)},drug(s,v){s.drug=B2_DRUG[v]?v:'none';s.strips=1},clear(s){s.strips=1;s.seed+=31},
   hear(s){B2_click(B2_minis(s.seed+s.strips-1,s.drug).map(m=>m.t/2),.12);return 'keep'}},
  draw(s,f,X){
@@ -249,7 +249,7 @@ SCENE({id:'quantal-release',name:'Miniature potentials',tag:'Fatt and Katz, 1952
   out+=TF(60,180,'how many',13,C.muted,'start');
   const n=all.length,mean=n?sum(all.map(m=>m.a))/n:0,span=(s.strips-1)*10+show;
   out+=B2_tile(360,180,210,'Blips counted',String(n))+B2_tile(360,232,210,'Mean size',n?fmt(B2_r2(mean))+' mV':'none yet')+B2_tile(360,284,210,'Mean gap between blips',n?fmt(B2_r1(span/n))+' s':'none yet');
-  out+=B2_note('Simulated record. On this slow time base each blip, a few milliseconds long, looks like a tick.',364);
+  out+=B2_note('Simulated record. On this slow time base each blip, a few milliseconds long, looks like a tick.',372);
   return {svg:out,phase:s.drug==='cur'?'Curare blocks some of the muscle’s acetylcholine receptors, so every blip is smaller and many sink into the noise. They still come at the same random times: the nerve ending is releasing as before.':
    s.drug==='neo'?'Neostigmine stops the enzyme that destroys acetylcholine, so each packet acts on more receptors for longer and every blip is larger. Fatt and Katz used this pair of tests to show the blips were made by acetylcholine.':
    `${n} blips so far, at random moments, with sizes clustered near ${n?fmt(B2_r2(mean)):'0.4'} mV. Fatt and Katz called them miniature end-plate potentials. Something at the nerve ending lets out acetylcholine in small, similar packets, even at rest.`};
@@ -411,7 +411,7 @@ function B2_timing(s){
 }
 SCENE({id:'excitation-inhibition-timing',name:'Timing decides',tag:'Summation over time',
  definition:'A synaptic potential outlasts the input that caused it, fading over a few milliseconds as charge leaks away through the membrane. A second input that arrives before the first has faded builds on top of it. This is temporal summation. How long the cell “remembers” an input is set by its membrane time constant.',
- example:'Two inputs of 10 mV each need 15 mV between them to fire this cell. With a time constant of 10 ms they succeed if they arrive within about 6 ms of each other. An inhibitory input placed just before the second one makes them fail again.',
+ example:'Two inputs of 10 mV each need 15 mV between them to fire this cell. With a time constant of 10 ms they succeed if they arrive within about 7 ms of each other. An inhibitory input placed just before the second one makes them fail again.',
  desc:'Membrane potential against time for two excitatory inputs separated by an adjustable gap, with an optional inhibitory input, the threshold line, and markers showing when each input arrives.',
  research:['Eccles (1957). The Physiology of Nerve Cells. Johns Hopkins Press.','Rall (1967). Distinguishing theoretical synaptic potentials computed for different soma-dendritic distributions of synaptic input. Journal of Neurophysiology 30, 1138–1168.','König, Engel & Singer (1996). Integrator or coincidence detector? The role of the cortical neuron revisited. Trends in Neurosciences 19, 130–137.'],
  dur:12,hint:'Shorten the gap until the cell just fires, then lengthen the time constant and see how much more slack it allows. Switch the inhibition on and move it to block the spike.',
@@ -437,7 +437,7 @@ SCENE({id:'excitation-inhibition-timing',name:'Timing decides',tag:'Summation ov
 
 // Synaptic channels by what they let through. Reversal potentials: about 0 mV for glutamate's channels,
 // about −80 mV for the chloride channels of Eccles's motor neurons. Size of potential = k × (reversal − membrane).
-const B2_CH={glu:{E:0,k:.1,name:'Glutamate channel',ions:'Na⁺ and K⁺',col:C.green},inh:{E:-80,k:.4,name:'Chloride channel',ions:'Cl⁻',col:C.coral}};
+const B2_CH={glu:{E:0,k:.1,name:'Glutamate channel',ions:'Na⁺ and K⁺',col:C.green},inh:{E:-80,k:.25,name:'Chloride channel',ions:'Cl⁻',col:C.coral}};
 SCENE({id:'excitation-inhibition-reversal',name:'What makes a synapse excitatory',tag:'Glutamate, GABA and the reversal potential',
  definition:'A transmitter does not carry a plus or minus sign. It opens channels, and the ions that pass pull the membrane towards a fixed voltage, the reversal potential. Glutamate’s fast channels pass sodium and potassium and pull towards about 0 mV, above threshold: excitation. The channels opened by GABA (and by glycine in the spinal cord) pass chloride and pull towards about −70 to −80 mV, below threshold: inhibition. Glutamate is the main excitatory transmitter of the brain and GABA the main inhibitory one.',
  example:'At −70 mV the chloride channel gives a small downward potential. Hold the cell at −80 mV and it gives none; at −90 mV it turns upward. Coombs, Eccles and Fatt found exactly this reversal in 1955, which showed inhibition was a flow of ions and not a mysterious “anti-excitation”.',
@@ -485,7 +485,7 @@ SCENE({id:'neurotransmitters',name:'What counts as a transmitter',tag:'Five test
  dur:14,hint:'Choose a candidate and press each test to run it. Compare a textbook case, a late-accepted one and a rule-breaker.',
  init:()=>({c:'ach',done:[0,0,0,0,0],last:-1}),
  watch(p){const ks=['ach','glu','no'],i=Math.min(2,Math.floor(p*3)),u=p*3-i,n=Math.min(5,Math.floor(u*6.5));return {c:ks[i],done:range(5).map(j=>j<n?1:0),last:n-1}},
- ui:[{choose:[['ach','Acetylcholine'],['glu','Glutamate'],['no','Nitric oxide']],label:'Candidate',get:s=>s.c,act:'c'},{b:'Run all five',act:'all'},{b:'Clear',act:'clear'}],
+ ui:[{choose:[['ach','Acetylcholine'],['glu','Glutamate'],['no','Nitric oxide']],label:'Candidate',get:s=>s.c,act:'c'},{b:'Run all five',act:'all'}],
  on:{c(s,v){s.c=B2_CAND[v]?v:'ach';s.done=[0,0,0,0,0];s.last=-1},test(s,v){const i=clamp(+v|0,0,4);s.done[i]=1;s.last=i},all(s){s.done=[1,1,1,1,1];s.last=4},clear(s){s.done=[0,0,0,0,0];s.last=-1}},
  draw(s,f,X){
   const c=B2_CAND[s.c],n=sum(s.done);
@@ -510,23 +510,23 @@ SCENE({id:'neurotransmitters-dopamine',name:'Dopamine earns its place',tag:'Mont
  dur:12,hint:'Give reserpine, then try each building block in turn. Watch which transmitter returns and whether movement returns with it.',
  init:()=>({st:'normal'}),
  watch(p){const seq=['normal','res','htp','res','dopa'],x=p*seq.length,i=Math.min(seq.length-1,Math.floor(x)),u=smooth(clamp((x-i)*2.2,0,1));return {st:seq[i],from:seq[Math.max(0,i-1)],u}},
- ui:[{b:'Give reserpine',act:'res'},{b:'Then give L-DOPA',act:'dopa'},{b:'Then give 5-HTP',act:'htp'},{b:'Start again',act:'reset'}],
+ ui:[{b:'Give reserpine',act:'res'},{b:'Then give L-DOPA',act:'dopa'},{b:'Then give 5-HTP',act:'htp'}],
  on:{res(s){s.st='res';s.msg=''},dopa(s){if(s.st==='normal'){s.msg='Give reserpine first: the test is whether L-DOPA can undo it.'}else{s.st='dopa';s.msg=''}},htp(s){if(s.st==='normal'){s.msg='Give reserpine first: the test is whether 5-HTP can undo it.'}else{s.st='htp';s.msg=''}},reset(s){s.st='normal';s.msg=''}},
  draw(s){
   const v=s.from?B2_carlMix(B2_CARL[s.from],B2_CARL[s.st],s.u):B2_CARL[s.st];
   const title={normal:'Before any drug',res:'Reserpine: stores emptied, movement stops',dopa:'L-DOPA: dopamine and movement return',htp:'5-HTP: serotonin returns, movement does not'}[s.st];
   let out=heading(title);
   // what was given
-  out+=R(20,52,200,150,'#fff',C.grid,8)+TBF(32,74,'Given',14,C.ink,'start');
+  out+=R(20,52,218,150,'#fff',C.grid,8)+TBF(32,74,'Given',14,C.ink,'start');
   const steps=[['Reserpine',s.st!=='normal',C.coral],['L-DOPA (makes dopamine)',s.st==='dopa',C.blue],['5-HTP (makes serotonin)',s.st==='htp',C.purple]];
   steps.forEach((t,i)=>{const y=100+i*32;out+=Ci(40,y-5,8,t[1]?t[2]:'#fff',t[1]?t[2]:C.line)+(t[1]?TBF(40,y,'✓',12,'#fff'):'')+TF(56,y,t[0],13,t[1]?C.ink:C.muted,'start')});
-  out+=R(20,214,200,96,'#fff',C.grid,8)+TBF(32,236,'Movement',14,C.ink,'start')+R(32,250,176,18,C.pale,'none',9)+R(32,250,Math.max(4,176*v.mv/100),18,v.mv>50?C.green:C.coral,'none',9)+TF(32,292,v.mv>50?'moving about normally':'almost none',13,v.mv>50?C.green:C.coral,'start');
+  out+=R(20,214,218,96,'#fff',C.grid,8)+TBF(32,236,'Movement',14,C.ink,'start')+R(32,250,176,18,C.pale,'none',9)+R(32,250,Math.max(4,176*v.mv/100),18,v.mv>50?C.green:C.coral,'none',9)+TF(32,292,v.mv>50?'moving about normally':'almost none',13,v.mv>50?C.green:C.coral,'start');
   // bars
   const bx=250,base=300,sc=2.1;out+=R(bx,52,330,258,'#fff',C.grid,8)+TF(bx+12,72,'amount in the brain, % of normal',13,C.muted,'start');
   for(const g of [0,50,100])out+=L(bx+44,base-g*sc,bx+318,base-g*sc,C.grid,1)+TF(bx+38,base-g*sc+4,g,13,C.muted,'end');
   [['Dopamine','da',C.blue],['Noradrenaline','na',C.amber],['Serotonin','ht',C.purple]].forEach((b,i)=>{const x=bx+62+i*88;out+=R(x,base-v[b[1]]*sc,60,v[b[1]]*sc,b[2],'none',4)+TF(x+30,base+18,b[0],13,C.ink)});
-  out+=TF(bx+165,340,'Illustrative levels; the pattern follows the published reports.',13,C.muted);
-  out+=T(300,366,s.msg||'Mice and rabbits were used. Reserpine left them still; L-DOPA reversed this for a time.',13,s.msg?C.coral:C.muted);
+  out+=TF(300,336,'Illustrative levels; the pattern follows the published reports.',13,C.muted);
+  out+=T(300,362,s.msg||'Mice and rabbits were used. Reserpine left them still; L-DOPA reversed this for a time.',13,s.msg?C.coral:C.muted);
   return {svg:out,phase:{normal:'All three transmitters are at their normal level and the animal moves about. Reserpine will empty the stores of all three at once, so by itself it cannot say which one matters for movement.',
    res:'Reserpine stops nerve endings storing dopamine, noradrenaline and serotonin, and the levels of all three fall close to zero. The animals become still. Which loss is responsible? Putting one transmitter back at a time can tell.',
    dopa:'Within minutes the animals move again. The brain’s dopamine has returned; noradrenaline, which is made from dopamine, has not. Movement follows dopamine, so dopamine is doing a job of its own. This result later led to L-DOPA as a treatment in Parkinson’s disease.',
@@ -657,11 +657,11 @@ SCENE({id:'receptors-drugs-channels',name:'Two kinds of receptor',tag:'A channel
    const c=(r,b,z)=>[r*Math.cos(b),r*Math.sin(b),z];
    faces.push({pts:[c(r0,a0,z0),c(r1,a0,z0),c(r1,a0,z1),c(r0,a0,z1)],fill:col,opacity:.6},{pts:[c(r0,a1,z0),c(r1,a1,z0),c(r1,a1,z1),c(r0,a1,z1)],fill:col,opacity:.6})}
   let out=sheet(-.6)+paintFaces(faces,Pr)+sheet(.3);
-  for(let i=0;i<5;i++){const am=(i+.5)*2*Math.PI/5,q=Pr([.74*Math.cos(am),.74*Math.sin(am),z1]);out+=TBF(q[0],q[1]+5,names[i],15,'#fff')}
+  for(let i=0;i<5;i++){const am=(i+.5)*2*Math.PI/5,q=Pr([.76*Math.cos(am),.76*Math.sin(am),z1]);out+=TBF(q[0],q[1]+4,names[i],13,'#fff')}
   // acetylcholine at the two α subunits
   for(const i of [0,2]){const am=(i+.5)*2*Math.PI/5,q=Pr([1.2*Math.cos(am),1.2*Math.sin(am),1.25]);out+=Ci(q[0],q[1],7,C.coral,'#fff')}
   const top=Pr([0,0,z1+.5]),bot=Pr([0,0,z1]);out+=arrow(top[0],top[1],bot[0],bot[1],open?C.blue:C.muted,3)+TF(top[0],top[1]-8,open?'Na⁺ passes':'pore closed',13,open?C.blue:C.muted);
-  const m=Pr([1.6,1.6,-.15]);out+=TF(m[0],m[1],'membrane',13,C.amber);
+  const m=[[1.6,1.6],[1.6,-1.6],[-1.6,1.6],[-1.6,-1.6]].map(c=>Pr([c[0],c[1],-.6])).sort((a,b)=>b[1]-a[1])[0];out+=TF(m[0],m[1]+18,'membrane',13,C.amber);
   return {svg:out,title:'The muscle’s acetylcholine receptor',caption:'Five protein subunits stand in a ring through the membrane, with the pore down the middle. The two α subunits (brighter) each carry part of a binding site for acetylcholine, marked by the red dots. The whole receptor is about 8 nanometres across. Sketch after Unwin’s electron-microscope structures; in adult muscle an ε subunit replaces γ.'};
  }});
 
@@ -726,7 +726,7 @@ SCENE({id:'receptors-drugs-caffeine',name:'Caffeine: an everyday antagonist',tag
   const r=B2_rng(s.h*7+s.c);for(let j=0;j<Math.round(q.A*5);j++)out+=Ci(40+r()*310,60+r()*40,4,C.amber);for(let j=0;j<s.c*3;j++){const x=40+r()*310,y=60+r()*40;out+=R(x-4,y-4,8,8,C.purple,'none',2)}
   out+=Ci(44,226,7,C.amber,'#fff')+TF(58,231,'adenosine: switches the receptor on',13,C.ink,'start')+R(37,245,14,14,C.purple,'#fff',3)+TF(58,257,'caffeine: sits there, switches nothing on',13,C.ink,'start');
   // bars
-  const bx=392,base=262,sc=1.9;out+=R(bx-12,50,200,244,'#fff',C.grid,8)+TF(bx,70,'adenosine signal, %',13,C.muted,'start');
+  const bx=392,base=262,sc=1.65;out+=R(bx-12,50,200,244,'#fff',C.grid,8)+TF(bx,70,'adenosine signal, %',13,C.muted,'start');
   for(const g of [0,50,100])out+=L(bx+24,base-g*sc,bx+176,base-g*sc,C.grid,1)+TF(bx+20,base-g*sc+4,g,13,C.muted,'end');
   out+=R(bx+38,base-q.f0*100*sc,54,q.f0*100*sc,'#e8c98a','none',4)+TF(bx+65,base+16,'without',13,C.muted)+TBF(bx+65,base-q.f0*100*sc-6,Math.round(q.f0*100),13,C.amber);
   out+=R(bx+108,base-q.fa*100*sc,54,q.fa*100*sc,s.c?C.purple:C.amber,'none',4)+TF(bx+135,base+16,s.c?'with caffeine':'now',13,C.muted)+TBF(bx+135,base-q.fa*100*sc-6,Math.round(q.fa*100),13,s.c?C.purple:C.amber);
@@ -738,10 +738,10 @@ SCENE({id:'receptors-drugs-caffeine',name:'Caffeine: an everyday antagonist',tag
 
 /* ===================== Lesson: neuromodulation ===================== */
 // Side view of a brain, front to the left. Positions are schematic.
-const B2_TGT={frontal:[120,120,'frontal cortex'],parietal:[290,52,'cortex'],occipital:[452,120,'visual cortex'],striatum:[236,138,'striatum'],thalamus:[300,150,'thalamus'],hippo:[352,172,'hippocampus'],cereb:[452,218,'cerebellum'],cord:[384,300,'spinal cord']};
+const B2_TGT={frontal:[140,130,'frontal cortex'],parietal:[290,74,'cortex'],occipital:[446,130,'visual cortex'],striatum:[236,138,'striatum'],thalamus:[300,150,'thalamus'],hippo:[352,172,'hippocampus'],cereb:[452,218,'cerebellum'],cord:[384,300,'spinal cord']};
 const B2_SYS={
  na:{chip:'Noradrenaline',src:[366,232],from:'locus coeruleus, in the pons',col:C.amber,to:['frontal','parietal','occipital','thalamus','hippo','cereb','cord'],
-  l1:'A few tens of thousands of neurons in a human brain.',l2:'They reach almost every region, from cortex to spinal cord.',l3:'Linked with alertness and with reacting to the unexpected.'},
+  l1:'A few tens of thousands of neurons in a human brain.',l2:'They reach almost every region, cortex to spinal cord.',l3:'Linked with alertness and with reacting to the unexpected.'},
  ht:{chip:'Serotonin',src:[352,246],from:'raphe nuclei, along the midline of the brainstem',col:C.purple,to:['frontal','parietal','occipital','striatum','thalamus','hippo','cereb','cord'],
   l1:'Clusters of neurons along the middle of the brainstem.',l2:'Upper groups supply the forebrain, lower ones the spinal cord.',l3:'Linked with sleep and waking, mood, appetite: no single job.'},
  da:{chip:'Dopamine',src:[330,210],from:'substantia nigra and the area beside it, in the midbrain',col:C.blue,to:['striatum','frontal'],
@@ -763,20 +763,20 @@ SCENE({id:'neuromodulation',name:'Small sources, wide reach',tag:'Four broadcast
   const y=B2_SYS[s.sys],u=s.u===undefined?1:s.u;
   let out=heading(s.cmp?'For contrast: one place speaks to one place':`${y.chip}: from one small source to ${y.to.length>5?'most of the brain':y.to.length+' regions'}`);
   // brain outline
-  out+=`<ellipse cx="290" cy="126" rx="212" ry="92" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+`<ellipse cx="452" cy="218" rx="54" ry="30" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316',C.line,26)+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316','#f4f8fb',21);
-  out+=TF(56,60,'front',13,C.muted)+TF(540,60,'back',13,C.muted);
+  out+=`<ellipse cx="290" cy="134" rx="212" ry="80" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+`<ellipse cx="452" cy="218" rx="54" ry="30" fill="#f4f8fb" stroke="${C.line}" stroke-width="2.5"/>`+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316',C.line,26)+P('M312 204C330 214 350 226 362 258C370 280 376 292 380 316','#f4f8fb',21);
+  out+=TF(46,70,'front',13,C.muted)+TF(554,70,'back',13,C.muted);
   for(const k in B2_TGT){const t=B2_TGT[k],on=!s.cmp&&y.to.includes(k)||s.cmp&&(k==='thalamus'||k==='occipital');out+=Ci(t[0],t[1],on?7:4,on?(s.cmp?C.ink:y.col):'#c9d6de')}
   if(s.cmp){const a=B2_TGT.thalamus,b=B2_TGT.occipital;out+=arrow(a[0],a[1],lerp(a[0],b[0]-8,u),lerp(a[1],b[1]+2,u),C.ink,3)+TF(a[0],a[1]+22,'thalamus',13,C.ink)+TF(b[0],b[1]-14,'visual cortex',13,C.ink)}
   else{
    for(const k of y.to){const t=B2_TGT[k],mx=(y.src[0]+t[0])/2+(t[1]-y.src[1])*.12,my=(y.src[1]+t[1])/2-(t[0]-y.src[0])*.12;
     const ex=lerp(y.src[0],t[0],u),ey=lerp(y.src[1],t[1],u),cx=lerp(y.src[0],mx,u),cy=lerp(y.src[1],my,u);out+=P(`M${y.src[0]} ${y.src[1]}Q${fmt(cx)} ${fmt(cy)} ${fmt(ex)} ${fmt(ey)}`,y.col,2.2)}
-   for(const k of y.to){const t=B2_TGT[k];if(k==='cord')out+=TF(t[0]+18,t[1]+4,t[2],13,C.muted,'start');else if(k==='cereb')out+=TF(t[0],t[1]+24,t[2],13,C.muted);else if(k==='hippo'||k==='thalamus'||k==='striatum')out+='';else out+=TF(t[0],t[1]-12,t[2],13,C.muted)}
+   for(const k of y.to){const t=B2_TGT[k];if(k==='cord')out+=TF(t[0]+18,t[1]-4,t[2],13,C.muted,'start');else if(k==='cereb')out+=TF(t[0]+10,t[1]+46,t[2],13,C.muted);else if(k==='parietal')out+=TF(t[0]+14,t[1]+4,t[2],13,C.muted,'start');else if(k==='hippo'||k==='thalamus'||k==='striatum')out+='';else out+=TF(t[0],t[1]-12,t[2],13,C.muted)}
   }
   B2_SYS_KEYS.forEach(k=>{const q=B2_SYS[k],on=k===s.sys&&!s.cmp;out+=hit(X,'sys',k,`${q.chip}: ${q.from}`,Ci(q.src[0],q.src[1],on?10:8,on?q.col:'#fff',q.col))});
-  out+=R(20,262,318,100,'#fff',C.grid,8);
+  out+=R(20,262,356,100,'#fff',C.grid,8);
   if(s.cmp)out+=TBF(32,284,'A relay pathway',14,C.ink,'start')+TF(32,306,'The thalamus passes visual signals to one',13,C.ink,'start')+TF(32,324,'area of cortex, point for point. It carries the',13,C.ink,'start')+TF(32,342,'message; modulators change how it is received.',13,C.ink,'start');
   else out+=TBF(32,284,y.chip,14,y.col,'start')+TF(32,306,y.l1,13,C.ink,'start')+TF(32,324,y.l2,13,C.ink,'start')+TF(32,342,y.l3,13,C.ink,'start');
-  out+=TF(470,300,'Sources drawn larger than',13,C.muted)+TF(470,318,'life; positions and fibre',13,C.muted)+TF(470,336,'paths are schematic.',13,C.muted);
+  out+=TF(486,340,'Schematic: sources',13,C.muted)+TF(486,358,'drawn larger than life.',13,C.muted);
   return {svg:out,phase:s.cmp?'Most long pathways are like this one: a defined source, a defined target, and a signal that says something specific. The four modulatory systems are the exception, and they were mapped only in the 1960s, when Swedish anatomists made their transmitters glow under the microscope.':
    `${y.chip} comes from the ${y.from}. ${y.l2} ${y.l3} Such links are broad tendencies seen across many experiments; none of these chemicals has a single function.`};
  }});
@@ -825,12 +825,12 @@ SCENE({id:'neuromodulation-marder',name:'One circuit, many rhythms',tag:'Eve Mar
    for(const b of r.bursts[i]){if(b[0]>=3000)break;const e=Math.min(b[1],3000);out+=R(TX(b[0]),yb-30,TX(e)-TX(b[0]),30,tint(cols[i],.8),'none',2);for(let t=b[0]+8;t<e;t+=22)out+=L(TX(t),yb-28,TX(t),yb-2,cols[i],1.6)}});
   for(const v of [0,1,2,3])out+=TF(TX(v*1000),238,v+(v===3?' s':''),13,C.muted);
   // circuit
-  const N={PD:[70,286],LP:[190,286],PY:[130,346]},inh=(a,b,bend)=>{const A=N[a],B=N[b],dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d,ox=-uy*bend,oy=ux*bend;const x1=A[0]+ux*18+ox,y1=A[1]+uy*18+oy,x2=B[0]-ux*21+ox,y2=B[1]-uy*21+oy;return L(x1,y1,x2,y2,C.muted,2)+Ci(x2,y2,4,C.muted)};
+  const N={PD:[70,290],LP:[190,290],PY:[130,336]},inh=(a,b,bend)=>{const A=N[a],B=N[b],dx=B[0]-A[0],dy=B[1]-A[1],d=Math.hypot(dx,dy),ux=dx/d,uy=dy/d,ox=-uy*bend,oy=ux*bend;const x1=A[0]+ux*18+ox,y1=A[1]+uy*18+oy,x2=B[0]-ux*21+ox,y2=B[1]-uy*21+oy;return L(x1,y1,x2,y2,C.muted,2)+Ci(x2,y2,4,C.muted)};
   out+=inh('PD','LP',-5)+inh('LP','PD',-5)+inh('PD','PY',0)+inh('LP','PY',-5)+inh('PY','LP',-5);
-  names.forEach((n,i)=>{const q=N[n];out+=Ci(q[0],q[1],16,r.active[i]?tint(cols[i],.8):'#fff',eff&&tg===i?C.amber:cols[i])+TBF(q[0],q[1]+5,n,13,cols[i])});
+  names.forEach((n,i)=>{const q=N[n];out+=Ci(q[0],q[1],15,r.active[i]?tint(cols[i],.8):'#fff',eff&&tg===i?C.amber:cols[i])+TBF(q[0],q[1]+5,n,13,cols[i])});
   out+=TF(20,262,'● ends: inhibition',13,C.muted,'start');
   out+=B2_tile(262,252,150,'Cycle period',Math.round(r.period)+' ms')+B2_tile(424,252,156,'Cycles a second',r.period?fmt(B2_r1(1000/r.period)):'none')+B2_tile(262,304,318,'Firing order',order+(silent.length?` · ${silent.join(', ')} silent`:''),silent.length?C.coral:C.ink);
-  out+=B2_note('A simple rate model with this circuit’s main connections; not the crab’s own equations.',370);
+  out+=B2_note('A simple rate model with this circuit’s main connections; not the crab’s own equations.',372);
   return {svg:out,phase:!eff?'With no modulator the three cells fire in a fixed order, PD then LP then PY, because each silences the others in turn and then tires. This three-phase pattern is the pyloric rhythm.':
    s.mod==='a'?`The modulator acts only on the pacemaker, which now recovers sooner between bursts, so the whole cycle shortens to ${Math.round(r.period)} ms and the followers keep step.`:
    s.mod==='b'?`The modulator makes LP more excitable and slower to tire. Its bursts lengthen${silent.includes('PY')?', PY never gets its turn,':''} and, because LP inhibits the pacemaker, the cycle stretches to ${Math.round(r.period)} ms. Same wiring, a different rhythm.`:
@@ -854,8 +854,8 @@ SCENE({id:'neuromodulation-gain',name:'Turning up a neuron’s response',tag:'No
  dur:10,hint:'Pass the same current with and without noradrenaline and count the spikes. Then change the current. The sound button plays the spikes as clicks at half speed.',
  init:()=>({I:23,na:0}),
  watch(p){return {I:23,na:p<.5?0:1}},
- ui:[{choose:[[0,'No modulator'],[1,'Noradrenaline']],label:'In the bath',get:s=>s.na,act:'na'},{range:'I',label:'Current passed in',min:16,max:28,get:s=>s.I,act:'I',show:v=>v+' (relative)'},{b:'Hear the spikes ▶',act:'hear'}],
- on:{na(s,v){s.na=+v?1:0},I(s,v){s.I=clamp(Math.round(+v),16,28)},hear(s){B2_click(B2_adapt(s.I,s.na).spikes.map(t=>(t-100)/500),.12);return 'keep'}},
+ ui:[{choose:[[0,'No modulator'],[1,'Noradrenaline']],label:'In the bath',get:s=>s.na,act:'na'},{range:'I',label:'Current passed in',min:21,max:29,get:s=>s.I,act:'I',show:v=>v+' (relative)'},{b:'Hear the spikes ▶',act:'hear'}],
+ on:{na(s,v){s.na=+v?1:0},I(s,v){s.I=clamp(Math.round(+v),21,29)},hear(s){B2_click(B2_adapt(s.I,s.na).spikes.map(t=>(t-100)/500),.12);return 'keep'}},
  draw(s,f,X){
   const r=B2_adapt(s.I,s.na),o=B2_adapt(s.I,s.na?0:1),n=r.spikes.length,show=X&&!X.try?clamp((X.p%.5)/.4,0,1)*800:800;
   let out=heading(`${s.na?'With noradrenaline':'No modulator'}: ${n} spike${n===1?'':'s'} from the same current`);
