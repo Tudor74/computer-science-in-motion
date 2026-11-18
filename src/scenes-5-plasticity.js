@@ -313,10 +313,10 @@ SCENE({id:'critical-periods-window',name:'What opens and closes the window',tag:
   out+=R(x0,56,ww,120,'#fff',C.grid,4);
   if(w)out+=R(TX(w[0]),56,TX(w[1])-TX(w[0]),120,C.greenp,'none',0)+TF((TX(w[0])+TX(w[1]))/2,74,'critical period',13,C.green);
   const pts=[];for(let d=10;d<=84;d+=1){const lev=s.inh==='weak'?.18:s.inh==='late'?.18+.72*smooth((d-58)/4):s.inh==='early'?.18+.72*smooth((d-13)/5):.1+.8*smooth((d-12)/10);pts.push([TX(d),170-lev*90])}
-  out+=B5_poly(pts,C.purple,2.6)+TF(x0+ww-6,pts[pts.length-1][1]-8,'inhibition (GABA)',13,C.purple,'end');
+  out+=B5_poly(pts,C.purple,2.6);
   out+=R(TX(s.day),150,TX(s.day+4)-TX(s.day),20,C.coral,'none',3)+TF(clamp(TX(s.day+2),x0+38,x0+ww-38),142,'eye closed',13,C.coral);
   for(const d of [10,20,30,40,50,60,70,80])out+=L(TX(d),176,TX(d),181,C.line,1)+TF(TX(d),194,d,13,C.muted);
-  out+=TF(x0+ww/2,212,'age of the mouse (days after birth)',13,C.muted);
+  out+=TF(x0+ww/2,212,'age of the mouse (days after birth)',13,C.muted)+TF(x0+ww,228,'purple line: strength of inhibition (GABA)',13,C.purple,'end');
   out+=TF(50,244,'Shift towards the open eye',13,C.muted,'start')+R(50,252,300,22,'#fff',C.line,5)+R(50,252,300*sh,22,C.coral,'none',5)+TBF(362,269,sh>.9?'full shift':sh>0?Math.round(sh*100)+'% of a full shift':'none',14,sh>0?C.coral:C.muted,'start');
   out+=B5_tile(50,290,160,'Inhibition',B5_WIN_N[s.inh],C.purple)+B5_tile(220,290,160,'Critical period',w?`days ${w[0]} to ${w[1]}`:'does not open',C.green)+B5_tile(390,290,160,'Eye closed',`days ${s.day} to ${s.day+4}`,C.coral);
   out+=B5_note('Schematic of results in mice. The boosting drug is a benzodiazepine; no doses are given.',360);
@@ -430,7 +430,7 @@ SCENE({id:'hebb-ltp-pairing',name:'Pairing a weak input with a strong one',tag:'
   names.forEach((nm,i)=>{const y=ys[i];out+=L(40,y,222,y,cols[i],on[i]?4:2.4)+Ci(226,y,4+3.5*s.w[i],cols[i],'#fff')+TBF(40,y-10,nm,14,cols[i],'start')+TF(70,y-10,i===0?'weak, paired':i===1?'weak, control':'strong',13,C.muted,'start');if(on[i])out+=TF(150,y+18,'train of stimuli',13,cols[i])});
   if(s.apv)out+=TBF(262,132,'blocked',13,C.coral);
   // bars
-  const bx=350,BW=v=>v*96;out+=TF(bx,60,'response to one test pulse (% of baseline)',13,C.muted,'start');
+  const bx=350,BW=v=>v*70;out+=TF(bx,60,'test response (% of baseline)',13,C.muted,'start');
   names.forEach((nm,i)=>{const y=ys[i]-22;out+=TBF(bx,y+17,nm,14,cols[i],'start')+R(bx+34,y,BW(s.w[i]),24,cols[i],'none',4)+R(bx+34,y,BW(1),24,'none',C.ink,4,'stroke-dasharray="4 3" stroke-width="1.4"')+TBF(bx+40+BW(s.w[i]),y+17,Math.round(s.w[i]*100)+'%',13,s.w[i]>1?cols[i]:C.muted,'start')});
   out+=TF(bx,ys[2]+22,'dashed: baseline (100%)',13,C.muted,'start');
   // log
@@ -489,8 +489,8 @@ SCENE({id:'hebb-ltp-morris',name:'Block the receptor, test the memory',tag:'Morr
   out+=TF(566,78,'control',13,C.blue,'end')+TF(566,94,'AP5',13,C.coral,'end');
   const pv=g=>s.pr[g]?Math.round(B5_mwmProbe(g,s.n[g])*100)+'%':'not tested';
   out+=B5_tile(322,274,120,'Probe: control',pv(0),C.blue)+B5_tile(452,274,120,'Probe: AP5',pv(1),C.coral);
-  out+=TF(447,340,'Share of 60 s in the platform’s quarter. Chance is 25%.',13,C.muted);
-  out+=B5_note('Simulated rats; times are illustrative. The pattern is that of Morris et al. (1986).',366);
+  out+=TF(447,336,'Share of 60 s in the platform’s quarter.',13,C.muted)+TF(447,352,'Chance is 25%.',13,C.muted);
+  out+=B5_note('Simulated rats; times are illustrative. The pattern is that of Morris et al. (1986).',372);
   return {svg:out,phase:probe?(d?`These rats had ${n} trial${n===1?'':'s'} with NMDA receptors blocked. With the platform gone they spend ${pv(1)} of the time in its quarter, close to chance: they have not learned the place.`:`After ${n} trial${n===1?'':'s'} the control rats spend ${pv(0)} of the minute in the platform’s quarter${n>=4?', well above the 25% of chance. They know where it should be':'. With so little training this is still near chance'}.`):
    !n?'The rat cannot see, smell or feel its way to the platform; it has to learn the place from the room around the pool. Run the first trial.':
    d?`Trial ${n}: the AP5 rats took ${Math.round(B5_mwmLat(1,n-1))} s on average. They swim normally and can see, but their times fall slowly. In the real experiment LTP could not be induced in their hippocampus.`:
@@ -629,7 +629,7 @@ SCENE({id:'map-plasticity-enriched',name:'Experience thickens the cortex',tag:'M
   let out=heading(!s.n?'Two cages, one litter':s.n<2?'One pair says little':clear?'Thicker, and clear of zero':'Not yet clear of zero');
   const cage=(y,lab,rats,toys)=>{let o=R(18,y,200,100,'#fff',C.line,6)+TF(118,y+118,lab,13,C.ink);rats.forEach(([x,yy])=>{o+=`<ellipse cx="${18+x}" cy="${y+yy}" rx="13" ry="8" fill="${C.muted}"/>`+Ci(18+x+13,y+yy-3,5,C.muted)});if(toys)o+=R(40,y+16,30,10,C.amber,'none',3)+P(`M150 ${y+86}L166 ${y+58}L182 ${y+86}`,C.green,3)+Ci(110,y+26,9,'none',C.purple);return o};
   out+=cage(52,'enriched: company and objects',[[40,70],[92,58],[128,80],[70,36],[160,34]],true)+cage(190,'impoverished: alone, plain cage',[[100,56]],false);
-  const pl=B5_plot(280,62,180,230,[0,21],[-6,16],{yt:[[-5,'−5'],[0,'0'],[5,'+5'],[10,'+10'],[15,'+15']],xt:[[1,'1'],[10,'10'],[20,'20']],xl:'pair of littermates'});
+  const pl=B5_plot(280,62,180,200,[0,21],[-6,16],{yt:[[-5,'−5'],[0,'0'],[5,'+5'],[10,'+10'],[15,'+15']],xt:[[1,'1'],[10,'10'],[20,'20']],xl:'pair of littermates'});
   out+=pl.svg+TF(250,54,'enriched cortex thicker by (%)',13,C.muted,'start')+L(pl.X(0),pl.Y(0),pl.X(21),pl.Y(0),C.ink,1.4);
   d.forEach((v,i)=>{out+=Ci(pl.X(i+1),pl.Y(clamp(v,-5.5,15.5)),4,C.blue,'#fff')});
   // mean and interval
@@ -643,4 +643,212 @@ SCENE({id:'map-plasticity-enriched',name:'Experience thickens the cortex',tag:'M
    s.n<2?`In the first pair the enriched rat’s cortex is ${d[0]<0?'thinner':'thicker'} by ${fmt(B5_r1(Math.abs(d[0])))}%. One pair cannot separate an effect of the cage from ordinary variation between two animals.`:
    clear?`After ${s.n} pairs the average is +${fmt(B5_r1(m))}%, give or take ${fmt(B5_r1(2*se))}%. The whole margin lies above zero. A few per cent of thickness is a small effect, found only by measuring many animals carefully.`:
    `After ${s.n} pairs the average is ${m<0?'−':'+'}${fmt(B5_r1(Math.abs(m)))}%, give or take ${fmt(B5_r1(2*se))}%. The margin still reaches zero, so more pairs are needed.`};
+ }});
+
+/* ===================== Lesson: neurogenesis ===================== */
+// Labelling dividing cells with radioactive thymidine. Cell counts in the drawing are illustrative.
+const B5_NG={
+ dg:{name:'Dentate gyrus',d1:6,mo:5,neu:4,layer:'granule cell layer',
+  s1:'A day later, six labelled cells lie just under the granule cell layer. They were copying their DNA when the label arrived, so they were dividing.',
+  s2:'A month later five labelled cells remain, and they have moved up into the layer and taken the shape of granule cells.',
+  s3:'Four of the five have the features of neurons; one is a glial cell. This is what Altman and Das reported in rats in 1965, and what Kaplan and Hinds confirmed with the electron microscope in 1977.'},
+ ob:{name:'Olfactory bulb',d1:0,mo:6,neu:6,layer:'granule cell layer',
+  s1:'A day later there is no labelled cell in the bulb. The dividing cells are elsewhere, beside the fluid-filled ventricles deep in the brain.',
+  s2:'A month later six labelled cells have appeared among the bulb’s granule cells. They were born beside the ventricle and migrated forward along a fixed route.',
+  s3:'All six have the features of small neurons. Altman described this stream of new cells to the rat’s olfactory bulb in 1969.'},
+ ctx:{name:'Neocortex',d1:3,mo:3,neu:0,layer:'a layer of cortical neurons',
+  s1:'A day later three small labelled cells are scattered through the tissue.',
+  s2:'A month later there are still three, small and scattered, and none sits among the large neurons.',
+  s3:'None is a neuron: they are glia and cells of blood-vessel walls, which divide throughout life. A 1999 report of new neurons in adult monkey neocortex was not confirmed (Kornack and Rakic, 2001).'}};
+SCENE({id:'neurogenesis',name:'Are new neurons born in adults?',tag:'Altman, 1962–1965',
+ definition:'Neurogenesis is the birth of new neurons. For most of the twentieth century the rule was that it ends soon after birth: an adult brain can lose neurons and never gains one. In 1962 Joseph Altman injected adult rats with radioactive thymidine, a building block of DNA that is taken up only by cells preparing to divide, and later found labelled cells that looked like neurons. With Gopal Das in 1965 he showed them in the dentate gyrus of the hippocampus.',
+ example:'The work was largely ignored. The label proves a cell divided, but not what kind of cell it became, and critics held that the labelled cells were glia. A 1985 study of adult monkeys by Pasko Rakic found no new neurons. Opinion changed only in the 1980s and 1990s, with songbirds and with better markers. In rodents two regions are now accepted: the dentate gyrus and the stream of cells to the olfactory bulb.',
+ desc:'A slice of brain tissue with a layer of grey cells. After an injection of label, some cells are drawn dark; over the steps they move, and in the last step each is marked N for neuron or G for glia. A list on the right gives the steps of the method.',
+ research:['Altman (1962). Are new neurons formed in the brains of adult mammals? Science 135, 1127–1128.','Altman & Das (1965). Autoradiographic and histological evidence of postnatal hippocampal neurogenesis in rats. Journal of Comparative Neurology 124, 319–335.','Kaplan & Hinds (1977). Science 197, 1092–1094. Rakic (1985). Limits of neurogenesis in primates. Science 227, 1054–1056. Kornack & Rakic (2001). Science 294, 2127–2130.'],
+ dur:12,hint:'Choose a region of the adult rat’s brain and step through the method. Ask at each step what the label does and does not prove.',
+ init:()=>({region:'dg'}),
+ trace(s){const q=B5_NG[s.region]||B5_NG.dg;return [
+  {k:0,say:'An adult rat is injected with radioactive thymidine. Any cell that is copying its DNA in the next hours builds the label into its chromosomes and keeps it.'},
+  {k:1,say:q.s1},{k:2,say:q.s2},{k:3,say:q.s3}]},
+ ui:[{choose:[['dg','Dentate gyrus'],['ob','Olfactory bulb'],['ctx','Neocortex']],label:'Region',get:s=>s.region,act:'region'}],
+ on:{region(s,v){s.region=B5_NG[v]?v:'dg'}},
+ draw(s,f,X){
+  const q=B5_NG[s.region]||B5_NG.dg,k=f?f.k:3,nlab=k===0?0:k===1?q.d1:q.mo;
+  let out=heading(k===0?'Label the cells that are dividing':k===1?(q.d1?'One day on: labelled cells':'One day on: none here yet'):k===2?'One month on':q.neu?`${q.neu} of ${q.mo} labelled cells are neurons`:'Labelled, but not neurons');
+  out+=R(18,48,350,250,'#fff',C.grid,8)+TBF(30,68,q.name+' of an adult rat',13,C.ink,'start');
+  out+=R(30,138,326,56,C.pale,'none',6)+TF(350,132,q.layer,13,C.blue,'end');
+  const r=B5_rng(s.region==='dg'?3:s.region==='ob'?8:14);
+  for(let i=0;i<26;i++)out+=Ci(42+(i%13)*25+4*r(),152+Math.floor(i/13)*26+4*r(),s.region==='ctx'?10:8,'#fff',C.line);
+  for(let j=0;j<nlab;j++){
+   const bx=62+j*52+(s.region==='ctx'?12*Math.sin(j*2.1):0),inLayer=s.region!=='ctx'&&k>=2,by=s.region==='ctx'?[94,236,222][j%3]:inLayer?(j%2?178:152):214,neu=j<q.neu;
+   if(inLayer)out+=L(bx,by-8,bx,by-26,C.ink,2);
+   out+=Ci(bx,by,inLayer?8:6,C.ink)+Ci(bx-2,by-2,1.6,'#fff')+Ci(bx+3,by+1,1.6,'#fff');
+   if(k===3)out+=TBF(bx,by+(s.region==='ctx'?24:inLayer?27:24),neu?'N':'G',14,neu?C.green:C.coral)}
+  if(k===0)out+=TF(193,236,'No label yet: every cell looks the same.',13,C.muted);
+  out+=TF(193,286,'dark: labelled  ·  N neuron  ·  G glia or other',13,C.muted);
+  ['Inject the label','Wait one day: who took it up?','Wait a month: where are they?','Check each: neuron or not?'].forEach((t,i)=>{out+=R(380,56+i*44,202,36,i===k?C.amberp:'#fff',i===k?C.amber:C.grid,7)+TF(390,79+i*44,`${i+1}. ${t}`,13,i===k?C.ink:C.muted,'start')});
+  out+=B5_tile(380,238,96,'Labelled',String(nlab),C.ink)+B5_tile(486,238,96,'Neurons',k===3?String(q.neu):'?',C.green);
+  out+=TF(300,320,'The label shows that a cell divided. It does not show what the cell became.',13,C.ink);
+  out+=B5_note('Schematic of thymidine labelling in adult rats. Counts are illustrative.',350);
+  return {svg:out,phase:f?f.say:''};
+ }});
+
+// A canary's year. HVC size relative to its autumn low, and the arrival of new neurons; both curves are schematic.
+const B5_MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const B5_hvc=m=>1.5+.45*Math.cos(2*Math.PI*(m-3.5)/12),B5_arrive=m=>.5+.5*Math.cos(2*Math.PI*(m-9.5)/12);
+const B5_song=m=>m>=2&&m<=5?'full, stable song':m===6||m===7?'song falls away':m>=8?'unstable; new syllables':'song settling';
+SCENE({id:'neurogenesis-canaries',name:'A canary’s song nucleus through the year',tag:'Nottebohm, 1981–1984',
+ definition:'The evidence that changed minds came from birds. Fernando Nottebohm found that the brain region a male canary uses to control song, called HVC, is nearly twice as large in spring, when he sings a stable song, as in autumn, when the song breaks down and is relearned with new syllables. In 1983 Steven Goldman and Nottebohm showed with labelled thymidine that new neurons are born in the adult canary’s brain and move into HVC.',
+ example:'The decisive step came in 1984. John Paton and Nottebohm recorded electrical responses to sound from single cells in HVC, filled each recorded cell with dye, and then found the birth label in some of them. Cells born in adulthood were working neurons wired into the circuit. Old neurons die as new ones arrive, so the nucleus is partly rebuilt each year.',
+ desc:'The outline of a canary’s brain with the song nucleus HVC drawn at its size for the chosen month. A graph across the twelve months shows the size of HVC and the arrival of new neurons, with a marker on the chosen month. Tiles give the month, the size and the state of the song.',
+ research:['Nottebohm (1981). A brain for all seasons: cyclical anatomical changes in song control nuclei of the canary brain. Science 214, 1368–1370.','Goldman & Nottebohm (1983). Neuronal production, migration, and differentiation in a vocal control nucleus of the adult female canary brain. PNAS 80, 2390–2394.','Paton & Nottebohm (1984). Neurons generated in the adult brain are recruited into functional circuits. Science 225, 1046–1048. Kirn, O’Loughlin, Kasparian & Nottebohm (1994). PNAS 91, 7844–7848.'],
+ dur:12,hint:'Move through the months of the year. Compare when HVC is largest with when most new neurons arrive.',
+ init:()=>({m:3}),
+ watch(p){return {m:Math.min(11,Math.floor(p*12))}},
+ ui:[{range:'m',label:'Month',min:1,max:12,get:s=>s.m+1,act:'m'},{b:'Next month',act:'next'}],
+ on:{m(s,v){s.m=clamp(Math.round(+v)-1||0,0,11)},next(s){s.m=(s.m+1)%12}},
+ draw(s,f,X){
+  const v=B5_hvc(s.m),ar=B5_arrive(s.m),rel=v/1.05;
+  let out=heading(s.m>=2&&s.m<=5?'Spring: a large HVC and a stable song':s.m>=8?'Autumn: a small HVC, many new neurons':s.m>=6?'Late summer: the song falls away':'Winter: the new song settles');
+  out+=R(18,48,230,196,'#fff',C.grid,8)+`<path d="M52 170C52 112 110 82 164 92C214 100 232 140 220 172C210 200 168 212 126 208C86 206 52 200 52 170Z" fill="#f4ece4" stroke="${C.line}" stroke-width="2"/>`;
+  out+=Ci(150,128,10*Math.sqrt(v),C.coral,'#fff')+TBF(150,133,'HVC',13,'#fff')+TF(133,232,'canary brain, from the side',13,C.muted);
+  out+=Ci(92,168,3,C.blue)+Ci(104,160,3,C.blue)+(ar>.5?Ci(118,150,3,C.blue)+Ci(130,142,3,C.blue):'')+TF(84,190,'new neurons',13,C.blue);
+  const pl=B5_plot(290,62,280,150,[-.5,11.5],[0,2.2],{xt:B5_MONTHS.map((n,i)=>[i,n[0]]),yt:[[1,'1'],[2,'2']],xl:'month'});
+  out+=pl.svg+TF(290,54,'red: size of HVC  ·  blue: new neurons arriving',13,C.muted,'start');
+  out+=R(pl.X(s.m-.5),62,pl.X(.5)-pl.X(-.5),150,C.amberp,'none',0);
+  for(let i=0;i<12;i++)out+=R(pl.X(i)-7,pl.Y(B5_arrive(i)*.8),14,pl.Y(0)-pl.Y(B5_arrive(i)*.8),C.blue,'none',2,'fill-opacity=".45"');
+  out+=B5_poly(range(12).map(i=>[pl.X(i),pl.Y(B5_hvc(i))]),C.coral,2.6)+Ci(pl.X(s.m),pl.Y(v),5.5,C.coral,'#fff');
+  out+=B5_tile(18,256,180,'Month',B5_MONTHS[s.m],C.ink)+B5_tile(208,256,180,'HVC size (autumn low = 1)','× '+fmt(B5_r1(rel)),C.coral)+B5_tile(398,256,184,'Song',B5_song(s.m),C.ink);
+  out+=TF(300,326,'New neurons replace old ones; the total rises and falls with the seasons.',13,C.ink);
+  out+=B5_note('Schematic curves for male canaries, after Nottebohm (1981) and Kirn et al. (1994).',354);
+  return {svg:out,phase:s.m>=2&&s.m<=5?`${B5_MONTHS[s.m]}: the breeding season. HVC is ${fmt(B5_r1(rel))} times its autumn size and the male repeats a fixed set of syllables. Few new neurons are arriving.`:
+   s.m>=8?`${B5_MONTHS[s.m]}: HVC is near its smallest, the song is variable, and new neurons are arriving in numbers. Paton and Nottebohm showed that such cells respond to sound: they join the working circuit while the bird learns new syllables.`:
+   s.m>=6?`${B5_MONTHS[s.m]}: after breeding the bird moults and sings less. HVC is shrinking as older neurons die.`:
+   `${B5_MONTHS[s.m]}: the neurons added in autumn are in place, HVC is growing again, and the new season’s song is settling into its fixed form.`};
+ }});
+
+const B5_HUM=[
+ {y:'1998',who:'Eriksson et al.',m:['A dividing-cell label (BrdU), given','for cancer care, read after death.'],n:'5 people, all with cancer',f:'Labelled neurons in the dentate gyrus.',d:'A very small and unusual sample.',side:1},
+ {y:'2013',who:'Spalding et al.',m:['Carbon-14 from 1950s bomb tests,','measured in neurons’ DNA.'],n:'Hippocampal neurons, post-mortem',f:'About 700 new neurons a day.',d:'Indirect: rests on a model of turnover.',side:1},
+ {y:'2018',who:'Sorrells et al.',m:['Antibody markers of young','neurons in brain tissue.'],n:'59 samples, before birth to 77 years',f:'A steep fall in childhood; none in adults.',d:'Markers can fade before tissue is fixed.',side:0},
+ {y:'2018',who:'Boldrini et al.',m:['Antibody markers, counted through','the whole hippocampus.'],n:'28 people aged 14 to 79',f:'Thousands of young neurons at every age.',d:'The markers may not mean “newborn”.',side:1},
+ {y:'2019',who:'Moreno-Jiménez et al.',m:['Antibody markers, with tightly','controlled tissue fixation.'],n:'13 healthy adults aged 43 to 87',f:'Thousands of young neurons.',d:'Same doubt about what markers mean.',side:1}];
+const B5_fixSeen=h=>Math.exp(-(h-1)/3.5);
+SCENE({id:'neurogenesis-human',name:'Adult humans: an open question',tag:'1998 to today: debated',
+ definition:'Whether adult humans make new neurons is debated. In 1998 Peter Eriksson and colleagues examined the brains of five people who had been given a dividing-cell label during cancer treatment, and found labelled neurons in the dentate gyrus. In 2018 two careful studies of donated brain tissue disagreed: Sorrells and colleagues found that young neurons fall steeply in childhood and could detect none in adults, while Boldrini and colleagues found them persisting into old age.',
+ example:'The labelling method used in animals cannot be used in healthy people, so human studies rely on marker proteins in tissue taken after death. How long the tissue waits, and how it is preserved, change how many marked cells can be seen, and it is disputed whether the markers pick out only newborn cells. Nothing here supports any claim about ways to “grow new brain cells”.',
+ desc:'Five studies listed by year on the left; choosing one fills a card with its method, sample, finding and the main doubt about it. Below, a slider changes how long a piece of tissue stays in fixative, and a bar shows how many marked cells can then be seen in the same tissue.',
+ research:['Eriksson et al. (1998). Neurogenesis in the adult human hippocampus. Nature Medicine 4, 1313–1317. Spalding et al. (2013). Dynamics of hippocampal neurogenesis in adult humans. Cell 153, 1219–1227.','Sorrells et al. (2018). Human hippocampal neurogenesis drops sharply in children to undetectable levels in adults. Nature 555, 377–381. Boldrini et al. (2018). Human hippocampal neurogenesis persists throughout aging. Cell Stem Cell 22, 589–599.','Moreno-Jiménez et al. (2019). Adult hippocampal neurogenesis is abundant in neurologically healthy subjects and drops sharply in patients with Alzheimer’s disease. Nature Medicine 25, 554–560.'],
+ dur:13,hint:'Open each study in turn and compare the methods, not just the conclusions. Then lengthen the time in fixative and watch the count from one piece of tissue fall.',
+ init:()=>({st:2,fix:1}),
+ watch(p){return {st:Math.min(4,Math.floor(p*5)),fix:1+Math.round(p*9)}},
+ ui:[{range:'fix',label:'Time in fixative (1 short, 10 long)',min:1,max:10,get:s=>s.fix,act:'fix'},{b:'Next study',act:'next'}],
+ on:{st(s,v){s.st=clamp(Math.round(+v)||0,0,4)},next(s){s.st=(s.st+1)%5},fix(s,v){s.fix=clamp(Math.round(+v)||1,1,10)}},
+ draw(s,f,X){
+  const q=B5_HUM[s.st],seen=B5_fixSeen(s.fix);
+  let out=heading(q.side?`${q.who} ${q.y}: new neurons found`:`${q.who} ${q.y}: none found in adults`);
+  B5_HUM.forEach((h,i)=>{const on=i===s.st;out+=hit(X,'st',i,`${h.who} ${h.y}`,R(18,50+i*42,196,36,on?C.amberp:'#fff',on?C.amber:C.grid,7)+TBF(28,73+i*42,h.y,13,h.side?C.green:C.coral,'start')+TF(66,73+i*42,h.who,13,C.ink,'start'))});
+  out+=R(224,50,358,204,'#fff',C.grid,8);
+  const row=(y,lab,txt,col=C.ink)=>TBF(236,y,lab,13,C.muted,'start')+TF(306,y,txt,13,col,'start');
+  out+=row(74,'Method',q.m[0])+TF(306,92,q.m[1],13,C.ink,'start')+row(124,'Sample',q.n)+row(156,'Found',q.f,q.side?C.green:C.coral)+row(188,'Doubt',q.d)+TF(236,236,'green year: found them  ·  red year: did not',13,C.muted,'start');
+  out+=R(18,266,564,76,'#fff',C.grid,8)+TF(30,286,'The same tissue, counted after a short or a long time in fixative:',13,C.ink,'start');
+  out+=R(30,296,330,22,'#fff',C.line,5)+R(30,296,330*seen,22,C.purple,'none',5)+TBF(372,313,Math.round(seen*100)+'% of marked cells still visible',13,C.purple,'start');
+  out+=TF(30,334,'Illustrative curve; the effect was reported by Moreno-Jiménez et al.',13,C.muted,'start');
+  out+=B5_note('A summary of published studies. The question is not settled.',362);
+  return {svg:out,phase:`${q.who} (${q.y}). ${q.m.join(' ')} Sample: ${q.n}. Result: ${q.f} Main doubt: ${q.d} ${s.fix>4?'With long fixation most marked cells in the same tissue go unseen, so a count of zero may reflect the method.':'With short, controlled fixation more marked cells are seen, though what they are is still argued.'}`};
+ }});
+
+/* ===================== Lesson: adolescent-brain ===================== */
+// Synaptic density by age, as % of the adult level. Schematic curves through the peaks Huttenlocher reported.
+const B5_ageOf=u=>(Math.pow(10,u/100*2.45)-1)*.25,B5_uOf=a=>Math.log10(a/.25+1)/2.45*100;
+const B5_SYN={front:{name:'Frontal cortex',pts:[[0,100],[1,150],[2,150],[16,100],[70,100]],col:C.purple},vis:{name:'Visual cortex',pts:[[0,40],[.67,165],[11,100],[70,100]],col:C.green}};
+function B5_synAt(reg,age){const p=B5_SYN[reg].pts,u=B5_uOf(age);for(let i=1;i<p.length;i++){const u0=B5_uOf(p[i-1][0]),u1=B5_uOf(p[i][0]);if(u<=u1+1e-9)return lerp(p[i-1][1],p[i][1],smooth((u-u0)/(u1-u0)))}return p[p.length-1][1]}
+const B5_ageName=a=>a<.04?'birth':a<1?Math.max(1,Math.round(a*12))+(Math.round(a*12)<=1?' month':' months'):a<3?fmt(B5_r1(a))+' years':Math.round(a)+' years';
+SCENE({id:'adolescent-brain',name:'Synapses rise, then fall',tag:'Huttenlocher, 1979',
+ definition:'In 1979 Peter Huttenlocher counted synapses under the electron microscope in a layer of frontal cortex from 21 human brains, from newborns to people in their nineties. The density of synapses rose through infancy to a peak at about 1 to 2 years, some 50% above the adult level, and then fell slowly until about 16. The developing brain makes more synapses than it keeps and removes the surplus, a process called pruning.',
+ example:'Regions differ. In visual cortex the peak came at about 8 months and the adult level was reached by about 11 years; in frontal cortex pruning ran on through adolescence, and a later study of dendritic spines suggests it continues through the twenties. The counts come from few brains, one per age, examined after death.',
+ desc:'A graph of synapse density against age from birth to 70 years, on a stretched age scale, for frontal and for visual cortex, with a marker at the chosen age. Beside it, a length of dendrite whose number of spines follows the curve.',
+ research:['Huttenlocher (1979). Synaptic density in human frontal cortex: developmental changes and effects of aging. Brain Research 163, 195–205.','Huttenlocher, de Courten, Garey & Van der Loos (1982). Synaptogenesis in human visual cortex: evidence for synapse elimination during normal development. Neuroscience Letters 33, 247–252.','Petanjek et al. (2011). Extraordinary neoteny of synaptic spines in the human prefrontal cortex. PNAS 108, 13281–13286.'],
+ dur:12,hint:'Slide the age from birth to 70 and switch between the two regions. The age scale is stretched so that the first years have room.',
+ init:()=>({u:35,reg:'front'}),
+ watch(p){return {u:Math.round(p*100),reg:'front'}},
+ ui:[{range:'u',label:'Age',min:0,max:100,get:s=>s.u,show:u=>B5_ageName(B5_ageOf(u)),act:'u'},{choose:[['front','Frontal cortex'],['vis','Visual cortex']],label:'Region',get:s=>s.reg,act:'reg'}],
+ on:{u(s,v){s.u=clamp(Math.round(+v)||0,0,100)},reg(s,v){s.reg=v==='vis'?'vis':'front'}},
+ draw(s,f,X){
+  const age=B5_ageOf(s.u),q=B5_SYN[s.reg],v=B5_synAt(s.reg,age),pk=s.reg==='vis'?.67:1.5,rising=age<(s.reg==='vis'?.67:1),falling=age>(s.reg==='vis'?.67:2)&&age<(s.reg==='vis'?11:16);
+  let out=heading(rising?'Synapses are being added':falling?'Pruning: the surplus is removed':age>=(s.reg==='vis'?11:16)?'The adult level':'At the peak');
+  const pl=B5_plot(60,62,360,200,[0,100],[0,190],{xt:[[0,'birth'],[B5_uOf(1),'1'],[B5_uOf(5),'5'],[B5_uOf(16),'16'],[B5_uOf(70),'70']],yt:[[50,'50'],[100,'100'],[150,'150']],xl:'age (years, stretched scale)'});
+  out+=pl.svg+TF(60,54,'synapse density (% of the adult level)',13,C.muted,'start')+L(pl.X(0),pl.Y(100),pl.X(100),pl.Y(100),C.line,1.2,'stroke-dasharray="4 4"');
+  for(const key of ['front','vis']){const pts=[];for(let u=0;u<=100;u+=1)pts.push([pl.X(u),pl.Y(B5_synAt(key,B5_ageOf(u)))]);out+=B5_poly(pts,B5_SYN[key].col,key===s.reg?3:1.5,key===s.reg?'':'stroke-dasharray="5 4"')}
+  out+=TF(pl.X(B5_uOf(.67))+8,pl.Y(172),'visual',13,C.green,'start')+TF(pl.X(B5_uOf(5)),pl.Y(150),'frontal',13,C.purple,'start');
+  out+=L(pl.X(s.u),62,pl.X(s.u),262,C.ink,1.2,'stroke-dasharray="3 3"')+Ci(pl.X(s.u),pl.Y(v),6,q.col,'#fff');
+  // dendrite with spines
+  out+=R(446,62,136,200,'#fff',C.grid,8)+TF(514,80,'a stretch of dendrite',13,C.muted)+L(514,96,514,250,C.ink,6);
+  const ns=Math.round(v/10);for(let i=0;i<ns;i++){const y=102+i*(144/Math.max(1,ns-1||1)),sd=i%2?1:-1;out+=L(514+sd*3,y,514+sd*20,y-4,q.col,2)+Ci(514+sd*22,y-4,3.5,q.col)}
+  out+=B5_tile(60,300,150,'Age',B5_ageName(age),C.ink)+B5_tile(225,300,195,q.name,s.reg==='vis'&&age<.3?'low, rising fast':'about '+Math.round(v/5)*5+'% of adult',q.col)+B5_tile(435,300,147,'Spines drawn',String(ns),q.col);
+  out+=B5_note('Schematic curves through Huttenlocher’s reported peaks, from few brains. Not a growth chart.',366);
+  return {svg:out,phase:rising?`At ${B5_ageName(age)} synapses are forming faster than they are lost in ${q.name.toLowerCase()}. Density is a count per volume; the cortex is also growing, so the total number rises even faster.`:
+   falling?`At ${B5_ageName(age)} density in ${q.name.toLowerCase()} is falling from its peak. Synapses that are little used are removed and those in use are kept and strengthened, so pruning is part of how experience shapes the circuit. It is not damage.`:
+   age>=(s.reg==='vis'?11:16)?`By ${B5_ageName(age)} density in ${q.name.toLowerCase()} is at the adult level, where Huttenlocher found it steady for decades.`:
+   `Around ${s.reg==='vis'?'8 months':'1 to 2 years'} density in ${q.name.toLowerCase()} peaks, about ${s.reg==='vis'?'two-thirds':'half'} again above the adult level.`};
+ }});
+
+// Group average and individuals. Grey-matter volume as % of the average peak: G(a) = 100 − 0.12 (a − 12)²; people differ by about 10% (sd). Illustrative.
+const B5_grey=a=>100-.12*(a-12)**2;
+const B5_PEOPLE=range(8).map(i=>{const r=B5_rng(i*29+401);return {o:10*B5_gauss(r),sh:1.5*B5_gauss(r)}});
+function B5_fitAges(s){const out=[];for(let a=4;a<=22;a++){if(Math.abs(s.v-B5_grey(a))>20)continue;if(s.two==='up'&&a>15)continue;if(s.two==='down'&&a<9)continue;out.push(a)}return out}
+SCENE({id:'adolescent-brain-mri',name:'The average curve and the individual',tag:'Giedd and colleagues, 1999',
+ definition:'In 1999 Jay Giedd and colleagues published MRI scans of 145 healthy children and young people aged about 4 to 22, many of them scanned more than once. White matter increased steadily across the whole range, by about 12%. The cortex’s grey matter rose and then fell, with the turning point at around 12 in the frontal lobes and about 16 in the temporal lobes. Later work showed the cortex thinning from back to front, with the regions for planning and control among the last to settle.',
+ example:'These are group averages. Brain volumes differ between healthy people of the same age by about 10% either way, far more than the average changes from one year to the next. The age of the grey-matter peak also depends on the method: a 2022 analysis of over 100,000 people put it near 6 years. No scan can explain one teenager’s behaviour.',
+ desc:'A graph of grey-matter volume against age from 4 to 22: a thick average curve, a shaded band for the usual spread between people, and eight thin lines for simulated individuals. A horizontal line marks one measured value, and a green bar along the bottom shows every age that value is consistent with.',
+ research:['Giedd, Blumenthal, Jeffries, Castellanos, Liu, Zijdenbos, Paus, Evans & Rapoport (1999). Brain development during childhood and adolescence: a longitudinal MRI study. Nature Neuroscience 2, 861–863.','Gogtay et al. (2004). Dynamic mapping of human cortical development during childhood through early adulthood. PNAS 101, 8174–8179.','Bethlehem, Seidlitz, White et al. (2022). Brain charts for the human lifespan. Nature 604, 525–533.'],
+ dur:12,hint:'Set a measured value and see which ages it fits. Then add a second scan two years later. This is a model for reasoning about scans, not a way to assess anyone.',
+ init:()=>({v:96,two:'0'}),
+ watch(p){return p<.5?{v:Math.round(lerp(80,112,p*2)/2)*2,two:'0'}:{v:96,two:p<.75?'up':'down'}},
+ ui:[{range:'v',label:'Measured volume (% of the average peak)',min:70,max:130,step:2,get:s=>s.v,act:'v'},{choose:[['0','One scan'],['up','Two scans: rising'],['down','Two scans: falling']],label:'Scans',get:s=>s.two,act:'two'}],
+ on:{v(s,v){s.v=clamp(Math.round(+v/2)*2||100,70,130)},two(s,v){s.two=B5_pick(v,['0','up','down'],'0')}},
+ draw(s,f,X){
+  const fit=B5_fitAges(s),n=fit.length;
+  let out=heading(n>=17?'One value fits almost every age':n===0?'Outside the usual range at every age':s.two!=='0'?'Two scans narrow it, a little':'This value fits '+n+' of the 19 ages');
+  const pl=B5_plot(60,62,370,200,[4,22],[60,130],{xt:[[4,'4'],[8,'8'],[12,'12'],[16,'16'],[20,'20']],yt:[[80,'80'],[100,'100'],[120,'120']],xl:'age (years)'});
+  out+=pl.svg+TF(60,54,'grey-matter volume (% of the average peak)',13,C.muted,'start');
+  const up=[],dn=[];for(let a=4;a<=22;a+=.5){up.push([pl.X(a),pl.Y(Math.min(130,B5_grey(a)+20))]);dn.push([pl.X(a),pl.Y(Math.max(60,B5_grey(a)-20))])}
+  out+=P('M'+up.concat(dn.reverse()).map(q=>fmt(q[0])+' '+fmt(q[1])).join(' L')+'Z','none',0,C.pale);
+  for(const pn of B5_PEOPLE){const pts=[];for(let a=4;a<=22;a+=.5)pts.push([pl.X(a),pl.Y(clamp(100+pn.o-.12*(a-12-pn.sh)**2,61,129))]);out+=B5_poly(pts,C.line,1.3)}
+  const av=[];for(let a=4;a<=22;a+=.5)av.push([pl.X(a),pl.Y(B5_grey(a))]);out+=B5_poly(av,C.blue,3)+TF(pl.X(12),pl.Y(B5_grey(12))-8,'average',13,C.blue);
+  out+=L(pl.X(4),pl.Y(s.v),pl.X(22),pl.Y(s.v),C.coral,2,'stroke-dasharray="6 4"');
+  for(const a of fit)out+=R(pl.X(a-.5<4?4:a-.5),254,pl.X(Math.min(22,a+.5))-pl.X(Math.max(4,a-.5)),8,C.green,'none',0);
+  out+=B5_tile(446,62,136,'Measured',s.v+'%',C.coral)+B5_tile(446,116,136,'Ages that fit',n?`${n} of 19`:'none',C.green)+B5_tile(446,170,136,'Scans',s.two==='0'?'one':s.two==='up'?'two, rising':'two, falling',C.ink);
+  out+=TF(514,236,'band: usual spread',13,C.muted)+TF(514,252,'thin lines: 8 people',13,C.muted);
+  out+=TF(300,318,'Green bar: ages at which this measurement would be unremarkable.',13,C.ink);
+  out+=B5_note('Illustrative model: average after Giedd et al. (1999), spread of about 10% between people.',346);
+  return {svg:out,phase:n===0?'A value this far from the average would be unusual at any age in the range, and still would not say anything about how a person thinks or behaves.':
+   s.two==='0'?`A volume of ${s.v}% is within the usual spread for ${n} of the 19 ages from 4 to 22. The differences between people are several times larger than the change with age, so one scan cannot place a person on the curve.`:
+   `Two scans of the same person show the direction of change, which is what Giedd’s repeated scans added. A ${s.two==='up'?'rising':'falling'} volume fits ${n} ages, ${s.two==='up'?'up to the mid-teens':'from about 9 onwards'}, because people’s turning points differ by years. It describes growth; it does not explain behaviour.`};
+ }});
+
+// Ages at which four whole-brain measures peak on average (Bethlehem et al. 2022). Curve shapes are schematic.
+const B5_MEAS=[['Cortical thickness',1.7,C.green],['Grey-matter volume',5.9,C.blue],['Deep grey matter',14.4,C.purple],['White-matter volume',28.7,C.amber]];
+const B5_measF=(a,pk)=>a<pk?.3+.7*smooth(a/pk):1-.4*smooth((a-pk)/(100-pk));
+SCENE({id:'adolescent-brain-myths',name:'“Finished at 25”?',tag:'A claim with no sharp basis',
+ definition:'It is often said that the brain is finished at 25. No study shows a finishing line at that age, or at any age. Different measures turn at different times: in a 2022 analysis of scans from more than 100,000 people, average cortical thickness peaked before age 2, grey-matter volume at about 6, the deep grey matter at about 14 and white-matter volume at about 29, and all of them kept changing afterwards.',
+ example:'The number 25 seems to have grown out of early studies that stopped following people in their early twenties, so they could not show where change ends. Development into the twenties is real, but it is gradual, it differs between people by years, and these are averages over thousands of scans. None of it says what a particular 17 or 24 year old can or cannot do.',
+ desc:'Four rows, one for each brain measure, each with a schematic curve from birth to 60 years and a dot at its average peak. A vertical line at the chosen age crosses all four rows, and each row says whether that measure is still rising or how long ago it peaked.',
+ research:['Bethlehem, Seidlitz, White et al. (2022). Brain charts for the human lifespan. Nature 604, 525–533.','Sowell, Thompson, Holmes, Jernigan & Toga (1999). In vivo evidence for post-adolescent brain maturation in frontal and striatal regions. Nature Neuroscience 2, 859–861.','Lebel & Beaulieu (2011). Longitudinal development of human brain wiring continues from childhood into adulthood. Journal of Neuroscience 31, 10937–10947.'],
+ dur:11,hint:'Move the line to any age you think the brain might be “finished” and read the four rows. Try 18, 25 and 30.',
+ init:()=>({age:25}),
+ watch(p){return {age:Math.round(lerp(10,40,p))}},
+ ui:[{range:'age',label:'Proposed finishing age (years)',min:10,max:40,get:s=>s.age,act:'age'}],
+ on:{age(s,v){s.age=clamp(Math.round(+v)||25,10,40)}},
+ draw(s,f,X){
+  const x0=236,w=340,AX=a=>x0+a/60*w,rising=B5_MEAS.filter(m=>s.age<m[1]).length;
+  let out=heading(`At ${s.age}: ${rising?rising+' measure'+(rising>1?'s':'')+' still rising, ':''}${4-rising} past ${4-rising===1?'its':'their'} peak`);
+  B5_MEAS.forEach((m,i)=>{const y=58+i*62,Y=v=>y+50-v*42,pts=[];for(let a=0;a<=60;a+=.5)pts.push([AX(a),Y(B5_measF(a,m[1]))]);
+   out+=R(x0,y,w,54,'#fff',C.grid,4)+B5_poly(pts,m[2],2.6)+Ci(AX(m[1]),Y(1),5,m[2],'#fff');
+   out+=TBF(18,y+18,m[0],13,m[2],'start')+TF(18,y+34,`average peak: ${fmt(m[1])} years`,13,C.muted,'start')+TF(18,y+50,s.age<m[1]?'still rising':`${fmt(B5_r1(s.age-m[1]))} years past its peak`,13,C.ink,'start')});
+  out+=L(AX(s.age),54,AX(s.age),300,C.coral,2,'stroke-dasharray="6 4"')+TBF(AX(s.age)+(s.age>32?-6:6),51,'age '+s.age,13,C.coral,s.age>32?'end':'start');
+  for(const a of [0,20,40,60])out+=TF(AX(a),318,a,13,C.muted);
+  out+=TF(300,340,'Every curve is still moving at the line. There is no age at which all are flat.',13,C.ink);
+  out+=B5_note('Peak ages are averages from Bethlehem et al. (2022). Curve shapes are schematic.',362);
+  return {svg:out,phase:`Put the line at ${s.age}. ${rising?`White-matter volume is still rising on average${rising>1?', and so is the deep grey matter':''}`:'All four measures are past their average peaks'}; the others have been declining for years, slowly, and will go on doing so. Whichever age is chosen, some measure is still changing, so no age marks the brain as finished. These are averages across many people, with a wide spread around each.`};
  }});
