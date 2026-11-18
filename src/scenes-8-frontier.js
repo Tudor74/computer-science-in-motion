@@ -101,7 +101,7 @@ SCENE({id:'patch-clamp-seal',name:'The gigaseal',tag:'Hamill, Marty, Neher, Sakm
   out+=B8_poly(B8_trace(ev,-s.amp,sd,11,40,520,100,sc,B8_SWEEP,360,72,170),C.blue,1.2);
   out+=L(40,166,40,166-sc*(s.amp<1?.5:2),C.ink,2)+TF(46,164,s.amp<1?'0.5 pA':'2 pA',13,C.ink,'start');
   // noise against seal
-  const pl=B8_plot(70,206,300,104,[7,11],[0,1.4],{xt:[[7,'10 MΩ'],[8,'100 MΩ'],[9,'1 GΩ'],[10,'10 GΩ'],[11,'100 GΩ']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'seal resistance (log scale)',xlDy:32,yl:'seal noise (pA)'});
+  const pl=B8_plot(70,206,300,104,[7,11],[0,1.4],{xt:[[8,'100 MΩ'],[9,'1 GΩ'],[10,'10 GΩ'],[11,'100 GΩ']],yt:[[0,'0'],[.5,'0.5'],[1,'1']],xl:'seal resistance (log scale)',xlDy:32,yl:'seal noise (pA)'});
   out+=pl.svg+R(pl.X(7.3),207,pl.X(8)-pl.X(7.3),102,C.coralp,'none',0)+R(pl.X(9),207,pl.X(11)-pl.X(9)-1,102,C.greenp,'none',0);
   out+=TF(pl.X(7.65),224,'1976',13,C.coral)+TF(pl.X(10),224,'gigaseals',13,C.green);
   const cpts=[];for(let i=0;i<=80;i++){const lg=7+i/80*4;cpts.push([pl.X(lg),pl.Y(Math.min(1.4,B8_noise(Math.pow(10,lg))))])}out+=B8_poly(cpts,C.ink,2);
@@ -715,7 +715,7 @@ SCENE({id:'recording-many-probes',name:'Hundreds of sites on one shank',tag:'Neu
   // scatter of spike sizes
   const iA=st.m1.indexOf(Math.max(...st.m1)),iB=st.m2.indexOf(Math.max(...st.m2)),one=st.sites.length===1;
   const pl=B8_plot(370,62,200,170,[0,360],[0,360],{xt:[[0,'0'],[150,'150'],[300,'300 µV']],yt:one?[]:[[0,'0'],[150,'150'],[300,'300']],xl:one?'spike size on the one site':'size on the site nearest cell 1',xlDy:32,yl:one?'(only one number per spike)':'size nearest cell 2'});out+=pl.svg;
-  const r=B8_rng(4321);for(let k=0;k<2;k++){const m=k?st.m2:st.m1,col=k?C.blue:C.coral;for(let q=0;q<40;q++){const g=1+B8_JIT*B8_gauss(r),a=m[iA]*g+B8_SN*B8_gauss(r),b=m[iB]*g+B8_SN*B8_gauss(r),jy=one?120+k*90+30*(r()-.5):b;out+=Ci(pl.X(clamp(a,0,360)),pl.Y(clamp(jy,0,360)),2.6,col)}}
+  const r=B8_rng(4321);for(let k=0;k<2;k++){const m=k?st.m2:st.m1,col=k?C.blue:C.coral;for(let q=0;q<40;q++){const g=1+B8_JIT*B8_gauss(r),a=m[iA]*g+B8_SN*B8_gauss(r),b=m[iB]*g+B8_SN*B8_gauss(r),jy=one?180+70*(r()-.5):b;out+=Ci(pl.X(clamp(a,0,360)),pl.Y(clamp(jy,0,360)),2.6,col)}}
   out+=B8_tile(330,282,120,'Separation (d′)',fmt(B8_r1(st.dp)),ok?C.green:C.coral)+B8_tile(458,282,120,'Mis-sorted',st.err<.001?'<0.1%':fmt(B8_r1(100*st.err))+'%',ok?C.green:C.coral);
   out+=B8_note('Simulated spike sizes and noise; illustrative fall-off with distance.',366);
   return {svg:out,phase:one&&s.pos==='same'?'Both cells sit 25 µm from the only site, so their spikes are the same size and their dots fall on top of each other. No software can sort them from this record alone. Add sites.':
@@ -807,12 +807,12 @@ SCENE({id:'brains-and-ai',name:'A neuron as a logic gate',tag:'McCulloch and Pit
   ['in 1','in 2','sum','fires','want'].forEach((h,i)=>out+=TBF(cx[i],64,h,13,C.muted));
   B8_PATS.forEach((x,i)=>{const yy=88+i*24,ok=outs[i]===g.t[i],sm=s.w1*x[0]+s.w2*x[1];out+=TF(cx[0],yy,x[0],13,C.ink)+TF(cx[1],yy,x[1],13,C.ink)+TF(cx[2],yy,B8_sg(sm),13,C.ink)+TBF(cx[3],yy,outs[i],13,ok?C.green:C.coral)+TF(cx[4],yy,g.t[i]+(ok?' ✓':' ✕'),13,ok?C.green:C.coral)});
   // input square with the dividing line
-  const pl=B8_plot(380,214,120,110,[-.4,1.4],[-.4,1.4],{xt:[[0,'0'],[1,'1']],yt:[[0,'0'],[1,'1']],xl:'input 1',xlDy:32});out+=pl.svg+TF(372,207,'input 2',13,C.muted,'end');
+  const pl=B8_plot(370,206,110,100,[-.4,1.4],[-.4,1.4],{xt:[[0,'0'],[1,'1']],yt:[[0,'0'],[1,'1']],xl:'input 1',xlDy:31});out+=pl.svg+TF(362,200,'input 2',13,C.muted,'end');
   const lo=-.4,hi=1.4,pts=[];
   if(Math.abs(s.w2)>1e-9){for(const xv of [lo,hi])pts.push([xv,(s.th-s.w1*xv)/s.w2])}else if(Math.abs(s.w1)>1e-9){for(const yv of [lo,hi])pts.push([s.th/s.w1,yv])}
-  if(pts.length){const cl=pts.map(q=>[clamp(q[0],lo-1,hi+1),q[1]]);out+=`<clipPath id="b8clip"><rect x="380" y="214" width="120" height="110"/></clipPath>`+G(L(pl.X(cl[0][0]),pl.Y(cl[0][1]),pl.X(cl[1][0]),pl.Y(cl[1][1]),C.amber,2.5),'clip-path="url(#b8clip)"')}
+  if(pts.length){const cl=pts.map(q=>[clamp(q[0],lo-1,hi+1),q[1]]);out+=`<clipPath id="b8clip"><rect x="370" y="206" width="110" height="100"/></clipPath>`+G(L(pl.X(cl[0][0]),pl.Y(cl[0][1]),pl.X(cl[1][0]),pl.Y(cl[1][1]),C.amber,2.5),'clip-path="url(#b8clip)"')}
   B8_PATS.forEach((x,i)=>out+=Ci(pl.X(x[0]),pl.Y(x[1]),8,g.t[i]?C.ink:'#fff',outs[i]===g.t[i]?C.green:C.coral,'stroke-width="3"'));
-  out+=TF(512,236,'filled: should fire',13,C.muted,'start')+TF(512,254,'ring: green if right',13,C.muted,'start')+TF(512,272,'line: sum = θ',13,C.amber,'start');
+  out+=TF(492,226,'filled: fire',13,C.muted,'start')+TF(492,244,'ring green:',13,C.muted,'start')+TF(492,260,'right',13,C.muted,'start')+TF(492,278,'line: sum = θ',13,C.amber,'start');
   out+=B8_tile(30,276,150,'Perceptron rule',s.log?`${s.log.up} change${s.log.up===1?'':'s'}`:'not run',s.log?(s.log.ok?C.green:C.coral):C.muted)+B8_tile(190,276,150,'Passes',s.log?(s.log.ok?String(s.log.ep):'25, no fit'):'none',s.log?(s.log.ok?C.green:C.coral):C.muted);
   out+=B8_note('A McCulloch–Pitts-style unit with adjustable weights, as in Rosenblatt’s perceptron.',362);
   return {svg:out,phase:s.log&&!s.log.ok?`After 25 passes and ${s.log.up} weight changes the unit still gets XOR wrong. No single line separates (0,1) and (1,0) from (0,0) and (1,1), so one threshold unit cannot compute it; a second layer of units can.`:
@@ -849,7 +849,7 @@ SCENE({id:'brains-and-ai-features',name:'From simple cells to convolution',tag:'
   // filter
   const fx=ix,fy=iy+9*ic+22,fc=14;out+=TF(fx,fy-6,'filter',13,C.muted,'start');
   B8_FILT[s.f].forEach((row,j)=>row.forEach((v,i)=>out+=R(fx+i*fc,fy+j*fc,fc,fc,v>0?C.blue:C.pale,'#fff',0,'stroke-width="1"')));
-  out+=TF(fx+3*fc+8,fy+16,'+1 dark blue, −0.5 pale',13,C.muted,'start')+TF(fx+3*fc+8,fy+34,'blue dashes: the centre cell’s window',13,C.blue,'start');
+  out+=TF(fx+3*fc+8,fy+16,'+1 blue, −0.5 pale',13,C.muted,'start')+TF(fx+3*fc+8,fy+34,'dashes: centre S cell’s view',13,C.blue,'start');
   // S map
   const sx=262,sy=82,sc=17;out+=TBF(sx,62,'simple cells (S)',13,C.ink,'start')+TF(sx,76,'one filter at every position',13,C.muted,'start');
   for(let y=0;y<7;y++)for(let x=0;x<7;x++)out+=R(sx+x*sc,sy+y*sc,sc,sc,S[y][x]>.01?shade(S[y][x]):'#fff',C.grid,0,'stroke-width="1"');
@@ -857,8 +857,8 @@ SCENE({id:'brains-and-ai-features',name:'From simple cells to convolution',tag:'
   // C map
   const cx=440,cy=96,cc=30;out+=TBF(cx,62,'complex cells (C)',13,C.ink,'start')+TF(cx,76,'strongest S in each patch',13,C.muted,'start');
   for(let y=0;y<3;y++)for(let x=0;x<3;x++)out+=R(cx+x*cc,cy+y*cc,cc,cc,Cm[y][x]>.01?shade(Cm[y][x]):'#fff',C.grid,0,'stroke-width="1"')+TF(cx+x*cc+cc/2,cy+y*cc+cc/2+5,fmt(Cm[y][x]),13,Cm[y][x]>1.5?'#fff':C.ink);
-  out+=R(cx+cc,cy+cc,cc,cc,'none',C.purple,0,'stroke-width="2.5"')+curveArrow(sx+5*sc+4,sy+3.5*sc,cx+cc-4,cy+1.5*cc,-18,C.purple,1.6);
-  out+=TF(cx,cy+3*cc+18,'purple: this C cell pools',13,C.purple,'start')+TF(cx,cy+3*cc+34,'the dashed patch of S cells',13,C.purple,'start');
+  out+=R(cx+cc,cy+cc,cc,cc,'none',C.purple,0,'stroke-width="2.5"')+curveArrow(sx+5*sc+4,sy+3.5*sc,cx-4,cy+1.5*cc,-14,C.purple,1.6);
+  out+=TF(cx,cy+3*cc+18,'purple: this C cell',13,C.purple,'start')+TF(cx,cy+3*cc+34,'pools the dashed',13,C.purple,'start')+TF(cx,cy+3*cc+50,'patch of S cells',13,C.purple,'start');
   out+=B8_tile(262,246,150,'Simple cell, centre',fmt(sC),sC>.01?C.coral:C.muted)+B8_tile(422,246,150,'Complex cell, centre',fmt(cC),cC>.01?C.coral:C.muted);
   out+=B8_tile(262,300,150,'S cells responding',`${nS} of 49`,C.ink)+B8_tile(422,300,150,'C cells responding',`${nC} of 9`,C.ink);
   out+=B8_note('Illustrative filter and image; responses are computed, negative sums shown as 0.',368);
@@ -872,7 +872,7 @@ SCENE({id:'brains-and-ai-features',name:'From simple cells to convolution',tag:'
 
 // Representational similarity, simulated. Eight images, four animate and four inanimate. Each image has its own
 // low-level pattern (random) and a category pattern shared by its group. A representation at "depth" α mixes them:
-// (1 − α)·low-level + α·category, plus noise. Model layers 1–5 have α = 0.05, 0.25, 0.45, 0.65, 0.85; the simulated
+// (1 − α)·low-level + α·category, plus noise (sd 0.15 for layers, 0.4 for areas). Model layers 1–5 have α = 0.05, 0.25, 0.45, 0.65, 0.85; the simulated
 // brain areas V1, V4 and IT have α = 0.03, 0.45 and 0.88 with their own noise. A dissimilarity matrix holds 1 − r for each
 // pair of images; matrices are compared by correlating their 28 entries.
 const B8_IMGS=['face','hand','dog','bird','car','chair','hammer','house'];
@@ -909,7 +909,7 @@ SCENE({id:'brains-and-ai-ventral',name:'Deep networks and the ventral stream',ta
   out+=B8_tile(40,284,160,'Match, this layer',fmt(B8_r2(r)),C.ink)+B8_tile(210,284,160,`Best layer for ${s.area}`,'layer '+best,col[s.area]);
   out+=B8_lines(390,290,'Pattern built in to echo the published result: early layers resemble V1, late layers IT.',28,13,C.muted);
   out+=B8_note('Simulated responses to eight images; the method is real, the numbers are illustrative.',368);
-  return {svg:out,phase:s.area==='IT'?`IT’s grid has two dark blocks: it responds alike to the four animate things and alike to the four objects. Layer ${s.L} ${best===s.L?'matches this best':s.L<best-1?'still sorts the images mostly by their low-level look':'is close'} (r = ${fmt(B8_r2(r))}); the top layers, which have learned categories, match best.`:
+  return {svg:out,phase:s.area==='IT'?`IT’s grid has two dark blocks: it responds alike to the four animate things and alike to the four objects. Layer ${s.L} ${best===s.L?'matches it best':r<.6?'still sorts the images mostly by their low-level look':'already resembles it'} (r = ${fmt(B8_r2(r))}); the top layers, which separate the categories most cleanly, match best.`:
    s.area==='V1'?`V1 responds to the images’ local features, not their category, so its grid has no blocks. The first layers match it best (layer ${best}); at layer ${s.L} the match is r = ${fmt(B8_r2(r))}.`:
    `V4 sits between: its best match is layer ${best}, a middle layer, as Yamins and colleagues reported for real V4 recordings. At layer ${s.L} the match is r = ${fmt(B8_r2(r))}.`};
  }});
@@ -943,19 +943,19 @@ SCENE({id:'brains-and-ai-backprop',name:'Who carries the error back?',tag:'Backp
   const R0=B8_BP[s.rule],k=s.steps,err=R0.loss[k],ang=R0.ang[k];
   let out=heading(`${B8_RULES[s.rule].name}, ${k} steps: ${Math.round(100*err)}% of the error left`);
   // network sketch
-  const lx=[60,130,200],ny=[6,3,3],pos=(l,i)=>[lx[l],96+(i-(ny[l]-1)/2)*30];
+  const lx=[60,130,200],ny=[6,3,3],pos=(l,i)=>[lx[l],130+(i-(ny[l]-1)/2)*(l?30:26)];
   for(let l=0;l<2;l++)for(let i=0;i<ny[l];i++)for(let j=0;j<ny[l+1];j++){const a=pos(l,i),b=pos(l+1,j);out+=L(a[0],a[1],b[0],b[1],C.grid,1.2)}
   for(let l=0;l<3;l++)for(let i=0;i<ny[l];i++){const q=pos(l,i);out+=Ci(q[0],q[1],8,'#fff',C.ink,'stroke-width="1.5"')}
-  out+=curveArrow(206,150,128,150,-22,B8_RULES[s.rule].col,2)+TF(166,192,s.rule==='bp'?'error back, same weights':s.rule==='fa'?'error back, random weights':'no error to hidden layer',13,B8_RULES[s.rule].col);
-  out+=TF(60,200,'input',13,C.muted)+TF(130,60,'hidden',13,C.muted)+TF(200,60,'output',13,C.muted);
+  out+=curveArrow(206,180,128,180,-22,B8_RULES[s.rule].col,2)+TF(166,218,s.rule==='bp'?'error back, same weights':s.rule==='fa'?'error back, random weights':'no error to hidden layer',13,B8_RULES[s.rule].col);
+  out+=TF(60,54,'input',13,C.muted)+TF(130,86,'hidden',13,C.muted)+TF(200,86,'output',13,C.muted);
   // loss curves
-  const pl=B8_plot(300,60,270,170,[0,1000],[0,1.05],{xt:[[0,'0'],[500,'500'],[1000,'1000 steps']],yt:[[0,'0%'],[.5,'50%'],[1,'100%']],xl:'training steps',xlDy:32,yl:'error left'});out+=pl.svg;
+  const pl=B8_plot(300,60,260,160,[0,1000],[0,1.05],{xt:[[0,'0'],[500,'500'],[1000,'1000']],yt:[[0,'0%'],[.5,'50%'],[1,'100%']],xl:'training steps',xlDy:32,yl:'error left'});out+=pl.svg;
   for(const rk of ['bp','fa','none']){const on=rk===s.rule,lo=B8_BP[rk].loss;out+=B8_poly(range(Math.floor(k/5)+1).map(i=>[pl.X(i*5),pl.Y(clamp(lo[i*5],0,1.05))]),B8_RULES[rk].col,on?3:1.4,on?'':'stroke-opacity=".55"')}
   out+=Ci(pl.X(k),pl.Y(clamp(err,0,1.05)),5,B8_RULES[s.rule].col,'#fff');
   out+=TF(570,292,'blue: backpropagation',13,C.blue,'end')+TF(570,310,'green: random feedback',13,C.green,'end')+TF(570,328,'coral: output layer only',13,C.coral,'end');
   out+=B8_tile(30,236,150,'Error left',Math.round(100*err)+'%',err<.05?C.green:C.coral)+B8_tile(30,290,150,'Forward vs feedback',s.rule==='bp'?'0° (same)':Math.round(ang)+'°',C.ink);
-  out+=B8_lines(196,256,'The angle compares the output weights with the weights that carry the error back.',24,13,C.muted);
-  out+=B8_note('A tiny linear network, simulated. Brains do not run this algorithm as far as anyone knows.',368);
+  out+=B8_lines(194,272,'The angle compares the output weights with the weights that carry the error back.',24,13,C.muted);
+  out+=B8_note('A tiny linear network, simulated. Whether brains learn by anything like these rules is not known.',368);
   return {svg:out,phase:k===0?'Before training the network’s output is unrelated to the target. Press Train.':s.rule==='bp'?`Backpropagation sends the error back through the forward weights themselves, and after ${k} steps ${Math.round(100*err)}% of the error is left. It works well, but needs each synapse’s strength to be known on the way back, which is the part that is hard to picture in the brain.`:
    s.rule==='fa'?`With fixed random feedback weights the network still learns: ${Math.round(100*err)}% of the error is left after ${k} steps. The output weights have turned to within ${Math.round(ang)}° of the feedback weights, so the random signal has become useful. This is one of several proposals for how a brain might learn without exact weight transport.`:
    `When only the output layer learns, the error stalls at about ${Math.round(100*err)}%: the hidden layer keeps its random start and cannot pass on everything the target needs. Getting the error to the hidden layer is what lets deep networks learn.`};

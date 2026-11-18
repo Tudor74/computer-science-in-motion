@@ -205,7 +205,7 @@ function B6_lightSay(s,f,fr){
  if(s.dim)return f.k===0?'In dim light all day there is no strong cue. The clock free-runs on its own period, about 24.2 hours in Czeisler’s volunteers.':`Day ${f.k}: the body’s night now falls ${B6_hrs(d)} later than at the start: 0.2 hours a day adds up to about 1.4 hours a week.`;
  if(s.shift===0)return 'No shift: the body’s night and the local night coincide, and morning light each day trims the clock’s slight tendency to run late.';
  if(f.k===0)return `After flying ${Math.abs(s.shift)} time zone${Math.abs(s.shift)===1?'':'s'} ${dir}, the body’s night sits ${B6_hrs(s.shift)} ${s.shift>0?'later':'earlier'} than the local night.`;
- if(Math.abs(d)<.01){const n=fr.findIndex(q=>Math.abs(q.d)<.01);return `Back in step after ${n} days. ${s.shift>0?'Going east the clock must advance, which it does more slowly':'Going west the clock must delay, which it does more readily'}: about ${s.shift>0?B6_ADV:B6_DEL} hours a day in this rule of thumb.`}
+ if(Math.abs(d)<.01){const n=fr.findIndex(q=>Math.abs(q.d)<.01);return `Back in step after ${n} days. ${s.shift>0?'Going east the clock must advance, which it does more slowly':'Going west the clock must delay, which it does more readily'}: about ${B6_hrs(s.shift>0?B6_ADV:B6_DEL)} a day in this rule of thumb.`}
  return `Day ${f.k}: light at the new local times ${s.shift>0?'advances':'delays'} the clock. The body’s night is still ${B6_hrs(d)} ${d>0?'late':'early'}.`;
 }
 SCENE({id:'circadian-clock-light',name:'Light resets the clock',tag:'A 24.2-hour human clock, Czeisler 1999',
@@ -320,10 +320,10 @@ SCENE({id:'sleep-stages-score',name:'Score the record',tag:'Rechtschaffen and Ka
  draw(s,f,X){
   const i=s.ans.length,done=i>=B6_EPOCHS.length,show=done?B6_EPOCHS.length-1:i,tr=B6_traces(B6_EPOCHS[show],show+3);
   const right=s.ans.filter((a,j)=>a===B6_EPOCHS[j]).length,watch=X&&!X.try;
-  let out=heading(done?`You agreed with the key on ${right} of 10 epochs`:`${watch?'A simulated scorer: e':'E'}poch ${i+1} of 10`);
+  let out=heading(done?`${watch?'The scorer':'You'} agreed with the key on ${right} of 10 epochs`:`${watch?'A simulated scorer: e':'E'}poch ${i+1} of 10`);
   out+=R(B6_POLY_X-4,46,B6_POLY_W+8,178,'#fff',C.grid,6)+B6_polygraph(tr,B6_POLY_X,B6_POLY_W,[86,152,200]);
   out+=TF(B6_POLY_X+B6_POLY_W,240,'8 s shown of the 30-s epoch',13,C.muted,'end');
-  if(i>0&&!done){const a=s.ans[i-1],k=B6_EPOCHS[i-1];out+=TF(B6_POLY_X,240,`Epoch ${i}: you said ${a}, the key says ${k}`,13,a===k?C.green:C.coral,'start')}
+  if(i>0&&!done){const a=s.ans[i-1],k=B6_EPOCHS[i-1];out+=TF(B6_POLY_X,240,`Epoch ${i}: ${watch?'the scorer':'you'} said ${a}, the key says ${k}`,13,a===k?C.green:C.coral,'start')}
   // mini hypnogram of scored epochs
   const hx=20,hy=258,lev={W:0,R:1,N1:2,N2:3,N3:4};out+=R(hx,hy,236,96,'#fff',C.grid,6);
   ['W','R','N1','N2','N3'].forEach((v,j)=>out+=TF(hx+24,hy+18+j*17,v,13,C.muted,'end'));
@@ -332,7 +332,7 @@ SCENE({id:'sleep-stages-score',name:'Score the record',tag:'Rechtschaffen and Ka
   const key=[['W','alpha, eyes, tone'],['N1','theta, slow eye roll'],['N2','spindles, K-complex'],['N3','big slow waves'],['R','eyes dart, no tone']];
   key.forEach(([k,t],j)=>{out+=TBF(272,276+j*17,k,13,B6_STAGE_COL[k],'start')+TF(300,276+j*17,t,13,C.ink,'start')});
   const pct=i?Math.round(100*right/i):0;
-  out+=B6_tile(452,256,132,'Your agreement',i?pct+'%':'—',i&&pct>=83?C.green:C.coral)+B6_tile(452,308,132,'Trained scorers','about 83%',C.ink);
+  out+=B6_tile(452,256,132,watch?'Scorer agrees':'Your agreement',i?pct+'%':'—',i&&pct>=83?C.green:C.coral)+B6_tile(452,308,132,'Trained scorers','about 83%',C.ink);
   const ph=done?`${right} of 10 match the key (${right*10}%). Trained scorers agree with a reference on about 83% of epochs, and least often on N1. ${right<10?'Look back at the red marks: which stage did you confuse with which?':'A perfect run on clear simulated epochs; real records are harder.'}`:
    i===0?'Score each epoch by what fills most of it. Start with the EEG: alpha, theta, spindles or big slow waves? Then check the eyes and the chin muscle.':
    `${s.ans[i-1]===B6_EPOCHS[i-1]?'Agreed.':'Not the key’s stage.'} The previous epoch was ${B6_STAGE_NAME[B6_EPOCHS[i-1]]}. Now epoch ${i+1}.`;
@@ -427,7 +427,7 @@ SCENE({id:'sleep-stages-pressure',name:'Two processes time sleep',tag:'Borbély�
   out+=B6_tile(60,304,160,'Awake before it',fmt(B6_r1(wake))+' h',C.coral)+B6_tile(232,304,160,'Recovery sleep',fmt(B6_r1(len))+' h',C.purple)+B6_tile(404,304,176,'Baseline sleep',`${B6_hh(7+base[0])}–${B6_hh(7+base[1])}`,C.ink);
   out+=B6_note('Model sleeper. Time constants 18.2 h rising, 4.2 h falling (Daan et al. 1984).',368);
   const phase=!s.extra?`Baseline: pressure rises for 16 hours, meets the upper threshold at ${B6_hh(7+base[0])} and drains to the lower one by ${B6_hh(7+base[1])}. The pattern repeats each day.`:
-   `Kept up ${s.extra} extra hours, the sleeper has been awake ${fmt(B6_r1(wake))} hours and pressure reaches ${fmt(Math.round(Sb*100)/100)}. Sleep starts at ${B6_hh(7+rec[0])} and lasts ${fmt(B6_r1(len))} hours, ${len<blen-.3?`shorter than the baseline ${fmt(B6_r1(blen))}: the lower threshold, rising with the clock through the morning, ends it early.${B6_mod(7+rec[0])>=3&&B6_mod(7+rec[0])<=12?' Daan, Beersma and Borbély predicted short sleep when bedtime falls in the morning.':''}`:len<=blen+1.5?`close to the baseline ${fmt(B6_r1(blen))}: the clock ends it at about the usual morning time, so the debt is paid off mainly by deeper sleep, not by longer sleep.`:`longer than the baseline ${fmt(B6_r1(blen))}: it starts while the lower threshold is still falling towards its night-time low, so pressure has hours to drain.`}`;
+   `Kept up ${s.extra} extra hours, the sleeper has been awake ${fmt(B6_r1(wake))} hours and pressure reaches ${fmt(Math.round(Sb*100)/100)}. Sleep starts at ${B6_hh(7+rec[0])} and lasts ${fmt(B6_r1(len))} hours, ${len<blen-.3?`shorter than the baseline ${fmt(B6_r1(blen))} hours: the lower threshold, rising with the clock through the morning, ends it early.${B6_mod(7+rec[0])>=3&&B6_mod(7+rec[0])<=12?' Daan, Beersma and Borbély predicted short sleep when bedtime falls in the morning.':''}`:len<=blen+1.5?`close to the baseline ${fmt(B6_r1(blen))} hours: the clock ends it at about the usual morning time, so the debt is paid off mainly by deeper sleep, not by longer sleep.`:`longer than the baseline ${fmt(B6_r1(blen))} hours: it starts while the lower threshold is still falling towards its night-time low, so pressure has hours to drain.`}`;
   return {svg:out,phase};
  }});
 
@@ -448,7 +448,7 @@ function B6_eegStrip(kind,x0,w,y,seed,amp=1){
  return B6_poly(pts,kind==='sleep'?C.purple:C.amber,1.4);
 }
 SCENE({id:'arousal-systems',name:'Waking the cortex from below',tag:'Moruzzi and Magoun, 1949',
- definition:'In the 1930s Frédéric Bremer cut through the brainstem of cats. Cut through the midbrain, the forebrain showed a sleeping EEG for good; cut lower, below the medulla, it still slept and woke. He thought sleep followed the loss of sensory input. In 1949 Giuseppe Moruzzi and Horace Magoun stimulated the reticular formation, the net-like core of the brainstem, in cats under anaesthesia: the slow, large EEG waves gave way at once to the small, fast pattern of waking.',
+ definition:'In the 1930s Frédéric Bremer cut through the brainstem of cats. Cut through the midbrain, the forebrain persistently showed a sleeping EEG; cut lower, below the medulla, it still slept and woke. He thought sleep followed the loss of sensory input. In 1949 Giuseppe Moruzzi and Horace Magoun stimulated the reticular formation, the net-like core of the brainstem, in cats under anaesthesia: the slow, large EEG waves gave way at once to the small, fast pattern of waking.',
  example:'The same year Lindsley, Bowden and Magoun destroyed that core while sparing the sensory pathways that run beside it: the EEG stayed in a sleep-like pattern. Cutting the sensory pathways and sparing the core did not. Waking is kept up by an activating system, not just by the senses. That system turned out to be several distinct groups of neurons.',
  desc:'A side view of a brainstem with the reticular core shaded, showing where each procedure cuts, stimulates or destroys. Below, the EEG recorded from the cortex before and after.',
  research:['Bremer (1935). Cerveau « isolé » et physiologie du sommeil. Comptes Rendus de la Société de Biologie 118.','Moruzzi & Magoun (1949). Brain stem reticular formation and activation of the EEG. Electroencephalography and Clinical Neurophysiology 1, 455–473.','Lindsley, Bowden & Magoun (1949). Effect upon the EEG of acute injury to the brain stem activating system. Electroencephalography and Clinical Neurophysiology 1, 475–486.'],
@@ -598,7 +598,7 @@ SCENE({id:'reward-dopamine',name:'Rats that press for brain stimulation',tag:'Ol
  example:'When the current was switched off, pressing died away, as with food reward in an ordinary training box. Olds spoke of “pleasure centres”, but the experiment shows only that the rats worked for the stimulation, not what they felt. Later work tied much of the effect to the brain’s dopamine pathways.',
  desc:'A cumulative record: a line that steps up each time the rat presses the lever, so that its slope is the rate of pressing. Each block of ten minutes can use a different electrode site, with the current on or off.',
  research:['Olds & Milner (1954). Positive reinforcement produced by electrical stimulation of septal area and other regions of rat brain. Journal of Comparative and Physiological Psychology 47, 419–427.','Delgado, Roberts & Miller (1954). Learning motivated by electrical stimulation of the brain. American Journal of Physiology 179, 587–593 (sites that cats learned to avoid).','Wise (1978). Catecholamine theories of reward: a critical review. Brain Research 152, 215–247.'],
- dur:12,hint:'Choose an electrode site and whether the current is on, then run the session ten minutes at a time. The slope of the record is the rate of pressing. Rates are illustrative.',
+ dur:12,hint:'Choose an electrode site and whether the current is on, then run the session ten minutes at a time. The slope of the record is the rate of pressing. “Hear” plays the last minute’s presses six times faster. Rates are illustrative.',
  init:B6_omInit,
  watch(p){const k=Math.min(6,Math.floor(p*7)),plan=[['septal',1],['septal',1],['septal',1],['septal',0],['septal',0],['septal',1]];return {site:'septal',on:1,segs:plan.slice(0,k).map(([site,on])=>({site,on}))}},
  ui:[{choose:Object.keys(B6_SITE).map(k=>[k,B6_SITE[k][0]]),label:'Electrode site',get:s=>s.site,act:'site'},{choose:[[1,'Current on'],[0,'Current off']],label:'Current',get:s=>s.on,act:'on'},{b:'Run 10 minutes',act:'run'},{b:'Hear the last minute ▶',act:'hear'}],
@@ -697,7 +697,7 @@ SCENE({id:'reward-dopamine-error',name:'The burst moves to the cue',tag:'Schultz
   let out=paintFaces(faces,Pr);
   const lab=(p,t,col)=>{const q=Pr(p);return TF(q[0],q[1],t,13,col)};
   out+=lab([X3(B6_TD.cue),-.35,0],'cue',C.blue)+lab([X3(B6_TD.rew),-.35,0],'juice',C.green)+lab([3.4,1.5,0],'trials →',C.muted)+lab([1.5,-.8,0],'time in trial →',C.muted);
-  return {svg:out,title:'Firing across trials and time',caption:`Height is the simulated firing rate, across time within a trial (left to right) and across ${log.length} trials (front to back). The ridge starts at the juice and, as training goes on, moves to the cue. A dip shows where juice was withheld.`};
+  return {svg:out,title:'Firing across trials and time',caption:`Height is the simulated firing rate, across time within a trial (left to right) and across ${log.length} trials (front to back). The ridge starts at the juice and, as training goes on, moves to the cue.${log.some(t=>t.type==='omit')?' A dip shows where juice was withheld.':''}`};
  }});
 
 // Wanting against liking. Illustrative values (relative to normal = 1), after Berridge, Venier & Robinson (1989; rats with
@@ -753,7 +753,7 @@ function B6_fast(dur,cut){
 }
 const B6_FFDUR={0:'No threat',1:'1 minute',6:'6 minutes'};
 SCENE({id:'stress-response',name:'Fight or flight, and back again',tag:'Cannon, 1915–1932',
- definition:'Walter Cannon, at Harvard, studied how animals meet an emergency. In 1911 he and de la Paz found adrenaline in the blood of cats that had been barked at by a dog, and in his 1915 book he described the whole fast response, carried by sympathetic nerves and adrenaline: a faster heart, glucose released into the blood, digestion paused. He called it the fight-or-flight response.',
+ definition:'Walter Cannon, at Harvard, studied how animals meet an emergency. In 1911 he and de la Paz found adrenaline in the blood of cats that had been barked at by a dog, and in his 1915 book he described the whole fast response, carried by sympathetic nerves and adrenaline: a faster heart, glucose released into the blood, digestion paused. It became known as the fight-or-flight response.',
  example:'Cannon also asked how the body returns to normal. In 1926 he coined the word homeostasis for the regulation that keeps the blood’s glucose, salt, temperature and other variables near steady levels, mostly by negative feedback. The stress response is a brief departure from homeostasis that the same systems then correct.',
  desc:'Three traces over twenty minutes, heart rate, adrenaline in the blood and blood glucose, as a threat comes and goes. The learner sets how long the threat lasts and whether the sympathetic nerves are intact.',
  research:['Cannon & de la Paz (1911). Emotional stimulation of adrenal secretion. American Journal of Physiology 28, 64–70.','Cannon (1915). Bodily Changes in Pain, Hunger, Fear and Rage. Appleton.','Cannon (1929). Organization for physiological homeostasis. Physiological Reviews 9, 399–431; Cannon (1932). The Wisdom of the Body.'],
@@ -971,7 +971,7 @@ SCENE({id:'hunger-homeostasis-parabiosis',name:'A signal in the blood',tag:'Cole
   // weights
   const pl=B6_plot(300,60,280,136,[0,4],[60,120],{xt:[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4']],xl:'weeks joined',xlDy:31,yt:[[60,'60'],[100,'100'],[120,'120']],yl:'body weight, % of start'});out+=pl.svg;
   out+=L(pl.X(0),pl.Y(100),pl.X(4),pl.Y(100),C.line,1,'stroke-dasharray="3 3"');
-  if(done)[A,B].forEach(([lab,end,txt],i)=>{const col=i?C.purple:C.coral,pts=[];for(let k=0;k<=20;k++){const u=k/20;pts.push([pl.X(4*u),pl.Y(100+(end-100)*(1-Math.exp(-3*u))/(1-Math.exp(-3)))])}out+=B6_poly(pts,col,2.6)+TF(pl.X(4)-4,pl.Y(end)+(end>100?-8:16),lab,13,col,'end')});
+  if(done)[A,B].forEach(([lab,end,txt],i)=>{const col=i?C.purple:C.coral,pts=[];for(let k=0;k<=20;k++){const u=k/20;pts.push([pl.X(4*u),pl.Y(100+(end-100)*(1-Math.exp(-3*u))/(1-Math.exp(-3)))])}const other=(i?A:B)[1];out+=B6_poly(pts,col,2.6)+TF(pl.X(4)-4,pl.Y(end)+(end>=other?-8:16),lab,13,col,'end')});
   else out+=TF(440,140,'press Join',13,C.muted);
   // results table
   out+=R(14,240,572,90,'#fff',C.grid,8);
@@ -993,7 +993,7 @@ function B6_lepPeople(){const r=B6_rng(4242),out=[];for(let i=0;i<60;i++){const 
 const B6_LEP_PTS=B6_lepPeople();
 const B6_corr=pts=>{const n=pts.length,mx=sum(pts.map(p=>p[0]))/n,my=sum(pts.map(p=>p[1]))/n;let a=0,b=0,c=0;for(const [x,y] of pts){a+=(x-mx)*(y-my);b+=(x-mx)**2;c+=(y-my)**2}return a/Math.sqrt(b*c)};
 SCENE({id:'hunger-homeostasis-leptin',name:'Leptin, the signal from fat',tag:'Friedman’s group, 1994',
- definition:'In 1994 Yiying Zhang, Jeffrey Friedman and colleagues cloned the gene that is broken in ob mice. It makes a hormone, released by fat cells in proportion to the amount of fat, which they named leptin. In the arcuate nucleus of the hypothalamus leptin quietens AgRP neurons, which drive eating, and excites POMC neurons, which restrain it. Coleman’s missing signal had been found.',
+ definition:'In 1994 Yiying Zhang, Jeffrey Friedman and colleagues cloned the gene that is broken in ob mice. It makes a hormone, released by fat cells in proportion to the amount of fat, which the group soon named leptin. In the arcuate nucleus of the hypothalamus leptin quietens AgRP neurons, which drive eating, and excites POMC neurons, which restrain it. Coleman’s missing signal had been found.',
  example:'Injected leptin made ob mice eat less and lose much of their excess weight; db mice, whose leptin receptor is faulty, did not respond. A few children are born unable to make leptin, and leptin treatment works for them. But most people with obesity have high leptin, in line with their fat mass (Considine and colleagues, 1996), and extra leptin does little: most human obesity is not leptin deficiency.',
  desc:'Left, the feedback loop from fat cells through leptin to the arcuate nucleus and back to eating. Right, either the weight change of mice given daily leptin or salt-water injections, or a scatter of blood leptin against body fat in simulated people.',
  research:['Zhang, Proenca, Maffei, Barone, Leopold & Friedman (1994). Positional cloning of the mouse obese gene and its human homologue. Nature 372, 425–432.','Halaas and others (1995); Pelleymounter and others (1995); Campfield and others (1995), all Science 269 (leptin injections in mice).','Considine and others (1996), New England Journal of Medicine 334, 292–295; Montague and others (1997), Nature 387, 903–908 (congenital leptin deficiency).'],

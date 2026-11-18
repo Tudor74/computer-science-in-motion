@@ -11,7 +11,7 @@ stages:[
  {id:'plasticity',name:'5 · Development and plasticity',years:'1890–today',why:'How a brain wires itself and keeps changing: growing axons, critical periods, strengthened synapses, shifting maps, new neurons and adolescence.'},
  {id:'state',name:'6 · Brain states',years:'1936–today',why:'The body clock, sleep, wakefulness, reward, stress and hunger: the systems that set what state the whole brain is in.'},
  {id:'disorder',name:'7 · When things go wrong',years:'1817–today',why:'Stroke, epilepsy, Parkinson’s, Alzheimer’s, depression and addiction: what is known, what is contested and what treatment can do. Not medical advice.'},
- {id:'frontier',name:'8 · Tools and frontiers',years:'1943–today',why:'Single channels, light-switched neurons, the brain’s map of space, brain–computer interfaces, organoids and what brains and AI have taught each other.'}
+ {id:'frontier',name:'8 · Tools and frontiers',years:'1943–today',why:'Single channels, light-switched neurons, the brain’s map of space, brain–computer interfaces, recording many neurons and what brains and AI have taught each other.'}
 ],
 lessons:[]};
 const THREADS=[];
