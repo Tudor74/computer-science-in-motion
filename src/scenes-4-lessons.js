@@ -1,7 +1,7 @@
 /* Consciousness era 4 · Sleep, dreams and anaesthesia: lessons, sources and connections. */
 SOURCE('k4-aserinsky-1953',{title:'Aserinsky, E. & Kleitman, N. (1953). Regularly occurring periods of eye motility, and concomitant phenomena, during sleep. Science 118, 273–274.',url:'https://doi.org/10.1126/science.118.3062.273'});
-SOURCE('k4-dement-1957',{title:'Dement, W. & Kleitman, N. (1957). The relation of eye movements during sleep to dream activity: an objective method for the study of dreaming. Journal of Experimental Psychology 53, 339–346.',url:'https://doi.org/10.1037/h0048189'});
-SOURCE('k4-foulkes-1962',{title:'Foulkes, W. D. (1962). Dream reports from different stages of sleep. Journal of Abnormal and Social Psychology 65, 14–25.',url:'https://doi.org/10.1037/h0040431'});
+SOURCE('k4-dement-1957',{title:'Dement, W. & Kleitman, N. (1957). The relation of eye movements during sleep to dream activity: an objective method for the study of dreaming. Journal of Experimental Psychology 53, 339–346.'});
+SOURCE('k4-foulkes-1962',{title:'Foulkes, W. D. (1962). Dream reports from different stages of sleep. Journal of Abnormal and Social Psychology 65, 14–25.'});
 SOURCE('k4-solms-2000',{title:'Solms, M. (2000). Dreaming and REM sleep are controlled by different brain mechanisms. Behavioral and Brain Sciences 23, 843–850.',url:'https://doi.org/10.1017/S0140525X00003988',note:'printed with replies from critics, including Hobson'});
 SOURCE('k4-siclari-2017',{title:'Siclari, F. et al. (2017). The neural correlates of dreaming. Nature Neuroscience 20, 872–878.',url:'https://doi.org/10.1038/nn.4545'});
 SOURCE('k4-hearne-1978',{title:'Hearne, K. M. T. (1978). Lucid dreams: an electro-physiological and psychological study. PhD thesis, University of Liverpool.'});
@@ -12,7 +12,7 @@ SOURCE('k4-sanders-2012',{title:'Sanders, R. D., Tononi, G., Laureys, S. & Sleig
 SOURCE('k4-franks-2008',{title:'Franks, N. P. (2008). General anaesthesia: from molecular targets to neuronal pathways of sleep and arousal. Nature Reviews Neuroscience 9, 370–386.',url:'https://doi.org/10.1038/nrn2372'});
 SOURCE('k4-sarasso-2015',{title:'Sarasso, S. et al. (2015). Consciousness and complexity during unresponsiveness induced by propofol, xenon, and ketamine. Current Biology 25, 3099–3105.',url:'https://doi.org/10.1016/j.cub.2015.10.014'});
 SOURCE('k4-tunstall-1977',{title:'Tunstall, M. E. (1977). Detecting wakefulness during general anaesthesia for caesarean section. British Medical Journal 1, 1321.'});
-SOURCE('k4-sanders-2017',{title:'Sanders, R. D. et al. (2017). Incidence of connected consciousness after tracheal intubation: a prospective, international, multicenter cohort study of the isolated forearm technique. Anesthesiology 126, 214–222.',url:'https://doi.org/10.1097/ALN.0000000000001479'});
+SOURCE('k4-sanders-2017',{title:'Sanders, R. D. et al. (2017). Incidence of connected consciousness after tracheal intubation: a prospective, international, multicenter cohort study of the isolated forearm technique. Anesthesiology 126, 214–222.'});
 SOURCE('k4-sebel-2004',{title:'Sebel, P. S. et al. (2004). The incidence of awareness during anesthesia: a multicenter United States study. Anesthesia & Analgesia 99, 833–839.'});
 SOURCE('k4-nap5',{title:'Pandit, J. J. et al. (2014). 5th National Audit Project (NAP5) on accidental awareness during general anaesthesia: summary of main findings and risk factors. British Journal of Anaesthesia 113, 549–559.',url:'https://doi.org/10.1093/bja/aeu313'});
 SOURCE('k4-jennett-1972',{title:'Jennett, B. & Plum, F. (1972). Persistent vegetative state after brain damage: a syndrome in search of a name. Lancet 299, 734–737.'});
