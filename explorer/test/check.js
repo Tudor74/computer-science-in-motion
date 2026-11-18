@@ -35,7 +35,10 @@ const ok = (cond, msg) => { console.log((cond ? "PASS " : "FAIL ") + msg); if (!
       const c = {}; for (const p of DATA.snapshot.papers) for (const x of p.problems) c[x] = (c[x] || 0) + 1;
       return Object.entries(c).sort((a, b) => b[1] - a[1])[0][0];
     });
-    await page.locator(`#map .lm[data-problem="${busiest}"] .core`).click({ force: true });
+    // Scroll the landmark into view, then click at its real position with the mouse.
+    await page.evaluate(id => document.querySelector(`#map .lm[data-problem="${id}"] .core`).scrollIntoView({ block: "center" }), busiest);
+    const bb = await page.locator(`#map .lm[data-problem="${busiest}"] .core`).boundingBox();
+    await page.mouse.click(bb.x + bb.width / 2, bb.y + bb.height / 2);
     await page.waitForSelector("#lane-panel:not([hidden])");
     const pts = await page.locator("#lane .pt").count();
     ok(pts > 0, `${width}px: lane '${busiest}' shows ${pts} preprints`);

@@ -32,7 +32,7 @@ button:focus-visible,a:focus-visible,[tabindex]:focus-visible,input:focus-visibl
 .brand a:focus-visible{outline:2px solid #acd4ef;outline-offset:2px}
 .topic-header h1{margin:0;font-size:23px;line-height:1.22;font-weight:580;letter-spacing:-.02em}
 .title-block{flex:1 1 260px;min-width:0}
-.snapdate{flex:0 0 auto;text-align:right;font-size:13px;color:#d0d6d9;line-height:1.35}
+.snapdate{flex:0 1 auto;min-width:0;text-align:right;font-size:13px;color:#d0d6d9;line-height:1.35;overflow-wrap:anywhere}
 .snapdate b{display:block;font-size:17px;color:#fff;font-variant-numeric:tabular-nums}
 
 main{padding:12px 18px 6px}
@@ -322,7 +322,7 @@ function drawMap() {
   // One SVG unit = one CSS pixel, so text stays readable at every width.
   const W = Math.max(280, Math.round(svg.getBoundingClientRect().width || 1000));
   const narrow = W < 560;
-  const H = Math.round(narrow ? W * 1.45 : W * .56);
+  const H = Math.round(narrow ? W * 1.9 : W * .56);
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const defs = el("defs", {}, svg);
   // Area follows this week's count, but no region is drawn below 7% of the map, so small fields stay usable.
@@ -334,11 +334,15 @@ function drawMap() {
     const f = FIELD[r.id], col = fieldColour(r.id);
     const g = el("g", {class: "region", tabindex: 0, role: "button", "aria-label": `${f.name}: ${fmt(f.week_count)} new preprints this week. Open the field lane.`}, svg);
     el("rect", {x: r.x, y: r.y, width: r.w, height: r.h, fill: col, "fill-opacity": .13, rx: 6}, g);
+    const cp = el("clipPath", {id: "clip-" + r.id}, defs);
+    el("rect", {x: r.x + 2, y: r.y + 2, width: Math.max(0, r.w - 4), height: Math.max(0, r.h - 4)}, cp);
     const fs = 1;
-    const SHORT = {cs: "Comp. sci.", earthspace: "Earth & space", mathematics: "Maths", chemistry: "Chemistry", medicine: "Medicine"};
-    const nm = r.w - 20 < f.name.length * 8.6 ? (SHORT[r.id] || f.name) : f.name;
-    const t = el("text", {x: r.x + 10, y: r.y + 24, class: "rlabel", "font-size": r.w - 20 < nm.length * 8.6 ? 13 : 15}, g); t.textContent = nm;
-    const c = el("text", {x: r.x + 10, y: r.y + 42, class: "rcount", "font-size": 12.5}, g); c.textContent = r.w < 130 ? fmt(f.week_count) : `${fmt(f.week_count)} this week`;
+    const SHORT = {cs: "Comp. sci.", earthspace: "Earth & space", mathematics: "Maths"};
+    const TINY = {cs: "CS", earthspace: "Space", mathematics: "Maths", chemistry: "Chem.", medicine: "Med.", physics: "Phys.", biology: "Bio."};
+    let nm = r.w - 20 < f.name.length * 8.6 ? (SHORT[r.id] || f.name) : f.name;
+    if (r.w - 20 < nm.length * 7.6) nm = TINY[r.id];
+    const t = el("text", {x: r.x + 10, y: r.y + 24, "clip-path": `url(#clip-${r.id})`, class: "rlabel", "font-size": r.w - 20 < nm.length * 8.6 ? 13 : 15}, g); t.textContent = nm;
+    const c = el("text", {x: r.x + 10, y: r.y + 42, "clip-path": `url(#clip-${r.id})`, class: "rcount", "font-size": 12.5}, g); c.textContent = r.w < 130 ? fmt(f.week_count) : `${fmt(f.week_count)} this week`;
     g.addEventListener("click", () => openLane({field: r.id}));
     g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLane({field: r.id}); } });
     const probs = S.problems.filter(p => p.field === r.id);
@@ -352,11 +356,20 @@ function drawMap() {
       while (cols < n && Math.ceil(n / cols) * 64 > avail) cols++;
       const rows = Math.ceil(n / cols);
       let cx = r.x + (i % cols + .5) * r.w / cols;
-      const cy = top + (Math.floor(i / cols) + .5) * avail / rows - 14 * fs;
+      const cy = Math.min(top + (Math.floor(i / cols) + .5) * avail / rows - 14 * fs, r.y + r.h - 16);
       const room = r.w / cols, vroom = avail / rows;
       let label = room < p.name.length * 6.8 + 12 && p.short ? p.short : p.name;
-      if (room < label.length * 6.8 + 4 || vroom < 44) label = "";
-      const half = label ? label.length * 3.4 + 6 : 14;
+      // Too wide for one line: break at the space nearest the middle.
+      let lines = [label];
+      if (room < label.length * 6.8 + 4 && label.includes(" ")) {
+        const mid = label.length / 2, sp = [...label].map((c, k) => c === " " ? k : -1).filter(k => k > 0);
+        const k = sp.reduce((a, b) => Math.abs(b - mid) < Math.abs(a - mid) ? b : a);
+        lines = [label.slice(0, k), label.slice(k + 1)];
+      }
+      const widest = Math.max(...lines.map(l => l.length));
+      if (room < widest * 6.8 + 4 || vroom < 44 + 14 * (lines.length - 1)) lines = [];
+      label = lines.join(" ");
+      const half = lines.length ? widest * 3.4 + 6 : 14;
       cx = Math.min(Math.max(cx, r.x + half), r.x + r.w - half);
       const act = laneCount(p.id), a = act / maxAct;
       const lg = el("g", {class: "lm", tabindex: 0, role: "button", "data-problem": p.id, "aria-label": `${p.name}: ${act} preprints this week. Open the lane.`}, svg);
@@ -368,11 +381,11 @@ function drawMap() {
       if (act) el("circle", {cx, cy, r: gr, fill: `url(#${gid})`, class: "glow", style: `animation-duration:${(4.2 - 2.4 * a).toFixed(2)}s`}, lg);
       el("circle", {cx, cy, r: 26 * fs, fill: "transparent"}, lg);
       el("circle", {cx, cy, r: (8 + 4 * Math.sqrt(a)) * fs, fill: act ? col : "#b9c6ce", class: "core"}, lg);
-      const lt = el("text", {x: cx, y: cy + 26 * fs, "text-anchor": "middle", class: "lmlabel", "font-size": 12 * fs}, lg);
-      lt.textContent = label;
-      const ct = el("text", {x: cx, y: cy + 40 * fs, "text-anchor": "middle", class: "lmcount", "font-size": 11 * fs}, lg);
+      const lt = el("text", {x: cx, y: cy + 26 * fs, "text-anchor": "middle", "clip-path": `url(#clip-${r.id})`, class: "lmlabel", "font-size": 12 * fs}, lg);
+      lines.forEach((l, k) => { const ts = el("tspan", {x: cx, dy: k ? 14 : 0}, lt); ts.textContent = l; });
+      const ct = el("text", {x: cx, y: cy + 40 * fs + 14 * Math.max(0, lines.length - 1), "text-anchor": "middle", "clip-path": `url(#clip-${r.id})`, class: "lmcount", "font-size": 11 * fs}, lg);
       ct.textContent = act === 1 ? "1 preprint" : `${act} preprints`;
-      if (vroom < 58 || !label) ct.setAttribute("display", "none");
+      if (vroom < 58 + 14 * Math.max(0, lines.length - 1) || !label) ct.setAttribute("display", "none");
       lg.addEventListener("click", e => { e.stopPropagation(); openLane({problem: p.id}); });
       lg.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); openLane({problem: p.id}); } });
     });
