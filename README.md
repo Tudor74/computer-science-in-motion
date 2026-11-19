@@ -1,21 +1,21 @@
-# Brain In Motion
+# Dimensions In Motion
 
-A single-file, offline HTML page on how the brain works and how that was found out, in the order of discovery: the neuron, the synapse, maps of the brain, movement, development and plasticity, brain states, disorders, and the tools at the frontier. In Try it you run the classic preparations as simulations (ion gradients, an axon, a reflex, prism adaptation), read the classic records, and see your results beside the published ones. Contested claims are labelled as contested. Safety rules apply throughout: nothing is medical advice, no on-screen test is a diagnosis, no fast flicker, and gentle volumes.
+A single-file, offline HTML page on space beyond three dimensions and how it was understood: counting dimensions, hypercubes and polytopes, seeing the fourth dimension, surfaces, curvature, higher manifolds, high-dimensional surprises, and dimensions at work in science and data. In Try it you build, turn, slice and unfold the shapes yourself (a cube slid into a tesseract, a tesseract passing through 3-space, a square glued into a torus, an arrow carried round a curved surface), and every count and measurement on screen is computed from the shape, not typed in. Conjectures, open problems and unconfirmed physics (string theory, extra dimensions) are labelled as such.
 
-This is the `brain` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `dimensions` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
-**Status:** all eight eras are written: 48 lessons, 173 scenes. A correctness review is still to come.
+**Status: scaffold.** The route, the era files and the brief are in place; each lesson currently shows one placeholder card until its era is written (see `docs/DIMENSIONS-BRIEF.md`).
 
 ## Route
 
-1. **The neuron**: animal electricity, the neuron doctrine, the resting potential, the action potential, myelin and conduction, glia
-2. **Synapses**: the synapse, quantal release, excitation and inhibition, neurotransmitters, receptors and drugs, neuromodulation
-3. **Mapping the brain**: localisation, maps of the cortex, the split brain, brain imaging, lesion cases, the connectome
-4. **Movement**: the motor cortex, spinal reflexes, pattern generators, the cerebellum, the basal ganglia, population coding
-5. **Development and plasticity**: wiring up, critical periods, Hebb and LTP, changing maps, neurogenesis, the adolescent brain
-6. **Brain states**: the circadian clock, sleep stages, arousal systems, reward and dopamine, the stress response, hunger and homeostasis
-7. **When things go wrong**: stroke, epilepsy, Parkinson's disease, Alzheimer's disease, depression and its treatments, addiction
-8. **Tools and frontiers**: the patch clamp, optogenetics, place and grid cells, brain–computer interfaces, recording many neurons, brains and AI
+1. **Counting dimensions**: coordinates, degrees of freedom, Flatland, shadows and projection, distance in n dimensions, what a dimension is
+2. **Hypercubes and polytopes**: building the n-cube, counting its parts, simplices and cross-polytopes, the regular polytopes, the 24-cell, 120-cell and 600-cell, Euler's formula
+3. **Seeing the fourth dimension**: slicing a tesseract, projections and Schlegel diagrams, rotation in four dimensions, unfolding nets, Hinton's cubes, stereographic projection
+4. **Surfaces**: the idea of a manifold, gluing diagrams, the Möbius strip and orientability, the Klein bottle and projective plane, Euler characteristic and genus, classifying surfaces
+5. **Curvature**: Gauss's remarkable theorem, non-Euclidean geometry, geodesics, Riemann's 1854 lecture, Minkowski spacetime, curvature from inside
+6. **Higher manifolds**: three-manifolds you could live in, the Poincaré conjecture, Thurston's geometrisation, knots and the fourth dimension, exotic spheres, dimension four
+7. **High-dimensional surprises**: the volume of the n-ball, most volume near the surface, nearly perpendicular random directions, sphere packing and kissing numbers, the curse of dimensionality, corners of the cube
+8. **Dimensions at work**: configuration space, phase space, data in many dimensions, fractal dimension, topological data analysis, extra dimensions in physics
 
 ## Source layout
 
@@ -40,4 +40,4 @@ node test/family.js           # In Motion family links in the header and footer
 | `src/scenes-N-words.js` | Era N's glossary entries, including the people |
 | `src/curriculum.js` | The eight eras and their header textures |
 | `src/app.js` | Runtime: clock, Watch/Try it, 2D/3D, controls, local map, glossary |
-| `docs/BRAIN-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, safety and honesty rules, test commands. It refers to the HCI, Mind and Music briefs beside it |
+| `docs/DIMENSIONS-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, the computed-numbers rule, safety and honesty rules, test commands. It refers to the HCI, Mind, Music and Physics briefs beside it |

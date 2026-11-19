@@ -37,15 +37,15 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE (Brain In Motion): the learner runs the classic preparation or reads the classic
-   record, and their result is drawn beside the published one. Neuron: change ion gradients, inject current
-   into an axon and hear the spikes as clicks. Synapse: count quanta, sum inputs, shift a dose–response curve.
-   Map: stimulate a cortical strip, test noise voxels and count the false positives. Movement: tap a reflex,
-   tune a pattern generator, adapt to prisms, decode a reach. Plasticity: steer a growth cone, pair inputs for
-   LTP. State: shift a body clock, build a hypnogram, follow a prediction error. Disorder and frontier scenes
-   explain; they never test the learner. Safety: nothing is medical advice and no on-screen test is a
-   diagnosis, no flicker above 3 per second, gentle sounds only from the learner's action. Contested claims
-   (adult human neurogenesis, the monoamine account of depression, amyloid, left/right-brain types) are labelled.
+ INTERACTION DESIGN NOTE (Dimensions In Motion): the learner builds, turns, slices and counts, and every number
+   on screen is computed from the shape, never typed in. Count: name points by coordinates, measure distance in n
+   dimensions, watch a sphere pass through Flatland. Polytope: drag a cube into a new direction, count its parts by
+   2^(n−k)·C(n,k), check Euler's alternating sum. Seeing: slide a tesseract through 3-space, rotate it in the xw
+   and yz planes, fold its net. Surface: glue the edges of a square, walk a Möbius strip, compute V − E + F.
+   Curvature: add a triangle's angles, carry an arrow round a loop. Manifold: fly through a 3-torus, untie a knot
+   with the fourth direction. Surprise: plot the n-ball's volume, sample random directions. Work: move a two-joint
+   arm and its point on the torus, measure a coastline with shorter rulers. Open problems and unconfirmed physics
+   (string theory, extra dimensions) are labelled as such.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
