@@ -139,6 +139,7 @@ th{font-size:12px;color:var(--muted);font-weight:700}
 .cases h4{margin:0 0 4px;font-size:16px}
 .cases .lesson{background:#f6f9fb;border-radius:8px;padding:7px 10px;margin:8px 0 6px}
 .cases ul{margin:4px 0 0;padding-left:18px}
+.cases ul li{border:0;border-radius:0;padding:2px 0}
 .ethics{background:#f6f9fb;border-radius:12px;padding:12px 16px}
 .ethics dl{margin:0}
 .ethics dt{font-weight:700;margin-top:9px}
@@ -230,7 +231,7 @@ footer.bottom{padding:10px 18px 18px;font-size:12.5px;line-height:1.6;color:var(
   <div class="ethics"><dl>
    <dt>Matthew effect</dt><dd>Track record favours established labs. A strong record raises a paper's signal, so well-known groups gain and new voices start lower. That is why newcomers sit in their own lane and are never ranked.</dd>
    <dt>Bias</dt><dd>Publication and citation are shaped by field, gender and geography. Some fields publish far less in journals, citation gaps by gender are well documented, and authors outside North America and Europe are under-indexed. These signals inherit all of it; field averages only partly correct for it.</dd>
-   <dt>Correlation, not truth</dt><dd>The signals correlate (weakly, see the backtest) with later outcomes: being published, not retracted, still cited. Those outcomes are not truth. BICEP2 was published and is still cited; OPERA came from a superb collaboration and was wrong.</dd>
+   <dt>Correlation, not truth</dt><dd><span id="corr-text">This snapshot has no backtest results. We do not yet know how strongly these signals predict later outcomes: being published, not retracted, still cited.</span> Those outcomes are not truth. BICEP2 was published and is still cited; OPERA came from a superb collaboration and was wrong.</dd>
    <dt>Missing records</dt><dd>Many good papers are never formally published: mathematics and computer science often stop at arXiv or a conference, and some results are simply complete as preprints. “Not published” is not “wrong”.</dd>
    <dt>Data gaps</dt><dd id="gaps-dd">OpenAlex and Crossref are incomplete: preprint and journal versions are not always linked, author identities are sometimes split or merged, retractions are recorded late, and very new preprints may not be indexed yet.</dd>
    <dt>No naming and shaming</dt><dd>Individuals are never ranked. Author track records appear only as pooled, aggregate signals on a paper's card (first and last authors together), never as an author leaderboard, and no author-level numbers are published here.</dd>
@@ -259,6 +260,7 @@ const DATA = /*__DATA__*/null;
 <script>
 "use strict";
 const S = DATA.snapshot, B = DATA.backtest;
+if (B) document.getElementById("corr-text").textContent = "The Backtest section measures how strongly these signals predicted later outcomes: being published, not retracted, still cited.";
 const NS = "http://www.w3.org/2000/svg";
 const $ = id => document.getElementById(id);
 const FIELD = Object.fromEntries(S.fields.map(f => [f.id, f]));
@@ -267,6 +269,49 @@ const RM = matchMedia("(prefers-reduced-motion: reduce)");
 const fmt = n => n.toLocaleString("en-GB");
 const pct = x => x == null ? "—" : Math.round(x * 100) + "%";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// Display LaTeX in titles and abstracts as readable text. The records keep the original source.
+const TEX_SYM = {alpha:"α",beta:"β",gamma:"γ",delta:"δ",epsilon:"ϵ",varepsilon:"ε",zeta:"ζ",eta:"η",theta:"θ",vartheta:"ϑ",iota:"ι",kappa:"κ",lambda:"λ",mu:"μ",nu:"ν",xi:"ξ",pi:"π",varpi:"ϖ",rho:"ρ",varrho:"ϱ",sigma:"σ",varsigma:"ς",tau:"τ",upsilon:"υ",phi:"ϕ",varphi:"φ",chi:"χ",psi:"ψ",omega:"ω",Gamma:"Γ",Delta:"Δ",Theta:"Θ",Lambda:"Λ",Xi:"Ξ",Pi:"Π",Sigma:"Σ",Upsilon:"Υ",Phi:"Φ",Psi:"Ψ",Omega:"Ω",
+  ell:"ℓ",hbar:"ℏ",partial:"∂",nabla:"∇",infty:"∞",times:"×",cdot:"·",pm:"±",mp:"∓",le:"≤",leq:"≤",leqslant:"≤",ge:"≥",geq:"≥",geqslant:"≥",neq:"≠",ne:"≠",approx:"≈",simeq:"≃",sim:"∼",cong:"≅",equiv:"≡",propto:"∝",gg:"≫",ll:"≪",
+  to:"→",rightarrow:"→",leftarrow:"←",leftrightarrow:"↔",Rightarrow:"⇒",Leftarrow:"⇐",Leftrightarrow:"⇔",longrightarrow:"⟶",mapsto:"↦",uparrow:"↑",downarrow:"↓",
+  in:"∈",notin:"∉",ni:"∋",subset:"⊂",subseteq:"⊆",supset:"⊃",supseteq:"⊇",cup:"∪",cap:"∩",setminus:"∖",emptyset:"∅",varnothing:"∅",forall:"∀",exists:"∃",neg:"¬",wedge:"∧",vee:"∨",perp:"⊥",parallel:"∥",mid:"∣",
+  circ:"∘",odot:"⊙",otimes:"⊗",oplus:"⊕",ast:"∗",star:"⋆",dagger:"†",prime:"′",ldots:"…",dots:"…",cdots:"⋯",vdots:"⋮",lfloor:"⌊",rfloor:"⌋",lceil:"⌈",rceil:"⌉",langle:"⟨",rangle:"⟩",
+  sum:"∑",prod:"∏",int:"∫",oint:"∮",colon:":",vert:"|",Vert:"‖",lvert:"|",rvert:"|",backslash:"\\",degree:"°",
+  log:"log",ln:"ln",exp:"exp",sin:"sin",cos:"cos",tan:"tan",min:"min",max:"max",dim:"dim",det:"det",lim:"lim",sup:"sup",inf:"inf",deg:"deg",ker:"ker",gcd:"gcd",arg:"arg",Pr:"Pr",tr:"tr",
+  quad:" ",qquad:"  ",",":" ",";":" ",":":" ","!":"","{":"{","}":"}","%":"%","_":"_","&":"&","#":"#","$":"$"," ":" ","|":"‖"};
+const TEX_BB = {N:"ℕ",Z:"ℤ",Q:"ℚ",R:"ℝ",C:"ℂ",P:"ℙ",H:"ℍ",E:"𝔼",F:"𝔽",S:"𝕊",T:"𝕋",A:"𝔸",K:"𝕂"};
+const TEX_ACC = {tilde:"̃",hat:"̂",widehat:"̂",widetilde:"̃",bar:"̅",overline:"̅",dot:"̇",ddot:"̈",vec:"⃗"};
+const TEX_FONT = /^(mathrm|rm|text|textrm|textit|textbf|mathit|mathbf|bf|it|boldsymbol|bm|mathsf|sf|mathtt|tt|mathcal|cal|mathscr|mathfrak|operatorname|mathnormal|emph)$/;
+const TEX_DROP = /^(left|right|big|Big|bigg|Bigg|bigl|bigr|Bigl|Bigr|biggl|biggr|displaystyle|textstyle|limits|nolimits)$/;
+function texToHtml(src) {
+  let i = 0;
+  const cmd = () => { let m = /^\\([A-Za-z]+|.)/.exec(src.slice(i)); i += m ? m[0].length : 1; return m ? m[1] : ""; };
+  const arg = () => { while (src[i] === " ") i++; if (src[i] === "{") { i++; return seq("}"); } if (src[i] === "\\") return atom(); return src[i] !== undefined ? esc(src[i++]) : ""; };
+  const atom = () => {
+    const c = src[i];
+    if (c === "{") { i++; return seq("}"); }
+    if (c === "~") { i++; return " "; }
+    if (c === "^" || c === "_") { i++; const t = c === "^" ? "sup" : "sub"; return `<${t}>${arg()}</${t}>`; }
+    if (c !== "\\") { i++; return esc(c); }
+    const name = cmd();
+    const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+    if (own(TEX_SYM, name) && !TEX_FONT.test(name)) return esc(TEX_SYM[name]);
+    if (name === "mathbb" || name === "mathds" || name === "bbm") { const a = arg(); return a.replace(/[A-Z]/g, ch => TEX_BB[ch] || ch); }
+    if (TEX_FONT.test(name)) return arg();
+    if (TEX_DROP.test(name)) return "";
+    if (own(TEX_ACC, name)) { const a = arg(); return a + TEX_ACC[name]; }
+    if (name === "frac" || name === "tfrac" || name === "dfrac") { const a = arg(), b = arg(); const w = s => s.replace(/<[^>]*>/g, "").length > 1 ? `(${s})` : s; return `${w(a)}/${w(b)}`; }
+    if (name === "sqrt") { const a = arg(); return a.replace(/<[^>]*>/g, "").length > 1 ? `√(${a})` : `√${a}`; }
+    return esc(name);
+  };
+  const seq = end => { let out = ""; while (i < src.length && src[i] !== end) out += atom(); if (end) i++; return out; };
+  return seq("");
+}
+function texHtml(s) {
+  s = String(s ?? ""); let out = "", last = 0;
+  for (const m of s.matchAll(/\$\$([^$]+)\$\$|\$([^$]+)\$/g)) { out += esc(s.slice(last, m.index)) + texToHtml(m[1] ?? m[2]); last = m.index + m[0].length; }
+  return out + esc(s.slice(last));
+}
+const texPlain = s => { const d = document.createElement("div"); d.innerHTML = texHtml(s); return d.textContent; };
 const dayMs = 864e5;
 const snapDay = new Date(S.snapshot_date + "T00:00:00Z");
 const longDate = d => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
@@ -441,7 +486,7 @@ function drawLane() {
   const showNew = state.newcomers;
   const W = Math.max(280, Math.round(svg.getBoundingClientRect().width || 1000));
   const narrow = W < 700, fs = 1;
-  const padL = 48, bandW = narrow ? 0 : 200, padR = 14 + bandW, top = 34;
+  const padL = 48, bandW = narrow ? 0 : 200, padR = 14 + bandW, top = narrow ? 20 : 50;
   const plotH = narrow ? 280 : 300, stripH = 58 * fs, gap = 26 * fs;
   const H = top + plotH + 40 * fs + (showNew ? stripH + gap : 0) + (none.length ? stripH + gap : 0) + 10;
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
@@ -476,9 +521,9 @@ function drawLane() {
   const yl = el("text", {x: 14, y: top + plotH / 2, transform: `rotate(-90 14 ${top + plotH / 2})`, "text-anchor": "middle", "font-size": 12 * fs}, ax);
   yl.textContent = "evidence signal";
   if (!narrow && B) {
-    const bt = el("text", {x: x1 + 12, y: top - 6, class: "band-label", "font-weight": 700}, svg);
+    const bt = el("text", {x: x1 + 12, y: top - 26, class: "band-label", "font-weight": 700}, svg);
     bt.textContent = "2018–21, similar signals:";
-    const b2 = el("text", {x: x1 + 12, y: top + 8, class: "band-label"}, svg);
+    const b2 = el("text", {x: x1 + 12, y: top - 10, class: "band-label"}, svg);
     b2.innerHTML = `<tspan fill="#1772b7" font-weight="700">published</tspan> · <tspan fill="#2c776c" font-weight="700">still cited</tspan>`;
   }
   // Points: x = age (posted → now), y = signal, size = boldness.
@@ -489,7 +534,7 @@ function drawLane() {
     const bold = p.features.bold.length;
     const r = (6 + 5 * Math.min(bold, 3)) * fs;
     const g = el("g", {class: "pt", tabindex: 0, role: "button", "data-id": p.id, "data-sel": state.paper === p.id ? "true" : "false",
-      "aria-label": `${p.title}. ${p.rank != null ? "Signal " + p.rank.toFixed(2) : p.newcomer ? "Newcomer team, not ranked" : "No track record found"}. ${bold ? "Bold claim. " : ""}Status: ${STATUS[p.status]}. Open the claim card.`}, svg);
+      "aria-label": `${texPlain(p.title)}. ${p.rank != null ? "Signal " + p.rank.toFixed(2) : p.newcomer ? "Newcomer team, not ranked" : "No track record found"}. ${bold ? "Bold claim. " : ""}Status: ${STATUS[p.status]}. Open the claim card.`}, svg);
     const col = fieldColour(p.field);
     el("circle", {cx: X(age) + jit(p), cy: y, r, fill: col, "fill-opacity": bold ? .55 : .8, stroke: bold ? "#ad472a" : "#fff", "stroke-width": bold ? 2.5 : 1.5}, g);
     if (p.status !== "posted") el("circle", {cx: X(age) + jit(p), cy: y, r: 3 * fs, fill: "#fff"}, g);
@@ -524,7 +569,7 @@ function drawLane() {
     const li = document.createElement("li"), b = document.createElement("button");
     b.type = "button"; b.dataset.id = p.id; b.setAttribute("aria-pressed", state.paper === p.id ? "true" : "false");
     const tags = (p.features.bold.length ? `<span class="tag bold">bold claim</span>` : "") + (p.newcomer ? `<span class="tag new">newcomer team</span>` : "") + (p.status_changed ? `<span class="tag chg">status changed</span>` : "") + (p.status !== "posted" ? `<span class="tag">${esc(STATUS[p.status])}</span>` : "");
-    b.innerHTML = `<span class="score">${p.rank != null ? p.rank.toFixed(2) : "—"}</span><span class="ptitle">${esc(p.title)}<small>${tags}${esc(FIELD[p.field].name)} · ${esc(p.source)} · posted ${esc(p.posted)}</small></span>`;
+    b.innerHTML = `<span class="score">${p.rank != null ? p.rank.toFixed(2) : "—"}</span><span class="ptitle">${texHtml(p.title)}<small>${tags}${esc(FIELD[p.field].name)} · ${esc(p.source)} · posted ${esc(p.posted)}</small></span>`;
     b.addEventListener("click", () => openCard(p.id));
     li.appendChild(b); list.appendChild(li);
   }
@@ -572,9 +617,9 @@ function openCard(id) {
   }
   const oa = p.openalex ? `<a href="${esc(p.openalex.replace("https://openalex.org/", "https://openalex.org/works/"))}" rel="noopener">OpenAlex record</a>` : "";
   c.innerHTML = `<p class="eyebrow" style="margin-top:0">${esc(FIELD[p.field].name)} · ${esc(p.source)} ${esc(p.category)}${p.problems.length ? " · " + p.problems.map(x => esc(PROB[x].name)).join(", ") : ""}</p>
-   <h3>${esc(p.title)}</h3><p class="who">${esc(p.authors.join(", "))}</p>
+   <h3>${texHtml(p.title)}</h3><p class="who">${esc(p.authors.join(", "))}</p>
    <ol class="timeline" aria-label="Timeline">${tl}</ol>
-   <p class="abs">${esc(p.abstract)}</p>${rank}${sigs}
+   <p class="abs">${texHtml(p.abstract)}</p>${rank}${sigs}
    <div class="links-row"><a href="${esc(p.url)}" rel="noopener">${esc(p.source)} page</a>${oa}${p.published_doi ? `<a href="https://doi.org/${esc(p.published_doi)}" rel="noopener">Published version</a>` : ""}</div>`;
   $("card-panel").hidden = false;
   $("crumb-card").disabled = false;
@@ -629,7 +674,7 @@ function drawBacktest() {
   box.innerHTML = `
    <p class="verdict"><b>Plainly: the signals are ${strength(auc)} at telling which preprints will be published</b> (AUC ${auc ?? "—"}, where 0.5 is a coin toss and 1 is perfect)${aucR != null ? `, and ${strength(aucR)} for “still cited” (AUC ${aucR})` : ""}. ` +
    (better ? `Track record beats simply using the field average, but only slightly (Brier score ${B.brier_signal} against ${B.brier_field_base}; lower is better).` : `Track record does <b>not</b> beat simply using the field average (Brier score ${B.brier_signal} against ${B.brier_field_base}; lower is better).`) +
-   ` Read every signal on this page with that in mind.</p>
+   ` ${B.overall.retracted === 0 ? `None of the ${B.n_scored} scored preprints had been retracted by ${B.outcome_year}, so the “not retracted” component could not be tested at all. ` : ""}Read every signal on this page with that in mind.</p>
    <ul class="stats">
     <li><b>${fmt(B.n_papers)}</b>preprints sampled from ${B.years[0]}–${B.years[B.years.length - 1]}</li>
     <li><b>${fmt(B.n_scored)}</b>had a team track record at the time</li>
@@ -669,7 +714,7 @@ function drawBacktest() {
   }
   const base = B.overall.published;
   el("line", {x1: X(0), x2: X(1), y1: Y(base), y2: Y(base), stroke: "#ad472a", "stroke-width": 1.5}, svg);
-  const bl = el("text", {x: X(1), y: Y(base) - 6, "text-anchor": "end", class: "band-label"}, svg); bl.textContent = "average: " + pct(base);
+  const bl = el("text", {x: X(0) + 6, y: Y(base) - 6, class: "band-label"}, svg); bl.textContent = "average published: " + pct(base);
 }
 
 /* ---------- case studies ---------- */
@@ -684,7 +729,7 @@ function drawCases() {
     const rec = c.record || {};
     const doiLink = d => d.startsWith("10.48550/arxiv.") ? `https://arxiv.org/abs/${d.slice(15)}` : `https://doi.org/${d}`;
     const facts = [];
-    if (rec.ok) facts.push(`Record: “${esc(rec.title)}”${rec.date ? ", " + esc(rec.date) : ""}${rec.container ? ", " + esc(rec.container) : ""}; cited ${fmt(rec.cited_by || 0)} times; ${rec.retracted ? "<b>retracted</b>" : "not retracted"} (${c.doi.startsWith("10.48550") ? "OpenAlex" : "Crossref"}).`);
+    if (rec.ok) facts.push(`Record: “${esc(rec.title)}”${rec.date ? ", " + esc(rec.date) : ""}${rec.container ? ", " + esc(rec.container) : ""}; cited ${fmt(rec.cited_by || 0)} times; ${rec.retracted ? "<b>retracted</b>" : "not retracted"} (${c.doi.startsWith("10.48550") ? "OpenAlex" : "Crossref"}).${c.kind === "preprint" && rec.date && +rec.date.slice(0, 4) !== c.year ? " OpenAlex merges this preprint with its later journal version, hence the later date." : ""}`);
     const st = c.signals_then;
     if (st) facts.push(st.eligible >= 3 ? `Signals then: the first and last authors had ${st.eligible} preprints older than two years; ${st.record.published} later published, ${st.record.cited} cited ${S.cite_n}+ times.` : `Signals then: newcomer team by our rule (${st.eligible} eligible earlier preprints for the first and last authors), so it would not have been ranked.`);
     if (st && st.title_bold && st.title_bold.length) facts.push(`Bold-claims flag: fires on the title (${st.title_bold.map(b => "“" + esc(b) + "”").join(", ")}).`);
