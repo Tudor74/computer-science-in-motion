@@ -4,7 +4,7 @@ A single-file, offline HTML page on space beyond three dimensions and how it was
 
 This is the `dimensions` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
-**Status: scaffold.** The route, the era files and the brief are in place; each lesson currently shows one placeholder card until its era is written (see `docs/DIMENSIONS-BRIEF.md`).
+**Status:** all eight eras are written: 48 lessons, 157 scenes. A correctness review is still to come.
 
 ## Route
 
