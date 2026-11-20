@@ -1,21 +1,21 @@
-# Dimensions In Motion
+# Levin Lab In Motion
 
-A single-file, offline HTML page on space beyond three dimensions and how it was understood: counting dimensions, hypercubes and polytopes, seeing the fourth dimension, surfaces, curvature, higher manifolds, high-dimensional surprises, and dimensions at work in science and data. In Try it you build, turn, slice and unfold the shapes yourself (a cube slid into a tesseract, a tesseract passing through 3-space, a square glued into a torus, an arrow carried round a curved surface), and every count and measurement on screen is computed from the shape, not typed in. Conjectures, open problems and unconfirmed physics (string theory, extra dimensions) are labelled as such.
+A single-file, offline HTML page on the research of Michael Levin's lab at the Allen Discovery Center at Tufts University, and the work it builds on: bioelectricity in every cell, left and right in the embryo, regenerating planaria, frog faces, eyes and tails, cancer and the brain, xenobots, basal cognition, and the tools and open questions at the frontier. In Try it you run simplified models of the experiments (a cell's voltage set by pumps and channels, voltages spreading through gap junctions, a worm fragment regrowing after a brief block, a xenobot body evolved in a toy simulator), every number on screen is computed by the model, and the published result is shown beside it. Every claim carries a visible label: replicated finding, single-lab finding, framework or hypothesis, speculation, or criticism and debate. Animal work is described plainly, and nothing here is medical advice or a human treatment.
 
-This is the `dimensions` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
+This is the `levin` branch of the [Computer Science In Motion](https://github.com/Tudor74/computer-science-in-motion) repository, sharing its engine with the other In Motion courses, and part of the [In Motion](https://in-motion.puter.site) family.
 
-**Status:** all eight eras are written: 48 lessons, 157 scenes. A correctness review is still to come.
+**Status: scaffold.** The route, the era files and the brief are in place; each lesson currently shows one placeholder card until its era is written (see `docs/LEVIN-BRIEF.md`).
 
 ## Route
 
-1. **Counting dimensions**: coordinates, degrees of freedom, Flatland, shadows and projection, distance in n dimensions, what a dimension is
-2. **Hypercubes and polytopes**: building the n-cube, counting its parts, simplices and cross-polytopes, the regular polytopes, the 24-cell, 120-cell and 600-cell, Euler's formula
-3. **Seeing the fourth dimension**: slicing a tesseract, projections and Schlegel diagrams, rotation in four dimensions, unfolding nets, Hinton's cubes, stereographic projection
-4. **Surfaces**: the idea of a manifold, gluing diagrams, the Möbius strip and orientability, the Klein bottle and projective plane, Euler characteristic and genus, classifying surfaces
-5. **Curvature**: Gauss's remarkable theorem, non-Euclidean geometry, geodesics, Riemann's 1854 lecture, Minkowski spacetime, curvature from inside
-6. **Higher manifolds**: three-manifolds you could live in, the Poincaré conjecture, Thurston's geometrisation, knots and the fourth dimension, exotic spheres, dimension four
-7. **High-dimensional surprises**: the volume of the n-ball, most volume near the surface, nearly perpendicular random directions, sphere packing and kissing numbers, the curse of dimensionality, corners of the cube
-8. **Dimensions at work**: configuration space, phase space, data in many dimensions, fractal dimension, topological data analysis, extra dimensions in physics
+1. **Bioelectricity before the lab**: voltage in every cell, early bioelectricity (Galvani, Burr, Lund), the vibrating probe, voltage dyes, gap junctions, instructive and permissive signals
+2. **Left and right**: body asymmetry, the chick left–right gene cascade, ion flux before genes, serotonin, the gap-junction model, the cilia-flow debate
+3. **Planaria**: worms that regrow, two-headed worms, patterns that persist through later cuts, heads of other species, adapting to barium, memory after decapitation
+4. **Frog faces, eyes and tails**: the electric face, eyes outside the head, tail regeneration, a sodium pulse, "Picasso" tadpoles, an adult frog leg regrown
+5. **Cancer and the brain**: voltage and cell division, instructor cells, tumours held back by hyperpolarisation, cells that stop communicating, rescuing brain development, cancer and the boundary of self
+6. **Xenobots**: designed in a computer, evolution in simulation, self-assembled xenobots, kinematic replication, anthrobots, organism or robot
+7. **Basal cognition**: basal cognition, the TAME framework, the cognitive light cone, navigating morphospace, learning in gene networks, the debate over cognition
+8. **Tools and open questions**: simulating bioelectricity, ion-channel drugs, reading and writing the bioelectric code, what other labs have confirmed, open questions, a space of forms
 
 ## Source layout
 
@@ -40,4 +40,4 @@ node test/family.js           # In Motion family links in the header and footer
 | `src/scenes-N-words.js` | Era N's glossary entries, including the people |
 | `src/curriculum.js` | The eight eras and their header textures |
 | `src/app.js` | Runtime: clock, Watch/Try it, 2D/3D, controls, local map, glossary |
-| `docs/DIMENSIONS-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, the computed-numbers rule, safety and honesty rules, test commands. It refers to the HCI, Mind, Music and Physics briefs beside it |
+| `docs/LEVIN-BRIEF.md` | The brief for era authors: fixed lesson ids, lesson notes, the evidence labels, the verification and computed-numbers rules, safety and honesty rules, test commands. It refers to the HCI, Mind, Music and Biology briefs beside it |

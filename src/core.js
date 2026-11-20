@@ -37,15 +37,17 @@
    Pictures stay deterministic; a scene never needs sound to be understood (captions say what you would hear).
    Notes: midiHz(m), noteName(m); 12-tone equal temperament unless a scene is about tuning.
 
- INTERACTION DESIGN NOTE (Dimensions In Motion): the learner builds, turns, slices and counts, and every number
-   on screen is computed from the shape, never typed in. Count: name points by coordinates, measure distance in n
-   dimensions, watch a sphere pass through Flatland. Polytope: drag a cube into a new direction, count its parts by
-   2^(n−k)·C(n,k), check Euler's alternating sum. Seeing: slide a tesseract through 3-space, rotate it in the xw
-   and yz planes, fold its net. Surface: glue the edges of a square, walk a Möbius strip, compute V − E + F.
-   Curvature: add a triangle's angles, carry an arrow round a loop. Manifold: fly through a 3-torus, untie a knot
-   with the fourth direction. Surprise: plot the n-ball's volume, sample random directions. Work: move a two-joint
-   arm and its point on the torus, measure a coastline with shorter rulers. Open problems and unconfirmed physics
-   (string theory, extra dimensions) are labelled as such.
+ INTERACTION DESIGN NOTE (Levin Lab In Motion): the learner runs simplified models of the lab's experiments and
+   reads the published result beside them; every number on screen is computed by the model, and every model is
+   labelled as simplified. Signal: set pump and channel strengths and watch a cell's voltage settle; couple cells by
+   gap junctions and watch voltages spread. Asymmetry: place an ion pump on one side and follow a signal round a ring
+   of coupled cells. Planaria: cut a worm, block gap junctions for a while, and see what a toy model regrows, cut
+   after cut. Frog: paint a voltage pattern and compare with the imaged "electric face"; time a tail amputation
+   against the refractory stage. Cancer: couple and uncouple a sheet of cells and watch a depolarised patch grow
+   or shrink. Xenobot: evolve a body of voxels in a toy simulator and see what survives building. Cognition and
+   frontier scenes explain frameworks and debates; they never test the learner. Each claim carries a visible label:
+   replicated finding, single-lab finding, framework or hypothesis, speculation, or criticism and debate. Animal
+   work is described plainly; nothing is medical advice, and no finding is presented as a human treatment.
 =========================================================================== */
 const $=id=>document.getElementById(id);
 const C={ink:'#192c37',muted:'#546873',blue:'#1772b7',pale:'#e1eef7',line:'#abc3d3',coral:'#c45238',coralp:'#f9e2d9',green:'#2c776c',greenp:'#dceee8',purple:'#7156a6',purplep:'#ece6f6',amber:'#9a6200',amberp:'#fbefd5',paper:'#ffffff',grid:'#d9e4eb',dark:'#2b3d47'};
