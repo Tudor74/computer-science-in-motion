@@ -528,5 +528,30 @@ function f(t){if(t0===null)t0=t;var sh=(s0+200*((t-t0)%T)/T)%200,a=2*Math.PI*sh/
 w.setAttribute('transform','translate('+(-sh).toFixed(2)+' 0)');r.setAttribute('x2',x);r.setAttribute('y2',y);d.setAttribute('x1',x);d.setAttribute('y1',y);d.setAttribute('y2',y);p.setAttribute('cx',x);p.setAttribute('cy',y);h.setAttribute('cy',y);requestAnimationFrame(f)}
 requestAnimationFrame(f)})();
 </script>
+<script>
+/* Animated favicon: a dot travelling along a drifting wave, drawn on a 64 px canvas about 12 times a second.
+   Falls back to the static favicon.ico where canvas favicons are unsupported or reduced motion is requested. */
+(function(){
+ try{
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var c=document.createElement('canvas');c.width=c.height=64;var g=c.getContext('2d');if(!g||!c.toDataURL)return;
+  var link=document.createElement('link');link.rel='icon';link.type='image/png';document.head.appendChild(link);
+  var x0=9,x1=55,mid=32,amp=15,t0=performance.now();
+  function y(x,ph){return mid-amp*Math.sin((x-x0)/(x1-x0)*2*Math.PI+ph)}
+  function draw(now){
+   var s=(now-t0)/1000,ph=s*0.9,u=(s/3)%1,x;
+   g.clearRect(0,0,64,64);g.fillStyle='#192c37';g.beginPath();
+   if(g.roundRect)g.roundRect(0,0,64,64,14);else g.rect(0,0,64,64);g.fill();
+   g.strokeStyle='#fff';g.lineWidth=6;g.lineCap='round';g.lineJoin='round';g.beginPath();
+   for(x=x0;x<=x1;x+=1)x===x0?g.moveTo(x,y(x,ph)):g.lineTo(x,y(x,ph));g.stroke();
+   var dx=x0+u*(x1-x0),dy=y(dx,ph);
+   g.fillStyle='#fff';g.beginPath();g.arc(dx,dy,8,0,2*Math.PI);g.fill();
+   g.fillStyle='#192c37';g.beginPath();g.arc(dx,dy,3.8,0,2*Math.PI);g.fill();
+   link.href=c.toDataURL('image/png');
+  }
+  draw(t0);setInterval(function(){draw(performance.now())},80);
+ }catch(e){}
+})();
+</script>
 </body>
 </html>
